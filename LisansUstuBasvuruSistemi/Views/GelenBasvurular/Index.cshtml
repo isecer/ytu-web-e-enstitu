@@ -262,7 +262,7 @@
                                         <td>
                                             @if (!item.DurumClassName.IsNullOrWhiteSpace())
                                             {
-                                                if (item.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                if (item.BasvuruDurumID == BasvuruDurumuEnum.IptalEdildi)
                                                 {
                                                     <span class="tooltips" data-style="blue" data-original-title="@item.BasvuruDurumAciklamasi" @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=cursor:pointer;color:" + item.DurumColor) : "")>
                                                         <i class="@item.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @item.BasvuruDurumAdi
@@ -278,7 +278,7 @@
                                             }
                                             else
                                             {
-                                                if (item.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                if (item.BasvuruDurumID == BasvuruDurumuEnum.IptalEdildi)
                                                 {
                                                     <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@item.BasvuruDurumAciklamasi">@item.BasvuruDurumAdi</span>
                                                 }
@@ -333,7 +333,7 @@
         if (unTogled) GetDetail(id, Isdelete, sndr, IsBelgeShow);
     }
     function GetDetail(id, IsBelgeShow) {
-        var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
+        var tbName = "@TabAdiEnum.BasvuruDetayTn-" + id;
         var tID = GetSelectedTabID(tbName);
         if (IsBelgeShow == true) {
             tID="4";
@@ -357,7 +357,7 @@
     }
     function SubData(id,isDelete) {
         var _panel = $('#bsvrDet_' + id);
-        var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
+        var tbName = "@TabAdiEnum.BasvuruDetayTn-" + id;
         var tID = GetSelectedTabID(tbName);
         if (isDelete) tID = 1;
         PanelRefresh(_panel, false);

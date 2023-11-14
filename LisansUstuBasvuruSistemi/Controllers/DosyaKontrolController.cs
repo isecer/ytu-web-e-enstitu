@@ -137,7 +137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var tdoBasvuruDanisman = _entities.TDOBasvuruDanismen.FirstOrDefault(p => p.UniqueID == rowId);
                     if (tdoBasvuruDanisman != null)
                     {
-                        if (tdoBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniOnerisi)
+                        if (tdoBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
                         {
                             var rpr = new RprTezDanismaniOneriFormu_FR0347(tdoBasvuruDanisman.TDOBasvuruDanismanID);
                             rpr.CreateDocument();

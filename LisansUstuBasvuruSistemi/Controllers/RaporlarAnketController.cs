@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string ekd)
         { 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-            ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(enstituKod,true), "Value", "Caption", null); 
+            ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(enstituKod,true), "Value", "Caption", null); 
 
             return View();
         }

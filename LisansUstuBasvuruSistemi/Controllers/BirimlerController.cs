@@ -58,7 +58,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (data != null) model = data;
             }
 
-            ViewBag.UstBirimID = new SelectList(Management.cmbBirimler(true), "Value", "Caption", model.UstBirimID);
+            ViewBag.UstBirimID = new SelectList(Management.CmbBirimler(true), "Value", "Caption", model.UstBirimID);
             return View(model);
         }
         [HttpPost]
@@ -73,9 +73,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 string msg = "Birim Adı Boş bırakılamaz.";
                 MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BirimAdi" });
+                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BirimAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BirimAdi" });
+            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BirimAdi" });
             #endregion
 
             if (MmMessage.Messages.Count == 0)
@@ -106,7 +106,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
-            ViewBag.UstBirimID = new SelectList(Management.cmbBirimler(true), "Value", "Caption", kModel.UstBirimID);
+            ViewBag.UstBirimID = new SelectList(Management.CmbBirimler(true), "Value", "Caption", kModel.UstBirimID);
             ViewBag.MmMessage = MmMessage;
             return View(kModel);
         }
@@ -128,7 +128,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.BirimAdi + "' İsimli Birim Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage(); 
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Birimler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Birimler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

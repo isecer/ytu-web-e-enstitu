@@ -50,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                             }).First();
 
                 var sonSr = db.SRTalepleris.First(f =>
-                    f.MezuniyetBasvurulariID==data.MezuniyetBasvurulariID && f.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
+                    f.MezuniyetBasvurulariID==data.MezuniyetBasvurulariID && f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
                 this.DisplayName = data.AdSoyad + " FR-1243 Lisansüstü Ciltli Tez Teslim Formu";
                 cellOgrenciNo.Text = data.OgrenciNo;
                 cellOgrenciAdSoyad.Text = data.AdSoyad;

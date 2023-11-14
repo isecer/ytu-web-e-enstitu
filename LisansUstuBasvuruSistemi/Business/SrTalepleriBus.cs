@@ -22,11 +22,11 @@ namespace LisansUstuBasvuruSistemi.Business
                 var dofW = Convert.ToInt32(nTarih.DayOfWeek.ToString("d"));
                 var haftaGunu = db.HaftaGunleris.First(p => p.HaftaGunID == dofW);
                 var salon = db.SRSalonlars.First(p => p.SRSalonID == srSalonId);
-                var secilenTarihRezervasyonlar = db.SRTalepleris.Where(p => p.SRSalonID == srSalonId && p.Tarih == nTarih && (p.SRDurumID == SRTalepDurum.Onaylandı || p.SRDurumID == SRTalepDurum.TalepEdildi)).ToList();
-                var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
-                var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
-                var rezervasyonlar = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezervasyon && p.SRSalonID == srSalonId && p.Tarih == nTarih);
-                var rezerve = db.SROzelTanimlars.FirstOrDefault(p => p.SROzelTanimGunlers.Any(a => a.HaftaGunID == dofW) && p.SROzelTanimID != (srOzelTanimId.HasValue ? srOzelTanimId.Value : 0) && p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezerve && p.SRSalonID == srSalonId && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
+                var secilenTarihRezervasyonlar = db.SRTalepleris.Where(p => p.SRSalonID == srSalonId && p.Tarih == nTarih && (p.SRDurumID == SrTalepDurumEnum.Onaylandı || p.SRDurumID == SrTalepDurumEnum.TalepEdildi)).ToList();
+                var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
+                var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
+                var rezervasyonlar = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon && p.SRSalonID == srSalonId && p.Tarih == nTarih);
+                var rezerve = db.SROzelTanimlars.FirstOrDefault(p => p.SROzelTanimGunlers.Any(a => a.HaftaGunID == dofW) && p.SROzelTanimID != (srOzelTanimId.HasValue ? srOzelTanimId.Value : 0) && p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve && p.SRSalonID == srSalonId && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
                 var talepTip = db.SRTalepTipleris.First(p => p.SRTalepTipID == srTalepTipId);
                 model.Tarih = nTarih;
                 var salonSaatleri = db.SRSaatlers.Where(p => p.SRSalonID == srSalonId && p.HaftaGunID == haftaGunu.HaftaGunID).Select(s => new SRSalonSaatler
@@ -37,7 +37,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     HaftaGunAdi = haftaGunu.HaftaGunAdi,
                     BasSaat = s.BasSaat,
                     BitSaat = s.BitSaat,
-                    SalonDurumID = SRSalonDurum.Boş,
+                    SalonDurumID = SrSalonDurumEnum.Boş,
                     Aciklama = "Rezervasyon için uygun"
                 }).ToList();
 
@@ -49,7 +49,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (salonSaat != null)
                     {
                         salonSaat.Checked = srTalepId == item.SRTalepID;
-                        salonSaat.SalonDurumID = SRSalonDurum.Alındı;
+                        salonSaat.SalonDurumID = SrSalonDurumEnum.Alındı;
                         salonSaat.Aciklama = aciklama;
 
                     }
@@ -62,7 +62,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             HaftaGunAdi = haftaGunu.HaftaGunAdi,
                             BasSaat = item.BasSaat,
                             BitSaat = item.BitSaat,
-                            SalonDurumID = SRSalonDurum.Alındı,
+                            SalonDurumID = SrSalonDurumEnum.Alındı,
                             Aciklama = aciklama,
                             Checked = true,
                         });
@@ -87,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 _rw.HaftaGunAdi = haftaGunu.HaftaGunAdi;
                                 _rw.BasSaat = item.BasSaat;
                                 _rw.BitSaat = item.BitSaat;
-                                _rw.SalonDurumID = SRSalonDurum.Alındı;
+                                _rw.SalonDurumID = SrSalonDurumEnum.Alındı;
                                 _rw.Aciklama = rezTip.TalepTipAdi + ", " + talep.Aciklama;
                                 salonSaatleri.Add(_rw);
                             }
@@ -96,7 +96,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 var qdata = salonSaatleri.FirstOrDefault(p => p.BasSaat == item.BasSaat && p.BitSaat == item.BitSaat);
                                 if (tarih == talep.Tarih && qdata != null)
                                 {
-                                    qdata.SalonDurumID = SRSalonDurum.Alındı;
+                                    qdata.SalonDurumID = SrSalonDurumEnum.Alındı;
                                     qdata.Aciklama = rezTip.TalepTipAdi + ", " + talep.Aciklama;
                                 }
 
@@ -141,27 +141,27 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
 
                         var rezTip = db.SRTalepTipleris.First(p => p.SRTalepTipID == qGTalepEslesen.SRTalepTipID);
-                        item.SalonDurumID = qGTalepEslesen.SRDurumID == SRTalepDurum.Onaylandı ? SRSalonDurum.Dolu : SRSalonDurum.OnTalep;
+                        item.SalonDurumID = qGTalepEslesen.SRDurumID == SrTalepDurumEnum.Onaylandı ? SrSalonDurumEnum.Dolu : SrSalonDurumEnum.OnTalep;
                         item.Disabled = true;
-                        item.Aciklama = qGTalepEslesen.SRDurumID == SRTalepDurum.Onaylandı ? rezTip.TalepTipAdi + ", " + qGTalepEslesen.Kullanicilar.Ad + " " + qGTalepEslesen.Kullanicilar.Soyad : "Onay bekliyor";
+                        item.Aciklama = qGTalepEslesen.SRDurumID == SrTalepDurumEnum.Onaylandı ? rezTip.TalepTipAdi + ", " + qGTalepEslesen.Kullanicilar.Ad + " " + qGTalepEslesen.Kullanicilar.Soyad : "Onay bekliyor";
 
                     }
                     else if (resmiTatilDegisen != null)
                     {
-                        item.SalonDurumID = SRSalonDurum.ResmiTatil;
+                        item.SalonDurumID = SrSalonDurumEnum.ResmiTatil;
                         item.Disabled = true;
                         item.Aciklama = resmiTatilDegisen.Aciklama;
                     }
                     else if (resmiTatilSabit != null)
                     {
-                        item.SalonDurumID = SRSalonDurum.ResmiTatil;
+                        item.SalonDurumID = SrSalonDurumEnum.ResmiTatil;
                         item.Disabled = true;
                         item.Aciklama = resmiTatilSabit.Aciklama;
                     }
                     else if (rezerve != null)
                     {
                         var rezTip = db.SRTalepTipleris.First(p => p.SRTalepTipID == rezerve.SRTalepTipID);
-                        item.SalonDurumID = SRSalonDurum.Dolu;
+                        item.SalonDurumID = SrSalonDurumEnum.Dolu;
                         item.Disabled = true;
                         item.Aciklama = rezTip.TalepTipAdi + ", " + rezerve.Aciklama;
                     }
@@ -176,20 +176,20 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (qRez != null)
                         {
                             var rezTip = db.SRTalepTipleris.First(p => p.SRTalepTipID == qRez.SROzelTanimlar.SRTalepTipID);
-                            item.SalonDurumID = SRSalonDurum.Dolu;
+                            item.SalonDurumID = SrSalonDurumEnum.Dolu;
                             item.Disabled = true;
                             item.Aciklama = rezTip.TalepTipAdi + ", " + rezervasyonlar.Aciklama;
                         }
-                        else if (kTarih < nowDate && item.SalonDurumID == SRSalonDurum.Boş)
+                        else if (kTarih < nowDate && item.SalonDurumID == SrSalonDurumEnum.Boş)
                         {
-                            item.SalonDurumID = SRSalonDurum.GecmisTarih;
+                            item.SalonDurumID = SrSalonDurumEnum.GecmisTarih;
                             item.Disabled = true;
                             item.Aciklama = "Geçmişe dönük rezervasyon alınamaz.";
                         }
                     }
-                    else if (kTarih < nowDate && item.SalonDurumID == SRSalonDurum.Boş)
+                    else if (kTarih < nowDate && item.SalonDurumID == SrSalonDurumEnum.Boş)
                     {
-                        item.SalonDurumID = SRSalonDurum.GecmisTarih;
+                        item.SalonDurumID = SrSalonDurumEnum.GecmisTarih;
                         item.Disabled = true;
                         item.Aciklama = "Geçmişe dönük rezervasyon alınamaz.";
                     }
@@ -237,10 +237,10 @@ namespace LisansUstuBasvuruSistemi.Business
                     var salon = db.SRSalonlars.First(p => p.SRSalonID == srSalonId);
 
                     var haftaGunu = db.HaftaGunleris.First(p => p.HaftaGunID == dofW);
-                    var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
-                    var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
-                    var rezervasyonlar = db.SROzelTanimlars.Where(p => p.SROzelTanimID != (srOzelTanimId ?? 0) && p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezervasyon && p.SRSalonID == srSalonId && p.Tarih == nTarih).ToList();
-                    var rezerve = db.SROzelTanimlars.FirstOrDefault(p => p.SROzelTanimGunlers.Any(a => a.HaftaGunID == dofW) && p.SROzelTanimID != (srOzelTanimId ?? 0) && p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezerve && p.SRSalonID == srSalonId && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
+                    var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
+                    var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
+                    var rezervasyonlar = db.SROzelTanimlars.Where(p => p.SROzelTanimID != (srOzelTanimId ?? 0) && p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon && p.SRSalonID == srSalonId && p.Tarih == nTarih).ToList();
+                    var rezerve = db.SROzelTanimlars.FirstOrDefault(p => p.SROzelTanimGunlers.Any(a => a.HaftaGunID == dofW) && p.SROzelTanimID != (srOzelTanimId ?? 0) && p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve && p.SRSalonID == srSalonId && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
                     var tTip = db.SRTalepTipleris.First(p => p.SRTalepTipID == srTalepTipId);
 
 
@@ -248,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         var syLst = tTip.SRTalepTipleriAktifAylars.SelectMany(s => s.Aylar.AyAdi).ToList(); 
                         mmMessage.Messages.Add(tTip.TalepTipAdi + " talep tipi için talep yapılabilecek aylar: '" + string.Join(", ", syLst) + "' Bu ayların dışında sistem rezervasyon işlemine kapalıdır.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
 
                     }
 
@@ -258,30 +258,30 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (tarih2.HasValue)
                         {
 
-                            var qTalepEslesen = db.SRTalepleris.Where(a => a.SRSalonID == srSalonId && a.Tarih == nTarih).Any(p => p.SRDurumID == SRTalepDurum.Onaylandı || p.SRDurumID == SRTalepDurum.TalepEdildi);
+                            var qTalepEslesen = db.SRTalepleris.Where(a => a.SRSalonID == srSalonId && a.Tarih == nTarih).Any(p => p.SRDurumID == SrTalepDurumEnum.Onaylandı || p.SRDurumID == SrTalepDurumEnum.TalepEdildi);
                             if (qTalepEslesen)
                             {
                                 mmMessage.Messages.Add(nTarih.ToShortDateString() + "Tarihi için " + salon.SalonAdi + " Salonu için dolu saatler var!");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                             }
                             if (resmiTatilDegisen != null || resmiTatilSabit != null)
                             {
 
                                 mmMessage.Messages.Add("Resmi tatillerde rezervasyon alınamaz.");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                             }
                             else if (rezerve != null)
                             {
 
                                 mmMessage.Messages.Add(nTarih.ToShortDateString() + " Tarihinde " + salon.SalonAdi + " Salonu doludur!");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
 
                             }
                             else if (rezervasyonlar.Count > 0)
                             {
 
                                 mmMessage.Messages.Add(nTarih.ToShortDateString() + " Tarihinde " + salon.SalonAdi + " Salonu doludur!");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
 
                             }
                         }
@@ -302,21 +302,21 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                                    (a.BasSaat > item.BasSaat && a.BasSaat < item.BitSaat) || a.BitSaat > item.BasSaat && a.BitSaat < item.BitSaat)
                                                  );
 
-                                if (qTalepEslesen.Any(p => p.SRDurumID == SRTalepDurum.Onaylandı || p.SRDurumID == SRTalepDurum.TalepEdildi))
+                                if (qTalepEslesen.Any(p => p.SRDurumID == SrTalepDurumEnum.Onaylandı || p.SRDurumID == SrTalepDurumEnum.TalepEdildi))
                                 {
                                     mmMessage.Messages.Add((nTarih.ToShortDateString() + " " + item.BasSaat.ToString() + " - " + item.BitSaat.ToString()) + " Tarihi için " + salon.SalonAdi + " Salonu Doludur! Lütfen boş bir saat seçiniz.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                                 }
                                 if (resmiTatilDegisen != null || resmiTatilSabit != null)
                                 {
                                     ;
                                     mmMessage.Messages.Add("Resmi tatillerde rezervasyon alınamaz.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                                 }
                                 else if (rezerve != null)
                                 {
                                     mmMessage.Messages.Add(item.BasSaat.ToString() + " - " + item.BitSaat.ToString() + " Tarihinde " + salon.SalonAdi + " Salonu doludur!");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
 
                                 }
                                 else if (rezervasyonlar.Count > 0)
@@ -333,19 +333,19 @@ namespace LisansUstuBasvuruSistemi.Business
                                         if (qRez != null)
                                         {
                                             mmMessage.Messages.Add(item.BasSaat.ToString() + " - " + item.BitSaat.ToString() + " Tarihinde " + salon.SalonAdi + " Salonu doludur!");
-                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                                         }
                                     }
                                 }
                                 else if (kTarih < nowDate)
                                 {
                                     mmMessage.Messages.Add("Geçmişe dönük rezervasyon alınamaz.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                                 }
                                 else if (salon.SRSaatlers.Any(a => a.BasSaat == item.BasSaat && a.BitSaat == item.BitSaat) == false)
                                 {
                                     mmMessage.Messages.Add("Rezervasyon için seçilen sat uygun değildir.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                                 }
                             }
                         }
@@ -367,7 +367,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var ttip = db.SRTalepTipleris.First(p => p.SRTalepTipID == srTalepTipId);
                 if (ttip.MaxCevaplanmamisTalep.HasValue)
                 {
-                    var q = db.SRTalepleris.Where(p => p.TalepYapanID == talepYapanId && p.SRTalepTipID == srTalepTipId && p.SRDurumID == SRTalepDurum.TalepEdildi);
+                    var q = db.SRTalepleris.Where(p => p.TalepYapanID == talepYapanId && p.SRTalepTipID == srTalepTipId && p.SRDurumID == SrTalepDurumEnum.TalepEdildi);
                     if (id.HasValue) q = q.Where(p => p.SRTalepID != id.Value);
                     var kayitlar = q.ToList();
                     var cnt = kayitlar.Count;
@@ -426,7 +426,7 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.SRDurumlaris.Where(p => p.SRDurumID == (yeniKayit ? BelgeTalepDurum.TalepEdildi : p.SRDurumID) && p.IsAktif && (yonetici || p.TalepEdenGorsun == true)).OrderBy(o => o.SRDurumID).ToList();
+                var data = db.SRDurumlaris.Where(p => p.SRDurumID == (yeniKayit ? BelgeTalepDurumEnum.TalepEdildi : p.SRDurumID) && p.IsAktif && (yonetici || p.TalepEdenGorsun == true)).OrderBy(o => o.SRDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.SRDurumID, Caption = item.DurumAdi });

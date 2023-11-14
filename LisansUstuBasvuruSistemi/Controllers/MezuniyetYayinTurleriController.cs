@@ -138,9 +138,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.MezuniyetYayinTurAdi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Yayın Türü Adı Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MezuniyetYayinTurAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MezuniyetYayinTurAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MezuniyetYayinTurAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MezuniyetYayinTurAdi" });
 
             #endregion
             if (mmMessage.Messages.Count == 0)
@@ -242,7 +242,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + ytAdi.MezuniyetYayinTurAdi + "' İsimli Yayın Türü Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MezuniyetYayinTurleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MezuniyetYayinTurleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

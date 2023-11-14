@@ -101,22 +101,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             { 
                 mmMessage.Messages.Add("Enstitü Seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
 
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
             if (kModel.BaslangicTarihi == DateTime.MinValue || kModel.BitisTarihi == DateTime.MinValue)
             {
                 if (kModel.BaslangicTarihi == DateTime.MinValue)
                 {
                     mmMessage.Messages.Add("Başlangıç Tarihi Seçiniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
 
                 }
                 if (kModel.BitisTarihi == DateTime.MinValue)
                 {
                     mmMessage.Messages.Add("Bitiş Tarihi Seçiniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
 
                 }
 
@@ -124,22 +124,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (kModel.BaslangicTarihi >= kModel.BitisTarihi)
             {
                 mmMessage.Messages.Add("Başlangıç Tarihi Bitiş Tarihinden Büyükya daEşit Olamaz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
             }
             else
             {
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BaslangicTarihi" });
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BitisTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BaslangicTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BitisTarihi" });
             }
 
             if (talepTipId.Count == 0)
             { 
                 mmMessage.Messages.Add("En az bir talep tipi seçilmelidir");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepTipID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TalepTipID" });
 
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TalepTipID" });
             if (mmMessage.Messages.Count == 0)
             {
                 if (_entities.TalepSurecleris.Any(a => a.EnstituKod == kModel.EnstituKod &&
@@ -150,8 +150,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                 )
                 {
                     mmMessage.Messages.Add("Seçilen başlangıç bitiş tarihleri daha önceden kayıt edilen süreçlerle çakışmaması gerekmektedir.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
                 }
             }
             #endregion
@@ -227,16 +227,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     mmMessage.Title = "Uyarı";
                     mmMessage.Messages.Add(message);
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
                     mmMessage.IsSuccess = true;
                 }
                 catch (Exception ex)
                 {
                     message = "'" + kayit.BaslangicTarihi.ToFormatDateAndTime() + " / " + kayit.BitisTarihi.ToFormatDateAndTime() + "' Tarihli Talep Süreci Silinirken Bir Hata Oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "TalepSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "TalepSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                     mmMessage.Title = "Hata";
                     mmMessage.Messages.Add(message);
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                 }
             }
@@ -245,7 +245,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 message = "Silmek İstediğiniz Talep Süreci Sistemde Bulunamadı!";
                 mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message);
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = true;
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);

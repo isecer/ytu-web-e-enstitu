@@ -50,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EkSayisi = s.DuyuruEkleris.Count,
                         Ekler = s.DuyuruEkleris,
                         s.AnaSayfadaGozuksun,
-                        AnaSayfaPopupAc = s.DuyuruPopuplars.Any(a => a.DuyuruPopupTipID == DuyuruPopupTipi.AnaSayfa),
+                        AnaSayfaPopupAc = s.DuyuruPopuplars.Any(a => a.DuyuruPopupTipID == DuyuruPopupTipiEnum.AnaSayfa),
                         s.YayinSonTarih,
                         s.IsEnUsteSabitle,
                         s.IsAktif

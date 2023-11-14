@@ -81,7 +81,7 @@
                                             <tr>
                                                 <td>
                                                     <div class="checkbox pull-left">
-                                                        <label style="color:@(role.Disabled==true?RenkTiplier.Danger:(role.Checked==true?RenkTiplier.Info:""))">
+                                                        <label style="color:@(role.Disabled==true?RenkTipiEnum.Danger:(role.Checked==true?RenkTipiEnum.Info:""))">
                                                             <input type="checkbox" class="icheckbox" @(role.Disabled ? "disabled" : "") name="RolID" value="@role.Value.RolID" @role.Checked.ToChecked()>
                                                             @role.Value.GorunurAdi
                                                         </label>
@@ -143,7 +143,7 @@
                         var val = $(itmx).val();
                         if (val == Rol.Value) {
                             $(itmx).parent().addClass("checked");
-                            if (Rol.Caption != '@RenkTiplier.Info') {
+                            if (Rol.Caption != '@RenkTipiEnum.Info') {
 
                                 $(itmx).parent().addClass("disabled");
                                 $(itmx).attr("disabled", "disabled");
@@ -186,7 +186,7 @@
                 if (chkD) { $(itmx).parent().addClass("checked"); }
                 else { $(itmx).parent().removeClass("checked"); }
                 $(itmx).prop("checked", chkD);
-                $(itmx).parents('label').first().attr('style','color:@RenkTiplier.Info');
+                $(itmx).parents('label').first().attr('style','color:@RenkTipiEnum.Info');
             }
         });
 

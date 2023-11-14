@@ -18,13 +18,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class SinavTipleriController : Controller
     {
         private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index()
+        public ActionResult Index(string ekd)
         {
-            return Index(new FmSinavTipleri { PageSize = 15 });
+            return Index(new FmSinavTipleri { PageSize = 15 },ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmSinavTipleri model)
+        public ActionResult Index(FmSinavTipleri model, string ekd)
         {
+            model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
             var q = from s in _entities.SinavTipleris
@@ -67,7 +68,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
+            ViewBag.SinavTipGrupID = new SelectList(Management.CmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -136,8 +137,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.SinavDilleris = _entities.SinavDilleris.ToList();
             ViewBag.Programlars = _entities.Programlars.Where(p => p.AnabilimDallari.EnstituKod == model.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
-            ViewBag.OzelNotTipID = new SelectList(Management.cmbGetOzelNotTipleri(true), "Value", "Caption", model.OzelNotTipID);
+            ViewBag.SinavTipGrupID = new SelectList(Management.CmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
+            ViewBag.OzelNotTipID = new SelectList(Management.CmbGetOzelNotTipleri(true), "Value", "Caption", model.OzelNotTipID);
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.EnstituKod), "Value", "Caption");
@@ -230,28 +231,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Enstitü seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
 
             if (kModel.SinavTipGrupID <= 0)
             {
                 mmMessage.Messages.Add("Sınav tip grup bilgisini seçiniz!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipGrupID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SinavTipGrupID" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavTipGrupID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SinavTipGrupID" });
             if (kModel.SinavTipKod <= 0)
             {
                 mmMessage.Messages.Add("Sınav tip kodu bilgisini giriniz!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SinavTipKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavTipKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SinavTipKod" });
             if (kModel.SinavAdi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Sınav Adı bilgisini giriniz!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SinavAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SinavAdi" });
 
 
             if (kModel.OzelNot)
@@ -259,27 +260,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.OzelNotTipID.HasValue == false)
                 {
                     mmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not tipinin belirlenmesi gerekmektedir!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNotTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OzelNotTipID" });
                 }
                 else
                 {
-                    if (kModel.OzelNotTipID == OzelNotTip.SeciliNotlar)
+                    if (kModel.OzelNotTipID == OzelNotTipEnum.SeciliNotlar)
                     {
                         if (qSinavNotlari.Count == 0)
                         {
                             mmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not bilgilerinin girilmesi zorunludur!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNot" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OzelNot" });
                         }
-                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelNot" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OzelNot" });
                     }
-                    else if (kModel.OzelNotTipID == OzelNotTip.SeciliNotAraliklari)
+                    else if (kModel.OzelNotTipID == OzelNotTipEnum.SeciliNotAraliklari)
                     {
                         if (qSubSinavAralik.Count == 0)
                         {
                             mmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not aralık bilgilerinin girilmesi zorunludur!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNot" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OzelNot" });
                         }
-                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelNot" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OzelNot" });
                     }
                 }
             }
@@ -326,7 +327,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (_entities.SinavTipleris.Any(p => p.SinavTipKod == kModel.SinavTipKod && p.EnstituKod == kModel.EnstituKod && p.SinavTipID != kModel.SinavTipID))
                 {
                     mmMessage.Messages.Add("Tanımlamak istediğiniz kod daha önceden sisteme tanımlanmıştır, tekrar tanımlanamaz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipKod" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SinavTipKod" });
                 }
             }
 
@@ -464,8 +465,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.SinavDilleris = _entities.SinavDilleris.ToList();
             ViewBag.Programlars = _entities.Programlars.Where(p => p.AnabilimDallari.EnstituKod == kModel.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", kModel.SinavTipGrupID);
-            ViewBag.OzelNotTipID = new SelectList(Management.cmbGetOzelNotTipleri(true), "Value", "Caption", kModel.OzelNotTipID);
+            ViewBag.SinavTipGrupID = new SelectList(Management.CmbGetSinavTipGruplari(true), "Value", "Caption", kModel.SinavTipGrupID);
+            ViewBag.OzelNotTipID = new SelectList(Management.CmbGetOzelNotTipleri(true), "Value", "Caption", kModel.OzelNotTipID);
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod), "Value", "Caption");
@@ -831,7 +832,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SinavTipleriOT_SNA_PR.Add(new Models.SinavTipleriOT_SNA_PR { SinavTipleriOT_SNAID = kModel.SinavTipleriOT_SNAID, ProgramKod = item });
                 }
 
-                if (stip.SinavTipGrupID == SinavTipGrup.DilSinavlari || stip.SinavTipGrupID == SinavTipGrup.Ales_Gree)
+                if (stip.SinavTipGrupID == SinavTipGrupEnum.DilSinavlari || stip.SinavTipGrupID == SinavTipGrupEnum.Ales_Gree)
                     foreach (var item in qNaOgrenimTipKodNotAralik)
                     {
                         var qST = _entities.SinavTipleriOT_SNA_OT.Add(new SinavTipleriOT_SNA_OT
@@ -900,7 +901,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + pAdi.SinavAdi + "' Sınav Tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Ünvanlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Ünvanlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else
@@ -930,7 +931,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + pAdi.SinavAdi + "' İsimli Sınav tipine ait programa özel not kriteri Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SinavTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SinavTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

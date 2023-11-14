@@ -117,9 +117,9 @@
         <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-font-face.min.css" media="all">
         <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
     *@
-     
-    <link href="~/Content/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />  
-    <link href="~/Content/fontawesome-free-6.4.2-web/css/v4-shims.min.css" rel="stylesheet" /> 
+
+    <link href="~/Content/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />
+    <link href="~/Content/fontawesome-free-6.4.2-web/css/v4-shims.min.css" rel="stylesheet" />
     <link href="~/Content/css/howerBtnStyle.css" rel="stylesheet" />
     <!-- END SCRIPTS -->
     <style>
@@ -127,6 +127,13 @@
             max-width: 800px;
             width: auto;
             z-index: 5001;
+        }
+
+        @@media (max-width: 600px) {
+            .elementToHide {
+                display: none;
+            }
+           
         }
     </style>
 </head>
@@ -252,13 +259,53 @@
                             <a style="padding-bottom: 0px;" href="javascript:void(0)" class="dropdown-toggle" data-close-others="true">
 
                                 <img id="userMainImage" style="margin-top: -12px; width: 45px; height: 45px;" src="@UserIdentity.Current.ImagePath">
-                                <span class="xn-text" style="margin-top: 10px;">@UserIdentity.Current.NameSurname</span>
+                                <span class="xn-text elementToHide" style="margin-top: 10px;">@UserIdentity.Current.NameSurname</span>
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="xn-drop-left animated zoomIn" style="z-index:997;">
                                 <li><a href="javascript:void(0)" onclick="detayGor(@UserIdentity.Current.Id)"><i class="fa fa-user"></i> Hesap Bilgileri</a></li>
                                 <li><a href="javascript:void(0);" onclick="HesapKayit(@UserIdentity.Current.Id)"><span class="fa fa-id-card-o fa-lg"></span>Hesap Bilgilerini Düzenle</a></li>
+                                @if (RoleNames.Kullanicilar.InRoleCurrent())
+                                {
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="OgrenciSorgula();"><span class="fa fa-search"></span> OBS'de öğrenci sorgula</a>
+                                        <script type="text/javascript">
+                                            function OgrenciSorgulaView(tc) {
+                                                var view = "";
+                                                $.ajax({
+                                                    url: '@Url.Action("ObsOgrenciSorgula", "Ajax")',
+                                                    async: false,
+                                                    data: { tc: tc },
+                                                    success: function (result) {
+                                                        view = result;
+                                                    },
+                                                    error: function (err) {
+                                                        alert(err.responseText);
+                                                    }
+                                                });
+                                                return view;
+                                            }
+                                            function OgrenciSorgula(tc) {
+                                                var view = OgrenciSorgulaView(tc);
+                                                var btbxxFS = bootbox.dialog({
+                                                    message: '<div id="obsOgrenciPanel" style="max-height:700px;overflow-x:scroll;">' + view + '</div>',
+                                                    title: "Obs Öğrenci Sorgulama",
+                                                    buttons: {
+                                                        danger: {
+                                                            label: 'Kapat',
+                                                            className: "btn-primary",
+                                                            callback: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+
+                                        </script>
+                                    </li>
+                                }
                                 <li><a href="javascript:void(0);" onclick="yetkiYenile();"><span class="fa fa-refresh"></span>Yetkilerimi Yenile</a></li>
+
                                 @if (prevUserKey.Key != null)
                                 {
                                     <li><a href="@Url.Action("SetLogin","Kullanicilar",new {kullaniciId=UserIdentity.Current.Id,key=prevUserKey.Value })"><i class="fa fa-user"></i> Önceki Hesaba Geç</a></li>
@@ -266,7 +313,7 @@
 
                                 @if (UserIdentity.Current.IsActiveDirectoryUser == false)
                                 {
-                                    <li><a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Şifre Değiştir', '@(Url.Action("ParolaSifirla", "Account", new { KullaniciID = UserIdentity.Current.Id }))', 600, '@ModalSizeClass.Basic')"><span class="fa fa-lock"></span>Şifreyi değiştir</a></li>
+                                    <li><a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Şifre Değiştir', '@(Url.Action("ParolaSifirla", "Account", new { KullaniciID = UserIdentity.Current.Id }))', 600, '@ModalSizeClassEnum.Basic')"><span class="fa fa-lock"></span>Şifreyi değiştir</a></li>
                                 }
 
                                 <li><a href="javascript:void(0);" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span>Çıkış Yap</a></li>
@@ -480,45 +527,7 @@
                         </li>
 
                     }
-                    @if (RoleNames.Kullanicilar.InRoleCurrent())
-                    {
-                        <li class="xn-icon-button pull-right">
-                            <a href="javascript:void(0);" onclick="OgrenciSorgula();"><span class="fa fa-search"></span></a>
-                            <script type="text/javascript">
-                                function OgrenciSorgulaView(tc) {
-                                    var view = "";
-                                    $.ajax({
-                                        url: '@Url.Action("ObsOgrenciSorgula", "Ajax")',
-                                        async: false,
-                                        data: {tc:tc  },
-                                        success: function (result) {
-                                            view = result;
-                                        },
-                                        error: function (err) {
-                                            alert(err.responseText);
-                                        }
-                                    });
-                                    return view;
-                                }
-                                function OgrenciSorgula(tc) {
-                                    var view = OgrenciSorgulaView(tc);
-                                    var btbxxFS = bootbox.dialog({
-                                        message:'<div id="obsOgrenciPanel" style="max-height:700px;overflow-x:scroll;">'+ view+'</div>',
-                                        title: "Obs Öğrenci Sorgulama",
-                                        buttons: {
-                                            danger: {
-                                                label: 'Kapat',
-                                                className: "btn-primary",
-                                                callback: function () {
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
 
-                            </script>
-                        </li>
-                    }
                     <!-- LOGIN BLOCk -->
                     @if (!BiskaUtil.UserIdentity.Current.IsAuthenticated)
                     {
@@ -767,7 +776,7 @@
                         {
                             <div id="msgs" style="display: none;">
                                 @{
-                                    var cls = mmmsgs.MessageType == Msgtype.Success ? "success" : (mmmsgs.MessageType == Msgtype.Warning ? "warning" : (mmmsgs.MessageType == Msgtype.Error ? "danger" : "info"));
+                                    var cls = mmmsgs.MessageType == MsgTypeEnum.Success ? "success" : (mmmsgs.MessageType == MsgTypeEnum.Warning ? "warning" : (mmmsgs.MessageType == MsgTypeEnum.Error ? "danger" : "info"));
                                     <div class="panel-body panel-body-pricing">
                                         @if (!mmmsgs.Title.IsNullOrWhiteSpace())
                                         {
@@ -1347,7 +1356,7 @@
                 buttons.push({
                     label: '<i class="fa fa-plus tooltips"></i> ' + popupSetting.btnAdi,
                     className: "btn-success",
-                    callback: function () { 
+                    callback: function () {
                         if (popupSetting.redirectUrl)
                             window.location.href = popupSetting.redirectUrl;
                         else if (popupSetting.callbackFnc)
@@ -1372,7 +1381,7 @@
                 cache: false,
                 dataType: "json",
                 data: { 'PopupTipID': popupSetting.popupTipId },
-                success: function (result) { 
+                success: function (result) {
                     if (result.ShowMessage) {
                         var mdlx = bootbox.dialog({
                             title: popupSetting.title,
@@ -1746,7 +1755,7 @@
                 var cls = mMessage.MessageType == 0 ?
             'success' : (mMessage.MessageType ==  2 ? 'warning' : (mMessage.MessageType ==  1 ? 'danger' : 'info'));
             var color = mMessage.MessageType ==  0 ?
-                '@RenkTiplier.Success' : (mMessage.MessageType ==  1 ? '@RenkTiplier.Danger' : (mMessage.MessageType == 2 ? '@RenkTiplier.Warning' : '@RenkTiplier.Info'));
+                '@RenkTipiEnum.Success' : (mMessage.MessageType ==  1 ? '@RenkTipiEnum.Danger' : (mMessage.MessageType == 2 ? '@RenkTipiEnum.Warning' : '@RenkTipiEnum.Info'));
             var pnlStrt = "<div class=panel panel-" + cls + "  style='margin-bottom:3px;'> <div class='panel-body panel-body-pricing'>";
             if (mMessage.Title != "") {
                 pnlStrt += "<h3 style='font-size:10pt;' class=text-" + cls + ">" + mMessage.Title + "</h3>";

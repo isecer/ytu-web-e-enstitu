@@ -12,13 +12,29 @@
     var kayit = RoleNames.KullanicilarKayit.InRoleCurrent();
     var silme = RoleNames.KullanicilarSil.InRoleCurrent();
     var yetkilendirme = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
-    var programYetkileri = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent(); 
+    var programYetkileri = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     var mailGonder = RoleNames.MailGonder.InRoleCurrent();
-    var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();   
+    var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
     var selectedPrograms = (List<string>)ViewBag.SelectedPrograms;
 }
+<style>
+    @@media (max-width: 700px) {
+        .colCaptionHide {
+            display: none;
+        }
 
+        .colDurumWidthSetting {
+            width: 100px;
+        }
+    }
+
+    @@media (max-width: 500px) {
+        .col500pxHide {
+            display: none;
+        }
+    }
+</style>
 <div class="row">
     @using (Html.BeginForm("Index", "Kullanicilar", FormMethod.Post, new { id = "frmKullanicilar" }))
     {
@@ -36,126 +52,90 @@
                     </ul>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-hover" style="table-layout:fixed;">
-                        <tr>
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Enstitü</td>
-                                        <td>
-                                            @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td style="padding-left:10px;">
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Öğrenim Seviyesi</td>
-                                        <td>
-                                            @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Kullanıcı Tipi</td>
-                                        <td>
-                                            @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", style = "padding:0px;", onchange = "$('#frmKullanicilar').submit();" })
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td style="padding-left:10px;">
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Öğrenim Durumu</td>
-                                        <td>
-                                            @Html.DropDownList("OgrenimDurumID", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Cinsiyet</td>
-                                        <td>
-                                            @Html.DropDownList("CinsiyetID", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td style="padding-left:10px;">
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Birim</td>
-                                        <td>
-                                            @Html.DropDownList("BirimID", null, "", new { @class = "form-control", style = "padding:0px;", onchange = "$('#frmKullanicilar').submit();" })
-                                        </td>
-                                    </tr>
+                    <div class="col-md-6" style="margin-bottom:0px;">
+                        <table class="table table-hover" style="margin-bottom:0px;">
+                            <tr>
+                                <td width="120">Enstitü / K.Tip</td>
+                                <td>
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td>@Html.DropDownList("EnstituKod", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })</td>
+                                            <td>@Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="120">Cinsiyet</td>
+                                <td>
+                                    @Html.DropDownList("CinsiyetID", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="120">Yetki G / Ek Yetki</td>
+                                <td>
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td>
+                                                @Html.DropDownList("YetkiGrupID", null, "", new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("IsAdmin", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                            </td>
+                                        </tr>
+                                    </table>
+                                <td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-hover" style="margin-bottom:0px;">
+                            <tr>
+                                <td width="120">Öğrenim Sv / Drm</td>
+                                <td>
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td>
+                                                @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("OgrenimDurumID", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                            </td>
+                                        </tr>
+                                    </table>
 
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Yetki Grubu</td>
-                                        <td>
-                                            @Html.DropDownList("YetkiGrupID", null, "", new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
-                                        </td>
-                                    </tr>
+                                </td>
+                            </tr>
 
-                                </table>
-                            </td>
-                            <td style="padding-left:10px;">
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Aranacak Kelime</td>
-                                        <td>
-                                            <table style="width:100%;table-layout:fixed;">
-                                                <tr>
-                                                    <td><input name="AdSoyad" id="AdSoyad" type="text" onkeypress="if (event.which == 13) { $('#frmKullanicilar').submit(); }" value="@Model.AdSoyad" class="form-control" /></td>
-                                                    <td width="110px;"><a href="javascript:void(0);" onclick="$('#frmKullanicilar').submit();" class="btn btn-info"><i class="glyphicon glyphicon-filter"> Filtrele</i></a></td>
-                                                </tr>
-                                            </table>
-                                            @if (Model.AdSoyad.IsNullOrEmpty() == false)
-                                            {
-                                                <script>
-                                                    $(function () {
-                                                        SetCaretAtEnd(document.getElementById('AdSoyad'));
-                                                    });
+                            <tr>
+                                <td width="120">Birim</td>
+                                <td>
+                                    @Html.DropDownList("BirimID", null, "", new { @class = "form-control", style = "padding:0px;", onchange = "$('#frmKullanicilar').submit();" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="120">Aranacak Kelime</td>
+                                <td>
+                                    <table style="width:100%;table-layout:fixed;">
+                                        <tr>
+                                            <td><input name="AdSoyad" id="AdSoyad" type="text" onkeypress="if (event.which == 13) { $('#frmKullanicilar').submit(); }" value="@Model.AdSoyad" class="form-control" /></td>
+                                            <td width="110px;"><a href="javascript:void(0);" onclick="$('#frmKullanicilar').submit();" class="btn btn-info"><i class="glyphicon glyphicon-filter"> Filtrele</i></a></td>
+                                        </tr>
+                                    </table>
+                                    @if (Model.AdSoyad.IsNullOrEmpty() == false)
+                                    {
+                                        <script>
+                                            $(function () {
+                                                SetCaretAtEnd(document.getElementById('AdSoyad'));
+                                            });
 
-                                                </script>
-                                            }
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tr>
-                                        <td width="120">Ek Yetki</td>
-                                        <td>
-                                            @Html.DropDownList("IsAdmin", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td style="padding-left:10px;"></td>
-                        </tr>
+                                        </script>
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
-                    </table>
                 </div>
             </div>
         </div>
@@ -172,8 +152,8 @@
                                         <li><span class="label label-primary label-form"><a style="width:54px;color:white;" href="@Url.Action("Kayit")"><i class="fa fa-plus fa-lg"></i> Yeni</a></span></li>
                                     }
                                     <li><span class="label label-info label-form">Toplam: <b>@indexModel.Toplam</b></span></li>
-                                    <li><span class="label label-success label-form">Aktif: <b>@indexModel.Aktif</b></span></li>
-                                    <li><span class="label label-danger label-form">Pasif: <b>@indexModel.Pasif</b></span></li>
+                                    <li class="col500pxHide"><span class="label label-success label-form">Aktif: <b>@indexModel.Aktif</b></span></li>
+                                    <li class="col500pxHide"><span class="label label-danger label-form">Pasif: <b>@indexModel.Pasif</b></span></li>
                                 </ul>
                             </td>
                         </tr>
@@ -185,14 +165,13 @@
 
                             @if (Model.RowCount > 0)
                             {
-                                int RowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.KullanicilarDtos)
                                 {
 
                                     <tr id="row_@item.KullaniciID">
                                         <td>
                                             <div class="btn-group">
-                                                <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-cogs fa-lg"></i></a>
+                                                <a href="javascript:void(0);" data-toggle="dropdown" style="padding:8px 5px;" class="btn btn-primary dropdown-toggle"><i class="fa fa-cogs fa-lg"></i></a>
                                                 <ul class="dropdown-menu" role="menu">
                                                     <li role="presentation" class="dropdown-header" style="color:maroon;"><i class="fa fa-cogs fa-lg"></i> İşlemler</li>
                                                     @if (kayit)
@@ -213,7 +192,7 @@
                                                     <li>
                                                         <a href="javascript:void(0)" onclick="detayGor(@item.KullaniciID,'#kulPnl')"><i class="fa fa-file-text-o"></i>Detay Göster</a>
                                                     </li>
-                                                    
+
                                                     @if (mailGonder)
                                                     {
                                                         <li>
@@ -260,60 +239,60 @@
                                                         <table style="width:100%;margin:0px;padding:0px;">
 
                                                             <tr>
-                                                                <td width="60">Ad Soyad</td>
-                                                                <td width="5">:</td>
+                                                                <td class="colCaptionHide" width="60">Ad Soyad</td>
+                                                                <td class="colCaptionHide" width="5">:</td>
                                                                 <td>@item.Ad @item.Soyad</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Yetki Grubu</td>
-                                                                <td>:</td>
+                                                                <td class="colCaptionHide">Yetki Grubu</td>
+                                                                <td class="colCaptionHide">:</td>
                                                                 <td>@item.YetkiGrupAdi</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Kullanıcı T.</td>
-                                                                <td>:</td>
+                                                                <td class="colCaptionHide">Kullanıcı T.</td>
+                                                                <td class="colCaptionHide">:</td>
                                                                 <td>@item.KullaniciTipAdi</td>
                                                             </tr>
                                                         </table>
 
                                                     </td>
-                                                    <td width="260" style="vertical-align:top;padding:0px;">
+                                                    <td class="col500pxHide" style="vertical-align:top;padding:0px;">
                                                         <table style="width:100%;margin:0px;padding:0px;">
 
                                                             <tr>
-                                                                <td width="35">K. Adı</td>
-                                                                <td width="5">:</td>
+                                                                <td class="colCaptionHide" width="35">K. Adı</td>
+                                                                <td class="colCaptionHide" width="5">:</td>
                                                                 <td>@item.KullaniciAdi</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Email</td>
-                                                                <td>:</td>
+                                                                <td class="colCaptionHide">Email</td>
+                                                                <td class="colCaptionHide">:</td>
                                                                 <td>@item.EMail</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Cep T</td>
-                                                                <td>:</td>
+                                                                <td class="colCaptionHide">Cep T</td>
+                                                                <td class="colCaptionHide">:</td>
                                                                 <td>@item.CepTel</td>
                                                             </tr>
                                                         </table>
 
                                                     </td>
-                                                    <td width="200" style="vertical-align:top;padding:0px;">
+                                                    <td class="colDurumWidthSetting" width="180" style="vertical-align:top;padding:0px;">
                                                         <table style="width:100%;margin:0px;padding:0px;">
 
                                                             <tr>
-                                                                <td width="75">Oluşturma T</td>
-                                                                <td width="5">:</td>
+                                                                <td class="colCaptionHide" width="75">Oluşturma T</td>
+                                                                <td class="colCaptionHide" width="5">:</td>
                                                                 <td>@item.OlusturmaTarihi.ToFormatDateAndTime()</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Son Oturum T</td>
-                                                                <td>:</td>
+                                                                <td class="colCaptionHide">Son Oturum T</td>
+                                                                <td class="colCaptionHide">:</td>
                                                                 <td>@item.LastLogonDate.ToFormatDateAndTime()</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Durum</td>
-                                                                <td>:</td>
+                                                                <td class="colCaptionHide">Durum</td>
+                                                                <td class="colCaptionHide">:</td>
                                                                 <td><span class="badge badge-@(item.IsAktif ? "success" : "danger")">@(item.IsAktif ? "Aktif" : "Pasif")</span></td>
                                                             </tr>
                                                         </table>

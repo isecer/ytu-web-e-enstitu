@@ -29,8 +29,8 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
-            //RollerBus.UpdateRoles();
-            //MenulerBus.UpdateMenus();
+            RollerBus.UpdateRoles();
+            MenulerBus.UpdateMenus();
 
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
@@ -134,7 +134,7 @@ namespace LisansUstuBasvuruSistemi
 
                 var errCode = HttpContext.Current.Response.StatusCode;
                 IController errorController;
-                if (errCode == HttpDurumKod.NotFound || errCode == HttpDurumKod.Unauthorized)
+                if (errCode == HttpDurumKodEnum.NotFound || errCode == HttpDurumKodEnum.Unauthorized)
                 {
                     var url = HttpContext.Current.Request.Url;
                     routeData.Values.Add("url", url);

@@ -113,14 +113,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                         catch (Exception ex)
                         {
                             qeklenen.HataMesaji = ex.ToExceptionMessage();
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, uid, uIp);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, uid, uIp);
                         }
                         dbb.SaveChanges();
                     }
                 }
                 catch (Exception ex)
                 {
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, uid, uIp);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, uid, uIp);
                 }
             }).Start();
 

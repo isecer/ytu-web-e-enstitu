@@ -170,7 +170,7 @@
                                     <td>
                                         @if (!item.EYKYaGonderildi.HasValue)
                                         {
-                                            var danismanDegisiklik = item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
+                                            var danismanDegisiklik = item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
                                             if (danismanDegisiklik && !item.DanismanOnayladi.HasValue && !item.VarolanDanismanOnayladi.HasValue)
                                             {
                                                 <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Onayı Bekleniyor.</span>
@@ -186,15 +186,15 @@
                                             }
                                             else if (!item.DanismanOnayladi.HasValue)
                                             {
-                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "")Danışman Onayı Bekleniyor.</span>
+                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "")Danışman Onayı Bekleniyor.</span>
                                             }
                                             else if (item.DanismanOnayladi == true)
                                             {
-                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "") Danışman Onayladı.</span>
+                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "") Danışman Onayladı.</span>
                                             }
                                             else
                                             {
-                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "") Danışman Onaylamadı.</span>
+                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "") Danışman Onaylamadı.</span>
 
                                             }
                                         }
@@ -273,15 +273,15 @@
                                     <td>
                                         @if (item.IsDuzeltSilYapabilir && (tdoFormOlusturmaYetkisi || Model.KullaniciID == UserIdentity.Current.Id) && !item.IsObsData)
                                         {
-                                            if (item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi)
+                                            if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                                             {
                                                 <a href="javascript:void(0)" onclick="GetTdoDanismanDegisiklikFormu(@Model.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Danışman Değişikliği Formunu Düzelt"></i></a>
                                             }
-                                            else if (item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi)
+                                            else if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                                             {
                                                 <a href="javascript:void(0)" onclick="GetTdoDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Tez Dili/Başlığı Değişikliği Formunu Düzelt"></i></a>
                                             }
-                                            else if (item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                                            else if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                                             {
                                                 <a href="javascript:void(0)" onclick="GetTdoDanismanDilBaslikDegisiklikFormu(@item.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Danışman/Tez Dili/Tez Başlığı Öneri Formunu Düzelt"></i></a>
                                             }
@@ -644,14 +644,14 @@
                                                     }
                                                     @if (item.DanismanOnayladi == true && !item.IsObsData)
                                                     {
-                                                        if (item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniOnerisi)
+                                                        if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
                                                         {
 
                                                             <tr>
                                                                 <td class="CaptionTd">Tez Danışman Öneri Formu</td>
                                                                 <td class="CaptionTd">:</td>
                                                                 <td class="ValueTd">
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.TezDanismanOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezDanismanOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-print"></i> FR-0347 Tez Danışmanı Öneri Formunu İndir
                                                                     </a>
                                                                 </td>
@@ -664,7 +664,7 @@
                                                                 <td class="CaptionTd">Tez Danışmanı/Konusu/Dili Değişiklik Formu</td>
                                                                 <td class="CaptionTd">:</td>
                                                                 <td class="ValueTd">
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Danışman Öneri Formu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.TezDanismanDegisiklikFormu&UniqueID=@item.UniqueID', 'auto', 'modal-dialog modal-lg')">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Danışman Öneri Formu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezDanismanDegisiklikFormu&UniqueID=@item.UniqueID', 'auto', 'modal-dialog modal-lg')">
                                                                         <i class="fa fa-print"></i> FR-0308 Tez Danışmanı/Konusu/Dili Değişiklik Formunu İndir
                                                                     </a>
                                                                 </td>
@@ -784,7 +784,7 @@
                                                                         </table>
                                                                     </td>
                                                                 </tr>
-                                                                if (item.TDODanismanTalepTipID != TdoDanismanTalepTip.TezDanismaniDegisikligi)
+                                                                if (item.TDODanismanTalepTipID != TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                                                                 {
                                                                     <tr id="EYKOnayTezBaslikTrRow_@item.TDOBasvuruDanismanID" class="form-group hide">
                                                                         <td class="CaptionTd">@(item.IsYeniTezBasligiGozuksun ? "Yeni" : "") Tez Başlığı Türkçe</td>
@@ -972,7 +972,7 @@
                                                                                             <td class="CaptionTd">Eş Danışman Öneri Formu</td>
                                                                                             <td class="CaptionTd">:</td>
                                                                                             <td class="ValueTd">
-                                                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Eş Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.TezEsDanismanOneriFormu&UniqueID=@itemE.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Eş Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezEsDanismanOneriFormu&UniqueID=@itemE.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                     <i class="fa fa-print"></i> FR-0320 Eş Danışmanı Öneri Formunu İndir
                                                                                                 </a>
                                                                                             </td>

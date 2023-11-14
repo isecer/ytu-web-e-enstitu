@@ -30,9 +30,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.YetkiGrupID,
                         s.YetkiGrupAdi,
                         YetkiSayisi = s.YetkiGrupRolleris.Count,
-                        FBEYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlari.FenBilimleri),
-                        SBEYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlari.SosyalBilimleri),
-                        TETYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlari.TemizEnerjiTeknolojileri)
+                        FBEYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlariEnum.FenBilimleri),
+                        SBEYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlariEnum.SosyalBilimleri),
+                        TETYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri)
                     };
             if (!model.YetkiGrupAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.YetkiGrupAdi.Contains(model.YetkiGrupAdi));
             model.RowCount = q.Count();
@@ -91,9 +91,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 string msg = "Yetki Grup Adı Giriniz.";
                 mmMessage.Messages.Add(msg);
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YetkiGrupAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "YetkiGrupAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YetkiGrupAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "YetkiGrupAdi" });
             //if (RolID == null || RolID.Count == 0)
             //{
             //    string msg = "Yetki Grubuna Ait Rolleri Belirleyiniz!";
@@ -158,7 +158,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.YetkiGrupAdi + "' Yetki Grubu Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "YetkiGruplari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "YetkiGruplari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

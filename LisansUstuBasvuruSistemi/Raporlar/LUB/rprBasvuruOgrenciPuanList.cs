@@ -14,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             {
                 var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == id).First(); 
                 string surec = bsurec.BaslangicYil + " / " + bsurec.BitisYil + " " + bsurec.Donemler.DonemAdi;
-                if (bsurec.BasvuruSurecTipID==BasvuruSurecTipi.LisansustuBasvuru) surec += "Lisansüstü Başvuruları Değerlendirme Sonuç Listesi";
+                if (bsurec.BasvuruSurecTipID==BasvuruSurecTipiEnum.LisansustuBasvuru) surec += "Lisansüstü Başvuruları Değerlendirme Sonuç Listesi";
                 else surec += " Lisansüstü Yatay Geçiş Başvuruları Değerlendirme Sonuç Listesi";
                 lbllblDonemBilgi.Text = surec;
               

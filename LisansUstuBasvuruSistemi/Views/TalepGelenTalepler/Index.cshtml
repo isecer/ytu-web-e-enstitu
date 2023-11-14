@@ -349,7 +349,7 @@
                                                                             <td>@item.ProgramAdi</td>
                                                                         </tr>
                                                                     }
-                                                                    @if (item.OgrenimTipKod.IsDoktora() && (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi))
+                                                                    @if (item.OgrenimTipKod.IsDoktora() && (item.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi))
                                                                     {
                                                                         <tr>
                                                                             <td>Tez Önerisi Yapıldı Mı?</td>
@@ -381,7 +381,7 @@
                                                                     }
 
 
-                                                                    @if (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi)
+                                                                    @if (item.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi)
                                                                     {
                                                                         <tr>
                                                                             <td>YTÜ'de Araştırma Görevlisi</td>
@@ -419,7 +419,7 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                        if (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi)
+                                                                        if (item.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi)
                                                                         {
                                                                             <tr>
                                                                                 <td>Ödenmeyen Harç Borcu Var Mı?</td>
@@ -456,14 +456,14 @@
                                                                             <td>Talep Durumu</td>
                                                                             <td>:</td>
                                                                             <td>
-                                                                                @Html.DropDownList("KTalepDurumID", null, new { @class = "form-control", style = "padding:0px;", id = "KTalepDurumID_" + item.TalepGelenTalepID, onchange = "if($(this).val()=='" + TalepDurumu.Rededildi + "'){$('.RAciklama_" + item.TalepGelenTalepID + "').removeClass('hide');}else {$('.RAciklama_" + item.TalepGelenTalepID + "').addClass('hide');}" })
+                                                                                @Html.DropDownList("KTalepDurumID", null, new { @class = "form-control", style = "padding:0px;", id = "KTalepDurumID_" + item.TalepGelenTalepID, onchange = "if($(this).val()=='" + TalepDurumuEnum.Rededildi + "'){$('.RAciklama_" + item.TalepGelenTalepID + "').removeClass('hide');}else {$('.RAciklama_" + item.TalepGelenTalepID + "').addClass('hide');}" })
                                                                                 <script>
                                                                                     setTimeout(function () { $('#KTalepDurumID_@item.TalepGelenTalepID').val('@item.TalepDurumID'); }, 200);
                                                                                 </script>
                                                                             </td>
                                                                         </tr>
 
-                                                                        <tr class="RAciklama_@item.TalepGelenTalepID @(item.TalepDurumID == TalepDurumu.Rededildi ? "" : "hide")">
+                                                                        <tr class="RAciklama_@item.TalepGelenTalepID @(item.TalepDurumID == TalepDurumuEnum.Rededildi ? "" : "hide")">
                                                                             <td>Red Açıklaması</td>
                                                                             <td>:</td>
                                                                             <td><textarea style="width: 100%;" maxlength="512" id="TalepDurumAciklamasi_@item.TalepGelenTalepID">@item.TalepDurumAciklamasi</textarea></td>
@@ -510,7 +510,7 @@
                                                                                 }
                                                                             </td>
                                                                         </tr>
-                                                                        if (item.TalepDurumID == TalepDurumu.Rededildi)
+                                                                        if (item.TalepDurumID == TalepDurumuEnum.Rededildi)
                                                                         {
                                                                             <tr>
                                                                                 <td>Red Açıklaması</td>

@@ -4,7 +4,7 @@
 @{
     Layout = null;
 
-    var root = Management.getRoot();
+    var root = Management.GetRoot();
     root = root.EndsWith("/") ? root : root + "/";
 
     var apath = Request.Url.AbsolutePath.IndexOf("?") > -1 ? Request.Url.AbsolutePath.Substring(0, Request.Url.AbsolutePath.IndexOf("?")) : Request.Url.AbsolutePath;

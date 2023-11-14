@@ -13,7 +13,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         {
             var model = new UrlInfoModel
             {
-                Root = LisansUstuBasvuruSistemi.Models.Management.getRoot()
+                Root = LisansUstuBasvuruSistemi.Models.Management.GetRoot()
             };
             var webSite = uri.AbsoluteUri.Replace(uri.AbsolutePath, "");
 

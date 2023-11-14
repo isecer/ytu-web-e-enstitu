@@ -170,7 +170,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mmMessage = new MmMessage
             {
                 Title = "Enstitu Başvuru Onay İşlemi",
-                MessageType = Msgtype.Warning
+                MessageType = MsgTypeEnum.Warning
 
             };
             if (enstituOnay == false && enstituOnayAciklama.IsNullOrWhiteSpace())
@@ -189,7 +189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (sendMail)
 
                     mmMessage.IsSuccess = true;
-                mmMessage.MessageType = Msgtype.Success;
+                mmMessage.MessageType = MsgTypeEnum.Success;
                 LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvuru.ToJson());
                 if (sendMail)
                     YeterlikBus.SendMailBasvuruOnayi(basvuru.UniqueID);
@@ -234,7 +234,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "Toplu Yeterlik başvuruları Onay işlemi yapılırken bir hata oluştu!";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu Yeterlik başvuruları Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu Yeterlik başvuruları Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 }
             }
             else

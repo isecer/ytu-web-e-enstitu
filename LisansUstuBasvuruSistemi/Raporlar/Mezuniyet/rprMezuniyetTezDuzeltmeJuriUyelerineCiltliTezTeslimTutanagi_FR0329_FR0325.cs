@@ -21,8 +21,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                
 
                 xrCellEOYil.Text = xrCellEOYil.Text + mBasvuru.MezuniyetSureci.BaslangicYil.ToString() + "-" + mBasvuru.MezuniyetSureci.BitisYil.ToString();
-                xrChkYariyilGuz.Checked = mBasvuru.MezuniyetSureci.DonemID == DonemBilgi.GuzYariyili;
-                xrChkYariyilBahar.Checked = mBasvuru.MezuniyetSureci.DonemID == DonemBilgi.BaharYariyili;
+                xrChkYariyilGuz.Checked = mBasvuru.MezuniyetSureci.DonemID == AkademikDonemEnum.GuzYariyili;
+                xrChkYariyilBahar.Checked = mBasvuru.MezuniyetSureci.DonemID == AkademikDonemEnum.BaharYariyili;
                 xrCellEnstituAdi.Text = mBasvuru.MezuniyetSureci.Enstituler.EnstituAd;
                 xrCellAnabilimdaliAdi.Text = mBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
                 xrCellProgramAdi.Text = mBasvuru.Programlar.ProgramAdi;

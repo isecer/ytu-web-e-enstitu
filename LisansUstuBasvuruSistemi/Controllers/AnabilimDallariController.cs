@@ -18,13 +18,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class AnabilimDallariController : Controller
     {
         private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index()
+        public ActionResult Index(string ekd)
         {
-            return Index(new FmAnabilimDallariDto { });
+            return Index(new FmAnabilimDallariDto { },ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmAnabilimDallariDto model)
+        public ActionResult Index(FmAnabilimDallariDto model, string ekd)
         {
+            model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from s in _entities.AnabilimDallaris
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
@@ -98,25 +99,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Enstitü seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
             if (kModel.AnabilimDaliKod.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Kod Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AnabilimDaliKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "AnabilimDaliKod" });
             if (kModel.AnabilimDaliAdi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Ad Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AnabilimDaliAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "AnabilimDaliAdi" });
             if (kModel.EMail.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("EMail Bilgisini Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EMail" });
             }
             else
             {
@@ -124,9 +125,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("EMail Formatı uygun değildir.");
                     mmMessage.MessagesDialog.Add(
-                        new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                        new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EMail" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EMail" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EMail" });
             }
             if (mmMessage.Messages.Count == 0)
             {
@@ -134,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (cnt > 0)
                 {
                     mmMessage.Messages.Add("Tanımlamak istediğiniz Anabilim Dalı kodu daha önceden sisteme tanımlanmıştır.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AnabilimDaliKod" });
                 }
 
             }
@@ -229,7 +230,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetFilterKullanici(string term)
         {
 
-            var ogrenciList = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel && p.UnvanID.HasValue && ((p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term))).Select(s => new
+            var ogrenciList = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && p.UnvanID.HasValue && ((p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term))).Select(s => new
             {
                 s.KullaniciID,
                 s.Ad,
@@ -265,7 +266,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.AnabilimDaliAdi + "' İsimli Anabilim Dalı Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "AnabilimDallari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "AnabilimDallari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

@@ -427,7 +427,7 @@
     }
     function getDetailx(id, Isdelete, mbyID, sndr) {
         var _panel = $('#bsvrDet_' + id);
-        var tbName = "@TabAdlari.MezuniyetBasvurulariTN-" + id;
+        var tbName = "@TabAdiEnum.MezuniyetBasvurulariTn-" + id;
         var STabID = "@Model.STabID";
 
         var tID = GetSelectedTabID(tbName);
@@ -474,7 +474,7 @@
     }
 
     function bDurumChange(sndr, id) {
-        if ($(sndr).val() == "@MezuniyetYayinKontrolDurumu.IptalEdildi") {
+        if ($(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi") {
             $(id).removeClass("hide");
         } else {
             $(id).addClass("hide");
@@ -491,11 +491,11 @@
             message = "kayıt işlemini yapabilmek için başvuru durumunu seçiniz";
             successSave = false;
         }
-        else if (durumID == "@MezuniyetYayinKontrolDurumu.IptalEdildi" && durumAck.trim() == "") {
+        else if (durumID == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" && durumAck.trim() == "") {
             successSave = false;
             message ="kayıt işlemini yapabilmek için iptal açıklaması giriniz";
         }
-        else if (durumID == "@MezuniyetYayinKontrolDurumu.Taslak") {
+        else if (durumID == "@MezuniyetYayinKontrolDurumuEnum.Taslak") {
             message = "Başvuru taslağa çekilecek fakat varsa eğer danışman onayı, yayın onayı işlemler geri alınacak.";
         } 
         else {

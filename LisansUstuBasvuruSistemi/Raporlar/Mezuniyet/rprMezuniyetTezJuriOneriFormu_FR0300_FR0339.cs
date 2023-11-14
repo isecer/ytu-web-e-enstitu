@@ -55,17 +55,17 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
                 TbRowYeniTB.Visible = !mezuniyetJuriOneriFormu.YeniTezBaslikTr.IsNullOrWhiteSpace();
                 TbRowYeniTBCeviri.Visible = !mezuniyetJuriOneriFormu.YeniTezBaslikEn.IsNullOrWhiteSpace();
-                if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.FenBilimleri)
+                if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlariEnum.FenBilimleri)
                 {
                     txtMudurlukAdiTr.Text = "FEN BİLİMLERİ ENSTİTÜSÜ MÜDÜRLÜĞÜNE,";
                     txtMudurlukAdiEn.Text = "THE GRADUATE SCHOOL OF NATURAL and APPLIED SCIENCE";
                 }
-                else if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.SosyalBilimleri)
+                else if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlariEnum.SosyalBilimleri)
                 {
                     txtMudurlukAdiTr.Text = "SOSYAL BİLİMLERİ ENSTİTÜSÜ MÜDÜRLÜĞÜNE,";
                     txtMudurlukAdiEn.Text = "THE GRADUATE SCHOOL OF SOCIAL SCIENCE";
                 }
-                if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.TemizEnerjiTeknolojileri)
+                if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri)
                 {
                     txtMudurlukAdiTr.Text = "TEMİZ ENERJİ TEKNOLOJİLERİ ENSTİTÜSÜ MÜDÜRLÜĞÜNE,";
                     txtMudurlukAdiEn.Text = "TEMİZ ENERJİ TEKNOLOJİLERİ ENSTİTÜSÜ";

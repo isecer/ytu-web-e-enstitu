@@ -83,8 +83,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
 
 
                 var yeniJuriler = data.Juriler.Where(p => p.IsYeniOrOnceki).ToList();
-                if (data.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciDegisiklik ||
-                    data.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciVeDisiDegisiklik)
+                if (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciDegisiklik ||
+                    data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik)
                 {
                     ChkMevcutUyeYtuIciEvet.Checked = true;
                     var ytuIci1 = yeniJuriler.FirstOrDefault(f => f.IsYtuIciJuri && f.RowNum == 1);
@@ -117,8 +117,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 }
                 else ChkMevcutUyeYtuIciHayir.Checked = true;
 
-                if (data.TijDegisiklikTipID == TijDegisiklikTipi.YtuDisiDegisiklik ||
-                    data.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciVeDisiDegisiklik)
+                if (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuDisiDegisiklik ||
+                    data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik)
                 {
                     ChkMevcutUyeYtuDisiEvet.Checked = true;
                     var ytuDisi1 = data.Juriler.FirstOrDefault(f => !f.IsYtuIciJuri && f.RowNum == 4);
@@ -156,10 +156,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
 
 
 
-                chkGerekceDiger.Checked = data.TijFormTipID == TijFormTipi.Diger;
-                chkGerekceTezDanismanDegisikligi.Checked = data.TijFormTipID == TijFormTipi.DanismanDegisikligi;
-                chkGerekceTezKonuDegisikligi.Checked = data.TijFormTipID == TijFormTipi.TezKonusuDegisikligi;
-                chkGerekceDanismanTezKonuDegisikligi.Checked = data.TijFormTipID == TijFormTipi.DanismanVeTezKonusuDegisikligi;
+                chkGerekceDiger.Checked = data.TijFormTipID == TijFormTipiEnum.Diger;
+                chkGerekceTezDanismanDegisikligi.Checked = data.TijFormTipID == TijFormTipiEnum.DanismanDegisikligi;
+                chkGerekceTezKonuDegisikligi.Checked = data.TijFormTipID == TijFormTipiEnum.TezKonusuDegisikligi;
+                chkGerekceDanismanTezKonuDegisikligi.Checked = data.TijFormTipID == TijFormTipiEnum.DanismanVeTezKonusuDegisikligi;
 
                 cellDanismanUnvanAdSoyad.Text = data.Danisman.Unvanlar.UnvanAdi + "\r\n" + data.Danisman.Ad + " " + data.Danisman.Soyad;
                 cellDanismanImza.Text = data.DanismanOnayTarihi.ToFormatDate() + " " + "Tarihinde Danışman tarafından elektronik olarak onaylanmıştır";

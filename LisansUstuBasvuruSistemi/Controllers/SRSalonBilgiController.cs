@@ -81,16 +81,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                               BitSaat = ss.BitSaat,
                               SRSalonID = s.SRSalonID,
                               SalonAdi = s.SalonAdi,
-                              GTID = _entities.SRTalepleris.Where(a => a.SRSalonID == s.SRSalonID && (a.SRDurumID == SRTalepDurum.Onaylandı || a.SRDurumID == SRTalepDurum.TalepEdildi) && a.Tarih == i &&
+                              GTID = _entities.SRTalepleris.Where(a => a.SRSalonID == s.SRSalonID && (a.SRDurumID == SrTalepDurumEnum.Onaylandı || a.SRDurumID == SrTalepDurumEnum.TalepEdildi) && a.Tarih == i &&
                                          (
                                            (a.BasSaat == ss.BasSaat || a.BitSaat == ss.BitSaat) ||
                                          (
                                              (a.BasSaat < ss.BasSaat && a.BitSaat > ss.BasSaat) || a.BasSaat < ss.BitSaat && a.BitSaat > ss.BitSaat) ||
                                              (a.BasSaat > ss.BasSaat && a.BasSaat < ss.BitSaat) || a.BitSaat > ss.BasSaat && a.BitSaat < ss.BitSaat)
                                         ).Select(s2 => s2.SRTalepID).FirstOrDefault(),
-                              OTID = _entities.SROzelTanimlars.Where(p => p.IsAktif && ((p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= i && p.BitTarih >= i) ||
-                                                                                  (p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == i.Month && p.Gun == i.Day) ||
-                                                                                  (p.SROzelTanimTipID == SROzelTanimTip.Rezervasyon && p.SRSalonID == s.SRSalonID && p.Tarih == i && p.SROzelTanimSaatlers.Any(a =>
+                              OTID = _entities.SROzelTanimlars.Where(p => p.IsAktif && ((p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= i && p.BitTarih >= i) ||
+                                                                                  (p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == i.Month && p.Gun == i.Day) ||
+                                                                                  (p.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon && p.SRSalonID == s.SRSalonID && p.Tarih == i && p.SROzelTanimSaatlers.Any(a =>
                                                                                     (
                                                                                          (a.BasSaat == ss.BasSaat || a.BitSaat == ss.BitSaat) ||
                                                                                          (
@@ -98,11 +98,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                                            (a.BasSaat > ss.BasSaat && a.BasSaat < ss.BitSaat) || a.BitSaat > ss.BasSaat && a.BitSaat < ss.BitSaat)
                                                                                          )
                                                                                     ) ||
-                                                                                 (p.SROzelTanimTipID == SROzelTanimTip.Rezerve && p.SRSalonID == s.SRSalonID && p.SROzelTanimGunlers.Any(a => a.HaftaGunID == ss.HaftaGunID) && p.BasTarih.Value <= i && p.BitTarih >= i)
+                                                                                 (p.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve && p.SRSalonID == s.SRSalonID && p.SROzelTanimGunlers.Any(a => a.HaftaGunID == ss.HaftaGunID) && p.BasTarih.Value <= i && p.BitTarih >= i)
                                                 )).Select(s2 => s2.SROzelTanimID).FirstOrDefault(),
 
-                              RemoveRow = _entities.SROzelTanimlars.Any(p => p.IsAktif && ((p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= i && p.BitTarih >= i) ||
-                                                                                    (p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == i.Month && p.Gun == i.Day)))
+                              RemoveRow = _entities.SROzelTanimlars.Any(p => p.IsAktif && ((p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= i && p.BitTarih >= i) ||
+                                                                                    (p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == i.Month && p.Gun == i.Day)))
 
 
                           };

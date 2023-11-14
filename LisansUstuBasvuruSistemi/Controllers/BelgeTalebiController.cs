@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             if (kullanici.YtuOgrencisi)
             {
-                if (kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                if (kullanici.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci)
                 {
                     var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
                     if (kullKayitB.KayitVar)
@@ -275,7 +275,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             belgeTalebi.SeciliDonemdeVerilenMiktar = AyniDonemAlinenBelgeSayisi(belgeTalebi);
             belgeTalebi.SeciliDonemdehenuzVerilmeyenMiktar = AyniDonemTalepEdilenBelgeSayisi(belgeTalebi);
             belgeTalebi.BelgeTalepID = belh.BelgeTalepID;
-            ViewBag.VerilenBelgeSayisi = new SelectList(GetBelgeSayisi(), "Value", "Caption", belgeTalebi.BelgeDurumID == BelgeTalepDurum.Verildi ? belgeTalebi.VerilenBelgeSayisi : belgeTalebi.IstenenBelgeSayisi);
+            ViewBag.VerilenBelgeSayisi = new SelectList(GetBelgeSayisi(), "Value", "Caption", belgeTalebi.BelgeDurumID == BelgeTalepDurumEnum.Verildi ? belgeTalebi.VerilenBelgeSayisi : belgeTalebi.IstenenBelgeSayisi);
             ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurum(true, kYetki), "Value", "Caption", belgeTalebi.BelgeDurumID);
 
             return View(belgeTalebi);
@@ -331,11 +331,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (belge.KullaniciID != kul.KullaniciID && belge.IslemYapanID != kul.KullaniciID)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Farklı bir kullanıcıya ait belge talebi güncellenmek isteniyor! \r\n BelgeTalepID:" + belge.BelgeTalepID + " \r\n Ad Soyad" + belge.AdiSoyadi, "BelgeTalebi/TalepYap", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Farklı bir kullanıcıya ait belge talebi güncellenmek isteniyor! \r\n BelgeTalepID:" + belge.BelgeTalepID + " \r\n Ad Soyad" + belge.AdiSoyadi, "BelgeTalebi/TalepYap", LogTipiEnum.Saldırı);
                             mmMessage.Messages.Add("Size ait olmayan bir belgeyi düzenlemeye hakkınız yoktur!");
 
                         }
-                        else if (belge.BelgeDurumID == BelgeTalepDurum.IptalEdildi || belge.BelgeDurumID == BelgeTalepDurum.Kapatildi || belge.BelgeDurumID == BelgeTalepDurum.Verildi)
+                        else if (belge.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi || belge.BelgeDurumID == BelgeTalepDurumEnum.Kapatildi || belge.BelgeDurumID == BelgeTalepDurumEnum.Verildi)
                         { 
                             mmMessage.Messages.Add("Bu Belge Talebini Düzeltemezsiniz.");
                         }
@@ -355,9 +355,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        if (belgeT.BelgeDurumID == BelgeTalepDurum.IptalEdildi)
+                        if (belgeT.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi)
                             mmMessage.Messages.Add("Aranılan belge iptal edildiğinden dolayı herhangi bir işlem yapamazsınız!");
-                        if (belgeT.BelgeDurumID == BelgeTalepDurum.Verildi)
+                        if (belgeT.BelgeDurumID == BelgeTalepDurumEnum.Verildi)
                             mmMessage.Messages.Add("Aranılan belge talebi daha önceden işlem gördüğünden herhangi bir işlem yapamazsınız!");
                         else belge = belgeT;
 
@@ -378,7 +378,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kul.YtuOgrencisi)
                 {
 
-                    if (kul.OgrenimDurumID != OgrenimDurum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
+                    if (kul.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
                     {
                         var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
@@ -397,7 +397,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             else
                             {
                                 mmMessage.Messages.Add("Öğrenci Bilgileriniz Doğrulanamadı!");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
                             }
                         }
                     }
@@ -416,9 +416,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurum(true, belgeDuzenleYetki, belge.BelgeTalepID <= 0), "Value", "Caption", belge.BelgeDurumID);
             ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true, belge.OgrenimDurumID, enstituKod), "Value", "Caption", belge.BelgeTipID);
 
-            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", belge.ProgramKod);
+            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", belge.ProgramKod);
             //ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod true), "Value", "Caption", belge.OgrenimTipKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", belge.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", belge.OgrenimDurumID);
             ViewBag.BelgeDilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", belge.BelgeDilKodu);
             ViewBag.MmMessage = mmMessage;
             if (belge.BelgeTalepID > 0)
@@ -445,11 +445,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
 
                 mmMessage.Messages.Add("Öğrenci Numarası Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
             }
             else
             {
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenciNo" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgrenciNo" });
                 if (kModel.BelgeTalepID <= 0)
                 {
                     var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
@@ -477,45 +477,45 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.BelgeTipID <= 0)
             {
                 mmMessage.Messages.Add("Belge Tipini Seçiniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeTipID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeTipID" });
             }
-            else if (kModel.BelgeTipID == BelgeTalepTip.İlgiliMakama && kModel.BelgeAciklamasi.IsNullOrWhiteSpace())
+            else if (kModel.BelgeTipID == BelgeTalepTipiEnum.İlgiliMakama && kModel.BelgeAciklamasi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("İlgili Makam Açıklaması Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeAciklamasi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeAciklamasi" });
             }
-            else if (kModel.BelgeTipID == BelgeTalepTip.Diğer)
+            else if (kModel.BelgeTipID == BelgeTalepTipiEnum.Diğer)
             {
                 if (kModel.BelgeAdi.IsNullOrWhiteSpace())
                 {
 
                     mmMessage.Messages.Add("Belge Adını Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeAdi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeAdi" });
                 }
                 if (kModel.BelgeAciklamasi.IsNullOrWhiteSpace())
                 {
                     mmMessage.Messages.Add("Belge Açıklaması Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeAciklamasi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeAciklamasi" });
                 }
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeTipID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BelgeTipID" });
             if (kModel.BelgeDilKodu.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Belgenin Hazırlanacağı Dili Seçiniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeDilKodu" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeDilKodu" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeDilKodu" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BelgeDilKodu" });
             if (kModel.IstenenBelgeSayisi <= 0)
             {
 
                 mmMessage.Messages.Add("İstenen Belge Sayısını Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IstenenBelgeSayisi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IstenenBelgeSayisi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "IstenenBelgeSayisi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "IstenenBelgeSayisi" });
 
             if (kModel.BelgeTalepID <= 0)
             {
-                kModel.BelgeDurumID = BelgeTalepDurum.TalepEdildi;//talep edildi
+                kModel.BelgeDurumID = BelgeTalepDurumEnum.TalepEdildi;//talep edildi
             }
             else
             {
@@ -524,9 +524,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
 
                     mmMessage.Messages.Add("Talep Durumunu Seçiniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeDurumID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeDurumID" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeDurumID" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BelgeDurumID" });
 
 
             }
@@ -615,8 +615,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     belge.ProgramKod = kModel.ProgramKod;
                     belge.Email = kModel.Email;
                     belge.EklenecekGun = kModel.EklenecekGun;
-                    if (kModel.BelgeTipID == BelgeTalepTip.İlgiliMakama) belge.BelgeAciklamasi = kModel.BelgeAciklamasi;
-                    else if (kModel.BelgeTipID == BelgeTalepTip.Diğer)
+                    if (kModel.BelgeTipID == BelgeTalepTipiEnum.İlgiliMakama) belge.BelgeAciklamasi = kModel.BelgeAciklamasi;
+                    else if (kModel.BelgeTipID == BelgeTalepTipiEnum.Diğer)
                     {
                         belge.BelgeAdi = kModel.BelgeAdi;
                         belge.BelgeAciklamasi = kModel.BelgeAciklamasi;
@@ -654,7 +654,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    if (kModel.BelgeDurumID == BelgeTalepDurum.IptalEdildi)
+                    if (kModel.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi)
                     {
                         mmMessage.IsSuccess = true;
                         mmMessage.Messages.Add("Belge talep işleminiz iptal edildi!");
@@ -671,8 +671,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurum(true, belgeDuzenleYetki, kModel.BelgeTalepID <= 0), "Value", "Caption", kModel.BelgeDurumID);
             ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true, kModel.OgrenimDurumID, enstituKod), "Value", "Caption", kModel.BelgeTipID);
-            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", kModel.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
+            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", kModel.ProgramKod);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             ViewBag.BelgeDilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", kModel.BelgeDilKodu);
             ViewBag.MmMessage = mmMessage;
             int sayi = 10;
@@ -699,7 +699,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             string anketGiris = "";
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
 
-            if (kModel.BelgeTalepID <= 0 && kul.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
+            if (kModel.BelgeTalepID <= 0 && kul.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci)
             {
                 string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
@@ -709,36 +709,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.BelgeTipID <= 0)
                 {
                     mmMessage.Messages.Add("Belge Tipi Seçiniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeTipID" });
                 }
-                else if (kModel.BelgeTipID == BelgeTalepTip.İlgiliMakama && kModel.BelgeAciklamasi.IsNullOrWhiteSpace())
+                else if (kModel.BelgeTipID == BelgeTalepTipiEnum.İlgiliMakama && kModel.BelgeAciklamasi.IsNullOrWhiteSpace())
                 {
                     mmMessage.Messages.Add("İlgili Makam Açıklaması Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeAciklamasi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeAciklamasi" });
                 }
-                else if (kModel.BelgeTipID == BelgeTalepTip.Diğer)
+                else if (kModel.BelgeTipID == BelgeTalepTipiEnum.Diğer)
                 {
                     if (kModel.BelgeAdi.IsNullOrWhiteSpace())
                     {
                         mmMessage.Messages.Add("Belge Adı Giriniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeAdi" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeAdi" });
                     }
                     if (kModel.BelgeAciklamasi.IsNullOrWhiteSpace())
                     {
                         mmMessage.Messages.Add("Belge Açıklaması Giriniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeAciklamasi" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeAciklamasi" });
                     }
                 }
                 if (kModel.BelgeDilKodu.IsNullOrWhiteSpace())
                 {
                     mmMessage.Messages.Add("Belgenin hazırlanacağı Dili Seçiniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeDilKodu" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeDilKodu" });
                 }
 
                 if (kModel.IstenenBelgeSayisi <= 0)
                 {
                     mmMessage.Messages.Add("İstenilen Belge Sayısını Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IstenenBelgeSayisi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IstenenBelgeSayisi" });
                 }
 
 
@@ -873,14 +873,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (kModel.DonemlikKota.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Not", Aciklama = "Bu belge tipi için dönemlik alınabilecek maksimum belge sayısı " + kModel.DonemlikKota.Value + " adettir, eğer " + kModel.DonemlikKota.Value + " adetten fazla belgeye ihtiyaç duyuluyorsa daha önceden alınmış olan belgenin fotokopisini çektirilip kurum tarafından 'Aslı Gibidir' kaşesi vurdurulabilir." });
             var konu = "";
-            if (kModel.BelgeDurumID == BelgeTalepDurum.TalepEdildi)
+            if (kModel.BelgeDurumID == BelgeTalepDurumEnum.TalepEdildi)
             {
                 var belgeAlimAdresi = BelgeTalepAyar.BelgeAlımAdresi.GetAyarBt(enstituKodu, "");
                 contentBilgi.AciklamaDetayi = GunHesap(kModel.TalepTarihi, kModel.EklenecekGun, kModel.TeslimBaslangicSaat.Value, kModel.TeslimBitisSaat.Value, kModel.UcretAlimiVar, belgeAlimAdresi);
                 contentBilgi.AciklamaBasligi = "Belge Talebi İşlemi Yapıldı";
                 konu = "Belge Talebi İşlemi Yapıldı";
             }
-            else if (kModel.BelgeDurumID == BelgeTalepDurum.Kapatildi)
+            else if (kModel.BelgeDurumID == BelgeTalepDurumEnum.Kapatildi)
             {
                 contentBilgi.AciklamaDetayi = "Reddedilme Nedeni: " + kModel.BelgeDurumAciklamasi;
                 contentBilgi.AciklamaBasligi = "Belge talep işleminiz reddedildi!";
@@ -1008,14 +1008,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var belge = _entities.BelgeTalepleris.First(p => p.BelgeTalepID == id);
             var oldTdid = belge.BelgeDurumID;
-            if (islemTipId == BelgeTalepDurum.Verildi)
+            if (islemTipId == BelgeTalepDurumEnum.Verildi)
             {
                 var bel2 = TutarHesapla(belge);
                 belge.VerilenBelgeSayisi = miktar;
                 belge.BelgeFiyati = bel2.BelgeFiyati;
                 belge.VerilenBelgeTutar = bel2.VerilenBelgeTutar;
             }
-            else if (islemTipId == BelgeTalepDurum.Kapatildi && islemTipId != oldTdid)
+            else if (islemTipId == BelgeTalepDurumEnum.Kapatildi && islemTipId != oldTdid)
             {
                 belge.BelgeDurumAciklamasi = islemTipAciklamasi;
                 belge.VerilenBelgeSayisi = null;
@@ -1026,7 +1026,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             belge.IslemYapanID = UserIdentity.Current.Id;
             belge.IslemYapanIp = UserIdentity.Ip;
             _entities.SaveChanges();
-            if (islemTipId == BelgeTalepDurum.Kapatildi && islemTipId != oldTdid)
+            if (islemTipId == BelgeTalepDurumEnum.Kapatildi && islemTipId != oldTdid)
             {
                 var donem = belge.Donemler;
                 BilgiMaili(belge, donem.DonemAdi, belge.EnstituKod);
@@ -1067,7 +1067,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ucretsizMiktar = mdl.UcretsizMiktar ?? 0;
             }
             int belgeSayisi = 0;
-            if (mdl.BelgeDurumID == BelgeTalepDurum.Verildi) belgeSayisi = mdl.VerilenBelgeSayisi ?? 1;
+            if (mdl.BelgeDurumID == BelgeTalepDurumEnum.Verildi) belgeSayisi = mdl.VerilenBelgeSayisi ?? 1;
             else belgeSayisi = mdl.IstenenBelgeSayisi;
 
             mdl.VerilenBelgeTutar = ayniDonemAlinan >= ucretsizMiktar ? (belgeSayisi * belgeFiyati) : (((belgeSayisi + ayniDonemAlinan) - ucretsizMiktar) * belgeFiyati);
@@ -1079,7 +1079,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
             var belge = _entities.BelgeTalepleris.First(p => p.BelgeTalepID == id);
-            if (belge.BelgeDurumID == BelgeTalepDurum.Verildi) belge.VerilenBelgeSayisi = miktar;
+            if (belge.BelgeDurumID == BelgeTalepDurumEnum.Verildi) belge.VerilenBelgeSayisi = miktar;
             else belge.IstenenBelgeSayisi = miktar;
             var bel2 = TutarHesapla(belge);
             return bel2.VerilenBelgeTutar.ToJsonResult();
@@ -1091,7 +1091,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public int AyniDonemAlinenBelgeSayisi(BelgeTalepleri mdl)
         {
-            var data = _entities.BelgeTalepleris.Where(p => p.BelgeDurumID == BelgeTalepDurum.Verildi &&
+            var data = _entities.BelgeTalepleris.Where(p => p.BelgeDurumID == BelgeTalepDurumEnum.Verildi &&
                                                       p.BelgeTipID == mdl.BelgeTipID &&
                                                       p.OgretimYiliBaslangic == mdl.OgretimYiliBaslangic &&
                                                       p.OgretimYiliBitis == mdl.OgretimYiliBitis &&
@@ -1105,7 +1105,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public int AyniDonemTalepEdilenBelgeSayisi(BelgeTalepleri mdl)
         {
-            var data = _entities.BelgeTalepleris.Where(p => (p.BelgeDurumID == BelgeTalepDurum.TalepEdildi || p.BelgeDurumID == BelgeTalepDurum.Hazirlandi || p.BelgeDurumID == BelgeTalepDurum.Hazirlaniyor) &&
+            var data = _entities.BelgeTalepleris.Where(p => (p.BelgeDurumID == BelgeTalepDurumEnum.TalepEdildi || p.BelgeDurumID == BelgeTalepDurumEnum.Hazirlandi || p.BelgeDurumID == BelgeTalepDurumEnum.Hazirlaniyor) &&
                                                       p.BelgeTipID == mdl.BelgeTipID &&
                                                       p.OgretimYiliBaslangic == mdl.OgretimYiliBaslangic &&
                                                       p.OgretimYiliBitis == mdl.OgretimYiliBitis &&
@@ -1135,14 +1135,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     mmMessage.Messages.Add("Belge Talebi Silindi.");
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
                 }
                 catch (Exception ex)
                 {
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Belge Talebi Silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogTipiEnum.OnemsizHata);
                 }
             }
             return mmMessage.ToJsonResult();

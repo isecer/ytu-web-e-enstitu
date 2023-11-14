@@ -14,6 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public DateTime? Tarih { get; set; }
         public string Aciklama { get; set; }
         public string MailGonderen { get; set; }
+        public bool? IsEkVar { get; set; }
         public IEnumerable<FrMailGondermeDto> MailGondermeDtos { get; set; }
     }
     public class FrMailGondermeDto : GonderilenMailler

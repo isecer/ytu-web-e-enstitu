@@ -225,7 +225,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (model.TDOBasvuruDanismanList.Any())
                 {
                     var firstRow = model.TDOBasvuruDanismanList.First();
-                    firstRow.VarolanDanismanGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
+                    firstRow.VarolanDanismanGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
                     firstRow.VarolanDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
                     if (firstRow.VarolanDanismanGozuksun)
                     {
@@ -236,7 +236,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         firstRow.YeniDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
 
                     }
-                    firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi;
+                    firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi;
 
                     firstRow.IsDuzeltSilYapabilir = firstRow.DanismanOnayladi != true && firstRow.VarolanDanismanOnayladi != true;
                 }
@@ -246,7 +246,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (basvuru.TDOBasvuruDanisman != null)
                     lastEsBasvuru = basvuru.TDOBasvuruDanisman.TDOBasvuruEsDanismen
                         .OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault();
-                model.IsYeniDanismanOneriOrDegisiklik = model.TDOBasvuruDanisman == null || model.TDOBasvuruDanismanList.All(a => a.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniOnerisi && a.EYKDaOnaylandi != true);
+                model.IsYeniDanismanOneriOrDegisiklik = model.TDOBasvuruDanisman == null || model.TDOBasvuruDanismanList.All(a => a.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniOnerisi && a.EYKDaOnaylandi != true);
                 if (model.IsYeniDanismanOneriOrDegisiklik)
                 {
                     model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman == null || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi == false);
@@ -340,7 +340,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         kModel.EYKYaGonderildi = true;
                         kModel.EYKDaOnaylandi = true;
 
-                        kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezDanismaniOnerisi;
+                        kModel.TDODanismanTalepTipID = TdoDanismanTalepTipEnum.TezDanismaniOnerisi;
 
                         kModel.IslemTarihi = DateTime.Now;
                         kModel.IslemYapanID = UserIdentity.Current.Id;
@@ -379,13 +379,13 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (kayitYetki == false) SistemBilgilendirmeBus.SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez danışmanı öneri Başvuru ID:" + tdoBasvuruId, "TDO Başvuru Düzelt", LogType.Uyarı);
+                        if (kayitYetki == false) SistemBilgilendirmeBus.SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez danışmanı öneri Başvuru ID:" + tdoBasvuruId, "TDO Başvuru Düzelt", LogTipiEnum.Uyarı);
                     }
                     else
                     {
                         if (basvuru.EnstituKod != enstituKod)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Seçilen Tez danışmanı öneri başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez danışmanı öneri Başvuru Enstitü Kod:" + basvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + enstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogType.Uyarı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Seçilen Tez danışmanı öneri başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez danışmanı öneri Başvuru Enstitü Kod:" + basvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + enstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogTipiEnum.Uyarı);
                             enstituKod = basvuru.EnstituKod;
                         }
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
@@ -393,7 +393,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitüde yetkili değilsiniz.");
                             string message = "Bu enstitüye ait Tez danışmanı öneri başvurusu güncellemeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogTipiEnum.Saldırı);
                         }
                         else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                         {
@@ -405,7 +405,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu işlem için yetkili değilsiniz.");
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogTipiEnum.Saldırı);
                         }
 
                     }
@@ -416,7 +416,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez danışmanı önerisi Yap", LogType.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez danışmanı önerisi Yap", LogTipiEnum.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
@@ -426,7 +426,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && (kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))
+                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && (kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))
                         {
                             var aktifDevamEdenBasvuruVar = db.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
                             if (aktifDevamEdenBasvuruVar)// toplam başvuru kontrol
@@ -472,7 +472,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         var message = "Bu enstitüye ait tez danışman başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", LogType.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", LogTipiEnum.Kritik);
                     }
                     else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
@@ -484,7 +484,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogTipiEnum.Saldırı);
                     }
                     //else if (KayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi)
                     //{
@@ -597,7 +597,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
                     var mModel = new List<SablonMailModel>();
 
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniOnerisi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
                     {
                         var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
@@ -605,17 +605,17 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Danışman",
                             AdSoyad = danisman.Ad + " " + danisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_DanismanOnerisiYapildiDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TdoDanismanOnerisiYapildiDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_DanismanOnerisiYapildiOgrenci
+                            MailSablonTipID = MailSablonTipiEnum.TdoDanismanOnerisiYapildiOgrenci
                         });
                     }
-                    else if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniDegisikligi)
+                    else if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                     {
                         var varolanDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.VarolanTezDanismanID);
                         var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
@@ -624,24 +624,24 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Varolan Danışman",
                             AdSoyad = varolanDanisman.Ad + " " + varolanDanisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = varolanDanisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_TezDanismanDegisikligiVarolanDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TdoTezDanismanDegisikligiVarolanDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Yeni Danışman",
                             AdSoyad = yeniDanisman.Ad + " " + yeniDanisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = yeniDanisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_TezDanismanDegisikligiYeniDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TdoTezDanismanDegisikligiYeniDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_TezDanismanDegisikligiOgrenci
+                            MailSablonTipID = MailSablonTipiEnum.TdoTezDanismanDegisikligiOgrenci
                         });
                     }
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                     {
                         var varolanDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.VarolanTezDanismanID);
                         var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
@@ -650,24 +650,24 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Varolan Danışman",
                             AdSoyad = varolanDanisman.Ad + " " + varolanDanisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = varolanDanisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiVarolanDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiVarolanDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Yeni Danışman",
                             AdSoyad = yeniDanisman.Ad + " " + yeniDanisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = yeniDanisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiYeniDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiYeniDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiOgrenci
+                            MailSablonTipID = MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiOgrenci
                         });
                     }
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezBasligiDegisikligi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                     {
                         var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
@@ -675,14 +675,14 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Danışman",
                             AdSoyad = danisman.Ad + " " + danisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_TezBasligiDegisikligiDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TdoTezBasligiDegisikligiDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = danisman.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_TezBasligiDegisikligiOgrenci
+                            MailSablonTipID = MailSablonTipiEnum.TdoTezBasligiDegisikligiOgrenci
                         });
                     }
 
@@ -791,16 +791,16 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
 
                 }
             }
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + tdoBasvuruDanismanId;
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
@@ -818,9 +818,9 @@ namespace LisansUstuBasvuruSistemi.Business
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
                     var mModel = new List<SablonMailModel>();
                     int? raporTipId = null;
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniOnerisi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
                     {
-                        raporTipId = RaporTipleri.TezDanismanOneriFormu;
+                        raporTipId = RaporTipiEnum.TezDanismanOneriFormu;
                         if (isOnayOrRed)
                         {
                             var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
@@ -829,7 +829,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 JuriTipAdi = "Danışman",
                                 AdSoyad = danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_DanismanOnerisiOnaylandiDanisman
+                                MailSablonTipID = MailSablonTipiEnum.TdoDanismanOnerisiOnaylandiDanisman
                             });
                         }
                         mModel.Add(new SablonMailModel
@@ -837,12 +837,12 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_DanismanOnerisiOnaylandiOgrenci : MailSablonTipi.TDO_DanismanOnerisiReddedildiOgrenci
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoDanismanOnerisiOnaylandiOgrenci : MailSablonTipiEnum.TdoDanismanOnerisiReddedildiOgrenci
                         });
                     }
-                    else if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniDegisikligi)
+                    else if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                     {
-                        raporTipId = RaporTipleri.TezDanismanDegisiklikFormu;
+                        raporTipId = RaporTipiEnum.TezDanismanDegisiklikFormu;
                         var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
 
                         mModel.Add(new SablonMailModel
@@ -850,19 +850,19 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Yeni Danışman",
                             AdSoyad = yeniDanisman.Ad + " " + yeniDanisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = yeniDanisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezDanismanDegisikligiOnaylandiYeniDanisman : MailSablonTipi.TDO_TezDanismanDegisikligiRetEdildiYeniDanisman
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezDanismanDegisikligiOnaylandiYeniDanisman : MailSablonTipiEnum.TdoTezDanismanDegisikligiRetEdildiYeniDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezDanismanDegisikligiOnaylandiOgrenci : MailSablonTipi.TDO_TezDanismanDegisikligiRetEdildiOgrenci
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezDanismanDegisikligiOnaylandiOgrenci : MailSablonTipiEnum.TdoTezDanismanDegisikligiRetEdildiOgrenci
                         });
                     }
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                     {
-                        raporTipId = RaporTipleri.TezDanismanDegisiklikFormu;
+                        raporTipId = RaporTipiEnum.TezDanismanDegisiklikFormu;
                         var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
 
                         mModel.Add(new SablonMailModel
@@ -870,33 +870,33 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Yeni Danışman",
                             AdSoyad = yeniDanisman.Ad + " " + yeniDanisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = yeniDanisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiOnaylandiYeniDanisman : MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiRetEdildiYeniDanisman
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiOnaylandiYeniDanisman : MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiRetEdildiYeniDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiOnaylandiOgrenci : MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiRetEdildiOgrenci
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiOnaylandiOgrenci : MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiRetEdildiOgrenci
                         });
                     }
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezBasligiDegisikligi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                     {
-                        raporTipId = RaporTipleri.TezDanismanDegisiklikFormu;
+                        raporTipId = RaporTipiEnum.TezDanismanDegisiklikFormu;
                         var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Danışman",
                             AdSoyad = danisman.Ad + " " + danisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezBasligiDegisikligiOnaylandiDanisman : MailSablonTipi.TDO_TezBasligiDegisikligiRetEdildiDanisman
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezBasligiDegisikligiOnaylandiDanisman : MailSablonTipiEnum.TdoTezBasligiDegisikligiRetEdildiDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezBasligiDegisikligiOnaylandiOgrenci : MailSablonTipi.TDO_TezBasligiDegisikligiRetEdildiOgrenci
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezBasligiDegisikligiOnaylandiOgrenci : MailSablonTipiEnum.TdoTezBasligiDegisikligiRetEdildiOgrenci
                         });
                     }
 
@@ -926,7 +926,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (isOnayOrRed)
                         {
                             var ids = new List<int?>() { tdoBasvuruDanismanId };
-                            var ekler = Management.exportRaporPdf(raporTipId.Value, ids);
+                            var ekler = Management.ExportRaporPdf(raporTipId.Value, ids);
                             item.Attachments.AddRange(ekler);
 
                         }
@@ -974,7 +974,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             var retAciklama = "";
 
-                            if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezBasligiDegisikligi || tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniOnerisi) retAciklama = tdoBasvuruDanisman.DanismanOnaylanmadiAciklama;
+                            if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi || tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniOnerisi) retAciklama = tdoBasvuruDanisman.DanismanOnaylanmadiAciklama;
                             else retAciklama = tdoBasvuruDanisman.VarolanDanismanOnaylanmadiAciklama;
 
 
@@ -1026,16 +1026,16 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
 
                 }
             }
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + tdoBasvuruDanismanId;
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
@@ -1052,7 +1052,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var tdoBasvuru = tdoBasvuruDanisman.TDOBasvuru;
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
                     var mModel = new List<SablonMailModel>();
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniOnerisi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
                     {
 
                         var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
@@ -1061,7 +1061,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Danışman",
                             AdSoyad = danisman.Ad + " " + danisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_DanismanOnerisiEYKDaOnaylandiDanisman : MailSablonTipi.TDO_DanismanOnerisiEYKDaReddedildiOgrenciDanisman
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoDanismanOnerisiEykDaOnaylandiDanisman : MailSablonTipiEnum.TdoDanismanOnerisiEykDaReddedildiOgrenciDanisman
                         });
 
                         mModel.Add(new SablonMailModel
@@ -1069,10 +1069,10 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_DanismanOnerisiEYKDaOnaylandiOgrenci : MailSablonTipi.TDO_DanismanOnerisiEYKDaReddedildiOgrenciDanisman
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoDanismanOnerisiEykDaOnaylandiOgrenci : MailSablonTipiEnum.TdoDanismanOnerisiEykDaReddedildiOgrenciDanisman
                         });
                     }
-                    else if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniDegisikligi)
+                    else if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                     {
                         var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
 
@@ -1081,17 +1081,17 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Yeni Danışman",
                             AdSoyad = yeniDanisman.Ad + " " + yeniDanisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = yeniDanisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezDanismanDegisikligiEYKDaOnaylandiYeniDanisman : MailSablonTipi.TDO_TezDanismanDegisikligiEYKDaRetEdildiYeniDanisman
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezDanismanDegisikligiEykDaOnaylandiYeniDanisman : MailSablonTipiEnum.TdoTezDanismanDegisikligiEykDaRetEdildiYeniDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezDanismanDegisikligiEYKDaOnaylandiOgrenci : MailSablonTipi.TDO_TezDanismanDegisikligiEYKDaRetEdildiOgrenci
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezDanismanDegisikligiEykDaOnaylandiOgrenci : MailSablonTipiEnum.TdoTezDanismanDegisikligiEykDaRetEdildiOgrenci
                         });
                     }
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                     {
                         var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
 
@@ -1100,17 +1100,17 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Yeni Danışman",
                             AdSoyad = yeniDanisman.Ad + " " + yeniDanisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = yeniDanisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiEYKDaOnaylandiYeniDanisman : MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiEYKDaRetEdildiYeniDanisman
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiEykDaOnaylandiYeniDanisman : MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiEykDaRetEdildiYeniDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiEYKDaOnaylandiOgrenci : MailSablonTipi.TDO_TezDanismanVeBaslikDegisikligiEYKDaRetEdildiOgrenci
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiEykDaOnaylandiOgrenci : MailSablonTipiEnum.TdoTezDanismanVeBaslikDegisikligiEykDaRetEdildiOgrenci
                         });
                     }
-                    if (tdoDanismanTalepTipId == TdoDanismanTalepTip.TezBasligiDegisikligi)
+                    if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                     {
                         var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
@@ -1118,14 +1118,14 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Danışman",
                             AdSoyad = danisman.Ad + " " + danisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezBasligiDegisikligiEYKDaOnaylandiDanisman : MailSablonTipi.TDO_TezBasligiDegisikligiEYKDaRetEdildiDanisman
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezBasligiDegisikligiEykDaOnaylandiDanisman : MailSablonTipiEnum.TdoTezBasligiDegisikligiEykDaRetEdildiDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isOnayOrRed ? MailSablonTipi.TDO_TezBasligiDegisikligiEYKDaOnaylandiOgrenci : MailSablonTipi.TDO_TezBasligiDegisikligiEYKDaRetEdildiOgrenci
+                            MailSablonTipID = isOnayOrRed ? MailSablonTipiEnum.TdoTezBasligiDegisikligiEykDaOnaylandiOgrenci : MailSablonTipiEnum.TdoTezBasligiDegisikligiEykDaRetEdildiOgrenci
                         });
                     }
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipID).ToList();
@@ -1234,16 +1234,16 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
 
                 }
             }
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + tdoBasvuruDanismanId;
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
@@ -1270,14 +1270,14 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Danışman",
                             AdSoyad = danisman.Ad + " " + danisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_EsDanismanDegisikligiYapildiDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanDegisikligiYapildiDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_EsDanismanDegisikligiYapildiOgrenci
+                            MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanDegisikligiYapildiOgrenci
                         });
                     }
                     else
@@ -1287,14 +1287,14 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Danışman",
                             AdSoyad = danisman.Ad + " " + danisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_EsDanismanOnerisiYapildiDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanOnerisiYapildiDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TDO_EsDanismanOnerisiYapildiOgrenci
+                            MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanOnerisiYapildiOgrenci
                         });
                     }
 
@@ -1317,7 +1317,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                         var iDs = new List<int?>() { tdoBasvuruEsDanismanId };
-                        var ekler = Management.exportRaporPdf(RaporTipleri.TezEsDanismanOneriFormu, iDs);
+                        var ekler = Management.ExportRaporPdf(RaporTipiEnum.TezEsDanismanOneriFormu, iDs);
                         item.Attachments.AddRange(ekler);
 
 
@@ -1401,16 +1401,16 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
 
                 }
             }
             catch (Exception ex)
             {
                 var message = "Tez Eş danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOEsBasvuruDanismanID:" + tdoBasvuruEsDanismanId;
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
@@ -1438,7 +1438,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 JuriTipAdi = "Öğrenci, Danışman",
                                 AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + " , " + danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true }, new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_EsDanismanDegisikligiEYKDaRetEdildiOgrenciDanisman
+                                MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanDegisikligiEykDaRetEdildiOgrenciDanisman
                             });
                         }
                         else
@@ -1448,21 +1448,21 @@ namespace LisansUstuBasvuruSistemi.Business
                                 JuriTipAdi = "Danışman",
                                 AdSoyad = danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_EsDanismanDegisikligiEYKDaOnaylandiDanisman
+                                MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanDegisikligiEykDaOnaylandiDanisman
                             });
                             mModel.Add(new SablonMailModel
                             {
                                 JuriTipAdi = "Eş Danışman",
                                 AdSoyad = esDanisman.AdSoyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = esDanisman.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_EsDanismanDegisikligiEYKDaOnaylandiEsDanisman
+                                MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanDegisikligiEykDaOnaylandiEsDanisman
                             });
                             mModel.Add(new SablonMailModel
                             {
                                 JuriTipAdi = "Öğrenci",
                                 AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_EsDanismanDegisikligiEYKDaOnaylandiOgrenci
+                                MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanDegisikligiEykDaOnaylandiOgrenci
                             });
                         }
                     }
@@ -1475,7 +1475,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 JuriTipAdi = "Öğrenci, Danışman",
                                 AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + " , " + danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true }, new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_EsDanismanOnerisiEYKDaReddedildiOgrenciDanisman
+                                MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanOnerisiEykDaReddedildiOgrenciDanisman
                             });
                         }
                         else
@@ -1485,21 +1485,21 @@ namespace LisansUstuBasvuruSistemi.Business
                                 JuriTipAdi = "Danışman",
                                 AdSoyad = danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_EsDanismanOnerisiEYKDaOnaylandiDanisman
+                                MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanOnerisiEykDaOnaylandiDanisman
                             });
                             mModel.Add(new SablonMailModel
                             {
                                 JuriTipAdi = "Eş Danışman",
                                 AdSoyad = esDanisman.AdSoyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = esDanisman.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_EsDanismanOnerisiEYKDaOnaylandiEsDanisman
+                                MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanOnerisiEykDaOnaylandiEsDanisman
                             });
                             mModel.Add(new SablonMailModel
                             {
                                 JuriTipAdi = "Öğrenci",
                                 AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
-                                MailSablonTipID = MailSablonTipi.TDO_EsDanismanOnerisiEYKDaOnaylandiOgrenci
+                                MailSablonTipID = MailSablonTipiEnum.TdoEsDanismanOnerisiEykDaOnaylandiOgrenci
                             });
                         }
                     }
@@ -1606,16 +1606,16 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
 
                 }
             }
             catch (Exception ex)
             {
                 var message = "Tez Eş Danışmanı işlemi için mail gönderilirken bir hata oluştu!";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;

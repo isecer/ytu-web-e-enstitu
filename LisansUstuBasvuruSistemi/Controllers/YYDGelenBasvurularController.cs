@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new FmBasvurularDto() { PageSize = 10, Expand = false };
 
-            model.BasvuruSurecID = Management.getAktifBasvuruSurecID(EnstituBus.GetSelectedEnstitu(EKD), BasvuruSurecTipi.YTUYeniMezunDRBasvuru);
+            model.BasvuruSurecID = Management.GetAktifBasvuruSurecId(EnstituBus.GetSelectedEnstitu(EKD), BasvuruSurecTipiEnum.YTUYeniMezunDRBasvuru);
             model.Expand = model.BasvuruSurecID.HasValue;
             return Index(model, EKD, null, false, BelgeDetailBasvuruID);
         }
@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var q = from s in db.Basvurulars
                     join en in db.Enstitulers on s.BasvuruSurec.EnstituKod equals en.EnstituKod
-                    join bs in db.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == BasvuruSurecTipi.YTUYeniMezunDRBasvuru) on s.BasvuruSurecID equals bs.BasvuruSurecID
+                    join bs in db.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == BasvuruSurecTipiEnum.YTUYeniMezunDRBasvuru) on s.BasvuruSurecID equals bs.BasvuruSurecID
                     join d in db.Donemlers on bs.DonemID equals d.DonemID
                     join ktip in db.KullaniciTipleris on s.Kullanicilar.KullaniciTipID equals ktip.KullaniciTipID
                     join dr in db.BasvuruDurumlaris on s.BasvuruDurumID equals dr.BasvuruDurumID
@@ -95,7 +95,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.LMezuniyetNotu,
                         s.LMezuniyetNotu100LukSistem,
                         MulakatSonucTipIDs = s.MulakatSonuclaris.Select(s2 => s2.MulakatSonucTipID),
-                        KayitliTercihVar = s.BasvurularTercihleris.Any(a => s.BasvuruID == a.BasvuruID && s.BasvuruDurumID == BasvuruDurumu.Onaylandı && s.MulakatSonuclaris.Any(a2 => a2.KayitDurumID.HasValue && a2.KayitDurumlari.IsKayitOldu)),
+                        KayitliTercihVar = s.BasvurularTercihleris.Any(a => s.BasvuruID == a.BasvuruID && s.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı && s.MulakatSonuclaris.Any(a2 => a2.KayitDurumID.HasValue && a2.KayitDurumlari.IsKayitOldu)),
                         IsNotDuzelt = (s.BasvuruSurec.AGNOGirisBaslangicTarihi.HasValue && s.LUniversiteID == Management.UniversiteYtuKod && (s.BasvuruSurec.AGNOGirisBaslangicTarihi.Value <= nowDate && s.BasvuruSurec.AGNOGirisBitisTarihi.Value >= nowDate && s.BasvurularTercihleris.Any(a => a.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))),
                     };
             var q2 = q;
@@ -105,7 +105,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (ProgramKod.Count > 0) q = q.Where(p => p.BasvurularTercihleris.Any(a => ProgramKod.Contains(a.ProgramKod)));
             if (model.BasvuruDurumID.HasValue)
             {
-                if (model.BasvuruDurumID.Value == BasvuruDurumu.Gonderildi) q = q.Where(p => p.KayitliTercihVar);
+                if (model.BasvuruDurumID.Value == BasvuruDurumuEnum.Gonderildi) q = q.Where(p => p.KayitliTercihVar);
                 else q = q.Where(p => p.BasvuruDurumID == model.BasvuruDurumID);
             }
             if (model.MulakatSonucTipID.HasValue) q = q.Where(p => p.MulakatSonucTipIDs.Any(a => a == model.MulakatSonucTipID.Value));
@@ -123,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             model.RowCount = q.Count();
             var IndexModel = new MIndexBilgi();
-            var KayitCountDurum = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumu.Onaylandı).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.ClassName, s.Color }).FirstOrDefault();
+            var KayitCountDurum = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.ClassName, s.Color }).FirstOrDefault();
             if (KayitCountDurum != null)
             {
                 IndexModel.ListB.Add(new mxRowModel { Key = "Toplam", ClassName = "", Color = KayitCountDurum.Color, Toplam = model.RowCount });
@@ -206,7 +206,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                           from lOb in deflb.DefaultIfEmpty()
                           join lo in db.OgrenimDurumlaris on s.LOgrenimDurumID equals lo.OgrenimDurumID into deflod
                           from lOd in deflod.DefaultIfEmpty()
-                          let os = (from sq in db.BasvurularTercihleris.Where(p => p.MulakatSonuclaris.Any(a => a.KayitDurumID == KayitDurumu.KayitOldu) && p.BasvuruID == s.BasvuruID)
+                          let os = (from sq in db.BasvurularTercihleris.Where(p => p.MulakatSonuclaris.Any(a => a.KayitDurumID == KayitDurumuEnum.KayitOldu) && p.BasvuruID == s.BasvuruID)
                                     join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == _EnstituKod) on sq.OgrenimTipKod equals ot.OgrenimTipKod
                                       select new { sq.OgrenimTipKod, ot.OgrenimTipAdi }).FirstOrDefault()
                           select new
@@ -240,17 +240,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             ViewBag.IndexModel = IndexModel;
-            ViewBag.BasvuruSurecID = new SelectList(Management.getbasvuruSurecleri(_EnstituKod, BasvuruSurecTipi.YTUYeniMezunDRBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
+            ViewBag.BasvuruSurecID = new SelectList(Management.GetbasvuruSurecleri(_EnstituKod, BasvuruSurecTipiEnum.YTUYeniMezunDRBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(_EnstituKod, true, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.BasvuruDurumID = new SelectList(Management.cmbBasvuruDurumListe( true, true), "Value", "Caption", model.BasvuruDurumID);
-            ViewBag.MulakatSonucTipID = new SelectList(Management.cmbMulakatSonucTip( true), "Value", "Caption", model.MulakatSonucTipID);
-            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar( _EnstituKod, false), "Value", "Caption", model.ProgramKod);
-            ViewBag.LOgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu2( true, IsBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
-            ViewBag.SinavTipKod = new SelectList(Management.cmbGetBSAktifSinavlar(_EnstituKod, new List<int> { SinavTipGrup.DilSinavlari, SinavTipGrup.Tomer, SinavTipGrup.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
+            ViewBag.BasvuruDurumID = new SelectList(Management.CmbBasvuruDurumListe( true, true), "Value", "Caption", model.BasvuruDurumID);
+            ViewBag.MulakatSonucTipID = new SelectList(Management.CmbMulakatSonucTip( true), "Value", "Caption", model.MulakatSonucTipID);
+            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar( _EnstituKod, false), "Value", "Caption", model.ProgramKod);
+            ViewBag.LOgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu2( true, isBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
+            ViewBag.SinavTipKod = new SelectList(Management.CmbGetBsAktifSinavlar(_EnstituKod, new List<int> { SinavTipGrupEnum.DilSinavlari, SinavTipGrupEnum.Tomer, SinavTipGrupEnum.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleriOgrenciler(true), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.CinsiyetID = new SelectList(Management.cmbCinsiyetler( true), "Value", "Caption", model.CinsiyetID);
-            ViewBag.IsTaahhutVar = new SelectList(Management.cmbSinavBelgeTaahhut(true), "Value", "Caption", model.IsTaahhutVar);
-            ViewBag.UyrukKod = new SelectList(Management.cmbUyruk(true), "Value", "Caption", model.UyrukKod);
+            ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler( true), "Value", "Caption", model.CinsiyetID);
+            ViewBag.IsTaahhutVar = new SelectList(Management.CmbSinavBelgeTaahhut(true), "Value", "Caption", model.IsTaahhutVar);
+            ViewBag.UyrukKod = new SelectList(Management.CmbUyruk(true), "Value", "Caption", model.UyrukKod);
            
             if (isFiltered)
             {

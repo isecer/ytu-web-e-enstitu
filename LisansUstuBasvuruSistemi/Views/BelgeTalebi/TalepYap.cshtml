@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
-@using LisansUstuBasvuruSistemi.Utilities.Enums 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos  
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @model BelgeTalepleri
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
@@ -14,7 +14,7 @@
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.BelgeTalepID <= 0 ? "Yeni Belge Talebi İşlemi" : "Belge talebi düzenleme işlemi")</h3>
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i> @(Model.BelgeTalepID <= 0 ? "Yeni Belge Talebi İşlemi" : "Belge talebi düzenleme işlemi")</h3>
                     <ul class="panel-controls">
                         <li><a href="@Url.Action("TalepYap", Model.BelgeTalepID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
                     </ul>
@@ -42,14 +42,14 @@
                                     @Html.DropDownList("BelgeTipID", null, new { @class = "form-control", onChange = "getBelgeSayisiA();getBilgi();" })
                                 </div>
                             </div>
-                            <div class="form-group @(Model.BelgeTipID == BelgeTalepTip.Diğer?"":"hide")" id="digerBelgeAdi">
+                            <div class="form-group @(Model.BelgeTipID == BelgeTalepTipiEnum.Diğer?"":"hide")" id="digerBelgeAdi">
                                 <label class="col-md-3 col-xs-4 control-label">Belge Adı</label>
                                 <div class="col-md-9 col-xs-8">
                                     <input type="text" name="BelgeAdi" id="BelgeAdi" value="@Model.BelgeAdi" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group @((Model.BelgeTipID == BelgeTalepTip.İlgiliMakama || Model.BelgeTipID == BelgeTalepTip.Diğer) ?"":"hide")" id="ilgilimakamAciklama">
-                                <label class="col-md-3 col-xs-4 control-label" id="ilgiliLbl">@(Model.BelgeTipID == BelgeTalepTip.İlgiliMakama ? "İlgili Makam Açıklaması" : "Diğer Belge Tipi Açıklaması")</label>
+                            <div class="form-group @((Model.BelgeTipID == BelgeTalepTipiEnum.İlgiliMakama || Model.BelgeTipID == BelgeTalepTipiEnum.Diğer) ?"":"hide")" id="ilgilimakamAciklama">
+                                <label class="col-md-3 col-xs-4 control-label" id="ilgiliLbl">@(Model.BelgeTipID == BelgeTalepTipiEnum.İlgiliMakama ? "İlgili Makam Açıklaması" : "Diğer Belge Tipi Açıklaması")</label>
                                 <div class="col-md-9 col-xs-8">
                                     <textarea style="min-height:100px;" type="text" class="form-control" name="BelgeAciklamasi" id="BelgeAciklamasi" autocomplete="off">@Model.BelgeAciklamasi</textarea>
                                 </div>
@@ -125,12 +125,12 @@
         var OgrNo = $('#OgrenciNo').val();
         var Miktar = $('#IstenenBelgeSayisi').val();
         var BelgeTalepID = $('#BelgeTalepID').val();
-        if (btipID == '@BelgeTalepTip.İlgiliMakama') {
+        if (btipID == '@BelgeTalepTipiEnum.İlgiliMakama') {
             $('#ilgilimakamAciklama').removeClass("hide");
             $('#digerBelgeAdi').addClass("hide");
             $('#ilgiliLbl').html('İlgili Makam Açıklaması');
         }
-        else if (btipID == '@BelgeTalepTip.Diğer') {
+        else if (btipID == '@BelgeTalepTipiEnum.Diğer') {
             $('#ilgilimakamAciklama').removeClass("hide");
             $('#digerBelgeAdi').removeClass("hide");
             $('#ilgiliLbl').html('Diğer Belge Tipi Açıklaması');

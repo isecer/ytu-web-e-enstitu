@@ -26,36 +26,24 @@
                 <div class="panel-body">
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th class="sirala" field="EnstituKod" width="90">Enstitü Kod</th> 
+                            <tr class="info">
+                                <th class="sirala" field="EnstituKod" width="50">Kod</th>
                                 <th class="sirala" field="EnstituAd">Enstitü Adı</th>
                                 <th class="sirala" field="IsAktif" width="150">Web Adresi</th>
-                                <th class="sirala" field="IsAktif" width="70">Durum</th>
-                                <th width="50"> 
+                                <th class="sirala" field="IsAktif" width="60">Durum</th>
+                                <th width="30">
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="filtrele">
-                                <th>
-                                    <input name="EnstituKod" type="text" value="@Model.EnstituKod" class="form-control" />
-                                </th> 
-                                <th>
-                                    <input name="EnstituAdi" type="text" value="@Model.EnstituAd" class="form-control" />
-                                </th>
-                                <th></th>
-                                <th>
-                                    @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
-                                </th>
-                                <th></th>
-                            </tr>
+                             
                             @if (Model.RowCount > 0)
                             {
                                 foreach (var item in Model.EnstitulerDtos)
                                 {
                                     <tr>
                                         <td>@item.EnstituKod</td>
-                                         
+
                                         <td id="tdMad_@item.EnstituKod">
                                             @item.EnstituAd
                                         </td>
@@ -66,7 +54,6 @@
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Kayit")"><i class="fa fa-plus tooltips" data-style="blue" data-original-title="Yeni"></i></a>
                                             <a href="@Url.Action("Kayit", "Enstituler", new { id = item.EnstituKod })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
                                             <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.EnstituKod')"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
                                         </td>

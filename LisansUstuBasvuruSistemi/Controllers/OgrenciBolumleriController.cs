@@ -18,13 +18,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class OgrenciBolumleriController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index()
+        public ActionResult Index(string ekd)
         {
-            return Index(new FmOgrenciBolumleri { });
+            return Index(new FmOgrenciBolumleri(), ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmOgrenciBolumleri model)
+        public ActionResult Index(FmOgrenciBolumleri model, string ekd)
         {
+            model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from s in _entities.OgrenciBolumleris
                     join se in _entities.OgrenciBolumleris on new { s.OgrenciBolumID } equals new { se.OgrenciBolumID }
@@ -50,7 +51,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             if (!model.BolumAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.BolumAdi.Contains(model.BolumAdi));
             model.RowCount = q.Count();
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd).ThenBy(o => o.BolumAdi); 
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd).ThenBy(o => o.BolumAdi);
             model.data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
@@ -90,15 +91,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Enstitü seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
             if (kModel.BolumAdi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Bölüm Adı Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BolumAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BolumAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BolumAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BolumAdi" });
 
 
             #endregion
@@ -138,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult Sil(int? id)
         {
-            var kayit = _entities.OgrenciBolumleris.FirstOrDefault(p => p.OgrenciBolumID == id); 
+            var kayit = _entities.OgrenciBolumleris.FirstOrDefault(p => p.OgrenciBolumID == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -154,7 +155,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.BolumAdi + "' İsimli Öğrenci Bölüm Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Bolumler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Bolumler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

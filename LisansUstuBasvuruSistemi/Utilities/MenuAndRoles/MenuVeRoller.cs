@@ -201,20 +201,20 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string TiJuriOnerileriOgrenciAdina = "Jüri Önerisini Öğrenci Adına Yap";
 
 
-        [Menu(BagliMenuID = 83300, MenuAdi = "Tez Öneri Savunma Giriş", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TosBasvuru/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 10)]
+        [Menu(BagliMenuID = 83300, MenuAdi = "Tez Öneri Giriş", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TosBasvuru/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 10)]
         public const string TosBasvuru = "Tos Basvuru";
-        [Menu(BagliMenuID = 83300, MenuAdi = "Tez Öneri Sav. Başvuruları", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TosGelenBasvurular/Index", SiraNo = 11)]
-        [Role(GorunurAdi = "Tez Öneri Savunma Başvuruları", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        [Menu(BagliMenuID = 83300, MenuAdi = "Tez Öneri Başvuruları", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TosGelenBasvurular/Index", SiraNo = 11)]
+        [Role(GorunurAdi = "Tez Öneri Başvuruları", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TosGelenBasvuru = "Tos Gelen Başvurular";
-        [Role(GorunurAdi = "Tez Öneri Savunma Başvuruları Kayıt", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        [Role(GorunurAdi = "Tez Öneri Başvuruları Kayıt", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TosGelenBasvuruKayit = "Tos Gelen Başvurular Kayıt";
-        [Role(GorunurAdi = "Tez Öneri Savunma Başvuruları Sil", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        [Role(GorunurAdi = "Tez Öneri Başvuruları Sil", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TosGelenBasvuruSil = "Tos Gelen Başvurular Sil";
-        [Role(GorunurAdi = "Tez Öneri Savunma Toplantı Talebi Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        [Role(GorunurAdi = "Tez Öneri Toplantı Talebi Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TosToplantiTalebiYap = "Tos Toplantı Talebi Yap";
-        [Role(GorunurAdi = "Tez Öneri Savunma Degerlendirme Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        [Role(GorunurAdi = "Tez Öneri Degerlendirme Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TosDegerlendirmeYap = "Tez Öneri Savunma Degerlendirme Yap";
-        [Role(GorunurAdi = "Tez Öneri Savunma Degerlendirme Düzeltme", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        [Role(GorunurAdi = "Tez Öneri Degerlendirme Düzeltme", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TosDegerlendirmeDuzeltme = "Tez Öneri Savunma Degerlendirme Düzeltme";
         
 

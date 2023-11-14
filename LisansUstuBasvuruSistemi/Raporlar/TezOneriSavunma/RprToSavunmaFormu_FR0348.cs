@@ -80,15 +80,15 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
 
 
                 var strDurumAdiTr =
-                    data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi
+                    data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                         ? "KABUL EDİLDİ"
-                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi
+                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
                             ? "RET EDİLDİ"
                             : "DÜZELTME TALEP EDİLDİ");
                 var strDurumAdiEn =
-                    data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi
+                    data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                         ? "ACCEPTED"
-                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi
+                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
                             ? "REJECTED"
                             : "REVISION");
 

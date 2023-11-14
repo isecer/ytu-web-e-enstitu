@@ -54,20 +54,20 @@
                                                     success: function (result) { 
                                                         var classEk = result.IsDoktora ? "Dr" : "YL";
                                                          $('.AllGroup').addClass('hide');
-                                                        if (result.TalepTipID == '@TalepTipi.LisansustuSureUzatmaTalebi') {
+                                                        if (result.TalepTipID == '@TalepTipiEnum.LisansustuSureUzatmaTalebi') {
                                                             $('.EkSure' + classEk).removeClass('hide');
                                                         }
-                                                        else if (result.TalepTipID == '@TalepTipi.YDSSinavSonucuBelgesiYukleme') {
+                                                        else if (result.TalepTipID == '@TalepTipiEnum.YdsSinavSonucuBelgesiYukleme') {
                                                             $('.YDS' + classEk).removeClass('hide');
                                                         }
-                                                        else if (result.TalepTipID == '@TalepTipi.KayitSildirmeBelgesiYukleme') {
+                                                        else if (result.TalepTipID == '@TalepTipiEnum.KayitSildirmeBelgesiYukleme') {
                                                             $('.Silme' + classEk).removeClass('hide');
 
                                                         }
-                                                        else if (result.TalepTipID == '@TalepTipi.Covid19KayitDondurmaTalebi') {
+                                                        else if (result.TalepTipID == '@TalepTipiEnum.Covid19KayitDondurmaTalebi') {
                                                             $('.Dondurma' + classEk).removeClass('hide');
                                                         }
-                                                        else if (result.TalepTipID == '@TalepTipi.KayitDondurma') {
+                                                        else if (result.TalepTipID == '@TalepTipiEnum.KayitDondurma') {
                                                             $('.KDondurma' + classEk).removeClass('hide');
                                                         }
                                                         if (result.IsBelgeYuklemeVar) {

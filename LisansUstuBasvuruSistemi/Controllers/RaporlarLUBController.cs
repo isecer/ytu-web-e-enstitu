@@ -14,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
            
-            ViewBag.BasvuruSurecID = new SelectList(Management.getbasvuruSurecleri(enstituKod, BasvuruSurecTipi.LisansustuBasvuru ,true), "Value", "Caption");
+            ViewBag.BasvuruSurecID = new SelectList(Management.GetbasvuruSurecleri(enstituKod, BasvuruSurecTipiEnum.LisansustuBasvuru ,true), "Value", "Caption");
             return View();
         }
     }

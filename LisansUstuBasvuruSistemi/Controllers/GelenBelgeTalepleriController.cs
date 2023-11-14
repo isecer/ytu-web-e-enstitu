@@ -24,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = RoleNames.GelenBelgeTalepleri)]
+        [Authorize(Roles = RoleNames.GelenBelgeTalepleri)] 
         public ActionResult Index(FmBelgeTalepleriDto model, string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
@@ -182,9 +182,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipID);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(true, 0), "Value", "Caption", model.OgretimYili);
             ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumID);
-            ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", model.ProgramKod);
+            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", model.ProgramKod);
             ViewBag.DilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", model.DilKodu);
             ViewBag.BuGunkuKayitlar = new SelectList(BelgeTalepBus.GetCmbBelgeTeslimSaatler(), "Value", "Caption", model.BuGunkuKayitlar);
             return View(model);
@@ -201,14 +201,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.SaveChanges();
                 mmMessage.Messages.Add("Belge Talebi Silindi.");
                 mmMessage.IsSuccess = true;
-                mmMessage.MessageType = Msgtype.Success;
+                mmMessage.MessageType = MsgTypeEnum.Success;
             }
             catch (Exception ex)
             {
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Belge Talebi Silinemedi.");
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogType.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogTipiEnum.OnemsizHata);
             }
             return mmMessage.ToJsonResult();
         }

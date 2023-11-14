@@ -16,8 +16,9 @@
             <!-- START SIMPLE DATATABLE -->
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-bullhorn"></i>&nbsp; Duyuru Listesi</h3>
+                    <h3 class="panel-title"><i class="fa fa-bullhorn"></i> Duyuru Listesi</h3>
                     <ul class="panel-controls">
+                        <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Duyuru Ekle</span></li>
                         <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
@@ -27,12 +28,11 @@
                         <thead>
                             <tr>
                                 <th width="75"></th>
-                                <th width="140" class="sirala" field="EnstituAd">Enstitu</th>
-                                <th width="110" class="sirala" field="Tarih">Tarih</th>
+                                <th class="sirala" field="Tarih" width="110">Tarih</th>
                                 <th class="sirala" field="Baslik">Başlık</th>
-                                <th width="40" class="sirala" field="EkSayisi"><i class="fa fa-download"></i></th>
+                                <th class="sirala" field="EkSayisi" width="40"><i class="fa fa-download"></i></th>
                                 <th class="sirala" field="IsAktif" width="60">Durum</th>
-                                <th style="width:44px; padding-left: 0px; padding-right: 0px;"></th>
+                                <th width="40"></th>
 
                             </tr>
 
@@ -40,12 +40,7 @@
                         <tbody>
                             <tr class="filtrele">
                                 <th></th>
-                                <th>
-                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
-                                </th>
-                                <th>
-                                    <input type="text" name="Tarih" value="@Model.Tarih" class="form-control" />
-                                </th>
+                                <th></th>
                                 <th>
                                     <input type="text" name="Baslik" value="@Model.Baslik" class="form-control" />
                                 </th>
@@ -53,9 +48,7 @@
                                 <th>
                                     @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
-                                <th>
-                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
-                                </th>
+                                <th></th>
 
                             </tr>
                             @if (Model.RowCount > 0)
@@ -80,25 +73,23 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td ondblclick="ShowDetail(@item.DuyuruID)">@item.EnstituAdi</td>
-                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
+                                        <td>
                                             @item.Tarih.ToFormatDateAndTime()
                                         </td>
-                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
+                                        <td>
                                             @(item.Baslik.Length > 70 ? item.Baslik.Substring(0, 69) + "..." : item.Baslik)
                                         </td>
-                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
+                                        <td>
                                             <img src="~/Images/Attachment.png" style="height: 16px;" />@item.EkSayisi
                                         </td>
                                         <td><span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span></td>
-                                        <td style="vertical-align: middle; padding-left: 0px; padding-right: 0px;">
-                                            <a href="@Url.Action("Kayit")"><i class="fa fa-plus tooltips" data-style="blue" data-original-title="Yeni"></i></a>
-                                            <a href="@Url.Action("Kayit", "Duyurular", new { id = item.DuyuruID })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,@item.DuyuruID)"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        <td>
+                                            <a href="@Url.Action("Kayit", "Duyurular", new { id = item.DuyuruID })"><i class="fa fa-edit fa-lg" title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="silmeOnay(this,@item.DuyuruID)"><i class="fa fa-trash-o fa-lg" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.DuyuruID" style="display:none">
-                                        <td id="cls-@item.DuyuruID" colspan="8" style="padding: 1px 1px 2px 75px;">
+                                        <td id="cls-@item.DuyuruID" colspan="6" style="padding: 1px 1px 2px 75px;">
 
                                             <div class="panel panel-success">
                                                 <div class="panel-heading padding-0">
@@ -231,7 +222,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="8" style="text-align: center">
+                                    <td colspan="6" style="text-align: center">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

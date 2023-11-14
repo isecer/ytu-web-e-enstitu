@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var q = from s in _entities.SRTalepTipleris
                     join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    select new FrSRTalepTipleri
+                    select new FrSrTalepTipleri
                     {
                         SRTalepTipID = s.SRTalepTipID,
                         IsTezSinavi = s.IsTezSinavi,
@@ -52,7 +52,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.TalepTipAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.TalepTipAdi.Contains(model.TalepTipAdi));
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.TalepTipAdi); 
-            model.data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount,
@@ -97,18 +97,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.TalepTipAdi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Talpe Tip Adı Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepTipAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TalepTipAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TalepTipAdi" });
             if (kullaniciTipIDs.Count == 0)
             {
                 mmMessage.Messages.Add("Kullanıcı Tipi Seçiniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AyID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AyID" });
             }
             if (ayIDs.Count == 0)
             {
                 mmMessage.Messages.Add("Ay Seçiniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AyID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AyID" });
             }
 
 
@@ -187,7 +187,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + data.TalepTipAdi + "' İsimli talep tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SRTalepTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SRTalepTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

@@ -979,7 +979,6 @@
           <Property Name="KayitTarihi" Type="datetime" />
           <Property Name="KayitYilBaslangic" Type="int" />
           <Property Name="KayitDonemID" Type="int" />
-          <Property Name="OkuduguDonemNo" Type="int" />
           <Property Name="DanismanID" Type="int" />
           <Property Name="FixedHeader" Type="bit" Nullable="false" />
           <Property Name="FixedSidebar" Type="bit" Nullable="false" />
@@ -11321,7 +11320,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="KayitTarihi" Type="DateTime" Precision="3" />
           <Property Name="KayitYilBaslangic" Type="Int32" />
           <Property Name="KayitDonemID" Type="Int32" />
-          <Property Name="OkuduguDonemNo" Type="Int32" />
           <Property Name="DanismanID" Type="Int32" />
           <Property Name="FixedHeader" Type="Boolean" Nullable="false" />
           <Property Name="FixedSidebar" Type="Boolean" Nullable="false" />
@@ -18819,7 +18817,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="FixedSidebar" ColumnName="FixedSidebar" />
                 <ScalarProperty Name="FixedHeader" ColumnName="FixedHeader" />
                 <ScalarProperty Name="DanismanID" ColumnName="DanismanID" />
-                <ScalarProperty Name="OkuduguDonemNo" ColumnName="OkuduguDonemNo" />
                 <ScalarProperty Name="KayitDonemID" ColumnName="KayitDonemID" />
                 <ScalarProperty Name="KayitYilBaslangic" ColumnName="KayitYilBaslangic" />
                 <ScalarProperty Name="KayitTarihi" ColumnName="KayitTarihi" />

@@ -26,29 +26,23 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th width="75"></th>
-                                <th class="sirala" field="EnstituAd">Enstitü Adı</th>
-                                <th class="sirala" field="SinavTipGrupAdi" width="150">Grup Adı</th> 
-                                <th class="sirala" field="SinavAdi" width="140">Sınav Tipi</th>  
-                                <th class="sirala" field="OzelNot" width="60" title="Özel not girişi">On</th> 
+                                <th width="75"></th> 
+                                <th class="sirala" field="SinavTipGrupAdi">Grup Adı</th> 
+                                <th class="sirala" field="SinavAdi">Sınav Adı</th>   
                                 <th class="sirala" field="IsAktif" width="60">Durum</th>
-                                <th width="50"> 
+                                <th width="40"> 
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="filtrele">
-                                <th></th>
-                                <th>
-                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
-                                </th>
+                                <th></th> 
                                 <th>
                                     @Html.DropDownList("SinavTipGrupID", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th> 
                                 <th>
                                     <input name="SinavAdi" type="text" value="@Model.SinavAdi" class="form-control" />
-                                </th> 
-                                <th></th>
+                                </th>  
                                 <th>
                                     @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
@@ -74,31 +68,25 @@
                                                     </td>
                                                 </tr>
                                             </table>
-                                        </td>
-                                        <td>@item.EnstituAd</td>
+                                        </td> 
 
                                         <td>@item.SinavTipGrupAdi</td>
 
                                        
                                         <td id="tdMad_@item.SinavTipID">
                                             @item.SinavAdi
-                                        </td>
-                                          
-                                        <td style="text-align:center;">
-                                            <span class="label label-@(item.OzelNot ? "success" : "danger")">@item.OzelNot.ToEvetHayir()</span>
-                                        </td>
+                                        </td> 
                                        
                                         <td id="tdIa_@item.SinavTipID" style="text-align:center;">
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Kayit")"><i class="fa fa-plus tooltips" data-style="blue" data-original-title="Yeni"></i></a>
-                                            <a href="@Url.Action("Kayit", "SinavTipleri", new { id = item.SinavTipID })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                             <a href="@Url.Action("Kayit", "SinavTipleri", new { id = item.SinavTipID })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
                                             <a href="javascript:void(0)" onclick="getDetail('@item.SinavTipID',true,this)"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.SinavTipID" style="display:none">
-                                        <td id="cls-@item.SinavTipID" colspan="11" style="padding: 1px 1px 2px 75px;"></td>
+                                        <td id="cls-@item.SinavTipID" colspan="5" style="padding: 1px 1px 2px 75px;"></td>
                                     </tr>
 
                                 }
@@ -106,7 +94,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="10" style="text-align: center;">
+                                    <td colspan="5" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>
@@ -133,7 +121,7 @@
     function getDetail(id, Isdelete, sndr) {
         var _panel = $('#STDetay_' + id);
         PanelRefresh(_panel, false);
-        var tbName = "@TabAdlari.SinavTipTN-" + id;
+        var tbName = "@TabAdiEnum.SinavTipTn-" + id;
         var tID = GetSelectedTabID(tbName);
         $.ajax({
             url: '@Url.Action("GetDetail", "SinavTipleri")',
@@ -230,7 +218,7 @@
     }
 
     function STProgramaOzelNotKriteriEkle(url) {
-        yeniDialogBB(null, 'Sınav tipi özel not ekleme işlemi', url, 650, '@ModalSizeClass.Large');
+        yeniDialogBB(null, 'Sınav tipi özel not ekleme işlemi', url, 650, '@ModalSizeClassEnum.Large');
 
     }
 </script>

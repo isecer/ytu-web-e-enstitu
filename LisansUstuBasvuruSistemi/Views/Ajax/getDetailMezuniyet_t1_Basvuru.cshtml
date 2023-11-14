@@ -13,7 +13,7 @@
     var tdKayitYetki = kayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
     var isKendiBasvuruSu = Model.KullaniciID == UserIdentity.Current.Id;
 
-    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
 
     var isTezDanisman = Model.TezDanismanID == UserIdentity.Current.Id;
     var sonucGirisSureciAktif = (Model.sonucGirisSureciAktif || kayitYetki) && Model.MezuniyetJuriOneriFormlaris.All(a => a.EYKYaGonderildi != true);
@@ -105,9 +105,9 @@
                             {
                                 <a href="javascript:void(0);" class="openFl" FPath="@Url.Content(Model.DanismanImzaliFormDosyaYolu)" FName=" @(Model.OgrenimTipKod.IsDoktora()? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu")"><span class="fa fa-download" style="color: green;"></span>&nbsp;@Model.DanismanImzaliFormDosyaAdi</a>
                             }
-                            else if (Model.IsDanismanOnay == true && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                            else if (Model.IsDanismanOnay == true && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                             {
-                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=true' , 'auto', 'modal-dialog modal-lg' )">
+                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=true' , 'auto', 'modal-dialog modal-lg' )">
                                     <i class="fa fa-file-pdf-o"></i> FR-0338 Mezuniyet Tez Teslim Formunu İndir
                                 </a>
                             }
@@ -115,7 +115,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="padding-left:10px;text-align:left;">
-                            @if (!Model.YayinBilgileri.Any(a => a.Onaylandi.HasValue) && (isTezDanisman || tdKayitYetki) && (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak))
+                            @if (!Model.YayinBilgileri.Any(a => a.Onaylandi.HasValue) && (isTezDanisman || tdKayitYetki) && (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak))
                             {
                                 <table style="width:100%;">
                                     <tr>
@@ -198,7 +198,7 @@
                                         <td class="CaptionTd" width="10">:</td>
                                         <td class="ValueTd">@Model.TezDanismanAdi</td>
                                     </tr>
-                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Taslak)
+                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Taslak)
                                     {
                                         <tr>
                                             <td class="CaptionTd">Onay Durumu</td>
@@ -281,9 +281,9 @@
                     <tr>
                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign" style="font-size:14pt;"></i> Yayın Bilgisi</td>
                         <td style="font-size:9pt; border-bottom:1px solid;">
-                            @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                            @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                             {
-                                <a style="float:right;" href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Yayın Şartı Onayı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetBasvuruRaporu&MezuniyetBasvurulariID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                <a style="float:right;" href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Yayın Şartı Onayı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetBasvuruRaporu&MezuniyetBasvurulariID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
                                     <i class="fa fa-file-pdf-o"></i>  Yayın Onayını İndir
                                 </a>
                             }
@@ -298,7 +298,7 @@
                                         <th width="35"></th>
                                         <th width="150">Yayın Türü</th>
                                         <th>Yayın Başlığı</th>
-                                        @if (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak)
+                                        @if (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak)
                                         {
                                             <th width="120"></th>
                                         }
@@ -311,7 +311,7 @@
                                         foreach (var item in Model.YayinBilgileri)
                                         {
 
-                                            item.DegerlendirmeKolonu = Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak && Model.IsDanismanOnay == true;
+                                            item.DegerlendirmeKolonu = Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak && Model.IsDanismanOnay == true;
                                             item.DegerlendirmeAktif = sonucGirisSureciAktif && (!isKendiBasvuruSu || Model.GelenBasvuru) && kayitYetki;
                                             item.sonucGirisSureciAktif = sonucGirisSureciAktif;
                                             inx++;
@@ -323,7 +323,7 @@
                                     else
                                     {
                                         <tr>
-                                            <td style="text-align:center;" colspan="@(Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak?"5":"4")">Yayın bilgisi istenmemektedir.</td>
+                                            <td style="text-align:center;" colspan="@(Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak?"5":"4")">Yayın bilgisi istenmemektedir.</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -360,7 +360,7 @@
                                             }
                                         </td>
                                     </tr>
-                                    <tr id="bdurumRowID_@Model.MezuniyetBasvurulariID" class="@(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi ? "" : "hide")">
+                                    <tr id="bdurumRowID_@Model.MezuniyetBasvurulariID" class="@(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi ? "" : "hide")">
                                         <td class="CaptionTd">İptal Açıklaması</td>
                                         <td class="CaptionTd">:</td>
                                         <td class="ValueTd">

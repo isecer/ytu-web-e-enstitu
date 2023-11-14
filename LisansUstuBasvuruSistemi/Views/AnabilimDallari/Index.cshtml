@@ -17,30 +17,30 @@
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Anabilim Dalı Listesi</h3>
                     <ul class="panel-controls">
                         <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit", "AnabilimDallari")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Anabilim Dalı Ekle</span></li>
-                    @if (filteredAbdIds.Any() || filteredKomiteIds.Any())
-                    {
-                        <li>
-                            @*<span class="label label-primary label-form" style="cursor: pointer;" onclick="mGonderGB('@string.Join(",", filteredKomiteIds)',true,false)"><i class="fa fa-envelope" aria-hidden="true"></i> @filteredKomiteIds.Count Komite Üyesine Mail Gönder</span>*@
-                            <span class="btn-group btn-group-sm" style="margin-top: 3px; margin-left: 5px;">
-                                <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-envelope"></i> Mail Gönder</a>
-                                <ul class="dropdown-menu" role="menu">
-                                    @if (filteredKomiteIds.Any())
-                                    {
-                                        <li>
-                                            <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredKomiteIds)',true,false)">@filteredKomiteIds.Count Komite Üyesine Mail Gönder</a>
-                                        </li>
-                                    }
-                                    @if (filteredAbdIds.Any())
-                                    {
-                                        <li>
-                                            <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredAbdIds)',true,false)">@filteredAbdIds.Count Anabilim Dalına Mail Gönder</a>
-                                        </li>
+                        @if (filteredAbdIds.Any() || filteredKomiteIds.Any())
+                        {
+                            <li>
+                                @*<span class="label label-primary label-form" style="cursor: pointer;" onclick="mGonderGB('@string.Join(",", filteredKomiteIds)',true,false)"><i class="fa fa-envelope" aria-hidden="true"></i> @filteredKomiteIds.Count Komite Üyesine Mail Gönder</span>*@
+                                <span class="btn-group btn-group-sm" style="margin-top: 3px; margin-left: 5px;">
+                                    <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-envelope"></i> Mail Gönder</a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        @if (filteredKomiteIds.Any())
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredKomiteIds)',true,false)">@filteredKomiteIds.Count Komite Üyesine Mail Gönder</a>
+                                            </li>
+                                        }
+                                        @if (filteredAbdIds.Any())
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredAbdIds)',true,false)">@filteredAbdIds.Count Anabilim Dalına Mail Gönder</a>
+                                            </li>
 
-                                    }
-                                </ul>
-                            </span>
-                        </li>
-                    }
+                                        }
+                                    </ul>
+                                </span>
+                            </li>
+                        }
                         <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                     </ul>
                 </div>
@@ -48,20 +48,16 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th class="sirala" field="EnstituAd" width="140">Enstitü Adı</th>
-                                <th class="sirala" field="AnabilimDaliKod" width="50">Abd Kod</th>
+                                <th class="sirala" field="AnabilimDaliKod" width="50">Kod</th>
                                 <th class="sirala" field="AnabilimDaliAdi">Anabilim Dalı Adı</th>
                                 <th class="sirala" field="IsEmailVar">EMail</th>
                                 <th class="sirala" field="YeterlikKomiteUyeCount" width="90">Y.Komite.Üye</th>
                                 <th class="sirala" field="IsAktif" width="60">Durum</th>
-                                <th width="50"></th>
+                                <th width="40"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="filtrele">
-                                <th>
-                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
-                                </th>
                                 <th>
                                     <input name="AnabilimDaliKod" type="text" value="@Model.AnabilimDaliKod" class="form-control" />
                                 </th>
@@ -84,14 +80,13 @@
                                 foreach (var item in Model.FrAnabilimDallaris)
                                 {
                                     <tr>
-                                        <td>@item.EnstituAd</td>
                                         <td>@item.AnabilimDaliKod</td>
                                         <td id="tdMad_@item.AnabilimDaliID">
                                             @item.AnabilimDaliAdi
                                         </td>
                                         <td>
                                             @if (item.IsEmailVar)
-                                            { 
+                                            {
                                                 @item.EMail
                                             }
                                             else
@@ -108,7 +103,6 @@
                                         <td>
                                             <a href="@Url.Action("Kayit", "AnabilimDallari", new { id = item.AnabilimDaliID })"><i class="fa fa-edit fa-lg" data-style="blue" title="Düzelt"></i></a>
                                             <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.AnabilimDaliID');"><i class="fa fa-trash-o  fa-lg" data-style="blue" title="Sil"></i></a>
-
                                         </td>
                                     </tr>
                                 }
@@ -116,7 +110,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="7" style="text-align: center;">
+                                    <td colspan="6" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

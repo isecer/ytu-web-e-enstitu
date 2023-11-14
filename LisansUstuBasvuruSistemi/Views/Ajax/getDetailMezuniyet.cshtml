@@ -11,9 +11,9 @@
 
     Layout = null;
     bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();  
-    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
     var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true);
-    var itemOnaylananSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
+    var itemOnaylananSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
 
@@ -40,19 +40,19 @@
 
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Başvuru Kabulü</span></a></li>
-                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                     {
                         <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-group fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> EYK Süreci</span></a></li>
                     }
-                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.EYKDaOnaylandi == true && Model.EYKTarihi.HasValue)
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && Model.EYKDaOnaylandi == true && Model.EYKTarihi.HasValue)
                     {
                         <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',3)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-edit fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Sınav Süreci</span></a></li>
                     }
-                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili)
                     {
                         <li class="@(Model.SelectedTabIndex == 4 ? "active" : "") bnt-@tbName-4" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',4)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-file-text-o fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Tez Kontrol Süreci</span></a></li>
                     }
-                    @if ((Model.KullaniciID == UserIdentity.Current.Id || kayitYetki) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && (isTdYuklemeKapali || bezCiltForm != null))
+                    @if ((Model.KullaniciID == UserIdentity.Current.Id || kayitYetki) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili && (isTdYuklemeKapali || bezCiltForm != null))
                     {
                         <li class="@(Model.SelectedTabIndex == 5 ? "active" : "") bnt-@tbName-5" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',5)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-graduation-cap fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Mezuniyet Süreci</span></a></li>
                     }
@@ -99,7 +99,7 @@
                                         <td>:</td>
                                         <td>@Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
                                     </tr>
-                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                                     {
                                         <tr>
                                             <td>Danışman</td>
@@ -119,7 +119,7 @@
                                             </td>
                                         </tr>
                                     }
-                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                                     {
                                         <tr class="@(Model.EYKTarihi.HasValue ? "success" : "danger")">
                                             <td>EYK Tarihi</td>
@@ -199,15 +199,15 @@
 
                     @Model.ToMezuniyetDetayBasvuru()
 
-                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                     {
                         @Model.ToMezuniyetDetayEykSureci()
                     }
-                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.EYKDaOnaylandi == true && Model.EYKTarihi.HasValue)
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && Model.EYKDaOnaylandi == true && Model.EYKTarihi.HasValue)
                     {
                         @Model.ToMezuniyetDetaySinavSureci()
                     }
-                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili)
                     {
                         @Model.ToMezuniyetDetayTezKontrolSureci()
                         if ((Model.KullaniciID == UserIdentity.Current.Id || kayitYetki) && (isTdYuklemeKapali || bezCiltForm != null))
@@ -240,7 +240,7 @@
     });
     function DurumKontrol(id) {
         var secimval = $('#SRDurumID_' + id).val();
-        if (secimval == '@SRTalepDurum.Reddedildi') {
+        if (secimval == '@SrTalepDurumEnum.Reddedildi') {
             $('#aciklamabilgi_' + id).removeClass("hide");
         }
         else {
@@ -248,7 +248,7 @@
         }
     }
     function TTStVChange(sndr, rwid) {
-        if ($(sndr).val() != "@MezuniyetSinavDurum.Basarili") {
+        if ($(sndr).val() != "@MezuniyetSinavDurumEnum.Basarili") {
             $('#InpTTSt_' + rwid).addClass("hide");
             $('.tt_Title_' + rwid).addClass("hide");
         }

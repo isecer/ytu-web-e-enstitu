@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
@@ -24,8 +24,11 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-clock-o"></i>Mezuniyet Süreçleri</h3>
                     <ul class="panel-controls">
+                        @if (kayit)
+                        {
+                            <li><span class="label label-primary label-form"><a style="width:54px;color:white;" href="@Url.Action("Kayit")"><i class="fa fa-plus fa-lg"></i> Yeni Süreç Ekle</a></span></li>
+                        }
                         <li><span class="label label-success label-form">Toplam: @indexModel.Toplam</span></li>
-                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -33,27 +36,14 @@
                         <thead>
                             <tr>
                                 <th width="125"></th>
-                                <th class="sirala" field="EnstituAd">Enstitu</th>
-                                <th width="190" class="sirala" field="DonemAdi">Öğretim Yılı</th>
+                                <th>Öğretim Yılı</th>
                                 <th width="105" class="sirala" field="BaslangicTarihi">Başlangıç Tar.</th>
                                 <th width="105" class="sirala" field="BitisTarihi">Bitiş Tar.</th>
-
+                                <th width="60" class="sirala" field="IsAktif">Durum</th>
                             </tr>
 
                         </thead>
                         <tbody>
-                            <tr class="filtrele">
-                                <th>
-                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
-                                </th>
-                                <th>
-                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
-                                </th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-
-                            </tr>
                             @if (Model.RowCount > 0)
                             {
                                 int rowIndex = Model.StartRowIndex;
@@ -96,7 +86,7 @@
                                                     </td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow-ana-@item.MezuniyetSurecID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MezuniyetSurecID,'ana-')">
+                                                            <li id="iShow-ana-@item.MezuniyetSurecID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MezuniyetSurecID,'ana-')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
@@ -104,7 +94,6 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td>@item.EnstituAdi</td>
                                         <td>@item.BaslangicYil / @item.BitisYil @item.DonemAdi @item.SiraNo</td>
                                         <td>
                                             @item.BaslangicTarihi.ToFormatDateAndTime()
@@ -112,6 +101,7 @@
                                         <td>
                                             @item.BitisTarihi.ToFormatDateAndTime()
                                         </td>
+                                        <td><span class="badge badge-@(item.IsAktif ? "success" : "danger")">@(item.IsAktif ? "Aktif" : "Pasif")</span></td>
 
 
                                     </tr>
@@ -156,7 +146,7 @@
     }
     function getDetail(id, Isdelete, sndr) {
 
-        var tbName = "@TabAdlari.MezuniyetSureciTN-" + id;
+        var tbName = "@TabAdiEnum.MezuniyetSureciTn-" + id;
         var tID = GetSelectedTabID(tbName);
         if ($('#SelectedTb-' + tbName).length > 0) {
             subData(id, Isdelete, sndr);
@@ -166,7 +156,7 @@
                 url: '@Url.Action("GetMsDetail", "MezuniyetSureci")',
                 data: { id: id, tbInx: tID, IsDelete: (Isdelete == true) },
                 async: false,
-                success: function (result) { 
+                success: function (result) {
                     if (Isdelete != true) {
                         $('#cls-ana-' + id).html(result);
                         subData(id, Isdelete);
@@ -184,17 +174,17 @@
     }
 
 
-    
+
     function subData(id, IsDelete) {
 
         var _panel = $('#pnglDB_' + id);
-        var tbName = "@TabAdlari.MezuniyetSureciTN-" + id;
+        var tbName = "@TabAdiEnum.MezuniyetSureciTn-" + id;
         var tID = GetSelectedTabID(tbName);
         if (IsDelete == true) tID = 1;
         PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetMsSubData", "MezuniyetSureci")',
-            data: { id: id, tbInx: tID  }, 
+            data: { id: id, tbInx: tID  },
             success: function (result) {
 
                 $('#' + tbName + '-' + tID).html(result);

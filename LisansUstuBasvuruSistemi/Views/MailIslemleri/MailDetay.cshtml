@@ -99,7 +99,8 @@
 
                                 </div>
                                 @if (Model.KisiSayisi > 15)
-                                {<table style="width:100%;">
+                                {
+                                    <table style="width:100%;">
                                         <tr>
                                             <td id="filtreKelime_@Model.GonderilenMailID"></td>
                                         </tr>
@@ -110,7 +111,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 col-xs-3 control-label">Ekler <img src="@Url.Content("/Images/Attachment.png")" style="height: 16px;"></label>
+                    <label class="col-md-2 col-xs-3 control-label">Ekler</label>
                     <div class="col-md-10  col-xs-9" style="text-align: left;">
                         <div class="panel panel-warning" style="margin:0px;padding:0px;">
                             <div class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
@@ -121,15 +122,15 @@
                                             foreach (var item2 in Model.GonderilenMailEkleris.Select((s, inx) => new { inx, s }))
                                             {
                                                 <tr>
-                                                    <td style="width: 25px;">@(item2.inx + 1))</td>
+                                                    <td style="width: 25px;">@(item2.inx + 1).</td>
                                                     <td class="name">
                                                         @if (item2.s.EkDosyaYolu.IsNullOrWhiteSpace())
                                                         {
-                                                            <span class="fa fa-paperclip" style="color: green;"></span> @item2.s.EkAdi
+                                                            <span class="fa fa-paperclip fa-lg" style="color: green;"></span> @item2.s.EkAdi
                                                         }
                                                         else
                                                         {
-                                                            <a href="@item2.s.EkDosyaYolu" target="_blank"><span class="fa fa-paperclip" style="color: green;"></span> @item2.s.EkAdi</a>
+                                                            <a href="@item2.s.EkDosyaYolu" target="_blank"><span class="fa fa-paperclip fa-lg" style="color: green;"></span> @item2.s.EkAdi</a>
                                                         }
                                                     </td>
                                                 </tr>

@@ -21,12 +21,22 @@
     </div>
 </div>
 
-@if (Model.Ogrenci == null || Model.Ogrenci.TCKIMLIKNO.IsNullOrWhiteSpace())
+@if (!Model.Tc.IsNullOrWhiteSpace() && Model.Ogrenci == null)
 {
     <div class="panel panel-danger" style="padding-bottom: 0px;">
         <div class="panel-body" style="padding: 0px;">
-            <div class="panel panel-default form-horizontal" style="margin: 0px;text-align:center;font-size:13pt;color:maroon;">
-                Listelenen öğrenci yok
+            <div class="panel panel-default form-horizontal" style="margin: 0px;text-align:center;font-size:9pt;color:maroon;">
+                '@Model.Tc' ile yapılan arama sonucunda herhangi bir öğrenci bulunamadı.
+            </div>
+        </div>
+    </div>
+}
+else if (Model.Ogrenci == null)
+{
+    <div class="panel panel-danger" style="padding-bottom: 0px;">
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel panel-default form-horizontal" style="margin: 0px; text-align: center; font-size: 9pt; color: green;">
+                Öğrenciyi sorgulamak için öğrenci numarası veya tc numarası girin ve sorgula butonuna tıklayın
             </div>
         </div>
     </div>

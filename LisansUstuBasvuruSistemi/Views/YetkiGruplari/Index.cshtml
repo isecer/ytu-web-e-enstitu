@@ -19,16 +19,22 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
+                                <th></th>
+                                <th></th>
+                                <th colspan="3" class="info" style="text-align:center">Yetkili Kişi Sayıları</th>
+                                <th></th>
+                            </tr>
+                            <tr class="info">
                                 <th class="sirala" field="YetkiGrupAdi">Yetki Grup Adı</th>
-                                <th class="sirala" field="YetkiSayisi" width="125">Yetki Sayısı</th>
-                                <th class="sirala" field="FbeYetkiliSayisi" width="125">FBE Yetkili Sayısı</th>
-                                <th class="sirala" field="SbeYetkiliSayisi" width="125">SBE Yetkili Sayısı</th>
-                                <th class="sirala" field="TetYetkiliSayisi" width="125">TET Yetkili Sayısı</th>
+                                <th class="sirala" field="YetkiSayisi" width="65">Yetki S.</th>
+                                <th class="sirala" field="FbeYetkiliSayisi" width="60">FBE</th>
+                                <th class="sirala" field="SbeYetkiliSayisi" width="60">SBE</th>
+                                <th class="sirala" field="TetYetkiliSayisi" width="60">TET</th>
                                 <th width="40"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="filtrele">
+                            @*<tr class="filtrele">
                                 <td style="padding: 0px;">
                                     <input type="text" name="YetkiGrupAdi" class="form-control" value="@Model.YetkiGrupAdi" />
                                 </td>
@@ -38,7 +44,7 @@
                                 <td style="padding: 0px;"></td>
                                 <td style="padding: 0px;"></td>
 
-                            </tr>
+                            </tr>*@
                             @if (Model.Data.Any())
                             {
                                 foreach (var item in Model.Data)

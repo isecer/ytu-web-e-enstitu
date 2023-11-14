@@ -11,12 +11,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public static string Tuz = "@BİSKAmcumu";
         public static int UniversiteYtuKod { get; } = 67;
         public static int PageSize = 15;
-        public static List<string> FExtensions()
-        {
-            return new List<string>() { ".jpg", ".jpeg", ".tif", ".bmp", ".png", ".txt", ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".rtf", ".pptx" };
-        }
-        public static SistemDilleri[] SistemDilleris { get; set; }
-        public static Enstituler[] Enstitulers { get; set; }
+       
         public static List<int> GetOgrenimTurKods()
         {
             var oTurList = new List<int>
@@ -79,8 +74,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
 
             return bTurList;
-        }
-        public static Roller[] Roles { get; set; }
-        public static Menuler[] Menulers { get; set; }
+        } 
     }
 }

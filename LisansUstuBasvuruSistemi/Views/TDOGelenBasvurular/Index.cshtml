@@ -8,7 +8,10 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var danismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-    var mKids = (List<int>)ViewBag.kIds;
+
+    var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+
     var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
     var silmeYetki = RoleNames.TdoGelenBasvuruSil.InRoleCurrent();
     var eykOnayYetki = kayitYetki || RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
@@ -180,11 +183,20 @@
                             </li>
 
                         }
-                        @if (kayitYetki && mKids.Count > 0)
+                        @if (kayitYetki)
                         {
-                            <li>
-                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>
-                            </li>
+                            if (filteredOgrenciIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                </li>
+                            }
+                            if (filteredDanismanIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                </li>
+                            } 
                         }
                     </ul>
                 </div>

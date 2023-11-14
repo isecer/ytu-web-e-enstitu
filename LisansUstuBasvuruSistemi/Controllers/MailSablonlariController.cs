@@ -106,16 +106,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             { 
                 mmMessage.Messages.Add("Şablonun Ekleneceği Enstitüyü Seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
 
             }
             
             if (kModel.SablonAdi.IsNullOrWhiteSpace())
             { 
                 mmMessage.Messages.Add("Şablon Adı Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SablonAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SablonAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SablonAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SablonAdi" });
 
             if (kModel.Sablon.IsNullOrWhiteSpace() && kModel.SablonHtml.IsNullOrWhiteSpace())
             { 
@@ -131,7 +131,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.Sablon = kModel.Sablon ?? "";
                 if (kModel.MailSablonlariID <= 0)
                 {
-                    kModel.MailSablonTipID = MailSablonTipi.Normal; 
+                    kModel.MailSablonTipID = MailSablonTipiEnum.Normal; 
                     kModel.IsAktif = true;
                     var eklenen = _entities.MailSablonlaris.Add(kModel);
 
@@ -220,7 +220,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.SablonAdi + "' Başlıklı Şablon! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MailSablonlari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MailSablonlari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

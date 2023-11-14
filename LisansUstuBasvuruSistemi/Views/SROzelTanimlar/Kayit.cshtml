@@ -39,7 +39,7 @@
                                     @Html.DropDownList("SROzelTanimTipID", null, new { @class = "form-control", onchange = "setWisible(this)" })
                                 </div>
                             </div>
-                            <div class="_Sabit form-group @(Model.SROzelTanimTipID==SROzelTanimTip.ResmiTatilSabit ? "" : "hide")">
+                            <div class="_Sabit form-group @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.ResmiTatilSabit ? "" : "hide")">
                                 <div class="panel panel-default" style="margin:0px;">
                                     <div class="panel-heading padding-0" style="padding:0px;">
                                         <h3 class="panel-title"><i class="fa fa-pencil"></i> Resmi Tatil Sabit Tarihler</h3>
@@ -62,7 +62,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="_Degisen form-group @(Model.SROzelTanimTipID==SROzelTanimTip.ResmiTatilDegisen ? "" : "hide")">
+                            <div class="_Degisen form-group @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.ResmiTatilDegisen ? "" : "hide")">
                                 <div class="panel panel-default" style="margin:0px;">
                                     <div class="panel-heading padding-0" style="padding:0px;">
                                         <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Resmi Tatil Sabit Olmayan Tarihler</h3>
@@ -85,11 +85,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="_Rezervasyon @((Model.SROzelTanimTipID==SROzelTanimTip.Rezervasyon || Model.SROzelTanimTipID==SROzelTanimTip.Rezerve) ? "" : "hide")">
+                            <div class="_Rezervasyon @((Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezervasyon || Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezerve) ? "" : "hide")">
 
                                 <div class="panel panel-default" style="margin:0px;">
                                     <div class="panel-heading padding-0" style="padding:0px;">
-                                        <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; <span id="rezTipAd">@(Model.SROzelTanimTipID == SROzelTanimTip.Rezervasyon ? "Rezervasyon" : "Rezerve")</span> </h3>
+                                        <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; <span id="rezTipAd">@(Model.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon ? "Rezervasyon" : "Rezerve")</span> </h3>
                                     </div>
                                     <div class="panel-body" style="padding:0px;">
                                         <div class="form-group">
@@ -104,19 +104,19 @@
                                                 @Html.DropDownList("SRSalonID", null, new { @class = "form-control", onChange = "getSaatler();getGunler();" })
                                             </div>
                                         </div>
-                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
+                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezerve ? "" : "hide")">
                                             <label class="col-md-3 col-xs-3 control-label">Başlangıç Tarihi</label>
                                             <div class="col-md-9 col-xs-9">
                                                 <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BasTarih.ToFormatDateInput()" name="BasTarih2" id="BasTarih2">
                                             </div>
                                         </div>
-                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
+                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezerve ? "" : "hide")">
                                             <label class="col-md-3 col-xs-3 control-label">Bitiş Tarihi</label>
                                             <div class="col-md-9 col-xs-9">
                                                 <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitTarih.ToFormatDateInput()" name="BitTarih2" id="BitTarih2">
                                             </div>
                                         </div>
-                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
+                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezerve ? "" : "hide")">
                                             <label class="col-md-3 col-xs-4 control-label">Hafta Günleri</label>
                                             <div class="col-md-9 col-xs-8" id="hgunDrpd">
                                                 <select id="HaftaGunIDs" name="HaftaGunIDs" multiple class="form-control select">
@@ -127,7 +127,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <table class="_SubRezervasyon @(Model.SROzelTanimTipID==SROzelTanimTip.Rezervasyon ? "" : "hide")" style="width:100%;table-layout:fixed;">
+                                        <table class="_SubRezervasyon @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezervasyon ? "" : "hide")" style="width:100%;table-layout:fixed;">
                                             <tr>
                                                 <td width="260">
                                                     <div class="panel panel-default">
@@ -188,21 +188,21 @@
 <script>
     function setWisible(sndr) {
         var _val = $(sndr).val();
-        if (_val == '@SROzelTanimTip.ResmiTatilSabit') {
+        if (_val == '@SrOzelTanimTipiEnum.ResmiTatilSabit') {
             $('._Sabit').removeClass('hide');
             $('._Degisen').addClass('hide');
             $('._Rezervasyon').addClass('hide');
             $('._Rezerve').addClass('hide');
             $('._SubRezervasyon').addClass('hide');
         }
-        else if (_val == '@SROzelTanimTip.ResmiTatilDegisen') {
+        else if (_val == '@SrOzelTanimTipiEnum.ResmiTatilDegisen') {
             $('._Sabit').addClass('hide');
             $('._Degisen').removeClass('hide');
             $('._Rezervasyon').addClass('hide');
             $('._Rezerve').addClass('hide');
             $('._SubRezervasyon').addClass('hide');
         }
-        else if (_val == '@SROzelTanimTip.Rezervasyon') {
+        else if (_val == '@SrOzelTanimTipiEnum.Rezervasyon') {
             $('._Sabit').addClass('hide');
             $('._Degisen').addClass('hide');
             $('._Rezervasyon').removeClass('hide');
@@ -211,7 +211,7 @@
             $('#rezTipAd').html("Rezervasyon");
 
         }
-        else if (_val == '@SROzelTanimTip.Rezerve') {
+        else if (_val == '@SrOzelTanimTipiEnum.Rezerve') {
             $('._Sabit').addClass('hide');
             $('._Degisen').addClass('hide');
             $('._Rezervasyon').removeClass('hide');

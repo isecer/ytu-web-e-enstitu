@@ -59,9 +59,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kmodel.EnstituKod.IsNullOrWhiteSpace())
             { 
                 mmMessage.Messages.Add("Sıkça sorulan soruların yayınlanacağı Enstitüyü Seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
             if (kmodel.Aciklama.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Sıkça sorulan sorular için açıklamaları giriniz!");

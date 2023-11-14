@@ -81,15 +81,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
                 MmMessage.Messages.Add("Enstitü Seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
             if (kModel.AnketAdi.IsNullOrWhiteSpace())
             {
                 MmMessage.Messages.Add("Anket Adı Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnketAdi" });
+                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AnketAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnketAdi" });
+            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "AnketAdi" });
             if (MmMessage.Messages.Count == 0)
             {
                 kModel.IslemTarihi = DateTime.Now;
@@ -201,7 +201,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             //var kModel = new kmAnketlerSoru();
             var mMessage = new MmMessage();
-            mMessage.MessageType = Msgtype.Error;
+            mMessage.MessageType = MsgTypeEnum.Error;
             mMessage.IsSuccess = false;
             mMessage.Title = "Anket sorusu kaydetme işlemi başarısız";
 
@@ -209,18 +209,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.SoruAdi.IsNullOrWhiteSpace())
             {
                 mMessage.Messages.Add("Anket Sorusunu Giriniz.");
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SoruAdi" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SoruAdi" });
             }
-            else mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SoruAdi" });
+            else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SoruAdi" });
 
             if (kModel.IsTabloVeriGirisi)
             {
                 if (kModel.IsTabloVeriMaxSatir.HasValue == false || kModel.IsTabloVeriMaxSatir.Value <= 0)
                 {
                     mMessage.Messages.Add("Tablo olarak veri girişi seçilen sorular için Max Cevap sayısı 0 dan büyük bir değer olmalıdır.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsTabloVeriMaxSatir" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsTabloVeriMaxSatir" });
                 }
-                else mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "IsTabloVeriMaxSatir" });
+                else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "IsTabloVeriMaxSatir" });
             }
             if (mMessage.Messages.Count == 0)
             {
@@ -244,7 +244,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     db.SaveChanges();
 
                     mMessage.Title = "Anket sorusu kaydetme işlemi başarılı";
-                    mMessage.MessageType = Msgtype.Success;
+                    mMessage.MessageType = MsgTypeEnum.Success;
                     mMessage.IsSuccess = true;
                 }
                 catch (Exception ex)
@@ -283,15 +283,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             //var kModel = new kmAnketlerSoru();
             var mMessage = new MmMessage();
-            mMessage.MessageType = Msgtype.Error;
+            mMessage.MessageType = MsgTypeEnum.Error;
             mMessage.IsSuccess = false;
             mMessage.Title = "Anket sorusu şıkkı kaydetme işlemi başarısız";
             if (kModel.SecenekAdi.IsNullOrWhiteSpace())
             {
                 mMessage.Messages.Add("Seçenek Bilgisini Giriniz.");
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SecenekAdi" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SecenekAdi" });
             }
-            else mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SecenekAdi" });
+            else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SecenekAdi" });
 
 
             
@@ -317,7 +317,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     db.SaveChanges();
 
                     mMessage.Title = "Anket sorusu şıkkı kaydetme işlemi başarılı";
-                    mMessage.MessageType = Msgtype.Success;
+                    mMessage.MessageType = MsgTypeEnum.Success;
                     mMessage.IsSuccess = true;
                 }
                 catch (Exception ex)
@@ -345,7 +345,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.AnketAdi + "' İsimli Anket Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Anketler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Anketler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else
@@ -372,7 +372,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.SoruAdi + "' İsimli Anket Sorusu Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Anketler/SilSoru<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Anketler/SilSoru<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else
@@ -400,7 +400,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.SecenekAdi + "' İsimli Anket Sorusu Şıkkı Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Anketler/SilSoruSecenek<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Anketler/SilSoruSecenek<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

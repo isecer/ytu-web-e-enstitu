@@ -78,7 +78,7 @@
                                                     @Html.DropDownList("OzelNotTipID", null, new { @class = "form-control", onchange = "OzelNotTipKontrol()" })
                                                 </div>
                                             </div>
-                                            <div id="dvBelliNotlar" class="@(Model.OzelNotTipID.HasValue && Model.OzelNotTipID.Value==OzelNotTip.SeciliNotlar?"":"hide" )">
+                                            <div id="dvBelliNotlar" class="@(Model.OzelNotTipID.HasValue && Model.OzelNotTipID.Value==OzelNotTipEnum.SeciliNotlar?"":"hide" )">
                                                 <div class="form-group">
                                                     <label class="col-md-2 col-xs-3 control-label">Not Adı</label>
                                                     <div class="col-md-10 col-xs-9">
@@ -121,7 +121,7 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div id="dvBelliNotAraliklari" class="@(Model.OzelNotTipID.HasValue && Model.OzelNotTipID.Value==OzelNotTip.SeciliNotAraliklari?"":"hide" )">
+                                            <div id="dvBelliNotAraliklari" class="@(Model.OzelNotTipID.HasValue && Model.OzelNotTipID.Value==OzelNotTipEnum.SeciliNotAraliklari?"":"hide" )">
                                                 <div class="form-group">
                                                     <label class="col-md-2 col-xs-3 control-label">Not Aralık Adı</label>
                                                     <div class="col-md-10 col-xs-9">
@@ -359,12 +359,12 @@
 
     function OzelNotTipKontrol() {
             var tip = $('#OzelNotTipID').val();
-            if (tip == '@OzelNotTip.SeciliNotlar') {
+            if (tip == '@OzelNotTipEnum.SeciliNotlar') {
                 $('#dvBelliNotAraliklari').addClass('hide');
                 $('#dvBelliNotlar').removeClass('hide');
 
             }
-            else if (tip == '@OzelNotTip.SeciliNotAraliklari') {
+            else if (tip == '@OzelNotTipEnum.SeciliNotAraliklari') {
 
                 $('#dvBelliNotlar').addClass('hide');
                 $('#dvBelliNotAraliklari').removeClass('hide');
@@ -384,7 +384,7 @@
                 OzelNotTipKontrol();
             }
             else {
-                if (_SinavTipGrupID == '@SinavTipGrup.DilSinavlari' || _SinavTipGrupID=='@SinavTipGrup.Tomer') {
+                if (_SinavTipGrupID == '@SinavTipGrupEnum.DilSinavlari' || _SinavTipGrupID=='@SinavTipGrupEnum.Tomer') {
                     $('#_OzelNot').addClass('hide');
                 }
                 else {
@@ -423,7 +423,7 @@
     }
     function notEkle() {
         var _tip = $('#OzelNotTipID').val();
-        if (_tip == '@OzelNotTip.SeciliNotlar') {
+        if (_tip == '@OzelNotTipEnum.SeciliNotlar') {
             var NotharfAdi = $('#_SinavNotAdi').val();
             var NotharfDegeri = $('#_SinavNotDeger').val();
             var _rowEkle = true;
@@ -451,7 +451,7 @@
                 $('.tooltips').tooltip();
             }
         }
-        else if (_tip == '@OzelNotTip.SeciliNotAraliklari') {
+        else if (_tip == '@OzelNotTipEnum.SeciliNotAraliklari') {
             var sbSinavAralikAdi = $('#_SubSinavAralikAdi').val();
             var _min = $('#_SubSinavMin').val();
             var _max = $('#_SubSinavMax').val();

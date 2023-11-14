@@ -13,8 +13,8 @@
 <div class="error-container">
     @*<div class="error-code">Hata !</div>*@
     <div class="icon-preview"><i class="fa fa-eye-slash"></i></div>
-    <div class="error-text">@(errC == HttpDurumKod.Unauthorized ? "Bu İşlemi Yapmaya Yetkili Değilsiniz" : "Çağrılan sayfa bulunamadı")</div>
-    <div class="error-subtext">@(errC == HttpDurumKod.Unauthorized ? "Bu İşlemi Yapmaya Yetkili Değilsiniz" : "Sayfa Çağırma Hatası! Bulunamayan Sayfa") "@sayfaAdi"</div>
+    <div class="error-text">@(errC == HttpDurumKodEnum.Unauthorized ? "Bu İşlemi Yapmaya Yetkili Değilsiniz" : "Çağrılan sayfa bulunamadı")</div>
+    <div class="error-subtext">@(errC == HttpDurumKodEnum.Unauthorized ? "Bu İşlemi Yapmaya Yetkili Değilsiniz" : "Sayfa Çağırma Hatası! Bulunamayan Sayfa") "@sayfaAdi"</div>
     <div class="error-actions">
         <div class="row">
             <div class="col-md-6">

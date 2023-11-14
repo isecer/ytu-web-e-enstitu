@@ -7,16 +7,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public class YeterlikBasvuruFilterEnum
     {
-        public static int IslemGormeyenler = 0;
-        public static int Onaylananlar = 1;
-        public static int IptalEdilenler = 2;
-        public static int JuriOlusturulmayanlar = 3;
-        public static int KomiteOnayiBekleyenler = 4;
-        public static int KomiteOnayiTamamlananlar = 5;
-        public static int SinavSureciniBaslatilmayanlar = 6;
-        public static int SinavSurecindeOlanlar = 7;
-        public static int BasariliOlanlar = 8;
-        public static int BasarisizOlanlar = 9;
+        public const int IslemGormeyenler = 0;
+        public const int Onaylananlar = 1;
+        public const int IptalEdilenler = 2;
+        public const int JuriOlusturulmayanlar = 3;
+        public const int KomiteOnayiBekleyenler = 4;
+        public const int KomiteOnayiTamamlananlar = 5;
+        public const int SinavSureciniBaslatilmayanlar = 6;
+        public const int SinavSurecindeOlanlar = 7;
+        public const int BasariliOlanlar = 8;
+        public const int BasarisizOlanlar = 9;
 
     }
 }

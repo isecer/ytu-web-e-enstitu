@@ -222,7 +222,7 @@
         if (KullaniciID != undefined && KullaniciID != null) url += "?KullaniciID=" + KullaniciID;
         var popupSetting = {
             title:'||',
-            popupTipId:@DuyuruPopupTipi.MezuniyetBasvuru,
+            popupTipId:@DuyuruPopupTipiEnum.MezuniyetBasvuru,
             btnAdi: 'Başvuru Yap',
             redirectUrl: url,
             callbackFnc: ''
@@ -244,7 +244,7 @@
         var _panel = $('#bsvrDet_' + id);
 
 
-        var tbName = "@TabAdlari.MezuniyetBasvurulariTN-" + id;
+        var tbName = "@TabAdiEnum.MezuniyetBasvurulariTn-" + id;
         var tID = tbNo != undefined ? tbNo: GetSelectedTabID(tbName);
         PanelRefresh(_panel, false);
         $.ajax({

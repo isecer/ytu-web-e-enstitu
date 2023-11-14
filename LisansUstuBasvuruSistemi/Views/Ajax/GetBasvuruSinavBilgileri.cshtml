@@ -70,7 +70,7 @@
                                     else
                                     {
                                         bool IsTarihIstensin = true;
-                                        if (item.SinavTipGrupID == SinavTipGrup.Tomer && ((Model.IsTurkceProgramVar && (Model.LEgitimDiliTurkce == true || Model.YLEgitimDiliTurkce == true)) || !Model.IsTurkceProgramVar))
+                                        if (item.SinavTipGrupID == SinavTipGrupEnum.Tomer && ((Model.IsTurkceProgramVar && (Model.LEgitimDiliTurkce == true || Model.YLEgitimDiliTurkce == true)) || !Model.IsTurkceProgramVar))
                                         {
                                             IsTarihIstensin = false;
                                         }
@@ -88,7 +88,7 @@
                                         }
                                     }
 
-                                    @if (item.IsTaahhutVar != true && item.SinavTipGrupID == SinavTipGrup.DilSinavlari)
+                                    @if (item.IsTaahhutVar != true && item.SinavTipGrupID == SinavTipGrupEnum.DilSinavlari)
                                     {
                                         <tr>
                                             <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
@@ -122,7 +122,7 @@
                                     @{
                                         var locTaahhutkey = "Sınav bilgisinin açıklanması itibari ile 5 gün içinde ve mesai saatleri dahilinde başvuru Dil sınavı kriterlerine uyan sınav belgemi getirmeyi taahhüt ediyorum. Aksi halde başvurumun ve kaydımın iptal edilmesini onaylıyorum.";
                                         if (item.SinavTipKod == 56) { locTaahhutkey = "28 Ağustos 2022 YÖKDİL sınavına girmiş olan adaylar minimum puan değeri girmeleri gerekmektedir. Programı kayıt hakkı kazanmanız durumunda; lisansüstü kayıt takviminde yer alan tarihlerde sisteme minimum değeri sağlayan sınav sonucu belgenizi yükleyeceğimi taahhüt ederim. (Aksi taktirde kaydınız yapılmayacaktır.)"; }
-                                        else if (item.SinavTipGrupID == SinavTipGrup.Tomer)
+                                        else if (item.SinavTipGrupID == SinavTipGrupEnum.Tomer)
                                         {
                                             if (Model.IsTurkceProgramVar)
                                             {

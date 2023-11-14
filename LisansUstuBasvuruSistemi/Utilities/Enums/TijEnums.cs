@@ -5,34 +5,33 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
-    public static class TijBasvuruDurum
+    public class TijBasvuruDurumEnum
     {
-        public static int DanismanOnayiBekliyor = 1;
-        public static int DanismanTarafindanOnaylandi = 2;
-        public static int DanismanTarafindanOnaylanmadi = 3;
-        public static int EykYaGonderimOnayiBekleniyor = 4;
-        public static int EykYaGonderimiOnaylandi = 5;
-        public static int EykYaGonderimiOnaylanmadi = 6;
-        public static int EykDaOnayBekleniyor = 7;
-        public static int EykDaOnaylandi = 8;
-        public static int EykDaOnaylanmadi = 9;
+        public const int DanismanOnayiBekliyor = 1;
+        public const int DanismanTarafindanOnaylandi = 2;
+        public const int DanismanTarafindanOnaylanmadi = 3;
+        public const int EykYaGonderimOnayiBekleniyor = 4;
+        public const int EykYaGonderimiOnaylandi = 5;
+        public const int EykYaGonderimiOnaylanmadi = 6;
+        public const int EykDaOnayBekleniyor = 7;
+        public const int EykDaOnaylandi = 8;
+        public const int EykDaOnaylanmadi = 9;
 
     }
-    public static class TijDegisiklikTipi
+    public class TijDegisiklikTipiEnum
     {
-        public static int YtuIciDegisiklik = 1;
-        public static int YtuDisiDegisiklik = 2;
-        public static int YtuIciVeDisiDegisiklik = 3;
-
+        public const int YtuIciDegisiklik = 1;
+        public const int YtuDisiDegisiklik = 2;
+        public const int YtuIciVeDisiDegisiklik = 3; 
     }
-    public static class TijFormTipi
+    public class TijFormTipiEnum
     {
-        public static int YeniForm = 1;
-        public static int DanismanDegisikligi = 2;
-        public static int TezKonusuDegisikligi = 3;
-        public static int DanismanVeTezKonusuDegisikligi = 4;
-        public static int Diger = 5;
-        public static int TumDegisiklikler = 1000;
+        public const int YeniForm = 1;
+        public const int DanismanDegisikligi = 2;
+        public const int TezKonusuDegisikligi = 3;
+        public const int DanismanVeTezKonusuDegisikligi = 4;
+        public const int Diger = 5;
+        public const int TumDegisiklikler = 1000;
 
     }
 }

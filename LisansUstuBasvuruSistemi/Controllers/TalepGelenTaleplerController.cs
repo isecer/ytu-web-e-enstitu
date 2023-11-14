@@ -25,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-            var talepSurecId = Management.getAktifTalepSurecID(enstituKod);
+            var talepSurecId = Management.GetAktifTalepSurecId(enstituKod);
             return Index(new FmTalep() { PageSize = 15, TalepSurecID = talepSurecId, Expand = talepSurecId.HasValue }, ekd);
         }
         [HttpPost]
@@ -119,7 +119,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (qQ != q)
             {
                 model.Expand = true;
-                ViewBag.KTalepGelenTalepIDs = q.Where(p => p.TalepDurumID == TalepDurumu.TalepYapildi).Select(s => s.TalepGelenTalepID).ToList();
+                ViewBag.KTalepGelenTalepIDs = q.Where(p => p.TalepDurumID == TalepDurumuEnum.TalepYapildi).Select(s => s.TalepGelenTalepID).ToList();
             }
             else ViewBag.KTalepGelenTalepIDs = new List<int>(); 
             q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi); 
@@ -144,13 +144,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Color = item.Color,
                 TalepTipID = item.TalepTipID,
                 TalepTipAdi = item.TalepTipAdi,
-                TalepTipAciklama = item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi ?
+                TalepTipAciklama = item.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi ?
                                 (item.OgrenimTipKod.IsDoktora() ?
                                     "Bu talep tipini seçecek öğrenciler, doktora tez önerisinden başarılı olmuş ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir. "
                                     :
                                     "Bu talep tipini seçecek öğrenciler Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşamasını tamamlamış ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir.")
                                  :
-                                 item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi ?
+                                 item.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi ?
                                  (item.OgrenimTipKod.IsDoktora() ?
                                     "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
                                     :

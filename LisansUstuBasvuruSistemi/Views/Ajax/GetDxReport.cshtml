@@ -6,16 +6,14 @@
 }
 @*<script type="text/javascript">
 
-    function ReportDesigner_Init(s, e) { 
-        s.GetDesignerModel().reportPreviewModel.reportPreview.zoom(1);
-    }
-</script>*@  
-@Html.DevExpress().GetStyleSheets(
-                new StyleSheet { ExtensionSuite = ExtensionSuite.Report }
-            )
-@Html.DevExpress().GetScripts(
-        new Script { ExtensionSuite = ExtensionSuite.Report}
-    )
+        function ReportDesigner_Init(s, e) {
+            s.GetDesignerModel().reportPreviewModel.reportPreview.zoom(1);
+        }
+    </script>*@
+<head>
+    @Html.DevExpress().GetStyleSheets(new StyleSheet() { ExtensionType = ExtensionType.WebDocumentViewer })
+    @Html.DevExpress().GetScripts(new Script() { ExtensionType = ExtensionType.WebDocumentViewer })
+</head>
 @Html.DevExpress().WebDocumentViewer(settings =>
 {
 
@@ -23,7 +21,7 @@
     //settings.ClientSideEvents.Init = "ReportDesigner_Init";
 }).Bind(Model).GetHtml()
 
-
+ 
 
 
 

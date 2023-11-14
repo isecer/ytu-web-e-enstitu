@@ -152,7 +152,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (kayitYetki == false) SistemBilgilendirmeBus.SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez İzleme Başvuru ID:" + tiBasvuruId, "TI Başvuru Düzelt", LogType.Uyarı);
+                        if (kayitYetki == false) SistemBilgilendirmeBus.SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez İzleme Başvuru ID:" + tiBasvuruId, "TI Başvuru Düzelt", LogTipiEnum.Uyarı);
                     }
                     else
                     {
@@ -160,7 +160,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             TiAyar.BasvurusuAcikmi.GetAyarTi(tiBasvuru.EnstituKod, "false").ToBoolean() ?? false;
                         if (tiBasvuru.EnstituKod != enstituKod)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Seçilen Tez İzleme başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez İzleme Başvuru Enstitü Kod:" + tiBasvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + enstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + tiBasvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + tiBasvuru.Kullanicilar.KullaniciAdi, "TIK Başvuru Düzelt", LogType.Uyarı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Seçilen Tez İzleme başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez İzleme Başvuru Enstitü Kod:" + tiBasvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + enstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + tiBasvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + tiBasvuru.Kullanicilar.KullaniciAdi, "TIK Başvuru Düzelt", LogTipiEnum.Uyarı);
                             enstituKod = tiBasvuru.EnstituKod;
                         }
                         if (!UserIdentity.Current.EnstituKods.Contains(tiBasvuru.EnstituKod) && kayitYetki && tiBasvuru.KullaniciID != UserIdentity.Current.Id)
@@ -168,7 +168,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitü için Yetkili Değilsiniz.");
                             var message = $"Bu enstitüye ait Tez İzleme başvurusu güncellemeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: { tiBasvuru.TIBasvuruID } \r\n Başvuru sahibi: { tiBasvuru.Kullanicilar.Ad + " " + tiBasvuru.Kullanicilar.Soyad } \r\n Başvuru Tarihi: " + tiBasvuru.BasvuruTarihi;
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogTipiEnum.Saldırı);
                         }
                         else if (!basvuruAcikmi && UserIdentity.Current.IsAdmin == false)
                         {
@@ -180,7 +180,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + tiBasvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + tiBasvuru.Kullanicilar.KullaniciAdi, "TIK Başvuru Düzelt", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + tiBasvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + tiBasvuru.Kullanicilar.KullaniciAdi, "TIK Başvuru Düzelt", LogTipiEnum.Saldırı);
                         }
                     }
                 }
@@ -199,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kul.OgrenimTipKod.IsDoktora())
+                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && kul.OgrenimTipKod.IsDoktora())
                         {
                             var aktifDevamEdenBasvuruVar = db.TIBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TIBasvuruID != tiBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
                             if (aktifDevamEdenBasvuruVar)// toplam başvuru kontrol
@@ -285,7 +285,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (tiBasvuruAraRaporId.HasValue)
                     {
                         isAraRaporOrToplanti = true;
-                        sablonTipIDs.AddRange(new List<int> { MailSablonTipi.TI_AraRaporBaslatildiOgrenci, MailSablonTipi.TI_AraRaporBaslatildiDanisman });
+                        sablonTipIDs.AddRange(new List<int> { MailSablonTipiEnum.TiAraRaporBaslatildiOgrenci, MailSablonTipiEnum.TiAraRaporBaslatildiDanisman });
                         mModel.Add(new SablonMailModel
                         {
 
@@ -293,33 +293,33 @@ namespace LisansUstuBasvuruSistemi.Business
                             UnvanAdi = danisman.UnvanAdi,
                             AdSoyad = danisman.AdSoyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TI_AraRaporBaslatildiDanisman
+                            MailSablonTipID = MailSablonTipiEnum.TiAraRaporBaslatildiDanisman
                         });
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Öğrenci " + kul.Ad + " " + kul.Soyad,
                             AdSoyad = kul.Ad + " " + kul.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = tiAraRapor.TIBasvuru.Kullanicilar.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TI_AraRaporBaslatildiOgrenci
+                            MailSablonTipID = MailSablonTipiEnum.TiAraRaporBaslatildiOgrenci
                         });
                     }
                     if (srTalepId.HasValue)
                     {
-                        sablonTipIDs.AddRange(new List<int> { MailSablonTipi.TI_ToplantiBilgiKomite, MailSablonTipi.TI_ToplantiBilgiOgrenci });
+                        sablonTipIDs.AddRange(new List<int> { MailSablonTipiEnum.TiToplantiBilgiKomite, MailSablonTipiEnum.TiToplantiBilgiOgrenci });
                         mModel.Add(new SablonMailModel
                         {
 
                             JuriTipAdi = "Öğrenci " + kul.Ad + " " + kul.Soyad,
                             AdSoyad = kul.Ad + " " + kul.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = tiAraRapor.TIBasvuru.Kullanicilar.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TI_ToplantiBilgiOgrenci
+                            MailSablonTipID = MailSablonTipiEnum.TiToplantiBilgiOgrenci
                         });
                         mModel.AddRange(juriler.Select(item => new SablonMailModel
                         {
                             UnvanAdi = item.UnvanAdi,
                             AdSoyad = item.AdSoyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TI_ToplantiBilgiKomite,
+                            MailSablonTipID = MailSablonTipiEnum.TiToplantiBilgiKomite,
                             JuriTipAdi = item.JuriTipAdi,
                             TIBasvuruAraRaporKomiteID = danisman.TIBasvuruAraRaporKomiteID
                         }));
@@ -352,7 +352,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                     itemEk.EkAdi.ToSetNameFileExtension(fExtension), System.Net.Mime.MediaTypeNames.Application.Octet));
 
                             }
-                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemEk.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailTIToplantiBilgisi", LogType.Uyarı);
+                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemEk.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailTIToplantiBilgisi", LogTipiEnum.Uyarı);
                         }
                         if (item.Sablon.GonderilecekEkEpostalar != null) item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }));
                         var paramereDegerleri = new List<MailReplaceParameterDto>();
@@ -390,7 +390,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = oncekiMailTarihi?.ToFormatDateAndTime() });
                         }
                         #region SR Talebi
-                        if (item.MailSablonTipID == MailSablonTipi.TI_ToplantiBilgiKomite || item.MailSablonTipID == MailSablonTipi.TI_ToplantiBilgiOgrenci)
+                        if (item.MailSablonTipID == MailSablonTipiEnum.TiToplantiBilgiKomite || item.MailSablonTipID == MailSablonTipiEnum.TiToplantiBilgiOgrenci)
                         {
                             if (item.SablonParametreleri.Any(a => a == "@ToplantiTarihi"))
                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "ToplantiTarihi", Value = srTalebi.Tarih.ToLongDateString() });
@@ -487,16 +487,16 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
 
                 }
             }
             catch (Exception ex)
             {
                 var message = "Tez İzleme toplantısı için Komite üyelerine mail gönderilirken bir hata oluştu! \r\nSRTalepID:" + srTalepId;
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIBilgisi \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
@@ -533,7 +533,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             JuriTipAdi = "Öğrenci " + kul.Ad + " " + kul.Soyad,
                             AdSoyad = kul.Ad + " " + kul.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = tiAraRapor.TIBasvuru.Kullanicilar.EMail, ToOrBcc = true } },
-                            MailSablonTipID = MailSablonTipi.TI_DegerlendirmeSonucGonderimOgrenci,
+                            MailSablonTipID = MailSablonTipiEnum.TiDegerlendirmeSonucGonderimOgrenci,
                         });
                     }
 
@@ -543,7 +543,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         UnvanAdi = item.UnvanAdi,
                         AdSoyad = item.AdSoyad,
                         EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, ToOrBcc = true } },
-                        MailSablonTipID = isLinkOrSonuc ? MailSablonTipi.TI_DegerlendirmeLinkGonderimKomite : MailSablonTipi.TI_DegerlendirmeSonucGonderimDanisman,
+                        MailSablonTipID = isLinkOrSonuc ? MailSablonTipiEnum.TiDegerlendirmeLinkGonderimKomite : MailSablonTipiEnum.TiDegerlendirmeSonucGonderimDanisman,
                         JuriTipAdi = item.JuriTipAdi,
                     }));
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
@@ -571,13 +571,13 @@ namespace LisansUstuBasvuruSistemi.Business
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailTIToplantiBilgisi", LogType.Uyarı);
+                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailTIToplantiBilgisi", LogTipiEnum.Uyarı);
                         }
                         if (!isLinkOrSonuc)
                         {
                             var ds = new List<int?>() { tiBasvuruAraRaporId };
-                            if (item.MailSablonTipID == MailSablonTipi.TI_DegerlendirmeSonucGonderimDanisman) ds.Add(1);
-                            var ekler = Management.exportRaporPdf(RaporTipleri.TezIzlemeDegerlendirmeFormu, ds);
+                            if (item.MailSablonTipID == MailSablonTipiEnum.TiDegerlendirmeSonucGonderimDanisman) ds.Add(1);
+                            var ekler = Management.ExportRaporPdf(RaporTipiEnum.TezIzlemeDegerlendirmeFormu, ds);
                             gonderilenMailEkleri.AddRange(ekler.Select(s => new GonderilenMailEkleri { EkAdi = s.Name, EkDosyaYolu = "" }));
                             item.Attachments.AddRange(ekler);
                         }
@@ -678,7 +678,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
 
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
 
                 }
             }
@@ -686,10 +686,10 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 var message = "";
                 message = isLinkOrSonuc ? "Tez İzleme değerlendirmesi için Komite üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!" : "Tez İzleme değerlendirmesi sonucu Komite üyelerine mail olarak gönderilirken bir hata oluştu!";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
@@ -717,7 +717,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         string message = "Bu enstitüye ait tez izleme başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TIBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "TIK Başvuru Sil", LogType.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "TIK Başvuru Sil", LogTipiEnum.Kritik);
                     }
                     else if (!TiAyar.BasvurusuAcikmi.GetAyarTi(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
@@ -729,7 +729,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Tez İzleme Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Tez İzleme Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogTipiEnum.Saldırı);
                     }
                     //else if (KayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi)
                     //{

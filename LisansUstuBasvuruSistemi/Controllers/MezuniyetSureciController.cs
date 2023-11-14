@@ -18,16 +18,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class MezuniyetSureciController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index()
+        public ActionResult Index(string ekd)
         {
 
-            return Index(new FmMezuniyetSureci() { PageSize = 15 });
+            return Index(new FmMezuniyetSureci() { PageSize = 15 },ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmMezuniyetSureci model)
+        public ActionResult Index(FmMezuniyetSureci model,string ekd)
         {
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-
+            model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var q = from s in _entities.MezuniyetSurecis
                     join e in _entities.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
                     join d in _entities.Donemlers on new { s.DonemID } equals new { d.DonemID }
@@ -104,7 +104,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var eoY = DateTime.Now.ToEgitimOgretimYilBilgi();
             model.OgretimYili = eoY.BaslangicYili + "/" + eoY.BitisYili + "/" + eoY.Donem;
-            var mzMList = Management.getZmMailZamanData(!id.HasValue || id <= 0);
+            var mzMList = Management.GetZmMailZamanData(!id.HasValue || id <= 0);
             if (id > 0)
             {
                 var data = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == id);
@@ -139,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? enstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", model.OgretimYili);
             ViewBag.OgrenimTipleri = OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, false, true);
-            ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(enstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
+            ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(enstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
             ViewBag.kmMzOtoMail = mzMList;
             return View(model);
         }
@@ -219,35 +219,35 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Enstitü Seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
 
             if (kModel.BaslangicTarihi == DateTime.MinValue || kModel.BitisTarihi == DateTime.MinValue)
             {
                 if (kModel.BaslangicTarihi == DateTime.MinValue)
                 {
                     mmMessage.Messages.Add("Geçerli Bir Başlangıç Tarih Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BaslangicTarihi" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BaslangicTarihi" });
                 if (kModel.BitisTarihi == DateTime.MinValue)
                 {
                     mmMessage.Messages.Add("Geçerli Bir Bitiş Tarih Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BitisTarihi" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BitisTarihi" });
             }
             else if (kModel.BaslangicTarihi >= kModel.BitisTarihi)
             {
                 mmMessage.Messages.Add("Başlangıç tarihi bitiş tarihinden büyük olamaz!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
             }
             else
             {
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BaslangicTarihi" });
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BitisTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BaslangicTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BitisTarihi" });
             }
 
             var eOyilBilgi = new EgitimOgretimDonemDto();
@@ -257,12 +257,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 eOyilBilgi.BaslangicYili = oy[0].ToInt().Value;
                 eOyilBilgi.BitisYili = oy[1].ToInt().Value;
                 eOyilBilgi.Donem = oy[2].ToInt().Value;
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgretimYili" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
             }
             else
             {
                 mmMessage.Messages.Add("Öğretim yılı seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgretimYili" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
             }
 
             if (mmMessage.Messages.Count == 0)
@@ -281,8 +281,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (qBasS > 0)
                 {
                     mmMessage.Messages.Add("Girmiş olduğunuz tarihler için daha önceden mezuniyet süreci kayıt edilmiştir.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
                 }
             }
             if (mmMessage.Messages.Count == 0)
@@ -435,7 +435,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.MBTezTeslimSuresiGun = sItem.MBTezTeslimSuresiGun ?? 0;
                 item.MBSRTalebiKacGunSonraAlabilir = sItem.MBSRTalebiKacGunSonraAlabilir ?? 0;
             }
-            var zmMList = Management.getZmMailZamanData();
+            var zmMList = Management.GetZmMailZamanData();
 
             if (qMailZamanlari.Any())
                 foreach (var item in zmMList)
@@ -445,7 +445,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.OgrenimTipleri = OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod, false, true);
-            ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
+            ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }
@@ -574,7 +574,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  EnstituKod = s.EnstituKod,
                                  EnstituAdi = e.EnstituAd,
                                  TarihKriterID = s.TarihKriterID,
-                                 TarihKriterAdi = s.TarihKriterID == TarihKriterSecim.SecilenTarihAraligi ? "Seçilen Tarih Aralığı" : (s.TarihKriterID == TarihKriterSecim.SecilenTarihVeOncesi ? "Seçilen Tarih ve Öncesi" : "Seçilen Tarih ve Sonrası"),
+                                 TarihKriterAdi = s.TarihKriterID == TarihKriterSecimEnum.SecilenTarihAraligi ? "Seçilen Tarih Aralığı" : (s.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeOncesi ? "Seçilen Tarih ve Öncesi" : "Seçilen Tarih ve Sonrası"),
                                  BaslangicYil = s.BaslangicYil,
                                  BitisYil = s.BitisYil,
                                  DonemID = s.DonemID,
@@ -771,16 +771,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     mmMessage.Title = "Uyarı";
                     mmMessage.Messages.Add(message);
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
                     mmMessage.IsSuccess = true;
                 }
                 catch (Exception ex)
                 {
                     message = "'" + qBil.BaslangicYil + "/" + qBil.BitisYil + " " + qBil.DonemAdi + "' Dönemine ait mezuniyet süreci silinirken bir hata oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MezuniyetSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MezuniyetSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                     mmMessage.Title = "Hata";
                     mmMessage.Messages.Add(message);
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                 }
             }
@@ -789,7 +789,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 message = "Silmek istediğiniz mezuniyet süreci sistemde bulunamadı!";
                 mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message);
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = true;
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);

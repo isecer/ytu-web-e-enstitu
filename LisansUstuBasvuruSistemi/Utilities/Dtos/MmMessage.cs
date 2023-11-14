@@ -12,7 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DialogID { get; set; }
         public bool IsCloseDialog { get; set; }
         public bool IsSuccess { get; set; }
-        public Msgtype MessageType { get; set; }
+        public MsgTypeEnum MessageType { get; set; }
 
         public string Title { get; set; }
         public string ReturnUrl { get; set; }
@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public object Table { get; set; }
         public MmMessage()
         {
-            MessageType = Msgtype.Nothing;
+            MessageType = MsgTypeEnum.Nothing;
             Messages = new List<string>();
             MessagesDialog = new List<MrMessage>();
             ReturnUrlTimeOut = 400;
@@ -41,11 +41,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool AddIcon { get; set; }
         public string HtmlData { get; set; }
         public List<int> ReturnIds { get; set; }
-        public Msgtype MessageType { get; set; }
+        public MsgTypeEnum MessageType { get; set; }
         public MrMessage()
         {
             AddIcon = true;
-            MessageType = Msgtype.Nothing;
+            MessageType = MsgTypeEnum.Nothing;
         }
     }
     public class MrMesajBilgi

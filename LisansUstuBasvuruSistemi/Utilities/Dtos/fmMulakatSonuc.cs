@@ -19,10 +19,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             MulakatSonucDetay = new List<FrMulakatSonucDetay>();
             OranModel = new List<FmMsonucOranModel>
             {
-                new FmMsonucOranModel { MulakatSurecineGirecek = true, AlanTipID = AlanTipi.AlanIci },
-                new FmMsonucOranModel { MulakatSurecineGirecek = true, AlanTipID = AlanTipi.AlanDisi },
-                new FmMsonucOranModel { MulakatSurecineGirecek = false, AlanTipID = AlanTipi.AlanIci },
-                new FmMsonucOranModel { MulakatSurecineGirecek = false, AlanTipID = AlanTipi.AlanDisi }
+                new FmMsonucOranModel { MulakatSurecineGirecek = true, AlanTipID = AlanTipiEnum.AlanIci },
+                new FmMsonucOranModel { MulakatSurecineGirecek = true, AlanTipID = AlanTipiEnum.AlanDisi },
+                new FmMsonucOranModel { MulakatSurecineGirecek = false, AlanTipID = AlanTipiEnum.AlanIci },
+                new FmMsonucOranModel { MulakatSurecineGirecek = false, AlanTipID = AlanTipiEnum.AlanDisi }
             };
         }
     }

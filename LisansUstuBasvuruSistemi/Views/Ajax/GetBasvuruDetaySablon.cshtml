@@ -7,7 +7,7 @@
 @model BasvuruDetayDto
 @{
     Layout = null;
-    var tbName = TabAdlari.BasvuruDetayTN + "-" + Model.BasvuruID;
+    var tbName = TabAdiEnum.BasvuruDetayTn + "-" + Model.BasvuruID;
     var color = Model.DurumColor;  
 } 
 <div class="panel" style="vertical-align:top;min-height:489px;" id="bsvrDet_@Model.BasvuruID">
@@ -66,7 +66,7 @@
                                             <span>@Model.BasvuruDurumAdi</span>
 
                                         }
-                                        @if (Model.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                        @if (Model.BasvuruDurumID == BasvuruDurumuEnum.IptalEdildi)
                                         {
                                             <span style="color:red;">(@Model.BasvuruDurumAciklamasi)</span>
                                         }

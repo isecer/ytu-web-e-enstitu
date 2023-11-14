@@ -118,48 +118,48 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.TDODanismanTalepTipID.HasValue) q = q.Where(p => p.TDODanismanTalepTipID == model.TDODanismanTalepTipID);
             if (model.AktifDurumID.HasValue)
             {
-                if (model.AktifDurumID == TdoDansimanDurumu.DanismanOnayiBekliyor) q = q.Where(p => !p.DanismanOnayladi.HasValue);
-                else if (model.AktifDurumID == TdoDansimanDurumu.DanismanTarafindanOnaylandi) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
-                else if (model.AktifDurumID == TdoDansimanDurumu.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.DanismanOnayladi == false && !p.EYKYaGonderildi.HasValue);
-                else if (model.AktifDurumID == TdoDansimanDurumu.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
-                else if (model.AktifDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylandi) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.EYKYaGonderildi == false && !p.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TdoDansimanDurumu.EykDaOnayBekleniyor) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TdoDansimanDurumu.EykDaOnaylandi) q = q.Where(p => p.EYKDaOnaylandi == true);
-                else if (model.AktifDurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.EYKDaOnaylandi == false);
+                if (model.AktifDurumID == TdoDansimanDurumuEnum.DanismanOnayiBekliyor) q = q.Where(p => !p.DanismanOnayladi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumuEnum.DanismanTarafindanOnaylandi) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumuEnum.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.DanismanOnayladi == false && !p.EYKYaGonderildi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumuEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.EYKYaGonderildi == false && !p.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumuEnum.EykDaOnayBekleniyor) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.EYKDaOnaylandi == true);
+                else if (model.AktifDurumID == TdoDansimanDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.EYKDaOnaylandi == false);
             }
             if (model.AktifEsDurumID.HasValue)
             {
-                if (model.AktifEsDurumID == TdoDansimanDurumu.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.EsDanismanOnerisiVar && !p.Es_EYKYaGonderildi.HasValue);
-                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylandi) q = q.Where(p => p.Es_EYKYaGonderildi == true);
-                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.Es_EYKYaGonderildi == false);
-                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykDaOnayBekleniyor) q = q.Where(p => p.Es_EYKYaGonderildi == true && !p.Es_EYKDaOnaylandi.HasValue);
-                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykDaOnaylandi) q = q.Where(p => p.Es_EYKDaOnaylandi == true);
-                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.Es_EYKDaOnaylandi == false);
+                if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.EsDanismanOnerisiVar && !p.Es_EYKYaGonderildi.HasValue);
+                else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.Es_EYKYaGonderildi == true);
+                else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.Es_EYKYaGonderildi == false);
+                else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykDaOnayBekleniyor) q = q.Where(p => p.Es_EYKYaGonderildi == true && !p.Es_EYKDaOnaylandi.HasValue);
+                else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.Es_EYKDaOnaylandi == true);
+                else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.Es_EYKDaOnaylandi == false);
             }
             if (model.TDOBasvuruID.HasValue) q = q.Where(p => p.TDOBasvuruID == model.TDOBasvuruID);
-            if (!model.DonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TDODanismanDetayModels.Any(a => a.RaporDonemID == model.DonemID));
-            if (model.DurumID.HasValue)
-            {
-                if (model.DurumID == TdoDansimanDurumu.DanismanOnayiBekliyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.DanismanOnayladi.HasValue));
-                else if (model.DurumID == TdoDansimanDurumu.DanismanTarafindanOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true));
-                else if (model.DurumID == TdoDansimanDurumu.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == false));
-                else if (model.DurumID == TdoDansimanDurumu.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true && !p2.EYKYaGonderildi.HasValue));
-                else if (model.DurumID == TdoDansimanDurumu.EykYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true));
-                else if (model.DurumID == TdoDansimanDurumu.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == false));
-                else if (model.DurumID == TdoDansimanDurumu.EykDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true && !p2.EYKDaOnaylandi.HasValue));
-                else if (model.DurumID == TdoDansimanDurumu.EykDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == true));
-                else if (model.DurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == false));
-            }
-            if (model.EsDurumID.HasValue)
-            {
-                if (model.EsDurumID == TdoDansimanDurumu.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.Es_EYKYaGonderildi.HasValue));
-                else if (model.EsDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true));
-                else if (model.EsDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == false));
-                else if (model.EsDurumID == TdoDansimanDurumu.EykDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true && !p2.Es_EYKDaOnaylandi.HasValue));
-                else if (model.EsDurumID == TdoDansimanDurumu.EykDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == true));
-                else if (model.EsDurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == false));
-            }
+            //if (!model.DonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TDODanismanDetayModels.Any(a => a.RaporDonemID == model.DonemID));
+            //if (model.DurumID.HasValue)
+            //{
+            //    if (model.DurumID == TdoDansimanDurumuEnum.DanismanOnayiBekliyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.DanismanOnayladi.HasValue));
+            //    else if (model.DurumID == TdoDansimanDurumuEnum.DanismanTarafindanOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true));
+            //    else if (model.DurumID == TdoDansimanDurumuEnum.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == false));
+            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true && !p2.EYKYaGonderildi.HasValue));
+            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true));
+            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == false));
+            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true && !p2.EYKDaOnaylandi.HasValue));
+            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == true));
+            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == false));
+            //}
+            //if (model.EsDurumID.HasValue)
+            //{
+            //    if (model.EsDurumID == TdoDansimanDurumuEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.Es_EYKYaGonderildi.HasValue));
+            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true));
+            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == false));
+            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true && !p2.Es_EYKDaOnaylandi.HasValue));
+            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == true));
+            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == false));
+            //}
 
             if (!model.AdSoyad.IsNullOrWhiteSpace())
                 q = q.Where(p =>
@@ -214,8 +214,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (model.AktifEsDurumID == 5 || model.EsDurumID == 5)
                 q = q.OrderBy(o => o.EYKYaGonderildiIslemTarihiES);
             else q = q.OrderBy(o => o.Sira).ThenByDescending(o => o.RowDate);
-            model.TdoBasvuruDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
-            ViewBag.kIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
+            model.TdoBasvuruDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList(); 
+            ViewBag.filteredOgrenciIds = isFiltered ? q.Select(s => s.KullaniciID).Distinct().ToList() : new List<int>();
+            ViewBag.filteredDanismanIds = isFiltered ? q.Where(p => p.TezDanismanID.HasValue).Select(s => s.TezDanismanID.Value).Distinct().ToList() : new List<int>();
             ViewBag.AktifDonemID = new SelectList(TezDanismanOneriBus.CmbTdoDonemListe(enstituKod, true), "Value", "Caption", model.AktifDonemID);
             ViewBag.TDODanismanTalepTipID = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(true), "Value", "Caption", model.TDODanismanTalepTipID);
             ViewBag.AktifDurumID = new SelectList(TezDanismanOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
@@ -233,36 +234,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 IsSuccess = true
             };
             if (!basTar.HasValue)
             {
                 mMessage.IsSuccess = false;
                 mMessage.Messages.Add("Başlangıç tarihini giriniz.");
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasTar" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BasTar" });
             }
-            else mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "BasTar" });
+            else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "BasTar" });
             if (!basTar.HasValue)
             {
                 mMessage.IsSuccess = false;
                 mMessage.Messages.Add("Bitiş tarihini giriniz.");
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitTar" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitTar" });
             }
-            else mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "BitTar" });
+            else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "BitTar" });
             if (basTar.HasValue && bitTar.HasValue)
             {
                 if (basTar > bitTar)
                 {
                     mMessage.IsSuccess = false;
                     mMessage.Messages.Add("Başlangıç tarihi bitiş tarihinden büyük olamaz.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasTar" });
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitTar" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BasTar" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitTar" });
                 }
                 else
                 {
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "BasTar" });
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "BitTar" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "BasTar" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "BitTar" });
                 }
             }
 
@@ -283,7 +284,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
 
                 mMessage.Title = "Tutanak çıktısı oluşturulamadı";
-                mMessage.MessageType = Msgtype.Warning;
+                mMessage.MessageType = MsgTypeEnum.Warning;
             }
 
             return mMessage.ToJsonResult();
@@ -466,21 +467,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var isDoktora = item.TDOBasvuru.OgrenimTipKod.IsDoktora();
                         var isDoktoraStr = isDoktora ? "doktora" : "yüksek lisans";
 
-                        if (item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi)
+                        if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                         {
                             danismanAdi = item.VarolanTDUnvanAdi + " " + item.VarolanTDAdSoyad;
                             yeniDanismanAdi = item.TDUnvanAdi + " " + item.TDAdSoyad;
                             degisiklikTipId = 1;
                             aciklama = "Yapılan görüşmeler sonunda, aşağıda adı ve programı belirtilen <b>" + isDoktoraStr + "</b> öğrencisi için<b> tez danışman değişikliğine</b> ilişkin önerinin aşağıda belirtildiği şekilde <b>kabul edilmesine, oybirliğiyle karar verildi.</b>";
                         }
-                        else if (item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi)
+                        else if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                         {
                             danismanAdi = item.TDUnvanAdi + " " + item.TDAdSoyad;
                             degisiklikTipId = item.IsTezDiliTr == (item.IsYeniTezDiliTr ?? item.IsTezDiliTr) ? 2 : 3;
                             var subTipAdi = degisiklikTipId == 2 ? "tez dili ve başlığı" : "tez başlığı";
                             aciklama = "Yapılan görüşmeler sonunda, aşağıda adı ve programı belirtilen <b>" + isDoktoraStr + "</b> öğrencisi için<b> " + subTipAdi + " değişikliğine</b> ilişkin önerinin aşağıda belirtildiği şekilde <b>kabul edilmesine, oybirliğiyle karar verildi.</b>";
                         }
-                        else if (item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                        else if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                         {
                             danismanAdi = item.VarolanTDUnvanAdi + " " + item.VarolanTDAdSoyad;
                             yeniDanismanAdi = item.TDUnvanAdi + " " + item.TDAdSoyad;

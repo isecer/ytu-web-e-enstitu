@@ -39,15 +39,15 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label">Rezervasyon Bilgi</label>
                             <div class="col-md-9">
-                                @if (Model.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit)
+                                @if (Model.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit)
                                 {
                                     @(Model.Gun + " " + Model.AyAdi)
                                 }
-                                else if (Model.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen)
+                                else if (Model.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen)
                                 {
                                     <span>@Model.BasTarih.Value.ToFormatDate() - @Model.BitTarih.Value.ToFormatDate() </span>
                                 }
-                                else if (Model.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
+                                else if (Model.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
                                 {
                                     var dofW = Model.Tarih.Value.DayOfWeek.ToString("d").ToInt().Value;
                                     var haftaGunu = haftaGunleri.Where(p => p.HaftaGunID == dofW).First();
@@ -62,7 +62,7 @@
                                         }
                                     </span>
                                 }
-                                else if (Model.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+                                else if (Model.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
                                 {
                                     @Model.SalonAdi <br />
                                                                                 <span>@Model.BasTarih.Value.ToFormatDate() - @Model.BitTarih.Value.ToFormatDate() Tarih Arası</span>

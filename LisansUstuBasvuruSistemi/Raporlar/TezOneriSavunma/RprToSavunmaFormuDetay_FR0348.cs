@@ -39,9 +39,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 cellDanismanTarihImza.Text = "";
                 cellDanismanAlanUyum.Text = data.Danisman.IsCalismaRaporuAltAlanUygun == true ? "UYGUN (COMPATIBLE)" : "UYGUN DEĞİL (INCOMPATIBLE)";
                 cellDanismanDegerlendirmeSonucu.Text =
-                    data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi
+                    data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                         ? "KABUL (ACCEPTED)"
-                        : (data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi
+                        : (data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
                             ? "RET (REJECTED)"
                             : "DÜZELTME (REVISION)"
                         );
@@ -58,9 +58,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 cellTik1UnvanAdSoyad.Text = data.TikUyesi1.UnvanAdi + " \r\n" + data.TikUyesi1.AdSoyad;
                 cellTik1AbdUniversiteAdi.Text = data.TikUyesi1.AnabilimdaliAdi + "\r\n" + data.TikUyesi1.UniversiteAdi;
                 cellTik1TarihImza.Text = "";
-                cellTik1DegerlendirmeSonucu.Text = data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi
+                cellTik1DegerlendirmeSonucu.Text = data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                     ? "KABUL (ACCEPTED)"
-                    : (data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi
+                    : (data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
                         ? "RET (REJECTED)"
                         : "DÜZELTME (REVISION)"
                     );
@@ -70,9 +70,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 cellTik2UnvanAdSoyad.Text = data.TikUyesi2.UnvanAdi + "\r\n" + data.TikUyesi2.AdSoyad;
                 cellTik2AbdUniversiteAdi.Text = data.TikUyesi2.AnabilimdaliAdi + "\r\n" + data.TikUyesi2.UniversiteAdi;
                 cellTik2TarihImza.Text = "";
-                cellTik2DegerlendirmeSonucu.Text = data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi
+                cellTik2DegerlendirmeSonucu.Text = data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                     ? "KABUL (ACCEPTED)"
-                    : (data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi
+                    : (data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
                         ? "RET (REJECTED)"
                         : "DÜZELTME (REVISION)"
                     );

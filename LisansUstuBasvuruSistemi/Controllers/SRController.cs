@@ -44,17 +44,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (ttip.Count > 0)
             {
-                if (kulls.KullaniciTipID == KullaniciTipBilgi.IdariPersonel || kulls.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel)
+                if (kulls.KullaniciTipID == KullaniciTipiEnum.IdariPersonel || kulls.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
                 {
                     bbModel.KullaniciTipYetki = true;
                     bbModel.BirimAdi = kulls.Birimler.BirimAdi;
                     bbModel.UnvanAdi = kulls.Unvanlar.UnvanAdi;
                     bbModel.SicilNo = kulls.SicilNo;
                 }
-                else if (kulls.KullaniciTipID == KullaniciTipBilgi.YerliOgrenci || kulls.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci)
+                else if (kulls.KullaniciTipID == KullaniciTipiEnum.YerliOgrenci || kulls.KullaniciTipID == KullaniciTipiEnum.YabanciOgrenci)
                 {
 
-                    if ((kulls.YtuOgrencisi && (kulls.OgrenimTipKod == OgrenimTipi.Doktra || kulls.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kulls.OgrenimDurumID == OgrenimDurum.HalenOğrenci) == false)
+                    if ((kulls.YtuOgrencisi && (kulls.OgrenimTipKod == OgrenimTipi.Doktra || kulls.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kulls.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci) == false)
                     {
                         bbModel.KullaniciTipYetki = false;
                         bbModel.KullaniciTipYetkiYokMsj = "Salon Rezervasyon talebi yapabilmek Öğrenim Seviyenizin Doktora veya Tezli YL ve Öğrenim durumunuzun Halen Öğrenci olarak güncellemeniz gerekmektedir.";
@@ -182,8 +182,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var ttip = _entities.SRTalepTipleris.Where(p => p.SRTalepTipKullanicilars.Any(a => a.KullaniciTipID == kulls.KullaniciTipID)).ToList();
             if (ttip.Count > 0)
             {
-                if (kulls.KullaniciTipID == KullaniciTipBilgi.YerliOgrenci || kulls.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci)
-                    if ((kulls.YtuOgrencisi && (kulls.OgrenimTipKod == OgrenimTipi.Doktra || kulls.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kulls.OgrenimDurumID == OgrenimDurum.HalenOğrenci) == false)
+                if (kulls.KullaniciTipID == KullaniciTipiEnum.YerliOgrenci || kulls.KullaniciTipID == KullaniciTipiEnum.YabanciOgrenci)
+                    if ((kulls.YtuOgrencisi && (kulls.OgrenimTipKod == OgrenimTipi.Doktra || kulls.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kulls.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci) == false)
                     {
                         mmMessage.Messages.Add("Salon Rezervasyon talebi yapabilmek Öğrenim Seviyenizin Doktora veya Tezli YL ve Öğrenim durumunuzun Halen Öğrenci olarak güncellemeniz gerekmektedir.");
                     }
@@ -231,11 +231,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (data.TalepYapanID != UserIdentity.Current.Id)
                         {
                             var basvuruBilgi = data.Kullanicilar.Ad + " " + data.Kullanicilar.Soyad + " Kullanıcısına ait <br/>" + data.Tarih.ToString() + " tarihli salon rezervasyon talebi  <br/>";
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Farklı bir kullanıcıya ait salon rezervasyon bilgisi güncellenmek isteniyor! \r\n SRTalepID:" + model.SRTalepID + " \r\n " + basvuruBilgi.Replace("<br/>", "\r\n"), "SR/TalepYap", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Farklı bir kullanıcıya ait salon rezervasyon bilgisi güncellenmek isteniyor! \r\n SRTalepID:" + model.SRTalepID + " \r\n " + basvuruBilgi.Replace("<br/>", "\r\n"), "SR/TalepYap", LogTipiEnum.Saldırı);
                             mmMessage.Messages.Add("Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!");
 
                         }
-                        else if (model.SRDurumID == SRTalepDurum.Reddedildi || model.SRDurumID == SRTalepDurum.Onaylandı)
+                        else if (model.SRDurumID == SrTalepDurumEnum.Reddedildi || model.SRDurumID == SrTalepDurumEnum.Onaylandı)
                         {
                             var bDurumAdi = data.SRDurumlari.DurumAdi;
                             mmMessage.Messages.Add("Durumu " + bDurumAdi + " olan rezervasyonlar üzerinde düzenleme işlemi yapamazsınız!");
@@ -290,7 +290,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 string msg = "Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!";
                 mmMessage.Messages.Add("Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!");
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + kModel.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "SR/TalepYap", LogType.Saldırı);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + kModel.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "SR/TalepYap", LogTipiEnum.Saldırı);
             }
             var kulls = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.TalepYapanID);
             var ttips = _entities.SRTalepTipleris.Where(p => p.SRTalepTipKullanicilars.Any(a => a.KullaniciTipID == kulls.KullaniciTipID)).ToList();
@@ -299,10 +299,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.OgrenciNo = kulls.OgrenciNo;
             if (ttips.Count > 0)
             {
-                if (kulls.KullaniciTipID == KullaniciTipBilgi.YerliOgrenci || kulls.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci)
+                if (kulls.KullaniciTipID == KullaniciTipiEnum.YerliOgrenci || kulls.KullaniciTipID == KullaniciTipiEnum.YabanciOgrenci)
                 {
 
-                    if ((kulls.YtuOgrencisi && (kulls.OgrenimTipKod == OgrenimTipi.Doktra || kulls.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kulls.OgrenimDurumID == OgrenimDurum.HalenOğrenci) == false)
+                    if ((kulls.YtuOgrencisi && (kulls.OgrenimTipKod == OgrenimTipi.Doktra || kulls.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kulls.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci) == false)
                     {
                         mmMessage.Messages.Add("Salon Rezervasyon talebi yapabilmek Öğrenim Seviyenizin Doktora veya Tezli YL ve Öğrenim durumunuzun Halen Öğrenci olarak güncellemeniz gerekmektedir.");
                     }
@@ -333,16 +333,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.SRTalepTipID <= 0)
             {
                 mmMessage.Messages.Add("Talep Tipi seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRTalepTipID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRTalepTipID" });
             }
             else
             {
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "SRTalepTipID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "SRTalepTipID" });
                 ttip = _entities.SRTalepTipleris.First(p => p.SRTalepTipID == kModel.SRTalepTipID);
                 if (ttip.IsTezSinavi)
                 {
                     mmMessage.Messages.Add("Tez sınavı talebi mezuniyet işlemleri kısmından yapılmaktadır.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRTalepTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRTalepTipID" });
                 }
                 else
                 {
@@ -353,20 +353,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (kModel.SRSalonID <= 0)
                         {
                             mmMessage.Messages.Add("Salon Seçiniz");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRSalonID" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRSalonID" });
                         }
-                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "SRSalonID" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "SRSalonID" });
 
                         if (kModel.Tarih == DateTime.MinValue)
                         {
 
                             mmMessage.Messages.Add("Talep Tarihi Seçiniz");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
                         if (!kModel.BasSaat.HasValue || !kModel.BitSaat.HasValue)//bitiş saati mi baz alınsın başlangıç saati mi ?
                         {
                             mmMessage.Messages.Add("Lütfen belirtilen güne ait uygun saat seçiniz!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
 
                         if (ttip.IsTezSinavi)
@@ -374,15 +374,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (kModel.DanismanAdi.IsNullOrWhiteSpace())
                             {
                                 mmMessage.Messages.Add("Danışman Adı Giriniz");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DanismanAdi" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DanismanAdi" });
                             }
-                            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "DanismanAdi" });
+                            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "DanismanAdi" });
                             if (kModel.TezOzeti.IsNullOrWhiteSpace())
                             {
                                 mmMessage.Messages.Add("Tez Özeti Giriniz");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TezOzeti" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezOzeti" });
                             }
-                            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "TezOzeti" });
+                            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "TezOzeti" });
 
                         }
                         else
@@ -390,9 +390,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (kModel.Aciklama.IsNullOrWhiteSpace())
                             {
                                 mmMessage.Messages.Add("Açıklama Giriniz");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Aciklama" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Aciklama" });
                             }
-                            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "Aciklama" });
+                            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "Aciklama" });
                         }
                         if (mmMessage.Messages.Count == 0)
                         {
@@ -406,7 +406,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         string msg = kotK.ValueS;
                         mmMessage.Messages.Add(msg);
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRTalepTipID" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRTalepTipID" });
 
                     }
                 }
@@ -442,7 +442,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         insD.Aciklama = kModel.Aciklama;
                     }
-                    insD.SRDurumID = SRTalepDurum.TalepEdildi;
+                    insD.SRDurumID = SrTalepDurumEnum.TalepEdildi;
                     insD.SRDurumAciklamasi = kModel.SRDurumAciklamasi;
                     insD.IslemTarihi = kModel.IslemTarihi;
                     insD.IslemYapanID = kModel.IslemYapanID;
@@ -588,7 +588,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var snded = MailManager.SendMailRetVal(mailBilgi.EnstituKod, enstituAdi, htmlMail, eMailList, null);
                     if (snded != null)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Salon rezervasyon talebi işlemi için mail gönderilirken bir hata oluştu! Hata: " + snded.ToExceptionMessage(), "SR/TalepYap", LogType.Hata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Salon rezervasyon talebi işlemi için mail gönderilirken bir hata oluştu! Hata: " + snded.ToExceptionMessage(), "SR/TalepYap", LogTipiEnum.Hata);
                     }
                 }
                 #endregion
@@ -672,13 +672,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }).First();
             var kulls = _entities.Kullanicilars.First(p => p.KullaniciID == q.TalepYapanID);
             var bbModel = new IndexPageInfoDto();
-            if (kulls.KullaniciTipID == KullaniciTipBilgi.IdariPersonel || kulls.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel)
+            if (kulls.KullaniciTipID == KullaniciTipiEnum.IdariPersonel || kulls.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
             {
                 bbModel.BirimAdi = kulls.Birimler.BirimAdi;
                 bbModel.UnvanAdi = kulls.Unvanlar.UnvanAdi;
                 bbModel.SicilNo = kulls.SicilNo;
             }
-            else if ((kulls.KullaniciTipID == KullaniciTipBilgi.YerliOgrenci || kulls.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci) && kulls.YtuOgrencisi)
+            else if ((kulls.KullaniciTipID == KullaniciTipiEnum.YerliOgrenci || kulls.KullaniciTipID == KullaniciTipiEnum.YabanciOgrenci) && kulls.YtuOgrencisi)
             {
                 var ots = _entities.OgrenimTipleris.First(p => p.OgrenimTipKod == kulls.OgrenimTipKod && p.EnstituKod == kulls.EnstituKod);
                 bbModel.OgrenimDurumAdi = kulls.OgrenimDurumlari.OgrenimDurumAdi;
@@ -703,12 +703,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var basvuruBilgi = kayit.Kullanicilar.Ad + " " + "" + kayit.Kullanicilar.Soyad + " Kullanıcısına ait <br/>" + kayit.Tarih.ToShortDateString() + " " + kayit.BasSaat + "-" + kayit.BitSaat + " tarihli rezervasyon<br/>";
             try
             {
-                if (kayit.SRDurumID != SRTalepDurum.TalepEdildi && RoleNames.SrGelenTalepler.InRoleCurrent() == false)
+                if (kayit.SRDurumID != SrTalepDurumEnum.TalepEdildi && RoleNames.SrGelenTalepler.InRoleCurrent() == false)
                 {
                     mmMessage.Messages.Add("Onaylanan veya reddedilen taleplerinizi silemezsiniz");
                     mmMessage.Title = "Bilgilendirme";
                     mmMessage.IsSuccess = false;
-                    mmMessage.MessageType = Msgtype.Information;
+                    mmMessage.MessageType = MsgTypeEnum.Information;
                 }
                 else
                 { 
@@ -717,16 +717,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SRTalepleris.Remove(kayit);
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
                 }
             }
             catch (Exception ex)
             {
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add(basvuruBilgi + "silinemedi!");
                 mmMessage.Title = "Hata";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(basvuruBilgi + "silinemedi! Hata:" + ex.ToExceptionMessage(), "SR/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(basvuruBilgi + "silinemedi! Hata:" + ex.ToExceptionMessage(), "SR/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
             } 
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);

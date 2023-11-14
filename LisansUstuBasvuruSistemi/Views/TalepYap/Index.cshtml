@@ -239,7 +239,7 @@
                                                                             <td>@item.ProgramAdi</td>
                                                                         </tr>
                                                                     }
-                                                                    @if (item.OgrenimTipKod.IsDoktora() && (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi))
+                                                                    @if (item.OgrenimTipKod.IsDoktora() && (item.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi))
                                                                     {
                                                                         <tr>
                                                                             <td>Tez Önerisi Yapıldı Mı?</td>
@@ -271,7 +271,7 @@
                                                                     }
 
 
-                                                                    @if (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi)
+                                                                    @if (item.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi)
                                                                     {
                                                                         <tr>
                                                                             <td>YTÜ'de Araştırma Görevlisi</td>
@@ -309,7 +309,7 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                        if (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi)
+                                                                        if (item.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi)
                                                                         {
                                                                             <tr>
                                                                                 <td>Ödenmeyen Harç Borcu Var Mı?</td>
@@ -366,7 +366,7 @@
                                                                             }
                                                                         </td>
                                                                     </tr>
-                                                                    @if (item.TalepDurumID == TalepDurumu.Rededildi)
+                                                                    @if (item.TalepDurumID == TalepDurumuEnum.Rededildi)
                                                                     {
                                                                         <tr>
                                                                             <td>Red Açıklaması</td>
@@ -408,7 +408,7 @@
     function YeniBasvuruDuyuruKontrol() {
         var popupSetting = {
             title:'||',
-            popupTipId:@DuyuruPopupTipi.TalepYap,
+            popupTipId:@DuyuruPopupTipiEnum.TalepYap,
             btnAdi: 'Talep Yap',
             redirectUrl: '@Url.Action("TalepYap")',
             callbackFnc: ''

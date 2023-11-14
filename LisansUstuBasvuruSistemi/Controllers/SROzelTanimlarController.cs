@@ -82,7 +82,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            else q = q.OrderBy(o => o.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit ? 0 : o.SROzelTanimTipID); 
+            else q = q.OrderBy(o => o.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit ? 0 : o.SROzelTanimTipID); 
             model.FrOzelTanimlars = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();  
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
@@ -137,64 +137,64 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             { 
                 mmMessage.Messages.Add("Enstitü seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
             if (kModel.SROzelTanimTipID <= 0)
             { 
                 mmMessage.Messages.Add("Özel tanım tipini seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SROzelTanimTipID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SROzelTanimTipID" });
             }
-            else if (kModel.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit)
+            else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit)
             {
                 if (kModel.Ay.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Ay seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Ay" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Ay" });
                 }
                 if (kModel.Gun.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Gün seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Gun" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Gun" });
                 }
             }
-            else if (kModel.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen)
+            else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen)
             {
                 if (kModel.BasTarih.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Başlangıç Tarihi seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasTarih" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BasTarih" });
                 }
                 if (kModel.BitTarih.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Bitiş Tarihi seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitTarih" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitTarih" });
                 }
                 if (kModel.BasTarih.HasValue && kModel.BitTarih.HasValue)
                 {
                     if (kModel.BasTarih > kModel.BitTarih)
                     { 
                         mmMessage.Messages.Add("Başlangıç tarihi bitiş tarihinden büyük olamaz!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasTarih" });
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitTarih" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BasTarih" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitTarih" });
                     }
                 }
             }
-            else if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
+            else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
             {
                 if (kModel.SRTalepTipID.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Rezervasyon tipini seçiniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRTalepTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRTalepTipID" });
                 }
                 else if (kModel.SRSalonID.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Salon seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRSalonID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRSalonID" });
                 }
                 else if (kModel.Tarih.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Rezervasyon tarihini seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                 }
                 else
                 {
@@ -216,41 +216,41 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (saatler.Count == 0)
                     { 
                         mmMessage.Messages.Add("Rezervasyonun yapılabilmesi için en az 1 uygun saat seçmeniz gerekmektedir.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                     }
                 }
             }
-            else if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+            else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
             {
                 if (kModel.SRTalepTipID.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Rezervasyon tipini seçiniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRTalepTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRTalepTipID" });
                 }
                 else if (kModel.SRSalonID.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Salon seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRSalonID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRSalonID" });
                 }
                 kModel.BasTarih = basTarih2;
                 kModel.BitTarih = bitTarih2;
                 if (kModel.BasTarih.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Başlangıç Tarihi Seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasTarih2" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BasTarih2" });
                 }
                 if (kModel.BitTarih.HasValue == false)
                 { 
                     mmMessage.Messages.Add("Bitiş Tarihi Seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitTarih2" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitTarih2" });
                 }
                 if (kModel.BasTarih.HasValue && kModel.BitTarih.HasValue)
                 {
                     if (kModel.BasTarih > kModel.BitTarih)
                     { 
                         mmMessage.Messages.Add("Başlangıç tarihi bitiş tarihinden büyük olamaz!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasTarih" });
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitTarih" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BasTarih" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitTarih" });
                     }
 
                 }
@@ -261,9 +261,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 //    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "HaftaGunID" });
                 //}
             }
-            if (mmMessage.Messages.Count == 0 && (kModel.SROzelTanimTipID == SROzelTanimTip.Rezervasyon || kModel.SROzelTanimTipID == SROzelTanimTip.Rezerve))
+            if (mmMessage.Messages.Count == 0 && (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon || kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve))
             {
-                if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+                if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
                 {
                     var msg = SrTalepleriBus.SrKayitKontrol(kModel.SRSalonID.Value, kModel.SRTalepTipID.Value, kModel.BasTarih.Value, saatler, null, kModel.SROzelTanimID, kModel.BitTarih, haftaGunIDs);
                     mmMessage.Messages.AddRange(msg.Messages);
@@ -279,7 +279,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.Aciklama.IsNullOrWhiteSpace())
             { 
                 mmMessage.Messages.Add("Açıklama giriniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Aciklama" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Aciklama" });
             }
             #endregion
             if (mmMessage.Messages.Count == 0)
@@ -292,7 +292,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EnstituKod = kModel.EnstituKod,
                         SROzelTanimTipID = kModel.SROzelTanimTipID
                     };
-                    if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
+                    if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
                     {
                         insertM.Tarih = kModel.Tarih;
                         insertM.SRSalonID = kModel.SRSalonID;
@@ -302,7 +302,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         insertM.BasTarih = null;
                         insertM.BitTarih = null;
                     }
-                    else if (kModel.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit)
+                    else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit)
                     {
                         insertM.Tarih = null;
                         insertM.SRSalonID = null;
@@ -313,7 +313,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         insertM.BitTarih = null;
 
                     }
-                    else if (kModel.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen)
+                    else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen)
                     {
                         insertM.Tarih = null;
                         insertM.SRSalonID = null;
@@ -324,7 +324,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         insertM.BitTarih = kModel.BitTarih;
 
                     }
-                    else if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+                    else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
                     {
                         insertM.Tarih = null;
                         insertM.SRSalonID = kModel.SRSalonID;
@@ -349,7 +349,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var data = _entities.SROzelTanimlars.First(p => p.SROzelTanimID == kModel.SROzelTanimID);
                     data.EnstituKod = kModel.EnstituKod;
                     data.SROzelTanimTipID = kModel.SROzelTanimTipID;
-                    if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
+                    if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
                     {
                         data.Tarih = kModel.Tarih;
                         data.SRSalonID = kModel.SRSalonID;
@@ -359,7 +359,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         data.BasTarih = null;
                         data.BitTarih = null;
                     }
-                    else if (kModel.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit)
+                    else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit)
                     {
                         data.Tarih = null;
                         data.SRSalonID = null;
@@ -370,7 +370,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         data.BitTarih = null;
 
                     }
-                    else if (kModel.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen)
+                    else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen)
                     {
                         data.Tarih = null;
                         data.SRSalonID = null;
@@ -380,7 +380,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         data.BasTarih = kModel.BasTarih;
                         data.BitTarih = kModel.BitTarih;
                     }
-                    else if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+                    else if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
                     {
                         data.Tarih = null;
                         data.SRSalonID = kModel.SRSalonID;
@@ -395,18 +395,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now;
-                    if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
+                    if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
                     {
                         var ots = _entities.SROzelTanimSaatlers.Where(p => p.SROzelTanimID == data.SROzelTanimID).ToList();
                         _entities.SROzelTanimSaatlers.RemoveRange(ots);
                     }
-                    if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+                    if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
                     {
                         var hgs = _entities.SROzelTanimGunlers.Where(p => p.SROzelTanimID == data.SROzelTanimID).ToList();
                         _entities.SROzelTanimGunlers.RemoveRange(hgs);
                     }
                 }
-                if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
+                if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
                 {
                     foreach (var item in saatler)
                     {
@@ -414,7 +414,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         _entities.SROzelTanimSaatlers.Add(item);
                     }
                 }
-                if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+                if (kModel.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
                 {
                     foreach (var item in haftaGunIDs.Distinct())
                     {
@@ -512,7 +512,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Aciklama + "' Açıklamalı özel tanım Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SROzelTanimlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SROzelTanimlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

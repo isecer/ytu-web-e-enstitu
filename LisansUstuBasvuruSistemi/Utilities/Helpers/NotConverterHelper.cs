@@ -14,14 +14,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public static CevrilenNotDto ToNotCevir(this double deger, int notSistemi)
         {
             var mdl = new CevrilenNotDto();
-            if (notSistemi == NotSistemi.Not1LikSistem)
+            if (notSistemi == NotSistemiEnum.Not1LikSistem)
             {  // && CSistem == 100
                 mdl.Not1Lik = 1;
                 mdl.Not4Luk = 4;
                 mdl.Not5Lik = 5;
                 mdl.Not100Luk = (30d + (-35d / 2d + (0.5825d + (0.1925d + 0.195833d * (-2d + deger)) * (-3d + deger)) * (-1d + deger)) * (-5d + deger)).ToString("n2").ToDouble().Value;
             }
-            else if (notSistemi == NotSistemi.Not4LükSistem)
+            else if (notSistemi == NotSistemiEnum.Not4LükSistem)
             {
                 //&& CSistem == 100
                 mdl.Not1Lik = 1;
@@ -29,26 +29,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 mdl.Not5Lik = 5;
                 mdl.Not100Luk = (100d + (70d / 3d + (0.00166667d + 0.00166667d * (-2d + deger)) * (-1d + deger)) * (-4d + deger)).ToString("n2").ToDouble().Value;
             }
-            else if (notSistemi == NotSistemi.Not5LikSistem)
+            else if (notSistemi == NotSistemiEnum.Not5LikSistem)
             {
                 mdl.Not1Lik = 1;
                 mdl.Not4Luk = 4;
                 mdl.Not5Lik = 5;
                 mdl.Not100Luk = (100d + (18.6667d + (-0.000952381d + (0.0021645d + 0.00155844d * (-4d + deger)) * (-3d + deger)) * (-1.25d + deger)) * (-5d + deger)).ToString("n2").ToDouble().Value;
             }
-            else if (notSistemi == NotSistemi.Not100LükSistem)
+            else if (notSistemi == NotSistemiEnum.Not100LükSistem)
             {
                 mdl.Not1Lik = 1;
                 mdl.Not4Luk = 4;
                 mdl.Not5Lik = 5;
                 mdl.Not100Luk = deger.ToString("n2").ToDouble().Value;
             }
-            else if (notSistemi == NotSistemi.Not20LikSistem)
+            else if (notSistemi == NotSistemiEnum.Not20LikSistem)
             {
                 mdl.Not1Lik = 1;
                 mdl.Not4Luk = 4;
                 mdl.Not5Lik = 5;
-                mdl.Not100Luk = ToNotCevir((deger * (0.2)), NotSistemi.Not4LükSistem).Not100Luk.ToString("n2").ToDouble().Value;
+                mdl.Not100Luk = ToNotCevir((deger * (0.2)), NotSistemiEnum.Not4LükSistem).Not100Luk.ToString("n2").ToDouble().Value;
             }
             return mdl;
 

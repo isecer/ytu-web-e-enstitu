@@ -93,15 +93,15 @@
                                             @item.SROzelTanimTipAdi
                                         </td>
                                         <td>
-                                            @if (item.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit)
+                                            @if (item.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit)
                                             {
                                                 @(item.Gun + " " + item.AyAdi)
                                             }
-                                            else if (item.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen)
+                                            else if (item.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen)
                                             {
                                                 <span>@item.BasTarih.Value.ToFormatDate() - @item.BitTarih.Value.ToFormatDate() </span>
                                             }
-                                            else if (item.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
+                                            else if (item.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
                                             {
                                                 var dofW = item.Tarih.Value.DayOfWeek.ToString("d").ToInt().Value;
                                                 var haftaGunu = haftaGunleri.Where(p => p.HaftaGunID == dofW).First();
@@ -113,7 +113,7 @@
                                                     <span>@string.Join(", ", item.SROzelTanimSaatlers.Select(s => string.Format("{0:hh\\:mm}", s.BasSaat) + "-" + string.Format("{0:hh\\:mm}", s.BitSaat)).ToList())</span>
                                                 </span>
                                             }
-                                            else if (item.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+                                            else if (item.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
                                             {
                                                 @item.SalonAdi <br />
                                                 <span>@item.BasTarih.Value.ToFormatDate() - @item.BitTarih.Value.ToFormatDate() Tarih Arası</span>

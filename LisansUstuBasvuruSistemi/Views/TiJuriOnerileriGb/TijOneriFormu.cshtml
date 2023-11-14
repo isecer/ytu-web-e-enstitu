@@ -9,291 +9,287 @@
     var tezDanismaniBilgi = Model.JoFormJuriList.FirstOrDefault(p => p.IsTezDanismani);
 
 }
-<div class="widget widget-default" style="margin:0px;padding:4px;">
-    <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
-        <div class="panel-heading padding-0">
-            <h3 class="panel-title"><i class="fa fa-book myCaptionTd"></i><span class="myCaptionTd"> Tez İzleme Jüri Öneri Formu</span> </h3>
-        </div>
-        <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
 
+<div class="panel panel-info form-horizontal" style="margin:0px;margin-top:5px;">
+    <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
+        @using (Ajax.BeginForm("TijOneriFormuPost", "TiJuriOnerileriGb", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTijOneriFormu" }))
+        {
+            @Html.HiddenFor(p => p.TijBasvuruID);
+            @Html.HiddenFor(p => p.KullaniciId);
+            @Html.HiddenFor(p => p.TijBasvuruOneriID);
+            @Html.HiddenFor(p => p.IsTezDiliTr);
+            <input type="hidden" name="RowNum" value="0" />
+            <input type="hidden" name="IsTezDanismani" value="true" />
+            <input type="hidden" name="IsYtuIciJuri" value="true" />
+            <input type="hidden" name="AdSoyad" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.AdSoyad : "")" />
+            <input type="hidden" name="UnvanAdi" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.UnvanAdi : "")" />
+            <input type="hidden" name="EMail" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.EMail : "")" />
+            <input type="hidden" name="UniversiteID" value="67" />
+            <input type="hidden" name="AnabilimdaliAdi" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.AnabilimdaliAdi : "")" />
 
-            @using (Ajax.BeginForm("TijOneriFormuPost", "TiJuriOnerileriGb", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTijOneriFormu" }))
-            {
-                @Html.HiddenFor(p => p.TijBasvuruID);
-                @Html.HiddenFor(p => p.KullaniciId);
-                @Html.HiddenFor(p => p.TijBasvuruOneriID);
-                @Html.HiddenFor(p => p.IsTezDiliTr);
-                <input type="hidden" name="RowNum" value="0" />
-                <input type="hidden" name="IsTezDanismani" value="true" />
-                <input type="hidden" name="IsYtuIciJuri" value="true" />
-                <input type="hidden" name="AdSoyad" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.AdSoyad : "")" />
-                <input type="hidden" name="UnvanAdi" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.UnvanAdi : "")" />
-                <input type="hidden" name="EMail" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.EMail : "")" />
-                <input type="hidden" name="UniversiteID" value="67" />
-                <input type="hidden" name="AnabilimdaliAdi" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.AnabilimdaliAdi : "")" />
-
-                <div class="panel-body form-group-separated">
-                    <div class="form-group">
-                        <label class="col-md-3 col-xs-2 control-label">Adı ve Soyadı - Numarası</label>
-                        <div class="col-md-9 col-xs-10">
-                            @Model.OgrenciAdSoyad
-                        </div>
+            <div class="panel-body form-group-separated">
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-2 control-label">Öğrenci Ad-Soyad</label>
+                    <div class="col-md-9 col-xs-10">
+                        @Model.OgrenciAdSoyad
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
-                        <div class="col-md-9 col-xs-10">
-                            @(Model.IsTezDiliTr ? "Türkçe" : "İngilizce")
-                        </div>
-                    </div>
-                    @if (!Model.TezBaslikTr.IsNullOrWhiteSpace())
-                    {
-                        <div class="form-group">
-                            <label class="col-md-3 col-xs-2 control-label">Tez Başlığı Türkçe</label>
-                            <div class="col-md-9 col-xs-10">
-                                @Model.TezBaslikTr
-                            </div>
-                        </div>
-                    }
-                    @if (!Model.TezBaslikEn.IsNullOrWhiteSpace())
-                    {
-                        <div class="form-group">
-                            <label class="col-md-3 col-xs-2 control-label">Tez Başlığı İngilizce</label>
-                            <div class="col-md-9 col-xs-10">
-                                @Model.TezBaslikEn
-                            </div>
-                        </div>
-                    }
-
-                    <div class="form-group @(Model.IsIlkOneri?"hide":"")">
-                        <label class="col-md-3 col-xs-2 control-label">Değişiklik Nedeni Seçiniz</label>
-                        <div class="col-md-9 col-xs-10">
-                            @Html.DropDownList("TijFormTipID", Model.SListTijFormTip, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="form-group @(Model.IsIlkOneri?"hide":"")">
-                        <label class="col-md-3 col-xs-2 control-label">Değişecek Jüri Grubu Seçimi</label>
-                        <div class="col-md-9 col-xs-10">
-                            @Html.DropDownList("TijDegisiklikTipID", Model.SListTijDegisiklikTip, new { @class = "form-control", onchange = "DegisiklikTipChange()" })
-                        </div>
-                    </div>
-
-                    @if (!Model.IsTezDiliTr && Model.TezDanismanID == UserIdentity.Current.Id)
-                    {
-                        <div class="form-group">
-                            <label class="col-md-3 col-xs-2 control-label" style="color:maroon">Tahhüt</label>
-                            <div class="col-md-9 col-xs-10" style="color:maroon">
-                                Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
-                            </div>
-                        </div>
-                    }
                 </div>
-                <div class="row" id="juriRow">
-                    <div class="col-md-4">
-
-                        <div class="panel panel-default">
-                            <div class="panel-body profile bg-info" style="padding: 8px; text-align: center;">
-                                Doldurulacak Jüri Listesi <br />(Danışman ve Eş Danışman Hariç)
-                            </div>
-                            <div class="panel-body list-group jMenuItems">
-                                @{
-                                    var rowNumM = 0;
-                                    for (int i = 1; i <= 6; i++)
-                                    {
-                                        rowNumM++;
-                                        var isYtuIciOrDisi = i <= 3;
-                                        var isActive = i == 1;
-                                        if (rowNumM > 3)
-                                        {
-                                            rowNumM = 1;
-                                        }
-                                        <a href="javascript:void(0)" rowNum="@i" onclick="ShowContent(@i)" class="list-group-item @(isActive ? "active" : "")" style="padding: 3px 15px;" id="jMenuItem_@i"><span class="fa fa-user"></span> YTU @(isYtuIciOrDisi ? "İçi" : "Dışı") @(rowNumM + ".Jüri " + (i % 3 == 0 ? "(Zorunlu Değil)" : "")) </a>
-                                    }
-                                }
-                            </div>
-                        </div>
-
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
+                    <div class="col-md-9 col-xs-10">
+                        @(Model.IsTezDiliTr ? "Türkçe" : "İngilizce")
                     </div>
-                    <div class="col-md-8">
+                </div>
+                @if (!Model.TezBaslikTr.IsNullOrWhiteSpace())
+                {
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Başlığı Türkçe</label>
+                        <div class="col-md-9 col-xs-10">
+                            @Model.TezBaslikTr
+                        </div>
+                    </div>
+                }
+                @if (!Model.TezBaslikEn.IsNullOrWhiteSpace())
+                {
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Başlığı İngilizce</label>
+                        <div class="col-md-9 col-xs-10">
+                            @Model.TezBaslikEn
+                        </div>
+                    </div>
+                }
 
-                        @{
-                            var rowNum = 0;
-                            for (int i = 1; i <= 6; i++)
-                            {
-                                rowNum++;
-                                var isYtuIciOrDisi = i <= 3;
-                                var activeCls = i == 1 ? "" : "hide";
-                                if (rowNum > 3)
+                <div class="form-group @(Model.IsIlkOneri?"hide":"")">
+                    <label class="col-md-3 col-xs-2 control-label">Değişiklik Nedeni</label>
+                    <div class="col-md-9 col-xs-10">
+                        @Html.DropDownList("TijFormTipID", Model.SListTijFormTip, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group @(Model.IsIlkOneri?"hide":"")">
+                    <label class="col-md-3 col-xs-2 control-label">Değişecek Jüri Grubu</label>
+                    <div class="col-md-9 col-xs-10">
+                        @Html.DropDownList("TijDegisiklikTipID", Model.SListTijDegisiklikTip, new { @class = "form-control", onchange = "DegisiklikTipChange()" })
+                    </div>
+                </div>
+
+                @if (!Model.IsTezDiliTr && Model.TezDanismanID == UserIdentity.Current.Id)
+                {
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label" style="color:maroon">Tahhüt</label>
+                        <div class="col-md-9 col-xs-10" style="color:maroon">
+                            Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row" id="juriRow">
+                <div class="col-md-4">
+
+                    <div class="panel panel-default">
+                        <div class="panel-body profile bg-info" style="padding: 4px; text-align: center;">
+                            Dolurulacak Jüri Listesi <br /><span style="font-size:7pt;">(Danışman, Eş Danışman Hariç)</span>
+                        </div>
+                        <div class="panel-body list-group jMenuItems">
+                            @{
+                                var rowNumM = 0;
+                                for (int i = 1; i <= 6; i++)
                                 {
-                                    rowNum = 1;
+                                    rowNumM++;
+                                    var isYtuIciOrDisi = i <= 3;
+                                    var isActive = i == 1;
+                                    if (rowNumM > 3)
+                                    {
+                                        rowNumM = 1;
+                                    }
+                                    <a href="javascript:void(0)" rowNum="@i" onclick="ShowContent(@i)" class="list-group-item @(isActive ? "active" : "")" style="padding: 3px 3px;" id="jMenuItem_@i"><span class="fa fa-user"></span> YTU @(isYtuIciOrDisi ? "İçi" : "Dışı") @Html.Raw(rowNumM + ".Jüri " + (i % 3 == 0 ? "<span style='font-size:6.5pt;'>(Zorunlu Değil)</span>" : "")) </a>
                                 }
+                            }
+                        </div>
+                    </div>
 
-                                var rowData = Model.JoFormJuriList.FirstOrDefault(p => p.RowNum == i);
-                                <div class="widget widget-default @activeCls jContents" style="padding: 3px; margin: 0px;" id="jContent_@i">
-                                    <div class="panel panel-default form-horizontal">
-                                        <div class="panel-heading padding-0" style="padding: 0px; margin: 0px;">
-                                            <h3 class="panel-title" style="font-size: 9pt;">
-                                                @("Yıldız Teknik Üniversitesi " + (isYtuIciOrDisi ? "İçinden " : "Dışından ") + rowNum + ". Jüri Önerisi") @(i % 3 == 0 ? "(Zorunlu Değil)" : "")
-                                            </h3>
-                                        </div>
-                                        <div class="panel-body form-group-separated" style="padding: 5px;">
+                </div>
+                <div class="col-md-8">
 
-                                            @if (isYtuIciOrDisi)
-                                            {
-                                                <div class="form-group">
-                                                    <label style="text-align: left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        Adı Soyadı (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                    @{
+                        var rowNum = 0;
+                        for (int i = 1; i <= 6; i++)
+                        {
+                            rowNum++;
+                            var isYtuIciOrDisi = i <= 3;
+                            var activeCls = i == 1 ? "" : "hide";
+                            if (rowNum > 3)
+                            {
+                                rowNum = 1;
+                            }
 
-                                                        <input type="hidden" name="RowNum" value="@i" />
-                                                        <input type="hidden" name="IsTezDanismani" value="false" />
-                                                        <input type="hidden" name="IsYtuIciJuri" value="true" />
-                                                        <input type="hidden" name="AdSoyad" value="@(rowData != null ? rowData.AdSoyad : "")" id="AdSoyad_@i" />
-                                                        <input type="text" class="form-control egitmens" value="" style="width: 100%;" id="xAdSoyad_@i" />
-                                                        @if (rowData != null)
-                                                        {
-                                                            <script>
+                            var rowData = Model.JoFormJuriList.FirstOrDefault(p => p.RowNum == i);
+                            <div class="widget widget-default @activeCls jContents" style="padding: 3px; margin: 0px;" id="jContent_@i">
+                                <div class="panel panel-default form-horizontal">
+                                    <div class="panel-heading padding-0" style="padding: 0px; margin: 0px;">
+                                        <h3 class="panel-title" style="font-size: 9pt;">
+                                            @("Yıldız Teknik Üniversitesi " + (isYtuIciOrDisi ? "İçinden " : "Dışından ") + rowNum + ". Jüri Önerisi") @Html.Raw(i % 3 == 0 ? "<span style='font-size:7pt;'>(Zorunlu Değil)</span>" : "")
+                                        </h3>
+                                    </div>
+                                    <div class="panel-body form-group-separated" style="padding: 5px;fpnt-size:8.5pt;">
+
+                                        @if (isYtuIciOrDisi)
+                                        {
+                                            <div class="form-group">
+                                                <label style="text-align: left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Adı Soyadı (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+
+                                                    <input type="hidden" name="RowNum" value="@i" />
+                                                    <input type="hidden" name="IsTezDanismani" value="false" />
+                                                    <input type="hidden" name="IsYtuIciJuri" value="true" />
+                                                    <input type="hidden" name="AdSoyad" value="@(rowData != null ? rowData.AdSoyad : "")" id="AdSoyad_@i" />
+                                                    <input type="text" class="form-control egitmens" value="" style="width: 100%;" id="xAdSoyad_@i" />
+                                                    @if (rowData != null)
+                                                    {
+                                                        <script>
                                                             setTimeout(function () {
                                                                 var secilen = @Html.Raw(Json.Encode(new { id = rowData.AdSoyad, text = rowData.AdSoyad }));
                                                                 $("#xAdSoyad_@i").select2('data', secilen);
                                                             }, 1200);
-                                                            </script>
-                                                        }
-                                                    </div>
+                                                        </script>
+                                                    }
                                                 </div>
-                                                <div class="form-group">
-                                                    <label style="text-align: left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        Unvanı (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        @Html.Hidden("UnvanAdi", (rowData != null ? rowData.UnvanAdi : ""), new { id = "UnvanAdi_" + i })
-                                                        @Html.DropDownList("xUnvanAdi", (rowData != null ? rowData.SlistUnvanAdi : Model.SListUnvanAdi), new { @class = "form-control", disabled = "disabled", @style = "width:100%;color:black;", id = ("xUnvanAdi_" + i) })
-                                                        @if (rowData != null && rowData.UnvanAdi != null && rowData.UnvanAdi != "")
-                                                        {
-                                                            <script>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align: left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Unvanı (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    @Html.Hidden("UnvanAdi", (rowData != null ? rowData.UnvanAdi : ""), new { id = "UnvanAdi_" + i })
+                                                    @Html.DropDownList("xUnvanAdi", (rowData != null ? rowData.SlistUnvanAdi : Model.SListUnvanAdi), new { @class = "form-control", disabled = "disabled", @style = "width:100%;color:black;", id = ("xUnvanAdi_" + i) })
+                                                    @if (rowData != null && rowData.UnvanAdi != null && rowData.UnvanAdi != "")
+                                                    {
+                                                        <script>
                                                             $(function () {
                                                                 $('#@("xUnvanAdi_" + i)').val('@Html.Raw(rowData.UnvanAdi)');
                                                             });
-                                                            </script>
-                                                        }
-                                                    </div>
+                                                        </script>
+                                                    }
                                                 </div>
-                                                <div class="form-group">
-                                                    <label style="text-align: left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        E-Posta Adresi (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@(rowData != null ? rowData.EMail : "")" style="width: 100%; color: black;" id="EMail_@(i)" />
-                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align: left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    E-Posta (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control" maxlength="128" name="EMail" value="@(rowData != null ? rowData.EMail : "")" style="width: 100%; color: black;" id="EMail_@(i)" />
                                                 </div>
+                                            </div>
 
-                                                <div class="form-group">
-                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        Üniversitesi (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        @Html.Hidden("UniversiteID", (rowData != null ? rowData.UniversiteID.ToStrObjEmptString() : ""), new { id = "UniversiteID_" + i })
-                                                        @Html.DropDownList("xUniversiteID", (rowData != null ? rowData.SListUniversiteID : Model.SListUniversiteID), new { @class = "form-control", disabled = "disabled", @style = "width:100%;color:black;", id = "xUniversiteID_" + i })
-                                                        @if (rowData != null && rowData.UniversiteID.HasValue)
-                                                        {
-                                                            <script>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Üniversitesi (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    @Html.Hidden("UniversiteID", (rowData != null ? rowData.UniversiteID.ToStrObjEmptString() : ""), new { id = "UniversiteID_" + i })
+                                                    @Html.DropDownList("xUniversiteID", (rowData != null ? rowData.SListUniversiteID : Model.SListUniversiteID), new { @class = "form-control", disabled = "disabled", @style = "width:100%;color:black;", id = "xUniversiteID_" + i })
+                                                    @if (rowData != null && rowData.UniversiteID.HasValue)
+                                                    {
+                                                        <script>
                                                             $(function () {
                                                                 $('#@("xUniversiteID_" + i)').val('@rowData.UniversiteID.Value');
                                                             });
-                                                            </script>
-                                                        }
-                                                        @*<input type="text"  class="form-control" maxlength="128" name="UniversiteAdi" value="@(RowData!=null?RowData.UniversiteAdi:"")" style="width: 100%;color:black;" id="YtuIciJuri@(i)UniversiteAdi" />*@
-                                                    </div>
+                                                        </script>
+                                                    }
+                                                    @*<input type="text"  class="form-control" maxlength="128" name="UniversiteAdi" value="@(RowData!=null?RowData.UniversiteAdi:"")" style="width: 100%;color:black;" id="YtuIciJuri@(i)UniversiteAdi" />*@
                                                 </div>
+                                            </div>
 
-                                                <div class="form-group">
-                                                    <label style="text-align: left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        Anabilimdalı (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        <input type="text" class="form-control upperCase" maxlength="256" name="AnabilimdaliAdi" value="@(rowData != null ? rowData.AnabilimdaliAdi : "")" style="width: 100%; color: black;" id="AnabilimdaliAdi_@(i)" />
-                                                    </div>
+                                            <div class="form-group">
+                                                <label style="text-align: left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Anabilimdalı (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control upperCase" maxlength="256" name="AnabilimdaliAdi" value="@(rowData != null ? rowData.AnabilimdaliAdi : "")" style="width: 100%; color: black;" id="AnabilimdaliAdi_@(i)" />
                                                 </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="form-group">
-                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        Adı Soyadı (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        <input type="hidden" name="RowNum" value="@i" />
-                                                        <input type="hidden" name="IsTezDanismani" value="false" />
-                                                        <input type="hidden" name="IsYtuIciJuri" value="false" />
-                                                        <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(rowData != null ? rowData.AdSoyad : "")" style="width: 100%;" id="AdSoyad_@(i)" />
-                                                    </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Adı Soyadı (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="hidden" name="RowNum" value="@i" />
+                                                    <input type="hidden" name="IsTezDanismani" value="false" />
+                                                    <input type="hidden" name="IsYtuIciJuri" value="false" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(rowData != null ? rowData.AdSoyad : "")" style="width: 100%;" id="AdSoyad_@(i)" />
                                                 </div>
-                                                <div class="form-group">
-                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        Unvanı (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        @Html.DropDownList("UnvanAdi", (rowData != null ? rowData.SlistUnvanAdi : Model.SListUnvanAdi), new { @class = "form-control", @style = "width:100%;color:black;", id = ("UnvanAdi_" + i) })
-                                                        @if (rowData != null && rowData.UnvanAdi != null && rowData.UnvanAdi != "")
-                                                        {
-                                                            <script>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Unvanı (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    @Html.DropDownList("UnvanAdi", (rowData != null ? rowData.SlistUnvanAdi : Model.SListUnvanAdi), new { @class = "form-control", @style = "width:100%;color:black;", id = ("UnvanAdi_" + i) })
+                                                    @if (rowData != null && rowData.UnvanAdi != null && rowData.UnvanAdi != "")
+                                                    {
+                                                        <script>
                                                             $(function () {
                                                                 $('#@("UnvanAdi_" + i)').val('@Html.Raw(rowData.UnvanAdi)');
                                                             });
-                                                            </script>
-                                                        }
-                                                    </div>
+                                                        </script>
+                                                    }
                                                 </div>
-                                                <div class="form-group">
-                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        E-Posta Adresi (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@(rowData != null ? rowData.EMail : "")" style="width: 100%;" id="EMail_@(i)" />
-                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    E-Posta (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control" maxlength="128" name="EMail" value="@(rowData != null ? rowData.EMail : "")" style="width: 100%;" id="EMail_@(i)" />
                                                 </div>
-                                                <div class="form-group">
-                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        Üniversitesi (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        @Html.DropDownList("UniversiteID", (rowData != null ? rowData.SListUniversiteID : Model.SListUniversiteID), new { @class = "form-control", @style = "width:100%;color:black;", id = "UniversiteID_" + i })
-                                                        @if (rowData != null && rowData.UniversiteID.HasValue)
-                                                        {
-                                                            <script>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Üniversitesi (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    @Html.DropDownList("UniversiteID", (rowData != null ? rowData.SListUniversiteID : Model.SListUniversiteID), new { @class = "form-control", @style = "width:100%;color:black;", id = "UniversiteID_" + i })
+                                                    @if (rowData != null && rowData.UniversiteID.HasValue)
+                                                    {
+                                                        <script>
                                                             $(function () {
-                                                                $('#@("UniversiteID_" + i )').val('@rowData.UniversiteID.Value');
+                                                                $('#@("UniversiteID_" + i)').val('@rowData.UniversiteID.Value');
                                                             });
-                                                            </script>
-                                                        }
-                                                    </div>
+                                                        </script>
+                                                    }
                                                 </div>
-                                                <div class="form-group">
-                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                        Anabilimdalı (*)
-                                                    </label>
-                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        <input type="text" class="form-control upperCase" maxlength="256" name="AnabilimdaliAdi" value="@(rowData != null ? rowData.AnabilimdaliAdi : "")" style="width: 100%;" id="AnabilimdaliAdi_@(i)" />
-                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Anabilimdalı (*)
+                                                </label>
+                                                <div class="col-md-8 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control upperCase" maxlength="256" name="AnabilimdaliAdi" value="@(rowData != null ? rowData.AnabilimdaliAdi : "")" style="width: 100%;" id="AnabilimdaliAdi_@(i)" />
                                                 </div>
-                                            }
+                                            </div>
+                                        }
 
 
-                                        </div>
                                     </div>
                                 </div>
+                            </div>
 
-                            }
                         }
+                    }
 
-                    </div>
                 </div>
 
+            </div>
 
-            }
-        </div>
+
+        }
     </div>
 </div>
+
 @if (Model.TijBasvuruOneriID > 0)
 {
 
@@ -393,7 +389,7 @@
                     "</table>";
                 return cont2;
             }
-        }).on('change', function (e) { 
+        }).on('change', function (e) {
             var Inpid = $(this).prop("id");
             var mID = Inpid.replace("xAdSoyad_", "");
             $('#AdSoyad_' + mID).val(e.added == undefined ? "" : e.added.AdSoyad);

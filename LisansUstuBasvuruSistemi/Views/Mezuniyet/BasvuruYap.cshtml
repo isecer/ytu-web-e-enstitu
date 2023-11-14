@@ -85,7 +85,7 @@
                                                             {
                                                                 var classname = BsvDurum.ClassName;
                                                                 var color = BsvDurum.Color;
-                                                                if (BsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi)
+                                                                if (BsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
                                                                 {
                                                                     <span class="tooltips" data-style="blue" data-original-title="@Model.MezuniyetYayinKontrolDurumAciklamasi" style="cursor:pointer;color:@color;">
                                                                         <i class="@classname" style="font-size:20pt;font-weight:bold;"></i> @BsvDurum.DurumAdi
@@ -101,7 +101,7 @@
                                                             }
                                                             else
                                                             {
-                                                                if (BsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi)
+                                                                if (BsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
                                                                 {
                                                                     <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@Model.MezuniyetYayinKontrolDurumAciklamasi">@BsvDurum.DurumAdi</span>
                                                                 }
@@ -364,7 +364,7 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="form-group chkOnayD @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi? "" : "hide")">
+                                                <div class="form-group chkOnayD @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi? "" : "hide")">
                                                     <label class="col-md-3 col-xs-4 control-label">Onay</label>
                                                     <div class="col-md-9 col-xs-8" style="text-align:center;">
                                                         <div class="btn btn-success">
@@ -454,8 +454,8 @@
     function btnkKontrol()
     {
         var drm= $('#MezuniyetYayinKontrolDurumID').val();
-        var onylnd=@MezuniyetYayinKontrolDurumu.Onaylandi;
-        var tslk=@MezuniyetYayinKontrolDurumu.Taslak;
+        var onylnd=@MezuniyetYayinKontrolDurumuEnum.Onaylandi;
+        var tslk=@MezuniyetYayinKontrolDurumuEnum.Taslak;
         if(onylnd==drm)   {
             var chk = $('#checkOnay');
             var chkd = $(chk).prop('checked');
@@ -476,7 +476,7 @@
     function durumKontrol(sndr)
     {
         var drm= $(sndr).val();
-        var onylnd=@MezuniyetYayinKontrolDurumu.Onaylandi;
+        var onylnd=@MezuniyetYayinKontrolDurumuEnum.Onaylandi;
         $('.chkOnayD').addClass("hide");
         if(onylnd==drm)   {
             $('.chkOnayD').removeClass("hide");
@@ -624,6 +624,7 @@
 
             frmD = {
                 "MezuniyetSurecID": @Model.MezuniyetSurecID,
+                "MezuniyetBasvurulariID": @Model.MezuniyetBasvurulariID,
                 "MezuniyetYayinKontrolDurumID": $('#MezuniyetYayinKontrolDurumID').val(),
                 "StepNo": step,
                 "YayinSayisi": $('#yRows').find('li').length,
@@ -673,6 +674,7 @@
         else {
             frmD = {
                 "MezuniyetSurecID": @Model.MezuniyetSurecID,
+                "MezuniyetBasvurulariID": @Model.MezuniyetBasvurulariID,
                 "MezuniyetYayinKontrolDurumID": $('#MezuniyetYayinKontrolDurumID').val(),
                 "StepNo": step,
                 "YayinSayisi": $('#yRows').find('li').length,

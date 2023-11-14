@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 Kullanici = kullanici
             };
-            var talepSurecId = Management.getAktifTalepSurecID(enstituKod);
+            var talepSurecId = Management.GetAktifTalepSurecId(enstituKod);
             bbModel.SistemBasvuruyaAcik = talepSurecId.HasValue;
             bbModel.EnstituYetki = UserIdentity.Current.SeciliEnstituKodu.Contains(enstituKod) || UserIdentity.Current.SeciliEnstituKodu == enstituKod;
             bbModel.Enstitü = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
@@ -48,7 +48,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             bbModel.YtuOgrencisi = kullanici.YtuOgrencisi;
             bbModel.KullaniciTipYetki = true;
-            if (kullanici.KayitDonemID.HasValue == false && kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kullanici.KayitDonemID.HasValue == false)
+            if (kullanici.KayitDonemID.HasValue == false && kullanici.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && kullanici.KayitDonemID.HasValue == false)
             {
                 var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
                 kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
@@ -145,13 +145,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsbelgeYuklemesiVar = item.IsBelgeYuklemeVar,
                 YtuOgrencisi = item.YtuOgrencisi,
                 TalepDurumID = item.TalepDurumID,
-                TalepTipAciklama = item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi ?
+                TalepTipAciklama = item.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi ?
                                 (item.OgrenimTipKod.IsDoktora() ?
                                     "Bu talep tipini seçecek öğrenciler, doktora tez önerisinden başarılı olmuş ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir. "
                                     :
                                     "Bu talep tipini seçecek öğrenciler Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşamasını tamamlamış ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir.")
                                  :
-                                 item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi ?
+                                 item.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi ?
                                  (item.OgrenimTipKod.IsDoktora() ?
                                     "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
                                     :
@@ -209,7 +209,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                talep.TalepSurecID = Management.getAktifTalepSurecID(enstituKod) ?? 0;
+                talep.TalepSurecID = Management.GetAktifTalepSurecId(enstituKod) ?? 0;
                 var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
                 talep.KullaniciID = kul.KullaniciID;
                 talep.AdSoyad = kul.Ad + " " + kul.Soyad;
@@ -246,7 +246,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (kModel.TalepGelenTalepID <= 0)
             {
-                kModel.TalepSurecID = Management.getAktifTalepSurecID(enstituKod) ?? 0;
+                kModel.TalepSurecID = Management.GetAktifTalepSurecId(enstituKod) ?? 0;
 
                 if (kModel.TalepSurecID <= 0)
                 {
@@ -266,7 +266,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.TalepGelenTalepID > 0 && !kayitYetki)
             {
                 var talep = _entities.TalepGelenTaleplers.Find(kModel.TalepGelenTalepID);
-                if (talep.TalepDurumID > TalepDurumu.TalepYapildi)
+                if (talep.TalepDurumID > TalepDurumuEnum.TalepYapildi)
                 {
                     mmMessage.Messages.Add("Enstitü tarafından işlem gören talepler düzeltilemez.");
                 }
@@ -275,11 +275,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.TalepTipID <= 0)
                 {
                     mmMessage.Messages.Add("Talep Tipi seçiniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TalepTipID" });
                 }
                 else
                 {
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TalepTipID" });
                     var talepTipi = _entities.TalepTipleris.First(p => p.TalepTipID == kModel.TalepTipID);
                     if (talepTipi.IsAktifOgrenciKontroluYapilsin)
                     {
@@ -295,15 +295,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (kul.YtuOgrencisi)
             {
-                if (kModel.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi)
+                if (kModel.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi)
                 {
                     if (kModel.IsHarcBorcuVar == true)
                     {
                         mmMessage.Messages.Add("Talep işleminin yapılabilmesi ödenmeyen harç borcunuzun bulunmaması gerekmektedir.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsHarcBorcuVar" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsHarcBorcuVar" });
 
                     }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "IsHarcBorcuVar" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "IsHarcBorcuVar" });
                 }
                 if (mmMessage.Messages.Count == 0)
                 {
@@ -312,47 +312,47 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (!kModel.TalepArGorStatuID.HasValue)
                         {
                             mmMessage.Messages.Add("Araştırma Görevlisi Statüsü seçiniz.");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepArGorStatuID" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TalepArGorStatuID" });
 
                         }
-                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepArGorStatuID" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TalepArGorStatuID" });
                     }
 
                     if (kModel.OgrenimTipKod.IsDoktora())
                     {
-                        if (kModel.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || kModel.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi)
+                        if (kModel.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi || kModel.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi)
                         {
-                            if (kModel.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi)
+                            if (kModel.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi)
                             {
                                 if (kModel.IsTezOnerisiYapildi != true)
                                 {
                                     mmMessage.Messages.Add("Başvuru Yapılabilmesi İçin Tez Önerisinin Verilmiş Olması Gerekmektedir.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsTezOnerisiYapildi" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsTezOnerisiYapildi" });
                                 }
                                 else
                                 {
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "IsTezOnerisiYapildi" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "IsTezOnerisiYapildi" });
                                     if (!kModel.DoktoraTezOneriTarihi.HasValue)
                                     {
                                         mmMessage.Messages.Add("Doktora Tez Öneri Tarihi bilgisini giriniz.");
-                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DoktoraTezOneriTarihi" });
+                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DoktoraTezOneriTarihi" });
                                     }
-                                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DoktoraTezOneriTarihi" });
+                                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DoktoraTezOneriTarihi" });
                                     if (dosyaDanismanOnay == null && dosyaAdiDanismanOnay.IsNullOrWhiteSpace())
                                     {
                                         mmMessage.Messages.Add("Danışman İmzalı Onay Belgesi Yükleyiniz.");
-                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
+                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DosyaDanismanOnay" });
                                     }
                                     else if (dosyaDanismanOnay != null)
                                     {
                                         if (dosyaDanismanOnay.FileName.Split('.').Last().ToLower() != "pdf")
                                         {
                                             mmMessage.Messages.Add("Yükleyeceğiniz te öneri belgesi pdf türünde olmalıdır.");
-                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
+                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DosyaDanismanOnay" });
                                         }
-                                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DosyaDanismanOnay" });
+                                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DosyaDanismanOnay" });
                                     }
-                                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DosyaDanismanOnay" });
+                                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DosyaDanismanOnay" });
                                 }
 
 
@@ -364,25 +364,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     if (!kModel.DoktoraTezOneriTarihi.HasValue)
                                     {
                                         mmMessage.Messages.Add("Doktora Tez Öneri Tarihi bilgisini giriniz.");
-                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DoktoraTezOneriTarihi" });
+                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DoktoraTezOneriTarihi" });
 
                                     }
-                                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DoktoraTezOneriTarihi" });
+                                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DoktoraTezOneriTarihi" });
                                     if (dosyaDanismanOnay == null && dosyaAdiDanismanOnay.IsNullOrWhiteSpace())
                                     {
                                         mmMessage.Messages.Add("Danışman İmzalı Onay Belgesi Yükleyiniz.");
-                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
+                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DosyaDanismanOnay" });
                                     }
                                     else if (dosyaDanismanOnay != null)
                                     {
                                         if (dosyaDanismanOnay.FileName.Split('.').Last().ToLower() != "pdf")
                                         {
                                             mmMessage.Messages.Add("Yükleyeceğiniz te öneri belgesi pdf türünde olmalıdır.");
-                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
+                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DosyaDanismanOnay" });
                                         }
-                                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DosyaDanismanOnay" });
+                                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DosyaDanismanOnay" });
                                     }
-                                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DosyaDanismanOnay" });
+                                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DosyaDanismanOnay" });
                                 }
                             }
                         }
@@ -390,31 +390,31 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        if (kModel.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || kModel.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi)
+                        if (kModel.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi || kModel.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi)
                         {
-                            if (kModel.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi)
+                            if (kModel.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi)
                             {
                                 if (kModel.IsDersYukuTamamlandi != true)
                                 {
                                     mmMessage.Messages.Add("Talep işleminin yapılabilmesi için ders yükünün tamamlanması gerekmektedir.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsDersYukuTamamlandi" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsDersYukuTamamlandi" });
                                 }
                                 else
                                 {
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DosyaDanismanOnay" });
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DosyaDanismanOnay" });
                                     if (kModel.IsDersYukuTamamlandi == true && dosyaDanismanOnay == null && dosyaAdiDanismanOnay.IsNullOrWhiteSpace())
                                     {
                                         mmMessage.Messages.Add("Danışman İmzalı Onay Belgesi Yükleyiniz.");
-                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
+                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DosyaDanismanOnay" });
                                     }
                                     else if (dosyaDanismanOnay != null)
                                     {
                                         if (dosyaDanismanOnay.FileName.Split('.').Last().ToLower() != "pdf")
                                         {
                                             mmMessage.Messages.Add("Yükleyeceğiniz ders yükü belgesi pdf türünde olmalıdır.");
-                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
+                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DosyaDanismanOnay" });
                                         }
-                                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DosyaDanismanOnay" });
+                                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DosyaDanismanOnay" });
                                     }
                                 }
                             }
@@ -425,16 +425,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     if (dosyaDanismanOnay == null && dosyaAdiDanismanOnay.IsNullOrWhiteSpace())
                                     {
                                         mmMessage.Messages.Add("Danışman İmzalı Onay Belgesi Yükleyiniz.");
-                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
+                                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DosyaDanismanOnay" });
                                     }
                                     else if (dosyaDanismanOnay != null)
                                     {
                                         if (dosyaDanismanOnay.FileName.Split('.').Last().ToLower() != "pdf")
                                         {
                                             mmMessage.Messages.Add("Yükleyeceğiniz ders yükü belgesi pdf türünde olmalıdır.");
-                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
+                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "DosyaDanismanOnay" });
                                         }
-                                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DosyaDanismanOnay" });
+                                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "DosyaDanismanOnay" });
                                     }
                                 }
 
@@ -469,7 +469,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (dosya == null && dosyaAdi.IsNullOrWhiteSpace())
                     {
                         mmMessage.Messages.Add("Belge seçiniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Dosya" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Dosya" });
 
                     }
                     else if (dosya != null)
@@ -479,13 +479,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mmMessage.Messages.Add("Yükleyeceğiniz belge pdf türünde olmalıdır.");
                             mmMessage.MessagesDialog.Add(new MrMessage
                             {
-                                MessageType = Msgtype.Warning,
+                                MessageType = MsgTypeEnum.Warning,
                                 PropertyName = "Dosya"
                             });
                         }
-                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Dosya" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "Dosya" });
                     }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Dosya" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "Dosya" });
 
                 }
 
@@ -495,10 +495,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
 
                         mmMessage.Messages.Add("Talep işleminin yapılabilmesi taahhüt onayı verilmesi gerekmektedir.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsTaahut" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsTaahut" });
 
                     }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "IsTaahut" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "IsTaahut" });
 
                 }
                 else kModel.IsTaahut = null;
@@ -534,7 +534,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (yeniKayit)
                 {
                     kModel.TalepTarihi = DateTime.Now;
-                    kModel.TalepDurumID = TalepDurumu.TalepYapildi;//talep edildi
+                    kModel.TalepDurumID = TalepDurumuEnum.TalepYapildi;//talep edildi
                     kModel.TalepTarihi = DateTime.Now;
 
 
@@ -590,10 +590,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                 }
 
-                if ((kModel.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || kModel.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi))
+                if ((kModel.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi || kModel.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi))
                 {
                     var dosyalar = new Dictionary<TalepGelenTalepBelgeleri, HttpPostedFileBase>();
-                    if (kModel.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi && dosyaDanismanOnay != null)
+                    if (kModel.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi && dosyaDanismanOnay != null)
                     {
                         dosyalar.Add(new TalepGelenTalepBelgeleri
                         {
@@ -632,13 +632,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 LogIslemleri.LogEkle("TalepGelenTalepler", yeniKayit ? IslemTipi.Insert : IslemTipi.Update, talep.ToJson());
                 mmMessage.IsSuccess = true;
-                mmMessage.MessageType = Msgtype.Success;
+                mmMessage.MessageType = MsgTypeEnum.Success;
                 return mmMessage.ToJsonResult();
             }
             else
             {
                 mmMessage.IsSuccess = false;
-                mmMessage.MessageType = Msgtype.Warning;
+                mmMessage.MessageType = MsgTypeEnum.Warning;
                 return mmMessage.ToJsonResult();
             }
         }
@@ -712,14 +712,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tipi", Aciklama = talep.TalepTipAdi });
                 string talepTipAciklama = "";
-                if (talep.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi)
+                if (talep.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi)
                 {
                     talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
                         "Bu talep tipini seçecek öğrenciler, doktora tez önerisinden başarılı olmuş ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir. "
                         :
                         "Bu talep tipini seçecek öğrenciler Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşamasını tamamlamış ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir.";
                 }
-                else if (talep.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi)
+                else if (talep.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi)
                 {
                     talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
                         "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
@@ -730,7 +730,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!talepTipAciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tipi Açıklaması", Aciklama = talepTipAciklama });
                 htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tarihi", Aciklama = talep.TalepTarihi.ToFormatDateAndTime() });
                 htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Durumu", Aciklama = talep.TalepDurumAdi });
-                if (talep.TalepDurumID == TalepDurumu.Rededildi) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Red Açıklaması", Aciklama = talep.TalepDurumAciklamasi });
+                if (talep.TalepDurumID == TalepDurumuEnum.Rededildi) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Red Açıklaması", Aciklama = talep.TalepDurumAciklamasi });
                 if (!aciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Not", Aciklama = aciklama });
 
                 contentBilgi.GrupBasligi = "'" + talep.TalepTipAdi + "' talebiniz " + talep.TalepDurumAdi;
@@ -787,13 +787,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var oldTdid = talep.TalepDurumID;
 
             talep.TalepDurumID = talepDurumId;
-            if (talep.TalepDurumID == TalepDurumu.Rededildi) talep.TalepDurumAciklamasi = talepDurumAciklamasi;
+            if (talep.TalepDurumID == TalepDurumuEnum.Rededildi) talep.TalepDurumAciklamasi = talepDurumAciklamasi;
             talep.IslemTarihi = DateTime.Now;
             talep.IslemYapanID = UserIdentity.Current.Id;
             talep.IslemYapanIP = UserIdentity.Ip;
             _entities.SaveChanges();
 
-            if (talepDurumId != TalepDurumu.TalepYapildi && talepDurumId != oldTdid)
+            if (talepDurumId != TalepDurumuEnum.TalepYapildi && talepDurumId != oldTdid)
             {
                 BilgiMaili(new List<int> { talep.TalepGelenTalepID }, talep.TalepSurecleri.EnstituKod);
             }
@@ -815,7 +815,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var mmMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 IsSuccess = true,
                 Title = "Toplu Talep Onaylama İşlemi"
             };
@@ -823,11 +823,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 try
                 {
-                    var talepler = _entities.TalepGelenTaleplers.Where(p => p.TalepDurumID == TalepDurumu.TalepYapildi && kTalepGelenTalepIDs.Contains(p.TalepGelenTalepID)).ToList();
+                    var talepler = _entities.TalepGelenTaleplers.Where(p => p.TalepDurumID == TalepDurumuEnum.TalepYapildi && kTalepGelenTalepIDs.Contains(p.TalepGelenTalepID)).ToList();
 
                     foreach (var item in talepler)
                     {
-                        item.TalepDurumID = TalepDurumu.Onaylandi;
+                        item.TalepDurumID = TalepDurumuEnum.Onaylandi;
                         item.IslemTarihi = DateTime.Now;
                         item.IslemYapanID = UserIdentity.Current.Id;
                         item.IslemYapanIP = UserIdentity.Ip;
@@ -842,22 +842,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     catch (Exception ex)
                     {
                         mmMessage.Messages.Add("Onaylanan Taleplere mail gönderilirken bir hata oluştu.");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Hata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                     }
                     LogIslemleri.LogEkle("TalepGelenTalepler", IslemTipi.Update, talepler.ToJson());
 
                 }
                 catch (Exception ex)
                 {
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Toplu Talep Onay işlemi yapılırken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu Talep Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Hata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu Talep Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 }
             }
             else
             {
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz.");
 
@@ -875,14 +875,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             string aciklama = null;
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
-            if (talepTipId == TalepTipi.LisansustuSureUzatmaTalebi)
+            if (talepTipId == TalepTipiEnum.LisansustuSureUzatmaTalebi)
             {
                 aciklama = kul.OgrenimTipKod.IsDoktora() ?
                     "Bu talep tipini seçecek öğrenciler, doktora tez önerisinden başarılı olmuş ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir. "
                     :
                     "Bu talep tipini seçecek öğrenciler Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşamasını tamamlamış ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir.";
             }
-            else if (talepTipId == TalepTipi.Covid19KayitDondurmaTalebi)
+            else if (talepTipId == TalepTipiEnum.Covid19KayitDondurmaTalebi)
             {
                 aciklama = kul.OgrenimTipKod.IsDoktora() ?
                     "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
@@ -919,24 +919,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
            
             if (duzenleYetki == false)
             {
-                if (Management.getAktifTalepSurecID(talep.TalepSurecleri.EnstituKod, talep.TalepSurecID).HasValue)
+                if (Management.GetAktifTalepSurecId(talep.TalepSurecleri.EnstituKod, talep.TalepSurecID).HasValue)
                 {
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Title = "Uyarı";
                     mmMessage.Messages.Add("Süreç tamamlandıktan sonra başvurunuzu silemezsiniz!");
                 }
                 if (UserIdentity.Current.Id != talep.KullaniciID)
                 {
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Title = "Uyarı";
                     mmMessage.Messages.Add("Başka bir kullanıcıya ait talep işlemini silemezsiniz!");
 
                 }
-                else if (talep.TalepDurumID == TalepDurumu.Onaylandi || talep.TalepDurumID == TalepDurumu.Rededildi)
+                else if (talep.TalepDurumID == TalepDurumuEnum.Onaylandi || talep.TalepDurumID == TalepDurumuEnum.Rededildi)
                 {
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Title = "Hata";
                     var bDurumAdi = talep.TalepDurumlari.TalepDurumAdi;
@@ -968,15 +968,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     LogIslemleri.LogEkle("TalepGelenTalepler", IslemTipi.Delete, talep.ToJson());
                     mmMessage.IsSuccess = true;
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
                 }
                 catch (Exception ex)
                 {
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Talep silinirken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id, "TalepYap /Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id, "TalepYap /Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);

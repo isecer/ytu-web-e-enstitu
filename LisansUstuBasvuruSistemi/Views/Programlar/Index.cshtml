@@ -15,70 +15,6 @@
         <div class="col-md-12">
 
             <!-- START SIMPLE DATATABLE -->
-            <div class="panel panel-info" id="pnlFltr"> 
-                <div class="panel-heading padding-0">
-                    <h3 class="panel-title">
-                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
-                    </h3>
-                    <ul class="panel-controls">
-                        <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Program Ekle</span></li>
-                         
-                    </ul>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-hover" style="table-layout:fixed;">
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-md-4 col-xs-5 control-label">Enstitü</label>
-                                    <div class="col-md-8 col-xs-7">
-                                        @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
-                                    </div>
-                                </div>
-                            </td>
-                            
-                        
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-md-4 col-xs-5 control-label">Durum</label>
-                                    <div class="col-md-8 col-xs-7">
-                                        @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
-                                    </div>
-                                </div>
-                            </td>
-                            
-                        </tr>
-                        <tr>
-                            <td>
-                                
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-md-4 col-xs-5 control-label">Aranacak Kelime</label>
-                                    <div class="col-md-8 col-xs-7">
-                                        <table style="table-layout:fixed;width:100%;">
-                                            <tr>
-                                                <td><input name="ProgramAdi" type="text" value="@Model.ProgramAdi" class="form-control" /></td>
-                                                <td width="106">
-                                                    <a href="javascript:void(0);" onclick="$('#Expand').val(($('#pnlFltr').hasClass('panel-toggled')?'false':'true')); $('#frmPrgrmlr').submit();" class="btn btn-info"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        
-
-                                        
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-
-            <!-- START SIMPLE DATATABLE -->
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
                     <table style="width:100%;table-layout:fixed;">
@@ -88,6 +24,7 @@
                             <td style="width:380px;">
                                 <ul class="panel-controls">
                                     @*<li><span class="label label-success label-form" onclick="getReportType()" style="cursor:pointer;">Program Listesini İndir</span></li>*@
+                                    <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Program Ekle</span></li>
                                     <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                                     <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
                                     <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
@@ -102,28 +39,37 @@
                         <thead>
                             <tr>
                                 <th width="75"></th>
-                                <th class="sirala" field="EnstituAd" width="230">Enstitü / Ales Tip</th> 
                                 <th class="sirala" field="ProgramAdi">Anabilim Dalı / P Adı</th>
                                 <th class="sirala" field="IsAktif" width="60">Durum</th>
-                                <th width="40"> 
-                                </th>
+                                <th width="40"> </th>
                             </tr>
                         </thead>
                         <tbody>
+
+                            <tr class="filtrele">
+                                <th></th>
+                                <th>
+                                    <input name="ProgramAdi" type="text" value="@Model.ProgramAdi" class="form-control" />
+                                </th>
+                                <th>
+                                    @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
+                                <th></th>
+                            </tr>
                             @if (Model.RowCount > 0)
                             {
-                                int RowIndex = Model.StartRowIndex;
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.data)
                                 {
-                                    RowIndex++;
+                                    rowIndex++;
                                     <tr>
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.ProgramKod"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.ProgramKod')">
+                                                            <li id="iShow_@item.ProgramKod" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.ProgramKod')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
@@ -131,9 +77,6 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td>
-                                            @item.EnstituAd  <br /> 
-                                        </td> 
                                         <td id="tdMad_@item.ProgramKod">
                                             @item.AnabilimDaliAdi <br />@item.ProgramAdi
                                         </td>
@@ -169,14 +112,14 @@
                                                                         <label class="col-md-3 control-label">P Kod</label>
                                                                         <div class="col-md-9">@item.ProgramKod</div>
                                                                     </div>
-                                                                    
+
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 control-label">Eğitim Dili Ing</label>
                                                                         <div class="col-md-9">
                                                                             <span class="label label-@(item.Ingilizce ? "success" : "danger")">@(item.Ingilizce ? "Evet" : "Hayır")</span>
                                                                         </div>
                                                                     </div>
-                                                                    
+
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 control-label">Durum</label>
                                                                         <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
@@ -202,7 +145,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">
+                                    <td colspan="4" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

@@ -14,7 +14,7 @@
     var tdKayitYetki = kayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
 
 
-    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
 
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
@@ -140,7 +140,7 @@
                                                     @if (itemTD.IsOnaylandiOrDuzeltme == true)
                                                     {
                                                         <br />
-                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Tez Kontrol Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezKontrolFormu&ID=@itemTD.RowID' , 'auto', 'modal-dialog modal-lg' )">
+                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Tez Kontrol Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezKontrolFormu&ID=@itemTD.RowID' , 'auto', 'modal-dialog modal-lg' )">
                                                             <i class="fa fa-file-pdf-o"></i> Tez Kontrol Formunu İndir
                                                         </a>
                                                     }

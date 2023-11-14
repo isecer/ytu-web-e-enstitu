@@ -53,7 +53,7 @@
                         </tr>
                     }
 
-                    if (Model.Sinav.IsTaahhutVar != true && Model.Sinav.SinavTipGrupID == SinavTipGrup.DilSinavlari)
+                    if (Model.Sinav.IsTaahhutVar != true && Model.Sinav.SinavTipGrupID == SinavTipGrupEnum.DilSinavlari)
                     {
                         <tr>
                             <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
@@ -88,19 +88,19 @@
                         <td>
                             @if (Model.SinavDetay.OzelTarih)
                             {
-                                if (Model.SinavDetay.OzelTarihTipID == OzelTarihTip.BelirliTarihler)
+                                if (Model.SinavDetay.OzelTarihTipID == OzelTarihTipiEnum.BelirliTarihler)
                                 {
                                     <span>Sadece sistem tarafından belirlenmiş tarihleri seçebilirsiniz</span>
                                 }
-                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTip.BelirliTarihdenOncesi)
+                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTipiEnum.BelirliTarihdenOncesi)
                                 {
                                     <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> tarihi ve önceki sınavlar</span>
                                 }
-                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTip.BelirliTarhidenSonrasi)
+                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTipiEnum.BelirliTarhidenSonrasi)
                                 {
                                     <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> tarihi ve sonraki sınavlar</span>
                                 }
-                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTip.IkiTarihArasi)
+                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTipiEnum.IkiTarihArasi)
                                 {
                                     <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> ile <b>@Model.SinavDetay.Tarih2.Value.ToDateString()</b> tarih aralığındaki sınavlar</span>
                                 }
@@ -123,7 +123,7 @@
 
                     if (Model.SinavDetay.OzelNot)
                     {
-                        if (Model.SinavDetay.OzelNotTipID.HasValue && Model.SinavDetay.OzelNotTipID == OzelNotTip.SeciliNotAraliklari)
+                        if (Model.SinavDetay.OzelNotTipID.HasValue && Model.SinavDetay.OzelNotTipID == OzelNotTipEnum.SeciliNotAraliklari)
                         {
                             <tr>
                                 <td style="vertical-align:top;"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
@@ -147,7 +147,7 @@
 
 
                         }
-                        else if (Model.SinavDetay.OzelNotTipID.HasValue && Model.SinavDetay.OzelNotTipID == OzelNotTip.SeciliNotlar)
+                        else if (Model.SinavDetay.OzelNotTipID.HasValue && Model.SinavDetay.OzelNotTipID == OzelNotTipEnum.SeciliNotlar)
                         {
                             <tr>
                                 <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
@@ -210,7 +210,7 @@
             <td class="myCaptionTd" style="text-align:left;">
                 @{
                     var minNot = "";
-                    if (Model.SinavDetay.OzelNotTipID == OzelNotTip.SeciliNotlar)
+                    if (Model.SinavDetay.OzelNotTipID == OzelNotTipEnum.SeciliNotlar)
                     {
                         minNot = Model.SinavDetay.BasvuruSurecSinavNotlaris.OrderBy(o => o.SinavNotDeger).Select(s => s.SinavNotAdi).First();
                     }
@@ -218,7 +218,7 @@
                     {
                         minNot = Model.SinavDetay.Min.ToStrObjEmptString();
                     }
-                    var locTaahhutkey = Model.Sinav.SinavTipGrupID == SinavTipGrup.Tomer ? 
+                    var locTaahhutkey = Model.Sinav.SinavTipGrupID == SinavTipGrupEnum.Tomer ? 
                                     (Model.IsTurkceProgramVar ? "Kayıt olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim." : "Mezun olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim.") 
                                     : (Model.SinavDetay.GIsTaahhutVar ? (Model.SinavDetay.SinavTipKod == 56 ? "28 Ağustos 2022 YÖKDİL sınavına girmiş olan adaylar minimum puan değeri girmeleri gerekmektedir. Programı kayıt hakkı kazanmanız durumunda; lisansüstü kayıt takviminde yer alan tarihlerde sisteme minimum değeri sağlayan sınav sonucu belgenizi yükleyeceğimi taahhüt ederim. (Aksi taktirde kaydınız yapılmayacaktır.)" : "Başvuru koşullarında belirtilen koşula uygun sınav notu bulunan dil sınavı belgemi getireceğimi taahhüt ederim. Aksi halde başvurumun iptal edilmesini onaylıyorum.") 
                         : "DilSinaviTaahhut");
@@ -236,14 +236,14 @@
             <td class="myCaptionTd">:</td>
             <td class="myCaptionTd" style="text-align: left;">
 
-                @if (Model.Sinav.SinavTipGrupID == SinavTipGrup.Ales_Gree && Model.SinavDetay.WebService)
+                @if (Model.Sinav.SinavTipGrupID == SinavTipGrupEnum.Ales_Gree && Model.SinavDetay.WebService)
                 {
                     var mdlXml = Model.Sinav.WsXmlData.toSinavSonucAlesXmlModel();
-                    if (Model.SinavDetay.EnstituKod == EnstituKodlari.FenBilimleri)
+                    if (Model.SinavDetay.EnstituKod == EnstituKodlariEnum.FenBilimleri)
                     {
                         <span>Sayısal Puan :@mdlXml.SAY_PUAN.ToDouble().ToString("n2")</span>
                     }
-                    else if (Model.SinavDetay.EnstituKod == EnstituKodlari.SosyalBilimleri)
+                    else if (Model.SinavDetay.EnstituKod == EnstituKodlariEnum.SosyalBilimleri)
                     {
                         <span>Sayısal Puan:@mdlXml.SAY_PUAN.ToDouble().ToString("n2") , Eşit Ağırlık Puan:@mdlXml.EA_PUAN.ToDouble().ToString("n2") , Sözel Puan :@mdlXml.SOZ_PUAN.ToDouble().ToString("n2")</span>
                     }

@@ -5,7 +5,7 @@
 
 @if (Model.Messages.Count > 0)
 { 
-    var cls = Model.MessageType == Msgtype.Success ? "success" : (Model.MessageType == Msgtype.Warning ? "warning" : (Model.MessageType == Msgtype.Error ? "danger" : "info"));
+    var cls = Model.MessageType == MsgTypeEnum.Success ? "success" : (Model.MessageType == MsgTypeEnum.Warning ? "warning" : (Model.MessageType == MsgTypeEnum.Error ? "danger" : "info"));
     <div class="panel-body panel-body-pricing">
         @if (!Model.Title.IsNullOrWhiteSpace())
         {

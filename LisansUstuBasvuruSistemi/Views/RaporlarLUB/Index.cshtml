@@ -47,7 +47,7 @@
             alert("Akademik Tarih Seçiniz");
             return;
         } 
-        yeniDialogBBRprLansCape(null, 'Başvuru Süreci Sayısal Raporu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=' +@RaporTipleri.BasvuruSonucSayisal +'&BasvuruSurecID=' + id, 'auto','1200', 'modal-dialog modal-lg')
+        yeniDialogBBRprLansCape(null, 'Başvuru Süreci Sayısal Raporu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=' +@RaporTipiEnum.BasvuruSonucSayisal +'&BasvuruSurecID=' + id, 'auto','1200', 'modal-dialog modal-lg')
                
     }
 </script>

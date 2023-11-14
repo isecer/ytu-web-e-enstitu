@@ -17,7 +17,7 @@
     var durumDetayIconClass = "";
     var aciklamaDetay = "";
 
-    if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi)
+    if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
     {
         tabAdi = "Yeni Başvuru";
         tabIconClass = "fa fa-list-alt fa-lg";
@@ -28,7 +28,7 @@
         durumDetayIconClass = "fa fa-comments-o";
         aciklamaDetay = item.MezuniyetYayinKontrolDurumAciklamasi;
     }
-    else if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Taslak)
+    else if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Taslak)
     {
         tabAdi = "Yeni Başvuru";
         tabIconClass = "fa fa-list-alt fa-lg";
@@ -37,7 +37,7 @@
         durumDetayIconClass = "fa fa-exclamation-triangle";
         durumDetay = "Süreç Devamı İçin Öğrenci Onayı Gerekmekte.";
     }
-    else if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi)
+    else if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi)
     {
         tabAdi = "Yeni Başvuru";
         tabIconClass = "fa fa-list-alt fa-lg";
@@ -74,7 +74,7 @@
 
         }
     }
-    else if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+    else if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
     {
 
 
@@ -165,9 +165,9 @@
             tabIconClass = "fa fa-edit fa-lg";
             var isDanismanUzatmaSonrasiOnay = item.SrTalebi.IsDanismanUzatmaSonrasiOnay;
             var isOgrenciUzatmaSonrasiOnay = item.SrTalebi.IsOgrenciUzatmaSonrasiOnay;
-            var isEnstituOnayiVar = item.SrTalebi.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
+            var isEnstituOnayiVar = item.SrTalebi.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
             var enstituSinavDurumId = item.SrTalebi.MezuniyetSinavDurumID;
-            var isJuriOnayiVar = item.SrTalebi.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
+            var isJuriOnayiVar = item.SrTalebi.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
             var juriSinavDurumId = item.SrTalebi.JuriSonucMezuniyetSinavDurumID;
 
             if (isDanismanUzatmaSonrasiOnay.HasValue)
@@ -215,7 +215,7 @@
             }
             else if (isEnstituOnayiVar)
             {
-                if (enstituSinavDurumId == MezuniyetSinavDurum.Uzatma)
+                if (enstituSinavDurumId == MezuniyetSinavDurumEnum.Uzatma)
                 {
 
                     durumAdi = "Uzatma Talebi";
@@ -231,7 +231,7 @@
                     }
                     durumDetayIconClass = "fa fa-comments-o";
                 }
-                else if (enstituSinavDurumId == MezuniyetSinavDurum.Basarili)
+                else if (enstituSinavDurumId == MezuniyetSinavDurumEnum.Basarili)
                 {
                     durumAdi = "Sınav Sonucu Başarılı";
                     durumIconClass = "fa fa-thumbs-o-up";
@@ -239,7 +239,7 @@
                     durumDetay = "Sınav Sonucunu Enstitü Onayladı. Öğrenci Tez Kontrolü İçin Dosya Yüklemeli.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
-                else if (enstituSinavDurumId == MezuniyetSinavDurum.Basarisiz)
+                else if (enstituSinavDurumId == MezuniyetSinavDurumEnum.Basarisiz)
                 {
                     durumAdi = "Sınav Sonucu Başarısız";
                     durumIconClass = "fa fa-thumbs-o-down";
@@ -251,7 +251,7 @@
             }
             else if (isJuriOnayiVar)
             {
-                if (juriSinavDurumId == MezuniyetSinavDurum.Uzatma)
+                if (juriSinavDurumId == MezuniyetSinavDurumEnum.Uzatma)
                 {
                     durumAdi = "Uzatma Talebi";
                     durumIconClass = "fa fa-calendar";
@@ -259,7 +259,7 @@
                     durumDetay = "Jüri Sınav Sonucunu Uzatma Olarak Değerlendirdi. Enstitünün Onayı Gerekmekte.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
-                else if (juriSinavDurumId == MezuniyetSinavDurum.Basarili)
+                else if (juriSinavDurumId == MezuniyetSinavDurumEnum.Basarili)
                 {
                     durumAdi = "Jüri Üyeleri Sınav Sonucunu Başarılı Olarak Değerlendirdi";
                     durumIconClass = "fa fa-thumbs-o-up";
@@ -267,7 +267,7 @@
                     durumDetay = "Jüri Sınav Sonucunu Başarılı Olarak Değerlendirdi. Enstitünün Onayı Gerekmekte.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
-                else if (juriSinavDurumId == MezuniyetSinavDurum.Basarisiz)
+                else if (juriSinavDurumId == MezuniyetSinavDurumEnum.Basarisiz)
                 {
                     durumAdi = "Jüri Üyeleri Sınav Sonucunu Başarısız Olarak Değerlendirdi";
                     durumIconClass = "fa fa-thumbs-o-down";
@@ -286,7 +286,7 @@
             }
             else
             {
-                if (item.SrTalebi.SRDurumID == SRTalepDurum.TalepEdildi)
+                if (item.SrTalebi.SRDurumID == SrTalepDurumEnum.TalepEdildi)
                 {
                     durumAdi = "Sınav Talebi Yapıldı";
                     durumIconClass = "fa fa-thumbs-o-up";
@@ -294,7 +294,7 @@
                     durumDetay = "Enstitü Tarafından Sınav Talebinin Onaylanması Bekleniyor.";
                     durumDetayIconClass = "fa fa-comments-o";
                 }
-                else if (item.SrTalebi.SRDurumID == SRTalepDurum.Onaylandı)
+                else if (item.SrTalebi.SRDurumID == SrTalepDurumEnum.Onaylandı)
                 {
                     durumAdi = "Sınav Talebi Onaylandı";
                     durumIconClass = "fa fa-thumbs-o-up";
@@ -303,7 +303,7 @@
                     durumDetayIconClass = "fa fa-clock-o";
 
                 }
-                else if (item.SrTalebi.SRDurumID == SRTalepDurum.Reddedildi)
+                else if (item.SrTalebi.SRDurumID == SrTalepDurumEnum.Reddedildi)
                 {
                     durumAdi = "Sınav Talebi Ret Ededildi";
                     durumIconClass = "fa fa-thumbs-o-down";
@@ -312,7 +312,7 @@
                     durumDetayIconClass = "fa fa-clock-o";
                     aciklamaDetay = "Ret Açıklaması: " + item.SrTalebi.SRDurumAciklamasi;
                 }
-                else if (item.SrTalebi.SRDurumID == SRTalepDurum.IptalEdildi)
+                else if (item.SrTalebi.SRDurumID == SrTalepDurumEnum.IptalEdildi)
                 {
                     durumAdi = "Sınav Talebi İptal Ededildi";
                     durumIconClass = "fa fa-thumbs-o-down";

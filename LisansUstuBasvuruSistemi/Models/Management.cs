@@ -101,7 +101,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 db.SaveChanges();
             }
         }
-        public static string getRoot()
+        public static string GetRoot()
         {
             var root = HttpRuntime.AppDomainAppVirtualPath;
             root = root.EndsWith("/") ? root : root + "/";
@@ -110,60 +110,33 @@ namespace LisansUstuBasvuruSistemi.Models
         #endregion
 
         #region ComboData 
-        public static List<KmMzOtoMail> getZmMailZamanData(bool? chkD = null)
+        public static List<KmMzOtoMail> GetZmMailZamanData(bool? isChecked = null)
         {
 
-            var bsMList = new List<KmMzOtoMail>();
-            bsMList.Add(new KmMzOtoMail { gID = 1, Checked = chkD ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipi.Gun, Zaman = 1, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 1 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" });
-            bsMList.Add(new KmMzOtoMail { gID = 2, Checked = chkD ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipi.Gun, Zaman = 2, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 2 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" });
-            bsMList.Add(new KmMzOtoMail { gID = 3, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipi.Gun, Zaman = 10, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 10 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" });
-            bsMList.Add(new KmMzOtoMail { gID = 4, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipi.Gun, Zaman = 5, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 5 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" });
-            bsMList.Add(new KmMzOtoMail { gID = 5, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmadi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "SR talebi yapma sürecini 5 Gün aşanları bildir (Enstitü)" });
-
-            bsMList.Add(new KmMzOtoMail { gID = 10, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_SinavDegerlendirmeHatirlantmaDanismanDR, ZamanTipID = ZamanTipi.Gun, Zaman = -1, Gonderildi = false, Aciklama = "DR Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" });
-            bsMList.Add(new KmMzOtoMail { gID = 11, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_SinavDegerlendirmeHatirlantmaDanismanYL, ZamanTipID = ZamanTipi.Gun, Zaman = -1, Gonderildi = false, Aciklama = "YL Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" });
-
-            bsMList.Add(new KmMzOtoMail { gID = 6, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_TezSinavSonucuSistemeGirilmedi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Sınav olup sonucunu 5 gün içinde getirmeyenleri bildir (Estitü,Danışman,Öğrenci)" });
-            bsMList.Add(new KmMzOtoMail { gID = 7, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_TezKontrolTezDosyasiYuklenmeli, ZamanTipID = ZamanTipi.Gun, Zaman = -7, Gonderildi = false, Aciklama = "Sınav olup Tez Dosyasını 7 gün içinde yüklemeyenleri bildir (Öğrenci)" });
-            bsMList.Add(new KmMzOtoMail { gID = 8, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_CiltliTezTeslimYapilmali, ZamanTipID = ZamanTipi.Gun, Zaman = 5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihine 5 gün kala teslim etmeyenleri bildir (Danışman,Öğrenci)" });
-            bsMList.Add(new KmMzOtoMail { gID = 9, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_CiltliTezTeslimYapilmadi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihini 5 gün geçirenleri bildir (Enstitü)" });
+            var bsMList = new List<KmMzOtoMail>
+            {
+                new KmMzOtoMail { gID = 1, Checked = isChecked ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipi.Gun, Zaman = 1, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 1 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" },
+                new KmMzOtoMail { gID = 2, Checked = isChecked ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipi.Gun, Zaman = 2, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 2 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" },
+                new KmMzOtoMail { gID = 3, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezEykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipi.Gun, Zaman = 10, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 10 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" },
+                new KmMzOtoMail { gID = 4, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezEykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipi.Gun, Zaman = 5, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 5 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" },
+                new KmMzOtoMail { gID = 5, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezEykTarihineGoreSrAlinmadi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "SR talebi yapma sürecini 5 Gün aşanları bildir (Enstitü)" },
+                new KmMzOtoMail { gID = 10, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezSinavDegerlendirmeHatirlantmaDanismanDr, ZamanTipID = ZamanTipi.Gun, Zaman = -1, Gonderildi = false, Aciklama = "DR Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" },
+                new KmMzOtoMail { gID = 11, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezSinavDegerlendirmeHatirlantmaDanismanYl, ZamanTipID = ZamanTipi.Gun, Zaman = -1, Gonderildi = false, Aciklama = "YL Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" },
+                new KmMzOtoMail { gID = 6, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezTezSinavSonucuSistemeGirilmedi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Sınav olup sonucunu 5 gün içinde getirmeyenleri bildir (Estitü,Danışman,Öğrenci)" },
+                new KmMzOtoMail { gID = 7, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezTezKontrolTezDosyasiYuklenmeli, ZamanTipID = ZamanTipi.Gun, Zaman = -7, Gonderildi = false, Aciklama = "Sınav olup Tez Dosyasını 7 gün içinde yüklemeyenleri bildir (Öğrenci)" },
+                new KmMzOtoMail { gID = 8, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezCiltliTezTeslimYapilmali, ZamanTipID = ZamanTipi.Gun, Zaman = 5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihine 5 gün kala teslim etmeyenleri bildir (Danışman,Öğrenci)" },
+                new KmMzOtoMail { gID = 9, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezCiltliTezTeslimYapilmadi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihini 5 gün geçirenleri bildir (Enstitü)" }
+            };
 
             return bsMList;
         }
-        public static List<CmbIntDto> getbasvuruSurecleri(string EnstituKod, int BasvuruSurecTipID, bool bosSecimVar = false)
+        public static List<CmbIntDto> GetbasvuruSurecleri(string enstituKod, int basvuruSurecTipId, bool bosSecimVar = false)
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = (from s in db.BasvuruSurecs.Where(p => p.EnstituKod == EnstituKod && p.BasvuruSurecTipID == BasvuruSurecTipID)
-                            join d in db.Donemlers on s.DonemID equals d.DonemID
-                            orderby s.BaslangicTarihi descending
-                            select new
-                            {
-                                s.BasvuruSurecID,
-                                s.BaslangicYil,
-                                s.BitisYil,
-                                d.DonemAdi,
-                                s.BaslangicTarihi,
-                                s.BitisTarihi
-                            }).ToList();
-                foreach (var item in data)
-                {
-                    lst.Add(new CmbIntDto { Value = item.BasvuruSurecID, Caption = (item.BaslangicYil + "/" + item.BitisYil + " " + item.DonemAdi + " (" + item.BaslangicTarihi.ToDateString() + " - " + item.BitisTarihi.ToDateString() + ")") });
-                }
-            }
-            return lst;
-        }
-        public static List<CmbIntDto> getbasvuruSurecleri(int KullaniciID, string EnstituKod, int BasvuruSurecTipID, bool bosSecimVar = false)
-        {
-            var lst = new List<CmbIntDto>();
-            if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var qBasvuruSurecIDs = db.Basvurulars.Where(p => p.KullaniciID == KullaniciID && p.BasvuruSurec.EnstituKod == EnstituKod && p.BasvuruSurec.BasvuruSurecTipID == BasvuruSurecTipID && p.BasvurularTercihleris.Any(a => a.MulakatSonuclaris.Any(a2 => a2.MulakatSonucTipID == MulakatSonucTipi.Asil || a2.MulakatSonucTipID == MulakatSonucTipi.Yedek))).Select(s => s.BasvuruSurecID).Distinct().ToList();
-
-                var data = (from s in db.BasvuruSurecs.Where(p => qBasvuruSurecIDs.Contains(p.BasvuruSurecID))
+                var data = (from s in db.BasvuruSurecs.Where(p => p.EnstituKod == enstituKod && p.BasvuruSurecTipID == basvuruSurecTipId)
                             join d in db.Donemlers on s.DonemID equals d.DonemID
                             orderby s.BaslangicTarihi descending
                             select new
@@ -187,7 +160,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-        public static List<CmbIntDto> cmbYetkiGruplari(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbYetkiGruplari(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -205,7 +178,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static List<CmbIntDto> cmbUyruk(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbUyruk(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -223,7 +196,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-        public static List<CmbIntDto> cmbUnvanlar(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbUnvanlar(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -238,7 +211,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbBirimler(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbBirimler(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -253,7 +226,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<Birimler> getBirimler()
+        public static List<Birimler> GetBirimler()
         {
 
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -263,7 +236,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
         }
 
-        public static List<CmbIntDto> cmbCinsiyetler(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbCinsiyetler(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -278,13 +251,13 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbBasvuruDurumListe(bool bosSecimVar = false, bool Tumu = false)
+        public static List<CmbIntDto> CmbBasvuruDurumListe(bool bosSecimVar = false, bool isTumu = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.BasvuruDurumlaris.Where(p => (Tumu ? true : p.BasvuranGorsun)).OrderBy(o => o.BasvuruDurumID).ToList();
+                var data = db.BasvuruDurumlaris.Where(p => (isTumu || p.BasvuranGorsun)).OrderBy(o => o.BasvuruDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.BasvuruDurumID, Caption = item.BasvuruDurumAdi });
@@ -299,7 +272,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-        public static List<CmbIntDto> cmbMulakatSonucTip(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbMulakatSonucTip(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -316,7 +289,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-        public static List<CmbBoolDto> cmbSinavBelgeTaahhut(bool bosSecimVar = false)
+        public static List<CmbBoolDto> CmbSinavBelgeTaahhut(bool bosSecimVar = false)
         {
             var dct = new List<CmbBoolDto>();
             if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
@@ -324,7 +297,7 @@ namespace LisansUstuBasvuruSistemi.Models
             dct.Add(new CmbBoolDto { Value = false, Caption = "Taahhüt Olmayan" });
             return dct;
         }
-        public static List<CmbBoolDto> cmbBolumOrOgrenci(bool bosSecimVar = false)
+        public static List<CmbBoolDto> CmbBolumOrOgrenci(bool bosSecimVar = false)
         {
             var dct = new List<CmbBoolDto>();
             if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
@@ -333,7 +306,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbKayitDurum()
+        public static List<CmbIntDto> CmbKayitDurum()
         {
             var dct = new List<CmbIntDto>();
             dct.Add(new CmbIntDto { Value = null, Caption = "İşlem Görmeyenler" });
@@ -350,7 +323,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static List<CmbIntDto> cmbOTYedekCarpanData(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbOtYedekCarpanData(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -381,9 +354,9 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-          
 
-        public static List<CmbIntDto> cmbGetAktifUniversiteler(bool bosSecimVar = false)
+
+        public static List<CmbIntDto> CmbGetAktifUniversiteler(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -398,7 +371,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbGetOgrenciBolumleri(string EnstituKod, bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetOgrenciBolumleri(string EnstituKod, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -413,7 +386,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbGetNotSistemleri(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetNotSistemleri(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -429,23 +402,23 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-        public static NotSistemleri getNotSistemi(int NotSistemID)
+        public static NotSistemleri GetNotSistemi(int notSistemId)
         {
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                return db.NotSistemleris.Where(p => p.NotSistemID == NotSistemID).OrderBy(o => o.NotSistemID).FirstOrDefault();
+                return db.NotSistemleris.Where(p => p.NotSistemID == notSistemId).OrderBy(o => o.NotSistemID).FirstOrDefault();
 
             }
 
         }
-        public static List<CmbStringDto> cmbGetAktifAnabilimDallariStr(string EnstituKod, bool bosSecimVar = false)
+        public static List<CmbStringDto> CmbGetAktifAnabilimDallariStr(string enstituKod, bool bosSecimVar = false)
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == EnstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
+                var data = db.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == enstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbStringDto { Value = item.AnabilimDaliAdi, Caption = item.AnabilimDaliAdi });
@@ -453,13 +426,13 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
         }
-        public static List<CmbIntDto> cmbGetAktifAnabilimDallari(string EnstituKod, bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetAktifAnabilimDallari(string enstituKod, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == EnstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
+                var data = db.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == enstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.AnabilimDaliID, Caption = item.AnabilimDaliAdi });
@@ -467,64 +440,26 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
         }
-        public static List<CmbIntDto> cmbGetAktifBolumlerX(int OgrenimTipKod, int BasvuruSurecID, int? KullaniciTipID = null, bool SadeceKotasiOlanlar = true)
-        {
-
-            var dct = new List<CmbIntDto>();
-            if (OgrenimTipKod == 0 && BasvuruSurecID == 0) return dct;
-            if (!KullaniciTipID.HasValue) KullaniciTipID = UserIdentity.Current.KullaniciTipID;
-
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var kulTip = db.KullaniciTipleris.Where(p => p.KullaniciTipID == KullaniciTipID).First();
-                var basvurusrc = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID).First();
-                var q = from p in db.Programlars
-                        join k in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == BasvuruSurecID) on p.ProgramKod equals k.ProgramKod
-                        join bl in db.AnabilimDallaris on p.AnabilimDaliKod equals bl.AnabilimDaliKod
-                        join ot in db.OgrenimTipleris on new { k.BasvuruSurec.EnstituKod, k.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                        where bl.EnstituKod == basvurusrc.EnstituKod && ot.OgrenimTipKod == OgrenimTipKod
-                        group new { bl.AnabilimDaliID, bl.AnabilimDaliAdi, k.AlanIciKota, k.AlanDisiKota, k.OrtakKota, k.OrtakKotaSayisi } by new { bl.AnabilimDaliID, bl.AnabilimDaliAdi } into g1
-                        orderby g1.Key.AnabilimDaliAdi
-                        select new
-                        {
-                            g1.Key.AnabilimDaliID,
-                            g1.Key.AnabilimDaliAdi,
-                            cnt = g1.Where(p => p.AlanIciKota > 0 || p.AlanDisiKota > 0 || (p.OrtakKota && p.OrtakKotaSayisi > 0)).Count()
-
-                        };
-                if (SadeceKotasiOlanlar) q = q.Where(p => p.cnt > 0);
-                var qdata = q.ToList();
-                if (qdata.Count > 0) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-
-                foreach (var item in qdata)
-                {
-                    dct.Add(new CmbIntDto { Value = item.AnabilimDaliID, Caption = item.AnabilimDaliAdi + " " });
-                }
-
-
-            }
-            return dct;
-        }
-        public static List<CmbStringDto> cmbGetAktifProgramlarX(int AnabilimDaliID, int _OgrenimTipKod, int BasvuruSurecID, int KullaniciTipID, bool SadeceKotasiOlanlar = true)
+        public static List<CmbStringDto> CmbGetAktifProgramlarX(int anabilimDaliId, int ogrenimTipKod, int basvuruSurecId, int kullaniciTipId, bool sadeceKotasiOlanlar = true)
         {
             var dct = new List<CmbStringDto>();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                bool Yerli = true;
-                if (KullaniciTipID > 0) Yerli = db.KullaniciTipleris.Where(p => p.KullaniciTipID == KullaniciTipID).First().Yerli;
+                bool isYerli = true;
+                if (kullaniciTipId > 0) isYerli = db.KullaniciTipleris.First(p => p.KullaniciTipID == kullaniciTipId).Yerli;
                 var q = from p in db.Programlars
-                        join k in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == BasvuruSurecID) on new { p.ProgramKod, OgrenimTipKod = _OgrenimTipKod } equals new { k.ProgramKod, k.OgrenimTipKod }
-                        where p.AnabilimDaliID == AnabilimDaliID
+                        join k in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == basvuruSurecId) on new { p.ProgramKod, OgrenimTipKod = ogrenimTipKod } equals new { k.ProgramKod, k.OgrenimTipKod }
+                        where p.AnabilimDaliID == anabilimDaliId
                         group new { p.ProgramKod, p.ProgramAdi, k.AlanIciKota, k.AlanDisiKota, k.OrtakKota, k.OrtakKotaSayisi } by new { p.ProgramKod, p.ProgramAdi } into g1
                         orderby g1.Key.ProgramAdi
                         select new
                         {
                             g1.Key.ProgramKod,
                             g1.Key.ProgramAdi,
-                            cnt = g1.Where(p => p.AlanIciKota > 0 || p.AlanDisiKota > 0 || (p.OrtakKota && p.OrtakKotaSayisi > 0)).Count()
+                            cnt = g1.Count(p => p.AlanIciKota > 0 || p.AlanDisiKota > 0 || (p.OrtakKota && p.OrtakKotaSayisi > 0))
 
                         };
-                if (SadeceKotasiOlanlar) q = q.Where(p => p.cnt > 0);
+                if (sadeceKotasiOlanlar) q = q.Where(p => p.cnt > 0);
                 var qdata = q.ToList();
                 if (qdata.Count > 0) dct.Add(new CmbStringDto { Value = null, Caption = "" });
 
@@ -538,7 +473,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
         }
 
-        public static List<CmbIntDto> cmbGetSinavTipGruplari(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetSinavTipGruplari(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -552,8 +487,8 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
 
-        } 
-        public static List<CmbIntDto> cmbGetOzelNotTipleri(bool bosSecimVar = false)
+        }
+        public static List<CmbIntDto> CmbGetOzelNotTipleri(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -569,13 +504,13 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-        public static List<CmbIntDto> cmbGetAktifSinavlar(string EnstituKodu, int? SinavTipGrupID = null, bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetAktifSinavlar(string enstituKodu, int? sinavTipGrupId = null, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = (from s in db.SinavTipleris.Where(s2 => s2.EnstituKod == EnstituKodu && s2.IsAktif)
+                var data = (from s in db.SinavTipleris.Where(s2 => s2.EnstituKod == enstituKodu && s2.IsAktif)
                             join stl in db.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
                             orderby stl.SinavAdi
                             select new
@@ -585,7 +520,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                 s.SinavTipGrupID,
                                 stl.SinavAdi
                             }).AsQueryable();
-                if (SinavTipGrupID.HasValue) data = data.Where(p => p.SinavTipGrupID == SinavTipGrupID.Value);
+                if (sinavTipGrupId.HasValue) data = data.Where(p => p.SinavTipGrupID == sinavTipGrupId.Value);
                 var qdata = data.ToList();
                 foreach (var item in qdata)
                 {
@@ -595,15 +530,15 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbGetBSAktifSinavlar(string EnstituKodu, List<int> SinavTipGrupIDs, bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetBsAktifSinavlar(string enstituKodu, List<int> sinavTipGrupIDs, bool bosSecimVar = false)
         {
-            SinavTipGrupIDs = SinavTipGrupIDs ?? new List<int>();
+            sinavTipGrupIDs = sinavTipGrupIDs ?? new List<int>();
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var bssT = db.BasvuruSurecSinavTipleris.Where(p => p.EnstituKod == EnstituKodu).Select(s => s.SinavTipID).Distinct();
-                var data = (from s in db.SinavTipleris.Where(s2 => s2.EnstituKod == EnstituKodu && bssT.Contains(s2.SinavTipID))
+                var bssT = db.BasvuruSurecSinavTipleris.Where(p => p.EnstituKod == enstituKodu).Select(s => s.SinavTipID).Distinct();
+                var data = (from s in db.SinavTipleris.Where(s2 => s2.EnstituKod == enstituKodu && bssT.Contains(s2.SinavTipID))
 
                             join stl in db.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
                             orderby stl.SinavAdi
@@ -613,7 +548,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                 s.SinavTipGrupID,
                                 stl.SinavAdi
                             }).AsQueryable();
-                if (SinavTipGrupIDs.Count > 0) data = data.Where(p => SinavTipGrupIDs.Contains(p.SinavTipGrupID));
+                if (sinavTipGrupIDs.Count > 0) data = data.Where(p => sinavTipGrupIDs.Contains(p.SinavTipGrupID));
                 var qdata = data.ToList();
                 foreach (var item in qdata)
                 {
@@ -623,15 +558,15 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbGetdAktifSinavlar(List<CmbMultyTypeDto> filterM, int BasvuruSurecID, int SinavTipGrupID, bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetdAktifSinavlar(List<CmbMultyTypeDto> filterM, int basvuruSurecId, int sinavTipGrupId, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = (from s in db.BasvuruSurecSinavTipleris.Where(s2 => s2.IsAktif && s2.BasvuruSurecID == BasvuruSurecID)
+                var data = (from s in db.BasvuruSurecSinavTipleris.Where(s2 => s2.IsAktif && s2.BasvuruSurecID == basvuruSurecId)
                             join stl in db.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
                             orderby stl.SinavAdi
-                            where s.SinavTipGrupID == SinavTipGrupID
+                            where s.SinavTipGrupID == sinavTipGrupId
                             select new
                             {
                                 s.SinavTipID,
@@ -639,7 +574,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                 stl.SinavAdi
                             }).ToList();
 
-                var qSinavOt = db.BasvuruSurecSinavTipleriOTNotAraliklaris.Where(p => p.BasvuruSurecID == BasvuruSurecID).ToList();
+                var qSinavOt = db.BasvuruSurecSinavTipleriOTNotAraliklaris.Where(p => p.BasvuruSurecID == basvuruSurecId).ToList();
                 var qJoin = (from s in qSinavOt
                              join fl in filterM on new { s.OgrenimTipKod, s.Ingilizce } equals new { OgrenimTipKod = fl.Value, Ingilizce = fl.ValueB }
                              group new { s.SinavTipID, s.OgrenimTipKod, s.IsGecerli, s.IsIstensin, s.Ingilizce, ProgramKod = fl.ValueS2 } by new { s.SinavTipID, s.OgrenimTipKod, s.IsGecerli, s.IsIstensin, s.Ingilizce, ProgramKod = fl.ValueS2 } into g1
@@ -649,25 +584,25 @@ namespace LisansUstuBasvuruSistemi.Models
                                  g1.Key.OgrenimTipKod,
                                  g1.Key.IsGecerli,
                                  g1.Key.IsIstensin,
-                                 IsIstensin2 = db.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars.Where(p => p.BasvuruSurecSinavTipleriOTNotAraliklari.BasvuruSurecID == BasvuruSurecID && p.BasvuruSurecSinavTipleriOTNotAraliklari.SinavTipID == g1.Key.SinavTipID && p.BasvuruSurecSinavTipleriOTNotAraliklari.OgrenimTipKod == g1.Key.OgrenimTipKod && p.BasvuruSurecSinavTipleriOTNotAraliklari.Ingilizce == g1.Key.Ingilizce && p.ProgramKod == g1.Key.ProgramKod).Any() == false,
+                                 IsIstensin2 = db.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars.Any(p => p.BasvuruSurecSinavTipleriOTNotAraliklari.BasvuruSurecID == basvuruSurecId && p.BasvuruSurecSinavTipleriOTNotAraliklari.SinavTipID == g1.Key.SinavTipID && p.BasvuruSurecSinavTipleriOTNotAraliklari.OgrenimTipKod == g1.Key.OgrenimTipKod && p.BasvuruSurecSinavTipleriOTNotAraliklari.Ingilizce == g1.Key.Ingilizce && p.ProgramKod == g1.Key.ProgramKod) == false,
                                  g1.Key.Ingilizce,
                                  g1.Key.ProgramKod,
 
                              }).ToList();
 
-                var ProgramKods = filterM.Select(s => s.ValueS2).ToList();
+                var programKods = filterM.Select(s => s.ValueS2).ToList();
                 int inxBosR = 0;
                 var otIDs = filterM.Select(s => s.Value).ToList();
 
                 foreach (var item in data)
                 {
 
-                    var qnyGecersiz = qJoin.Where(p => p.SinavTipID == item.SinavTipID && (p.IsGecerli == false)).Any();
+                    var qnyGecersiz = qJoin.Any(p => p.SinavTipID == item.SinavTipID && (p.IsGecerli == false));
                     var qGecerliAmaIstenmesin = qJoin.Where(p => p.SinavTipID == item.SinavTipID && p.IsGecerli && (p.IsIstensin == false || p.IsIstensin2 == false)).Select(s => new { s.SinavTipID, s.OgrenimTipKod, s.ProgramKod }).Distinct().ToList();
-                    var Istensin = qGecerliAmaIstenmesin.Count != ProgramKods.Count;
-                    var sinavBVarmi = qJoin.Where(p => p.SinavTipID == item.SinavTipID && filterM.Any(a => a.Value == p.OgrenimTipKod && a.ValueB == p.Ingilizce)).Any();
+                    var isIstensin = qGecerliAmaIstenmesin.Count != programKods.Count;
+                    var sinavBVarmi = qJoin.Any(p => p.SinavTipID == item.SinavTipID && filterM.Any(a => a.Value == p.OgrenimTipKod && a.ValueB == p.Ingilizce));
 
-                    if (!qnyGecersiz && Istensin && sinavBVarmi)
+                    if (!qnyGecersiz && isIstensin && sinavBVarmi)
                     {
                         if (inxBosR == 0)
                         {
@@ -682,13 +617,13 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbDoubleDto> cmbGetSinavTipOzelNot(int SinavTipID, bool bosSecimVar = false)
+        public static List<CmbDoubleDto> CmbGetSinavTipOzelNot(int sinavTipId, bool bosSecimVar = false)
         {
             var dct = new List<CmbDoubleDto>();
             if (bosSecimVar) dct.Add(new CmbDoubleDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.SinavTipleris.Where(p => p.SinavTipID == SinavTipID).SelectMany(s => s.SinavNotlaris).Select(s => new CmbDoubleDto
+                var data = db.SinavTipleris.Where(p => p.SinavTipID == sinavTipId).SelectMany(s => s.SinavNotlaris).Select(s => new CmbDoubleDto
                 {
                     Value = s.SinavNotDeger,
                     Caption = s.SinavNotAdi + " (Yüzlük karşılığı: " + s.SinavNotDeger + ")"
@@ -699,15 +634,15 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-        public static List<CmbIntDto> cmbGetYetkiliAnabilimDallari(bool bosSecimVar = false, string EnstituKod = "")
+        public static List<CmbIntDto> CmbGetYetkiliAnabilimDallari(bool bosSecimVar = false, string enstituKod = "")
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.AnabilimDallaris.Where(p => EnstKods.Contains(p.EnstituKod));
-                if (EnstituKod.IsNullOrWhiteSpace() == false) data = data.Where(p => p.EnstituKod == EnstituKod);
+                var data = db.AnabilimDallaris.Where(p => enstKods.Contains(p.EnstituKod));
+                if (enstituKod.IsNullOrWhiteSpace() == false) data = data.Where(p => p.EnstituKod == enstituKod);
                 var data2 = data.OrderBy(o => o.AnabilimDaliAdi).ToList();
                 foreach (var item in data2)
                 {
@@ -716,15 +651,15 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
 
-        } 
-        public static List<CmbStringDto> cmbGetAktifProgramlar(bool bosSecimVar = false, int? AnabilimDaliID = 0)
+        }
+        public static List<CmbStringDto> CmbGetAktifProgramlar(bool bosSecimVar = false, int? anabilimDaliId = 0)
         {
 
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.Programlars.Where(p => p.AnabilimDaliID == AnabilimDaliID && p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
+                var data = db.Programlars.Where(p => p.AnabilimDaliID == anabilimDaliId && p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption = item.ProgramAdi });
@@ -732,13 +667,13 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
         }
-        public static List<CmbStringDto> cmbGetAktifProgramlar(bool bosSecimVar = false)
+        public static List<CmbStringDto> CmbGetAktifProgramlar(bool bosSecimVar = false)
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.Programlars.Where(p =>  p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
+                var data = db.Programlars.Where(p => p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption = item.ProgramAdi });
@@ -746,19 +681,19 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
         }
-        public static List<CmbStringDto> cmbGetAktifProgramlar(string EnstituKod, bool bosSecimVar = false, bool IsAbdShow = false)
+        public static List<CmbStringDto> CmbGetAktifProgramlar(string enstituKod, bool bosSecimVar = false, bool isAbdShow = false)
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.Programlars.Where(p =>p.AnabilimDallari.IsAktif && p.IsAktif && p.AnabilimDallari.EnstituKod == EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
+                var data = db.Programlars.Where(p => p.AnabilimDallari.IsAktif && p.IsAktif && p.AnabilimDallari.EnstituKod == enstituKod).OrderBy(o => o.ProgramAdi).ToList();
                 foreach (var item in data)
                 {
-                    if (IsAbdShow)
+                    if (isAbdShow)
                     {
-                        var AbdL = item.AnabilimDallari;
-                        dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption = AbdL.AnabilimDaliAdi + " / " + item.ProgramAdi });
+                        var abdL = item.AnabilimDallari;
+                        dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption = abdL.AnabilimDaliAdi + " / " + item.ProgramAdi });
                     }
                     else
                     {
@@ -768,27 +703,27 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct.OrderBy(o => o.Caption).ToList();
         }
-        public static List<CmbStringDto> CmbGetBSTumProgramlar(int BasvuruSurecID, bool IsBolumOrOgrenci, List<int> OgrenimTipKods, bool IsBSonucOrMulakat)
+        public static List<CmbStringDto> CmbGetBsTumProgramlar(int basvuruSurecId, bool isBolumOrOgrenci, List<int> ogrenimTipKods, bool isBSonucOrMulakat)
         {
-            var dct = new List<CmbStringDto>();
+            List<CmbStringDto> dct;
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var BasvuruSureci = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID).First();
-                var KullaniciProgramKods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, BasvuruSureci.EnstituKod);
+                var basvuruSureci = db.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
+                var kullaniciProgramKods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, basvuruSureci.EnstituKod);
 
-                if (IsBSonucOrMulakat)
+                if (isBSonucOrMulakat)
                 {
-                    dct = (from Vw in db.vW_ProgramBasvuruSonucSayisal.Where(p => p.BasvuruSurecID == BasvuruSurecID && OgrenimTipKods.Contains(p.OgrenimTipKod))
+                    dct = (from vw in db.vW_ProgramBasvuruSonucSayisal.Where(p => p.BasvuruSurecID == basvuruSurecId && ogrenimTipKods.Contains(p.OgrenimTipKod))
                            where
-                                 (IsBolumOrOgrenci ? true : (Vw.AIAsilCount > 0 || Vw.ADAsilCount > 0))
-                                 && KullaniciProgramKods.Contains(Vw.ProgramKod)
+                                 (isBolumOrOgrenci || (vw.AIAsilCount > 0 || vw.ADAsilCount > 0))
+                                 && kullaniciProgramKods.Contains(vw.ProgramKod)
                            select new
                            {
-                               Vw.OgrenimTipKod,
+                               vw.OgrenimTipKod,
                                //IsOnayliBasvuruVar = (IsBolumOrOgrenci ? true : (IsMulakatOrSonuc ? (Vw.ToplamBasvuru > 0) : (Vw.AIAsilCount > 0 || Vw.ADAsilCount > 0))),
-                               Value = Vw.ProgramKod,
-                               Caption = Vw.OgrenimTipAdi + " > " + Vw.ProgramAdi,
+                               Value = vw.ProgramKod,
+                               Caption = vw.OgrenimTipAdi + " > " + vw.ProgramAdi,
 
                            }).Select(s => new CmbStringDto
                            {
@@ -800,12 +735,12 @@ namespace LisansUstuBasvuruSistemi.Models
                 }
                 else
                 {
-                    if (IsBolumOrOgrenci)
+                    if (isBolumOrOgrenci)
                     {
-                        dct = (from s in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == BasvuruSurecID && OgrenimTipKods.Contains(p.OgrenimTipKod))
+                        dct = (from s in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == basvuruSurecId && ogrenimTipKods.Contains(p.OgrenimTipKod))
                                join pl in db.Programlars on s.ProgramKod equals pl.ProgramKod
-                               join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == BasvuruSureci.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
-                               where KullaniciProgramKods.Contains(s.ProgramKod)
+                               join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == basvuruSureci.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
+                               where kullaniciProgramKods.Contains(s.ProgramKod)
                                select new CmbStringDto
                                {
                                    Value = s.ProgramKod,
@@ -815,11 +750,11 @@ namespace LisansUstuBasvuruSistemi.Models
                     }
                     else
                     {
-                        var BDurums = new List<int> { BasvuruDurumu.Onaylandı, BasvuruDurumu.Gonderildi };
-                        dct = (from s in db.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruSurecID == BasvuruSurecID && BDurums.Contains(p.Basvurular.BasvuruDurumID) && OgrenimTipKods.Contains(p.OgrenimTipKod))
+                        var bDurums = new List<int> { BasvuruDurumuEnum.Onaylandı, BasvuruDurumuEnum.Gonderildi };
+                        dct = (from s in db.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruSurecID == basvuruSurecId && bDurums.Contains(p.Basvurular.BasvuruDurumID) && ogrenimTipKods.Contains(p.OgrenimTipKod))
                                join pl in db.Programlars on s.ProgramKod equals pl.ProgramKod
-                               join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == BasvuruSureci.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
-                               where KullaniciProgramKods.Contains(s.ProgramKod)
+                               join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == basvuruSureci.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
+                               where kullaniciProgramKods.Contains(s.ProgramKod)
                                select new CmbStringDto
                                {
                                    Value = s.ProgramKod,
@@ -835,15 +770,15 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-         
-        public static List<CmbIntDto> cmbGetAktifOgrenimTipleri(int BasvuruSurecID, bool bosSecimVar = false)
+
+        public static List<CmbIntDto> CmbGetAktifOgrenimTipleri(int basvuruSurecId, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
-                var otS = from bs in db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID)
+                var otS = from bs in db.BasvuruSurecs.Where(p => p.BasvuruSurecID == basvuruSurecId)
                           join s in db.BasvuruSurecOgrenimTipleris.Where(p => p.IsAktif) on bs.BasvuruSurecID equals s.BasvuruSurecID
                           join ot in db.OgrenimTipleris on new { bs.EnstituKod, s.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
                           select new
@@ -861,17 +796,17 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
 
-        } 
+        }
 
 
 
-        public static List<CmbIntDto> cmbGetAktifAnketler(string EnstituKod, bool bosSecimVar = false, int? DahilAnketID = null)
+        public static List<CmbIntDto> CmbGetAktifAnketler(string enstituKod, bool bosSecimVar = false, int? dahilAnketId = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.Ankets.Where(p => p.EnstituKod == EnstituKod && (p.IsAktif || p.AnketID == DahilAnketID)).OrderBy(o => o.AnketAdi).ToList();
+                var data = db.Ankets.Where(p => p.EnstituKod == enstituKod && (p.IsAktif || p.AnketID == dahilAnketId)).OrderBy(o => o.AnketAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.AnketID, Caption = item.AnketAdi });
@@ -880,16 +815,16 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbAktifOgrenimDurumu(bool bosSecimVar = false, bool? Aktif = true, int? HaricOgreniDurumID = null, bool? IsBasvurudaGozuksun = null, bool? IsHesapKayittaGozuksun = null)
+        public static List<CmbIntDto> CmbAktifOgrenimDurumu(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? IsHesapKayittaGozuksun = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var qData = db.OgrenimDurumlaris.AsQueryable();
-                if (Aktif.HasValue) qData = qData.Where(p => p.IsAktif == Aktif.Value);
-                if (HaricOgreniDurumID.HasValue) qData = qData.Where(p => p.OgrenimDurumID == HaricOgreniDurumID.Value);
-                if (IsBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == IsBasvurudaGozuksun.Value);
+                if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
+                if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
+                if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
                 if (IsHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == IsHesapKayittaGozuksun.Value);
                 var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
                 foreach (var item in qData)
@@ -900,16 +835,16 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbAktifOgrenimDurumu2(bool bosSecimVar = false, bool? Aktif = true, int? HaricOgreniDurumID = null, bool? IsBasvurudaGozuksun = null, bool? IsHesapKayittaGozuksun = null)
+        public static List<CmbIntDto> CmbAktifOgrenimDurumu2(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? IsHesapKayittaGozuksun = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var qData = db.OgrenimDurumlaris.AsQueryable();
-                if (Aktif.HasValue) qData = qData.Where(p => p.IsAktif == Aktif.Value);
-                if (HaricOgreniDurumID.HasValue) qData = qData.Where(p => p.OgrenimDurumID == HaricOgreniDurumID.Value);
-                if (IsBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == IsBasvurudaGozuksun.Value);
+                if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
+                if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
+                if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
                 if (IsHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == IsHesapKayittaGozuksun.Value);
                 var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
                 foreach (var item in qData)
@@ -927,9 +862,9 @@ namespace LisansUstuBasvuruSistemi.Models
 
         #region Data
 
-         
 
-        public static PersisWsDataModel getWsPersisOE(string term)
+
+        public static PersisWsDataModel GetWsPersisOe(string term)
         {
             Ws_Persis.Service1SoapClient cl = new Ws_Persis.Service1SoapClient("Service1Soap");
 
@@ -941,11 +876,11 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-        public static bool ResimBilgisiLazimOlanKayitVarMi(int KullaniciID)
+        public static bool ResimBilgisiLazimOlanKayitVarMi(int kullaniciId)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                return db.Basvurulars.Where(p => p.KullaniciID == KullaniciID).Any() || db.MezuniyetBasvurularis.Any(a => a.KullaniciID == KullaniciID);
+                return db.Basvurulars.Any(p => p.KullaniciID == kullaniciId) || db.MezuniyetBasvurularis.Any(a => a.KullaniciID == kullaniciId);
             }
 
         }
@@ -956,313 +891,328 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-        public static int? getAktifBasvuruSurecID(string EnstituKod, int BasvuruSurecTipID, int? BasvuruSurecID = null, bool? IsMulakatDurum = null)
+        public static int? GetAktifBasvuruSurecId(string enstituKod, int basvuruSurecTipId, int? basvuruSurecId = null, bool? isMulakatDurum = null)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
                 var nowDate = DateTime.Now;
-                var bf = db.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == BasvuruSurecTipID && (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == EnstituKod) && p.BasvuruSurecID == (BasvuruSurecID.HasValue ? BasvuruSurecID.Value : p.BasvuruSurecID));
-                if (IsMulakatDurum.HasValue) bf = bf.Where(p => p.SonucGirisBaslangicTarihi.HasValue == IsMulakatDurum.Value);
+                var bf = db.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == basvuruSurecTipId && (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.BasvuruSurecID == (basvuruSurecId ?? p.BasvuruSurecID));
+                if (isMulakatDurum.HasValue) bf = bf.Where(p => p.SonucGirisBaslangicTarihi.HasValue == isMulakatDurum.Value);
                 var qBf = bf.FirstOrDefault();
-                int? ID = null;
-                if (qBf != null) ID = qBf.BasvuruSurecID;
-                return ID;
+                return qBf?.BasvuruSurecID;
             }
         }
 
-        public static int? getAktifTalepSurecID(string EnstituKod, int? TalepSurecID = null)
+        public static int? GetAktifTalepSurecId(string enstituKod, int? talepSurecId = null)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-
                 var nowDate = DateTime.Now;
-                var bf = db.TalepSurecleris.Where(p => (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == EnstituKod) && p.TalepSurecID == (TalepSurecID.HasValue ? TalepSurecID.Value : p.TalepSurecID));
-                var rTalepSurecID = bf.Select(s => s.TalepSurecID).FirstOrDefault();
+                var bf = db.TalepSurecleris.FirstOrDefault(p => (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.TalepSurecID == (talepSurecId ?? p.TalepSurecID));
 
-                return rTalepSurecID > 0 ? rTalepSurecID : (int?)null;
+                return bf?.TalepSurecID;
             }
         }
 
 
-         
+
         #endregion
 
         #region SendMails
-        public static List<System.Net.Mail.Attachment> exportRaporPdf(int raporTipID, List<int?> DataID)
+        public static List<System.Net.Mail.Attachment> ExportRaporPdf(int raporTipId, List<int?> dataId)
         {
 
             var mdl = new List<System.Net.Mail.Attachment>();
 
-            var ms = new MemoryStream();
-
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                if (raporTipID == RaporTipleri.MezuniyetBasvuruRaporu)
+                MemoryStream ms;
+                switch (raporTipId)
                 {
+                    case RaporTipiEnum.MezuniyetBasvuruRaporu:
+                        {
+                            var gd = Guid.NewGuid().ToString().Substr(0, 5);
 
-                    var gd = Guid.NewGuid().ToString().Substr(0, 5);
+                            var mezuniyetBasvurulariId = dataId[0].Value;
+                            var rpr = new RprMezuniyetYayinSartiOnayiFormu(mezuniyetBasvurulariId);
+                            rpr.CreateDocument();
+                            rpr.DisplayName = "MezuniyetBasvuruFormu_" + gd + ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.MezuniyetTezTeslimFormu:
+                        {
+                            var mbid = dataId[0].Value;
+                            var ilkOrIkinci = dataId[1].Value;
+                            var mb = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mbid);
+                            var rpr = new RprMezuniyetTezTeslimFormu_FR0338(mb.RowID, ilkOrIkinci == 1);
 
-                    var MezuniyetBasvurulariID = DataID[0].Value;
-                    var rpr = new RprMezuniyetYayinSartiOnayiFormu(MezuniyetBasvurulariID);
-                    rpr.CreateDocument();
-                    rpr.DisplayName = "MezuniyetBasvuruFormu_" + gd + ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.MezuniyetTezTeslimFormu)
-                {
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.MezuniyetTezDuzeltmeVeJuriUyelerineTezTeslimTutanagi:
+                        {
+                            var rpr = new RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325(dataId[0].Value);
 
-                    var MBID = DataID[0].Value;
-                    var IlkOrIkinci = DataID[1].Value;
-                    var MB = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == MBID);
-                    var rpr = new RprMezuniyetTezTeslimFormu_FR0338(MB.RowID, IlkOrIkinci == 1);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.MezuniyetTezSinavSonucFormu:
+                        {
+                            var srTalepId = dataId[0].Value;
+                            var srTalep = db.SRTalepleris.First(p => p.SRTalepID == srTalepId);
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.MezuniyetTezDuzeltmeVeJuriUyelerineTezTeslimTutanagi)
-                {
+                            var rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(srTalep.UniqueID.Value);
 
-                    var SRTalepID = DataID[0].Value;
-                    var rpr = new RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325(DataID[0].Value);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu:
+                        {
+                            if (!dataId[0].HasValue) 
+                                throw new Exception("mezuniyetJuriOneriFormId boş gelmekte.");
+                            var mezuniyetJuriOneriFormId = dataId[0].Value;
+                            var rpr = new RprJuriUyelerineTezTeslimFormu_FR0341_FR0302(mezuniyetJuriOneriFormId);
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.MezuniyetTezSinavSonucFormu)
-                {
-                    var SRTalepID = DataID[0].Value;
-                    var SrTalep = db.SRTalepleris.Where(p => p.SRTalepID == SRTalepID).First();
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu:
+                        {
+                            if (!dataId[0].HasValue)
+                                throw new Exception("mezuniyetJuriOneriFormId boş gelmekte.");
+                            var mezuniyetJuriOneriFormId = dataId[0].Value;
+                            var mezuniyetJuriOneriFormuJuriId = dataId[1];
+                            var rpr = new RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304(mezuniyetJuriOneriFormId, mezuniyetJuriOneriFormuJuriId);
 
-                    var rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(SrTalep.UniqueID.Value);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.MezuniyetDoktoraTezDegerlendirmeFormu:
+                        {
+                            
+                            var mezuniyetJuriOneriFormId = dataId[0].Value;
+                            var mezuniyetJuriOneriFormuJuriId = dataId[1];
+                            var rpr = new RprMezuniyetTezDegerlendirmeFormu_FR0303(mezuniyetJuriOneriFormId, mezuniyetJuriOneriFormuJuriId);
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.MezuniyetJuriUyelerineTezTeslimFormu)
-                {
-                    var MezuniyetJuriOneriFormID = DataID[0].Value;
-                    var rpr = new RprJuriUyelerineTezTeslimFormu_FR0341_FR0302(MezuniyetJuriOneriFormID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.MezuniyetTezKontrolFormu:
+                        {
+                            var id = dataId[0].Value;
+                            var rpr = new RprMezuniyetTezKontrolFormu(null, id);
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu)
-                {
-                    var MezuniyetJuriOneriFormID = DataID[0].Value;
-                    var MezuniyetJuriOneriFormuJuriID = DataID[1];
-                    var rpr = new RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304(MezuniyetJuriOneriFormID, MezuniyetJuriOneriFormuJuriID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.TezIzlemeDegerlendirmeFormu:
+                        {
+                            var id = dataId[0].Value;
+                            var rpr = new RprTiDegerlendirmeFormu_FR0307(id);
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.MezuniyetDoktoraTezDegerlendirmeFormu)
-                {
-                    var MezuniyetJuriOneriFormID = DataID[0].Value;
-                    var MezuniyetJuriOneriFormuJuriID = DataID[1];
-                    var rpr = new RprMezuniyetTezDegerlendirmeFormu_FR0303(MezuniyetJuriOneriFormID, MezuniyetJuriOneriFormuJuriID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            var isSwhoRaporDetay = false;
+                            if (dataId.Count > 1) isSwhoRaporDetay = dataId[1].ToIntToBooleanObj() ?? false;
+                            if (isSwhoRaporDetay)
+                            {
+                                var rpr2 = new RprTiDegerlendirmeFormuDetay_FR0307(id);
+                                rpr2.CreateDocument();
+                                rpr2.DisplayName += ".pdf";
+                                rpr.Pages.AddRange(rpr2.Pages);
+                            }
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.TezOneriSavunmaFormu:
+                        {
+                            var id = dataId[0].Value;
+                            var rpr = new RprToSavunmaFormu_FR0348(id);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            var isSwhoRaporDetay = false;
+                            if (dataId.Count > 1) isSwhoRaporDetay = dataId[1].ToIntToBooleanObj() ?? false;
+                            if (isSwhoRaporDetay)
+                            {
+                                var rpr2 = new RprToSavunmaFormuDetay_FR0348(id);
+                                rpr2.CreateDocument();
+                                rpr2.DisplayName += ".pdf";
+                                rpr.Pages.AddRange(rpr2.Pages);
+                            }
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.TezDanismanOneriFormu:
+                        {
+                            var id = dataId[0].Value;
+                            var rpr = new RprTezDanismaniOneriFormu_FR0347(id);
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.MezuniyetTezKontrolFormu)
-                {
-                    var ID = DataID[0].Value;
-                    var rpr = new RprMezuniyetTezKontrolFormu(null, ID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.TezDanismanDegisiklikFormu:
+                        {
+                            var id = dataId[0].Value;
+                            var rpr = new RprTezDanismaniDegisiklikFormu_FR0308(id);
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.TezIzlemeDegerlendirmeFormu)
-                {
-                    var ID = DataID[0].Value;
-                    var rpr = new RprTiDegerlendirmeFormu_FR0307(ID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.TezEsDanismanOneriFormu:
+                        {
+                            var id = dataId[0].Value; // tdo es danisman id
+                            var rpr = new RprTezEsDanismaniOneriFormu_FR0320(id);
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    var IsSwhoRaporDetay = false;
-                    if (DataID.Count > 1) IsSwhoRaporDetay = DataID[1].ToIntToBooleanObj() ?? false;
-                    if (IsSwhoRaporDetay)
-                    {
-                        var rpr2 = new RprTiDegerlendirmeFormuDetay_FR0307(ID);
-                        rpr2.CreateDocument();
-                        rpr2.DisplayName += ".pdf";
-                        rpr.Pages.AddRange(rpr2.Pages);
-                    }
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.TezOneriSavunmaFormu)
-                {
-                    var ID = DataID[0].Value;  
-                    var rpr = new RprToSavunmaFormu_FR0348(ID);
-                    rpr.CreateDocument(); 
-                    rpr.DisplayName += ".pdf";
-                    var isSwhoRaporDetay = false;
-                    if (DataID.Count > 1) isSwhoRaporDetay = DataID[1].ToIntToBooleanObj() ?? false;
-                    if (isSwhoRaporDetay)
-                    {
-                        var rpr2 = new RprToSavunmaFormuDetay_FR0348(ID);
-                        rpr2.CreateDocument();
-                        rpr2.DisplayName += ".pdf";
-                        rpr.Pages.AddRange(rpr2.Pages);
-                    }
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.TezDanismanOneriFormu)
-                {
-                    var ID = DataID[0].Value;
-                    var rpr = new RprTezDanismaniOneriFormu_FR0347(ID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.YeterlikDoktoraSinavSonucFormu:
+                        {
+                            var id = dataId[0].Value;
+                            var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(id);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.TezIzlemeJuriOneriFormu:
+                        {
+                            var id = dataId[0].Value;
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.TezDanismanDegisiklikFormu)
-                {
-                    var ID = DataID[0].Value;
-                    var rpr = new RprTezDanismaniDegisiklikFormu_FR0308(ID);
+                            var rpr = new RprTijOneriFormu_FR0306(id);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
+                    case RaporTipiEnum.TezIzlemeJuriDegisiklikFormu:
+                        {
+                            var id = dataId[0].Value;
 
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.TezEsDanismanOneriFormu)
-                {
-                    var ID = DataID[0].Value; // tdo es danisman id
-                    var rpr = new RprTezEsDanismaniOneriFormu_FR0320(ID);
-
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.YeterlikDoktoraSinavSonucFormu)
-                {
-                    var id = DataID[0].Value;
-                    var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(id);
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.TezIzlemeJuriOneriFormu)
-                {
-                    var id = DataID[0].Value; 
-
-                    var rpr = new RprTijOneriFormu_FR0306(id);
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
-                }
-                else if (raporTipID == RaporTipleri.TezIzlemeJuriDegisiklikFormu)
-                {
-                    var id = DataID[0].Value;
-
-                    var rpr = new RprTijDegisiklikFormu_FR1460(id);
-                    rpr.CreateDocument();
-                    rpr.DisplayName += ".pdf";
-                    rpr.ExportOptions.Pdf.Compressed = true;
-                    ms = new MemoryStream();
-                    rpr.ExportToPdf(ms);
-                    ms.Seek(0, System.IO.SeekOrigin.Begin);
-                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
-                    attc.ContentDisposition.ModificationDate = DateTime.Now;
-                    mdl.Add(attc);
+                            var rpr = new RprTijDegisiklikFormu_FR1460(id);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rpr.ExportOptions.Pdf.Compressed = true;
+                            ms = new MemoryStream();
+                            rpr.ExportToPdf(ms);
+                            ms.Seek(0, System.IO.SeekOrigin.Begin);
+                            var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                            attc.ContentDisposition.ModificationDate = DateTime.Now;
+                            mdl.Add(attc);
+                            break;
+                        }
                 }
             }
             return mdl;

@@ -199,7 +199,7 @@
         </h3>
         @if (Model.IsHesaplandi && false)
         {
-            <a style="float:right; cursor:pointer;color:@color;" onclick="yeniDialogBB(null, 'Başvuru Sonuç','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesi&BasvuruSurecID=@Model.BasvuruSurecID&RowID=@Model.RowID' , 'auto', 'modal-dialog modal-lg' )">
+            <a style="float:right; cursor:pointer;color:@color;" onclick="yeniDialogBB(null, 'Başvuru Sonuç','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.BasvuruSonucListesi&BasvuruSurecID=@Model.BasvuruSurecID&RowID=@Model.RowID' , 'auto', 'modal-dialog modal-lg' )">
                 <span style="font-size:12pt;margin-top:7px;" title="Sonuç Listesini Göster" class="fa fa-list"> Sonuç Listesini Göster</span>
 
             </a>
@@ -236,7 +236,7 @@
                                                     <td><i class="tooltips flag @(item.Ingilizce ? " flag-gb" : "flag-tr" )"></i> @(item.Ingilizce ? "İngilizce" : "Türkçe") </td>
                                                     <td width="65">Alan</td>
                                                     <td width="5">:</td>
-                                                    <td width="90" style="@(item.AlanTipID==AlanTipi.AlanDisi ? " color:#b64645;" : "" )">@item.AlanTipAdi</td>
+                                                    <td width="90" style="@(item.AlanTipID==AlanTipiEnum.AlanDisi ? " color:#b64645;" : "" )">@item.AlanTipAdi</td>
                                                 </tr>
                                                 <tr>
                                                     <td>

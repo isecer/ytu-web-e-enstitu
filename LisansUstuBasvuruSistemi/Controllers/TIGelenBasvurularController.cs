@@ -110,7 +110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    q = q.Where(p => p.TIAraRaporRaporDurumID == TiAraRaporDurumu.DegerlendirmeSureciTamamlandi && p.IsBasariliOrBasarisiz == (model.AktifTIAraRaporRaporDurumID.Value == TiAraRaporDurumu.DegerlendirmeBasariliOlanlar));
+                    q = q.Where(p => p.TIAraRaporRaporDurumID == TiAraRaporDurumuEnum.DegerlendirmeSureciTamamlandi && p.IsBasariliOrBasarisiz == (model.AktifTIAraRaporRaporDurumID.Value == TiAraRaporDurumuEnum.DegerlendirmeBasariliOlanlar));
                 }
 
             }

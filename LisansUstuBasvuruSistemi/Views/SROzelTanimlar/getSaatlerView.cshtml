@@ -46,12 +46,12 @@
                                         </td>
                                         <td style="padding:1px;" width="140">
                                             <label style="padding:0px;margin:1px;cursor:pointer;">
-                                                <input type="checkbox" name="Secildi" id="Secildi" onchange="_setSaat(this,'@item.SRSaatID','@item.BasSaat','@item.BitSaat')" value="true" @(item.Disabled ? "disabled" : "") @(item.SalonDurumID == SRSalonDurum.Alındı ? "checked=checked" : "") />
+                                                <input type="checkbox" name="Secildi" id="Secildi" onchange="_setSaat(this,'@item.SRSaatID','@item.BasSaat','@item.BitSaat')" value="true" @(item.Disabled ? "disabled" : "") @(item.SalonDurumID == SrSalonDurumEnum.Alındı ? "checked=checked" : "") />
                                                 <span style="font-size:12pt;font-weight:bold;">
                                                     @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
                                                 </span>
                                             </label>
-                                            @if (item.SalonDurumID == SRSalonDurum.Alındı)
+                                            @if (item.SalonDurumID == SrSalonDurumEnum.Alındı)
                                             {
                                                 <input type="text" name="BasSaat" id="BasSaat_@item.SRSaatID" style="display:none;" value="@item.BasSaat" />
                                                 <input type="text" name="BitSaat" id="BitSaat_@item.SRSaatID" style="display:none;" value="@item.BitSaat" />

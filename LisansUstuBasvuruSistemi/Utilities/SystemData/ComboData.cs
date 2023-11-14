@@ -35,9 +35,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemData
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto());
-            lst.Add(new CmbIntDto { Value = TarihKriterSecim.SecilenTarihVeOncesi, Caption = "Seçilen Tarih ve Öncesi" });
-            lst.Add(new CmbIntDto { Value = TarihKriterSecim.SecilenTarihAraligi, Caption = "Seçilen Tarih Aralığı" });
-            lst.Add(new CmbIntDto { Value = TarihKriterSecim.SecilenTarihVeSonrasi, Caption = "Seçilen Tarih ve Sonrası" });
+            lst.Add(new CmbIntDto { Value = TarihKriterSecimEnum.SecilenTarihVeOncesi, Caption = "Seçilen Tarih ve Öncesi" });
+            lst.Add(new CmbIntDto { Value = TarihKriterSecimEnum.SecilenTarihAraligi, Caption = "Seçilen Tarih Aralığı" });
+            lst.Add(new CmbIntDto { Value = TarihKriterSecimEnum.SecilenTarihVeSonrasi, Caption = "Seçilen Tarih ve Sonrası" });
 
             return lst;
         }

@@ -80,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IslemTarihi,
                         s.IslemYapanID,
                         s.IslemYapanIP,
-                        OrderInx = SqlFunctions.DateAdd("day", 0, (s.Tarih + " " + s.BasSaat)).Value > DateTime.Now ? (s.SRDurumID == SRTalepDurum.TalepEdildi ? 0 : (s.SRDurumID == SRTalepDurum.Onaylandı ? 1 : 2)) : (s.SRDurumID == SRTalepDurum.TalepEdildi ? 3 : (s.SRDurumID == SRTalepDurum.Onaylandı ? 4 : 5))
+                        OrderInx = SqlFunctions.DateAdd("day", 0, (s.Tarih + " " + s.BasSaat)).Value > DateTime.Now ? (s.SRDurumID == SrTalepDurumEnum.TalepEdildi ? 0 : (s.SRDurumID == SrTalepDurumEnum.Onaylandı ? 1 : 2)) : (s.SRDurumID == SrTalepDurumEnum.TalepEdildi ? 3 : (s.SRDurumID == SrTalepDurumEnum.Onaylandı ? 4 : 5))
                     };
             // if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (model.SRSalonID.HasValue) q = q.Where(p => p.SRSalonID == model.SRSalonID.Value);
@@ -157,15 +157,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.SRTalepleris.Remove(kayit);
                 _entities.SaveChanges();
                 mmMessage.IsSuccess = true;
-                mmMessage.MessageType = Msgtype.Success;
+                mmMessage.MessageType = MsgTypeEnum.Success;
             }
             catch (Exception ex)
             {
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add(basvuruBilgi + "silinemedi!");
                 mmMessage.Title = "Hata";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(basvuruBilgi + " Bilgi:" + ex.ToExceptionMessage(), "SRGelenTalepler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(basvuruBilgi + " Bilgi:" + ex.ToExceptionMessage(), "SRGelenTalepler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
             }
 
             //}
@@ -188,7 +188,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var sendMailAna = SrAyar.SrIslemlerindeMailGonder.GetAyarSr(enstituKod).ToBoolean().Value;
 
             bool save = false;
-            if (srDurumId == SRTalepDurum.Onaylandı)
+            if (srDurumId == SrTalepDurumEnum.Onaylandı)
             {
 
                 var qTalepEslesen = _entities.SRTalepleris.Where(a => a.SRTalepID != talep.SRTalepID && a.SRSalonID == talep.SRSalonID && a.Tarih == talep.Tarih &&
@@ -198,14 +198,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                             (a.BasSaat < talep.BasSaat && a.BitSaat > talep.BasSaat) || a.BasSaat < talep.BitSaat && a.BitSaat > talep.BitSaat) ||
                                             (a.BasSaat > talep.BasSaat && a.BasSaat < talep.BitSaat) || a.BitSaat > talep.BasSaat && a.BitSaat < talep.BitSaat)
                                         ).ToList();
-                if (talep.SRSalonID.HasValue && qTalepEslesen.Any(p => p.SRDurumID == SRTalepDurum.Onaylandı))
+                if (talep.SRSalonID.HasValue && qTalepEslesen.Any(p => p.SRDurumID == SrTalepDurumEnum.Onaylandı))
                 {
                     var salon = _entities.SRSalonlars.First(p => p.SRSalonID == talep.SRSalonID);
                     string msg = talep.Tarih.ToShortDateString() + " " + talep.BasSaat.ToString() + " - " + talep.BitSaat.ToString() + " Tarihi için '" + salon.SalonAdi + "' Salonu doludur bu rezervasyon onaylanamaz!";
                     var mmMessage = new MmMessage();
                     mmMessage.Messages.Add(msg);
                     mmMessage.IsSuccess = false;
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
                 }
                 else
@@ -216,7 +216,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-            else if (srDurumId == SRTalepDurum.Reddedildi)
+            else if (srDurumId == SrTalepDurumEnum.Reddedildi)
             {
                 sendMailTalepYapan = talep.SRDurumID != srDurumId;
                 sendMailJuri = sendMailTalepYapan;
@@ -252,10 +252,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 var mdl = new MailTableContentDto
                 {
-                    AciklamaBasligi = srDurumId == SRTalepDurum.Reddedildi ? "Salon rezervasyon talebi işleminiz kabul edilmemiştir." : "Salon rezervasyon talebi işleminiz onaylanmıştır",
+                    AciklamaBasligi = srDurumId == SrTalepDurumEnum.Reddedildi ? "Salon rezervasyon talebi işleminiz kabul edilmemiştir." : "Salon rezervasyon talebi işleminiz onaylanmıştır",
                     AciklamaTextAlingCenter = true
                 };
-                if (srDurumId == SRTalepDurum.Reddedildi) mdl.AciklamaDetayi = "Kabul edilmeme nedeni:" + talep.SRDurumAciklamasi;
+                if (srDurumId == SrTalepDurumEnum.Reddedildi) mdl.AciklamaDetayi = "Kabul edilmeme nedeni:" + talep.SRDurumAciklamasi;
                 mdl.GrupBasligi = "Rezervasyon talep detaylarınız";
                 mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Salon Adı", Aciklama = salon.SalonAdi });
                 mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Tarih", Aciklama = talep.Tarih.ToString("dd.MM.yyyyy") + " " + haftaGunu.HaftaGunAdi });
@@ -327,7 +327,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (sendMailAna && sendMailJuri && talep.SRTalepTipleri.IsTezSinavi)
             {
-                var msgs = MezuniyetBus.SendMailMezuniyetSinavYerBilgisi(id, srDurumId == SRTalepDurum.Onaylandı);
+                var msgs = MezuniyetBus.SendMailMezuniyetSinavYerBilgisi(id, srDurumId == SrTalepDurumEnum.Onaylandı);
                 if (msgs.Messages.Count > 0)
                 {
                     strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", msgs);

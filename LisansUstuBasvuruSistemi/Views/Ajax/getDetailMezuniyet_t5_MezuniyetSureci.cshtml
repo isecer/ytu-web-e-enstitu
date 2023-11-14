@@ -9,8 +9,8 @@
 @{ 
     Layout = null;
     bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent(); 
-    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-    var itemOnaylananSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
+    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+    var itemOnaylananSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
 
     var mezuniyetBasvurulariTezTeslimFormu = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(); 
     var item = itemOnaylananSr; 
@@ -102,7 +102,7 @@
                                                                         }
                                                                         else
                                                                         {
-                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'LİSANSÜSTÜ CİLTLİ TEZ TESLİM FORMU','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetCiltFormuRaporu&ID=@mezuniyetBasvurulariTezTeslimFormu.MezuniyetBasvurulariTezTeslimFormID' , 'auto', 'modal-dialog modal-lg' )">@mezuniyetBasvurulariTezTeslimFormu.IslemTarihi.ToDateString() Tarihinde oluşturulmuş Tez Teslim Formunu Görmek için tıklayınız</a>
+                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'LİSANSÜSTÜ CİLTLİ TEZ TESLİM FORMU','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetCiltFormuRaporu&ID=@mezuniyetBasvurulariTezTeslimFormu.MezuniyetBasvurulariTezTeslimFormID' , 'auto', 'modal-dialog modal-lg' )">@mezuniyetBasvurulariTezTeslimFormu.IslemTarihi.ToDateString() Tarihinde oluşturulmuş Tez Teslim Formunu Görmek için tıklayınız</a>
 
                                                                         }
 

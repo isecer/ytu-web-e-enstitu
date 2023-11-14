@@ -20,12 +20,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string ekd)
         {
-            var sEkod = EnstituBus.GetSelectedEnstitu(ekd);
-            return Index(new FmProgramlar { PageSize = 15, EnstituKod = sEkod, Expand = false });
+            return Index(new FmProgramlar { PageSize = 15 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmProgramlar model)
+        public ActionResult Index(FmProgramlar model, string ekd)
         {
+            model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from s in _entities.Programlars
                     join sl in _entities.Programlars on new { s.ProgramKod } equals new { sl.ProgramKod } into defP
@@ -85,13 +85,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            ViewBag.AnabilimDaliID = new SelectList(Management.cmbGetYetkiliAnabilimDallari(true), "Value", "Caption", model.AnabilimDaliID);
+            ViewBag.AnabilimDaliID = new SelectList(Management.CmbGetYetkiliAnabilimDallari(true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.Diller2 = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.KullaniciID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.OgrenciBolumID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
 
-            var roleName = new List<string>() { RoleNames.Programlar  };
+            var roleName = new List<string>() { RoleNames.Programlar };
             var kuls = UserBus.GetRoluOlanKullanicilar(roleName, enstituKod);
             var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, model.ProgramKod);
             ViewBag.KullaniciIDs = rolls.Where(p => p.Checked == true).Select(s => s.Value.KullaniciID).ToList();
@@ -116,26 +116,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (id.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Program kodu boş bırakılamaz ve 0 dan büyük bir değer olmalıdır!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "ProgramKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "ProgramKod" });
             if (kModel.AnabilimDaliID <= 0)
             {
                 mmMessage.Messages.Add("Anabilim Dalı seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AnabilimDaliID" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "AnabilimDaliID" });
             if (kModel.ProgramKod.IsNullOrWhiteSpace() && oldId.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Kayıt işlemini yapabilmeni için Kod kısmını doldurmanız gerekmektedir!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "ProgramKod" });
             }
             if (kModel.ProgramAdi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Program adı boş bırakılamaz!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "ProgramAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "ProgramAdi" });
             if (mmMessage.Messages.Count == 0)
             {
                 int newOrEd = oldId.IsNullOrWhiteSpace() ? 1 : 0;
@@ -143,7 +143,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (cnt > 1)
                 {
                     mmMessage.Messages.Add("Tanımlamak istediğiniz kod daha önceden sisteme tanımlanmıştır, tekrar tanımlanamaz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "ProgramKod" });
                 }
             }
 
@@ -174,7 +174,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var data = _entities.Programlars.First(p => p.ProgramKod == id);
                     data.AnabilimDaliID = kModel.AnabilimDaliID;
                     data.AnabilimDaliKod = bolm.AnabilimDaliKod;
-                    data.ProgramAdi = kModel.ProgramAdi; 
+                    data.ProgramAdi = kModel.ProgramAdi;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
@@ -208,7 +208,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = enstituKod;
             ViewBag.MmMessage = mmMessage;
             ViewBag.OldID = oldId;
-            ViewBag.AnabilimDaliID = new SelectList(Management.cmbGetYetkiliAnabilimDallari(true), "Value", "Caption", kModel.AnabilimDaliID);
+            ViewBag.AnabilimDaliID = new SelectList(Management.CmbGetYetkiliAnabilimDallari(true), "Value", "Caption", kModel.AnabilimDaliID);
             ViewBag.KullaniciID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.OgrenciBolumID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
 
@@ -219,7 +219,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult ProgramKullanicilarYetki(int anabilimDaliId, string programKod)
         {
             var abd = _entities.AnabilimDallaris.First(p => p.AnabilimDaliID == anabilimDaliId);
-            var roleName = new List<string>() {  RoleNames.Programlar };
+            var roleName = new List<string>() { RoleNames.Programlar };
             var kuls = UserBus.GetRoluOlanKullanicilar(roleName, abd.EnstituKod);
             var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, programKod).Select(s => new { Value = s.Value.KullaniciID, Caption = (s.Value.Ad + " " + s.Value.Soyad + " [" + s.Value.KullaniciAdi + "]") }).ToList();
             return Json(rolls, "application/json", JsonRequestBehavior.AllowGet);
@@ -246,7 +246,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + pAdi.ProgramAdi + "' İsimli Program Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Programlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Programlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

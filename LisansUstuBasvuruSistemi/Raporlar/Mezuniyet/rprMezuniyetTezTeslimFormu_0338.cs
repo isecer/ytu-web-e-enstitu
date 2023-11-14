@@ -58,7 +58,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 {
                     var joForm = mBasvuru.MezuniyetJuriOneriFormlaris.First();
                     chkIkinciTeslim.Checked = true;
-                    var srTalebi = mBasvuru.SRTalepleris.First(p => p.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma);
+                    var srTalebi = mBasvuru.SRTalepleris.First(p => p.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma);
                     cellTezDili.Text = mBasvuru.IsTezDiliTr == true ? "Türkçe" : "English";
 
                     var tezBasligi = "";

@@ -191,7 +191,7 @@
                                             </table>
                                         </td>
                                         <td id="tosDonemContent_@item.ToBasvuruID"> 
-                                            @item.AktifDonemAdi<br/>@(item.AktifSavunmaNo > 0 ? item.AktifSavunmaNo + ". Savunma" : "----")
+                                            @(item.AktifSavunmaNo > 0 ? item.AktifDonemAdi: "----")<br/>@(item.AktifSavunmaNo > 0 ? item.AktifSavunmaNo + ". Savunma" : "----")
                                         </td>
                                         <td id="tosDurumContent_@item.ToBasvuruID">@item.DurumModel.TosBasvuruDurumView()</td>
 
@@ -234,7 +234,7 @@
     function YeniBasvuruDuyuruKontrol(toUniqueId) { 
         var popupSetting = {
             title: '||',
-            popupTipId:@DuyuruPopupTipi.TezOneriSavunma,
+            popupTipId:@DuyuruPopupTipiEnum.TezOneriSavunma,
             btnAdi: 'Yeni Tez Öneri Savunma Başvurusu Yap',
             redirectUrl: null,
             fncparameter: toUniqueId,

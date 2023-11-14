@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmMailGondermeDto model)
         {
-            var q = from s in _entities.GonderilenMaillers.Where(p => model.Aciklama != null && model.Aciklama.Trim() != "" ? p.Aciklama.Contains(model.Aciklama): true)
+            var q = from s in _entities.GonderilenMaillers.Where(p => model.Aciklama != null && model.Aciklama.Trim() != "" ? p.Aciklama.Contains(model.Aciklama) : true)
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                     where s.Silindi == false && UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
@@ -42,12 +42,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.Konu,
                         MailGonderen = k.Ad + " " + k.Soyad,
                         s.Gonderildi,
-                        s.HataMesaji
+                        s.HataMesaji,
+                        EkSayisi = s.GonderilenMailEkleris.Count
                     };
 
             if (!model.Konu.IsNullOrWhiteSpace()) q = q.Where(p => p.Konu.Contains(model.Konu));
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.MailGonderen.IsNullOrWhiteSpace()) q = q.Where(p => p.MailGonderen.Contains(model.MailGonderen));
+            if (model.IsEkVar.HasValue) q = q.Where(p => p.EkSayisi > 0 == model.IsEkVar);
             if (model.Tarih.HasValue)
             {
                 var trih = model.Tarih.Value.TodateToShortDate();
@@ -55,8 +57,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.Tarih);
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Tarih);
             model.MailGondermeDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrMailGondermeDto
             {
                 GonderilenMailID = s.GonderilenMailID,
@@ -65,9 +66,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Konu = s.Konu,
                 MailGonderen = s.MailGonderen,
                 Gonderildi = s.Gonderildi,
-                HataMesaji = s.HataMesaji
+                HataMesaji = s.HataMesaji,
+                EkSayisi = s.EkSayisi
 
             }).ToList();
+            ViewBag.IsEkVar = new SelectList(GonderilenMaillerBus.GetCmbMailEkKontrol(true), "Value", "Caption", model.IsEkVar);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             return View(model);
         }
@@ -165,14 +168,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.Tarih = DateTime.Now;
 
             if (kModel.Konu.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Konu Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Konu" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Konu" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Konu" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "Konu" });
 
             if (kModel.Aciklama.IsNullOrWhiteSpace() && kModel.AciklamaHtml.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("İçerik Giriniz.");
             }
 
@@ -353,7 +356,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Konu + "' Konulu Mail Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MailGonder/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MailGonder/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

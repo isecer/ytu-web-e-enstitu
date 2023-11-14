@@ -9,8 +9,8 @@
     Layout = null;
     var color = Model.DurumColor;
     var mGonder = RoleNames.MailGonder.InRoleCurrent();
-    var secimColorA = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipi.Asil) ? "#2f8c8d" : "";
-    var secimColorY = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipi.Yedek) ? "#2f8c8d" : "";
+    var secimColorA = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipiEnum.Asil) ? "#2f8c8d" : "";
+    var secimColorY = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipiEnum.Yedek) ? "#2f8c8d" : "";
     var secilenTercihVar = Model.Tercihlers.Any(p => p.IsSeciliBasvuruyaAitTercih == (!Model.IsYedekCokluTercih || p.IsSeciliBasvuruyaAitTercih) && p.IsSecilenTercih == true);
       bool fileDialogShow = !Model.KayitIslemiGordu;
 
@@ -70,7 +70,7 @@ else
     <ol class="dd-list" id="Rw_tbody">
     @if (!Model.IsYedekCokluTercih)
     {
-        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipi.Asil && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
+        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipiEnum.Asil && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
         {
             bool IsBelgeYuklemeAktif = false;
             <li class="dd-item dd3-item">
@@ -84,10 +84,10 @@ else
                             <td style="text-align:left; color:@secimColorA;padding-right:4px;">
                                 <select id="KayitTercihUniqueIDA_@Model.BasvuruID" class="form-control" style="width:100%;color:@secimColorA">
                                     <option value="">@(Model.IsSecilenTercihVarAsil ? "Kayıt Olmak İstemiyorum" : "Seçilmedi...")</option>
-                                    @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Asil).OrderBy(o => o.SiraNo))
+                                    @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipiEnum.Asil).OrderBy(o => o.SiraNo))
                                     {
                                         IsBelgeYuklemeAktif = item.IsBelgeYuklemeAktif;
-                                        var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumu.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
+                                        var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
                                         <option @(item.IsSecilenTercih == true ? "selected" : "") value="@item.UniqueID">@item.ProgramAdi (@item.ProgramKod) (@item.OgrenimTipAdi) @durum</option>
                                     }
                                 </select>
@@ -103,7 +103,7 @@ else
                 </div>
             </li>
         }
-        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipi.Yedek && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
+        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipiEnum.Yedek && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
         {
             bool IsBelgeYuklemeAktif = false;
             <li class="dd-item dd3-item">
@@ -118,10 +118,10 @@ else
                             <td style="text-align:left; color:@secimColorY;padding-right:4px;">
                                 <select id="KayitTercihUniqueIDY_@Model.BasvuruID" class="form-control" style="width:100%;color:@secimColorY">
                                     <option value="">@(Model.IsSecilenTercihVarYedek ? "Kayıt Olmak İstemiyorum" : "Seçilmedi...")</option>
-                                    @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Yedek).OrderBy(o => o.SiraNo))
+                                    @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipiEnum.Yedek).OrderBy(o => o.SiraNo))
                                     {
                                         IsBelgeYuklemeAktif = item.IsBelgeYuklemeAktif;
-                                        var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumu.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
+                                        var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
                                         <option @(item.IsSecilenTercih == true ? "selected" : "") value="@item.UniqueID">@item.ProgramAdi (@item.ProgramKod) (@item.OgrenimTipAdi) @durum</option>
                                     }
                                 </select>
@@ -158,7 +158,7 @@ else
                                 </tr>
                                 @foreach (var item in Model.Tercihlers)
                                 {
-                                    var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumu.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(Kayıt İşlemi Bekleniyor)" : ""));
+                                    var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(Kayıt İşlemi Bekleniyor)" : ""));
 
                                     <tr>
                                         <td class="TRowPrName">@item.ProgramKod @item.ProgramAdi (@item.OgrenimTipAdi) @(durum)</td>
@@ -255,7 +255,7 @@ else
                                                                 }
                                                             </td>
                                                             <td width="240" style="color:@colorKb;font-weight:bold;text-align:right;">
-                                                                @if (item.BasvuruBelgeTipID == BasvuruBelgeTipi.KimlikBelgesi)
+                                                                @if (item.BasvuruBelgeTipID == BasvuruBelgeTipiEnum.KimlikBelgesi)
                                                                 {
                                                                     @(Model.IsYerli ? "Kimlik Belgesi" : "Pasaport Belgesi")
                                                                 }

@@ -172,26 +172,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.BaslangicTarihi == DateTime.MinValue)
                 {
                     mmMessage.Messages.Add("Geçerli Bir Başlangıç Tarih Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BaslangicTarihi" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BaslangicTarihi" });
                 if (kModel.BitisTarihi == DateTime.MinValue)
                 {
                     mmMessage.Messages.Add("Geçerli Bir Bitiş Tarih Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BitisTarihi" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BitisTarihi" });
             }
             else if (kModel.BaslangicTarihi >= kModel.BitisTarihi)
             {
                 mmMessage.Messages.Add("Başlangıç tarihi bitiş tarihinden büyük olamaz!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
             }
             else
             {
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BaslangicTarihi" });
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BitisTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BaslangicTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BitisTarihi" });
             }
             var donemDto = new EgitimOgretimDonemDto();
             if (kModel.OgretimYili.IsNullOrWhiteSpace() == false)
@@ -200,12 +200,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 donemDto.BaslangicYili = oy[0].ToInt().Value;
                 donemDto.BitisYili = oy[1].ToInt().Value;
                 donemDto.Donem = oy[2].ToInt().Value;
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgretimYili" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
             }
             else
             {
                 mmMessage.Messages.Add("Öğretim yılı seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgretimYili" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
             }
 
             if (!mmMessage.Messages.Any())
@@ -238,8 +238,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (surecCount > 0)
                 {
                     mmMessage.Messages.Add("Girmiş olduğunuz tarihler için daha önceden yeterlik süreci kayıt edilmiştir.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BaslangicTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitisTarihi" });
                 }
             }
 
@@ -406,22 +406,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.YeterlikSurecis.Remove(kayit);
                     _entities.SaveChanges();
                     mmMessage.Messages.Add(donemAdi + " Dönemine ait Yeterlik süreci silindi!");
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
                     mmMessage.IsSuccess = true;
                 }
                 catch (Exception ex)
                 {
                     var errMessage = "'" + donemAdi + "' Dönemine ait Yeterlik süreci silinirken bir hata oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(errMessage, "YeterlikSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(errMessage, "YeterlikSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                     mmMessage.Messages.Add(errMessage);
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                 }
             }
             else
             {
                 mmMessage.Messages.Add("Silmek istediğiniz Yeterlik süreci sistemde bulunamadı!");
-                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = true;
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);

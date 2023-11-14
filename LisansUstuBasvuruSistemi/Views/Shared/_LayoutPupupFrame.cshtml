@@ -2,7 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @{ 
-    var root = LisansUstuBasvuruSistemi.Models.Management.getRoot(); 
+    var root = LisansUstuBasvuruSistemi.Models.Management.GetRoot(); 
 }
 <head>
     <meta charset="utf-8" />
@@ -81,7 +81,7 @@
                     {
                         <div id="msgs" style="display: none;">
                             @{
-                                var cls = mmmsgs.MessageType == Msgtype.Success ? "success" : (mmmsgs.MessageType == Msgtype.Warning ? "warning" : (mmmsgs.MessageType == Msgtype.Error ? "danger" : "info"));
+                                var cls = mmmsgs.MessageType == MsgTypeEnum.Success ? "success" : (mmmsgs.MessageType == MsgTypeEnum.Warning ? "warning" : (mmmsgs.MessageType == MsgTypeEnum.Error ? "danger" : "info"));
                                 <div class="panel-body panel-body-pricing">
                                     @if (!mmmsgs.Title.IsNullOrWhiteSpace())
                                     {
@@ -113,7 +113,7 @@
                    {
                     <div id="msgs" style="display: none;">
                         @{
-                            var cls = mmmsgs.MessageType == Msgtype.Success ? "success" : (mmmsgs.MessageType == Msgtype.Warning ? "warning" : (mmmsgs.MessageType == Msgtype.Error ? "danger" : "info"));
+                            var cls = mmmsgs.MessageType == MsgTypeEnum.Success ? "success" : (mmmsgs.MessageType == MsgTypeEnum.Warning ? "warning" : (mmmsgs.MessageType == MsgTypeEnum.Error ? "danger" : "info"));
                             <div class="panel-body panel-body-pricing">
                                 @if (!mmmsgs.Title.IsNullOrWhiteSpace())
                                 {

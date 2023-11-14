@@ -84,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 while (success == false)
                 {
                     success = true;
-                    var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= mdl.Caption && p.BitTarih >= mdl.Caption);
+                    var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= mdl.Caption && p.BitTarih >= mdl.Caption);
                     if (resmiTatilDegisen != null)
                     {
                         success = false;
@@ -93,7 +93,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                        var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == mdl.Caption.Value.Month && p.Gun == mdl.Caption.Value.Day);
+                        var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == mdl.Caption.Value.Month && p.Gun == mdl.Caption.Value.Day);
                         if (resmiTatilSabit != null)
                         {
                             success = false;
@@ -113,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var belge = db.BelgeTalepleris.First(p => p.BelgeTalepID == belgeTalepId);
-                if (belge.BelgeDurumID == BelgeTalepDurum.TalepEdildi || belge.BelgeDurumID == BelgeTalepDurum.Hazirlaniyor || belge.BelgeDurumID == BelgeTalepDurum.Hazirlandi)
+                if (belge.BelgeDurumID == BelgeTalepDurumEnum.TalepEdildi || belge.BelgeDurumID == BelgeTalepDurumEnum.Hazirlaniyor || belge.BelgeDurumID == BelgeTalepDurumEnum.Hazirlandi)
                 {
                     var verilecekTarih = belge.TalepTarihi.AddDays(belge.EklenecekGun).TodateToShortDate();
                     var days = (verilecekTarih - DateTime.Now.TodateToShortDate());
@@ -143,7 +143,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
                     }
                 }
-                else if (belge.BelgeDurumID == BelgeTalepDurum.Verildi)
+                else if (belge.BelgeDurumID == BelgeTalepDurumEnum.Verildi)
                 {
                     html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToString("dd-MM-yyyy HH:mm:ss") + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde Verildi</span>";
 
@@ -179,7 +179,7 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.BelgeDurumlaris.Where(p => p.BelgeDurumID == (yeniKayit ? BelgeTalepDurum.TalepEdildi : p.BelgeDurumID) && p.IsAktif && (yonetici || p.TalepEdenGorsun == true)).OrderBy(o => o.BelgeDurumID).ToList();
+                var data = db.BelgeDurumlaris.Where(p => p.BelgeDurumID == (yeniKayit ? BelgeTalepDurumEnum.TalepEdildi : p.BelgeDurumID) && p.IsAktif && (yonetici || p.TalepEdenGorsun == true)).OrderBy(o => o.BelgeDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.BelgeDurumID, Caption = item.DurumAdi });

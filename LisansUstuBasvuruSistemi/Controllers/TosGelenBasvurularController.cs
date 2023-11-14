@@ -32,14 +32,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 baslangicYil = model.AktifDonemID.Substring(0, 4).ToInt(0);
                 donemId = model.AktifDonemID.Substring(4, 1).ToInt(0);
             }
-            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd); 
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var q = from s in _entities.ToBasvurus.Where(p => !model.IsDegerlendirme.HasValue || p.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaKomites.Any(a2 => a2.UniqueID == model.IsDegerlendirme)))
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
                     join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, e.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
-                    join pr in _entities.Programlars on k.ProgramKod equals pr.ProgramKod
-                    join ab in _entities.AnabilimDallaris on k.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
-                    join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
+                    join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
+                    join ab in _entities.AnabilimDallaris on s.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
                     let ard = _entities.ToBasvuruSavunmas.Where(p => (!baslangicYil.HasValue || (p.ToBasvuruID == s.ToBasvuruID && p.DonemID == donemId && p.DonemBaslangicYil == baslangicYil)) && p.ToBasvuruID == s.ToBasvuruID).OrderByDescending(ot => ot.ToBasvuruSavunmaID).FirstOrDefault()
                     select new FrTosBasvuru()
                     {
@@ -47,15 +46,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ToBasvuruID = s.ToBasvuruID,
                         TezDanismanID = s.TezDanismanID,
                         BasvuruTarihi = s.BasvuruTarihi,
-                        EnstituKod = en.EnstituKod,
-                        EnstituAdi = en.EnstituAd,
+                        EnstituKod = e.EnstituKod,
+                        EnstituAdi = e.EnstituAd,
                         OgrenimTipAdi = o.OgrenimTipAdi,
                         AnabilimDaliID = ab.AnabilimDaliID,
                         AnabilimdaliAdi = ab.AnabilimDaliAdi,
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
                         AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                        OgrenciNo = s.OgrenciNo, 
+                        OgrenciNo = s.OgrenciNo,
                         TcKimlikNo = s.Kullanicilar.TcKimlikNo,
                         ResimAdi = s.Kullanicilar.ResimAdi,
                         OgrenimTipKod = s.OgrenimTipKod,
@@ -70,7 +69,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DurumID = ard == null ? null : ard.ToBasvuruSavunmaDurumID,
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
                         DurumModel = new TosDurumDto
-                        { 
+                        {
                             IsTezOnerisiVar = ard != null,
                             ToBasvuruSavunmaDurumID = ard.ToBasvuruSavunmaDurumID,
                             IsSrTalebiYapildi = ard != null && ard.SRTalepleris.Any(),
@@ -88,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.SavunmaNo.HasValue) q = q.Where(p => p.AktifSavunmaNo == model.SavunmaNo);
             if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
             if (model.AktifDurumID.HasValue)
-            { 
+            {
                 if (model.AktifDurumID == 999)
                 {
                     q = q.Where(p => !p.DurumModel.IsTezOnerisiVar);

@@ -44,20 +44,20 @@
         AnaDurumIconName = "glyphicon glyphicon-list-alt";
         var isOyBirligiOrCokluguTxt = (Model.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle");
 
-        if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi)
+        if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi)
         {
             AnaDurumColor = "green";
             DetayDurumIconName = "fa fa-thumbs-o-up";
             DetayDurumAdi = isOyBirligiOrCokluguTxt + " Kabul Edildi";
         }
-        else if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi)
+        else if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi)
         {
             AnaDurumColor = "maroon";
             DetayDurumIconName = "fa fa-thumbs-o-down";
             DetayDurumAdi = isOyBirligiOrCokluguTxt + " Ret Edildi";
 
         }
-        else if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.Duzeltme)
+        else if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
         {
             AnaDurumColor = "maroon";
             DetayDurumIconName = "fa fa-calendar";

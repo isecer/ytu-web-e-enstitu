@@ -10,7 +10,7 @@
     Layout = null;
     bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
     var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + Model.MezuniyetBasvurulariID.ToString();
+    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + Model.MezuniyetBasvurulariID.ToString();
 
     var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
     var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
@@ -21,12 +21,12 @@
     if (sonSr != null)
     {
         isJuriDegerlendirmeVar = sonSr.SRTaleplerJuris.Any(a => !a.UnvanAdi.IsNullOrWhiteSpace() || a.IsLinkGonderildi == true);
-        if (sonSr.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+        if (sonSr.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma)
         {
             if (isJuriDegerlendirmeVar) { isSrTalebiYapilabilir = sonSr.IsDanismanUzatmaSonrasiOnay == true; }
             else { isSrTalebiYapilabilir = true; }
         }
-        else if (sonSr.SRDurumID == SRTalepDurum.IptalEdildi || sonSr.SRDurumID == SRTalepDurum.Reddedildi) { isSrTalebiYapilabilir = true; }
+        else if (sonSr.SRDurumID == SrTalepDurumEnum.IptalEdildi || sonSr.SRDurumID == SrTalepDurumEnum.Reddedildi) { isSrTalebiYapilabilir = true; }
     }
     else { isSrTalebiYapilabilir = true; }
 
@@ -102,11 +102,11 @@
                                                         int rowIndex = Model.MezuniyetSRModel.SalonRezervasyonlari.Count;
                                                         foreach (var item in Model.MezuniyetSRModel.SalonRezervasyonlari)
                                                         {
-                                                            var juriOnayiOlmayacak = item.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi && !(item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi);
-                                                            var isJuriSonucGirildi = item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
-                                                            var isJuriDegerlendirmeBasladi = item.SRTaleplerJuris.Any(a => a.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi);
-                                                            var isEnstituSonucuGirdi = item.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
-                                                            var isSrTalebiDuzeltilebilir = item.SRDurumID == SRTalepDurum.TalepEdildi && item.IsSonSRTalebi && !isEnstituSonucuGirdi && (!isJuriDegerlendirmeVar || !isJuriDegerlendirmeBasladi);
+                                                            var juriOnayiOlmayacak = item.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi && !(item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi);
+                                                            var isJuriSonucGirildi = item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
+                                                            var isJuriDegerlendirmeBasladi = item.SRTaleplerJuris.Any(a => a.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi);
+                                                            var isEnstituSonucuGirdi = item.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
+                                                            var isSrTalebiDuzeltilebilir = item.SRDurumID == SrTalepDurumEnum.TalepEdildi && item.IsSonSRTalebi && !isEnstituSonucuGirdi && (!isJuriDegerlendirmeVar || !isJuriDegerlendirmeBasladi);
                                                             <tr>
                                                                 <td width="55">
                                                                     <table>
@@ -142,20 +142,20 @@
                                                                 </td>
                                                                 <td style="color:@item.SColor">
 
-                                                                    @if (item.SRDurumID != SRTalepDurum.Onaylandı)
+                                                                    @if (item.SRDurumID != SrTalepDurumEnum.Onaylandı)
                                                                     {
 
                                                                     }
-                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili)
                                                                     {
                                                                         <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up"></i> @(item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Başarılı</span>
                                                                     }
-                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz)
+                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarisiz)
                                                                     {
                                                                         <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down"></i> @(item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Başarısız</span>
 
                                                                     }
-                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma)
                                                                     {
                                                                         <span style="color:maroon;" aria-hidden="true"><i class="fa fa-calendar"></i> @(item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Uzatma</span>
 
@@ -175,7 +175,7 @@
                                                                     }
                                                                 </td>
                                                                 <td style="color:@item.SColor">
-                                                                    @if (item.SRDurumID == SRTalepDurum.Onaylandı)
+                                                                    @if (item.SRDurumID == SrTalepDurumEnum.Onaylandı)
                                                                     {
                                                                         <i class="@item.SClassName"></i> <span>@item.SDurumListeAdi</span>
                                                                     }
@@ -299,7 +299,7 @@
                                                                                                     }
                                                                                                 </td>
                                                                                             </tr>
-                                                                                            <tr class="@(item.SRDurumID == SRTalepDurum.Reddedildi ? "" : "hide")" id="aciklamabilgi_@item.SRTalepID">
+                                                                                            <tr class="@(item.SRDurumID == SrTalepDurumEnum.Reddedildi ? "" : "hide")" id="aciklamabilgi_@item.SRTalepID">
                                                                                                 <td class="CaptionTd">Açıklama</td>
                                                                                                 <td class="CaptionTd">:</td>
                                                                                                 <td class="ValueTd">
@@ -321,7 +321,7 @@
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
-                                                                    @if (item.SRDurumID == SRTalepDurum.Onaylandı)
+                                                                    @if (item.SRDurumID == SrTalepDurumEnum.Onaylandı)
                                                                     {
                                                                         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
                                                                             <table style="width:100%;">
@@ -433,9 +433,9 @@
                                                                                                     @foreach (var itemJuri in item.SRTaleplerJuris)
                                                                                                     {
                                                                                                         var IsJuriDanisman = itemJuri.JuriTipAdi == "TezDanismani";
-                                                                                                        var IsJuriDegerlendirmeYapti = itemJuri.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
+                                                                                                        var IsJuriDegerlendirmeYapti = itemJuri.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
                                                                                                         var ShowDanismanRow = isDanismani && IsJuriDanisman && !isJuriSonucGirildi;
-                                                                                                        var UzatmaSonrasiOgrenciTaahhutu = item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma ? item.IsOgrenciUzatmaSonrasiOnay.HasValue : false;
+                                                                                                        var UzatmaSonrasiOgrenciTaahhutu = item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? item.IsOgrenciUzatmaSonrasiOnay.HasValue : false;
 
                                                                                                         <tr>
                                                                                                             <td>
@@ -461,19 +461,19 @@
                                                                                                                     {
                                                                                                                         //Öğrenci göremeyecek
                                                                                                                     }
-                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili)
                                                                                                                     {
                                                                                                                         <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;"></i> Başarılı</span>
                                                                                                                         <br />
                                                                                                                         <span style="font-size:8pt;color:green;">@itemJuri.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJuri.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                                                                     }
-                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz)
+                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarisiz)
                                                                                                                     {
                                                                                                                         <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;"></i> Başarısız</span>
                                                                                                                         <br />
                                                                                                                         <span style="font-size:8pt;color:maroon;">@itemJuri.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJuri.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                                                                     }
-                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma)
                                                                                                                     {
                                                                                                                         <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-calendar" style="font-size:12pt;"></i> Uzatma</span>
                                                                                                                         <br />
@@ -715,16 +715,16 @@
                                                                                         <td class="CaptionTd" width="140">Sınav Sonucu</td>
                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                         <td>
-                                                                                            @if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                                                                                            @if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili || item.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili)
                                                                                             {
                                                                                                 <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up"></i> @(item.IsOyBirligiOrCoklugu.HasValue ? (item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Başarılı</span>
                                                                                             }
-                                                                                            else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz)
+                                                                                            else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarisiz || item.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarisiz)
                                                                                             {
                                                                                                 <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down"></i> @(item.IsOyBirligiOrCoklugu.HasValue ? (item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Başarısız</span>
 
                                                                                             }
-                                                                                            else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+                                                                                            else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma || item.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma)
                                                                                             {
                                                                                                 <span style="color:maroon;" aria-hidden="true"><i class="fa fa-calendar"></i> @(item.IsOyBirligiOrCoklugu.HasValue ? (item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Uzatma</span>
 
@@ -737,7 +737,7 @@
                                                                                             <td class="CaptionTd">Tutanak Formu</td>
                                                                                             <td class="CaptionTd">:</td>
                                                                                             <td class="ValueTd">
-                                                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                     <i class="fa fa-file-pdf-o"></i> @(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formunu İndir
                                                                                                 </a>
                                                                                             </td>
@@ -776,7 +776,7 @@
                                                                                                         </td>
                                                                                                     </tr>
 
-                                                                                                    <tr id="InpTTSt_@item.SRTalepID" class="@(item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili ? "" : "hide")">
+                                                                                                    <tr id="InpTTSt_@item.SRTalepID" class="@(item.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "" : "hide")">
                                                                                                         <td class="CaptionTd">Tez Teslim Son Tarihi</td>
                                                                                                         <td class="CaptionTd">:</td>
                                                                                                         <td class="ValueTd">
@@ -864,7 +864,7 @@
                                                                                 </table>
                                                                             </div>
                                                                         }
-                                                                        if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma && (isEnstituSonucuGirdi || item.IsOgrenciUzatmaSonrasiOnay.HasValue))
+                                                                        if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && (isEnstituSonucuGirdi || item.IsOgrenciUzatmaSonrasiOnay.HasValue))
                                                                         {
                                                                             var ShowKayitOgrenci = (isOgrenci || kayitYetki) && !item.IsDanismanUzatmaSonrasiOnay.HasValue && item.IsSonSRTalebi;
                                                                             <br />
@@ -1002,7 +1002,7 @@
                                                                                                     <td class="CaptionTd">Tez Teslim Formu</td>
                                                                                                     <td class="CaptionTd">:</td>
                                                                                                     <td class="ValueTd">
-                                                                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Düzeltilmiş Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Düzeltilmiş Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                             <i class="fa fa-file-pdf-o"></i> FR-0338 Düzeltilmiş Mezuniyet Tez Teslim Formunu İndir
                                                                                                         </a>
                                                                                                     </td>
@@ -1070,7 +1070,7 @@
                                                                                                     <td class="CaptionTd">Tez Teslim Formu</td>
                                                                                                     <td class="CaptionTd">:</td>
                                                                                                     <td class="ValueTd">
-                                                                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                             <i class="fa fa-file-pdf-o"></i> FR-0338 Mezuniyet Tez Teslim Formunu İndir
                                                                                                         </a>
                                                                                                     </td>

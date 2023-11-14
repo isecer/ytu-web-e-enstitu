@@ -140,7 +140,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  GunNos = g1.Where(p => p.TalepBaslangicSaat == g1.Key.TalepBaslangicSaat && p.TalepBitisSaat == g1.Key.TalepBitisSaat && p.TeslimBaslangicSaat == g1.Key.TeslimBaslangicSaat && p.TeslimBitisSaat == g1.Key.TeslimBitisSaat && p.EklenecekGun == g1.Key.EklenecekGun).Select(s2 => new CmbIntDto { Value = s2.HaftaGunID, Caption = s2.HaftaGunAdi }).OrderByDescending(o => o.Value > 0).ThenBy(t => t.Value.Value).ToList()
                              }).OrderBy(t => t.GunNos.Min(m => m.Value)).ThenBy(t => t.TalepBaslangicSaat).ToList();
 
-            ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             return View(model);
         }
         [HttpPost]
@@ -184,24 +184,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.BelgeTipID.Count == 0)
             { 
                 mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz belge tipini seçmeniz gerekmektedir!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeTipID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeTipID" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeTipID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BelgeTipID" });
             if (kModel.OgrenimDurumID <= 0)
             { 
                 mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz öğrenim durumunu seçmeniz gerekmektedir!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimDurumID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimDurumID" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimDurumID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgrenimDurumID" });
 
             if (kModel.UcretAlimiVar)
             {
                 if (kModel.BelgeFiyati.HasValue == false || kModel.BelgeFiyati <= 0)
                 { 
                     mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz belge fiyatının 0 dan büyük bir değeri olması gerekmektedir!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeFiyati" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeFiyati" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeFiyati" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BelgeFiyati" });
             }
 
             if (qSaatler.Count == 0)
@@ -217,9 +217,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var belgeTipleri = _entities.BelgeTipleris.Where(p => ids.Contains(p.BelgeTipID)).Select(s => s.BelgeTipAdi).ToList();
                     string msg = "Eklemeye çalıştığınız '" + string.Join(", ", belgeTipleri) + "' belge tipleri sistemde zaten tanımlıdır!";
                     mmMessage.Messages.Add(msg);
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BelgeTipID" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeTipID" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "BelgeTipID" });
             }
             #endregion
             if (mmMessage.Messages.Count == 0)
@@ -311,7 +311,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.HaftaGunleri = haftaGunleri;
             ViewBag.BelgeTipleriList = BelgeTalepBus.GetCmbBelgeTipleri(false);
             ViewBag.MmMessage = mmMessage;
-            ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             return View(kModel);
         }
 
@@ -400,7 +400,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Eklemeye çalıştığınız günlere ait saat aralıkları zaten bulunmaktadır talep saatleri zaten eklidir! Tekrar eklenemez!");
                 }
             }
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
@@ -423,7 +423,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "Belge Tip detay kaydı silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "BelgeTipDetay/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "BelgeTipDetay/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

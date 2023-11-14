@@ -27,10 +27,10 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th class="sirala" field="SehirKod" width="90">Şehir Kodu</th>
+                                <th class="sirala" field="SehirKod" width="60">Kod</th>
                                 <th class="sirala" field="Ad">Şehir Adı</th>
-                                <th class="sirala" field="IsAktif" width="70">Durum</th>
-                                <th width="50"> 
+                                <th class="sirala" field="IsAktif" width="60">Durum</th>
+                                <th width="30"> 
                                 </th>
                             </tr>
                         </thead>
@@ -57,8 +57,7 @@
                                         <td id="tdIa_@item.SehirKod" style="text-align:center;">
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
-                                        <td>
-                                            <a href="@Url.Action("Kayit")"><i class="fa fa-plus tooltips" data-style="blue" data-original-title="Yeni"></i></a>
+                                        <td> 
                                             <a href="@Url.Action("Kayit", "Sehirler", new { id = item.SehirKod })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
                                             <a href="javascript:void(0)" onclick="silmeOnay(this,@item.SehirKod)"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
 

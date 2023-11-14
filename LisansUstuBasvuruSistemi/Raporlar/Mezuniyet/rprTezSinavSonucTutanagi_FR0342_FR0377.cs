@@ -135,9 +135,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 }
                 chkOyBirligi.Checked = srTalebi.IsOyBirligiOrCoklugu == true;
                 chkOyCoklugu.Checked = srTalebi.IsOyBirligiOrCoklugu == false;
-                chkBasarili.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili;
-                chkBasarisiz.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz;
-                chkUzatma.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma;
+                chkBasarili.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili;
+                chkBasarisiz.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarisiz || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarisiz;
+                chkUzatma.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma;
 
                 cellFormKodu.Text = "Form Kodu: " + srTalebi.UniqueID.ToString().Substring(0, 8).ToUpper();
                 var qrUlr = enstL.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MZTSS_" + mBasvuru.MezuniyetBasvurulariID + "_" + srTalebi.UniqueID;

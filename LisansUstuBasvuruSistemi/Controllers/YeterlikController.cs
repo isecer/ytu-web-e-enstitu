@@ -50,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.DonemAdi = surec.BaslangicYil + "/" + surec.BitisYil + " " + surec.Donemler.DonemAdi;
 
                     model.IsYtuOgrencisi =
-                        kullanici.YtuOgrencisi && kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci;
+                        kullanici.YtuOgrencisi && kullanici.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci;
                     model.IsEnstituYetki = kullanici.EnstituKod == enstituKod;
 
                     model.IsOgrenimSeviyeYetki =
@@ -363,8 +363,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 UnvanAdi = danisman.Unvanlar.UnvanAdi.Replace(" ", ""),
             });
             model.SelectListUndan = new SelectList(UnvanlarBus.GetCmbJuriUnvanlar(true), "Value", "Caption", null);
-            model.SelectListUniversite = new SelectList(Management.cmbGetAktifUniversiteler(true), "Value", "Caption", null);
-            model.SelectListAnabilimDali = new SelectList(Management.cmbGetAktifAnabilimDallariStr(basvuru.YeterlikSureci.EnstituKod, true), "Value", "Caption", null);
+            model.SelectListUniversite = new SelectList(Management.CmbGetAktifUniversiteler(true), "Value", "Caption", null);
+            model.SelectListAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallariStr(basvuru.YeterlikSureci.EnstituKod, true), "Value", "Caption", null);
 
             var view = ViewRenderHelper.RenderPartialView("Yeterlik", "YeterlikJuriFormu", model);
             return new { success = true, view }.ToJsonResult();
@@ -376,7 +376,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 Title = "Yeterlik Jüri Üyeleri Tanımlama İşlemi.",
                 IsSuccess = false,
-                MessageType = Msgtype.Warning
+                MessageType = MsgTypeEnum.Warning
 
             };
             var yeterlikBasvuru = _entities.YeterlikBasvurus.First(p => p.UniqueID == kModel.UniqueID);
@@ -476,11 +476,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = item.UniversiteID.HasValue ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "Universite" });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.AnabilimDaliAdi.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "AnabilimDali" });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.AdSoyad.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "AdSoyad" });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.UnvanAdi.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "UnvanAdi" });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.EMail.ToIsValidEmail() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "EMail" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = item.UniversiteID.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "Universite" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.AnabilimDaliAdi.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "AnabilimDali" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.AdSoyad.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "AdSoyad" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.UnvanAdi.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "UnvanAdi" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.EMail.ToIsValidEmail() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "EMail" });
 
             }
             if (mMessage.Messages.Count > 0)
@@ -550,7 +550,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", (!yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any() ? IslemTipi.Insert : IslemTipi.Update), juriEntitys.ToJson());
                 mMessage.IsSuccess = true;
-                mMessage.MessageType = Msgtype.Success;
+                mMessage.MessageType = MsgTypeEnum.Success;
             }
             return new { mMessage, mMessage.IsSuccess, kModel.SelectedTabId }.ToJsonResult();
         }
@@ -602,7 +602,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
@@ -633,7 +633,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (!juriDuzeltmeYetkisi && uye.YeterlikBasvuru.YeterlikBasvuruKomitelers.Count ==
                         uye.YeterlikBasvuru.YeterlikBasvuruKomitelers.Count(c => c.IsJuriOnaylandi.HasValue))
                     {
-                        mMessage.MessageType = Msgtype.Warning;
+                        mMessage.MessageType = MsgTypeEnum.Warning;
                         mMessage.Messages.Add(
                             "Değerlendirme işlemi tüm Komite üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
                     }
@@ -659,7 +659,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
@@ -727,7 +727,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
@@ -830,7 +830,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new
             {
@@ -894,7 +894,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new
             {
@@ -1006,7 +1006,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 mmMessage.Messages.Add(msg);
             }
-            mmMessage.MessageType = mmMessage.IsSuccess ? (juri.IsSonucOnaylandi.HasValue ? Msgtype.Success : Msgtype.Warning) : Msgtype.Error;
+            mmMessage.MessageType = mmMessage.IsSuccess ? (juri.IsSonucOnaylandi.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning) : MsgTypeEnum.Error;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new { mmMessage.IsSuccess, messageView }.ToJsonResult();
 
@@ -1106,7 +1106,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
@@ -1184,7 +1184,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
@@ -1215,13 +1215,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var juriDuzeltmeYetkisi = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
                     if (!juriDuzeltmeYetkisi && basvuru.TezDanismanID != UserIdentity.Current.Id)
                     {
-                        mMessage.MessageType = Msgtype.Warning;
+                        mMessage.MessageType = MsgTypeEnum.Warning;
                         mMessage.Messages.Add("Değerlendirme Linki Göndermek İçin Yetkili Değilsiniz.");
                     }
                     else if (!juriDuzeltmeYetkisi && basvuru.YeterlikBasvuruJuriUyeleris.Count ==
                              basvuru.YeterlikBasvuruJuriUyeleris.Count(c => c.SozluNotu.HasValue))
                     {
-                        mMessage.MessageType = Msgtype.Warning;
+                        mMessage.MessageType = MsgTypeEnum.Warning;
                         mMessage.Messages.Add(
                             "Değerlendirme işlemi tüm Jüri üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
                     }
@@ -1242,7 +1242,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
@@ -1271,18 +1271,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(adSoyad + " Öğrencisine ait Yeterlik başvurusu silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Yeterlik/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Yeterlik/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }
 
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new { mmMessage.IsSuccess, messageView }.ToJsonResult();
         }
         public ActionResult GetJuriData(string term)
         {
-            var data = Management.getWsPersisOE(term);
+            var data = Management.GetWsPersisOe(term);
             var kul2 = data.Table.Where(p => UnvanlarBus.JuriUnvanList.Contains(p.AKADEMIKUNVAN.ToJuriUnvanAdi())).Select(s => new
             {
                 id = s.ADSOYAD,

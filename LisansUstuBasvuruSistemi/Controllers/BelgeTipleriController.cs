@@ -77,7 +77,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.BelgeTipAdi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Belge Tip Adını Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "BelgeTipAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "BelgeTipAdi" });
             }
             #endregion
             if (mmMessage.Messages.Count == 0)
@@ -130,7 +130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + data.BelgeTipAdi + "' İsimli belge tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "BelgeTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "BelgeTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

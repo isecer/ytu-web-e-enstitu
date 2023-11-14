@@ -73,7 +73,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
 
-                    if ((kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                    if ((kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kul.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci)
                     {
                         bbModel.KullaniciTipYetki = true;
                         var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == kul.KayitDonemID.Value);
@@ -361,7 +361,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult GetProgramlar(int tdAnabilimDaliId)
         {
-            var bolm = Management.cmbGetAktifProgramlar(true, tdAnabilimDaliId);
+            var bolm = Management.CmbGetAktifProgramlar(true, tdAnabilimDaliId);
             return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult GetSinavTip(int tdoBasvuruId, int sinavTipId)
@@ -369,13 +369,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == sinavTipId);
 
             var notlar = new List<CmbDoubleDto>();
-            if (sinav.OzelNot) notlar = Management.cmbGetSinavTipOzelNot(sinavTipId, true);
+            if (sinav.OzelNot) notlar = Management.CmbGetSinavTipOzelNot(sinavTipId, true);
             return new { sinav.OzelNot, Notlar = notlar }.ToJsonResult();
         }
         public ActionResult GetTdoYeniDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tdoDanismanTalepTipId)
         {
 
-            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipId ?? TdoDanismanTalepTip.TezDanismaniOnerisi };
+            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipId ?? TdoDanismanTalepTipEnum.TezDanismaniOnerisi };
             var mMessage = new MmMessage()
             {
                 Title = "Tez Danışmanı Öneri İşlemi"
@@ -439,20 +439,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (isCopy == true)
                     {
                         model.TDOBasvuruDanismanID = 0;
-                        if (model.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi)
+                        if (model.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                         {
                             model.YeniTezBaslikTr = null;
                             model.YeniTezBaslikEn = null;
                             model.VarolanTezDanismanID = null;
                         }
-                        else if (model.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi)
+                        else if (model.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                         {
                             model.VarolanTezDanismanID = tdoBd.TezDanismanID;
                             model.TDAnabilimDaliID = null;
                             model.TDProgramKod = null;
                             model.TezDanismanID = 0;
                         }
-                        else if (model.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                        else if (model.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                         {
                             model.YeniTezBaslikTr = null;
                             model.YeniTezBaslikEn = null;
@@ -464,26 +464,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                 }
-                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
-                model.SListSinav = new SelectList(Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTDAnabilimDali = new SelectList(Management.cmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTDProgram = new SelectList(Management.cmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
-                var dilSinavList = Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true);
+                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
+                model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
+                model.SListTDAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTDProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                var dilSinavList = Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true);
                 dilSinavList.Insert(1, new CmbIntDto { Value = -1, Caption = "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu" });
                 model.SListTDSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
 
                 if (model.SinavTipID.HasValue)
                 {
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
-                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
+                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
                         var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
-                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
+                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
                 }
-                mMessage.MessageType = Msgtype.Information;
+                mMessage.MessageType = MsgTypeEnum.Information;
                 mMessage.IsSuccess = true;
                 view = ViewRenderHelper.RenderPartialView("TDOBasvuru", "TdoYeniDanismanFormu", model);
 
@@ -491,7 +491,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
 
-            if (mMessage.MessageType != Msgtype.Information) mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
@@ -507,7 +507,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı Öneri İşlemi"
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
@@ -538,18 +538,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Tez dilini seçiniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (isTezDiliTr.HasValue ? Msgtype.Success : Msgtype.Warning), PropertyName = "IsTezDiliTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (isTezDiliTr.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "IsTezDiliTr" });
 
                 if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Tez başlığını türkçe olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikTr" });
                 if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Tez başlığını ingilizce olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikEn" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikEn" });
                 if (isTezDiliTr == false)
                 {
                     if (!kModel.SinavTipID.HasValue)
@@ -560,7 +560,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mMessage.Messages.Add("Öğrenci Yabancı dil yeterlilik sınav puanı bilgisini giriniz.");
                         mMessage.MessagesDialog.Add(new MrMessage
-                        { MessageType = Msgtype.Warning, PropertyName = "SinavPuani" });
+                        { MessageType = MsgTypeEnum.Warning, PropertyName = "SinavPuani" });
                     }
                     else
                     {
@@ -585,7 +585,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                 mMessage.MessagesDialog.Add(new MrMessage
                                 {
-                                    MessageType = sinavPuaniUygun ? Msgtype.Success : Msgtype.Warning,
+                                    MessageType = sinavPuaniUygun ? MsgTypeEnum.Success : MsgTypeEnum.Warning,
                                     PropertyName = "SinavPuani"
                                 });
                             }
@@ -600,14 +600,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mMessage.MessagesDialog.Add(new MrMessage
                     {
-                        MessageType = (kModel.SinavTipID.HasValue ? Msgtype.Success : Msgtype.Warning),
+                        MessageType = (kModel.SinavTipID.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                         PropertyName = "SinavTipID"
                     });
                     mMessage.MessagesDialog.Add(new MrMessage
                     {
                         MessageType = (kModel.SinavYili.HasValue && kModel.SinavYili > 0
-                            ? Msgtype.Success
-                            : Msgtype.Warning),
+                            ? MsgTypeEnum.Success
+                            : MsgTypeEnum.Warning),
                         PropertyName = "SinavYili"
                     });
                 }
@@ -623,7 +623,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             mMessage.MessagesDialog.Add(new MrMessage
             {
-                MessageType = (kModel.TDAnabilimDaliID > 0 ? Msgtype.Success : Msgtype.Warning),
+                MessageType = (kModel.TDAnabilimDaliID > 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                 PropertyName = "TDAnabilimDaliID"
             });
             if (kModel.TDProgramKod.IsNullOrWhiteSpace())
@@ -632,7 +632,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             mMessage.MessagesDialog.Add(new MrMessage
             {
-                MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning),
+                MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                 PropertyName = "TDProgramKod"
             });
             if (isTezDiliTr == false)
@@ -640,7 +640,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (!kModel.TDSinavTipID.HasValue)
                     mMessage.Messages.Add("Tez danışmanı yabancı dil yeterlilik sınav adını seçiniz.");
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !kModel.TDSinavTipID.HasValue ? Msgtype.Error : Msgtype.Success, PropertyName = "TDSinavTipID" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !kModel.TDSinavTipID.HasValue ? MsgTypeEnum.Error : MsgTypeEnum.Success, PropertyName = "TDSinavTipID" });
                 if (kModel.TDSinavTipID.HasValue)
                 {
                     if (kModel.TDSinavTipID == -1)
@@ -650,12 +650,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mMessage.Messages.Add(
                                 "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu Sınav Tipi için Üniversite Adı giriniz.");
                             mMessage.MessagesDialog.Add(new MrMessage
-                            { MessageType = Msgtype.Error, PropertyName = "TDUniversiteAdi" });
+                            { MessageType = MsgTypeEnum.Error, PropertyName = "TDUniversiteAdi" });
                         }
                         else
                         {
                             mMessage.MessagesDialog.Add(new MrMessage
-                            { MessageType = Msgtype.Success, PropertyName = "TDUniversiteAdi" });
+                            { MessageType = MsgTypeEnum.Success, PropertyName = "TDUniversiteAdi" });
                         }
                     }
                     else
@@ -667,8 +667,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mMessage.MessagesDialog.Add(new MrMessage
                         {
                             MessageType = (kModel.TDSinavYili.HasValue && kModel.TDSinavYili > 0
-                                ? Msgtype.Success
-                                : Msgtype.Warning),
+                                ? MsgTypeEnum.Success
+                                : MsgTypeEnum.Warning),
                             PropertyName = "TDSinavYili"
                         });
                         if (!kModel.TDSinavPuani.ToDouble().HasValue)
@@ -694,7 +694,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                 mMessage.MessagesDialog.Add(new MrMessage
                                 {
-                                    MessageType = sinavPuaniUygun ? Msgtype.Success : Msgtype.Warning,
+                                    MessageType = sinavPuaniUygun ? MsgTypeEnum.Success : MsgTypeEnum.Warning,
                                     PropertyName = "TDSinavPuani"
                                 });
                             }
@@ -709,7 +709,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mMessage.MessagesDialog.Add(new MrMessage
                     {
-                        MessageType = (kModel.TDSinavTipID.HasValue ? Msgtype.Success : Msgtype.Warning),
+                        MessageType = (kModel.TDSinavTipID.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                         PropertyName = "TDSinavTipID"
                     });
                 }
@@ -726,7 +726,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
-                kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezDanismaniOnerisi;
+                kModel.TDODanismanTalepTipID = TdoDanismanTalepTipEnum.TezDanismaniOnerisi;
                 kModel.IsTezDiliTr = isTezDiliTr.Value;
 
                 if (isTezDiliTr == true)
@@ -821,7 +821,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -907,31 +907,31 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.TDAdSoyad = danisman.Ad + " " + danisman.Soyad;
                 }
 
-                model.SListSinav = new SelectList(Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTDAnabilimDali = new SelectList(Management.cmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTDProgram = new SelectList(Management.cmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
+                model.SListTDAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTDProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
 
-                var dilSinavList = Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true);
+                var dilSinavList = Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true);
                 dilSinavList.Insert(1, new CmbIntDto { Value = -1, Caption = "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu" });
                 model.SListTDSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
 
                 if (model.SinavTipID.HasValue)
                 {
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
-                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
+                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
                         var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
-                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
+                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
                 }
-                mMessage.MessageType = Msgtype.Information;
+                mMessage.MessageType = MsgTypeEnum.Information;
                 mMessage.IsSuccess = true;
             }
 
 
-            if (mMessage.MessageType != Msgtype.Information) mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
@@ -946,7 +946,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı Değişikliği İşlemi"
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
@@ -979,12 +979,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikTr" });
                 if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Varolan Tez başlığını ingilizce olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikEn" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikEn" });
 
 
                 if (kModel.TezDanismanID <= 0)
@@ -1006,7 +1006,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mMessage.MessagesDialog.Add(new MrMessage
                     {
-                        MessageType = (kModel.TDAnabilimDaliID > 0 ? Msgtype.Success : Msgtype.Warning),
+                        MessageType = (kModel.TDAnabilimDaliID > 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                         PropertyName = "TDAnabilimDaliID"
                     });
                     if (kModel.TDProgramKod.IsNullOrWhiteSpace())
@@ -1016,7 +1016,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mMessage.MessagesDialog.Add(new MrMessage
                     {
-                        MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning),
+                        MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                         PropertyName = "TDProgramKod"
                     });
                     if (isTezDiliTr == false)
@@ -1032,12 +1032,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     mMessage.Messages.Add(
                                         "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu Sınav Tipi için Üniversite Adı giriniz.");
                                     mMessage.MessagesDialog.Add(new MrMessage
-                                    { MessageType = Msgtype.Error, PropertyName = "TDUniversiteAdi" });
+                                    { MessageType = MsgTypeEnum.Error, PropertyName = "TDUniversiteAdi" });
                                 }
                                 else
                                 {
                                     mMessage.MessagesDialog.Add(new MrMessage
-                                    { MessageType = Msgtype.Success, PropertyName = "TDUniversiteAdi" });
+                                    { MessageType = MsgTypeEnum.Success, PropertyName = "TDUniversiteAdi" });
                                 }
                             }
                             else
@@ -1049,8 +1049,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 mMessage.MessagesDialog.Add(new MrMessage
                                 {
                                     MessageType = (kModel.TDSinavYili.HasValue && kModel.TDSinavYili > 0
-                                        ? Msgtype.Success
-                                        : Msgtype.Warning),
+                                        ? MsgTypeEnum.Success
+                                        : MsgTypeEnum.Warning),
                                     PropertyName = "TDSinavYili"
                                 });
                                 if (!kModel.TDSinavPuani.ToDouble().HasValue)
@@ -1076,7 +1076,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                         mMessage.MessagesDialog.Add(new MrMessage
                                         {
-                                            MessageType = sinavPuaniUygun ? Msgtype.Success : Msgtype.Warning,
+                                            MessageType = sinavPuaniUygun ? MsgTypeEnum.Success : MsgTypeEnum.Warning,
                                             PropertyName = "TDSinavPuani"
                                         });
                                     }
@@ -1092,7 +1092,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         mMessage.MessagesDialog.Add(new MrMessage
                         {
-                            MessageType = (kModel.TDSinavTipID.HasValue ? Msgtype.Success : Msgtype.Warning),
+                            MessageType = (kModel.TDSinavTipID.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                             PropertyName = "TDSinavTipID"
                         });
                     }
@@ -1111,7 +1111,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                 }
-                kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezDanismaniDegisikligi;
+                kModel.TDODanismanTalepTipID = TdoDanismanTalepTipEnum.TezDanismaniDegisikligi;
                 kModel.UniqueID = Guid.NewGuid();
                 kModel.FormKodu = formKodu;
                 kModel.VarolanTezDanismanID = oncekiBasvuru.TezDanismanID;
@@ -1217,7 +1217,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 TezDanismanOneriBus.SendMailTdoBilgisi(kModel.TDOBasvuruDanismanID);
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -1281,29 +1281,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
 
-                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
-                model.SListSinav = new SelectList(Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTDAnabilimDali = new SelectList(Management.cmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTDProgram = new SelectList(Management.cmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
-                var dilSinavList = Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true);
+                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
+                model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
+                model.SListTDAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTDProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                var dilSinavList = Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true);
                 dilSinavList.Insert(1, new CmbIntDto { Value = -1, Caption = "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu" });
                 model.SListTDSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
 
                 if (model.SinavTipID.HasValue)
                 {
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
-                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
+                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
                         var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
-                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
+                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
                 }
-                mMessage.MessageType = Msgtype.Information;
+                mMessage.MessageType = MsgTypeEnum.Information;
                 mMessage.IsSuccess = true;
             }
-            if (mMessage.MessageType != Msgtype.Information) mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
@@ -1319,7 +1319,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Dili, Tez Başlığı Değişikliği İşlemi"
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
@@ -1345,12 +1345,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikTr" });
                 if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Varolan Tez başlığını ingilizce olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikEn" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikEn" });
 
 
                 if (yenTezDiliDegisecekmi)
@@ -1359,18 +1359,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mMessage.Messages.Add("Yeni tez dilini seçiniz.");
                     }
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.IsYeniTezDiliTr.HasValue ? Msgtype.Success : Msgtype.Warning), PropertyName = "IsYeniTezDiliTr" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.IsYeniTezDiliTr.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "IsYeniTezDiliTr" });
                 }
                 if (kModel.YeniTezBaslikTr.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Yeni Tez başlığını türkçe olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "YeniTezBaslikTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "YeniTezBaslikTr" });
                 if (kModel.YeniTezBaslikEn.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Yeni Tez başlığını ingilizce olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "YeniTezBaslikEn" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikEn.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "YeniTezBaslikEn" });
                 if (isTezDiliTr == false)
                 {
                     if (!kModel.SinavTipID.HasValue) mMessage.Messages.Add("Öğrenci Yabancı dil yeterlilik sınav bilgisini seçiniz.");
@@ -1378,7 +1378,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kModel.SinavPuani.IsNullOrWhiteSpace() || !kModel.SinavPuani.ToDouble().HasValue)
                     {
                         mMessage.Messages.Add("Öğrenci Yabancı dil yeterlilik sınav puanı bilgisini giriniz.");
-                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavPuani" });
+                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SinavPuani" });
                     }
                     else
                     {
@@ -1396,7 +1396,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 {
                                     mMessage.Messages.Add("Öğrenci Yabancı dil yeterlilik sınav puanı en az " + sinavTipKriter.Min + " en fazla " + sinavTipKriter.Max + " olmalıdır.");
                                 }
-                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = sinavPuaniUygun ? Msgtype.Success : Msgtype.Warning, PropertyName = "SinavPuani" });
+                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = sinavPuaniUygun ? MsgTypeEnum.Success : MsgTypeEnum.Warning, PropertyName = "SinavPuani" });
                             }
                             else
                             {
@@ -1406,8 +1406,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     }
 
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.SinavTipID.HasValue ? Msgtype.Success : Msgtype.Warning), PropertyName = "SinavTipID" });
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.SinavYili.HasValue && kModel.SinavYili > 0 ? Msgtype.Success : Msgtype.Warning), PropertyName = "SinavYili" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.SinavTipID.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "SinavTipID" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.SinavYili.HasValue && kModel.SinavYili > 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "SinavYili" });
 
                     if (!kModel.TDSinavTipID.HasValue) mMessage.Messages.Add("Tez danışmanı yabancı dil yeterlilik sınav bilginizi seçiniz.");
                     else if (kModel.TDSinavTipID.HasValue)
@@ -1417,11 +1417,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (kModel.TDUniversiteAdi.IsNullOrWhiteSpace())
                             {
                                 mMessage.Messages.Add("Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu Sınav Tipi için Üniversite Adı giriniz.");
-                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "TDUniversiteAdi" });
+                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "TDUniversiteAdi" });
                             }
                             else
                             {
-                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TDUniversiteAdi" });
+                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TDUniversiteAdi" });
                             }
                         }
                         else
@@ -1429,7 +1429,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             var sinavTipi = _entities.SinavTipleris.First(p => p.SinavTipID == kModel.TDSinavTipID);
                             kModel.TDSinavAdi = sinavTipi.SinavAdi;
                             if (!kModel.TDSinavYili.HasValue || kModel.TDSinavYili <= 0) mMessage.Messages.Add("Tez danışmanı yabancı dil yeterlilik sınav yılı bilginizi giriniz.");
-                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDSinavYili.HasValue && kModel.TDSinavYili > 0 ? Msgtype.Success : Msgtype.Warning), PropertyName = "TDSinavYili" });
+                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDSinavYili.HasValue && kModel.TDSinavYili > 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TDSinavYili" });
                             if (!kModel.TDSinavPuani.ToDouble().HasValue)
                                 mMessage.Messages.Add("Tez danışmanı yabancı dil yeterlilik sınav puanı bilginizi giriniz.");
                             else
@@ -1445,7 +1445,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     {
                                         mMessage.Messages.Add("Tez danışmanı Yabancı dil yeterlilik sınav puanı en az " + sinavTipKriterMin + " en fazla " + 100 + " olmalıdır.");
                                     }
-                                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = sinavPuaniUygun ? Msgtype.Success : Msgtype.Warning, PropertyName = "TDSinavPuani" });
+                                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = sinavPuaniUygun ? MsgTypeEnum.Success : MsgTypeEnum.Warning, PropertyName = "TDSinavPuani" });
                                 }
                                 else
                                 {
@@ -1455,7 +1455,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                         }
                     }
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDSinavTipID.HasValue ? Msgtype.Success : Msgtype.Warning), PropertyName = "TDSinavTipID" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDSinavTipID.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TDSinavTipID" });
                 }
 
 
@@ -1467,12 +1467,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Değiştirmek istediğiniz tez dili mevcut tez dili ile aynı olamaz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (isOncekiTezDiliTr != kModel.IsYeniTezDiliTr ? Msgtype.Success : Msgtype.Warning), PropertyName = "IsYeniTezDiliTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (isOncekiTezDiliTr != kModel.IsYeniTezDiliTr ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "IsYeniTezDiliTr" });
 
             }
             if (!mMessage.Messages.Any())
             {
-                kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezBasligiDegisikligi;
+                kModel.TDODanismanTalepTipID = TdoDanismanTalepTipEnum.TezBasligiDegisikligi;
                 kModel.TezDanismanID = oncekiBasvuru.TezDanismanID;
                 kModel.IsTezDiliTr = isOncekiTezDiliTr;
                 //if (oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi ||
@@ -1584,7 +1584,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -1651,29 +1651,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
 
-                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
-                model.SListSinav = new SelectList(Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTDAnabilimDali = new SelectList(Management.cmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTDProgram = new SelectList(Management.cmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
-                var dilSinavList = Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true);
+                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
+                model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
+                model.SListTDAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTDProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                var dilSinavList = Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true);
                 dilSinavList.Insert(1, new CmbIntDto { Value = -1, Caption = "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu" });
                 model.SListTDSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
 
                 if (model.SinavTipID.HasValue)
                 {
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
-                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
+                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
                         var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
-                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
+                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
                 }
-                mMessage.MessageType = Msgtype.Information;
+                mMessage.MessageType = MsgTypeEnum.Information;
                 mMessage.IsSuccess = true;
             }
-            if (mMessage.MessageType != Msgtype.Information) mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
@@ -1689,7 +1689,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı, Tez Dili, Tez Başlığı Değişikliği İşlemi"
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
@@ -1723,12 +1723,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikTr" });
                 if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Varolan Tez başlığını ingilizce olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikEn" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikEn" });
 
                 if (yenTezDiliDegisecekmi)
                 {
@@ -1736,18 +1736,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mMessage.Messages.Add("Yeni tez dilini seçiniz.");
                     }
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.IsYeniTezDiliTr.HasValue ? Msgtype.Success : Msgtype.Warning), PropertyName = "IsYeniTezDiliTr" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.IsYeniTezDiliTr.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "IsYeniTezDiliTr" });
                 }
                 if (kModel.YeniTezBaslikTr.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Yeni Tez başlığını türkçe olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "YeniTezBaslikTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "YeniTezBaslikTr" });
                 if (kModel.YeniTezBaslikEn.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Yeni Tez başlığını ingilizce olarak giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "YeniTezBaslikEn" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikEn.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "YeniTezBaslikEn" });
                 if (isTezDiliTr == false)
                 {
                     if (!kModel.SinavTipID.HasValue)
@@ -1758,7 +1758,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mMessage.Messages.Add("Öğrenci Yabancı dil yeterlilik sınav puanı bilgisini giriniz.");
                         mMessage.MessagesDialog.Add(new MrMessage
-                        { MessageType = Msgtype.Warning, PropertyName = "SinavPuani" });
+                        { MessageType = MsgTypeEnum.Warning, PropertyName = "SinavPuani" });
                     }
                     else
                     {
@@ -1783,7 +1783,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                 mMessage.MessagesDialog.Add(new MrMessage
                                 {
-                                    MessageType = sinavPuaniUygun ? Msgtype.Success : Msgtype.Warning,
+                                    MessageType = sinavPuaniUygun ? MsgTypeEnum.Success : MsgTypeEnum.Warning,
                                     PropertyName = "SinavPuani"
                                 });
                             }
@@ -1798,14 +1798,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mMessage.MessagesDialog.Add(new MrMessage
                     {
-                        MessageType = (kModel.SinavTipID.HasValue ? Msgtype.Success : Msgtype.Warning),
+                        MessageType = (kModel.SinavTipID.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                         PropertyName = "SinavTipID"
                     });
                     mMessage.MessagesDialog.Add(new MrMessage
                     {
                         MessageType = (kModel.SinavYili.HasValue && kModel.SinavYili > 0
-                            ? Msgtype.Success
-                            : Msgtype.Warning),
+                            ? MsgTypeEnum.Success
+                            : MsgTypeEnum.Warning),
                         PropertyName = "SinavYili"
                     });
                 }
@@ -1816,7 +1816,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Değiştirmek istediğiniz tez dili mevcut tez dili ile aynı olamaz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (isOncekiTezDiliTr != kModel.IsYeniTezDiliTr ? Msgtype.Success : Msgtype.Warning), PropertyName = "IsYeniTezDiliTr" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (isOncekiTezDiliTr != kModel.IsYeniTezDiliTr ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "IsYeniTezDiliTr" });
 
             }
 
@@ -1838,7 +1838,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 mMessage.MessagesDialog.Add(new MrMessage
                 {
-                    MessageType = (kModel.TDAnabilimDaliID > 0 ? Msgtype.Success : Msgtype.Warning),
+                    MessageType = (kModel.TDAnabilimDaliID > 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                     PropertyName = "TDAnabilimDaliID"
                 });
                 if (kModel.TDProgramKod.IsNullOrWhiteSpace())
@@ -1848,7 +1848,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 mMessage.MessagesDialog.Add(new MrMessage
                 {
-                    MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning),
+                    MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                     PropertyName = "TDProgramKod"
                 });
                 if (isTezDiliTr == false)
@@ -1864,12 +1864,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 mMessage.Messages.Add(
                                     "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu Sınav Tipi için Üniversite Adı giriniz.");
                                 mMessage.MessagesDialog.Add(new MrMessage
-                                { MessageType = Msgtype.Error, PropertyName = "TDUniversiteAdi" });
+                                { MessageType = MsgTypeEnum.Error, PropertyName = "TDUniversiteAdi" });
                             }
                             else
                             {
                                 mMessage.MessagesDialog.Add(new MrMessage
-                                { MessageType = Msgtype.Success, PropertyName = "TDUniversiteAdi" });
+                                { MessageType = MsgTypeEnum.Success, PropertyName = "TDUniversiteAdi" });
                             }
                         }
                         else
@@ -1881,8 +1881,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mMessage.MessagesDialog.Add(new MrMessage
                             {
                                 MessageType = (kModel.TDSinavYili.HasValue && kModel.TDSinavYili > 0
-                                    ? Msgtype.Success
-                                    : Msgtype.Warning),
+                                    ? MsgTypeEnum.Success
+                                    : MsgTypeEnum.Warning),
                                 PropertyName = "TDSinavYili"
                             });
                             if (!kModel.TDSinavPuani.ToDouble().HasValue)
@@ -1908,7 +1908,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                     mMessage.MessagesDialog.Add(new MrMessage
                                     {
-                                        MessageType = sinavPuaniUygun ? Msgtype.Success : Msgtype.Warning,
+                                        MessageType = sinavPuaniUygun ? MsgTypeEnum.Success : MsgTypeEnum.Warning,
                                         PropertyName = "TDSinavPuani"
                                     });
                                 }
@@ -1924,7 +1924,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mMessage.MessagesDialog.Add(new MrMessage
                     {
-                        MessageType = (kModel.TDSinavTipID.HasValue ? Msgtype.Success : Msgtype.Warning),
+                        MessageType = (kModel.TDSinavTipID.HasValue ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                         PropertyName = "TDSinavTipID"
                     });
                 }
@@ -1933,7 +1933,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
-                kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
+                kModel.TDODanismanTalepTipID = TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
                 kModel.VarolanTezDanismanID = oncekiBasvuru.TezDanismanID;
                 kModel.VarolanTDAdSoyad = oncekiBasvuru.TDAdSoyad;
                 kModel.VarolanTDUnvanAdi = oncekiBasvuru.TDUnvanAdi;
@@ -2056,7 +2056,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -2064,7 +2064,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı Öneri Formu Danışman Onay İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
@@ -2085,7 +2085,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (kModel.DanismanOnayladi == false)
             {
                 if (kModel.DanismanOnaylanmadiAciklama.IsNullOrWhiteSpace()) mMessage.Messages.Add("Onaylanmama durumu için açıklama giriniz.");
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.DanismanOnaylanmadiAciklama.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "DanismanOnaylanmadiAciklama_" + kModel.TDOBasvuruDanismanID });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.DanismanOnaylanmadiAciklama.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "DanismanOnaylanmadiAciklama_" + kModel.TDOBasvuruDanismanID });
             }
 
             if (!mMessage.Messages.Any() && kModel.DanismanOnayladi == true)
@@ -2096,11 +2096,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!kModel.TDTezSayisiYL.HasValue || kModel.TDTezSayisiYL < 0) mMessage.Messages.Add("Yüksek lisans tez sayısı bilgisini giriniz.");
                 if (!kModel.TDOgrenciSayisiDR.HasValue || kModel.TDOgrenciSayisiDR < 0) mMessage.Messages.Add("Doktora öğrenci sayısı bilgisini giriniz.");
                 if (!kModel.TDTezSayisiDR.HasValue || kModel.TDTezSayisiDR < 0) mMessage.Messages.Add("Doktora tez sayısı bilgisini giriniz.");
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TDProgramKod_" + kModel.TDOBasvuruDanismanID });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDOgrenciSayisiYL.HasValue && kModel.TDOgrenciSayisiYL >= 0 ? Msgtype.Success : Msgtype.Warning), PropertyName = "TDOgrenciSayisiYL_" + kModel.TDOBasvuruDanismanID });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDTezSayisiYL.HasValue && kModel.TDTezSayisiYL >= 0 ? Msgtype.Success : Msgtype.Warning), PropertyName = "TDTezSayisiYL_" + kModel.TDOBasvuruDanismanID });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDOgrenciSayisiDR.HasValue && kModel.TDOgrenciSayisiDR >= 0 ? Msgtype.Success : Msgtype.Warning), PropertyName = "TDOgrenciSayisiDR_" + kModel.TDOBasvuruDanismanID });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDTezSayisiDR.HasValue && kModel.TDTezSayisiDR >= 0 ? Msgtype.Success : Msgtype.Warning), PropertyName = "TDTezSayisiDR_" + kModel.TDOBasvuruDanismanID });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TDProgramKod_" + kModel.TDOBasvuruDanismanID });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDOgrenciSayisiYL.HasValue && kModel.TDOgrenciSayisiYL >= 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TDOgrenciSayisiYL_" + kModel.TDOBasvuruDanismanID });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDTezSayisiYL.HasValue && kModel.TDTezSayisiYL >= 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TDTezSayisiYL_" + kModel.TDOBasvuruDanismanID });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDOgrenciSayisiDR.HasValue && kModel.TDOgrenciSayisiDR >= 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TDOgrenciSayisiDR_" + kModel.TDOBasvuruDanismanID });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.TDTezSayisiDR.HasValue && kModel.TDTezSayisiDR >= 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TDTezSayisiDR_" + kModel.TDOBasvuruDanismanID });
                 if (!mMessage.Messages.Any())
                 {
                     var danismanOgrenciKriterMax = TdoAyar.DanismanMaxOgrenciKayitKriter.GetAyarTdo(tdoBasvuruDanis.TDOBasvuru.EnstituKod).ToDouble();
@@ -2110,13 +2110,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (kModel.TDTezSayisiDR == 0 && kModel.TDTezSayisiYL == 0)
                         {
                             mMessage.Messages.Add("Doktora Öğrenim seviyesinde danışman atama formu oluşturulabilmesi için danışman mezun yükü 0 dan büyük olmalıdır.");
-                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TDTezSayisiDR_" + kModel.TDOBasvuruDanismanID });
-                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TDTezSayisiYL_" + kModel.TDOBasvuruDanismanID });
+                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TDTezSayisiDR_" + kModel.TDOBasvuruDanismanID });
+                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TDTezSayisiYL_" + kModel.TDOBasvuruDanismanID });
                         }
                         else
                         {
-                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TDTezSayisiDR_" + kModel.TDOBasvuruDanismanID });
-                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TDTezSayisiYL_" + kModel.TDOBasvuruDanismanID });
+                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TDTezSayisiDR_" + kModel.TDOBasvuruDanismanID });
+                            mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TDTezSayisiYL_" + kModel.TDOBasvuruDanismanID });
                         }
                     }
                     if (!mMessage.Messages.Any())
@@ -2127,13 +2127,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (!danismanOgrenciKriterMaxSaglaniyor)
                             {
                                 mMessage.Messages.Add("Danışmanın yüksek lisans ve doktora kayıtlı öğrenci sayısı toplamı maksimum " + danismanOgrenciKriterMax + " olabilir.");
-                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TDOgrenciSayisiDR_" + kModel.TDOBasvuruDanismanID });
-                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TDOgrenciSayisiYL_" + kModel.TDOBasvuruDanismanID });
+                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TDOgrenciSayisiDR_" + kModel.TDOBasvuruDanismanID });
+                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TDOgrenciSayisiYL_" + kModel.TDOBasvuruDanismanID });
                             }
                             else
                             {
-                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TDOgrenciSayisiDR_" + kModel.TDOBasvuruDanismanID });
-                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TDOgrenciSayisiYL_" + kModel.TDOBasvuruDanismanID });
+                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TDOgrenciSayisiDR_" + kModel.TDOBasvuruDanismanID });
+                                mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TDOgrenciSayisiYL_" + kModel.TDOBasvuruDanismanID });
                             }
                         }
                         else
@@ -2207,7 +2207,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -2215,7 +2215,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı Öneri Formu Danışman Onay İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
@@ -2231,7 +2231,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (kModel.DanismanOnayladi == false)
             {
                 if (kModel.VarolanDanismanOnaylanmadiAciklama.IsNullOrWhiteSpace()) mMessage.Messages.Add("Onaylanmama durumu için açıklama giriniz.");
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.VarolanDanismanOnaylanmadiAciklama.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "VarolanDanismanOnaylanmadiAciklama_" + kModel.TDOBasvuruDanismanID });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.VarolanDanismanOnaylanmadiAciklama.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "VarolanDanismanOnaylanmadiAciklama_" + kModel.TDOBasvuruDanismanID });
             }
             if (!mMessage.Messages.Any())
             {
@@ -2264,7 +2264,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -2272,7 +2272,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı Öneri Formu EYK'ya Gönderim İşlemi"
             };
             var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
@@ -2308,7 +2308,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -2316,7 +2316,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı Öneri Formu EYK'Da Onay İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
@@ -2334,7 +2334,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (eykDaOnaylanmadiDurumAciklamasi.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Onaylanmama durumu için açıklama giriniz.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "EYKDaOnaylanmadiDurumAciklamasi_" + tdoBasvuruDanismanId });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "EYKDaOnaylanmadiDurumAciklamasi_" + tdoBasvuruDanismanId });
 
                 }
             }
@@ -2343,7 +2343,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!eykDaOnaylandiOnayTarihi.HasValue)
                 {
                     mMessage.Messages.Add("EYK'Da onaylanma tarihini giriniz.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "EYKDaOnaylandiOnayTarihi_" + tdoBasvuruDanismanId });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "EYKDaOnaylandiOnayTarihi_" + tdoBasvuruDanismanId });
 
                 }
 
@@ -2352,13 +2352,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (tezBaslikTr.IsNullOrWhiteSpace())
                     {
                         mMessage.Messages.Add((isYeniTezBasligiGozuksun ? "Yeni " : "") + "Tez Başlığı Türkçe bilgisi boş bırakılamaz");
-                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "TezBaslikTr_" + tdoBasvuruDanismanId });
+                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "TezBaslikTr_" + tdoBasvuruDanismanId });
 
                     }
                     if (tezBaslikEn.IsNullOrWhiteSpace())
                     {
                         mMessage.Messages.Add((isYeniTezBasligiGozuksun ? "Yeni " : "") + "Tez Başlığı İngilizce bilgisi boş bırakılamaz");
-                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "TezBaslikEn_" + tdoBasvuruDanismanId });
+                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "TezBaslikEn_" + tdoBasvuruDanismanId });
 
                     }
                 }
@@ -2399,7 +2399,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -2454,7 +2454,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 view = ViewRenderHelper.RenderPartialView("TDOBasvuru", "TDOEsDanismanFormu", model);
                 mMessage.IsSuccess = true;
             }
-            if (mMessage.MessageType != Msgtype.Information) mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
@@ -2472,7 +2472,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Eş Danışmanı Öneri Formu Oluşturma İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
@@ -2505,48 +2505,48 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Ad Soyad giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.AdSoyad.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "AdSoyadX" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.AdSoyad.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "AdSoyadX" });
                 if (kModel.UnvanAdi.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Ünvan giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.UnvanAdi.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "UnvanAdi" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.UnvanAdi.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "UnvanAdi" });
                 if (kModel.UniversiteAdi.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Üniversite giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.UniversiteAdi.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "UniversiteAdi" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.UniversiteAdi.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "UniversiteAdi" });
                 if (kModel.AnabilimDaliAdi.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Anabilim dalı adı giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.AnabilimDaliAdi.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "AnabilimDaliAdi" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.AnabilimDaliAdi.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "AnabilimDaliAdi" });
 
                 if (kModel.ProgramAdi.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Program adı giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.ProgramAdi.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "ProgramAdi" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.ProgramAdi.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "ProgramAdi" });
                 if (kModel.EMail.IsNullOrWhiteSpace())
                 {
 
                     mMessage.Messages.Add("EMail bilgisini giriniz.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EMail" });
                 }
                 else if (kModel.EMail.ToIsValidEmail())
                 {
                     mMessage.Messages.Add("Mail formatı uygun değil.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EMail" });
                 }
                 else
                 {
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EMail" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EMail" });
                 }
                 if (kModel.Gerekce.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Gerekçe giriniz.");
                 }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.Gerekce.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "Gerekce" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.Gerekce.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "Gerekce" });
             }
 
             if (!mMessage.Messages.Any())
@@ -2635,7 +2635,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -2644,7 +2644,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Eş Danışmanı Öneri Formu EYK'ya Gönderim İşlemi"
             };
             var tdoBasvuruEsDanis =
@@ -2676,7 +2676,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 LogIslemleri.LogEkle("TDOBasvuruEsDanisman", IslemTipi.Update, tdoBasvuruEsDanis.ToJson());
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -2684,7 +2684,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mMessage = new MmMessage
             {
-                MessageType = Msgtype.Success,
+                MessageType = MsgTypeEnum.Success,
                 Title = "Tez Eş Danışmanı Öneri Formu EYK'Da Onay İşlemi"
             };
             var tdoBasvuruEsDanis = _entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
@@ -2705,7 +2705,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (eykDaOnaylanmadiDurumAciklamasi.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Onaylanmama durumu için açıklama giriniz.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "EYKDaOnaylanmadiDurumAciklamasi_" + tdoBasvuruEsDanismanId });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "EYKDaOnaylanmadiDurumAciklamasi_" + tdoBasvuruEsDanismanId });
 
                 }
             }
@@ -2714,7 +2714,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!eykDaOnaylandiOnayTarihi.HasValue)
                 {
                     mMessage.Messages.Add("EYK'Da onaylanma tarihini giriniz.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "EYKDaOnaylandiOnayTarihiEs_" + tdoBasvuruEsDanismanId });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "EYKDaOnaylandiOnayTarihiEs_" + tdoBasvuruEsDanismanId });
 
                 }
             }
@@ -2739,7 +2739,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
 
@@ -2780,10 +2780,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoBasvuruDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Danışman Öneri Formu sistemden silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
@@ -2825,10 +2825,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySilEs<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySilEs<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
@@ -2872,16 +2872,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     LogIslemleri.LogEkle("TDOBasvuru", IslemTipi.Delete, kayit.ToJson());
 
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silindi.");
-                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
 
                 }
                 catch (Exception ex)
                 {
-                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }

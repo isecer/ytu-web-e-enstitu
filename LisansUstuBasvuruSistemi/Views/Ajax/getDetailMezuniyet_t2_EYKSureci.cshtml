@@ -9,10 +9,10 @@
 @{
     Layout = null;
     bool juriOneriFormuKyetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
-    bool juriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SRTalepDurum.Onaylandı);
-    bool juriOneriFormuOnayYetkiEykDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SRTalepDurum.Onaylandı);
+    bool juriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
+    bool juriOneriFormuOnayYetkiEykDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
     var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
 }
 
 <div class="tab-pane @(Model.SelectedTabIndex == 2 ? "active" : "") " id="@tbName-2">
@@ -85,7 +85,7 @@
                                                     @if (Model.OgrenimTipKod.IsDoktora())
                                                     {
                                                         <li>
-                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
                                                                 <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0339 Yüksek Lisans Tez Jüri Öneri Formunu İndir
                                                             </a>
                                                         </li>
@@ -94,12 +94,12 @@
                                                             if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
                                                             {
                                                                 <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0341 Yüksek Lisans Jüri Üyelerine Tez Teslim Formunu İndir
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0304 Tezden Üretilen Yayınları Değerlendirme Formunu İndir
                                                                     </a>
                                                                 </li>
@@ -111,7 +111,7 @@
                                                     else
                                                     {
                                                         <li>
-                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
                                                                 <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0300 Doktora Tez Jüri Öneri Formunu İndir
                                                             </a>
                                                         </li>
@@ -120,12 +120,12 @@
                                                             if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
                                                             {
                                                                 <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0302 Doktora Jüri Üyelerine Tez Teslim Formunu İndir
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0304 Tezden Üretilen Yayınları Değerlendirme Formunu İndir
                                                                     </a>
                                                                 </li>

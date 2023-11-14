@@ -38,7 +38,7 @@
                     <td>@tik2.UnvanAdi @tik2.JuriAdi</td>
                 </tr>
             }
-            @if (!(ytuIciJuri.MezuniyetSinavDurumID>MezuniyetSinavDurum.SonucGirilmedi))
+            @if (!(ytuIciJuri.MezuniyetSinavDurumID>MezuniyetSinavDurumEnum.SonucGirilmedi))
             {
                 <tr>
                     <td width="90">YTÜ İçi Jüri</td>
@@ -54,7 +54,7 @@
                     </td>
                 </tr>
             }
-            @if (!(ytuDisiJuri.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi))
+            @if (!(ytuDisiJuri.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi))
             {
                 <tr>
                     <td width="90">YTÜ Dışı Jüri</td>

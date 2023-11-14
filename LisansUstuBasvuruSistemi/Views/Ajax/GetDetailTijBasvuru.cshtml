@@ -213,7 +213,7 @@
                                                     }
                                                     @if (!item.IsObsData && item.DanismanOnayladi == true)
                                                     {
-                                                        var title = (item.TijFormTipID == TijFormTipi.YeniForm ? "FR-0306 Doktora Tez İzleme Komitesi Öneri Formu" : "FR-1460 Doktora Tez İzleme Komitesi Değişikliği Formu");
+                                                        var title = (item.TijFormTipID == TijFormTipiEnum.YeniForm ? "FR-0306 Doktora Tez İzleme Komitesi Öneri Formu" : "FR-1460 Doktora Tez İzleme Komitesi Değişikliği Formu");
                                                         var title2 = title + "nu";
                                                         <tr>
                                                             <td class="CaptionTd">Form Kodu</td>
@@ -224,7 +224,7 @@
                                                             <td class="CaptionTd">Form</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">
-                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@title','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.TezIzlemeJuriOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@title','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezIzlemeJuriOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                     <i class="fa fa-print"></i> @title2 İndir
                                                                 </a>
                                                             </td>
@@ -233,7 +233,7 @@
                                                 </table>
                                             </div>
 
-                                            @if (item.TijFormTipID != TijFormTipi.YeniForm)
+                                            @if (item.TijFormTipID != TijFormTipiEnum.YeniForm)
                                             {
                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
                                                     <table class="table" style="width:100%;margin:0px;">
@@ -272,11 +272,11 @@
                                                                     <td style="text-align:center;color:@(item.EYKDaOnaylandi==true?"green":"maroon");">
                                                                         @if (!itemJr.IsTezDanismani)
                                                                         {
-                                                                            if (itemJr.IsYtuIciJuri && (item.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciDegisiklik || item.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciVeDisiDegisiklik))
+                                                                            if (itemJr.IsYtuIciJuri && (item.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciDegisiklik || item.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik))
                                                                             {
                                                                                 <span><b>@(item.EYKDaOnaylandi==true?"Değişti": "Değişecek")</b></span>
                                                                             }
-                                                                            else if (!itemJr.IsYtuIciJuri && (item.TijDegisiklikTipID == TijDegisiklikTipi.YtuDisiDegisiklik || item.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciVeDisiDegisiklik))
+                                                                            else if (!itemJr.IsYtuIciJuri && (item.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuDisiDegisiklik || item.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik))
                                                                             {
                                                                                 <span><b>@(item.EYKDaOnaylandi==true?"Değişti": "Değişecek")</b></span>
                                                                             }
@@ -320,7 +320,7 @@
                                                     <tr>
                                                         <td colspan="5" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">
                                                             <i class="fa fa-group fa-lg"></i>
-                                                            @if (item.TijFormTipID != TijFormTipi.YeniForm)
+                                                            @if (item.TijFormTipID != TijFormTipiEnum.YeniForm)
                                                             {
                                                                 @("Önerilen Jüriler")
                                                             }

@@ -7,7 +7,8 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTijBasvuru
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var eykYaGonderimYetki = RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
     var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
@@ -105,6 +106,23 @@
                             <li>
                                 <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
                             </li>
+
+                        }
+                        @if (eykYaGonderimYetki)
+                        {
+                            if (filteredOgrenciIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                </li>
+                            }
+                            if (filteredDanismanIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                </li>
+                            }
+
 
                         }
                     </ul>
@@ -317,7 +335,7 @@
     function YeniBasvuruDuyuruKontrol() {
         var popupSetting = {
             title:'',
-            popupTipId:@DuyuruPopupTipi.TijOneri,
+            popupTipId:@DuyuruPopupTipiEnum.TijOneri,
             btnAdi: 'Jüri Önerisi Yap',
             redirectUrl:'',
             callbackFnc: tijOneriOgrenciSecim
@@ -464,7 +482,7 @@
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,
-                            title: "||",
+                            title: '|| Tez İzleme Jüri Öneri Formu',
                             buttons: {
 
                                 success: {
@@ -472,17 +490,16 @@
                                     className: "btn-info btnKaydet",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        PanelRefresh(pnlx, false);
+                                        PanelRefresh(pnlx, false); 
                                         $('#FrmTijOneriFormu').ajaxForm({
                                             success: function (result) {
                                                 PanelRefresh(pnlx, true);
                                                 if (result.mMessage.IsSuccess) {
                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                     $(_clsBtn).click();
-                                                    if (refreshIndex) {
-                                                        
+                                                    if (refreshIndex) { 
                                                         window.location.href = '@Url.Action("Index")?SelectedBasvuruUniqueId=' + basvuruUniqueId;;
-                                                       }
+                                                    }
                                                     else  GetDetail(basvuruUniqueId);
                                                 }
                                                 else {
@@ -493,7 +510,7 @@
                                                     return false;
                                                 }
                                             },
-                                            complete: function (cmp) {
+                                            complete: function (cmp) { 
                                                 PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
@@ -512,9 +529,7 @@
                                     }
                                 }
                             }
-                        });
-
-                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                        }); 
                         if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
 
                     }

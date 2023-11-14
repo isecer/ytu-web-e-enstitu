@@ -18,13 +18,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class OgrenimTipleriController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index()
+        public ActionResult Index(string ekd)
         {
-            return Index(new FmOgrenimTipleri { });
+            return Index(new FmOgrenimTipleri { }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmOgrenimTipleri model)
+        public ActionResult Index(FmOgrenimTipleri model, string ekd)
         {
+            model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from s in _entities.OgrenimTipleris
                     join ea in _entities.Enstitulers on new { s.EnstituKod } equals new { ea.EnstituKod }
@@ -102,69 +103,69 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Enstitü seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
 
             if (kModel.OgrenimTipKod <= 0)
             {
                 mmMessage.Messages.Add("Kayıt işlemini yapabilmeni için Öğrenim Tipi Kod kısmını doldurmanız gerekmektedir!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipKod" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimTipKod" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimTipKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgrenimTipKod" });
 
             if (kModel.OgrenimTipAdi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Öğrenim Tip Adı Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipAdi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimTipAdi" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimTipAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgrenimTipAdi" });
 
             if (kModel.IsMezuniyetBasvurusuYapabilir)
             {
                 if (kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.IsNullOrWhiteSpace())
                 {
                     mmMessage.Messages.Add("Son döneminde kayıt yaptırması gereken ders kodlarını giriniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" });
                 if (kModel.MBasvuruToplamKrediKriteri.HasValue == false)
                 {
                     mmMessage.Messages.Add("Toplam Kredi kriteri bilgisini giriniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MBasvuruToplamKrediKriteri" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBasvuruToplamKrediKriteri" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MBasvuruToplamKrediKriteri" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBasvuruToplamKrediKriteri" });
                 if (kModel.MBasvuruAGNOKriteri.HasValue == false || !(kModel.MBasvuruAGNOKriteri > 0 && kModel.MBasvuruAGNOKriteri <= 4))
                 {
                     mmMessage.Messages.Add("Genel AGNO kriteri 1 ile 4 arasında bir değer olmalıdır!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MBasvuruAGNOKriteri" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBasvuruAGNOKriteri" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MBasvuruAGNOKriteri" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBasvuruAGNOKriteri" });
                 if (kModel.MBasvuruAKTSKriteri.HasValue == false)
                 {
                     mmMessage.Messages.Add("Toplam AKTS kriteri bilgisini giriniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MBasvuruAKTSKriteri" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBasvuruAKTSKriteri" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MBasvuruAKTSKriteri" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBasvuruAKTSKriteri" });
 
                 if (kModel.MBSinavUzatmaSuresiGun.HasValue == false)
                 {
                     mmMessage.Messages.Add("Sınav Uzatma Süresi Gün bilgisi boş bırakılamaz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MBSinavUzatmaSuresiGun" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBSinavUzatmaSuresiGun" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MBSinavUzatmaSuresiGun" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBSinavUzatmaSuresiGun" });
                 if (kModel.MBTezTeslimSuresiGun.HasValue == false)
                 {
                     mmMessage.Messages.Add("Tez Teslim Süresi Gün bilgisi boş bırakılamaz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MBTezTeslimSuresiGun" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBTezTeslimSuresiGun" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MBTezTeslimSuresiGun" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBTezTeslimSuresiGun" });
                 if (kModel.MBSRTalebiKacGunSonraAlabilir.HasValue == false)
                 {
                     mmMessage.Messages.Add("SR Talebi Kaç Gün Sonra Alabilir bilgisi boş bırakılamaz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MBSRTalebiKacGunSonraAlabilir" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBSRTalebiKacGunSonraAlabilir" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MBSRTalebiKacGunSonraAlabilir" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBSRTalebiKacGunSonraAlabilir" });
 
             }
 
@@ -175,7 +176,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (cnt)
                 {
                     mmMessage.Messages.Add("Tanımlamak istediğiniz Öğrenim Tipi Kodu seçilen Enstitü için daha önceden sisteme tanımlanmıştır, tekrar tanımlanamaz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipKod" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimTipKod" });
                 }
             }
             #endregion
@@ -276,7 +277,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + ogrenimTipleri.OgrenimTipAdi + "' İsimli Öğrenim tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "OgrenimTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "OgrenimTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else
