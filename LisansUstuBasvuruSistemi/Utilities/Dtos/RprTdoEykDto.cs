@@ -14,12 +14,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int TDODanismanTalepTipID { get; set; }
         public string Aciklama { get; set; }
         public string OgrenciBilgi { get; set; }
-        public string VarolanDanismanAdSoyad { get; set; }
+        public string DanismanAdSoyad { get; set; }
+        public string TezDili { get; set; }
+        public string TezBaslikTr { get; set; }
+        public string TezBaslikEn { get; set; }
         public string YeniTezDanismaniAdSoyad { get; set; }
-        public string VarolanTezDili { get; set; }
         public string YeniTezDili { get; set; }
-        public string VarolanTezBaslikTr { get; set; }
-        public string VarolanTezBaslikEn { get; set; }
         public string YeniTezBaslikTr { get; set; }
         public string YeniTezBaslikEn { get; set; }
     }

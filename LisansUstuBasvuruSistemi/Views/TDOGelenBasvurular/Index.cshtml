@@ -124,24 +124,26 @@
                                                                     success: function (result) {
 
                                                                         PanelRefresh(pnlx, true);
-                                                                            if (result.IsSuccess) {
-                                                                                var _Bastar = $('#BasTar').val();
-                                                                                var _Bittar = $('#BitTar').val();
-                                                                                //var _RaporTarihi = $('#RaporTarihi').val();
-                                                                                //var _Sayi = $('#Sayi').val();
-                                                                                var _tutanakTipId = $('#tutanakTipId').val();
-                                                                                var isEykdaOnayOrGonderim = $('#isEykdaOnayOrGonderim').val();
-                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar
-                                                                                    //+ '&RaporTarihi=' + _RaporTarihi
-                                                                                    //+ '&Sayi=' + _Sayi
-                                                                                    + '&tutanakTipId=' + _tutanakTipId
-                                                                                    + '&isEykdaOnayOrGonderim=' + isEykdaOnayOrGonderim;
+                                                                        if (result.IsSuccess) {
+                                                                            var bastar = $('#BasTar').val();
+                                                                            var bittar = $('#BitTar').val();
+                                                                            //var _RaporTarihi = $('#RaporTarihi').val();
+                                                                            //var _Sayi = $('#Sayi').val();
+                                                                            var tutanakTipId = $('#tutanakTipId').val();
+                                                                            var isDegisiklikOrYeniOneri = $('#isDegisiklikOrYeniOneri').val();
+                                                                            var isEykdaOnayOrGonderim = $('#isEykdaOnayOrGonderim').val();
+                                                                            window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + bastar + '&BitTar=' + bittar
+                                                                                //+ '&RaporTarihi=' + _RaporTarihi
+                                                                                //+ '&Sayi=' + _Sayi
+                                                                                + '&tutanakTipId=' + tutanakTipId
+                                                                                + '&isDegisiklikOrYeniOneri=' + isDegisiklikOrYeniOneri
+                                                                                + '&isEykdaOnayOrGonderim=' + isEykdaOnayOrGonderim;
 
-                                                                                toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
-                                                                            }
-                                                                            else {
-                                                                                getMsg(result);
-                                                                            }
+                                                                            toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
+                                                                        }
+                                                                        else {
+                                                                            getMsg(result);
+                                                                        }
 
 
                                                                     },

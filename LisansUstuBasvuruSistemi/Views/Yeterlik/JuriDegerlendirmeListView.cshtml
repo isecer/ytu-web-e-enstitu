@@ -50,7 +50,7 @@
                                             </li>
                                         </ul>
                                     </td>
-                                    <td>@itemJr.UnvanAdi<br /><span style="font-size:7pt;">@itemJr.JuriTipAdi</span></td>
+                                    <td>@itemJr.UnvanAdi<br /><span style="font-size:7pt;">@(itemJr.JuriTipAdi=="TezDanismani"?"Tez Danışmanı":"Jüri Üyesi")</span></td>
                                     <td>
                                         @itemJr.AdSoyad<br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                     </td>
@@ -164,17 +164,17 @@
                                         <td class="CaptionTd">Sözlü Sınavı Notu</td>
                                         <td class="CaptionTd">:</td>
                                         <td class="ValueTd" style="font-size: 11pt;">
-                                            @(Model.IsSozluSinavinaKatildi == true ? Model.SozluSinaviOrtalamaNotu.ToString() : "Sınava Katılmadı")
+                                            @(Model.IsSozluSinavinaKatildi == true ? Model.SozluSinaviOrtalamaNotu.ToFormatWithPrecision() : "Sınava Katılmadı")
                                         </td>
                                     </tr>
                                 }
-                                @if (Model.IsYaziliSinavinaKatildi == true && Model.IsSozluSinavinaKatildi == true && Model.IsSozluSinavBasarili==true)
+                                @if (Model.IsYaziliSinavinaKatildi == true && Model.IsSozluSinavinaKatildi == true && Model.IsSozluSinavBasarili==true && Model.GenelBasariNotu.HasValue)
                                 {
                                     <tr>
                                         <td class="CaptionTd">Genel Başarı Notu</td>
                                         <td class="CaptionTd">:</td>
                                         <td class="ValueTd" style="font-size: 11pt;">
-                                            @Model.GenelBasariNotu
+                                            @Model.GenelBasariNotu.Value.ToFormatWithPrecision()
                                         </td>
                                     </tr>
                                 }

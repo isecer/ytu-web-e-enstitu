@@ -25,12 +25,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
 
-        public ActionResult Login(bool? logout,  string returnUrl)
+        public ActionResult Login(bool? logout, string returnUrl)
         {
 
             if (logout == true)
             {
-                FormsAuthentication.SignOut();
+                FormsAuthenticationUtil.SignOut();
                 return RedirectToAction("Index", "Home");
             }
             if (UserIdentity.Current.IsAuthenticated) return RedirectToAction("Index", "Home");
@@ -78,7 +78,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         else
                         {
-                            LdapService.SecureSoapClient ld = new LdapService.SecureSoapClient();
+                            var ld = new LdapService.SecureSoapClient();
 
                             var wsPwd = ConfigurationManager.AppSettings["ldapServicePassword"];
                             var isSueccess = ld.Login(userName, password, wsPwd);
@@ -115,8 +115,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 // ignored
                             }
 
-                            rememberMe = rememberMe ?? false;
-                            FormsAuthentication.SetAuthCookie(user.KullaniciAdi,  rememberMe.Value);
+                            var isRememberMe = rememberMe ?? false;
+                            FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, string.Empty, isRememberMe);
                             UserBus.SetLastLogon();
 
                             if (returnUrl.IsNullOrWhiteSpace()) return RedirectToAction("Index", "Home");
@@ -125,23 +125,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         }
                         else
-                        { 
+                        {
                             if (loginUser != null && !loginUser.IsAktif) hata = "Kullanıcı Hesabı Pasif Durumda!";
                             else hata = "Kullanıcı Adı veya Şifre Hatalı. " + msg;
                         }
                     }
                     else
-                    { 
+                    {
                         hata = "Kullanıcı sistemde bulunamadı.";
                     }
                 }
 
             }
             catch (Exception ex)
-            { 
+            {
                 hata = "Sisteme Giriş Yapılırken Bir Hata Oluştu! Hata: " + ex.ToExceptionMessage();
             }
-            ViewBag.Hata = hata; 
+            ViewBag.Hata = hata;
             return PartialView();
 
         }
@@ -157,10 +157,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var users = OnlineUsersHelper.GetUsers.ToList();
             return View(users);
-        }
-
-
-
+        } 
         public ActionResult ParolaSifirla(string psKod, int? kullaniciId = null, string dlgId = "")
         {
 
@@ -353,16 +350,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult HesapKayit(int? id, string ekd)
         {
             var kayitYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
-            
+
             var model = new Kullanicilar
             {
                 EnstituKod = EnstituBus.GetSelectedEnstitu(ekd),
                 IsAktif = true
             };
 
-            bool isKurumIci = true;
-            bool isYerli = true;
-            bool resimVar = false;
+            var isKurumIci = true;
+            var isYerli = true;
+            var resimVar = false;
 
             if (UserIdentity.Current.IsAuthenticated)
             {
@@ -378,7 +375,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.ResimAdi = data.ResimAdi;
                     model = data;
 
-                } 
+                }
                 model.Sifre = "";
             }
             else

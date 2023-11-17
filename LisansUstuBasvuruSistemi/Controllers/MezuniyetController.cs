@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         public ActionResult Index(FmMezuniyetBasvurulari model, string ekd)
-        { 
+        {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             if (model.RowID.HasValue)
             {
@@ -198,7 +198,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 EnstituKod = enstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(ekd) : enstituKod
             };
-            if (mezuniyetBasvurulariId.HasValue)
+            if (mezuniyetBasvurulariId > 0)
             {
                 var basvuru =
                     _entities.MezuniyetBasvurularis.First(p =>
@@ -211,7 +211,37 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == model.KullaniciID);
 
             var mmMessage = MezuniyetBus.MezuniyetBasvuruKriterKontrol(model.EnstituKod, mezuniyetBasvurulariId);
-           
+
+            if (mmMessage.IsSuccess && !mezuniyetBasvurulariId.HasValue)
+            {
+                if (studentInfo.OgrenciTez.TEZ_DILI.IsNullOrWhiteSpace())
+                {
+                    mmMessage.Messages.Add("OBS sisteminde tez bilgilerinize ait tez dili bilginiz boş gelmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+                    mmMessage.IsSuccess = false;
+                }
+                else
+                {
+                    if (studentInfo.OgrenciTez.TEZ_BASLIK.IsNullOrWhiteSpace() &&
+                        studentInfo.OgrenciTez.TEZ_BASLIK_ENG.IsNullOrWhiteSpace())
+                    {
+                        mmMessage.Messages.Add(
+                            "Tezinizin türkçe ve ingilizce başlığı bilgisi OBS sisteminde tanımlı değildir. Başvuru yapabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
+                        mmMessage.IsSuccess = false;
+                    }
+                    else if (studentInfo.IsTezDiliTr && studentInfo.OgrenciTez.TEZ_BASLIK.IsNullOrWhiteSpace())
+                    {
+                        mmMessage.Messages.Add(
+                            "Tezinizin türkçe başlığı bilgisi OBS sisteminde tanımlı değildir. Başvuru yapabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
+                        mmMessage.IsSuccess = false;
+                    }
+                    else if (!studentInfo.IsTezDiliTr && studentInfo.OgrenciTez.TEZ_BASLIK_ENG.IsNullOrWhiteSpace())
+                    {
+                        mmMessage.Messages.Add(
+                            "Tezinizin ingilizce başlığı bilgisi OBS sisteminde tanımlı değildir. Başvuru yapabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
+                        mmMessage.IsSuccess = false;
+                    }
+                }
+            }
 
             var danismanBilgi = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kul.DanismanID);
             if (!mezuniyetBasvurulariId.HasValue && mmMessage.IsSuccess)
@@ -246,7 +276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.ResimAdi = kul.ResimAdi;
                 }
                 else
-                { 
+                {
                     model.MezuniyetSurecID = MezuniyetBus.GetMezuniyetAktifSurecId(model.EnstituKod).Value;
                     model.BasvuruTarihi = DateTime.Now;
                     model.KullaniciTipID = kul.KullaniciTipID;
@@ -327,7 +357,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
 
             var mmMessage = MezuniyetBus.MezuniyetBasvuruKriterKontrol(kModel.EnstituKod, kModel.MezuniyetBasvurulariID.ToNullIntZero());
- 
+
 
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
 
@@ -346,7 +376,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         stps.Add(2);
                         mmMessage.Messages.Add("Başvuru Durumunu Seçiniz!");
                         mmMessage.MessagesDialog.Add(new MrMessage
-                            { MessageType = MsgTypeEnum.Warning, PropertyName = "MezuniyetYayinKontrolDurumID" });
+                        { MessageType = MsgTypeEnum.Warning, PropertyName = "MezuniyetYayinKontrolDurumID" });
                     }
                     else if (kModel.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi)
                     {
@@ -805,7 +835,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             return View(kModel);
-        } 
+        }
         public ActionResult GetYayinTur(int mezuniyetSurecId, int mezuniyetYayinTurId)
         {
 
@@ -1092,7 +1122,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!yetkiliKullanici && !srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.KullaniciID == UserIdentity.Current.Id);
             else if (srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             var mezuniyetBasvuru = mezuniyetBasvurularis.First();
-            var model = new KmSRTalep
+            var model = new KmSrTalep
             {
                 IsSalonSecilsin = mezuniyetBasvuru.OgrenimTipKod.IsDoktora() && mezuniyetBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlariEnum.FenBilimleri
             };
@@ -1123,13 +1153,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult RezervasyonAlPost(KmSRTalep kModel)
+        public ActionResult RezervasyonAlPost(KmSrTalep kModel)
         {
 
-            var mmMessage = new MmMessage();
-            mmMessage.IsSuccess = false;
-            mmMessage.Title = "Salon Rezervasyonu Talep İşlemi";
-            mmMessage.MessageType = MsgTypeEnum.Warning;
+            var mmMessage = new MmMessage
+            {
+                IsSuccess = false,
+                Title = "Salon Rezervasyonu Talep İşlemi",
+                MessageType = MsgTypeEnum.Warning
+            };
             var surecKayitYetki = RoleNames.MezuniyetSureciKayıt.InRoleCurrent();
 
             var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
@@ -1230,9 +1262,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var uzatmaSonSrAlmaTarihi = uzatmaAlinanSrTalebi.Tarih.AddDays(mezuniyetSureciOgrenimTip.MBSinavUzatmaSuresiGun);
                         if (kModel.Tarih > uzatmaSonSrAlmaTarihi)
-                        {
-                            string msg = "Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası salon rezervasyonu işemi son tarihi olan '" + uzatmaSonSrAlmaTarihi.ToFormatDate() + "' tarihini aştığınız için salon rezervasyonu alamazsınız.";
-                            mmMessage.Messages.Add(msg);
+                        { 
+                            mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası salon rezervasyonu işemi son tarihi olan '" + uzatmaSonSrAlmaTarihi.ToFormatDate() + "' tarihini aştığınız için salon rezervasyonu alamazsınız.");
                         }
                     }
                 }

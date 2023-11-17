@@ -246,6 +246,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 AdSoyad = s.AdSoyad,
                 ResimAdi = s.Kullanicilar != null ? s.Kullanicilar.ResimAdi : null,
                 IslemYapanIP = s.IslemYapanIP,
+                IsAktif = s.IsAktif,
                 MesajEkleris = s.MesajEkleris.ToList()
             }).First();
 

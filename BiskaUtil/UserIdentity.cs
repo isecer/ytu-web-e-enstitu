@@ -98,10 +98,10 @@ namespace BiskaUtil
 
         public void Impersonate()
         {
+            #region Impersonate
 
-            HttpContext.Current.User = this.ToPrincipal();
-
-
+            HttpContext.Current.User = this.ToPrincipal(); 
+            #endregion
         }
 
 
@@ -113,52 +113,50 @@ namespace BiskaUtil
             }
             else
             {
-                if (HttpContext.Current == null || HttpContext.Current.User == null || !HttpContext.Current.User.Identity.IsAuthenticated) return;
-
-                if (session["UserIdentity"] != null)
+                if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated)
                 {
-                    var kimlik = (UserIdentity)session["UserIdentity"];
-                    kimlik.Impersonate();
-                }
-                else if (HttpContext.Current.User != null)
-                {
-                    if (HttpContext.Current.User.Identity is NotAuthenticatedUser) return;
-                    var kimlik = Membership.GetUserIdentity(HttpContext.Current.User.Identity.Name);
-                    if (kimlik.Id > 0)
+                    UserIdentity kimlik = null;
+                    if ((session["UserIdentity"] != null))
                     {
+                        kimlik = (UserIdentity)session["UserIdentity"];
                         kimlik.Impersonate();
-                        session["Kimlik"] = kimlik;
                     }
-                    else
+                    else if (HttpContext.Current.User != null)
                     {
-                        session["Kimlik"] = null;
-                        FormsAuthentication.SignOut();
-                        if (HttpContext.Current != null)
+                        if (!(HttpContext.Current.User.Identity is NotAuthenticatedUser))
                         {
-                            try
+                            //kimlik = AccountModel.GetKimlik(HttpContext.Current.User.Identity.Name);
+                            kimlik = Membership.GetUserIdentity(HttpContext.Current.User.Identity.Name);
+                            if (kimlik.Id > 0)
                             {
-                                if (HttpContext.Current.Session != null) HttpContext.Current.Session.Abandon();
-                                // clear authentication cookie
-                                var cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "")
-                                {
-                                    Expires = DateTime.Now.AddYears(-1)
-                                };
-                                HttpContext.Current.Response.Cookies.Add(cookie1);
-
-                                // clear session cookie (not necessary for your current problem but i would recommend you do it anyway)
-                                var cookie2 = new HttpCookie("ASP.NET_SessionId", "")
-                                {
-                                    Expires = DateTime.Now.AddYears(-1)
-                                };
-                                HttpContext.Current.Response.Cookies.Add(cookie2);
+                                kimlik.Impersonate();
+                                session["Kimlik"] = kimlik;
                             }
-                            catch
+                            else
                             {
-                                // ignored
+                                session["Kimlik"] = null;
+                                FormsAuthenticationUtil.SignOut();
+                                if (HttpContext.Current != null)
+                                {
+                                    try
+                                    {
+                                        if (HttpContext.Current.Session != null) HttpContext.Current.Session.Abandon();
+                                        // clear authentication cookie
+                                        HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+                                        cookie1.Expires = DateTime.Now.AddYears(-1);
+                                        HttpContext.Current.Response.Cookies.Add(cookie1);
+
+                                        // clear session cookie (not necessary for your current problem but i would recommend you do it anyway)
+                                        HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
+                                        cookie2.Expires = DateTime.Now.AddYears(-1);
+                                        HttpContext.Current.Response.Cookies.Add(cookie2);
+                                    }
+                                    catch { }
+                                }
+                                HttpContext.Current.User = new GenericPrincipal(new NotAuthenticatedUser(), new string[0]);
+                                //IPrincipal user = HttpContext.Current.User;
                             }
                         }
-                        HttpContext.Current.User = new GenericPrincipal(new NotAuthenticatedUser(), Array.Empty<string>());
-                        //IPrincipal user = HttpContext.Current.User;
                     }
                 }
             }
@@ -166,54 +164,51 @@ namespace BiskaUtil
 
         public static void SetCurrent()
         {
-            if (HttpContext.Current == null || HttpContext.Current.User == null ||
-                !HttpContext.Current.User.Identity.IsAuthenticated || HttpContext.Current.Session == null) return;
-            if (HttpContext.Current.Session["UserIdentity"] != null)
+            if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated)
             {
-                var session = HttpContext.Current.Session;
-                var kimlik = (UserIdentity)session["UserIdentity"];
-                kimlik.Impersonate(); 
-            }
-            else if (HttpContext.Current.User != null)
-            {
-                if (HttpContext.Current.User.Identity is NotAuthenticatedUser) return;
-                var session = HttpContext.Current.Session;
-                var kimlik = Membership.GetUserIdentity(HttpContext.Current.User.Identity.Name);
-                if (kimlik.Id > 0)
+                UserIdentity kimlik = null;
+                HttpSessionState session = HttpContext.Current.Session;
+                if ((HttpContext.Current.Session != null) && (HttpContext.Current.Session["UserIdentity"] != null))
                 {
+                    kimlik = (UserIdentity)session["UserIdentity"];
                     kimlik.Impersonate();
-                    session["UserIdentity"] = kimlik;
                 }
-                else
+                else if (HttpContext.Current.Session != null && HttpContext.Current.User != null)
                 {
-                    session["UserIdentity"] = null;
-                    FormsAuthentication.SignOut();
-                    if (HttpContext.Current != null)
+                    if (!(HttpContext.Current.User.Identity is NotAuthenticatedUser))
                     {
-                        try
+                        //kimlik = AccountModel.GetKimlik(HttpContext.Current.User.Identity.Name);
+                        kimlik = Membership.GetUserIdentity(HttpContext.Current.User.Identity.Name);
+                        if (kimlik.Id > 0)
                         {
-                            if (HttpContext.Current.Session != null) HttpContext.Current.Session.Abandon();
-                            // clear authentication cookie
-                            var cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "")
-                            {
-                                Expires = DateTime.Now.AddYears(-1)
-                            };
-                            HttpContext.Current.Response.Cookies.Add(cookie1);
-
-                            // clear session cookie (not necessary for your current problem but i would recommend you do it anyway)
-                            var cookie2 = new HttpCookie("ASP.NET_SessionId", "")
-                            {
-                                Expires = DateTime.Now.AddYears(-1)
-                            };
-                            HttpContext.Current.Response.Cookies.Add(cookie2);
+                            kimlik.Impersonate();
+                            session["UserIdentity"] = kimlik;
                         }
-                        catch
+                        else
                         {
-                            // ignored
+                            session["UserIdentity"] = null;
+                            FormsAuthenticationUtil.SignOut();
+                            if (HttpContext.Current != null)
+                            {
+                                try
+                                {
+                                    if (HttpContext.Current.Session != null) HttpContext.Current.Session.Abandon();
+                                    // clear authentication cookie
+                                    HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+                                    cookie1.Expires = DateTime.Now.AddYears(-1);
+                                    HttpContext.Current.Response.Cookies.Add(cookie1);
+
+                                    // clear session cookie (not necessary for your current problem but i would recommend you do it anyway)
+                                    HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
+                                    cookie2.Expires = DateTime.Now.AddYears(-1);
+                                    HttpContext.Current.Response.Cookies.Add(cookie2);
+                                }
+                                catch { }
+                            }
+                            HttpContext.Current.User = new GenericPrincipal(new NotAuthenticatedUser(), new string[0]);
+                            //IPrincipal user = HttpContext.Current.User;
                         }
                     }
-                    HttpContext.Current.User = new GenericPrincipal(new NotAuthenticatedUser(), Array.Empty<string>());
-                    //IPrincipal user = HttpContext.Current.User;
                 }
             }
         }

@@ -238,6 +238,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     return mMessage;
                 }
 
+                 
 
 
                 var isOgrenciSureckriterlerindenMuaf = entities.MezuniyetSureciKriterMuafOgrencilers.Any(a =>

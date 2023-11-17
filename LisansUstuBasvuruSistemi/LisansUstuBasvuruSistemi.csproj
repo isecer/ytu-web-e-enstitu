@@ -1048,6 +1048,7 @@
     <Compile Include="Utilities\Extensions\IconExtension.cs" />
     <Compile Include="Utilities\Helpers\Dynamic.cs" />
     <Compile Include="Utilities\Dtos\PagerModel.cs" />
+    <Compile Include="Utilities\Helpers\JsonConverter.cs" />
     <Compile Include="Utilities\Logs\RequestLogger.cs" />
     <Compile Include="Utilities\Filters\IPFilterAttribute.cs" />
     <Compile Include="Utilities\SystemData\ComboData.cs" />
@@ -5601,7 +5602,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\Genel\RprAnket.resx">
       <DependentUpon>RprAnket.cs</DependentUpon>
     </EmbeddedResource>

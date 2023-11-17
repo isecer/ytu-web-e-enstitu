@@ -1132,7 +1132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var toplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
             var tiAraRapor = _entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
-            var model = new KmSRTalep();
+            var model = new KmSrTalep();
             if (!toplantiYetki && tiAraRapor.TIBasvuru.TezDanismanID != UserIdentity.Current.Id) model.YetkisizErisim = true;
             else
             {
@@ -1181,7 +1181,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
         [HttpPost]
-        public ActionResult RezervasyonAlPost(KmSRTalep kModel, bool isSendMail = true)
+        public ActionResult RezervasyonAlPost(KmSrTalep kModel, bool isSendMail = true)
         {
             var mmMessage = new MmMessage
             {

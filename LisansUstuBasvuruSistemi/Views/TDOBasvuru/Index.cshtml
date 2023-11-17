@@ -2,14 +2,11 @@
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using LisansUstuBasvuruSistemi.Utilities.Extensions
-@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.Extensions 
 @model  FmTdoBasvuruDto
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
-    var kyetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
+    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel; 
 }
 
 <div class="row">
@@ -228,7 +225,7 @@
             title:'||',
             popupTipId:@DuyuruPopupTipiEnum.TdoBasvuru,
             btnAdi: 'Başvuru Yap',
-            redirectUrl: '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})',
+            redirectUrl: '@Url.Action("BasvuruYap",new { Model.KullaniciID})',
             callbackFnc: ''
         }
         ShowDuyuru(popupSetting);

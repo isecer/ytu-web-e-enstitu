@@ -7,7 +7,6 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
 
@@ -15,24 +14,25 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ValueConverterExtension
     {
-        public static string ToJson(this object obj)
-        {
-            return JsonConvert.SerializeObject(obj); ;
-        }
+
         public static string ToStrObj(this object obj)
         {
-            if (obj != null) return Convert.ToString(obj);
-            else return (string)null;
+            return obj != null ? Convert.ToString(obj) : null;
         }
 
         public static string ToStrObjEmptString(this object obj)
         {
-            if (obj != null)
-            {
-                var str = Convert.ToString(obj);
-                return str.Trim();
-            }
-            else return "";
+            if (obj == null) return "";
+            var str = Convert.ToString(obj);
+            return str.Trim();
+        }
+        public static string ToFormatWithPrecision(this decimal number, int precision = 2)
+        {
+            return number % 1 == 0 ? number.ToString($"N0") : number.ToString($"N{precision}");
+        }
+        public static string ToFormatWithPrecision(this decimal? number, int precision = 2)
+        {
+            return !number.HasValue ? string.Empty : number.Value.ToFormatWithPrecision(precision);
         }
         public static decimal? ToMoney(this string moneyString)
         {
@@ -55,30 +55,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static decimal? ToDecimalObj(this object obj)
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDecimal(obj);
-            else return (decimal?)null;
+            return null;
         }
         public static bool? ToBoolean(this string @string)
         {
-            bool? ok = null;
-            if (string.IsNullOrEmpty(@string)) return ok;
+
+            if (string.IsNullOrEmpty(@string)) return null;
 
             if (@string.ToUpper() == true.ToString().ToUpper() ||
                 @string == "1" ||
                 @string.ToLower() == "evet" ||
                 @string.ToLower() == "var" ||
                 @string.ToLower() == "on")
-                ok = true;
+                return true;
             if (@string.ToUpper() == false.ToString().ToUpper() ||
                 @string == "0" ||
                 @string.ToLower() == "hayır" ||
                 @string.ToLower() == "yok" ||
                 @string.ToLower() == "off")
-                ok = false;
-            return ok;
+                return false;
+            return null;
         }
         public static bool ToBoolean(this string @string, bool defaultValue)
         {
-            bool ok = defaultValue;
+            var ok = defaultValue;
             if (string.IsNullOrEmpty(@string)) return ok;
 
             if (@string.ToUpper() == true.ToString().ToUpper() ||
@@ -280,7 +280,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return rsm;
         }
 
-       
+
         public static DateTime ToGetBitisTarihi(this DateTime baslangicTarihi, int ay)
         {
             // İki tarih arasındaki toplam ay süresini hesaplayın

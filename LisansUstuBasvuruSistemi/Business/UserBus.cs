@@ -217,7 +217,7 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 var menus = new List<Menuler>();
                 var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == userName);
-                if (kull == null) FormsAuthentication.SignOut();
+                if (kull == null) FormsAuthenticationUtil.SignOut();
                 var kullRoll = kull.Rollers.SelectMany(s => s.Menulers).Distinct().OrderBy(o => o.SiraNo).ToList();
                 var ygRoll = kull.YetkiGruplari.YetkiGrupRolleris.SelectMany(s => s.Roller.Menulers).Distinct().OrderBy(o => o.SiraNo).ToList();
                 menus.AddRange(kullRoll);
@@ -249,7 +249,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 }
 
-                FormsAuthentication.SignOut();
+                FormsAuthenticationUtil.SignOut();
                 throw new SecurityException("Kullanıcı Tanımlı Değil");
 
             }
@@ -352,7 +352,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var kull = UserBus.GetUser(userName);
             if (kull == null)
             {
-                FormsAuthentication.SignOut();
+                FormsAuthenticationUtil.SignOut();
                 return null;
             }
 

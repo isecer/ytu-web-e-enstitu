@@ -158,7 +158,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent();
 
 
-            var model = new KmSRTalep
+            var model = new KmSrTalep
             {
                 EnstituKod = enstituKod
             };
@@ -276,7 +276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult TalepYap(KmSRTalep kModel, string ekd)
+        public ActionResult TalepYap(KmSrTalep kModel, string ekd)
         {
 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);

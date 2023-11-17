@@ -136,7 +136,7 @@
            
         }
     </style>
-</head>
+</head> 
 <body class="@(boxedOrFullWidth?("page-container-boxed "+backgroundImage):"") ">
     <div class="js">
         <div id="preloader"></div>
@@ -251,7 +251,7 @@
                     </li>
                     <!-- END TOGGLE NAVIGATION -->
 
-                    @if (BiskaUtil.UserIdentity.Current.IsAuthenticated)
+                    @if (UserIdentity.Current.IsAuthenticated)
                     {
                         var prevUserKey = UserIdentity.Current.Informations.FirstOrDefault(p => p.Key == "PrevUserKey");
                         <!-- PROFILE -->
@@ -529,7 +529,7 @@
                     }
 
                     <!-- LOGIN BLOCk -->
-                    @if (!BiskaUtil.UserIdentity.Current.IsAuthenticated)
+                    @if (!UserIdentity.Current.IsAuthenticated)
                     {
                         <li class="xn-icon-button pull-right" id="loginPanel">
                             <a href="javascript:void(0);" onclick="$('#UserName').focus()"><span class="fa fa-lock"></span></a>

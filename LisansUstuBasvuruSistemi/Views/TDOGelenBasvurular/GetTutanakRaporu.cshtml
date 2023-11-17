@@ -7,57 +7,67 @@
         <div class="panel-body">
             @using (Ajax.BeginForm("GetTutanakRaporuKontrolu", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TutanakRprForm" }))
             {
-            <div class="panel-body form-group-separated">
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Rapor Türü</label>
-                    <div class="col-md-9 col-xs-9">
-                        <select id="tutanakTipId" name="tutanakTipId" class="form-control">
-                            <option selected="selected" value="1">Tez/Dil/Danışman Başvuru Listesi (Excel)</option>
-                            <option value="2">Tez/Dil/Danışman Tutanak Çıktısı (Word)</option>
-                            <option value="3">Tez/Dil/Danışman Tutanak Çıktısı (Excel)</option>
-                            <option value="4">Eş Danışman Başvuru Listesi (Excel)</option>
-                        </select>
+                <div class="panel-body form-group-separated">
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Rapor Türü</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="tutanakTipId" name="tutanakTipId" class="form-control">
+                                <option selected="selected" value="1">Danışman Başvuru Listesi (Excel)</option>
+                                <option value="2">Tutanak Çıktısı (Word)</option>
+                                <option value="3">Tutanak Çıktısı (Excel)</option>
+                                <option value="4">Eş Danışman Başvuru Listesi (Excel)</option>
+                            </select>
+                        </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Talep Tipi</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="isDegisiklikOrYeniOneri" name="isDegisiklikOrYeniOneri" class="form-control">
+                                <option selected="selected" value="">Tümü</option>
+                                <option value="false">Yeni Öneriler</option>
+                                <option value="true">Değişiklikler</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Eyk Onay Durum</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="isEykdaOnayOrGonderim" name="isEykdaOnayOrGonderim" class="form-control">
+                                <option value="false">Eyk'ya Gönderilenler</option>
+                                <option selected="selected" value="true">Eyk'da Onaylananlar</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
+                        <div class="col-md-9 col-xs-9">
+                            <table>
+                                <tr>
+                                    <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BasTar" name="BasTar"> </td>
+                                    <td>/</td>
+                                    <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BitTar" name="BitTar"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                            <label class="col-md-3 col-xs-3 control-label">Rapor Tarihi</label>
+                            <div class="col-md-9 col-xs-9">
+                                <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="RaporTarihi" name="RaporTarihi">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xs-3 control-label">Rapor Sayısı</label>
+                            <div class="col-md-9 col-xs-9">
+                                <input class="form-control" autocomplete="off" size="10" type="text" id="Sayi" name="Sayi">
+                            </div>
+                        </div>*@
                 </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Eyk Onay Durum</label>
-                    <div class="col-md-9 col-xs-9">
-                        <select id="isEykdaOnayOrGonderim" name="isEykdaOnayOrGonderim" class="form-control">
-                            <option value="false">Eyk'ya Gönderilenler</option>
-                            <option  selected="selected" value="true">Eyk'da Onaylananlar</option> 
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
-                    <div class="col-md-9 col-xs-9">
-                        <table>
-                            <tr>
-                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BasTar" name="BasTar"> </td>
-                                <td>/</td>
-                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BitTar" name="BitTar"></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                @*<div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Rapor Tarihi</label>
-                    <div class="col-md-9 col-xs-9">
-                        <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="RaporTarihi" name="RaporTarihi">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Rapor Sayısı</label>
-                    <div class="col-md-9 col-xs-9">
-                        <input class="form-control" autocomplete="off" size="10" type="text" id="Sayi" name="Sayi">
-                    </div>
-                </div>*@
-            </div>
             }
         </div>
     </div>
 </div>
-<script> 
+<script>
     $(function () {
         $('#BasTar').datetimepicker({
             lang: 'tr',

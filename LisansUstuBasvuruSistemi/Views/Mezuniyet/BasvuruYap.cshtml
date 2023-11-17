@@ -2,14 +2,30 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
-@using LisansUstuBasvuruSistemi.Business 
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmMezuniyetBasvuru
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var mmMessage = (MmMessage)ViewBag._MmMessage;
-    var bsvDurum = (MezuniyetYayinKontrolDurumDto)ViewBag.MezuniyetYayinKontrolDurumu; 
+    var istezBasliklariAyni = Model.TezBaslikTr == Model.TezBaslikEn;
+    var bsvDurum = (MezuniyetYayinKontrolDurumDto)ViewBag.MezuniyetYayinKontrolDurumu;
+
+    var tezBaslikTrReadOnly = true;
+    var tezBaslikEnReadOnly = true;
+
+    if (Model.IsTezDiliTr.HasValue)
+    {
+        if (!Model.IsTezDiliTr.Value)
+        {
+            tezBaslikTrReadOnly = !istezBasliklariAyni && !Model.TezBaslikTr.IsNullOrWhiteSpace();
+        }
+        if (Model.IsTezDiliTr.Value)
+        {
+            tezBaslikEnReadOnly = !istezBasliklariAyni && !Model.TezBaslikEn.IsNullOrWhiteSpace();
+        }
+    }
 }
 
 <div class="row">
@@ -139,26 +155,29 @@
                                                 <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" />
                                                 <input type="text" style="display:none;" id="ResimAdi" name="ResimAdi" value="@Model.ResimAdi" />
                                                 <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
+                                                <input type="text" style="display:none;" id="IsTezDiliTr" name="IsTezDiliTr" value="@(Model.IsTezDiliTr.HasValue?Model.IsTezDiliTr.Value.ToString().ToLower():"")" />
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <select id="IsTezDiliTr" name="IsTezDiliTr" class="form-control">
-                                                            <option></option>
-                                                            <option value="true" @(Model.IsTezDiliTr == true ? "selected" : "")>Türkçe</option>
-                                                            <option value="false" @(Model.IsTezDiliTr == false ? "selected" : "")>İngilizce</option>
-                                                        </select>
+                                                        @(Model.IsTezDiliTr.HasValue?(Model.IsTezDiliTr.Value?"Türkçe":"İngilizce"):"-----")
+                                                        @*<select class="form-control">
+                                                                <option></option>
+                                                                <option value="true" @(Model.IsTezDiliTr == true ? "selected" : "")>Türkçe</option>
+                                                                <option value="false" @(Model.IsTezDiliTr == false ? "selected" : "")>İngilizce</option>
+                                                            </select>*@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (Türkçe)</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="250" value="@Model.TezBaslikTr" class="form-control" />
+
+                                                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="250" @(tezBaslikTrReadOnly ? "readonly" : "") value="@Model.TezBaslikTr" class="form-control" style="color:black;" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (İngilizce)</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="250" value="@Model.TezBaslikEn" class="form-control" />
+                                                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="250" @(tezBaslikEnReadOnly ? "readonly" : "") value="@Model.TezBaslikEn" class="form-control" style="color:black;" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

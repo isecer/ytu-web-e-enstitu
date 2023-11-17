@@ -181,7 +181,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (toBasvuruSavunma == null && !basvuruAlimiAktif)
             {
-                mMessage.Messages.Add("Tez Önerisi Savunma başvuru süreci pasif durumdadır. Yeni bir Tez Önerisi Savunma oluşturamazsınız. Detaylı bilgi almak için duyuruları takip edebilirsiniz ya da Enstitünüz ile görüşebilirsiniz.");
+                mMessage.Messages.Add("Tez Öneri Savunma başvuru süreci pasif durumdadır. Yeni bir Tez Öneri Savunma başvurusu oluşturamazsınız. Detaylı bilgi almak için duyuruları takip edebilirsiniz ya da Enstitünüz ile görüşebilirsiniz.");
             }
             else if (tosUniqueId.HasValue && toBasvuruSavunma.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue))
             {
@@ -189,7 +189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (!tosUniqueId.HasValue && toBasvuru.ToBasvuruSavunmas.Any(a => !a.ToBasvuruSavunmaDurumID.HasValue))
             {
-                mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Önerisi Savunma yapamazsınız. ");
+                mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Öneri Savunma başvurusu yapamazsınız. ");
             }
             else if (!tosUniqueId.HasValue && !kul.DanismanID.HasValue)
             {
@@ -204,6 +204,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
                 else mMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın lisansustu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
+            }
+            else if (toBasvuruSavunma==null && studentInfo.OgrenciTez.TEZ_DILI.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("OBS sisteminde tez bilgilerinize ait tez dili bilginiz boş gelmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+
             }
             else
             {
@@ -251,6 +256,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
 
+               
                 if (!tosUniqueId.HasValue)
                 {
                     mMessage.Messages.AddRange(TezOneriSavunmaBus.TosKalanHakSavunmaBaslangicTarihKriter(toUniqueId).MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message));
@@ -440,11 +446,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (toBasvuruSavunma == null && !basvuruAlimiAktif)
             {
-                mMessage.Messages.Add("Tez Önerisi Savunma başvuru süreci pasif durumdadır. Yeni bir Tez Önerisi Savunma oluşturamazsınız. Detaylı bilgi almak için duyuruları takip edebilirsiniz ya da Enstitünüz ile görüşebilirsiniz.");
+                mMessage.Messages.Add("Tez Öneri Savunma başvuru süreci pasif durumdadır. Yeni bir Tez Öneri Savunma başvurusu oluşturamazsınız. Detaylı bilgi almak için duyuruları takip edebilirsiniz ya da Enstitünüz ile görüşebilirsiniz.");
             }
             else if (toBasvuru.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaID != kModel.ToBasvuruSavunmaID && !a.ToBasvuruSavunmaDurumID.HasValue))
             {
-                mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Önerisi Savunma yapamazsınız. ");
+                mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Öneri Savunma başvurusu yapamazsınız. ");
             }
 
             else if (toBasvuruSavunma == null && !kul.DanismanID.HasValue && (danismanTc.IsNullOrWhiteSpace() || danismanTc.Length != 11))
@@ -709,7 +715,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var toplantiYetki = RoleNames.TosToplantiTalebiYap.InRoleCurrent();
             var toBasvuruSavunma = _entities.ToBasvuruSavunmas.First(p => p.UniqueID == tosUniqueId);
-            var model = new KmSRTalep();
+            var model = new KmSrTalep();
             if (!toplantiYetki && toBasvuruSavunma.ToBasvuru.TezDanismanID != UserIdentity.Current.Id) model.YetkisizErisim = true;
             else
             {
@@ -761,7 +767,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
         [HttpPost]
-        public ActionResult RezervasyonAlPost(KmSRTalep kModel, bool isSendMail = true)
+        public ActionResult RezervasyonAlPost(KmSrTalep kModel, bool isSendMail = true)
         {
             var mmMessage = new MmMessage
             {

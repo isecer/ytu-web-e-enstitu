@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.Kullanicilar)]
         public ActionResult Index()
         {
-           
+
             return Index(new FmKullanicilarDto() { PageSize = 15, Expand = false });
         }
         [HttpPost]
@@ -820,7 +820,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.KullaniciProgramlaris.Add(new KullaniciProgramlari { KullaniciID = kullaniciId, ProgramKod = item });
             }
             _entities.SaveChanges();
-         
+
             MessageBox.Show("Program Yetkileri Kaydedildi", MessageBox.MessageType.Success);
             return RedirectToAction("Index");
         }
@@ -867,7 +867,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var prevUserKey = Guid.NewGuid().ToString();
 
-            FormsAuthentication.SetAuthCookie(kullanici.KullaniciAdi,   false);
+            FormsAuthenticationUtil.SetAuthCookie(kullanici.KullaniciAdi, String.Empty, false);
             var ui = UserBus.GetUserIdentity(kullanici.KullaniciAdi);
             ui.Informations.Add("PrevUserKey", prevUserKey);
             ui.Informations.Add(prevUserKey, UserIdentity.Current.Id);

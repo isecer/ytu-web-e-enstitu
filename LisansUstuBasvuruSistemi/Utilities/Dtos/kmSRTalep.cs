@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class KmSRTalep : SRTalepleri
+    public class KmSrTalep : SRTalepleri
     { 
         public bool YetkisizErisim { get; set; }
         public string AdSoyad { get; set; }
@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string MzRowID { get; set; }
         public bool IsSalonSecilsin { get; set; }
         public DateTime? SonSrTarihi { get; set; }
-        public KmSRTalep()
+        public KmSrTalep()
         {
             JuriAdi = new List<string>();
             Telefon = new List<string>();

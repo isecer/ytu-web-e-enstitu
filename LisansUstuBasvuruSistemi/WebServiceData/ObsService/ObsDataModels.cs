@@ -11,13 +11,13 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
     {
         public bool KayitVar { get; set; }
         public bool Hata { get; set; }
-        public bool IsDanismanHesabiBulunamadi { get; set; }
         public string HataMsj { get; set; }
         public int? BaslangicYil { get; set; }
         public int? BitisYil { get; set; }
         public int? DonemID { get; set; }
         public int OkuduguDonemNo { get; set; }
         public DateTime? KayitTarihi { get; set; }
+        public bool IsDanismanHesabiBulunamadi { get; set; }
 
 
         public StudentDersModel AktifDonemDers = new StudentDersModel();

@@ -199,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             loginUser.KullaniciID, tdoBasvuruId);
                     }
                 }
-                FormsAuthentication.SetAuthCookie(loginUser.KullaniciAdi, rememberMe.Value);
+                FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi,String.Empty, rememberMe.Value);
                 UserBus.SetLastLogon();
             }
             return mmMessage.ToJsonResult();
@@ -214,7 +214,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kulId);
                 kul.LastLogonDate = DateTime.Now;
                 _entities.SaveChanges();
-                FormsAuthentication.SignOut();
+                FormsAuthenticationUtil.SignOut();
             }
 
             mmMessage.ReturnUrl = returnUrl.IsNullOrWhiteSpace() ? Url.Action("Index", "Home") : returnUrl;
