@@ -113,45 +113,7 @@
                     <td class="ValueTd form-group">
                         @Html.DropDownList("TDProgramKod", Model.SListTdProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
                     </td>
-                </tr>
-                <tr class="dilRow">
-                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Danışman Dil Yeterlilik Bilgileri</td>
-                </tr>
-                <tr class="dilRow">
-                    <td class="CaptionTd">Sınav Adı</td>
-                    <td class="CaptionTd">:</td>
-                    <td class="ValueTd form-group">
-                        @Html.DropDownList("TDSinavTipID", Model.SListTdSinav, new { @class = "form-control", @style = "color:black;", id = "TDSinavTipID", onchange = "SinavTipKontrol(this,'TDSinavPuani','TdSpInp');" })
-                    </td>
-                </tr>
-                <tr class="TdSinavUni dilRow">
-                    <td class="CaptionTd">Üniversite Adı</td>
-                    <td class="CaptionTd">:</td>
-                    <td class="ValueTd form-group">
-                        <input type="text" name="TDUniversiteAdi" id="TDUniversiteAdi" maxlength="256" autocomplete="off" value="@Model.TDUniversiteAdi" class="form-control" style="color: black;" />
-                    </td>
-                </tr>
-                <tr class="TdSp dilRow">
-                    <td class="CaptionTd">Sınav Yılı</td>
-                    <td class="CaptionTd">:</td>
-                    <td class="ValueTd form-group">
-                        <input type="text" name="TDSinavYili" id="TDSinavYili" maxlength="4" autocomplete="off" value="@Model.TDSinavYili" class="form-control" style="color: black;" />
-                    </td>
-                </tr>
-                <tr class="TdSp dilRow">
-                    <td class="CaptionTd">Sınav Puanı</td>
-                    <td class="CaptionTd">:</td>
-                    <td class="ValueTd form-group TdSpInp">
-                        @if (Model.SListTdSinavNot == null)
-                        {
-                            <input type="text" name="TDSinavPuani" id="TDSinavPuani" maxlength="64" autocomplete="off" value="@Model.TDSinavPuani" class="form-control" style="color: black;" />
-                        }
-                        else
-                        {
-                            @Html.DropDownList("TDSinavPuani", Model.SListTdSinavNot, new { @class = "form-control", id = "TDSinavPuani" })
-                        }
-                    </td>
-                </tr>
+                </tr> 
         </table>
     </div>
 
@@ -162,32 +124,14 @@
     {
         var showDilRow = $('#IsTezDiliTr').val() == "false";
         if (showDilRow) {
-            $('.dilRow').removeClass('hide');
-            if ($('#TDSinavTipID').val() == '-1')
-            {
-                $('.TdSinavUni').removeClass('hide');
-                $('.TdSp').addClass('hide');
-            }
-            else
-            {
-                $('.TdSinavUni').addClass('hide');
-                $('.TdSp').removeClass('hide');
-            }
+            $('.dilRow').removeClass('hide'); 
         }
         else
         {
             $('.dilRow').addClass('hide');
         }
     }
-    function SinavTipKontrol(sndr,inp,cls) {
-        if ($(sndr).val() == "-1") {
-            $('.TdSp').addClass('hide');
-            $('.TdSinavUni').removeClass('hide');
-        }
-        else {
-            $('.TdSp').removeClass('hide');
-            $('.TdSinavUni').addClass('hide');
-        }
+    function SinavTipKontrol(sndr,inp,cls) { 
         var _panel = $('#bbTdoForm');
         PanelRefresh(_panel, false);
         var sndrVal = $(sndr).val();

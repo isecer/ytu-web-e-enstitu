@@ -51,7 +51,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 {
                     var secilenJuri = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.MezuniyetJuriOneriFormuJuriID == mezuniyetJuriOneriFormuJuriId);
                     xrCellJuriAdSoyad.Text = secilenJuri.UnvanAdi + " " + secilenJuri.AdSoyad;
-                    xrCellJuriUniversiteAdi.Text = secilenJuri.UniversiteID.HasValue ? secilenJuri.Universiteler.Ad.ToUpper() : secilenJuri.UniversiteAdi.ToUpper();
+                    xrCellJuriUniversiteAdi.Text = secilenJuri.UniversiteAdi.ToUpper();
                     xrCellJuriTelefon.Text = "";
                     xrCellJuriFaks.Text = "";
                     xrCellJuriEPosta.Text = secilenJuri.EMail;

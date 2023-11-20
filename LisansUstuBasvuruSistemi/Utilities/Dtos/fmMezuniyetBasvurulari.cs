@@ -26,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? ToplamBasvurulanProgram { get; set; }
         public int? MezuniyetYayinKontrolDurumID { get; set; }
         public int? OgrenimTipKod { get; set; }
+        public bool? IsTezDiliTr { get; set; }
         public string ProgramKod { get; set; }
         public string AnabilimDaliKod { get; set; }
         public int? SRDurumID { get; set; }

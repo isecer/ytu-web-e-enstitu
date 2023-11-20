@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -17,7 +18,7 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 namespace LisansUstuBasvuruSistemi.Business
 {
     public static class MezuniyetBus
-    {
+    { 
         // tezli Yl öğrencilerinin mezuniyet başvurusu için belli bir dönem okuyu ondan sonra başvurabilirler 31-03-2016 tarihi itibari ile 4 dönem okumaları gerekir.
         public static DateTime MezuniyetDonemKontrolKriterBasTar = new DateTime(2016, 03, 31);
 
@@ -107,7 +108,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LisansustuBasvuruSistemiEntities())
             {
 
-                
+
                 if (mezuniyetBasvurulariId > 0)
                 {
                     var basvuru = entities.MezuniyetBasvurularis.FirstOrDefault(p =>
@@ -238,7 +239,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     return mMessage;
                 }
 
-                 
+
 
 
                 var isOgrenciSureckriterlerindenMuaf = entities.MezuniyetSureciKriterMuafOgrencilers.Any(a =>
@@ -330,221 +331,6 @@ namespace LisansUstuBasvuruSistemi.Business
             }
 
         }
-        //public static MmMessage MezuniyetSurecAktifKontrol(string enstituKod, int? mezuniyetBasvurulariId = null)
-        //{
-        //    var messageModel = new MmMessage();
-        //    using (var db = new LisansustuBasvuruSistemiEntities())
-        //    {
-        //        var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-        //        var kul = db.Kullanicilars.First(f => f.KullaniciID == UserIdentity.Current.Id);
-        //        var basvuruVar = db.MezuniyetBasvurularis.Any(p =>
-        //                                                           kul.ProgramKod == p.ProgramKod &&
-        //                                                           kul.OgrenciNo == p.OgrenciNo &&
-        //                                                           kul.OgrenimTipKod == p.OgrenimTipKod &&
-        //                                                           p.KullaniciID == kul.KullaniciID &&
-        //                                                           p.MezuniyetBasvurulariID != mezuniyetBasvurulariId &&
-        //                                                           (p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi || p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi));
-
-        //        if (basvuruVar)
-        //        {
-        //            messageModel.IsSuccess = false;
-        //            messageModel.Messages.Add("Okuduğunuz program için zaten bir başvurunuz bulunmakta. Tekrar başvuru yapamazsınız.");
-        //            return messageModel;
-
-        //        }
-        //        if (mezuniyetBasvurulariId.HasValue)
-        //        {
-        //            var basvuru = db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId.Value);
-        //            if (basvuru == null)
-        //            {
-        //                messageModel.IsSuccess = false;
-        //                messageModel.Messages.Add("Düzenlenmek istenen Mezuniyet Başvurusu sistemde bulunamadı.");
-        //            }
-        //            else
-        //            {
-
-        //                if (basvuru.MezuniyetSureci.EnstituKod != enstituKod)
-        //                {
-        //                    enstituKod = basvuru.MezuniyetSureci.EnstituKod;
-        //                }
-        //                if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
-        //                {
-        //                    messageModel.IsSuccess = false;
-        //                    messageModel.Messages.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
-        //                }
-        //                else if (!IsSurecAktif(basvuru.MezuniyetSurecID) && UserIdentity.Current.IsAdmin == false)
-        //                {
-        //                    messageModel.IsSuccess = false;
-        //                    messageModel.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
-
-        //                }
-        //                if (kayitYetki == false && basvuru.KullaniciID != UserIdentity.Current.Id)
-        //                {
-        //                    messageModel.IsSuccess = false;
-        //                    messageModel.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
-        //                }
-        //                else if (kayitYetki == false && (basvuru.IsDanismanOnay == true))
-        //                {
-        //                    messageModel.IsSuccess = false;
-        //                    messageModel.Messages.Add("Danışman tarafından onaylanan başvurunuzda düzenleme işlemi yapamazsınız!");
-        //                }
-
-        //            }
-        //        }
-        //        else
-        //        {
-        //            int? mezuniyetSurecId = GetMezuniyetAktifSurecId(enstituKod);
-        //            messageModel.IsSuccess = mezuniyetSurecId.HasValue;
-
-        //            if (messageModel.IsSuccess == false)
-        //            {
-        //                messageModel.Messages.Add("Başvuru Süreci Kapalı");
-        //            }
-        //            else if (!(kul.KullaniciTipleri.BasvuruYapabilir))
-        //            {
-        //                messageModel.IsSuccess = false;
-        //                messageModel.Messages.Add("Kullanıcı Hesap Türünüz için Başvuru İşlemleri Kapalıdır.");
-        //            }
-        //            else
-        //            {
-        //                if (kul.YtuOgrencisi)
-        //                {
-        //                    if (kul.OgrenimDurumID != OgrenimDurum.HalenOğrenci)
-        //                    {
-        //                        messageModel.IsSuccess = false;
-        //                        messageModel.Messages.Add(
-        //                            "Mezuniyet Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
-        //                    }
-        //                    else if (kul.KayitDonemID.HasValue == false)
-        //                    {
-        //                        messageModel.IsSuccess = false;
-        //                        messageModel.Messages.Add("Kayıt Tarihi Bilginiz Eksik Başvuru Yapamazsınız");
-        //                    }
-        //                    else if (kul.Programlar.AnabilimDallari.EnstituKod != enstituKod)
-
-        //                    {
-        //                        messageModel.IsSuccess = false;
-        //                        messageModel.Messages.Add("Bu enstitüye mezuniyet başvurusu yapamazsınız!");
-        //                        return messageModel;
-        //                    }
-
-        //                    //var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kul.KullaniciID);
-
-        //                    //if (studentInfo.IsTezDiliTr && studentInfo.OgrenciTez.TEZ_BASLIK.IsNullOrWhiteSpace())
-        //                    //    messageModel.Messages.Add("Türkçe tez başlığınızın bilgisi OBS sisteminde tanımlı olmadığından başvuru yapamazsınız. Bu durumu enstitünüze iletiniz.");
-
-        //                    //if (!studentInfo.IsTezDiliTr && studentInfo.OgrenciTez.TEZ_BASLIK_ENG.IsNullOrWhiteSpace())
-        //                    //    messageModel.Messages.Add("İngilice Tez başlığınızın bilgisi OBS sisteminde tanımlı olmadığından başvuru yapamazsınız. Bu durumu enstitünüze iletiniz.");
-
-
-
-
-        //                    if (IsMezuniyetSureciOgrenimTipUygun(mezuniyetSurecId.Value, kul.KullaniciID) == false)
-        //                    {
-        //                        var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
-        //                            .OgrenimTipAdi;
-        //                        messageModel.IsSuccess = false;
-        //                        messageModel.Messages.Add(otsAdi +
-        //                                         " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar");
-        //                    }
-        //                    else if (kul.KullaniciID != UserIdentity.Current.Id &&
-        //                             kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans &&
-        //                             (kul.KayitTarihi > MezuniyetDonemKontrolKriterBasTar && MezuniyetBus
-        //                                 .GetCmbOkunanDonemList(mezuniyetSurecId.Value, kul.KayitYilBaslangic.Value,
-        //                                     kul.KayitDonemID.Value).Count < 4))
-        //                    {
-        //                        var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
-        //                            .OgrenimTipAdi;
-        //                        messageModel.IsSuccess = false;
-        //                        messageModel.Messages.Add(otsAdi +
-        //                                         " öğrenim seviyesi okuyan öğrencilerin mezuniyet başvurusu için en az 4 dönem okumaları gerekmektedir.");
-        //                    }
-        //                    else
-        //                    {
-        //                        if (!db.MezuniyetSureciKriterMuafOgrencilers.Any(a =>
-        //                                a.MezuniyetSurecID == mezuniyetSurecId.Value &&
-        //                                a.KullaniciID == kul.KullaniciID))
-        //                        {
-
-
-        //                            var basvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.First(p =>
-        //                                p.MezuniyetSurecID == mezuniyetSurecId.Value &&
-        //                                p.OgrenimTipKod == kul.OgrenimTipKod);
-        //                            var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri
-        //                                .MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',')
-        //                                .Where(p => !p.IsNullOrWhiteSpace()).ToList();
-
-        //                            var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
-        //                            var bkMsg = new List<string>();
-        //                            if (basvuruSonDonemSecilecekDersKodlari.Any() &&
-        //                                ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p =>
-        //                                    basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) !=
-        //                                basvuruSonDonemSecilecekDersKodlari.Count)
-        //                            {
-        //                                bkMsg.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) +
-        //                                          " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
-        //                            }
-
-        //                            if (basvuruKriterleri.MBasvuruToplamKrediKriteri >
-        //                                ogrenciBilgi.AktifDonemDers.ToplamKredi)
-        //                            {
-        //                                bkMsg.Add("Toplam Kredi sayınız " +
-        //                                          basvuruKriterleri.MBasvuruToplamKrediKriteri +
-        //                                          " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " +
-        //                                          ogrenciBilgi.AktifDonemDers.ToplamKredi);
-
-        //                            }
-        //                            if (!basvuruKriterleri.MBasvuruEtikNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
-        //                            {
-        //                                bkMsg.Add("Etik dersi için ders notu " + basvuruKriterleri.MBasvuruEtikNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
-        //                            }
-        //                            if (!basvuruKriterleri.MBasvuruSeminerNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
-        //                            {
-        //                                bkMsg.Add("Seminer dersi için ders notu " + basvuruKriterleri.MBasvuruSeminerNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
-        //                            }
-        //                            if (basvuruKriterleri.MBasvuruAGNOKriteri > ogrenciBilgi.AktifDonemDers.Agno)
-        //                            {
-        //                                bkMsg.Add("Ortalamanız " + basvuruKriterleri.MBasvuruAGNOKriteri +
-        //                                          " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " +
-        //                                          ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
-
-        //                            }
-
-        //                            if (basvuruKriterleri.MBasvuruAKTSKriteri >
-        //                                ogrenciBilgi.AktifDonemDers.ToplamAkts)
-        //                            {
-        //                                bkMsg.Add("Akts toplamınız " + basvuruKriterleri.MBasvuruAKTSKriteri +
-        //                                          " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " +
-        //                                          ogrenciBilgi.AktifDonemDers.ToplamAkts);
-
-        //                            }
-
-        //                            if (bkMsg.Count > 0)
-        //                            {
-        //                                var otsAdi = db.OgrenimTipleris
-        //                                    .First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
-        //                                    .OgrenimTipAdi;
-        //                                messageModel.Messages.Add(otsAdi +
-        //                                                 " mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
-        //                                messageModel.Messages.AddRange(bkMsg);
-        //                                messageModel.IsSuccess = false;
-        //                            }
-        //                        }
-        //                    }
-
-        //                }
-        //                else
-        //                {
-        //                    messageModel.IsSuccess = false;
-        //                    messageModel.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Hesap bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
-        //                }
-        //            }
-        //        }
-
-        //    }
-        //    return messageModel;
-
-        //}
         public static KmMezuniyetBasvuru GetMezuniyetBasvuruBilgi(int mezuniyetBasvurulariId)
         {
             var model = new KmMezuniyetBasvuru();
@@ -790,13 +576,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.MezuniyetJuriOneriFormlaris = db.MezuniyetJuriOneriFormlaris.Include("MezuniyetJuriOneriFormuJurileris").Where(p => p.MezuniyetBasvurulariID == basvuru.MezuniyetBasvurulariID).ToList();
                 model.MezuniyetBasvurulariTezTeslimFormlaris = basvuru.MezuniyetBasvurulariTezTeslimFormlaris;
 
-                foreach (var item in model.MezuniyetJuriOneriFormlaris.SelectMany(s => s.MezuniyetJuriOneriFormuJurileris).Where(p => p.UniversiteID.HasValue))
-                {
-
-                    item.UniversiteAdi = item.Universiteler.Ad;
-                }
-
-
                 model.EYKYaGonderildi = model.MezuniyetJuriOneriFormlaris.Select(s => s.EYKYaGonderildi).FirstOrDefault();
                 model.EYKDaOnaylandi = model.MezuniyetJuriOneriFormlaris.Select(s => s.EYKDaOnaylandi).FirstOrDefault();
                 var yayins = (from qs in db.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId)
@@ -945,10 +724,11 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                    YeniTezBaslikTr = s.YeniTezBaslikTr,
                                                                    YeniTezBaslikEn = s.YeniTezBaslikEn,
                                                                    SRTaleplerJuris = s.SRTaleplerJuris.ToList(),
-                                                                   IsSonSRTalebi = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID),
+                                                                   IsSonSrTalebi = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID),
                                                                    // IslemYetkisiVar = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID) && (!mb.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   UzatmaSonSRTarih = s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? (EntityFunctions.AddDays(s.Tarih, bSurecOtKriter.MBSinavUzatmaSuresiGun).Value) : DateTime.Now,
-                                                                   TeslimSonTarih = model.TezTeslimSonTarih ?? EntityFunctions.AddDays(s.Tarih, bSurecOtKriter.MBTezTeslimSuresiGun).Value,
+                                                                   UzatmaTaahhutSonTarih = s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? (EntityFunctions.AddDays(s.Tarih, bSurecOtKriter.MBSinavUzatmaSuresiGun).Value) : DateTime.Now,
+                                                                   UzatmaSonSrTarih = s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? (EntityFunctions.AddDays(s.Tarih, bSurecOtKriter.MBSinavUzatmaSuresiGun).Value) : DateTime.Now,
+                                                                   TezTeslimSonTarih = model.TezTeslimSonTarih ?? EntityFunctions.AddDays(s.Tarih, bSurecOtKriter.MBTezTeslimSuresiGun).Value,
                                                                    IsOgrenciUzatmaSonrasiOnay = s.IsOgrenciUzatmaSonrasiOnay,
                                                                    OgrenciOnayTarihi = s.OgrenciOnayTarihi,
                                                                    IsDanismanUzatmaSonrasiOnay = s.IsDanismanUzatmaSonrasiOnay,
@@ -975,8 +755,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (model.IsAnketDolduruldu == false)
                 {
                     if (bsurec.AnketID.HasValue)
-                    {
-
+                    { 
                         if (!db.AnketCevaplaris.Any(a => a.MezuniyetBasvurulariID == mezuniyetBasvurulariId))
                         {
 
@@ -1313,6 +1092,19 @@ namespace LisansUstuBasvuruSistemi.Business
                                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MezuniyetYayinTurID" });
                                 }
                             }
+
+                            if (mmMessage.Messages.Any())
+                            {
+                                var zorunlular = kriterDetay.Where(p => p.IsZorunlu).SelectMany(s => s.data)
+                                       .Select(s => s.MezuniyetYayinTurAdi).ToList();
+                                if (zorunlular.Any()) mmMessage.Messages.Add("Zorunlu istenen yayın türleri: " + string.Join(", ", zorunlular));
+                                //    var zorunluOlmayanlar = kriterDetay.Where(p => !p.IsZorunlu).SelectMany(s => s.data).Where(p => p.IsGecerli)
+                                //        .Select(s => s.MezuniyetYayinTurAdi).ToList();
+                                //    if (zorunluOlmayanlar.Any()) mmMessage.Messages.Add("Zorunlu olmayan yayın türleri: " + string.Join(", ", zorunluOlmayanlar));
+                                //    var kabulEdilmeyenler = kriterDetay.Where(p => !p.IsZorunlu).SelectMany(s => s.data).Where(p => !p.IsGecerli)
+                                //        .Select(s => s.MezuniyetYayinTurAdi).ToList();
+                                //    if (kabulEdilmeyenler.Any()) mmMessage.Messages.Add("Kabul edilmeyen yayın türleri: " + string.Join(", ", kabulEdilmeyenler));
+                            }
                         }
                     }
                 }
@@ -1468,7 +1260,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return pagerString;
         }
 
-        public static bool ToJoFormSuccessRow(this string juriTipAdi, bool tezDiliTr, bool adSoyadSuccess, bool unvanAdiSuccess, bool eMailSuccess, bool universiteIdSuccess, bool uzmanlikAlaniSuccess, bool bilimselCalismalarAnahtarSozcuklerSuccess, bool dilSinavAdiSuccess, bool dilPuaniSuccess)
+        public static bool ToJoFormSuccessRow(this string juriTipAdi, bool tezDiliTr, bool adSoyadSuccess, bool unvanAdiSuccess, bool eMailSuccess, bool universiteAdiSuccess, bool uzmanlikAlaniSuccess)
         {
             var retVal = false;
             if (new List<string> { "YtuIciJuri4", "YtuDisiJuri4" }.Contains(juriTipAdi))
@@ -1480,18 +1272,16 @@ namespace LisansUstuBasvuruSistemi.Business
                                     adSoyadSuccess &&
                                     unvanAdiSuccess &&
                                     eMailSuccess &&
-                                    universiteIdSuccess &&
-                                    uzmanlikAlaniSuccess &&
-                                    bilimselCalismalarAnahtarSozcuklerSuccess
+                                    universiteAdiSuccess &&
+                                    uzmanlikAlaniSuccess
                                  )
                                  ||
                                  (
                                      !adSoyadSuccess &&
                                      !unvanAdiSuccess &&
                                      !eMailSuccess &&
-                                     !universiteIdSuccess &&
-                                     !uzmanlikAlaniSuccess &&
-                                     !bilimselCalismalarAnahtarSozcuklerSuccess
+                                     !universiteAdiSuccess &&
+                                     !uzmanlikAlaniSuccess
 
                                  )
                             );
@@ -1503,22 +1293,16 @@ namespace LisansUstuBasvuruSistemi.Business
                                    adSoyadSuccess &&
                                    unvanAdiSuccess &&
                                    eMailSuccess &&
-                                   universiteIdSuccess &&
-                                   uzmanlikAlaniSuccess &&
-                                   bilimselCalismalarAnahtarSozcuklerSuccess &&
-                                   dilSinavAdiSuccess &&
-                                   dilPuaniSuccess
+                                   universiteAdiSuccess &&
+                                   uzmanlikAlaniSuccess
                                 )
                                 ||
                                 (
                                     !adSoyadSuccess &&
                                     !unvanAdiSuccess &&
                                     !eMailSuccess &&
-                                    !universiteIdSuccess &&
-                                    !uzmanlikAlaniSuccess &&
-                                    !bilimselCalismalarAnahtarSozcuklerSuccess &&
-                                    !dilSinavAdiSuccess &&
-                                    !dilPuaniSuccess
+                                    !universiteAdiSuccess &&
+                                    !uzmanlikAlaniSuccess
                                 )
                            );
                 }
@@ -1532,9 +1316,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                   adSoyadSuccess &&
                                   unvanAdiSuccess &&
                                   eMailSuccess &&
-                                  universiteIdSuccess &&
-                                  uzmanlikAlaniSuccess &&
-                                  bilimselCalismalarAnahtarSozcuklerSuccess
+                                  universiteAdiSuccess &&
+                                  uzmanlikAlaniSuccess
                               );
                 }
                 else
@@ -1543,11 +1326,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                  adSoyadSuccess &&
                                  unvanAdiSuccess &&
                                  eMailSuccess &&
-                                 universiteIdSuccess &&
-                                 uzmanlikAlaniSuccess &&
-                                 bilimselCalismalarAnahtarSozcuklerSuccess &&
-                                 dilSinavAdiSuccess &&
-                                 dilPuaniSuccess
+                                 universiteAdiSuccess &&
+                                 uzmanlikAlaniSuccess
                              );
                 }
             }
@@ -1628,32 +1408,15 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return lst;
         }
-        //public static List<CmbMultyTypeDto> GetCmbOkunanDonemList(int mezuniyetSurecId, int kayitYili, int kayitDonemId)
-        //{
-        //    var kdonems = new List<CmbMultyTypeDto>();
-        //    using (var db = new LisansustuBasvuruSistemiEntities())
-        //    {
-        //        var surec = db.MezuniyetSurecis.First(p => p.MezuniyetSurecID == mezuniyetSurecId);
+        public static List<CmbBoolDto> GetCmbTezDili(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbBoolDto>();
+            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
+            dct.Add(new CmbBoolDto { Value = true, Caption = "Türkçe" });
+            dct.Add(new CmbBoolDto { Value = false, Caption = "İngilizce" });
 
-        //        for (int i = kayitYili; i <= surec.BaslangicYil; i++)
-        //        {
-        //            for (int donemIndex = 1; donemIndex <= 2; donemIndex++)
-        //            {
-        //                bool add = true;
-        //                if (i == kayitYili)
-        //                {
-        //                    if (kayitDonemId == DonemBilgi.BaharYariyili && donemIndex == 1) add = false;
-        //                }
-        //                else if (i == surec.BaslangicYil)
-        //                {
-        //                    if (surec.DonemID ==  DonemBilgi.GuzYariyili && donemIndex == 2) add = false;
-        //                }
-        //                if (add) kdonems.Add(new CmbMultyTypeDto { Inx = i, Value = donemIndex });
-        //            }
-        //        }
-        //    }
-        //    return kdonems;
-        //}
+            return dct;
+        }
 
         public static List<CmbIntDto> GetCmbMezuniyetYayinDurum(bool bosSecimVar = false, bool tumu = false)
         {
@@ -1815,6 +1578,398 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+        public static MmMessage SendMailBasvuruDanismanOnay(int mezuniyetBasvurulariId)
+        {
+            var mmMessage = new MmMessage();
+            try
+            {
+                using (var entities = new LisansustuBasvuruSistemiEntities())
+                {
+                    var mBasvur =
+                        entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var enstitu = mBasvur.MezuniyetSureci.Enstituler;
+                    var sablonTipId = mBasvur.IsDanismanOnay == true ? MailSablonTipiEnum.MezDanismanOnayladiOgrenci : MailSablonTipiEnum.MezDanismanOnaylamadiOgrenci;
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.EnstituKod == enstitu.EnstituKod).ToList();
+
+
+
+                    var mModel = new List<SablonMailModel>
+                        {
+                            new SablonMailModel
+                            {
+
+                                AdSoyad = mBasvur.Ad + " " + mBasvur.Soyad,
+                                EMails = new List<MailSendList> { new MailSendList { EMail = mBasvur.Kullanicilar.EMail, ToOrBcc = true } },
+                                MailSablonTipID = sablonTipId,
+                            }
+                        };
+
+                    var danisman = entities.Kullanicilars.First(p => p.KullaniciID == mBasvur.TezDanismanID);
+                    foreach (var item in mModel)
+                    {
+                        var basvuruDonemAdi = mBasvur.MezuniyetSureci.BaslangicYil + " " + mBasvur.MezuniyetSureci.BitisYil + " / " + mBasvur.MezuniyetSureci.Donemler.DonemAdi;
+                        var enstituL = mBasvur.MezuniyetSureci.Enstituler;
+
+                        item.Sablon = sablonlar.First(p => p.MailSablonTipID == item.MailSablonTipID);
+                        item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
+
+                        if (item.Sablon.GonderilecekEkEpostalar != null) item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }).ToList());
+                        var paramereDegerleri = new List<MailReplaceParameterDto>();
+                        if (item.SablonParametreleri.Any(a => a == "@EnstituAdi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EnstituAdi", Value = enstituL.EnstituAd });
+                        if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
+                        if (item.SablonParametreleri.Any(a => a == "@BasvuruDonemAdi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "BasvuruDonemAdi", Value = basvuruDonemAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@DanismanAdSoyad"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanAdSoyad", Value = danisman.Ad + " " + danisman.Soyad });
+                        if (item.SablonParametreleri.Any(a => a == "@DanismanUnvanAdi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanUnvanAdi", Value = danisman.Unvanlar.UnvanAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciNo", Value = mBasvur.OgrenciNo });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciAdSoyad", Value = mBasvur.Ad + " " + mBasvur.Soyad });
+                        if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "RetAciklamasi", Value = mBasvur.DanismanOnayAciklama });
+
+                        var attachs = new List<System.Net.Mail.Attachment>();
+
+                        var mCOntent = SystemMails.GetSystemMailContent(enstituL.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, paramereDegerleri);
+                        var snded = MailManager.SendMail(enstitu.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, item.EMails, attachs);
+                        if (snded)
+                        {
+                            var kModel = new GonderilenMailler
+                            {
+                                Tarih = DateTime.Now,
+                                EnstituKod = enstitu.EnstituKod,
+                                MesajID = null,
+                                IslemTarihi = DateTime.Now,
+                                Konu = item.Sablon.SablonAdi + " (" + item.AdSoyad + ")",
+                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                                IslemYapanIP = UserIdentity.Ip,
+                                Aciklama = item.Sablon.Sablon ?? "",
+                                AciklamaHtml = mCOntent.HtmlContent ?? "",
+                                Gonderildi = true,
+                                GonderilenMailEkleris = attachs.Select(s => new GonderilenMailEkleri { EkAdi = s.Name, EkDosyaYolu = "" }).ToList(),
+                                GonderilenMailKullanicilars = item.EMails.Select(s => new GonderilenMailKullanicilar { Email = s.EMail }).ToList()
+                            };
+                            entities.GonderilenMaillers.Add(kModel);
+                            entities.SaveChanges();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Danışman onay sonuç maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), "MezuniyetBus/SendMailBasvuruDanismanOnay \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                mmMessage.Messages.Add("Mezuniyet Danışman onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
+                mmMessage.MessageType = MsgTypeEnum.Error;
+                mmMessage.IsSuccess = false;
+            }
+            return mmMessage;
+        }
+        public static MmMessage SendMailBasvuruDurum(int mezuniyetBasvurulariId)
+        {
+            var mmMessage = new MmMessage();
+            try
+            {
+                using (var entities = new LisansustuBasvuruSistemiEntities())
+                {
+                    var mBasvur =
+                        entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var enstitu = mBasvur.MezuniyetSureci.Enstituler;
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.EnstituKod == enstitu.EnstituKod).ToList();
+
+
+                    var mModel = new List<SablonMailModel>();
+                    if (mBasvur.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
+                    {
+                        var danisman = entities.Kullanicilars.First(p => p.KullaniciID == mBasvur.TezDanismanID);
+                        mModel.Add(
+                            new SablonMailModel
+                            {
+
+                                MailSablonTipID = MailSablonTipiEnum.MezYayinSartiSaglandiDanisman,
+                                AdSoyad = danisman.Ad + " " + danisman.Soyad,
+                                EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
+                                UnvanAdi = danisman.Unvanlar.UnvanAdi
+                            });
+                    }
+                    var ogrenciMailSablonId = 1;
+                    if (mBasvur.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi) ogrenciMailSablonId = MailSablonTipiEnum.MezYayinSartiSaglanamadiOgrenci;
+                    else if (mBasvur.OgrenimTipKod.IsDoktora()) ogrenciMailSablonId = MailSablonTipiEnum.MezYayinSartiSaglandiOgrenciDoktora;
+                    else ogrenciMailSablonId = MailSablonTipiEnum.MezYayinSartiSaglandiOgrenciYl;
+                    mModel.Add(new SablonMailModel
+                    {
+
+                        AdSoyad = mBasvur.Ad + " " + mBasvur.Soyad,
+                        EMails = new List<MailSendList> { new MailSendList { EMail = mBasvur.Kullanicilar.EMail, ToOrBcc = true } },
+                        MailSablonTipID = ogrenciMailSablonId,
+                    });
+
+
+                    foreach (var item in mModel)
+                    {
+                        var basvuruDonemAdi = mBasvur.MezuniyetSureci.BaslangicYil + " " + mBasvur.MezuniyetSureci.BitisYil + " / " + mBasvur.MezuniyetSureci.Donemler.DonemAdi;
+                        var enstituL = mBasvur.MezuniyetSureci.Enstituler;
+
+                        item.Sablon = sablonlar.First(p => p.MailSablonTipID == item.MailSablonTipID);
+                        item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
+
+                        if (item.Sablon.GonderilecekEkEpostalar != null) item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }).ToList());
+                        var paramereDegerleri = new List<MailReplaceParameterDto>();
+                        if (item.SablonParametreleri.Any(a => a == "@EnstituAdi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EnstituAdi", Value = enstituL.EnstituAd });
+                        if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
+                        if (item.SablonParametreleri.Any(a => a == "@BasvuruDonemAdi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "BasvuruDonemAdi", Value = basvuruDonemAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@AdSoyad"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = item.AdSoyad });
+                        if (item.SablonParametreleri.Any(a => a == "@UnvanAdi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "UnvanAdi", Value = item.UnvanAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciAdSoyad", Value = mBasvur.Ad + " " + mBasvur.Soyad });
+                        if (item.SablonParametreleri.Any(a => a == "@IptalAciklamasi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "IptalAciklamasi", Value = mBasvur.MezuniyetYayinKontrolDurumAciklamasi });
+
+                        var attachs = new List<System.Net.Mail.Attachment>();
+
+                        if (item.MailSablonTipID != MailSablonTipiEnum.MezYayinSartiSaglandiDanisman && mBasvur.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
+                        {
+                            attachs = Management.ExportRaporPdf(RaporTipiEnum.MezuniyetBasvuruRaporu, new List<int?> { mBasvur.MezuniyetBasvurulariID });
+                        }
+                        if (mBasvur.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                        {
+                            var ttfp = Management.ExportRaporPdf(RaporTipiEnum.MezuniyetTezTeslimFormu, new List<int?> { mBasvur.MezuniyetBasvurulariID, 1 });
+                            attachs.AddRange(ttfp);
+                        }
+                        var mCOntent = SystemMails.GetSystemMailContent(enstituL.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, paramereDegerleri);
+                        var snded = MailManager.SendMail(enstitu.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, item.EMails, attachs);
+                        if (snded)
+                        {
+                            var kModel = new GonderilenMailler
+                            {
+                                Tarih = DateTime.Now,
+                                EnstituKod = enstitu.EnstituKod,
+                                MesajID = null,
+                                IslemTarihi = DateTime.Now,
+                                Konu = item.Sablon.SablonAdi + " (" + item.AdSoyad + ")"
+                            };
+                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu = kModel.Konu + " (" + item.JuriTipAdi + ")";
+                            kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
+                            kModel.IslemYapanIP = UserIdentity.Ip;
+                            kModel.Aciklama = item.Sablon.Sablon ?? "";
+                            kModel.AciklamaHtml = mCOntent.HtmlContent ?? "";
+                            kModel.Gonderildi = true;
+                            kModel.GonderilenMailEkleris = attachs.Select(s => new GonderilenMailEkleri { EkAdi = s.Name, EkDosyaYolu = "" }).ToList();
+                            kModel.GonderilenMailKullanicilars = item.EMails.Select(s => new GonderilenMailKullanicilar { Email = s.EMail }).ToList();
+                            entities.GonderilenMaillers.Add(kModel);
+                            entities.SaveChanges();
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet başvuru durumu değişikliği mail gönderme işlemi yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), "MezuniyetBus/SendMailBasvuruDurum \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                mmMessage.Messages.Add("Mezuniyet başvuru durumu değişikliği mail gönderme işlemi yapılırken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
+                mmMessage.MessageType = MsgTypeEnum.Error;
+                mmMessage.IsSuccess = false;
+            }
+            return mmMessage;
+        }
+        public static MmMessage SendMailJuriOneriFormuOnay(int mezuniyetJuriOneriFormId)
+        {
+            var mmMessage = new MmMessage();
+            try
+            {
+                using (var entities = new LisansustuBasvuruSistemiEntities())
+                {
+                    var juriOneriFormu = entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
+                    var mBasvur = juriOneriFormu.MezuniyetBasvurulari;
+                    var danismanSablonId = 0;
+                    var asilSablonId = 0;
+                    var ogrenciSablonId = 0;
+                    if (mBasvur.OgrenimTipKod.IsDoktora())
+                    {
+
+                        danismanSablonId = MailSablonTipiEnum.MezEykTarihiGirildiDanismanDoktora;
+                        asilSablonId = MailSablonTipiEnum.MezEykTarihiGirildiJuriAsilDoktora;
+                        ogrenciSablonId = MailSablonTipiEnum.MezEykTarihiGirildiOgrenciDoktora;
+                    }
+                    else
+                    {
+                        danismanSablonId = MailSablonTipiEnum.MezEykTarihiGirildiDanismanYl;
+                        asilSablonId = MailSablonTipiEnum.MezEykTarihiGirildiJuriAsilYl;
+                        ogrenciSablonId = MailSablonTipiEnum.MezEykTarihiGirildiOgrenciYl;
+                    }
+
+                    var tezKonusu = "";
+                    if (juriOneriFormu.IsTezBasligiDegisti == true)
+                    {
+                        tezKonusu = mBasvur.IsTezDiliTr == true
+                            ? juriOneriFormu.YeniTezBaslikTr
+                            : juriOneriFormu.YeniTezBaslikEn;
+                    }
+                    else tezKonusu = mBasvur.IsTezDiliTr == true
+                        ? mBasvur.TezBaslikTr
+                        : mBasvur.TezBaslikEn;
+
+                    var enstitu = mBasvur.MezuniyetSureci.Enstituler;
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.EnstituKod == enstitu.EnstituKod).ToList();
+
+                    var mModel = new List<SablonMailModel> {
+                            new SablonMailModel {
+
+                            AdSoyad =mBasvur.Ad + " " + mBasvur.Soyad,
+                            EMails= new List<MailSendList> { new MailSendList { EMail = mBasvur.Kullanicilar.EMail,ToOrBcc=true } },
+                            MailSablonTipID=ogrenciSablonId
+                            } };
+                    var juriler = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.IsAsilOrYedek.HasValue).ToList();
+                    foreach (var item in juriler.Where(p => p.IsAsilOrYedek == true))
+                    {
+                        mModel.Add(new SablonMailModel
+                        {
+
+                            AdSoyad = item.AdSoyad,
+                            EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, ToOrBcc = true } },
+                            MailSablonTipID = (item.JuriTipAdi == "TezDanismani" ? danismanSablonId : asilSablonId),
+                            JuriTipAdi = item.JuriTipAdi,
+                            UnvanAdi = item.UnvanAdi,
+                            MezuniyetJuriOneriFormuJuriID = item.MezuniyetJuriOneriFormuJuriID,
+                        });
+                        if (item.JuriTipAdi == "TezDanismani" && !mBasvur.TezEsDanismanEMail.IsNullOrWhiteSpace())
+                        {
+                            //Eş danışman var ise Danışmana giden mail eş danışmana da gönderilmesi için.
+                            mModel.Add(new SablonMailModel
+                            {
+
+                                AdSoyad = mBasvur.TezEsDanismanAdi,
+                                EMails = new List<MailSendList> { new MailSendList { EMail = mBasvur.TezEsDanismanEMail, ToOrBcc = true } },
+                                MailSablonTipID = danismanSablonId,
+                                JuriTipAdi = item.JuriTipAdi,
+                                UnvanAdi = mBasvur.TezEsDanismanUnvani,
+                            });
+                        }
+                    }
+                    var danisman = juriler.First(p => p.JuriTipAdi == "TezDanismani");
+
+                    var enstituL = mBasvur.MezuniyetSureci.Enstituler;
+                    var abdL = mBasvur.Programlar.AnabilimDallari;
+                    var prgL = mBasvur.Programlar;
+                    foreach (var item in mModel)
+                    {
+
+                        item.ProgramAdi = prgL.ProgramAdi;
+                        item.Sablon = sablonlar.First(p => p.MailSablonTipID == item.MailSablonTipID);
+                        item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
+
+                        //Şablona ait ekler var ise attachmets e ekle
+                        var gonderilenMailEkleri = new List<GonderilenMailEkleri>();
+                        foreach (var itemSe in item.Sablon.MailSablonlariEkleris)
+                        {
+                            var ekTamYol = HttpContext.Current.Server.MapPath("~" + itemSe.EkDosyaYolu);
+                            if (File.Exists(ekTamYol))
+                            {
+                                var fExtension = Path.GetExtension(ekTamYol);
+                                item.Attachments.Add(new System.Net.Mail.Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)),
+                                    itemSe.EkAdi.ToSetNameFileExtension(fExtension), System.Net.Mime.MediaTypeNames.Application.Octet));
+                                gonderilenMailEkleri.Add(new GonderilenMailEkleri { EkAdi = itemSe.EkAdi, EkDosyaYolu = itemSe.EkDosyaYolu });
+                            }
+                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "MezuniyetGelenBasvurular/JuriOneriFormuOnayDurumKayit", LogTipiEnum.Uyarı);
+                        }
+
+                        if (item.Sablon.GonderilecekEkEpostalar != null) item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }));
+                        var paramereDegerleri = new List<MailReplaceParameterDto>();
+
+                        if (item.SablonParametreleri.Any(a => a == "@EnstituAdi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EnstituAdi", Value = enstituL.EnstituAd });
+                        if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
+                        if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EYKTarihi", Value = mBasvur.EYKTarihi.Value.ToFormatDate() });
+                        if (item.SablonParametreleri.Any(a => a == "@AdSoyad"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = item.AdSoyad });
+                        if (item.SablonParametreleri.Any(a => a == "@UnvanAdi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "UnvanAdi", Value = item.UnvanAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciAdSoyad", Value = mBasvur.Ad + " " + mBasvur.Soyad });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciBilgi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciBilgi", Value = (mBasvur.OgrenciNo + " " + mBasvur.Ad + " " + mBasvur.Soyad + " (" + abdL.AnabilimDaliAdi + " / " + prgL.ProgramAdi + ")") });
+
+                        if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikTr", Value = tezKonusu });
+                        if (item.SablonParametreleri.Any(a => a == "@DanismanBilgi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanBilgi", Value = danisman.UnvanAdi + " " + danisman.AdSoyad });
+                        foreach (var itemAsil in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi != "TezDanismani" && p.IsAsilOrYedek == true).Select((s, inx) => new { s, inx = inx + 1 }))
+                            if (item.SablonParametreleri.Any(a => a == "@AsilBilgi" + itemAsil.inx))
+                            {
+                                var uniBilgi = "";
+                                if (itemAsil.s.JuriTipAdi.Contains("YtuDisiJuri"))
+                                {
+                                    uniBilgi = " (" + (itemAsil.s.UniversiteAdi) + ")";
+                                }
+                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AsilBilgi" + itemAsil.inx, Value = itemAsil.s.UnvanAdi + " " + itemAsil.s.AdSoyad + uniBilgi });
+                            }
+                        foreach (var itemYedek in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.IsAsilOrYedek == false).Select((s, inx) => new { s, inx = inx + 1 }))
+                            if (item.SablonParametreleri.Any(a => a == "@YedekBilgi" + itemYedek.inx))
+                            {
+                                var uniBilgi = "";
+                                if (itemYedek.s.JuriTipAdi.Contains("YtuDisiJuri"))
+                                {
+                                    uniBilgi = " (" + (itemYedek.s.UniversiteAdi) + ")";
+                                }
+                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YedekBilgi" + itemYedek.inx, Value = itemYedek.s.UnvanAdi + " " + itemYedek.s.AdSoyad + uniBilgi });
+                            }
+                        var mCOntent = SystemMails.GetSystemMailContent(enstituL.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, paramereDegerleri);
+                        // item.EMails = new List<MailSendList> { new MailSendList { EMail = "irfansecer@gmail.com", ToOrBCC = true } }; //test için
+                        var snded = MailManager.SendMail(enstitu.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, item.EMails, item.Attachments);
+                        if (snded)
+                        {
+                            gonderilenMailEkleri.AddRange(item.Attachments.Select(s => new GonderilenMailEkleri { EkAdi = s.Name, EkDosyaYolu = "" }).ToList());
+
+                            var kModel = new GonderilenMailler
+                            {
+                                Tarih = DateTime.Now,
+                                EnstituKod = enstitu.EnstituKod,
+                                MesajID = null,
+                                IslemTarihi = DateTime.Now,
+                                Konu = item.Sablon.SablonAdi + " (" + item.AdSoyad + ")",
+                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                                IslemYapanIP = UserIdentity.Ip,
+                                Aciklama = item.Sablon.Sablon ?? "",
+                                AciklamaHtml = mCOntent.HtmlContent ?? "",
+                                Gonderildi = true,
+                                GonderilenMailKullanicilars = item.EMails.Select(s => new GonderilenMailKullanicilar { Email = s.EMail }).ToList(),
+                                GonderilenMailEkleris = gonderilenMailEkleri
+                            };
+                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu = kModel.Konu + " (" + item.JuriTipAdi + ")";
+                            entities.GonderilenMaillers.Add(kModel);
+                            entities.SaveChanges();
+                        }
+                    }
+
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Jüri öneri formu onay sonuç maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), "MezuniyetBus/SendMailBasvuruDanismanOnay \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                mmMessage.Messages.Add("Mezuniyet Jüri öneri formu onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
+                mmMessage.MessageType = MsgTypeEnum.Error;
+                mmMessage.IsSuccess = false;
+            }
+            return mmMessage;
+        }
         public static MmMessage SendMailMezuniyetDegerlendirmeLink(int srTalepId, Guid? uniqueId = null, bool isLinkOrSonuc = false, bool isYeniLink = true, string eMail = "")
         {
             var mmMessage = new MmMessage();
@@ -1899,11 +2054,11 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
                         foreach (var itemSe in item.Sablon.MailSablonlariEkleris)
                         {
-                            var ekTamYol = System.Web.HttpContext.Current.Server.MapPath("~" + itemSe.EkDosyaYolu);
-                            if (System.IO.File.Exists(ekTamYol))
+                            var ekTamYol = HttpContext.Current.Server.MapPath("~" + itemSe.EkDosyaYolu);
+                            if (File.Exists(ekTamYol))
                             {
                                 var fExtension = Path.GetExtension(ekTamYol);
-                                item.Attachments.Add(new System.Net.Mail.Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)),
+                                item.Attachments.Add(new System.Net.Mail.Attachment(new MemoryStream(File.ReadAllBytes(ekTamYol)),
                                     itemSe.EkAdi.ToSetNameFileExtension(fExtension), System.Net.Mime.MediaTypeNames.Application.Octet));
                                 gonderilenMailEkleri.Add(new GonderilenMailEkleri
                                 {
@@ -2177,8 +2332,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanBilgi", Value = danisman.UnvanAdi + " " + danisman.AdSoyad });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanUni"))
                         {
-                            var universiteAdi = danisman.UniversiteID.HasValue ? danisman.Universiteler.Ad : danisman.UniversiteAdi;
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanUni", Value = universiteAdi });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanUni", Value = danisman.UniversiteAdi });
                         }
                         foreach (var itemAsil in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi != "TezDanismani" && p.IsAsilOrYedek == true).Select((s, inx) => new { s, inx = inx + 1 }))
                         {
@@ -2187,8 +2341,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AsilBilgi" + itemAsil.inx, Value = itemAsil.s.UnvanAdi + " " + itemAsil.s.AdSoyad });
                             if (item.SablonParametreleri.Any(a => a == "@AsilBilgiUni" + itemAsil.inx))
                             {
-                                var universiteAdi = itemAsil.s.UniversiteID.HasValue ? itemAsil.s.Universiteler.Ad : itemAsil.s.UniversiteAdi;
-                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AsilBilgiUni" + itemAsil.inx, Value = universiteAdi });
+                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AsilBilgiUni" + itemAsil.inx, Value = itemAsil.s.UniversiteAdi });
                             }
                         }
                         foreach (var itemYedek in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.IsAsilOrYedek == false).Select((s, inx) => new { s, inx = inx + 1 }))
@@ -2197,8 +2350,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YedekBilgi" + itemYedek.inx, Value = itemYedek.s.UnvanAdi + " " + itemYedek.s.AdSoyad });
                             if (item.SablonParametreleri.Any(a => a == "@YedekBilgiUni" + itemYedek.inx))
                             {
-                                var universiteAdi = itemYedek.s.UniversiteID.HasValue ? itemYedek.s.Universiteler.Ad : itemYedek.s.UniversiteAdi;
-                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YedekBilgiUni" + itemYedek.inx, Value = universiteAdi });
+                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YedekBilgiUni" + itemYedek.inx, Value = itemYedek.s.UniversiteAdi });
                             }
                         }
 
@@ -2447,9 +2599,9 @@ namespace LisansUstuBasvuruSistemi.Business
                             var ekTamYol = System.Web.HttpContext.Current.Server.MapPath("~" + itemSe.EkDosyaYolu);
                             if (System.IO.File.Exists(ekTamYol))
                             {
-                                var FExtension = Path.GetExtension(ekTamYol);
+                                var fExtension = Path.GetExtension(ekTamYol);
                                 item.Attachments.Add(new System.Net.Mail.Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)),
-                                    itemSe.EkAdi.ToSetNameFileExtension(FExtension), System.Net.Mime.MediaTypeNames.Application.Octet));
+                                    itemSe.EkAdi.ToSetNameFileExtension(fExtension), System.Net.Mime.MediaTypeNames.Application.Octet));
                                 gonderilenMEkleris.Add(new GonderilenMailEkleri
                                 {
                                     EkAdi = itemSe.EkAdi,

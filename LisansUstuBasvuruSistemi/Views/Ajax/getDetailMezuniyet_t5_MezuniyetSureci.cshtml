@@ -123,7 +123,7 @@
                                                         <td class="CaptionTd"></td>
                                                         <td class="CaptionTd">:</td>
                                                         <td class="ValueTd" style="color:maroon;">
-                                                            <i class="fa fa-info-circle fa-lg"></i> @Html.Raw(mezuniyetBasvurulariTezTeslimFormu == null ? "Tez Teslim Formu oluşturup çıktısını <b>" + item.TeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır." : "Hazırladığınız Tez Teslim Formunun çıktısını <b>" + item.TeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır.")
+                                                            <i class="fa fa-info-circle fa-lg"></i> @Html.Raw(mezuniyetBasvurulariTezTeslimFormu == null ? "Tez Teslim Formu oluşturup çıktısını <b>" + item.TezTeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır." : "Hazırladığınız Tez Teslim Formunun çıktısını <b>" + item.TezTeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır.")
                                                         </td>
                                                     </tr>
 
@@ -146,7 +146,7 @@
                                                         <td class="CaptionTd" width="140">Mezuniyet Durumu</td>
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">
-                                                            @if (kayitYetki && item.IsSonSRTalebi && Model.IsDelete == false)
+                                                            @if (kayitYetki && item.IsSonSrTalebi && Model.IsDelete == false)
                                                             {
                                                                 @Html.DropDownList("IsMezunOldu", Model.MezuniyetDurumSelectList.IsMezunOldu, new { id = "IsMezunOldu_" + Model.MezuniyetBasvurulariID, onchange = "MzDurumChange(this,'" + Model.MezuniyetBasvurulariID + "');", style = "width:120px;" })
                                                                 <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="MzDurumKaydet(@Model.MezuniyetBasvurulariID);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
@@ -173,7 +173,7 @@
                                                         <td class="CaptionTd" style="font-weight:bold;">Mezuniyet Tarihi</td>
                                                         <td class="CaptionTd" style="font-weight:bold;">:</td>
                                                         <td class="ValueTd">
-                                                            @if (kayitYetki && item.IsSonSRTalebi && Model.IsDelete == false)
+                                                            @if (kayitYetki && item.IsSonSrTalebi && Model.IsDelete == false)
                                                             {
                                                                 <input type="text" class="form-control" style="width:120px;" name="MezuniyetTarihi" id="MezuniyetTarihi_@Model.MezuniyetBasvurulariID" autocomplete="off" size="16" value="@(Model.MezuniyetTarihi.HasValue == false ? "" : Model.MezuniyetTarihi.ToFormatDateInput())" />
                                                                 <script>

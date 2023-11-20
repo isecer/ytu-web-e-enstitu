@@ -14,6 +14,8 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
 {
     public class ObsGetData
     {
+      
+
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
         public StudentControl GetObsStudentControl(string tcKimlikNo, string donemId)
@@ -208,6 +210,5 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
 
             return model;
         }
-
     }
 }

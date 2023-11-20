@@ -63,11 +63,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                              s.SinavAdi,
                              s.SinavYili,
                              s.SinavPuani,
-                             s.TDSinavTipID,
-                             s.TDSinavAdi,
-                             s.TDSinavYili,
-                             s.TDSinavPuani,
-                             s.TDUniversiteAdi,
                              s.DanismanOnayTarihi
 
                          }).First();
@@ -95,11 +90,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                     dgYabanciDilBilgi.Visible = true;
                     this.cellOgrenciYabanciDilBilgi.Text = q.SinavAdi + " / " + q.SinavYili;
                     this.cellOgrenciYabanciDilPuan.Text = (q.SinavPuani ?? "").ToString();
-                    this.cellDanismanYabanciDilBilgi.Text = q.TDSinavAdi + " / " +
-                                                            (q.TDSinavYili.HasValue
-                                                                ? q.TDSinavYili.ToString()
-                                                                : q.TDUniversiteAdi);
-                    this.cellDanismanYabanciDilPuan.Text = q.TDSinavTipID != -1 ? (q.TDSinavPuani ?? "").ToString() : "";
                 }
 
 

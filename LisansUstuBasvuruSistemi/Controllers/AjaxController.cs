@@ -85,11 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (columnName == "BackgroundImage") UserIdentity.Current.Informations["BackgroundImage"] = value;
             return Json("true", "application/json", JsonRequestBehavior.AllowGet);
         }
-        [ValidateInput(false)]
-        public ActionResult PaymentResponse()
-        {
-            return View();
-        }
+        
 
         public ActionResult LoginControl(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl, string dlgId)
         {
@@ -1181,8 +1177,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kul.EnstituKod);
                         var mRowModel = new List<MailTableRowDto>();
-                        DateTime gecerlilikTarihi = DateTime.Now.AddHours(2);
-                        string guid = Guid.NewGuid().ToString().Substring(0, 20);
+                        var gecerlilikTarihi = DateTime.Now.AddHours(2);
+                        var guid = Guid.NewGuid().ToString().Substring(0, 20);
                         mRowModel.Add(new MailTableRowDto { Baslik = "Şifre Sıfırlama Linki", Aciklama = "<a target='_blank' href='" + mailBilgi.SistemErisimAdresi + "/Account/ParolaSifirla?psKod=" + guid + "'>Şifrenizi sıfırlamak için tıklayınız</a>" });
                         mRowModel.Add(new MailTableRowDto { Baslik = "Link Geçerlilik Tarihi", Aciklama = "Yukarıdaki link '" + gecerlilikTarihi.ToFormatDateAndTime() + "' tarihine kadar geçerlidir." });
 
@@ -1207,9 +1203,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var tavleContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
                         mmmC.Content = tavleContent;
 
-                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                        var eMailList = new List<MailSendList>();
-                        eMailList.Add(new MailSendList { EMail = kul.EMail, ToOrBcc = true });
+                        var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        var eMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true } };
                         var rtVal = MailManager.SendMailRetVal(kul.EnstituKod, "Şifre Sıfırlama İşlemi", htmlMail, eMailList, null);
                         if (rtVal == null)
                         {
@@ -2145,7 +2140,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetKtNot(int mesajKategoriId)
         {
             string not = "";
-            var mkNot = _entities.MesajKategorileris.Where(p => p.MesajKategoriID == mesajKategoriId).FirstOrDefault();
+            var mkNot = _entities.MesajKategorileris.FirstOrDefault(p => p.MesajKategoriID == mesajKategoriId);
             if (mkNot != null) not = mkNot.KategoriAciklamasi;
             return Json(new { NotBilgisi = not });
         }
@@ -2158,7 +2153,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 DialogID = dlgid
             };
             ViewBag.MmMessage = mmMessage;
-            string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             if (groupId.IsNullOrWhiteSpace() == false)
             {
                 model = _entities.Mesajlars.First(p => p.GroupID == groupId);

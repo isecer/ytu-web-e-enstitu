@@ -304,7 +304,7 @@
                                         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                             <table style="width:100%;">
                                                 <tr>
-                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book"></i> Öğrenci & Tez Bilgileri</td>
+                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book"></i> Tez Bilgileri</td>
                                                 </tr>
                                                 @if (!isTezDiliTr)
                                                 {
@@ -497,46 +497,10 @@
                                                             <td class="ValueTd">@item.TDAnabilimDaliAdi / @item.TDProgramAdi</td>
                                                         </tr>
                                                     }
-                                                    @if (!isTezDiliTr)
-                                                    {
-                                                        <tr>
-                                                            <td class="CaptionTd">Dil Sınavı Adı / @(item.TDSinavTipID == -1 ? "Üniversite Adı" : "Yılı / Puanı") </td>
-                                                            <td class="CaptionTd">:</td>
-                                                            <td class="ValueTd">
-                                                                @if (item.IsObsData)
-                                                                {
-                                                                    @("OBS'de doğrulandı")
-                                                                }
-                                                                else
-                                                                {
-                                                                    @($"{item.TDSinavAdi} / {(item.TDSinavTipID == -1 ? item.TDUniversiteAdi : item.TDSinavYili.ToStrObj())} / {item.TDSinavPuani}")
-                                                                }
 
-                                                            </td>
-                                                        </tr>
-                                                    }
                                                     @if (item.YeniDanismanOnayIslemiAcik)
                                                     {
-                                                        <tr class="form-group">
-                                                            <td class="CaptionTd" width="200">Onay Durumu</td>
-                                                            <td class="CaptionTd" width="10">:</td>
-                                                            <td class="ValueTd">
-                                                                <table>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <select class="form-control" id="DanismanOnayladi_@item.TDOBasvuruDanismanID" onchange="DOnayChange(@item.TDOBasvuruDanismanID)">
-                                                                                <option @(!item.DanismanOnayladi.HasValue ? "selected" : "")></option>
-                                                                                <option value="true" @(item.DanismanOnayladi == true ? "selected" : "")>Onaylandı</option>
-                                                                                <option value="false" @(item.DanismanOnayladi == false ? "selected" : "")>Onaylanmadı</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <label class="btn btn-primary btn-sm" onclick="DOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
+
                                                         <tr class="form-group TDProgramKod_@item.TDOBasvuruDanismanID @(item.DanismanOnayladi==true?"":"hide")">
                                                             <td class="CaptionTd" width="200">Anabilim Dalı / Program</td>
                                                             <td class="CaptionTd" width="10">:</td>
@@ -580,6 +544,50 @@
                                                                 <textarea class="form-control" style="min-height:100px;" id="DanismanOnaylanmadiAciklama_@item.TDOBasvuruDanismanID" maxlength="512">@item.DanismanOnaylanmadiAciklama</textarea>
                                                             </td>
                                                         </tr>
+                                                        if (!isTezDiliTr)
+                                                        {
+                                                            <tr class="TDOgrenciSayisiYL_@item.TDOBasvuruDanismanID @(item.DanismanOnayladi==true?"":"hide")">
+                                                                <td class="CaptionTd">Dil Şartı Taahhütü</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td>
+                                                                    @if (item.IsObsData)
+                                                                    {
+                                                                        @("OBS'de doğrulandı")
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div class="tasks">
+                                                                            <div class="task-item task-warning" style="margin-bottom: 0px; cursor: auto;">
+                                                                                <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                                                    ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        <tr class="form-group">
+                                                            <td class="CaptionTd" width="200">Onay Durumu</td>
+                                                            <td class="CaptionTd" width="10">:</td>
+                                                            <td class="ValueTd">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <select class="form-control" id="DanismanOnayladi_@item.TDOBasvuruDanismanID" onchange="DOnayChange(@item.TDOBasvuruDanismanID)">
+                                                                                <option @(!item.DanismanOnayladi.HasValue ? "selected" : "")></option>
+                                                                                <option value="true" @(item.DanismanOnayladi == true ? "selected" : "")>Onaylandı</option>
+                                                                                <option value="false" @(item.DanismanOnayladi == false ? "selected" : "")>Onaylanmadı</option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <label class="btn btn-primary btn-sm" onclick="DOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
                                                     }
                                                     else
                                                     {
@@ -598,6 +606,31 @@
                                                                 <td class="ValueTd">Kayıtlı: @item.TDOgrenciSayisiDR Öğrenci / Mezun: @item.TDTezSayisiDR Öğrenci</td>
                                                             </tr>
 
+
+                                                            if (!isTezDiliTr)
+                                                            {
+                                                                <tr>
+                                                                    <td class="CaptionTd">Dil Şartı Taahhütü</td>
+                                                                    <td class="CaptionTd">:</td>
+                                                                    <td>
+                                                                        @if (item.IsObsData)
+                                                                        {
+                                                                            @("OBS'de doğrulandı")
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <div class="tasks">
+                                                                                <div class="task-item task-info" style="margin-bottom: 0px; cursor: auto;">
+                                                                                    <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                                                        ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+
+                                                                    </td>
+                                                                </tr>
+                                                            }
                                                         }
                                                         <tr class="form-group">
                                                             <td class="CaptionTd">Onay Durumu</td>
@@ -790,8 +823,8 @@
                                                                         <td class="CaptionTd">@(item.IsYeniTezBasligiGozuksun ? "Yeni" : "") Tez Başlığı Türkçe</td>
                                                                         <td class="CaptionTd">:</td>
                                                                         <td class="ValueTd form-group">
-                                                                            <input type="hidden" id="IsYeniTezBasligiGozuksun_@item.TDOBasvuruDanismanID" value="@item.IsYeniTezBasligiGozuksun.ToString().ToLower()"/>
-                                                                            <input type="text" id="TezBaslikTr_@item.TDOBasvuruDanismanID" autocomplete="off" maxlength="512" value="@(item.IsYeniTezBasligiGozuksun ? item.YeniTezBaslikTr : item.TezBaslikTr)" class="form-control " style="color:black;"/>
+                                                                            <input type="hidden" id="IsYeniTezBasligiGozuksun_@item.TDOBasvuruDanismanID" value="@item.IsYeniTezBasligiGozuksun.ToString().ToLower()" />
+                                                                            <input type="text" id="TezBaslikTr_@item.TDOBasvuruDanismanID" autocomplete="off" maxlength="512" value="@(item.IsYeniTezBasligiGozuksun ? item.YeniTezBaslikTr : item.TezBaslikTr)" class="form-control " style="color:black;" />
                                                                         </td>
                                                                     </tr>
                                                                     <tr id="EYKOnayTezBaslikEnRow_@item.TDOBasvuruDanismanID" class="form-group hide">
@@ -1355,12 +1388,12 @@
         var isBaslikGuncellensin = false;
         var isYeniTezBasligiGozuksun = false;
         var tezBaslikTr = "";
-        var tezBaslikEn = ""; 
+        var tezBaslikEn = "";
         if (EYKDaOnaylandi == 'true' && $('#TezBaslikTr_' + id).length > 0) {
-            isBaslikGuncellensin = true; 
+            isBaslikGuncellensin = true;
             isYeniTezBasligiGozuksun = $('#IsYeniTezBasligiGozuksun_' + id).val()=='true';
             tezBaslikTr = $('#TezBaslikTr_' + id).val();
-            tezBaslikEn = $('#TezBaslikEn_' + id).val();  
+            tezBaslikEn = $('#TezBaslikEn_' + id).val();
         }
         var model = {
             TDOBasvuruDanismanID: id,

@@ -22,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
             var mezuniyetJuriOneriFormu = mBasvuru.MezuniyetJuriOneriFormlaris.FirstOrDefault();
 
             var cells = new List<XRTableCell>();
-            var xrTable = new List<XRTable> { tableYtuIciJuri, tableYtuDisiJuri, tableDilSinav1, tableDilSinav2, tableDilSinav3, tableDilSinav4, tableDilSinav5, tableDilSinav6, tableDilSinav7, tableDilSinav8, tableDilSinav9, tableDilSinav10, tableDilSinav11 };
+            var xrTable = new List<XRTable> { tableYtuIciJuri, tableYtuDisiJuri };
             foreach (var item in xrTable)
             {
                 foreach (var itemR in item.Rows)
@@ -35,8 +35,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     }
                 }
             }
+            rwTaahhutOnay.Visible = mBasvuru.IsTezDiliTr == false;
             if (mezuniyetJuriOneriFormu != null)
             {
+              
                 txtFormKodu.Text = "Form Kodu: " + mezuniyetJuriOneriFormu.UniqueID;
                 var program = mBasvuru.Programlar;
                 var abdAdi = program.AnabilimDallari;
@@ -78,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     TbRowTik1.Visible = true;
                     TbRowTik2.Visible = true;
 
-                    lblFormNo.Text = "(Form No: FR-0300; Revizyon Tarihi: 29.03.2017; Revizyon No: 07)";
+                    lblFormNo.Text = "(Form No: FR-0300)";
                     txtFormAdiEn.Text = "DOCTORAL DISSERTATION COMMITTEE PROPOSPAL FORM";
                     txtFormAdiTr.Text = "DOKTORA TEZ JÜRİ ÖNERİ FORMU";
                     txtYUiciAciklama.Text = "Yıldız Teknik Üniversitesi İçinden Jüri Adayı Önerileri (Tik Haricinde)";
@@ -96,7 +98,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     RowIDs = new List<string> { "TezDanismani", "YtuIciJuri1", "YtuIciJuri2", "YtuIciJuri3", "YtuIciJuri4", "YtuDisiJuri1", "YtuDisiJuri2", "YtuDisiJuri3", "YtuDisiJuri4" };
                     TbRowTik1.Visible = false;
                     TbRowTik2.Visible = false;
-                    lblFormNo.Text = "(Form No: FR-0339; Revizyon Tarihi: 15.05.2018; Revizyon No: 07)";
+                    lblFormNo.Text = "(Form No: FR-0339)";
                     txtFormAdiEn.Text = "MASTER'S THESIS COMMITTEE PROPOSPAL FORM";
                     txtFormAdiTr.Text = "YÜKSEK LİSANS TEZ JÜRİ ÖNERİ FORMU";
                     txtYUiciAciklama.Text = "Yıldız Teknik Üniversitesi İçinden Jüri Adayı Önerileri (Anabilim Dalı İçerisinden Olmalı)";
@@ -115,7 +117,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     if (itmData != null)
                     {
 
-                        if (itmData.UniversiteID.HasValue) itmData.UniversiteAdi = itmData.Universiteler.KisaAd;
 
                         var unvanAdi = cells.FirstOrDefault(p => p.Name == "txt" + item + "UnvanAdi");
                         if (unvanAdi != null) unvanAdi.Text = itmData.UnvanAdi;
@@ -130,12 +131,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                         if (anabilimdaliProgramAdi != null) anabilimdaliProgramAdi.Text = itmData.AnabilimdaliProgramAdi;
                         var uzmanlikAlani = cells.FirstOrDefault(p => p.Name == "txt" + item + "UzmanlikAlani");
                         if (uzmanlikAlani != null) uzmanlikAlani.Text = itmData.UzmanlikAlani;
-                        var bilimselCalismalarAnahtarSozcukler = cells.FirstOrDefault(p => p.Name == "txt" + item + "BilimselCalismalarAnahtarSozcukler");
-                        if (bilimselCalismalarAnahtarSozcukler != null) bilimselCalismalarAnahtarSozcukler.Text = itmData.BilimselCalismalarAnahtarSozcukler;
-                        var dilSinavAdi = cells.FirstOrDefault(p => p.Name == "txt" + item + "DilSinavAdi");
-                        if (dilSinavAdi != null) dilSinavAdi.Text = itmData.DilSinavAdi;
-                        var dilPuani = cells.FirstOrDefault(p => p.Name == "txt" + item + "DilPuani");
-                        if (dilPuani != null) dilPuani.Text = itmData.DilPuani;
+
 
                     }
                 }

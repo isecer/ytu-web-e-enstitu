@@ -1345,13 +1345,9 @@
           <Property Name="UnvanAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="AdSoyad" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="EMail" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UniversiteID" Type="int" />
           <Property Name="UniversiteAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="AnabilimdaliProgramAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="UzmanlikAlani" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="BilimselCalismalarAnahtarSozcukler" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="DilSinavAdi" Type="nvarchar" MaxLength="128" />
-          <Property Name="DilPuani" Type="nvarchar" MaxLength="128" />
           <Property Name="IsAsilOrYedek" Type="bit" />
         </EntityType>
         <EntityType Name="MezuniyetSinavDurumlari">
@@ -2402,11 +2398,6 @@
           <Property Name="TDAnabilimDaliAdi" Type="nvarchar" MaxLength="512" Nullable="false" />
           <Property Name="TDProgramKod" Type="nvarchar" MaxLength="20" />
           <Property Name="TDProgramAdi" Type="nvarchar" MaxLength="512" Nullable="false" />
-          <Property Name="TDSinavTipID" Type="int" />
-          <Property Name="TDSinavAdi" Type="nvarchar" MaxLength="256" />
-          <Property Name="TDSinavYili" Type="int" />
-          <Property Name="TDSinavPuani" Type="nvarchar" MaxLength="16" />
-          <Property Name="TDUniversiteAdi" Type="nvarchar" MaxLength="256" />
           <Property Name="TDOgrenciSayisiYL" Type="int" />
           <Property Name="TDOgrenciSayisiDR" Type="int" />
           <Property Name="TDTezSayisiYL" Type="int" />
@@ -5070,18 +5061,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="MezuniyetJuriOneriFormuJurileri">
               <PropertyRef Name="MezuniyetJuriOneriFormID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MezuniyetJuriOneriFormuJurileri_Universiteler">
-          <End Role="Universiteler" Type="Self.Universiteler" Multiplicity="0..1" />
-          <End Role="MezuniyetJuriOneriFormuJurileri" Type="Self.MezuniyetJuriOneriFormuJurileri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Universiteler">
-              <PropertyRef Name="UniversiteID" />
-            </Principal>
-            <Dependent Role="MezuniyetJuriOneriFormuJurileri">
-              <PropertyRef Name="UniversiteID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7963,10 +7942,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="MezuniyetJuriOneriFormlari" EntitySet="MezuniyetJuriOneriFormlari" />
             <End Role="MezuniyetJuriOneriFormuJurileri" EntitySet="MezuniyetJuriOneriFormuJurileri" />
           </AssociationSet>
-          <AssociationSet Name="FK_MezuniyetJuriOneriFormuJurileri_Universiteler" Association="Self.FK_MezuniyetJuriOneriFormuJurileri_Universiteler">
-            <End Role="Universiteler" EntitySet="Universiteler" />
-            <End Role="MezuniyetJuriOneriFormuJurileri" EntitySet="MezuniyetJuriOneriFormuJurileri" />
-          </AssociationSet>
           <AssociationSet Name="FK_MezuniyetSureci_Anket" Association="Self.FK_MezuniyetSureci_Anket">
             <End Role="Anket" EntitySet="Anket" />
             <End Role="MezuniyetSureci" EntitySet="MezuniyetSureci" />
@@ -9732,10 +9707,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_MezuniyetJuriOneriFormuJurileri_MezuniyetJuriOneriFormlari" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormuJurileri_MezuniyetJuriOneriFormlari">
             <End Role="MezuniyetJuriOneriFormlari" EntitySet="MezuniyetJuriOneriFormlaris" />
-            <End Role="MezuniyetJuriOneriFormuJurileri" EntitySet="MezuniyetJuriOneriFormuJurileris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MezuniyetJuriOneriFormuJurileri_Universiteler" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormuJurileri_Universiteler">
-            <End Role="Universiteler" EntitySet="Universitelers" />
             <End Role="MezuniyetJuriOneriFormuJurileri" EntitySet="MezuniyetJuriOneriFormuJurileris" />
           </AssociationSet>
           <AssociationSet Name="FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri" Association="LisansustuBasvuruSistemiModel.FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri">
@@ -11788,16 +11759,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="UnvanAdi" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="AdSoyad" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="EMail" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="UniversiteID" Type="Int32" />
           <Property Name="UniversiteAdi" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="AnabilimdaliProgramAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="UzmanlikAlani" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="BilimselCalismalarAnahtarSozcukler" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="DilSinavAdi" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="DilPuani" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="IsAsilOrYedek" Type="Boolean" />
           <NavigationProperty Name="MezuniyetJuriOneriFormlari" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormuJurileri_MezuniyetJuriOneriFormlari" FromRole="MezuniyetJuriOneriFormuJurileri" ToRole="MezuniyetJuriOneriFormlari" />
-          <NavigationProperty Name="Universiteler" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormuJurileri_Universiteler" FromRole="MezuniyetJuriOneriFormuJurileri" ToRole="Universiteler" />
           <NavigationProperty Name="SRTaleplerJuris" Relationship="LisansustuBasvuruSistemiModel.FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri" FromRole="MezuniyetJuriOneriFormuJurileri" ToRole="SRTaleplerJuri" />
         </EntityType>
         <EntityType Name="MezuniyetSinavDurumlari">
@@ -13058,11 +13024,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="TDAnabilimDaliAdi" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="TDProgramKod" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="TDProgramAdi" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
-          <Property Name="TDSinavTipID" Type="Int32" />
-          <Property Name="TDSinavAdi" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="TDSinavYili" Type="Int32" />
-          <Property Name="TDSinavPuani" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
-          <Property Name="TDUniversiteAdi" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="TDOgrenciSayisiYL" Type="Int32" />
           <Property Name="TDOgrenciSayisiDR" Type="Int32" />
           <Property Name="TDTezSayisiYL" Type="Int32" />
@@ -13488,7 +13449,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="MezuniyetJuriOneriFormuJurileris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormuJurileri_Universiteler" FromRole="Universiteler" ToRole="MezuniyetJuriOneriFormuJurileri" />
           <NavigationProperty Name="TIBasvuruAraRaporKomites" Relationship="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRaporKomite_Universiteler" FromRole="Universiteler" ToRole="TIBasvuruAraRaporKomite" />
           <NavigationProperty Name="TijBasvuruOneriJurilers" Relationship="LisansustuBasvuruSistemiModel.FK_TijBasvuruOneriJuriler_Universiteler" FromRole="Universiteler" ToRole="TijBasvuruOneriJuriler" />
         </EntityType>
@@ -16605,18 +16565,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MezuniyetJuriOneriFormuJurileri_Universiteler">
-          <End Type="LisansustuBasvuruSistemiModel.Universiteler" Role="Universiteler" Multiplicity="0..1" />
-          <End Type="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormuJurileri" Role="MezuniyetJuriOneriFormuJurileri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Universiteler">
-              <PropertyRef Name="UniversiteID" />
-            </Principal>
-            <Dependent Role="MezuniyetJuriOneriFormuJurileri">
-              <PropertyRef Name="UniversiteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri">
           <End Type="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormuJurileri" Role="MezuniyetJuriOneriFormuJurileri" Multiplicity="0..1" />
           <End Type="LisansustuBasvuruSistemiModel.SRTaleplerJuri" Role="SRTaleplerJuri" Multiplicity="*" />
@@ -19191,13 +19139,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormuJurileri">
               <MappingFragment StoreEntitySet="MezuniyetJuriOneriFormuJurileri">
                 <ScalarProperty Name="IsAsilOrYedek" ColumnName="IsAsilOrYedek" />
-                <ScalarProperty Name="DilPuani" ColumnName="DilPuani" />
-                <ScalarProperty Name="DilSinavAdi" ColumnName="DilSinavAdi" />
-                <ScalarProperty Name="BilimselCalismalarAnahtarSozcukler" ColumnName="BilimselCalismalarAnahtarSozcukler" />
                 <ScalarProperty Name="UzmanlikAlani" ColumnName="UzmanlikAlani" />
                 <ScalarProperty Name="AnabilimdaliProgramAdi" ColumnName="AnabilimdaliProgramAdi" />
                 <ScalarProperty Name="UniversiteAdi" ColumnName="UniversiteAdi" />
-                <ScalarProperty Name="UniversiteID" ColumnName="UniversiteID" />
                 <ScalarProperty Name="EMail" ColumnName="EMail" />
                 <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
                 <ScalarProperty Name="UnvanAdi" ColumnName="UnvanAdi" />
@@ -20310,11 +20254,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="TDTezSayisiYL" ColumnName="TDTezSayisiYL" />
                 <ScalarProperty Name="TDOgrenciSayisiDR" ColumnName="TDOgrenciSayisiDR" />
                 <ScalarProperty Name="TDOgrenciSayisiYL" ColumnName="TDOgrenciSayisiYL" />
-                <ScalarProperty Name="TDUniversiteAdi" ColumnName="TDUniversiteAdi" />
-                <ScalarProperty Name="TDSinavPuani" ColumnName="TDSinavPuani" />
-                <ScalarProperty Name="TDSinavYili" ColumnName="TDSinavYili" />
-                <ScalarProperty Name="TDSinavAdi" ColumnName="TDSinavAdi" />
-                <ScalarProperty Name="TDSinavTipID" ColumnName="TDSinavTipID" />
                 <ScalarProperty Name="TDProgramAdi" ColumnName="TDProgramAdi" />
                 <ScalarProperty Name="TDProgramKod" ColumnName="TDProgramKod" />
                 <ScalarProperty Name="TDAnabilimDaliAdi" ColumnName="TDAnabilimDaliAdi" />

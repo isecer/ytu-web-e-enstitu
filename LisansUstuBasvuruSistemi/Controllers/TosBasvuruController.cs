@@ -430,16 +430,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (enstituYetki && !donemSecim.IsNullOrWhiteSpace())
             {
                 baslangicYil = donemSecim.Substring(0, 4).ToInt(0);
-                donemId = donemSecim.Substring(4, 1).ToInt(0);
-
-            }
-
-
-
-
-
-            var danismanTc = studentInfo.OgrenciInfo.DANISMAN_TC1;
-
+                donemId = donemSecim.Substring(4, 1).ToInt(0); 
+            } 
+            var danismanTc = studentInfo.OgrenciInfo.DANISMAN_TC1; 
             if (!degerlendirmeYetki)
             {
                 mMessage.Messages.Add("kayıt yetkisine sahip değilsiniz.");

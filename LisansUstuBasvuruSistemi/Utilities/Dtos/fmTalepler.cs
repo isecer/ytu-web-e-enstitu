@@ -42,12 +42,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ClassName { get; set; }
         public string Color { get; set; }
         public string IslemYapan { get; set; }
-        public bool IsSonSRTalebi { get; set; }
+        public bool IsSonSrTalebi { get; set; }
         public bool IsOncedenUzatmaAlindi { get; set; }
         public SrDurumSelectList SrDurumSelectList = new SrDurumSelectList();
         public List<SRTaleplerJuri> JuriBilgi { get; set; }
-        public DateTime UzatmaSonSRTarih { get; set; }
-        public DateTime TeslimSonTarih { get; set; }
+        public DateTime UzatmaTaahhutSonTarih { get; set; }
+        public DateTime UzatmaSonSrTarih { get; set; }
+        public DateTime TezTeslimSonTarih { get; set; }
 
         public string JuriSonucMezuniyetSinavDurumAdi { get; set; }
         public bool IsTezDiliTr { get; set; }

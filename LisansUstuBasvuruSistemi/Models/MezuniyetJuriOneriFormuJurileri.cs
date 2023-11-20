@@ -26,17 +26,12 @@ namespace LisansUstuBasvuruSistemi.Models
         public string UnvanAdi { get; set; }
         public string AdSoyad { get; set; }
         public string EMail { get; set; }
-        public Nullable<int> UniversiteID { get; set; }
         public string UniversiteAdi { get; set; }
         public string AnabilimdaliProgramAdi { get; set; }
         public string UzmanlikAlani { get; set; }
-        public string BilimselCalismalarAnahtarSozcukler { get; set; }
-        public string DilSinavAdi { get; set; }
-        public string DilPuani { get; set; }
         public Nullable<bool> IsAsilOrYedek { get; set; }
     
         public virtual MezuniyetJuriOneriFormlari MezuniyetJuriOneriFormlari { get; set; }
-        public virtual Universiteler Universiteler { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTaleplerJuri> SRTaleplerJuris { get; set; }
     }

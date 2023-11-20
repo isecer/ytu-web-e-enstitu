@@ -31,7 +31,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             fileName = fileName.GetFileName();
             extension = extension ?? fileName.GetFileExtension();
-            var nGuid = Guid.NewGuid().ToString().Substring(0, 4);
+            var nGuid = Guid.NewGuid().ToString().Substring(0, 8);
             if (addGuid != null) nGuid = addGuid + "_" + nGuid;
             fileName = fileName.Replace(extension, "_" + nGuid).ReplaceSpecialCharacter() + extension;
             fileName = fileName.Replace("+", "_");

@@ -195,18 +195,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Kayit(KmMezuniyetYonetmelik kModel, string dlgid = "")
         {
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
             var yayinturCount = 5;
             var qOtipKod = kModel.MezuniyetYayinTurIDs.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, Inx = inx }).ToList();
-            var qgID = kModel.MezuniyetYayinTurIDs.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, Inx = inx }).ToList();
+            var qgId = kModel.MezuniyetYayinTurIDs.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, Inx = inx }).ToList();
             var qGecerli = kModel.IsGecerlis.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, IsGecerli = s.Split('_')[2].ToIntToBooleanObj(), Inx = inx }).ToList();
             var qZorunlu = kModel.IsZorunlus.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, IsZorunlu = s.Split('_')[2].ToIntToBooleanObj(), Inx = inx }).ToList();
             var qGrpKodu = kModel.GrupKodus.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, GrupKodu = s.Split('_')[2].ToStrObj(), Inx = inx }).ToList();
             var qVeVeya = kModel.IsVeOrVeyas.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, IsVeOrVeya = s.Split('_')[2].ToBooleanObj(), Inx = inx }).ToList();
             var qDetaylar = (from s in qOtipKod
-                             join b in qgID on new { s.OgrenimTipKod, s.Inx } equals new { b.OgrenimTipKod, b.Inx }
+                             join b in qgId on new { s.OgrenimTipKod, s.Inx } equals new { b.OgrenimTipKod, b.Inx }
                              join g in qGecerli on new { b.OgrenimTipKod, b.MezuniyetYayinTurID, s.Inx } equals new { g.OgrenimTipKod, g.MezuniyetYayinTurID, g.Inx }
                              join z in qZorunlu on new { g.OgrenimTipKod, g.MezuniyetYayinTurID, g.Inx } equals new { z.OgrenimTipKod, z.MezuniyetYayinTurID, z.Inx }
                              join gr in qGrpKodu on new { z.OgrenimTipKod, z.MezuniyetYayinTurID, z.Inx } equals new { gr.OgrenimTipKod, gr.MezuniyetYayinTurID, gr.Inx }
@@ -224,20 +226,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             { 
-                MmMessage.Messages.Add("Enstitü Seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
+                mmMessage.Messages.Add("Enstitü Seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
 
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
 
             if (kModel.TarihKriterID <= 0)
             { 
-                MmMessage.Messages.Add("Tarih Kriteri Seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
+                mmMessage.Messages.Add("Tarih Kriteri Seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
             else
             {
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TarihKriterID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TarihKriterID" });
 
                 if (kModel.TarihKriterID == TarihKriterSecimEnum.SecilenTarihAraligi)
                 {
@@ -245,21 +247,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (kModel.OgretimYili.IsNullOrWhiteSpace())
                         { 
-                            MmMessage.Messages.Add("Öğretim Yılı Seçiniz");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
+                            mmMessage.Messages.Add("Öğretim Yılı Seçiniz");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
                         }
                         else
                         {
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
                         }
                         if (kModel.OgretimYiliB.IsNullOrWhiteSpace())
                         { 
-                            MmMessage.Messages.Add("Öğretim Yılı Bitişi Seçiniz");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
+                            mmMessage.Messages.Add("Öğretim Yılı Bitişi Seçiniz");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
                         }
                         else
                         {
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYiliB" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYiliB" });
                         }
                     }
                     else
@@ -275,14 +277,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         if (kModel.BaslangicYil >= kModel.BaslangicYilB && kModel.DonemID >= kModel.DonemIDB)
                         { 
-                            MmMessage.Messages.Add("Öğretim Yılı Öğretim Yılı Bitişten büyük ya da eşit olamaz!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
+                            mmMessage.Messages.Add("Öğretim Yılı Öğretim Yılı Bitişten büyük ya da eşit olamaz!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
                         }
                         else
                         {
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYiliB" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYiliB" });
                         }
                     }
                 }
@@ -295,7 +297,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 bool isContains = false;
                 var baslangic = Convert.ToDecimal(kModel.BaslangicYil + "," + kModel.DonemID);
@@ -343,21 +345,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (isContains)
                 { 
-                    MmMessage.Messages.Add("Girmiş olduğunuz Öğretim yılı daha önceden kayıt edilmiş yönetmeliklerde geçen öğretim yılı ile çakışmaktadır!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
+                    mmMessage.Messages.Add("Girmiş olduğunuz Öğretim yılı daha önceden kayıt edilmiş yönetmeliklerde geçen öğretim yılı ile çakışmaktadır!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
                 }
                 else
                 {
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYiliB" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYiliB" });
                 }
                 var ogrenimTipleris = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod && p.IsAktif && p.IsMezuniyetBasvurusuYapabilir).ToList();
                 foreach (var item in ogrenimTipleris)
                 {
                     if (qDetaylar.Any(p => p.OgrenimTipKod == item.OgrenimTipKod && p.IsGecerli) == false)
                     { 
-                        MmMessage.Messages.Add("Kayıt işlemi yapabilmeniz için " + item.OgrenimTipAdi + " öğrenim tipinden en az bir yayın tipini geçerli kılmanız gerekmektedir!");
+                        mmMessage.Messages.Add("Kayıt işlemi yapabilmeniz için " + item.OgrenimTipAdi + " öğrenim tipinden en az bir yayın tipini geçerli kılmanız gerekmektedir!");
                     }
                 }
 
@@ -366,7 +368,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 bool isnewOrEdit = kModel.MezuniyetYonetmelikID <= 0;
                 kModel.IslemTarihi = DateTime.Now;
@@ -462,7 +464,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
                 kModel.KrMezuniyetYonetmelikOt = qdata;
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
 
 
@@ -472,7 +474,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.GrupKodu = ComboData.GetCmbGrupKod(yayinturCount, "Grup", true);
             ViewBag.VeVeya = ComboData.GecCmbVeVeya(true);
             ViewBag.TarihKriterID = new SelectList(ComboData.GetCmbTarihKriterSecim(false), "Value", "Caption");
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }
 

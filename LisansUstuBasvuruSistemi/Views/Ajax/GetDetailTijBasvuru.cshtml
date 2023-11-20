@@ -438,22 +438,23 @@
                                                                     </table>
                                                                 </td>
                                                             </tr>
-                                                            <tr id="DanismanOnaylanmaTaahhutRow1_@item.UniqueID" style="color: @(item.DanismanOnayladi==true?"green":"maroon");" class="@(item.DanismanOnayladi == true ? "" : "hide")">
-                                                                <td class="CaptionTd">Taahhüt 1</td>
-                                                                <td class="CaptionTd">:</td>
-                                                                <td class="ValueTd">
-                                                                    Önerilen tez izleme komite üyeleri arasında eş danışman bulunmadığını kabul ediyorum.
+
+                                                            <tr id="DanismanOnaylanmaTaahhutRow1_@item.UniqueID" class="@(item.DanismanOnayladi == true ? "" : "hide")">
+                                                                <td colspan="3">
+                                                                    <div class="tasks">
+                                                                        <div class="task-item task-warning" style="margin-bottom: 0px; cursor: auto;">
+                                                                            <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                                                <br><b>Taahhüt1:</b> Önerilen tez izleme komite üyeleri arasında eş danışman bulunmadığını kabul ediyorum.
+                                                                                <br><b>Taahhüt2:</b> Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                                                                            </div>
+                                                                            <div class="task-footer" style="padding-top:0pt;padding-bottom:0px;color:green;">
+                                                                                <div class="pull-left"><span class="fa fa-check-circle-o"></span> @item.DanismanOnayTarihi.ToFormatDateAndTime()</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
                                                                 </td>
                                                             </tr>
-                                                            <tr id="DanismanOnaylanmaTaahhutRow2_@item.UniqueID" style="color: @(item.DanismanOnayladi==true?"green":"maroon");" class="@(item.DanismanOnayladi == true ? "" : "hide")">
-                                                                <td class="CaptionTd">Taahhüt 2</td>
-                                                                <td class="CaptionTd">:</td>
-                                                                <td class="ValueTd">
-                                                                    Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
-                                                                </td>
-
-                                                            </tr>
-
                                                             <tr id="DanismanOnaylanmamaAciklamasiAckRow_@item.UniqueID" class="form-group @(item.DanismanOnayladi == false ? "" : "hide")">
                                                                 <td class="CaptionTd">Onaylanmama Açıklaması</td>
                                                                 <td class="CaptionTd">:</td>
@@ -465,50 +466,51 @@
                                                         else
                                                         {
 
-                                                            <tr class="form-group">
-                                                                <td class="CaptionTd" width="200">Onay Durumu</td>
-                                                                <td class="CaptionTd" width="10">:</td>
-                                                                <td class="ValueTd">
-                                                                    @if (!item.DanismanOnayladi.HasValue)
-                                                                    {
 
-                                                                        <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;" aria-hidden="true"></i>Onay Bekleniyor.</span>
-                                                                    }
-                                                                    else if (item.DanismanOnayladi == true)
-                                                                    {
-
-                                                                        <span style="color: green; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size: 12pt;" aria-hidden="true"></i>Onaylandı. (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
-
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <span style="color: maroon; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size: 12pt;" aria-hidden="true"></i>Onaylanmadı. (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
-
-                                                                    }
-                                                                </td>
-                                                            </tr>
                                                             if (item.DanismanOnayladi == true)
                                                             {
-                                                                <tr style="color: green;">
-                                                                    <td class="CaptionTd">Taahhüt 1</td>
-                                                                    <td class="CaptionTd">:</td>
-                                                                    <td class="ValueTd">
-                                                                        Önerilen tez izleme komite üyeleri arasında eş danışman bulunmadığını kabul ediyorum.
+                                                                <tr>
+                                                                    <td colspan="3">
+                                                                        <div class="tasks">
+                                                                            <div class="task-item task-info" style="margin-bottom: 0px; cursor: auto;">
+                                                                                <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                                                    <br><b>Taahhüt1:</b> Önerilen tez izleme komite üyeleri arasında eş danışman bulunmadığını kabul ediyorum.
+                                                                                    <br><b>Taahhüt2:</b> Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                                                                                </div>
+                                                                                <div class="task-footer" style="padding-top:0pt;padding-bottom:0px;color:green;">
+                                                                                    <div class="pull-left"><span class="fa fa-check-circle-o"></span> @item.DanismanOnayTarihi.ToFormatDateAndTime() Tarihinde @item.DanismanAdi tarafından onaylandı</div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
                                                                     </td>
                                                                 </tr>
-                                                                <tr style="color: green;">
-                                                                    <td class="CaptionTd">Taahhüt 2</td>
-                                                                    <td class="CaptionTd">:</td>
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr class="form-group">
+                                                                    <td class="CaptionTd" width="200">Onay Durumu</td>
+                                                                    <td class="CaptionTd" width="10">:</td>
                                                                     <td class="ValueTd">
-                                                                        Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                                                                        @if (!item.DanismanOnayladi.HasValue)
+                                                                        {
+
+                                                                            <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;" aria-hidden="true"></i>Onay Bekleniyor.</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color: maroon; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size: 12pt;" aria-hidden="true"></i>Onaylanmadı. (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+
+                                                                        }
                                                                     </td>
                                                                 </tr>
                                                             }
                                                             if (item.DanismanOnayladi == false)
                                                             {
                                                                 <tr>
-                                                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
-                                                                    <td class="CaptionTd">:</td>
+                                                                    <td class="CaptionTd" width="200">Onaylanmama Açıklaması</td>
+                                                                    <td class="CaptionTd" width="10">:</td>
                                                                     <td class="ValueTd">
                                                                         @item.DanismanOnaylanmamaAciklamasi
                                                                     </td>

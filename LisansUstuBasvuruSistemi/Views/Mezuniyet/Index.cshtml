@@ -574,88 +574,87 @@
 {
 
     <script>
-             function GetJuriOneriFormu(MezuniyetBasvurulariID) {
-        var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        PanelRefresh(_panel, false);
-        $.ajax({
-            url: '@Url.Action("GetJuriOneriFormu", "MezuniyetGelenBasvurular")',
-            data: {
-                'MezuniyetBasvurulariID': MezuniyetBasvurulariID,
-            },
-            success: function (result) {
-                PanelRefresh(_panel, true);
-                if (result.IsSuccess) {
+        function GetJuriOneriFormu(MezuniyetBasvurulariID) {
+            var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
+            PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetJuriOneriFormu", "MezuniyetGelenBasvurular")',
+                data: {
+                    'MezuniyetBasvurulariID': MezuniyetBasvurulariID,
+                },
+                success: function (result) {
+                    PanelRefresh(_panel, true);
+                    if (result.IsSuccess) {
 
 
 
-                    var btbxxFS = bootbox.dialog({
-                        message: result.Content,
-                        //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
-                        buttons: {
+                        var btbxxFS = bootbox.dialog({
+                            message: result.Content,
+                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                            buttons: {
 
-                            success: {
-                                label: 'İleri',
-                                className: "btn-primary btnKaydet",
-                                callback: function (event) {
-                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                    PanelRefresh(pnlx, false);
-                                    $('#FrmJuriOneriFormu').ajaxForm({
-                                        success: function (result) {
-                                            if (result.mMessage.IsSuccess) {
-                                                var _clsBtn = $('.bootbox-close-button').first();
-                                                $(_clsBtn).click();
-                                                getDetailx(MezuniyetBasvurulariID);
-                                            }
-                                            else {
-                                                $('#PostDetayTabAdi').val(result.SelectedDetayTabAdi);
-
-                                                if (result.SelectedDetayTabAdi == "tab-YtuDisiJuri-4" || !result.IsYeniJO) {
-                                                     $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
-                                                    $('.btnKaydet').text('Kaydet');
-                                                    $('#SaveData').val("true");
-
+                                success: {
+                                    label: 'İleri',
+                                    className: "btn-primary btnKaydet",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        PanelRefresh(pnlx, false);
+                                        $('#FrmJuriOneriFormu').ajaxForm({
+                                            success: function (result) {
+                                                if (result.mMessage.IsSuccess) {
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    getDetailx(MezuniyetBasvurulariID);
                                                 }
                                                 else {
-                                                    $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
-                                                    $('.btnKaydet').text('İleri');
-                                                    $('#SaveData').val("false");
-                                                }
-                                                $("[href='#" + result.SelectedAnaTabAdi + "']").first().click();
-                                                $("[href='#" + result.SelectedDetayTabAdi + "']").first().click();
-                                                if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
-                                                return false;
-                                            }
-                                            PanelRefresh(pnlx, true);
-                                        },
-                                        complete: function (cmp) {
-                                            PanelRefresh(pnlx, true);
-                                        },
-                                        error: function (err) {
-                                            PanelRefresh(pnlx, true);
-                                        }
+                                                    $('#PostDetayTabAdi').val(result.SelectedDetayTabAdi);
 
-                                    });
-                                    $('#FrmJuriOneriFormu').submit();
-                                    return false;
+                                                    if (result.SelectedDetayTabAdi == "tab-YtuDisiJuri-4" || !result.IsYeniJO) {
+                                                        $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
+                                                        $('.btnKaydet').text('Kaydet');
+                                                        $('#SaveData').val("true");
+
+                                                    }
+                                                    else {
+                                                        $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
+                                                        $('.btnKaydet').text('İleri');
+                                                        $('#SaveData').val("false");
+                                                    }
+                                                    $("[href='#" + result.SelectedAnaTabAdi + "']").first().click();
+                                                    $("[href='#" + result.SelectedDetayTabAdi + "']").first().click();
+                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    return false;
+                                                }
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                PanelRefresh(pnlx, true);
+                                            }
+
+                                        });
+                                        $('#FrmJuriOneriFormu').submit();
+                                        return false;
+                                    }
                                 }
                             }
-                        }
-                    });
-                    $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                        });
+                       // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                    }
+                    else {
+                        showMmMessage(result.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+
                 }
-                else {
-                    showMmMessage(result.Messages, 'Tamam');
-                }
-
-            },
-            error: function (err) {
-                PanelRefresh(_panel, true);
-                alert(err.responseText);
-
-            }
-        })
-    }
-
+            });
+        }
         function SinavDegerlendir(UniqueID, MBasvuruID, IsDanisman) {
             var IsTezBasligiDegisti = $('#IsTezBasligiDegisti_' + UniqueID).val();
             var TezOrjinalBasligi = $('#TezOrjinalBasligi_' + UniqueID).val();

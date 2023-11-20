@@ -20,9 +20,9 @@
                     <th width="60" title="Tüm Dönem Toplam Kredi Kriteri">Min Kredi</th>
                     <th width="60" title="Genel AGNO Kriteri">Min AGNO</th>
                     <th width="60" title="Genel AKTS Kriteri">Min AKTS</th>
+                    <th width="40" title="EYK Tarihinden Sonra Salon Rezervasyonu Kaç Gün Sonra Alınabilir (Gün)">S.R.G</th>
                     <th width="50" title="Tez Sınavı Uzatma Süresi (Gün)">T.S.U.S</th>
                     <th width="40" title="Tez Teslim Süresi (Gün)">T.T.S</th>
-                    <th width="40" title="EYK Tarihinden Sonra Salon Rezervasyonu Kaç Gün Sonra Alınabilir (Gün)">S.R.G</th>
                 </tr>
             </thead>
             <tbody id="Rw_tbody">
@@ -71,17 +71,17 @@
                         </td>
                         <td>
                             <div class="form-group">
+                                <input type="text" class="form-control" name="MBSRTalebiKacGunSonraAlabilir" value="@item.MBSRTalebiKacGunSonraAlabilir">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
                                 <input type="text" class="form-control" name="MBSinavUzatmaSuresiGun" value="@item.MBSinavUzatmaSuresiGun">
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
                                 <input type="text" class="form-control" name="MBTezTeslimSuresiGun" value="@item.MBTezTeslimSuresiGun">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="MBSRTalebiKacGunSonraAlabilir" value="@item.MBSRTalebiKacGunSonraAlabilir">
                             </div>
                         </td>
                     </tr>

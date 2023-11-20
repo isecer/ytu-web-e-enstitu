@@ -55,11 +55,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public string TDAnabilimDaliAdi { get; set; }
         public string TDProgramKod { get; set; }
         public string TDProgramAdi { get; set; }
-        public Nullable<int> TDSinavTipID { get; set; }
-        public string TDSinavAdi { get; set; }
-        public Nullable<int> TDSinavYili { get; set; }
-        public string TDSinavPuani { get; set; }
-        public string TDUniversiteAdi { get; set; }
         public Nullable<int> TDOgrenciSayisiYL { get; set; }
         public Nullable<int> TDOgrenciSayisiDR { get; set; }
         public Nullable<int> TDTezSayisiYL { get; set; }

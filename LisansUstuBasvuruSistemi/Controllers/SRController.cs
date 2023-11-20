@@ -505,8 +505,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 #region SendMail
                 if (SrAyar.SrIslemlerindeMailGonder.GetAyarSr(enstituKod).ToBoolean().Value && kModel.SRTalepID <= 0)
-                {
-                    var enstLng = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
+                { 
                     var talep = _entities.SRTalepleris.First(p => p.SRTalepID == kid);
                     var salon = _entities.SRSalonlars.First(p => p.SRSalonID == talep.SRSalonID);
                     var juriler = _entities.SRTaleplerJuris.Where(p => p.SRTalepID == talep.SRTalepID).ToList();

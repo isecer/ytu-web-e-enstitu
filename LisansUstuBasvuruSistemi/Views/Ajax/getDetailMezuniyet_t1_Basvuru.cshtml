@@ -7,7 +7,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model MezuniyetBasvuruDetayDto
-@{ 
+@{
     Layout = null;
     var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
     var tdKayitYetki = kayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
@@ -131,7 +131,7 @@
                                                 <option></option>
                                                 <option value="true" @(Model.IsDanismanOnay == true ? "selected" : "")>Öğrenci Başvurusunu Onaylıyorum </option>
                                                 <option value="false" @(Model.IsDanismanOnay == false ? "selected" : "")>Öğrenci Başvurusunu Reddediyorum</option>
-                                            </select> 
+                                            </select>
                                             <a href="javascript:void(0);" onclick="DanismanBasvuruOnayKayit(@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
                                             <script>
                                                 function DanOnayChange(sndr) {
@@ -153,21 +153,22 @@
                                         </td>
                                     </tr>
                                     <tr class="BasvuruDanismanOnayTaahhutRw_@Model.MezuniyetBasvurulariID @(Model.IsDanismanOnay == true ? "" : "hide")">
-                                        <td class="CaptionTd">Taahhüt 1</td>
-                                        <td class="CaptionTd">:</td>
-                                        <td class="ValueTd">
-                                            <br />
-                                            Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
-                                        </td>
-                                    </tr>
-                                    <tr class="BasvuruDanismanOnayTaahhutRw_@Model.MezuniyetBasvurulariID @(Model.IsDanismanOnay == true ? "" : "hide")">
-                                        <td class="CaptionTd">Taahhüt 2</td>
-                                        <td class="CaptionTd">:</td>
-                                        <td class="ValueTd">
-                                            <br />
-                                            Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
-                                            <br />
-                                            <br />
+                                        <td colspan="3">
+                                            <div class="tasks ui-sortable">
+                                                <div class="task-item task-@(Model.IsDanismanOnay.HasValue?"info":"warning")" style="margin-bottom:0px;">
+                                                    <div class="task-text ui-sortable-handle" style="padding-bottom: 0px; font-size: 8pt;">
+                                                        <b>Taahhüt 1:</b>  Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                                        <br /><br />
+                                                        <b>Taahhüt 2:</b> Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                                    </div>
+                                                    @if (Model.IsDanismanOnay.HasValue)
+                                                    {
+                                                        <div class="task-footer" style="padding-top:0pt;padding-bottom:0px; color: green;">
+                                                            <div class="pull-left"><span class="fa fa-check-circle-o"></span> @Model.DanismanOnayTarihi.ToFormatDateAndTime() tarihinde @Model.TezDanismanAdi tarafından onaylandı </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr id="BasvuruDanismanOnayAciklamaRw_@Model.MezuniyetBasvurulariID" class="@(Model.IsDanismanOnay == false ? "" : "hide")">
@@ -177,7 +178,7 @@
                                             <textarea placeholder="Onaylanmama Sebebi" id="BasvuruDanismanOnayAciklama_@Model.MezuniyetBasvurulariID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@Model.DanismanOnayAciklama</textarea>
                                         </td>
                                     </tr>
-                                    @if (Model.IsDanismanOnay.HasValue)
+                                    @if (Model.IsDanismanOnay == false)
                                     {
                                         <tr>
                                             <td class="CaptionTd" style="font-weight:bold;">@(Model.IsDanismanOnay.Value?"Onay":"Ret") Tarihi</td>
@@ -193,13 +194,14 @@
                             else
                             {
                                 <table style="width:100%;">
-                                    <tr>
-                                        <td class="CaptionTd" width="100">Danışman Adı</td>
-                                        <td class="CaptionTd" width="10">:</td>
-                                        <td class="ValueTd">@Model.TezDanismanAdi</td>
-                                    </tr>
+
                                     @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Taslak)
                                     {
+                                        <tr>
+                                            <td class="CaptionTd" width="100">Danışman Adı</td>
+                                            <td class="CaptionTd" width="10">:</td>
+                                            <td class="ValueTd">@Model.TezDanismanAdi</td>
+                                        </tr>
                                         <tr>
                                             <td class="CaptionTd">Onay Durumu</td>
                                             <td class="CaptionTd">:</td>
@@ -210,36 +212,33 @@
                                     }
                                     else if (Model.IsDanismanOnay == true)
                                     {
+                                        <tr>
+                                            <td colspan="3">
+                                                <div class="tasks">
+                                                    <div class="task-item task-@(Model.IsDanismanOnay.HasValue?"info":"warning")" style="margin-bottom: 0px; cursor: auto;">
+                                                        <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                            <b>Taahhüt 1:</b> Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                                            <br /><br /><b>Taahhüt 2:</b> Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                                        </div>
+                                                        @if (Model.IsDanismanOnay.HasValue)
+                                                        {
+                                                            <div class="task-footer" style="padding-top:0pt;padding-bottom:0px;color:green;">
+                                                                <div class="pull-left"><span class="fa fa-check-circle-o"></span> @Model.DanismanOnayTarihi.ToFormatDateAndTime() tarihinde @Model.TezDanismanAdi tarafından onaylandı </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                                        <tr>
-                                            <td class="CaptionTd">Taahhüt 1</td>
-                                            <td class="CaptionTd">:</td>
-                                            <td class="ValueTd">
-                                                <br />
-                                                Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="CaptionTd">Taahhüt 2</td>
-                                            <td class="CaptionTd">:</td>
-                                            <td class="ValueTd">
-                                                <br />
-                                                Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
-                                                <br />
-                                                <br />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="CaptionTd">Onay Durumu</td>
-                                            <td class="CaptionTd">:</td>
-                                            <td class="ValueTd">
-                                                <span style="color:green;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Danışman Tarafından Onaylandı (@Model.DanismanOnayTarihi.ToFormatDateAndTime())</span>
-                                                <br />
-                                            </td>
-                                        </tr>
                                     }
                                     else if (Model.IsDanismanOnay == false)
                                     {
+                                        <tr>
+                                            <td class="CaptionTd" width="100">Danışman Adı</td>
+                                            <td class="CaptionTd" width="10">:</td>
+                                            <td class="ValueTd">@Model.TezDanismanAdi</td>
+                                        </tr>
                                         <tr>
                                             <td class="CaptionTd">Onay Durumu</td>
                                             <td class="CaptionTd">:</td>
@@ -250,6 +249,11 @@
                                     }
                                     else
                                     {
+                                        <tr>
+                                            <td class="CaptionTd" width="100">Danışman Adı</td>
+                                            <td class="CaptionTd" width="10">:</td>
+                                            <td class="ValueTd">@Model.TezDanismanAdi</td>
+                                        </tr>
                                         <tr>
                                             <td class="CaptionTd">Onay Durumu</td>
                                             <td class="CaptionTd">:</td>

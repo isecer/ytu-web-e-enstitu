@@ -1,5 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
@@ -8,7 +7,7 @@
 @model MezuniyetBasvuruDetayDto
 @{
     Layout = null;
-    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
     var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + Model.MezuniyetBasvurulariID.ToString();
 
@@ -16,8 +15,8 @@
     var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
     var sonSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault();
 
-    bool isJuriDegerlendirmeVar = false;
-    bool isSrTalebiYapilabilir = false;
+    var isJuriDegerlendirmeVar = false;
+    var isSrTalebiYapilabilir = false;
     if (sonSr != null)
     {
         isJuriDegerlendirmeVar = sonSr.SRTaleplerJuris.Any(a => !a.UnvanAdi.IsNullOrWhiteSpace() || a.IsLinkGonderildi == true);
@@ -106,7 +105,7 @@
                                                             var isJuriSonucGirildi = item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
                                                             var isJuriDegerlendirmeBasladi = item.SRTaleplerJuris.Any(a => a.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi);
                                                             var isEnstituSonucuGirdi = item.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
-                                                            var isSrTalebiDuzeltilebilir = item.SRDurumID == SrTalepDurumEnum.TalepEdildi && item.IsSonSRTalebi && !isEnstituSonucuGirdi && (!isJuriDegerlendirmeVar || !isJuriDegerlendirmeBasladi);
+                                                            var isSrTalebiDuzeltilebilir = item.SRDurumID == SrTalepDurumEnum.TalepEdildi && item.IsSonSrTalebi && !isEnstituSonucuGirdi && (!isJuriDegerlendirmeVar || !isJuriDegerlendirmeBasladi);
                                                             <tr>
                                                                 <td width="55">
                                                                     <table>
@@ -254,7 +253,7 @@
                                                                                                                     <script>
 
                                                                                                                             function SaveSinavTarihiTarihi(id) {
-                                                                                                                                var val = $('#SrSinavTarihiIInput_' + id).val(); 
+                                                                                                                                var val = $('#SrSinavTarihiIInput_' + id).val();
                                                                                                                                 var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
                                                                                                                                 PanelRefresh(_panel, false);
                                                                                                                                 $.ajax({
@@ -288,7 +287,7 @@
                                                                                                 <td class="CaptionTd" width="140">Salon Talep Durumu</td>
                                                                                                 <td class="CaptionTd" width="10">:</td>
                                                                                                 <td class="ValueTd">
-                                                                                                    @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi && (isJuriDegerlendirmeVar ? !isJuriDegerlendirmeBasladi : true) && !isEnstituSonucuGirdi)
+                                                                                                    @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSrTalebi && (isJuriDegerlendirmeVar ? !isJuriDegerlendirmeBasladi : true) && !isEnstituSonucuGirdi)
                                                                                                     {
                                                                                                         @Html.DropDownList("SRDurumID", item.SrDurumSelectList.SRDurumID, new { id = "SRDurumID_" + item.SRTalepID, onchange = "DurumKontrol(" + item.SRTalepID + ")", style = "width:120px;" })
                                                                                                         <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="SrDurumKaydet(@Model.MezuniyetBasvurulariID,@item.SRTalepID)"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
@@ -303,7 +302,7 @@
                                                                                                 <td class="CaptionTd">Açıklama</td>
                                                                                                 <td class="CaptionTd">:</td>
                                                                                                 <td class="ValueTd">
-                                                                                                    @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi)
+                                                                                                    @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSrTalebi)
                                                                                                     {
                                                                                                         <textarea style="width:100%;resize:vertical;" id="SRDurumAciklamasi_@item.SRTalepID" name="SRDurumAciklamasi_">@item.SRDurumAciklamasi.ToStrObjEmptString().Trim()</textarea>
 
@@ -331,7 +330,7 @@
                                                                                 @if (item.IsTezBasligiDegisti.HasValue)
                                                                                 {
                                                                                     <tr>
-                                                                                        <td class="CaptionTd" width="140">Tez Başlığı Değişti Mi</td>
+                                                                                        <td class="CaptionTd" width="140">Tez başlığı değişti mi?</td>
                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                         <td class="ValueTd">
                                                                                             @(item.IsTezBasligiDegisti == true ? "Tez Başlığı Değişti" : "Tez Başlığı Değişmedi")
@@ -339,14 +338,14 @@
                                                                                     </tr>
                                                                                 }
                                                                                 <tr>
-                                                                                    <td class="CaptionTd" width="140">Tez Dili</td>
+                                                                                    <td class="CaptionTd" width="140">Tez dili</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
-                                                                                        @(item.IsTezDiliTr == true ? "Türkçe" : "İngilizce")
+                                                                                        @(item.IsTezDiliTr ? "Türkçe" : "İngilizce")
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez Başlığı Türkçe</td>
+                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez başlığı türkçe</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
                                                                                         @(item.IsTezBasligiDegisti == true ? item.YeniTezBaslikTr : item.TezBaslikTr)
@@ -354,7 +353,7 @@
                                                                                 </tr>
 
                                                                                 <tr>
-                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez Başlığı İngilizce</td>
+                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez başlığı ingilizce</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
                                                                                         @(item.IsTezBasligiDegisti == true ? item.YeniTezBaslikEn : item.TezBaslikEn)
@@ -362,7 +361,7 @@
                                                                                 </tr>
 
                                                                                 <tr>
-                                                                                    <td class="CaptionTd" width="300">Tez Sanayi İş Birliği Kapsamında Mı Gerçekleşti?</td>
+                                                                                    <td class="CaptionTd" width="300">Tez sanayi ile iş birliği kapsamında mı gerçekleşti?</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
                                                                                         @if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null)
@@ -373,19 +372,19 @@
                                                                                         }
                                                                                         else if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true)
                                                                                         {
-                                                                                            <span>Tez Sanayi ile İş Birliği Kapsamında Gerçekleşti</span>
+                                                                                            <span>Tez sanayi ile iş birliği kapsamında gerçekleşti</span>
 
                                                                                         }
                                                                                         else if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false)
                                                                                         {
-                                                                                            <span>Tez Sanayi ile İş Birliği Kapsamında Gerçekleşmedi</span>
+                                                                                            <span>Tez sanayi ile iş birliği kapsamında gerçekleşmedi</span>
                                                                                         }
                                                                                     </td>
                                                                                 </tr>
                                                                                 @if (Model.OgrenimTipKod.IsDoktora() && item.IsYokDrBursiyeriVar.HasValue)
                                                                                 {
                                                                                     <tr>
-                                                                                        <td class="CaptionTd" width="140">100/2000 YÖK Bursiyeri</td>
+                                                                                        <td class="CaptionTd" width="140">100/2000 YÖK bursiyeri</td>
                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                         <td class="ValueTd">
                                                                                             @(item.IsYokDrBursiyeriVar == true ? "Var " : "Yok")
@@ -409,7 +408,7 @@
                                                                                     <tr>
                                                                                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> Jüri Üyeleri Değerlendirme Bilgileri</td>
                                                                                         <td width="40" style=" border-bottom:1px solid;">
-                                                                                            @if (kayitYetki && !isJuriSonucGirildi && !isEnstituSonucuGirdi && item.SRTaleplerJuris.Any(a => (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && (!a.MezuniyetSinavDurumID.HasValue || a.MezuniyetSinavDurumID==1)))
+                                                                                            @if (kayitYetki && !isJuriSonucGirildi && !isEnstituSonucuGirdi && item.SRTaleplerJuris.Any(a => (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && (!a.MezuniyetSinavDurumID.HasValue || a.MezuniyetSinavDurumID == 1)))
                                                                                             {
                                                                                                 <span class="label label-info" style="cursor:pointer;font-size:8pt;" onclick="SrJuriDegistir(@Model.MezuniyetBasvurulariID,'@item.UniqueID')"><i class="fa fa-group"></i> Jüri Değiştir</span>
                                                                                             }
@@ -432,16 +431,15 @@
                                                                                                 <tbody>
                                                                                                     @foreach (var itemJuri in item.SRTaleplerJuris)
                                                                                                     {
-                                                                                                        var IsJuriDanisman = itemJuri.JuriTipAdi == "TezDanismani";
-                                                                                                        var IsJuriDegerlendirmeYapti = itemJuri.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
-                                                                                                        var ShowDanismanRow = isDanismani && IsJuriDanisman && !isJuriSonucGirildi;
-                                                                                                        var UzatmaSonrasiOgrenciTaahhutu = item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? item.IsOgrenciUzatmaSonrasiOnay.HasValue : false;
+                                                                                                        var isJuriDanisman = itemJuri.JuriTipAdi == "TezDanismani";
+                                                                                                        var isJuriDegerlendirmeYapti = itemJuri.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
+                                                                                                        var showDanismanRow = isDanismani && isJuriDanisman && !isJuriSonucGirildi;
 
                                                                                                         <tr>
                                                                                                             <td>
                                                                                                                 <ul class="panel-controls">
                                                                                                                     <li id="iShow_SJo_@itemJuri.SRTalepJuriID" onclick="showDetailY('SJo_@itemJuri.SRTalepJuriID')">
-                                                                                                                        <a href="javascript:void(0)"><span class="fa fa-angle-@(ShowDanismanRow ? "up" : "down")" aria-hidden="true"></span> </a>
+                                                                                                                        <a href="javascript:void(0)"><span class="fa fa-angle-@(showDanismanRow ? "up" : "down")" aria-hidden="true"></span> </a>
                                                                                                                     </li>
                                                                                                                 </ul>
                                                                                                             </td>
@@ -484,7 +482,7 @@
                                                                                                                         if (itemJuri.IsLinkGonderildi == true)
                                                                                                                         {
                                                                                                                             <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
-                                                                                                                            if ((!isDanismani || !IsJuriDanisman))
+                                                                                                                            if ((!isDanismani || !isJuriDanisman))
                                                                                                                             {
                                                                                                                                 <br />
                                                                                                                                 <span style="font-size:7pt;color:green;">@itemJuri.LinkGonderimTarihi.Value.ToLongDateString()  @itemJuri.LinkGonderimTarihi.Value.ToString("HH:mm") Saatinde Değerlendirme lnki gönderildi.</span>
@@ -492,7 +490,7 @@
                                                                                                                         }
                                                                                                                         else
                                                                                                                         {
-                                                                                                                            if (IsJuriDanisman)
+                                                                                                                            if (isJuriDanisman)
                                                                                                                             {
                                                                                                                                 <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
                                                                                                                             }
@@ -512,7 +510,7 @@
                                                                                                                 </td>
                                                                                                             }
                                                                                                         </tr>
-                                                                                                        <tr class="MainRow2 cls-SJo_@itemJuri.SRTalepJuriID" style="@(ShowDanismanRow ? "" : "display: none;")">
+                                                                                                        <tr class="MainRow2 cls-SJo_@itemJuri.SRTalepJuriID" style="@(showDanismanRow ? "" : "display: none;")">
                                                                                                             <td id="cls-SJo_@itemJuri.SRTalepJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
                                                                                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                                                                     <table style="table-layout:fixed; font-size:9pt;margin:0px;">
@@ -537,7 +535,7 @@
                                                                                                                 </div>
                                                                                                                 @if ((!isOgrenci || isDanismani || kayitYetki) && !juriOnayiOlmayacak && !isEnstituSonucuGirdi)
                                                                                                                 {
-                                                                                                                    var JuriVeriGirisYetki = item.IsSonSRTalebi && isJuriDegerlendirmeVar && ((IsJuriDanisman && isDanismani && !IsJuriDegerlendirmeYapti && !isEnstituSonucuGirdi) || (kayitYetki && !isEnstituSonucuGirdi));
+                                                                                                                    var juriVeriGirisYetki = item.IsSonSrTalebi && isJuriDegerlendirmeVar && ((isJuriDanisman && isDanismani && !isJuriDegerlendirmeYapti && !isEnstituSonucuGirdi) || (kayitYetki && !isEnstituSonucuGirdi));
 
                                                                                                                     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                                                                         <table style="width:100%;">
@@ -545,10 +543,10 @@
                                                                                                                                 <tr>
                                                                                                                                     <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign"></i> Tez Sınavı Değerlendirmesi</td>
                                                                                                                                 </tr>
-                                                                                                                                @if (JuriVeriGirisYetki)
+                                                                                                                                @if (juriVeriGirisYetki)
                                                                                                                                 {
 
-                                                                                                                                    if (IsJuriDanisman)
+                                                                                                                                    if (isJuriDanisman)
                                                                                                                                     {
                                                                                                                                         <tr>
                                                                                                                                             <td class="CaptionTd" width="300">Sınavda Tez Başlığı Değişti mi?</td>
@@ -576,7 +574,7 @@
                                                                                                                                             </td>
                                                                                                                                         </tr>
                                                                                                                                         <tr>
-                                                                                                                                            <td class="CaptionTd">Tez Sanayi İş Birliği Kapsamında Mı Gerçekleşti?</td>
+                                                                                                                                            <td class="CaptionTd">Tez Sanayi İş Birliği Kapsamında mı Gerçekleşti?</td>
                                                                                                                                             <td class="CaptionTd">:</td>
                                                                                                                                             <td class="ValueTd">
                                                                                                                                                 <select class="form-control" style="width:100%;" id="IsTezSanayiVeIsBirligiKapsamindaGerceklesti_@itemJuri.UniqueID">
@@ -589,7 +587,7 @@
                                                                                                                                         if (Model.OgrenimTipKod.IsDoktora())
                                                                                                                                         {
                                                                                                                                             <tr>
-                                                                                                                                                <td class="CaptionTd">100/2000 YÖK Bursiyeri Var Mı?</td>
+                                                                                                                                                <td class="CaptionTd">100/2000 YÖK Bursiyeri Var mı?</td>
                                                                                                                                                 <td class="CaptionTd">:</td>
                                                                                                                                                 <td class="ValueTd">
                                                                                                                                                     <select class="form-control" style="width:100%;" id="IsYokDrBursiyeriVar_@itemJuri.UniqueID" onchange="if ($(this).val()=='true') { $('.IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID').removeClass('hide'); } else { $('.IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID').addClass('hide'); }">
@@ -621,7 +619,7 @@
                                                                                                                                             </select>
                                                                                                                                         </td>
                                                                                                                                     </tr>
-                                                                                                                                    <tr class="RwJAck_@itemJuri.SRTalepJuriID @(IsJuriDegerlendirmeYapti ? "" : "hide")">
+                                                                                                                                    <tr class="RwJAck_@itemJuri.SRTalepJuriID @(isJuriDegerlendirmeYapti ? "" : "hide")">
                                                                                                                                         <td colspan="3">
                                                                                                                                             <table style="width:100%;margin-top:5px;">
                                                                                                                                                 <tbody>
@@ -641,7 +639,7 @@
                                                                                                                                         <td class="CaptionTd"></td>
                                                                                                                                         <td class="CaptionTd">:</td>
                                                                                                                                         <td class="ValueTd" style="padding-top:5px;font-size:11pt;">
-                                                                                                                                            <span class="label label-primary" style="cursor:pointer;" onclick="SinavDegerlendir('@itemJuri.UniqueID',@Model.MezuniyetBasvurulariID,@(IsJuriDanisman))"><i class="fa fa-save" aria-hidden="true"></i> Değerlendirmeyi Kaydet</span>
+                                                                                                                                            <span class="label label-primary" style="cursor:pointer;" onclick="SinavDegerlendir('@itemJuri.UniqueID',@Model.MezuniyetBasvurulariID,@(isJuriDanisman))"><i class="fa fa-save" aria-hidden="true"></i> Değerlendirmeyi Kaydet</span>
                                                                                                                                         </td>
                                                                                                                                     </tr>
                                                                                                                                 }
@@ -737,7 +735,7 @@
                                                                                             <td class="CaptionTd">Tutanak Formu</td>
                                                                                             <td class="CaptionTd">:</td>
                                                                                             <td class="ValueTd">
-                                                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                     <i class="fa fa-file-pdf-o"></i> @(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formunu İndir
                                                                                                 </a>
                                                                                             </td>
@@ -751,7 +749,7 @@
 
                                                                         if (kayitYetki || (isEnstituSonucuGirdi || isJuriSonucGirildi))
                                                                         {
-                                                                            var EnstituDegerlendirmeYetki = (kayitYetki && (isJuriDegerlendirmeVar ? isJuriSonucGirildi : true) && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi) && !Model.MezuniyetBasvurulariTezDosyalaris.Any();
+                                                                            var enstituDegerlendirmeYetki = (kayitYetki && (!isJuriDegerlendirmeVar || isJuriSonucGirildi) && Model.IsMezunOldu.HasValue == false && item.IsSonSrTalebi) && !Model.MezuniyetBasvurulariTezDosyalaris.Any();
 
                                                                             <div class="widget widget-default" style="border-top:1px solid;color:@item.SColor;border-top-color:@item.SColor; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                                 <table style="width:100%;">
@@ -764,7 +762,7 @@
                                                                                                         <td class="CaptionTd" width="140">Enstitü Onayı</td>
                                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                                         <td class="ValueTd">
-                                                                                                            @if (EnstituDegerlendirmeYetki)
+                                                                                                            @if (enstituDegerlendirmeYetki)
                                                                                                             {
                                                                                                                 @Html.DropDownList("MezuniyetSinavDurumID", item.SrDurumSelectList.MezuniyetSinavDurumID, new { id = "MezuniyetSinavDurumID_" + item.SRTalepID, style = "width:120px;", onchange = "TTStVChange(this," + item.SRTalepID + ");" })
                                                                                                                 <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="SrSnvDurumKaydet(@Model.MezuniyetBasvurulariID,@item.SRTalepID);"><i class="fa fa-save" aria-hidden="true"></i>  Kaydet</span>
@@ -780,9 +778,9 @@
                                                                                                         <td class="CaptionTd">Tez Teslim Son Tarihi</td>
                                                                                                         <td class="CaptionTd">:</td>
                                                                                                         <td class="ValueTd">
-                                                                                                            @if (EnstituDegerlendirmeYetki)
+                                                                                                            @if (enstituDegerlendirmeYetki)
                                                                                                             {
-                                                                                                                <input class="form-control form-control-inline input-medium date-pickerx" style="max-width:90px;height:22px;float:left;" autocomplete="off" size="10" type="text" value="@item.TeslimSonTarih.ToFormatDateInput()" />
+                                                                                                                <input class="form-control form-control-inline input-medium date-pickerx" style="max-width:90px;height:22px;float:left;" autocomplete="off" size="10" type="text" value="@item.TezTeslimSonTarih.ToFormatDateInput()" />
                                                                                                             }
                                                                                                             else
                                                                                                             {
@@ -790,8 +788,8 @@
                                                                                                                 {
                                                                                                                     <table>
                                                                                                                         <tr>
-                                                                                                                            <td id="SrTezTeslimSonTrLblRw_@item.SRTalepID">@item.TeslimSonTarih.ToFormatDate()</td>
-                                                                                                                            <td id="SrTezTeslimTarihiContent_@item.SRTalepID" class="hide"><input class="form-control form-control-inline input-medium" id="SrTezTeslimTarihiIInput_@item.SRTalepID" style="max-width: 90px; height: 22px; float: left;" autocomplete="off" size="10" type="text" value="@item.TeslimSonTarih.ToFormatDateInput()" /></td>
+                                                                                                                            <td id="SrTezTeslimSonTrLblRw_@item.SRTalepID">@item.TezTeslimSonTarih.ToFormatDate()</td>
+                                                                                                                            <td id="SrTezTeslimTarihiContent_@item.SRTalepID" class="hide"><input class="form-control form-control-inline input-medium" id="SrTezTeslimTarihiIInput_@item.SRTalepID" style="max-width: 90px; height: 22px; float: left;" autocomplete="off" size="10" type="text" value="@item.TezTeslimSonTarih.ToFormatDateInput()" /></td>
                                                                                                                             <td style="padding-left: 3px;">
                                                                                                                                 <a href="javascript:void(0)" onclick="ShowTezTeslimTarihi(@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="Tez Teslim Son Tarih Kriterini Düzenle"></i></a>
                                                                                                                                 <script>
@@ -847,7 +845,7 @@
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {
-                                                                                                                    @item.TeslimSonTarih.ToFormatDate()
+                                                                                                                    @item.TezTeslimSonTarih.ToFormatDate()
                                                                                                                 }
 
 
@@ -866,7 +864,7 @@
                                                                         }
                                                                         if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && (isEnstituSonucuGirdi || item.IsOgrenciUzatmaSonrasiOnay.HasValue))
                                                                         {
-                                                                            var ShowKayitOgrenci = (isOgrenci || kayitYetki) && !item.IsDanismanUzatmaSonrasiOnay.HasValue && item.IsSonSRTalebi;
+                                                                            var showKayitOgrenci = (isOgrenci || kayitYetki) && !item.IsDanismanUzatmaSonrasiOnay.HasValue && item.IsSonSrTalebi;
                                                                             <br />
 
                                                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
@@ -874,7 +872,7 @@
                                                                                     <tr>
                                                                                         <td colspan="3" style="font-weight:bold;font-size:9pt; border-bottom:1px solid;"><i class="fa fa-check-square fa-lg" aria-hidden="true"></i> Öğrenci İçin Uzatma Sonrası Düzeltilmiş Tez Teslimi Taahhütü</td>
                                                                                     </tr>
-                                                                                    @if (ShowKayitOgrenci)
+                                                                                    @if (showKayitOgrenci)
                                                                                     {
                                                                                         <tr>
                                                                                             <td class="CaptionTd" width="140">Taahhüt Metni</td>
@@ -933,16 +931,38 @@
                                                                                     }
 
                                                                                 </table>
-                                                                                @if (item.IsOgrenciUzatmaSonrasiOnay == true)
-                                                                                {
-                                                                                    var showKayitDanisman = (isDanismani || kayitYetki) && item.IsSonSRTalebi;
-                                                                                    <br />
+
+                                                                            </div>
+                                                                            if (item.IsOgrenciUzatmaSonrasiOnay == true)
+                                                                            {
+                                                                                var showKayitDanisman = (isDanismani || kayitYetki) && item.IsSonSrTalebi;
+                                                                                <br />
+                                                                                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
                                                                                     <table style="width:100%;">
                                                                                         <tr>
                                                                                             <td colspan="3" style="font-weight:bold;font-size:9pt; border-bottom:1px solid;"><i class="fa fa-check-square fa-lg" aria-hidden="true"></i> Danışman Tez Kontrol Taahhütü</td>
                                                                                         </tr>
                                                                                         @if (showKayitDanisman)
                                                                                         {
+                                                                                            <tr class="UzatmaDanismanOnayTaahhutRw_@item.SRTalepID @(item.IsDanismanUzatmaSonrasiOnay == true ? "" : "hide")">
+                                                                                                <td colspan="3" style="padding-bottom:10px;">
+                                                                                                    <div class="tasks ui-sortable">
+                                                                                                        <div class="task-item task-@(Model.IsDanismanOnay.HasValue?"info":"warning")" style="margin-bottom:0px;">
+                                                                                                            <div class="task-text ui-sortable-handle" style="padding-bottom: 0px; font-size: 8pt;">
+                                                                                                                <b>Taahhüt 1:</b> Öğrencinin başvurusunda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                                                                                                <br /><br />
+                                                                                                                <b>Taahhüt 2:</b> Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                                                                                            </div>
+                                                                                                            @if (item.IsDanismanUzatmaSonrasiOnay == true)
+                                                                                                            {
+                                                                                                                <div class="task-footer" style="padding-top:0pt;padding-bottom:0px; color: green;">
+                                                                                                                    <div class="pull-left"><span class="fa fa-check-circle-o"></span> @item.DanismanOnayTarihi.ToFormatDateAndTime() tarihinde @Model.TezDanismanAdi tarafından onaylandı </div>
+                                                                                                                </div>
+                                                                                                            }
+                                                                                                        </div>
+                                                                                                    </div> 
+                                                                                                </td>
+                                                                                            </tr>
                                                                                             <tr>
                                                                                                 <td class="CaptionTd" width="140">Onay Durumu</td>
                                                                                                 <td class="CaptionTd" width="10">:</td>
@@ -951,7 +971,8 @@
                                                                                                         <option></option>
                                                                                                         <option value="true" @(item.IsDanismanUzatmaSonrasiOnay == true ? "selected" : "")>Öğrenci Başvurusunu Onaylıyorum</option>
                                                                                                         <option value="false" @(item.IsDanismanUzatmaSonrasiOnay == false ? "selected" : "")>Öğrenci Başvurusunu Reddediyorum</option>
-                                                                                                    </select> <a href="javascript:void(0);" onclick="DanismanUzatmaOnayKayit(@item.SRTalepID,@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
+                                                                                                    </select>
+                                                                                                    <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="DanismanUzatmaOnayKayit(@item.SRTalepID,@Model.MezuniyetBasvurulariID);"><i class="fa fa-save" aria-hidden="true"></i>  Kaydet</span>
                                                                                                     <script>
                                                                                                         function TaahhutDanOnayChange(sndr) {
                                                                                                             var SndrVal = $(sndr).val();
@@ -971,24 +992,8 @@
                                                                                                     </script>
                                                                                                 </td>
                                                                                             </tr>
-                                                                                            <tr class="UzatmaDanismanOnayTaahhutRw_@item.SRTalepID @(item.IsDanismanUzatmaSonrasiOnay == true ? "" : "hide")">
-                                                                                                <td class="CaptionTd">Taahhüt 1</td>
-                                                                                                <td class="CaptionTd">:</td>
-                                                                                                <td class="ValueTd">
-                                                                                                    <br />
-                                                                                                    Öğrencinin başvurusunda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            <tr class="UzatmaDanismanOnayTaahhutRw_@item.SRTalepID @(item.IsDanismanUzatmaSonrasiOnay == true ? "" : "hide")">
-                                                                                                <td class="CaptionTd">Taahhüt 2</td>
-                                                                                                <td class="CaptionTd">:</td>
-                                                                                                <td class="ValueTd">
-                                                                                                    <br />
-                                                                                                    Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
-                                                                                                    <br />
-                                                                                                    <br />
-                                                                                                </td>
-                                                                                            </tr>
+
+
                                                                                             <tr id="UzatmaDanismanOnayAciklamaRw_@item.SRTalepID" class="@(item.IsDanismanUzatmaSonrasiOnay == false ? "" : "hide")">
                                                                                                 <td class="CaptionTd">Açıklama</td>
                                                                                                 <td class="CaptionTd">:</td>
@@ -996,6 +1001,8 @@
                                                                                                     <textarea placeholder="Onaylanmama Sebebi" id="DanismanUzatmaSonrasiOnayAciklama_@item.SRTalepID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@item.DanismanUzatmaSonrasiOnayAciklama</textarea>
                                                                                                 </td>
                                                                                             </tr>
+
+
                                                                                             if (item.IsDanismanUzatmaSonrasiOnay == true)
                                                                                             {
                                                                                                 <tr>
@@ -1016,24 +1023,25 @@
                                                                                         {
                                                                                             if (item.IsDanismanUzatmaSonrasiOnay == true)
                                                                                             {
-                                                                                                <tr>
-                                                                                                    <td class="CaptionTd" width="140">Taahhüt 1</td>
-                                                                                                    <td class="CaptionTd" width="10">:</td>
-                                                                                                    <td class="ValueTd">
-                                                                                                        <br />
-                                                                                                        Öğrencinin başvurusunda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                                                                                <tr class="UzatmaDanismanOnayTaahhutRw_@item.SRTalepID @(item.IsDanismanUzatmaSonrasiOnay == true ? "" : "hide")">
+                                                                                                    <td colspan="3">
+                                                                                                        <div class="tasks ui-sortable">
+                                                                                                            <div class="task-item task-@(Model.IsDanismanOnay.HasValue?"info":"warning")" style="margin-bottom:0px;">
+                                                                                                                <div class="task-text ui-sortable-handle" style="padding-bottom: 0px; font-size: 8pt;">
+                                                                                                                    <b>Taahhüt 1:</b> Öğrencinin başvurusunda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                                                                                                    <br /><br />
+                                                                                                                    <b>Taahhüt 2:</b> Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                                                                                                </div>
+
+                                                                                                                <div class="task-footer" style="padding-top:0pt;padding-bottom:0px; color: green;">
+                                                                                                                    <div class="pull-left"><span class="fa fa-check-circle-o"></span> @item.DanismanOnayTarihi.ToFormatDateAndTime() tarihinde @Model.TezDanismanAdi tarafından onaylandı </div>
+                                                                                                                </div>
+
+                                                                                                            </div>
+                                                                                                        </div>
                                                                                                     </td>
                                                                                                 </tr>
-                                                                                                <tr>
-                                                                                                    <td class="CaptionTd">Taahhüt 2</td>
-                                                                                                    <td class="CaptionTd">:</td>
-                                                                                                    <td class="ValueTd">
-                                                                                                        <br />
-                                                                                                        Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
-                                                                                                        <br />
-                                                                                                        <br />
-                                                                                                    </td>
-                                                                                                </tr>
+
                                                                                             }
                                                                                             <tr>
                                                                                                 <td class="CaptionTd" width="140">Onay Durumu</td>
@@ -1079,9 +1087,8 @@
                                                                                         }
 
                                                                                     </table>
-                                                                                }
-                                                                            </div>
-
+                                                                                </div>
+                                                                            }
                                                                         }
                                                                     }
                                                                 </td>

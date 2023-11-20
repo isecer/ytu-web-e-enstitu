@@ -17,7 +17,6 @@ namespace LisansUstuBasvuruSistemi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Universiteler()
         {
-            this.MezuniyetJuriOneriFormuJurileris = new HashSet<MezuniyetJuriOneriFormuJurileri>();
             this.TIBasvuruAraRaporKomites = new HashSet<TIBasvuruAraRaporKomite>();
             this.TijBasvuruOneriJurilers = new HashSet<TijBasvuruOneriJuriler>();
         }
@@ -30,8 +29,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MezuniyetJuriOneriFormuJurileri> MezuniyetJuriOneriFormuJurileris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuruAraRaporKomite> TIBasvuruAraRaporKomites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

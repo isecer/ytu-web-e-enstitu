@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -31,12 +32,17 @@ namespace LisansUstuBasvuruSistemi.Business
             "BA",
             "AA"
         };
-
-        public static bool IsHarfNotuBuyukEsit(string not1, string not2)
+        public static bool IsHarfNotuBuyukEsit(string notKriteri, string ogrenciNotu)
         {
-            var not1Inx = NotDegerleri.IndexOf(not1);
-            var not2Inx = NotDegerleri.IndexOf(not2);
-            return not1Inx <= not2Inx;
+            var notKriteriIndex = NotDegerleri.IndexOf(notKriteri);
+            var ogrenciNotuIndex = NotDegerleri.IndexOf(ogrenciNotu);
+            var success = notKriteriIndex <= ogrenciNotuIndex;
+            if (!success)
+            {
+                //geçmiş öğrenciler için özel kontrol G notu geçerli
+                success = ogrenciNotu == "G";
+            }
+            return success;
         }
         public static int? GetYeterlikAktifSurecId(string enstituKod, int? yeterlikSurecId = null)
         {
@@ -209,7 +215,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 {
                                     errorMessage.Add("Okuduğunuz öğrenim seviyesi yeterlik başvuru yapmak için uygun değildir.");
                                 }
-                               
+
                                 var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
                                 var controlMessage = new List<string>();
                                 if (basvuruKriterleri.YsMaxBasvuruDonemNo.HasValue && basvuruKriterleri.YsMaxBasvuruDonemNo < ogrenciBilgi.OkuduguDonemNo)
@@ -292,7 +298,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return lst;
         }
 
-     
+
         public static List<CmbIntDto> GetCmbBasvuruDurumu(bool bosSecimVar = false)
         {
             var lst = new List<CmbIntDto>();

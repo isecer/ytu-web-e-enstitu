@@ -25,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
                 var danismanBilgi = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.JuriTipAdi == "TezDanismani");
                 xrCellDanismanBilgi.Text = (danismanBilgi.UnvanAdi + " " + danismanBilgi.AdSoyad).ToUpper();
-                xrCellDanismanBilgiUni.Text = danismanBilgi.UniversiteID.HasValue ? danismanBilgi.Universiteler.Ad.ToUpper() : danismanBilgi.UniversiteAdi.ToUpper();
+                xrCellDanismanBilgiUni.Text =  danismanBilgi.UniversiteAdi.ToUpper();
 
                 cellTezBaslikTr.Text =
                     joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikTr : mBasvuru.TezBaslikTr;
@@ -43,31 +43,31 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     var nUyerler = uyeler.Where(p => !p.JuriTipAdi.Contains("Tik")).ToList();
                     var uye1 = nUyerler[0];
                     xrCellUye1.Text = uye1.UnvanAdi + " " + uye1.AdSoyad;
-                    xrCellUye1Uni.Text = uye1.UniversiteID.HasValue ? uye1.Universiteler.Ad.ToUpper() : uye1.UniversiteAdi.ToUpper();
+                    xrCellUye1Uni.Text = uye1.UniversiteAdi.ToUpper();
                     var uye2 = nUyerler[1];
                     xrCellUye2.Text = uye2.UnvanAdi + " " + uye2.AdSoyad;
-                    xrCellUye2Uni.Text = uye2.UniversiteID.HasValue ? uye2.Universiteler.Ad.ToUpper() : uye2.UniversiteAdi.ToUpper();
+                    xrCellUye2Uni.Text = uye2.UniversiteAdi.ToUpper();
                     var nTikler = uyeler.Where(p => p.JuriTipAdi.Contains("Tik")).ToList();
                     var tik1 = nTikler[0];
                     xrCellTik1.Text = tik1.UnvanAdi + " " + tik1.AdSoyad;
-                    xrCellTik1Uni.Text = tik1.UniversiteID.HasValue ? tik1.Universiteler.Ad.ToUpper() : tik1.UniversiteAdi.ToUpper();
+                    xrCellTik1Uni.Text = tik1.UniversiteAdi.ToUpper();
                     var tik2 = nTikler[1];
                     xrCellTik2.Text = tik2.UnvanAdi + " " + tik2.AdSoyad;
-                    xrCellTik2Uni.Text = tik2.UniversiteID.HasValue ? tik2.Universiteler.Ad.ToUpper() : tik2.UniversiteAdi.ToUpper();
+                    xrCellTik2Uni.Text = tik2.UniversiteAdi.ToUpper();
 
                     var yedekler = joForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.IsAsilOrYedek == false).ToList();
 
 
                     var yedek1 = yedekler[0];
                     xrCellYedek1.Text = yedek1.UnvanAdi + ", " + yedek1.AdSoyad;
-                    xrCellYedek1Uni.Text = yedek1.UniversiteID.HasValue ? yedek1.Universiteler.Ad.ToUpper() : yedek1.UniversiteAdi.ToUpper();
+                    xrCellYedek1Uni.Text = yedek1.UniversiteAdi.ToUpper();
                     var yedek2 = yedekler[1];
                     xrCellYedek2.Text = yedek2.UnvanAdi + ", " + yedek2.AdSoyad;
-                    xrCellYedek2Uni.Text = yedek2.UniversiteID.HasValue ? yedek2.Universiteler.Ad.ToUpper() : yedek2.UniversiteAdi.ToUpper();
+                    xrCellYedek2Uni.Text = yedek2.UniversiteAdi.ToUpper();
 
 
 
-                    lblFormNo.Text = "(Form No: FR-0302; Revizyon Tarihi: 27.11.2019; Revizyon No:03)";
+                    lblFormNo.Text = "(Form No: FR-0302)";
                     xrRichKaraBigi.Html = "<table style='width:100%;table-layout:fixed;'><tbody><tr><td>" +
                                           "<b>YTÜ LİSANSÜSTÜ EĞİTİM ÖĞRETİM YÖNETMELİĞİ SENATO ESASLARI</b><br>" +
                                           "<b>MADDE 33- (4)</b> <span style='color:red;'> Doktora tez savunma sınavı, jüri üyelerinin belirlendiği tarihten itibaren en erken 15 (on beş) gün sonra ve en geç 1 (bir) ay içinde enstitülerin uygun göreceği sınav salonlarında yapılır. Sınavın ne zaman yapılacağı, danışmanın önerisi gözetilerek ilgili enstitü müdürlüğünce belirlenir ve doktora tez jüri üyelerine yazılı olarak bildirilir. Tez savunma sınav tarihi ve zamanı ilgili anabilim/anasanat dalı tarafından, öğretim elemanlarına, lisansüstü öğrencilerine ve alanın uzmanlarına dinleyici olarak katılabilmeleri için duyurulur.</span><br><br>" +
@@ -80,13 +80,13 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     this.DisplayName = (mBasvuru.Ad + " " + mBasvuru.Soyad) + " FR-0341 Yüksek Lisans Jüri Üyelerine Tez Teslim Formu";
                     var uye1 = uyeler[0];
                     xrCellUye1.Text = uye1.UnvanAdi + " " + uye1.AdSoyad;
-                    xrCellUye1Uni.Text = uye1.UniversiteID.HasValue ? uye1.Universiteler.Ad : uye1.UniversiteAdi;
+                    xrCellUye1Uni.Text = uye1.UniversiteAdi.ToUpper();
                     var uye2 = uyeler[1];
                     xrCellUye2.Text = uye2.UnvanAdi + " " + uye2.AdSoyad;
-                    xrCellUye2Uni.Text = uye2.UniversiteID.HasValue ? uye2.Universiteler.Ad : uye2.UniversiteAdi;
+                    xrCellUye2Uni.Text = uye2.UniversiteAdi.ToUpper();
                     xrTblRowTik1.Visible = false;
                     xrTblRowTik2.Visible = false;
-                    lblFormNo.Text = "(Form No: FR-0341; Revizyon Tarihi: 27.11.2019; Revizyon No:02)";
+                    lblFormNo.Text = "(Form No: FR-0341)";
                     xrRichKaraBigi.Html = "<table style='width:100%;table-layout:fixed;'><tbody><tr><td>" +
                                        "<b>YTÜ LİSANSÜSTÜ EĞİTİM ÖĞRETİM YÖNETMELİĞİ SENATO ESASLARI</b><br>" +
                                        "<b>MADDE 29- (3)</b> <span style='color:red;'> Tez jüri üyelerinin ilgili EYK tarafından belirlendiği tarihten itibaren en geç 1 (bir) hafta içerisinde, öğrenci hazırlamış olduğu tezinin bir kopyasını jüri üyelerine bir tutanakla teslim eder. Tez savunma sınavı, tezin jüri üyelerine tesliminden itibaren en erken 3 (üç) gün sonra ve en geç 1 (bir) ay içerisinde yapılmak üzere, sınav tarihi ve yerini belirten bir yazı danışman tarafından enstitüye iletilmek üzere ilgili anabilim/anasanat dalına verilir. Jüri üyeleri söz konusu tezin kendilerine teslim edildiği tarihten itibaren en geç bir ay içinde toplanarak öğrenciyi tez sınavına alır.</span>" +
@@ -96,10 +96,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
                     var yedek1 = yedekler[0];
                     xrCellYedek1.Text = yedek1.UnvanAdi + ", " + yedek1.AdSoyad;
-                    xrCellYedek1Uni.Text = yedek1.UniversiteID.HasValue ? yedek1.Universiteler.Ad : yedek1.UniversiteAdi;
+                    xrCellYedek1Uni.Text = yedek1.UniversiteAdi.ToUpper();
                     var yedek2 = yedekler[1];
                     xrCellYedek2.Text = yedek2.UnvanAdi + ", " + yedek2.AdSoyad;
-                    xrCellYedek2Uni.Text = yedek2.UniversiteID.HasValue ? yedek2.Universiteler.Ad : yedek2.UniversiteAdi;
+                    xrCellYedek2Uni.Text = yedek2.UniversiteAdi.ToUpper();
 
                 }
 

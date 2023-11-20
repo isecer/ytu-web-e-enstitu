@@ -17,8 +17,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public SelectList SListSinavNot { get; set; }
         public SelectList SListTdAnabilimDali { get; set; }
         public SelectList SListTdProgram { get; set; }
-        public SelectList SListTdSinav { get; set; }
-        public SelectList SListTdSinavNot { get; set; }
+      
         public SelectList SListTDoDanismanTalepTip { get; internal set; }
     }
 }

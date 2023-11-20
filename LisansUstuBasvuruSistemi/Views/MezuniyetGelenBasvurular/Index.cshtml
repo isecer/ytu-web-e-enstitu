@@ -6,7 +6,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmMezuniyetBasvurulari
-@{ 
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
     var eykYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() || RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent();
@@ -133,7 +133,7 @@
                             }
 
 
-                        }  
+                        }
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -157,10 +157,11 @@
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="150">Öğrenim Seviyesi</td>
+                                            <td width="150">Öğrenim S. / Tez Dili</td>
                                             <td>
                                                 @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
                                             </td>
+                                            <td>@Html.DropDownList("IsTezDiliTr", null, new { @class = "form-control" })</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -484,7 +485,7 @@
         var message = "";
         var successSave = true;
         var $durumInput =$('#MezuniyetYayinKontrolDurumID_' + mID).first();
-        var durumID = $durumInput.val(); 
+        var durumID = $durumInput.val();
         var selectedBasvuruDurumAdi = $durumInput.children("option").filter(":selected").text();
         var durumAck = $('#MezuniyetYayinKontrolDurumAciklamasi_' + mID).val();
         if (durumID == "" || durumID == null) {
@@ -497,7 +498,7 @@
         }
         else if (durumID == "@MezuniyetYayinKontrolDurumuEnum.Taslak") {
             message = "Başvuru taslağa çekilecek fakat varsa eğer danışman onayı, yayın onayı işlemler geri alınacak.";
-        } 
+        }
         else {
             message = "Başvuru durumunu " + selectedBasvuruDurumAdi + " olarak değiştirmek istiyor musunuz?";
             }
@@ -510,8 +511,8 @@
                 padding: '2em'
             });
             return;
-        }  
-        Swal.fire({ 
+        }
+        Swal.fire({
             text: message,
             type: 'warning',
             icon: "question",
@@ -533,9 +534,9 @@
                         cache: false,
                         data: { id: mID, MezuniyetYayinKontrolDurumID: durumID, MezuniyetYayinKontrolDurumAciklamasi: durumAck },
                         success: function (result) {
-                            $('.swal2-cancel').first().text("Evet"); 
-                            if (result.success) { 
-                                getDetailx(mID);  
+                            $('.swal2-cancel').first().text("Evet");
+                            if (result.success) {
+                                getDetailx(mID);
                             }
                             swal.close();
                             swal.fire({
@@ -547,12 +548,12 @@
                             })
                         },
                         complete: function (err) {
-                           
+
                         }
                     });
                 });
             }
-        }); 
+        });
     }
     function DanismanBasvuruOnayKayit(mID) {
         var _panel = $('#bsvrDet_' + mID);
@@ -887,12 +888,12 @@
                                         else {
                                             getMsg(result);
                                             return false;
-                                        } 
+                                        }
 
                                     },
                                     complete: function (cmp) {
                                         PanelRefresh(pnlx, true);
-                                    } 
+                                    }
 
                                 });
                                 $('#MezuniyetTezTeslimForm').submit();
@@ -1041,7 +1042,7 @@
                                 className: "btn-primary btnKaydet",
                                 callback: function (event) {
                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                    PanelRefresh(pnlx, false);
+                                    PanelRefresh(pnlx, false); 
                                     $('#FrmJuriOneriFormu').ajaxForm({
                                         success: function (result) {
                                             if (result.mMessage.IsSuccess) {
@@ -1084,7 +1085,7 @@
                             }
                         }
                     });
-                    $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                    //$(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
                 }
                 else {
                     showMmMessage(result.Messages, 'Tamam');
@@ -1165,7 +1166,7 @@
                                     getDetailx(MBasvuruID);
 
                                 }
-                                //showMmMessage(result.Messages, 'Tamam'); 
+                                //showMmMessage(result.Messages, 'Tamam');
                             }
                         });
                     });

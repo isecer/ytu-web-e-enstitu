@@ -13,6 +13,8 @@
     bool juriOneriFormuOnayYetkiEykDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
     var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+
+    var isDoktora = Model.OgrenimTipKod.IsDoktora();
 }
 
 <div class="tab-pane @(Model.SelectedTabIndex == 2 ? "active" : "") " id="@tbName-2">
@@ -21,7 +23,7 @@
             <table style="width:100%;">
                 <tbody>
                     <tr>
-                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> @(Model.OgrenimTipKod.IsDoktora() ? "Doktora Tez Jüri Öneri Formu" : "Yüksek Lisans Tez Jüri Öneri Formu")</td>
+                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> @(isDoktora ? "Doktora Tez Jüri Öneri Formu" : "Yüksek Lisans Tez Jüri Öneri Formu")</td>
                         <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
                             @if (juriOneriFormuKyetki)
                             {
@@ -82,424 +84,342 @@
                                             <div class="btn-group">
                                                 <a href="javascript:void(0);" data-toggle="dropdown" class="btn dropdown-toggle" aria-expanded="false">Form Çıktılarını İndir <span class="caret"></span></a>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    @if (Model.OgrenimTipKod.IsDoktora())
-                                                    {
-                                                        <li>
-                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0339 Yüksek Lisans Tez Jüri Öneri Formunu İndir
-                                                            </a>
-                                                        </li>
-                                                        if (juriOneriFormu.EYKDaOnaylandi == true)
-                                                        {
-                                                            if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
-                                                            {
-                                                                <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                        <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0341 Yüksek Lisans Jüri Üyelerine Tez Teslim Formunu İndir
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                        <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0304 Tezden Üretilen Yayınları Değerlendirme Formunu İndir
-                                                                    </a>
-                                                                </li>
 
-                                                            }
-                                                        }
-
-                                                    }
-                                                    else
+                                                    <li>
+                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                                            <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> @(isDoktora? "FR-0300 Doktora" : "FR-0339 Yüksek Lisans") Tez Jüri Öneri Formunu İndir
+                                                        </a>
+                                                    </li>
+                                                    @if (juriOneriFormu.EYKDaOnaylandi == true)
                                                     {
-                                                        <li>
-                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0300 Doktora Tez Jüri Öneri Formunu İndir
-                                                            </a>
-                                                        </li>
-                                                        if (juriOneriFormu.EYKDaOnaylandi == true)
+                                                        if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
                                                         {
-                                                            if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
-                                                            {
-                                                                <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                        <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0302 Doktora Jüri Üyelerine Tez Teslim Formunu İndir
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                        <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0304 Tezden Üretilen Yayınları Değerlendirme Formunu İndir
-                                                                    </a>
-                                                                </li>
-                                                            }
+
+                                                            <li>
+                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> @(isDoktora? "FR-0302 Doktora" : "FR-0341 Yüksek Lisans") Jüri Üyelerine Tez Teslim Formunu İndir
+                                                                </a>
+                                                            </li>
 
                                                         }
-
+                                                        <li>
+                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0304 Tezden Üretilen Yayınları Değerlendirme Formunu İndir
+                                                            </a>
+                                                        </li>
                                                     }
+
                                                 </ul>
                                             </div>
 
                                         </td>
                                     </tr>
                                 </table>
-                                <table class="table" style="font-size:9pt;margin:0px;">
-                                    <thead>
-                                        <tr class="info">
-                                            <th width="35" height="30"></th>
-                                            <th width="100">Unvan</th>
-                                            <th width="240">Ad Soyad</th>
-                                            <th>Dil Sınavı</th>
-                                            <th width="120" style="text-align:center;">Jüri Seçim Durumu</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="5" style="padding:0px;">
-                                                <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
-                                                    @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2" }.Contains(p.JuriTipAdi)))
-                                                    {
-                                                        <tr>
-                                                            <td width="35">
+                                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                                    <table style="width:100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> Önerilen Jüriler</td>
+                                                <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
+                                                   
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <table class="table" style="font-size:9pt;margin:0px;">
+                                                        <thead>
+                                                            <tr class="info">
+                                                                <th width="35" height="30"></th>
+                                                                <th width="100">Unvan</th>
+                                                                <th>Ad Soyad</th>
+                                                                <th width="90" style="text-align:center;">Asil/Yedek</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2" }.Contains(p.JuriTipAdi)))
+                                                            {
+                                                                <tr>
+                                                                    <td>
 
-                                                                <ul class="panel-controls">
-                                                                    <li id="iShow_Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.MezuniyetJuriOneriFormuJuriID')">
-                                                                        <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </td>
-                                                            <td width="100">
-                                                                @itemJr.UnvanAdi   <br /><span style="font-size:7pt;">@(itemJr.JuriTipAdi == "TezDanismani" ? "Tez Danışmanı" : "Tik Üyesi")</span>
-                                                            </td>
-                                                            <td width="240">
-                                                                @itemJr.AdSoyad
-                                                                <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
-                                                            </td>
-                                                            <td>
-                                                                @if (!itemJr.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.DilPuani.IsNullOrWhiteSpace())
-                                                                {
-                                                                    <span style="font-size: 8pt;"> @itemJr.DilSinavAdi<br />@itemJr.DilPuani</span>
-                                                                }
-                                                            </td>
-                                                            <td width="120" style="text-align:center;">
-                                                                @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
-                                                                {
-                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
-                                                                    if (itemJr.IsAsilOrYedek.HasValue)
-                                                                    {
-                                                                        <script>
+                                                                        <ul class="panel-controls">
+                                                                            <li id="iShow_Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.MezuniyetJuriOneriFormuJuriID')">
+                                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </td>
+                                                                    <td>
+                                                                        @itemJr.UnvanAdi   <br /><span style="font-size:7pt;">@(itemJr.JuriTipAdi == "TezDanismani" ? "Tez Danışmanı" : "Tik Üyesi")</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        @itemJr.AdSoyad
+                                                                        <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
+                                                                    </td>
+                                                                    <td style="text-align:center;">
+                                                                        @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
+                                                                        {
+                                                                            @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
+                                                                            if (itemJr.IsAsilOrYedek.HasValue)
+                                                                            {
+                                                                                <script>
                                                                                                 setTimeout(function () {
                                                                                                     $('#IsAsilOryedek_@(itemJr.JuriTipAdi)_@(juriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.IsAsilOrYedek.ToString())');
                                                                                                 }, 50);
-                                                                        </script>
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
-                                                                }
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="MainRow2 cls-Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" style="display:none;">
-                                                            <td id="cls-Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
-                                                                <div class="panel panel-primary">
-                                                                    <div class="panel-body">
-                                                                        <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td width="160" style="font-weight:bold;">Ad Soyad</td>
-                                                                                    <td width="10" style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.AdSoyad</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Unvan</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.UnvanAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">E-Posta Adresi</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.EMail</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Üniversitesi</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.UniversiteAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Anabilim Dalı / Program</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.AnabilimdaliProgramAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Uzmanlık Alanı</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.UzmanlikAlani</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet)</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.BilimselCalismalarAnahtarSozcukler</td>
-                                                                                </tr>
-                                                                                @if (!itemJr.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.DilPuani.IsNullOrWhiteSpace())
-                                                                                {
+                                                                                </script>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="MainRow2 cls-Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" style="display:none;">
+                                                                    <td id="cls-Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" colspan="4" style="padding: 1px 1px 2px 50px;">
+                                                                        <div class="panel panel-primary">
+                                                                            <div class="panel-body">
+                                                                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td width="160" style="font-weight:bold;">Ad Soyad</td>
+                                                                                            <td width="10" style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.AdSoyad</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Unvan</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.UnvanAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">E-Posta Adresi</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.EMail</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Üniversitesi</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.UniversiteAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Anabilim Dalı / Program</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.AnabilimdaliProgramAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Uzmanlık Alanı</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.UzmanlikAlani</td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
 
-                                                                                    <tr>
-                                                                                        <td style="font-weight:bold;">Sınav Adı</td>
-                                                                                        <td width="10" style="font-weight:bold;text-align:center;">:</td>
-                                                                                        <td>@itemJr.DilSinavAdi</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="font-weight:bold;">Sınav Puanı</td>
-                                                                                        <td width="10" style="font-weight:bold;text-align:center;">:</td>
-                                                                                        <td>@itemJr.DilPuani</td>
-                                                                                    </tr>
+                                                            <tr>
+                                                                <td colspan="4" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
+                                                                    Yıldız Teknik Üniversitesi İçinden Juri Adayı Önerisi
+                                                                </td>
+                                                            </tr>
+                                                            @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuIciJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <ul class="panel-controls">
+                                                                            <li id="iShow_Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID')">
+                                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </td>
+                                                                    <td>
+                                                                        @itemJr.s.UnvanAdi<br /><span style="font-size:7pt;">@itemJr.inx - Üye Önerisi</span>
 
-                                                                                }
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                </table>
+                                                                    </td>
+                                                                    <td>
+                                                                        @itemJr.s.AdSoyad
+                                                                        <br /><span style="font-size:7pt;">@itemJr.s.AnabilimdaliProgramAdi</span>
+                                                                    </td>
 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
-                                                Yıldız Teknik Üniversitesi İçinden Juri Adayı Önerisi
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5" style="padding:0px;">
-                                                <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
-                                                    @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuIciJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
-                                                    {
-                                                        <tr>
-                                                            <td width="35">
-                                                                <ul class="panel-controls">
-                                                                    <li id="iShow_Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID')">
-                                                                        <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </td>
-                                                            <td width="100">
-                                                                @itemJr.s.UnvanAdi<br /><span style="font-size:7pt;">@itemJr.inx - Üye Önerisi</span>
-
-                                                            </td>
-                                                            <td width="240">
-                                                                @itemJr.s.AdSoyad
-                                                                <br /><span style="font-size:7pt;">@itemJr.s.AnabilimdaliProgramAdi</span>
-                                                            </td>
-                                                            <td>
-                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
-                                                                {
-                                                                    <span style="font-size: 8pt;"> @itemJr.s.DilSinavAdi<br />@itemJr.s.DilPuani</span>
-                                                                }
-                                                            </td>
-                                                            <td width="120" style="text-align:center;">
-                                                                @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
-                                                                {
-                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
-                                                                    if (itemJr.s.IsAsilOrYedek.HasValue)
-                                                                    {
-                                                                        <script>
+                                                                    <td style="text-align:center;">
+                                                                        @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
+                                                                        {
+                                                                            @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
+                                                                            if (itemJr.s.IsAsilOrYedek.HasValue)
+                                                                            {
+                                                                                <script>
                                                                             setTimeout(function () {
                                                                                 $('#IsAsilOryedek_@(itemJr.s.JuriTipAdi)_@(juriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.s.IsAsilOrYedek.ToString())');
                                                                             }, 50);
-                                                                        </script>
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.s.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
-                                                                }
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="MainRow2 cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" style="display:none;">
-                                                            <td id="cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
-                                                                <div class="panel panel-primary">
-                                                                    <div class="panel-body">
-                                                                        <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td width="160" style="font-weight:bold;">Ad Soyad</td>
-                                                                                    <td width="10" style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.AdSoyad</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Unvan</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.UnvanAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">E-Posta Adresi</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.EMail</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Üniversite</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.UniversiteAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Anabilim Dalı / Program</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.AnabilimdaliProgramAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Uzmanlık Alanı</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.UzmanlikAlani</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet)</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.BilimselCalismalarAnahtarSozcukler</td>
-                                                                                </tr>
-                                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
-                                                                                {
-                                                                                    <tr>
-                                                                                        <td style="font-weight:bold;">Sınav Adı</td>
-                                                                                        <td style="font-weight:bold;text-align:center;">:</td>
-                                                                                        <td>@itemJr.s.DilSinavAdi</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="font-weight:bold;">Sınav Puanı</td>
-                                                                                        <td style="font-weight:bold;text-align:center;">:</td>
-                                                                                        <td>@itemJr.s.DilPuani</td>
-                                                                                    </tr>
+                                                                                </script>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.s.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="MainRow2 cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" style="display:none;">
+                                                                    <td id="cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" colspan="4" style="padding: 1px 1px 2px 50px;">
+                                                                        <div class="panel panel-primary">
+                                                                            <div class="panel-body">
+                                                                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td width="160" style="font-weight:bold;">Ad Soyad</td>
+                                                                                            <td width="10" style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.AdSoyad</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Unvan</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.UnvanAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">E-Posta Adresi</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.EMail</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Üniversite</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.UniversiteAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Anabilim Dalı / Program</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.AnabilimdaliProgramAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Uzmanlık Alanı</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.UzmanlikAlani</td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
 
-                                                                                }
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
+                                                            <tr>
+                                                                <td colspan="4" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
+                                                                    Yıldız Teknik Üniversitesi Dışından Juri Adayı Önerisi
+                                                                </td>
+                                                            </tr>
+                                                            @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <ul class="panel-controls">
+                                                                            <li id="iShow_Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID')">
+                                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </td>
+                                                                    <td>
+                                                                        @itemJr.s.UnvanAdi<br /><span style="font-size:7pt;">@itemJr.inx - Üye Önerisi</span>
+
+                                                                    </td>
+                                                                    <td>
+                                                                        @itemJr.s.AdSoyad
+                                                                        <br /><span style="font-size:7pt;">@itemJr.s.UniversiteAdi</span>
+                                                                    </td>
+
+                                                                    <td style="text-align:center;">
+                                                                        @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
+                                                                        {
+                                                                            @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last : center" })
+                                                                            if (itemJr.s.IsAsilOrYedek.HasValue)
+                                                                            {
+                                                                                <script>
+                                                                                    setTimeout(function () {
+                                                                                        $('#IsAsilOryedek_@(itemJr.s.JuriTipAdi)_@(juriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.s.IsAsilOrYedek.ToString())');
+                                                                                    }, 50);
+                                                                                </script>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.s.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="MainRow2 cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" style="display:none;">
+                                                                    <td id="cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" colspan="4" style="padding: 1px 1px 2px 50px;">
+                                                                        <div class="panel panel-primary">
+                                                                            <div class="panel-body">
+                                                                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td width="160" style="font-weight:bold;">Ad Soyad</td>
+                                                                                            <td width="10" style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.AdSoyad</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Unvan</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.UnvanAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">E-Posta Adresi</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.EMail</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Üniversitesi</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.UniversiteAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Anabilim Dalı / Program</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.AnabilimdaliProgramAdi</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td style="font-weight:bold;">Uzmanlık Alanı</td>
+                                                                                            <td style="font-weight:bold;">:</td>
+                                                                                            <td>@itemJr.s.UzmanlikAlani</td>
+                                                                                        </tr>
+
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            @if (Model.IsTezDiliTr == false && juriOneriFormu!=null)
+                                            {
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <br/>
+                                                        <div class="tasks">
+                                                            <div class="task-item task-info" style="margin-bottom: 0px; cursor: auto;">
+                                                                <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                                    <b>Danışman Dil Şartı Taahhüt Onayı:</b><br> Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
                                                                 </div>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                </table>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
-                                                Yıldız Teknik Üniversitesi Dışından Juri Adayı Önerisi
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5" style="padding:0px;">
-                                                <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
-                                                    @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
-                                                    {
-                                                        <tr>
-                                                            <td width="35">
-                                                                <ul class="panel-controls">
-                                                                    <li id="iShow_Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID')">
-                                                                        <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </td>
-                                                            <td width="100">
-                                                                @itemJr.s.UnvanAdi<br /><span style="font-size:7pt;">@itemJr.inx - Üye Önerisi</span>
-
-                                                            </td>
-                                                            <td width="240">
-                                                                @itemJr.s.AdSoyad
-                                                                <br /><span style="font-size:7pt;">@itemJr.s.UniversiteAdi</span>
-                                                            </td>
-                                                            <td>
-                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
-                                                                {
-                                                                    <span style="font-size: 8pt;"> @itemJr.s.DilSinavAdi<br />@itemJr.s.DilPuani</span>
-                                                                }
-                                                            </td>
-                                                            <td width="120" style="text-align:center;">
-                                                                @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
-                                                                {
-                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last : center" })
-                                                                    if (itemJr.s.IsAsilOrYedek.HasValue)
-                                                                    {
-                                                                        <script>
-                                                                            setTimeout(function () {
-                                                                                $('#IsAsilOryedek_@(itemJr.s.JuriTipAdi)_@(juriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.s.IsAsilOrYedek.ToString())');
-                                                                            }, 50);
-                                                                        </script>
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.s.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
-                                                                }
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="MainRow2 cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" style="display:none;">
-                                                            <td id="cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
-                                                                <div class="panel panel-primary">
-                                                                    <div class="panel-body">
-                                                                        <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td width="160" style="font-weight:bold;">Ad Soyad</td>
-                                                                                    <td width="10" style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.AdSoyad</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Unvan</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.UnvanAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">E-Posta Adresi</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.EMail</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Üniversitesi</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.UniversiteAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Anabilim Dalı / Program</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.AnabilimdaliProgramAdi</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Uzmanlık Alanı</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.UzmanlikAlani</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-weight:bold;">Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet)</td>
-                                                                                    <td style="font-weight:bold;">:</td>
-                                                                                    <td>@itemJr.s.BilimselCalismalarAnahtarSozcukler</td>
-                                                                                </tr>
-                                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
-                                                                                {
-                                                                                    <tr>
-                                                                                        <td style="font-weight:bold;">Sınav Adı</td>
-                                                                                        <td style="font-weight:bold;text-align:center;">:</td>
-                                                                                        <td>@itemJr.s.DilSinavAdi</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="font-weight:bold;">Sınav Puanı</td>
-                                                                                        <td style="font-weight:bold;text-align:center;">:</td>
-                                                                                        <td>@itemJr.s.DilPuani</td>
-                                                                                    </tr>
-
-                                                                                }
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
+                                                                <div class="task-footer" style="padding-top:0pt;padding-bottom:0px;color:green;">
+                                                                    <div class="pull-left"><span class="fa fa-check-circle-o"></span> @juriOneriFormu.IslemTarihi.ToFormatDateAndTime()</div> 
                                                                 </div>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
 
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                </div>
+
+
                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                     <table style="width:100%;">
                                         <tbody>

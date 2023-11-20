@@ -16,45 +16,22 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
         public Kullanicilar Danisman { get; set; }
-        public List<string> AnaTabAdi { get; set; }
-        public List<string> DetayTabAdi { get; set; }
-        public List<string> JuriTipAdi { get; set; }
-        public List<string> AdSoyad { get; set; }
-        public List<string> UnvanAdi { get; set; }
-        public List<string> EMail { get; set; }
-        public List<int?> UniversiteID { get; set; }
-        public List<string> AnabilimdaliProgramAdi { get; set; }
-        public List<string> UzmanlikAlani { get; set; }
-        public List<string> BilimselCalismalarAnahtarSozcukler { get; set; }
-        public List<string> DilSinavAdi { get; set; }
-        public List<string> DilPuani { get; set; }
+        public List<string> AnaTabAdi { get; set; } = new List<string>();
+        public List<string> DetayTabAdi { get; set; } = new List<string>();
+        public List<string> JuriTipAdi { get; set; } = new List<string>();
+        public List<string> AdSoyad { get; set; } = new List<string>();
+        public List<string> UnvanAdi { get; set; } = new List<string>();
+        public List<string> EMail { get; set; } = new List<string>();
+        public List<string> UniversiteAdi { get; set; } = new List<string>();
+        public List<string> AnabilimdaliProgramAdi { get; set; } = new List<string>();
+        public List<string> UzmanlikAlani { get; set; } = new List<string>();
 
-        public SelectList SListUnvanAdi { get; set; }
-        public SelectList SListUniversiteID { get; set; }
-        public List<KrMezuniyetJuriOneriFormuJurileri> JoFormJuriList { get; set; }
-
-
-        public MezuniyetJuriOneriFormuKayitDto()
-        {
-            AnaTabAdi = new List<string>();
-            DetayTabAdi = new List<string>();
-            JuriTipAdi = new List<string>();
-            AdSoyad = new List<string>();
-            UnvanAdi = new List<string>();
-            EMail = new List<string>();
-            UniversiteID = new List<int?>();
-            AnabilimdaliProgramAdi = new List<string>();
-            UzmanlikAlani = new List<string>();
-            BilimselCalismalarAnahtarSozcukler = new List<string>();
-            DilSinavAdi = new List<string>();
-            DilPuani = new List<string>();
-            JoFormJuriList = new List<KrMezuniyetJuriOneriFormuJurileri>();
-        }
+        public SelectList SListUnvanAdi { get; set; } 
+        public List<KrMezuniyetJuriOneriFormuJurileri> JoFormJuriList { get; set; } = new List<KrMezuniyetJuriOneriFormuJurileri>();
     }
     public class KrMezuniyetJuriOneriFormuJurileri : MezuniyetJuriOneriFormuJurileri
     {
 
-        public SelectList SlistUnvanAdi { get; set; }
-        public SelectList SListUniversiteID { get; set; }
+        public SelectList SlistUnvanAdi { get; set; } 
     }
 }
