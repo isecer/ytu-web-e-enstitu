@@ -1,15 +1,12 @@
-﻿@using BiskaUtil
-@using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using LisansUstuBasvuruSistemi.Utilities.Enums
+﻿@using LisansUstuBasvuruSistemi.Business 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles 
 @model FmKullanicilarDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kayit = RoleNames.KullanicilarKayit.InRoleCurrent();
+    var kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent();
     var silme = RoleNames.KullanicilarSil.InRoleCurrent();
     var yetkilendirme = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
     var programYetkileri = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
@@ -182,15 +179,15 @@
                                                         <li>
                                                             <a href="@Url.Action("Kayit", new { id=item.KullaniciID })"><i class="fa fa-edit fa-lg"></i>Düzenle</a>
                                                         </li>
-                                                        if (UserIdentity.Current.IsAdmin)
+                                                        if (kHesabaGecme)
                                                         {
                                                             <li>
-                                                                <a href="@Url.Action("SetLogin", new { item.KullaniciID })" target="_blank"><i class="fa fa-user fa-lg"></i>Kullanıcı Hesabına Geç</a>
+                                                                <a href="@Url.Action("SetLogin", new { item.UserKey })" target="_blank"><i class="fa fa-user fa-lg"></i>Kullanıcı Hesabına Geç</a>
                                                             </li>
                                                         }
                                                     }
                                                     <li>
-                                                        <a href="javascript:void(0)" onclick="detayGor(@item.KullaniciID,'#kulPnl')"><i class="fa fa-file-text-o"></i>Detay Göster</a>
+                                                        <a href="javascript:void(0)" onclick="DetayGor('@item.UserKey','#kulPnl')"><i class="fa fa-file-text-o"></i>Detay Göster</a>
                                                     </li>
 
                                                     @if (mailGonder)
@@ -220,7 +217,7 @@
                                                     @if (silme)
                                                     {
                                                         <li>
-                                                            <a href="javascript:void(0)" onclick="silmeOnay(this,@item.KullaniciID)"><i class="fa fa-trash-o"></i>Sil</a>
+                                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.UserKey')"><i class="fa fa-trash-o"></i>Sil</a>
                                                         </li>
                                                     }
                                                 </ul>
@@ -231,7 +228,7 @@
                                                 <tr>
                                                     <td width="60">
                                                         <span class="user" style="width: 50px; height: 50px; margin-right: 5px;">
-                                                            <img style="width: 50px; height: 50px;cursor:pointer;margin:0px;" onclick="detayGor(@item.KullaniciID,'#kulPnl')" src="@item.ResimAdi.ToKullaniciResim()">
+                                                            <img style="width: 50px; height: 50px;cursor:pointer;margin:0px;" onclick="DetayGor('@item.UserKey','#kulPnl')" src="@item.ResimAdi.ToKullaniciResim()">
                                                         </span>
                                                     </td>
 
@@ -332,11 +329,11 @@
 </script>
 <script type="text/javascript">
 
-    function silmeOnay(sndr, id) {
+    function silmeOnay(sndr, userKey) {
         setTimeout(function () {
             $.ajax({
                 url: '@Url.Action("getKullaniciDetay", "Ajax")',
-                data: { 'KullaniciID': id },
+                data: { userKey },
                 success: function (result) {
                     bootbox.dialog({
                         message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Kullanıcıyı Silmek İstiyor Musunuz?</td></tr></table>",
@@ -365,10 +362,10 @@
             });
         }, 120);
     }
-    function sil(sndr, id) {
+    function sil(sndr, userKey) {
         $.ajax({
             url: '@Url.Action("Sil", "Kullanicilar")',
-            data: { id: id },
+            data: { userKey },
             success: function (result) {
                 toastr[result.success ? "success" : "error"](result.message, "Kullanıcı Silme İşlemi")
                 if (result.success) {

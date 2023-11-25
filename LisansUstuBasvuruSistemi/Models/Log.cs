@@ -17,6 +17,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public int LogID { get; set; }
         public string TabloAdi { get; set; }
         public string IslemTipi { get; set; }
+        public string Aciklama { get; set; }
         public string TableData { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

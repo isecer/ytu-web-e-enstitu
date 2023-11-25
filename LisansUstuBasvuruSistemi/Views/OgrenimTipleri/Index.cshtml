@@ -105,107 +105,13 @@
                                                                         <label class="col-md-5 control-label">Öğrenim Tipi</label>
                                                                         <div class="col-md-7">@item.OgrenimTipAdi</div>
                                                                     </div>
-
-                                                                    <div class="panel" style="margin:0px; margin-top:4px;">
-                                                                        <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                                                            <h3 class="panel-title">
-                                                                                <i class="fa fa-gears"></i>Mezuniyet Başvurusu Ayarları
-                                                                            </h3>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-5 control-label">Mezuniyet Başvurusu Yapılabilir Mi</label>
+                                                                        <div class="col-md-7">
+                                                                            <span class="label label-@(item.IsMezuniyetBasvurusuYapabilir ? "success" : "danger")">@(item.IsMezuniyetBasvurusuYapabilir ? "Evet" : "Hayır")</span>
                                                                         </div>
-                                                                        <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                                                            <div class="panel" style="margin:0px;">
-                                                                                <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                                                                    <h3 class="panel-title" style="float:right;">
-                                                                                        <i class="fa fa-gears"></i> Başvuru Kriterleri
-                                                                                    </h3>
-
-                                                                                </div>
-                                                                                <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Mezuniyet Başvurusu Yapılabilir Mi</label>
-                                                                                        <div class="col-md-7">
-                                                                                            <span class="label label-@(item.IsMezuniyetBasvurusuYapabilir ? "success" : "danger")">@(item.IsMezuniyetBasvurusuYapabilir ? "Evet" : "Hayır")</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    @if (item.IsMezuniyetBasvurusuYapabilir)
-                                                                                    {
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Son Dönem Kayıt Yaptırması Gereken Ders Kodları</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Etik Ders Notu Kriteri</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBasvuruEtikNotKriteri
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Etik Ders Notu Kriteri</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBasvuruSeminerNotKriteri
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Tüm Dönem Toplam Kredi Kriteri</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBasvuruToplamKrediKriteri
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Genel AGNO Kriteri</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBasvuruAGNOKriteri
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Genel AKTS Kriteri</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBasvuruAKTSKriteri
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">SR Talebini Kaç Gün Sonra Alabilir</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBSRTalebiKacGunSonraAlabilir
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    }
-                                                                                </div>
-                                                                            </div>
-                                                                            @if (item.IsMezuniyetBasvurusuYapabilir)
-                                                                            {
-                                                                                <div class="panel" style="margin:0px;">
-                                                                                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                                                                        <h3 class="panel-title" style="float:right;">
-                                                                                            <i class="fa fa-gears"></i> Tez Sınavı ve Tez Teslimi Kriterleri
-                                                                                        </h3>
-
-                                                                                    </div>
-                                                                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Tez Sınavı Uzatma Süresi (Gün)</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBSinavUzatmaSuresiGun
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Tez Teslim Süresi (Gün)</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.MBTezTeslimSuresiGun
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            }
-                                                                        </div>
-
-
-
-                                                                    </div>
-
-
+                                                                    </div> 
+                                                                
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -20,6 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FrMailGondermeDto : GonderilenMailler
     {
         public string EnstituAdi { get; set; }
+        public Guid? UserKey { get; set; }
         public string MailGonderen { get; set; }
         public int EkSayisi { get; set; }
         public int KisiSayisi { get; set; }

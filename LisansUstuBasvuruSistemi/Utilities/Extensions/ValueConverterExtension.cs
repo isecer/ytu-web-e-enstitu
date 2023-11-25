@@ -129,6 +129,20 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
             return (int?)null;
         }
+        public static Guid? ToGuidObj(this object obj)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+            string guidString = obj.ToString();
+            Guid result;
+            if (Guid.TryParse(guidString, out result))
+            {
+                return result;
+            }
+            return null;
+        }
         public static int ToInt(this string @string, int @default)
         {
             var x = ToInt(@string);

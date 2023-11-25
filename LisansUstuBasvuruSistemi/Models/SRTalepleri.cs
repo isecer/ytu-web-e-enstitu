@@ -54,11 +54,17 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<int> MezuniyetSinavDurumID { get; set; }
         public Nullable<System.DateTime> MezuniyetSinavDurumIslemTarihi { get; set; }
         public Nullable<int> MezuniyetSinavDurumIslemYapanID { get; set; }
+        public Nullable<System.DateTime> UzatmaSonrasiOgrenciTaahhutSonTarih { get; set; }
+        public Nullable<int> UzatmaSonrasiOgrenciTaahhutSonTarihIslemYapanID { get; set; }
+        public Nullable<System.DateTime> UzatmaSonrasiOgrenciTaahhutSonTarihIslemTarihi { get; set; }
         public Nullable<bool> IsOgrenciUzatmaSonrasiOnay { get; set; }
         public Nullable<System.DateTime> OgrenciOnayTarihi { get; set; }
         public Nullable<bool> IsDanismanUzatmaSonrasiOnay { get; set; }
         public Nullable<System.DateTime> DanismanOnayTarihi { get; set; }
         public string DanismanUzatmaSonrasiOnayAciklama { get; set; }
+        public Nullable<System.DateTime> UzatmaSonrasiYeniSinavTalebiSonTarih { get; set; }
+        public Nullable<int> UzatmaSonrasiYeniSinavTalebiSonTarihIslemYapanID { get; set; }
+        public Nullable<System.DateTime> UzatmaSonrasiYeniSinavTalebiSonTarihIslemTarihi { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

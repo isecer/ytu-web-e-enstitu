@@ -475,14 +475,28 @@ namespace LisansUstuBasvuruSistemi.Business
             var model = new TijBasvuruDetayDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
+
+
                 int? danismanId = null;
                 var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
                 var tiJuriOnerileriYetkili = RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent() || RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
                 if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriYetkili)
                     danismanId = UserIdentity.Current.Id;
                 var basvuru = db.TijBasvurus.First(p => p.UniqueID == uniqueId);
-                var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
 
+                var ogrenciObsBilgi =
+                    KullanicilarBus.OgrenciBilgisiGuncelleObs(basvuru.KullaniciID);
+                //ana başvurudaki danışman ile aktif danışman uyuşmuyor ise aktif danışmanı ana başvuruya eşleştir.
+                if (ogrenciObsBilgi.KayitVar)
+                {
+                    if (basvuru.OgrenciNo == ogrenciObsBilgi.OgrenciInfo.OGR_NO && basvuru.TezDanismanID != ogrenciObsBilgi.AktifDanismanID)
+                    {
+                        basvuru.TezDanismanID = ogrenciObsBilgi.AktifDanismanID;
+                        db.SaveChanges();
+                    }
+                }
+
+                var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
                 var sonTijBasvuruOneri = basvuru.TijBasvuruOneris.OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault();
                 model.TijBasvuruOneriList = basvuru.TijBasvuruOneris.ToList().Where(p => p.TezDanismanID == (danismanId ?? p.TezDanismanID)).Select(s => new TijBasvuruOneriDetayDto
                 {
@@ -521,8 +535,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     EYKDaOnaylanmadiDurumAciklamasi = s.EYKDaOnaylanmadiDurumAciklamasi,
                     SelectEykYaGonderildi = new SelectList(ComboData.GetCmbEykGonderimDurumData(true, s.EYKYaGonderildi == true ? s.EYKYaGonderildiIslemTarihi : null), "Value", "Caption", s.EYKYaGonderildi),
                     SelectEykDaOnaylandi = new SelectList(ComboData.GetCmbEykOnayDurumData(true), "Value", "Caption", s.EYKDaOnaylandi),
-                    TijBasvuruOneriJurilers = s.TijBasvuruOneriJurilers.OrderBy(o=>o.IsYeniOrOnceki?1:2)
-                                                                       .ThenBy(t => t.IsTezDanismani ? 1 : 2) 
+                    TijBasvuruOneriJurilers = s.TijBasvuruOneriJurilers.OrderBy(o => o.IsYeniOrOnceki ? 1 : 2)
+                                                                       .ThenBy(t => t.IsTezDanismani ? 1 : 2)
                                                                        .ThenBy(o => o.IsYtuIciJuri ? 1 : 2)
                                                                        .ThenBy(t => t.RowNum).ToList()
                 }).OrderByDescending(o => o.BasvuruTarihi).ToList();
@@ -532,6 +546,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.DonemHtmlString = (sonTij ?? new TijBasvuruOneriDetayDto()).ToTijBasvuruDonemView().ToString();
                 model.IsYeniBasvuruYapilabilir = basvuru.IsYeniBasvuruYapilabilir;
                 model.UniqueID = basvuru.UniqueID;
+                model.TezDanismaniUserKey = db.Kullanicilars.Where(p => p.KullaniciID == basvuru.TezDanismanID)
+                    .Select(s => s.UserKey).FirstOrDefault();
                 model.TezDanismanID = basvuru.TezDanismanID;
                 model.TijBasvuruID = basvuru.TijBasvuruID;
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
@@ -882,7 +898,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AnabilimdaliAdi", Value = tijBasvuruOneri.TijBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "ProgramAdi", Value = tijBasvuruOneri.TijBasvuru.Programlar.ProgramAdi });
-                        if (item.MailSablonTipID == MailSablonTipiEnum.TijOneriFormuEykdaOnaylandiJuriUyelerine && juriUyeleri != null)
+                        if (juriUyeleri != null)
                         {
                             if (item.SablonParametreleri.Any(a => a == "@JuriUyesiAdSoyad"))
                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "JuriUyesiAdSoyad", Value = item.AdSoyad });
@@ -892,12 +908,14 @@ namespace LisansUstuBasvuruSistemi.Business
                             var juriDanisman = juriUyeleri.First(f => f.IsTezDanismani);
                             if (item.SablonParametreleri.Any(a => a == "@DanismanBilgi"))
                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanBilgi", Value = juriDanisman.UnvanAdi + " " + juriDanisman.AdSoyad });
-                            var asilUye1 = juriUyeleri.OrderBy(o => o.RowNum).First(f => !f.IsTezDanismani);
-                            if (item.SablonParametreleri.Any(a => a == "@AsilBilgi1"))
-                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AsilBilgi1", Value = asilUye1.UnvanAdi + " " + asilUye1.AdSoyad });
-                            var asilUye2 = juriUyeleri.OrderByDescending(o => o.RowNum).First(f => !f.IsTezDanismani);
-                            if (item.SablonParametreleri.Any(a => a == "@AsilBilgi2"))
-                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AsilBilgi2", Value = asilUye2.UnvanAdi + " " + asilUye2.AdSoyad });
+                            var juriler = juriUyeleri.Where(p => !p.IsTezDanismani).OrderBy(o => o.RowNum).ToList();
+                            var juriRowInx = 0;
+                            foreach (var itemJuri in juriler)
+                            {
+                                juriRowInx++;
+                                if (item.SablonParametreleri.Any(a => a == "@AsilBilgi" + juriRowInx))
+                                    paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AsilBilgi" + juriRowInx, Value = itemJuri.UnvanAdi + " " + itemJuri.AdSoyad });
+                            }
                         }
                         paramereDegerleri.Add(new MailReplaceParameterDto { Key = item.JuriTipAdi, Value = item.AdSoyad });
                         if (eykDaOnayOrEykYaGonderim)

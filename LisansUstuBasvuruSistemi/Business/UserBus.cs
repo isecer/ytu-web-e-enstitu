@@ -25,6 +25,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         select new FrKullanicilarDto
                         {
                             KullaniciID = s.KullaniciID,
+                            UserKey = s.UserKey,
                             EnstituKod = s.EnstituKod,
                             ResimAdi = s.ResimAdi,
                             YetkiGrupID = s.YetkiGrupID,
@@ -83,6 +84,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             EnstituKod = s.EnstituKod,
                             KullaniciID = s.KullaniciID,
+                            UserKey = s.UserKey,
                             ResimAdi = s.ResimAdi,
                             YetkiGrupID = s.YetkiGrupID,
                             KullaniciAdi = s.KullaniciAdi,
@@ -138,7 +140,9 @@ namespace LisansUstuBasvuruSistemi.Business
                         join ktl in db.KullaniciTipleris on new { s.KullaniciTipID } equals new { ktl.KullaniciTipID }
                         select new FrKullanicilarDto
                         {
+                            EnstituKod = s.EnstituKod,
                             KullaniciID = s.KullaniciID,
+                            UserKey = s.UserKey,
                             ResimAdi = s.ResimAdi,
                             YetkiGrupID = s.YetkiGrupID,
                             KullaniciTipID = s.KullaniciTipID,
@@ -363,6 +367,7 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 NameSurname = kull.Ad + " " + kull.Soyad,
                 Id = kull.KullaniciID,
+                UserKey = kull.UserKey,
                 Description = kull.EMail,
                 IsAdmin = kull.IsAdmin,
                 //ui.Password = kull.Sifre;

@@ -355,14 +355,13 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-
-        public static List<CmbIntDto> CmbGetAktifUniversiteler(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetAktifUniversiteler(bool bosSecimVar = false, bool isYtuHaric = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.Universitelers.OrderBy(o => o.Ad).ToList();
+                var data = db.Universitelers.Where(p=>!isYtuHaric || p.UniversiteID!=UniversiteYtuKod).OrderBy(o => o.Ad).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.UniversiteID, Caption = item.Ad + (item.KisaAd.IsNullOrWhiteSpace() ? "" : " (" + item.KisaAd + ")") });
@@ -371,13 +370,17 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> CmbGetOgrenciBolumleri(string EnstituKod, bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetAktifUniversiteler(bool bosSecimVar = false)
+        { 
+            return CmbGetAktifUniversiteler(bosSecimVar, false); 
+        }
+        public static List<CmbIntDto> CmbGetOgrenciBolumleri(string enstituKod, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.OgrenciBolumleris.Where(p => p.EnstituKod == EnstituKod && p.IsAktif).OrderBy(o => o.BolumAdi).ToList();
+                var data = db.OgrenciBolumleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif).OrderBy(o => o.BolumAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.OgrenciBolumID, Caption = item.BolumAdi });
@@ -1000,7 +1003,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         }
                     case RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu:
                         {
-                            if (!dataId[0].HasValue) 
+                            if (!dataId[0].HasValue)
                                 throw new Exception("mezuniyetJuriOneriFormId boş gelmekte.");
                             var mezuniyetJuriOneriFormId = dataId[0].Value;
                             var rpr = new RprJuriUyelerineTezTeslimFormu_FR0341_FR0302(mezuniyetJuriOneriFormId);
@@ -1037,7 +1040,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         }
                     case RaporTipiEnum.MezuniyetDoktoraTezDegerlendirmeFormu:
                         {
-                            
+
                             var mezuniyetJuriOneriFormId = dataId[0].Value;
                             var mezuniyetJuriOneriFormuJuriId = dataId[1];
                             var rpr = new RprMezuniyetTezDegerlendirmeFormu_FR0303(mezuniyetJuriOneriFormId, mezuniyetJuriOneriFormuJuriId);

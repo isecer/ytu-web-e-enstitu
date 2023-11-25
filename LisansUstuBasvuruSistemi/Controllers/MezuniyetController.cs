@@ -43,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bbModel = new IndexPageInfoDto();
             var mezuniyetSurecId = MezuniyetBus.GetMezuniyetAktifSurecId(enstituKod);
             bbModel.AktifSurecID = mezuniyetSurecId ?? 0;
-            bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.GetAyarMz(enstituKod, "0").ToBoolean().Value && mezuniyetSurecId.HasValue;
+            bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.GetAyarMz(enstituKod).ToBoolean(false) && mezuniyetSurecId.HasValue;
             bbModel.MezuniyetSurec = _entities.MezuniyetSurecis.FirstOrDefault(p => p.MezuniyetSurecID == mezuniyetSurecId.Value);
             if (bbModel.MezuniyetSurec != null)
             {
@@ -129,6 +129,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         BasTar = bs.BaslangicTarihi,
                         BitTar = bs.BitisTarihi,
                         KullaniciID = s.KullaniciID,
+                        UserKey = kul.UserKey,
                         TezBaslikTr = s.TezBaslikTr,
                         TezDanismanAdi = s.TezDanismanAdi,
                         TezDanismanUnvani = s.TezDanismanUnvani,
@@ -152,8 +153,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         TeslimFormDurumu = srT != null && s.MezuniyetBasvurulariTezTeslimFormlaris.Any(),
                         IsOnaylandiOrDuzeltme = td != null ? td.IsOnaylandiOrDuzeltme : null,
                         MezuniyetBasvurulariTezDosyasi = td,
-                        UzatmaSuresiGun = mOt.MBSinavUzatmaSuresiGun,
-                        MezuniyetSuresiGun = mOt.MBSinavUzatmaSuresiGun,
+                        UzatmaSuresiGun = mOt.MBSinavUzatmaSinavAlmaSuresiMaxGun,
+                        MezuniyetSuresiGun = mOt.MBSinavUzatmaSinavAlmaSuresiMaxGun,
                         EYKTarihi = s.EYKTarihi,
                         MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Select(s2 => s2.MezuniyetYayinTurID).ToList(),
                         FormNo = jOf != null ? jOf.UniqueID : "",
@@ -1183,6 +1184,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Son Sınav bilgisi enstitü tarafından onaylanmadan yeni rezervasyon alınamaz.");
 
             }
+            if (mezuniyetBasvurusu.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+            {
+                mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
             if (kModel.SRTalepID > 0)
             {
                 var srTalep = mezuniyetBasvurusu.SRTalepleris.First(p => p.SRTalepID == kModel.SRTalepID);
@@ -1220,12 +1225,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "SRSalonID" });
                         if (kModel.Tarih == DateTime.MinValue)
                         {
-                            mmMessage.Messages.Add("Talep tarihi seçimi yapınız!");
+                            mmMessage.Messages.Add("Sınav tarihi seçimi yapınız!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
                         else if (kModel.Tarih.Date < srBaslangicTarihi.Date)
                         {
-                            mmMessage.Messages.Add("Talep tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
+                            mmMessage.Messages.Add("Sınav tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
                         if (!kModel.BasSaat.HasValue || !kModel.BitSaat.HasValue)//bitiş saati mi baz alınsın başlangıç saati mi ?
@@ -1244,12 +1249,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "SalonAdi" });
                         if (kModel.Tarih == DateTime.MinValue)
                         {
-                            mmMessage.Messages.Add("Talep tarihi seçimi yapınız!");
+                            mmMessage.Messages.Add("Sınav tarihi seçimi yapınız!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
                         else if (kModel.Tarih.Date < srBaslangicTarihi.Date)
                         {
-                            mmMessage.Messages.Add("Talep tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
+                            mmMessage.Messages.Add("Sınav tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
                     }
@@ -1260,10 +1265,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var uzatmaAlinanSrTalebi = mezuniyetBasvurusu.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && p.SRDurumID == SrTalepDurumEnum.Onaylandı).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
                     if (uzatmaAlinanSrTalebi != null)
                     {
-                        var uzatmaSonSrAlmaTarihi = uzatmaAlinanSrTalebi.Tarih.AddDays(mezuniyetSureciOgrenimTip.MBSinavUzatmaSuresiGun);
+                        var uzatmaSonSrAlmaTarihi = uzatmaAlinanSrTalebi.UzatmaSonrasiYeniSinavTalebiSonTarih ?? uzatmaAlinanSrTalebi.Tarih.AddDays(mezuniyetSureciOgrenimTip.MBSinavUzatmaSinavAlmaSuresiMaxGun);
                         if (kModel.Tarih > uzatmaSonSrAlmaTarihi)
-                        { 
-                            mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası salon rezervasyonu işemi son tarihi olan '" + uzatmaSonSrAlmaTarihi.ToFormatDate() + "' tarihini aştığınız için salon rezervasyonu alamazsınız.");
+                        {
+                            mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası son sınav tarihi olan '" + uzatmaSonSrAlmaTarihi.ToFormatDate() + "' tarihini aştığınız için yeni sınav oluşturamazsınız.");
                         }
                     }
                 }
@@ -1467,12 +1472,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent();
-            var mezuniyetBasvuru = _entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
-            if (mezuniyetBasvuru.KullaniciID != UserIdentity.Current.Id && !yetkiliK)
+            var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
+            if (mezuniyetBasvurusu.KullaniciID != UserIdentity.Current.Id && !yetkiliK)
             {
                 mmMessage.Messages.Add("Başka bir kullanıcı tez teslim formu oluşturmaya yetkili değilsiniz!");
             }
-            else if (mezuniyetBasvuru.IsMezunOldu.HasValue)
+            else if (mezuniyetBasvurusu.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+            {
+                mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
+            else if (mezuniyetBasvurusu.IsMezunOldu.HasValue)
             {
                 mmMessage.Messages.Add("Mezuniyet sonuç bilgisi girilildikten sonra Tez teslim formu üzerinde düzeltme işlemi yapılamaz!");
 
@@ -1588,18 +1597,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-            var basv = _entities.MezuniyetBasvurularis.First(p => p.RowID == rowId);
-            var tezDosyasi = basv.MezuniyetBasvurulariTezDosyalaris.FirstOrDefault(p => p.MezuniyetBasvurulariTezDosyaID == mezuniyetBasvurulariTezDosyaId);
+            var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.First(p => p.RowID == rowId);
+            var tezDosyasi = mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.FirstOrDefault(p => p.MezuniyetBasvurulariTezDosyaID == mezuniyetBasvurulariTezDosyaId);
 
-            if (basv.MezuniyetSinavDurumID != MezuniyetSinavDurumEnum.Basarili)
+            if (mezuniyetBasvurusu.MezuniyetSinavDurumID != MezuniyetSinavDurumEnum.Basarili)
             {
                 mMessage.Messages.Add("Tez dosyasını yükleyebilmek için Sınav sürecinden başarılı bir şekilde geçmeniz gerekmektedir.!");
             }
-            else if (basv.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true))
+            else if (mezuniyetBasvurusu.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+            {
+                mMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
+            else if (mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true))
             {
                 mMessage.Messages.Add("Onaylanmış bir tez dosyanız bulunmaktadır. Yeni tez dosyası yüklenemez!");
             }
-            else if (!kayitYetki && basv.KullaniciID != UserIdentity.Current.Id)
+            else if (!kayitYetki && mezuniyetBasvurusu.KullaniciID != UserIdentity.Current.Id)
             {
                 mMessage.Messages.Add("Bu başvuru üstünde işlem yapmaya yetkili değilsiniz.");
             }
@@ -1627,7 +1640,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-                var dosyaYolu = "/BasvuruDosyalari/MezuniyetBelgeleri/" + belgeDosyasi.FileName.ToFileNameAddGuid(null, basv.MezuniyetBasvurulariID.ToString());
+                var dosyaYolu = "/BasvuruDosyalari/MezuniyetBelgeleri/" + belgeDosyasi.FileName.ToFileNameAddGuid(null, mezuniyetBasvurusu.MezuniyetBasvurulariID.ToString());
                 var belgeAdi = belgeDosyasi.FileName.GetFileName();
                 belgeDosyasi.SaveAs(Server.MapPath("~" + dosyaYolu));
 
@@ -1635,9 +1648,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     tezDosyasi = _entities.MezuniyetBasvurulariTezDosyalaris.Add(new MezuniyetBasvurulariTezDosyalari
                     {
-                        MezuniyetBasvurulariID = basv.MezuniyetBasvurulariID,
+                        MezuniyetBasvurulariID = mezuniyetBasvurusu.MezuniyetBasvurulariID,
                         RowID = Guid.NewGuid(),
-                        SiraNo = basv.MezuniyetBasvurulariTezDosyalaris.Count + 1,
+                        SiraNo = mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Count + 1,
                         YuklemeTarihi = DateTime.Now,
                         TezDosyaAdi = belgeAdi,
                         TezDosyaYolu = dosyaYolu,
@@ -1672,6 +1685,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 _entities.SaveChanges();
+
+                MezuniyetBus.TezDosyasiKontrolYetkilisiAta(mezuniyetBasvurusu.MezuniyetBasvurulariID);
                 MezuniyetBus.SendMailMezuniyetTezSablonKontrol(tezDosyasi.MezuniyetBasvurulariTezDosyaID, MailSablonTipiEnum.MezTezKontrolTezDosyasiYuklendi);
                 mMessage.Messages.Add("Tez Dosyası Yükleme İşlemi Başarılı");
 
@@ -1709,12 +1724,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     var srTalebi = komite.SRTalepleri;
-                    var mBasvuru = srTalebi.MezuniyetBasvurulari;
+                    var mezuniyetBasvurusu = srTalebi.MezuniyetBasvurulari;
                     var srTalepJuris = srTalebi.SRTaleplerJuris;
                     bool isTezDanismani = komite.JuriTipAdi == "TezDanismani";
                     var toplanti = komite.SRTalepleri;
                     var toplantiTarihi = toplanti.Tarih.Add(toplanti.BasSaat);
-                    if (!degerlendirmeDuzeltmeYetki && DateTime.Now < toplantiTarihi)
+                    if (mezuniyetBasvurusu.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                    {
+                        mMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+                    }
+                    else if (!degerlendirmeDuzeltmeYetki && DateTime.Now < toplantiTarihi)
                     {
                         mMessage.Messages.Add("<span style='color:maroon;'>Tez izleme rapor değerlendirme işlemi başarısız.<br/>Değerlendirme işlemi toplantı tarihi olan <b>'" + toplantiTarihi.ToLongDateString() + " " + $"{toplanti.BasSaat:hh\\:mm}" + "'</b> dan önce yapılamaz!</span>");
                     }
@@ -1747,7 +1766,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 {
                                     mMessage.Messages.Add("<span style='color:maroon;'>Tez sanayi ile işbirliği kapsamında mı gerçekleştirildi?</span>");
                                 }
-                                if (mBasvuru.OgrenimTipKod.IsDoktora())
+                                if (mezuniyetBasvurusu.OgrenimTipKod.IsDoktora())
                                 {
                                     if (!isYokDrBursiyeriVar.HasValue)
                                     {
@@ -1799,12 +1818,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     if (!isTezSanayiVeIsBirligiKapsamindaGerceklesti.HasValue)
                                         mMessage.Messages.Add("<span style='color:maroon;'>Tez sanayi ile işbirliği kapsamında mı gerçekleştirildi?</span>");
 
-                                    if (!mezuniyetSinavDurumId.HasValue || mezuniyetSinavDurumId <= MezuniyetSinavDurumEnum.SonucGirilmedi)
+                                    if (mezuniyetSinavDurumId <= MezuniyetSinavDurumEnum.SonucGirilmedi)
                                         mMessage.Messages.Add("<span style='color:maroon;'>Tez sınavı değerlendirme sonucu</span>");
 
 
 
-                                    if (mBasvuru.OgrenimTipKod.IsDoktora())
+                                    if (mezuniyetBasvurusu.OgrenimTipKod.IsDoktora())
                                     {
                                         if (!isYokDrBursiyeriVar.HasValue)
                                         {
@@ -1880,7 +1899,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var sendMailLink = false;
                         var sendSonuc = false;
-                        var jForm = mBasvuru.MezuniyetJuriOneriFormlaris.First();
+                        var jForm = mezuniyetBasvurusu.MezuniyetJuriOneriFormlaris.First();
                         if (isTezDanismani && mezuniyetSinavDurumId > MezuniyetSinavDurumEnum.SonucGirilmedi && !komite.SRTalepleri.SRTaleplerJuris.Any(a => a.IsLinkGonderildi.HasValue))
                         {
                             sendMailLink = true;
@@ -2127,6 +2146,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("Değerlendirme linkini göndermek için yetkili değilsiniz.");
             }
+            else if (srTalep.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+            {
+                mMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
             else if (uzatmaSonrasiOgrenciTaahhutu)
             {
                 mMessage.MessageType = MsgTypeEnum.Warning;
@@ -2188,11 +2211,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage
             {
-                Title = "Mezuniyet başvurusu danışman onay işlemi"
+                Title = "Tez sınavı öğrenci tez teslim taahhütü"
             };
             var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == srTalepId);
             var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
-
+            var onayTarihi = DateTime.Now;
             if (!kayitYetki)
             {
                 if (srTalep.MezuniyetBasvurulari.KullaniciID != UserIdentity.Current.Id)
@@ -2200,16 +2223,37 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz!");
                 }
             }
-            if (srTalep.IsDanismanUzatmaSonrasiOnay.HasValue)
+            else if (srTalep.IsDanismanUzatmaSonrasiOnay.HasValue)
             {
-                mmMessage.Messages.Add("Danışman taahhüt onayı yapıldı. Bu işlemi yapamazsınız.");
+                mmMessage.Messages.Add("Danışman tarafından taahhüt onayı yapıldı. Bu işlemi yapamazsınız.");
             }
+            else if (srTalep.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+            {
+                mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
+            else
+            {
+                if (srTalep.MezuniyetSinavDurumID != MezuniyetSinavDurumEnum.Uzatma)
+                {
+                    mmMessage.Messages.Add("Sadece uzatma alınan sınavlar için tez teslim taahhütü yapılabilir!");
+                }
+                else
+                {
+                    var mezuniyetSureciOgrenimTip = srTalep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == srTalep.MezuniyetBasvurulari.OgrenimTipKod);
+                    var uzatmaSonrasiTezTeslimSonTarih = srTalep.UzatmaSonrasiOgrenciTaahhutSonTarih ?? srTalep.Tarih.AddDays(mezuniyetSureciOgrenimTip.MBSinavUzatmaOgrenciTaahhutMaxGun);
+                    if (onayTarihi > uzatmaSonrasiTezTeslimSonTarih)
+                    {
+                        mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası tez teslim taahhütü işemi için son tarihi olan '" + uzatmaSonrasiTezTeslimSonTarih.ToFormatDate() + "' tarihini aştığınız için taahhüt onay işlemi yapamazsınız.");
+                    }
+                }
+            }
+
             if (!mmMessage.Messages.Any())
             {
                 if (mmMessage.Messages.Count == 0)
                 {
                     srTalep.IsOgrenciUzatmaSonrasiOnay = isOgrenciUzatmaSonrasiOnay;
-                    srTalep.OgrenciOnayTarihi = DateTime.Now;
+                    srTalep.OgrenciOnayTarihi = onayTarihi;
 
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("SRTalepleri", LogCrudType.Update, srTalep.ToJson());
@@ -2229,8 +2273,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (mmMessage.IsSuccess)
             {
-                var kayit = _entities.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == id);
-                var tarih = kayit.BasvuruTarihi.ToString();
+                var kayit = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
+
                 try
                 {
                     var fFList = new List<string>();
@@ -2256,7 +2300,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var path = Server.MapPath("~" + kayit.DanismanImzaliFormDosyaYolu);
                         if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
                     }
-                    mmMessage.Messages.Add(tarih + " Tarihli başvuru silindi.");
+                    mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;
                     foreach (var item in fFList)
                     {
@@ -2268,7 +2312,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
-                    mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
+                    mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
                     SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Mezuniyet/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }

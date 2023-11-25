@@ -126,7 +126,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                             if (itemB.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma)
                                             {
                                                 var sonSr = itemB.SRTalepleris.OrderByDescending(o => o.SRTalepID).First();
-                                                var srAlimSonTarih = sonTarih = sonSr.Tarih.AddDays(otKriterBilgi.MBSinavUzatmaSuresiGun).Date;
+                                                var srAlimSonTarih = sonTarih = sonSr.Tarih.AddDays(otKriterBilgi.MBSinavUzatmaSinavAlmaSuresiMaxGun).Date;
                                                 kalanGun = Convert.ToInt32((srAlimSonTarih.Value - tarih).TotalDays);
                                                 var juri = sonSr.SRTaleplerJuris.OrderBy(p => p.SRTalepJuriID).First();
                                                 eMailList.Add(new MailSendList { EMail = juri.Email.Trim(), ToOrBcc = true });

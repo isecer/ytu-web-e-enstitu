@@ -749,7 +749,7 @@
 
                                                                         if (kayitYetki || (isEnstituSonucuGirdi || isJuriSonucGirildi))
                                                                         {
-                                                                            var enstituDegerlendirmeYetki = (kayitYetki && (!isJuriDegerlendirmeVar || isJuriSonucGirildi) && Model.IsMezunOldu.HasValue == false && item.IsSonSrTalebi) && !Model.MezuniyetBasvurulariTezDosyalaris.Any();
+                                                                            var enstituDegerlendirmeYetki = (kayitYetki && (!isJuriDegerlendirmeVar || isJuriSonucGirildi) && Model.IsMezunOldu.HasValue == false && item.IsSonSrTalebi) && !Model.MezuniyetBasvurulariTezDosyalariDtos.Any();
 
                                                                             <div class="widget widget-default" style="border-top:1px solid;color:@item.SColor;border-top-color:@item.SColor; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                                 <table style="width:100%;">
@@ -872,6 +872,50 @@
                                                                                     <tr>
                                                                                         <td colspan="3" style="font-weight:bold;font-size:9pt; border-bottom:1px solid;"><i class="fa fa-check-square fa-lg" aria-hidden="true"></i> Öğrenci İçin Uzatma Sonrası Düzeltilmiş Tez Teslimi Taahhütü</td>
                                                                                     </tr>
+
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd" width="140">Taahhüt Son Tarih</td>
+                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            @if (kayitYetki ? item.IsOgrenciUzatmaSonrasiOnay.HasValue : !item.IsOgrenciUzatmaSonrasiOnay.HasValue)
+                                                                                            {
+                                                                                                <span>
+                                                                                                    Uzatma alınan sınav sonrası tez teslim taahhüt işlemi <b>@item.UzatmaTaahhutSonTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.
+                                                                                                    <br />
+                                                                                                </span>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+
+                                                                                                <input class="form-control form-control-inline input-medium date-pickerx" id="UzatmaTaahhutSonTarih_@item.SRTalepID" style="max-width:90px;height:22px;float:left;@(item.UzatmaSonrasiOgrenciTaahhutSonTarih.HasValue?"color:green;":"")" autocomplete="off" size="10" type="text" value="@item.UzatmaTaahhutSonTarih.ToFormatDateInput()">
+                                                                                                <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="UzatmaOgrenciTaahhutSonTarihKayit('@item.SRTalepID');"><i class="fa fa-save" aria-hidden="true"></i>  Kaydet</span>
+                                                                                                <script>
+                                                                                                        function UzatmaOgrenciTaahhutSonTarihKayit(id) {
+                                                                                                            var val = $('#UzatmaTaahhutSonTarih_' + id).val();
+                                                                                                            var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
+                                                                                                            PanelRefresh(_panel, false);
+                                                                                                            $.ajax({
+                                                                                                                url: '@Url.Action("UzatmaSonrasiOgrenciTaahhutTarihiKaydet", "MezuniyetGelenBasvurular")',
+                                                                                                                data: { 'id': id, 'taahhutSonTarih': val },
+                                                                                                                success: function (result) {
+                                                                                                                    PanelRefresh(_panel, true);
+                                                                                                                    toastr[result.IsSuccess ? "success" : "error"](result.MmMessage.Messages.join('<br/>'), result.MmMessage.Title);
+                                                                                                                     if (result.IsSuccess) {
+                                                                                                                        getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                error: function (err) {
+                                                                                                                    PanelRefresh(_panel, true);
+                                                                                                                    alert(err.responseText);
+                                                                                                                }
+                                                                                                            });
+                                                                                                        }
+
+                                                                                                </script>
+
+                                                                                            }
+                                                                                        </td>
+                                                                                    </tr>
                                                                                     @if (showKayitOgrenci)
                                                                                     {
                                                                                         <tr>
@@ -942,6 +986,49 @@
                                                                                         <tr>
                                                                                             <td colspan="3" style="font-weight:bold;font-size:9pt; border-bottom:1px solid;"><i class="fa fa-check-square fa-lg" aria-hidden="true"></i> Danışman Tez Kontrol Taahhütü</td>
                                                                                         </tr>
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd" width="140">Sınav Son Tarih</td>
+                                                                                            <td class="CaptionTd" width="10">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                @if (kayitYetki ? !showKayitDanisman : !item.IsDanismanUzatmaSonrasiOnay.HasValue)
+                                                                                                {
+                                                                                                    <span>
+                                                                                                        Uzatma alınan sınav sonrası yeni sınav alma işlemi <b>@item.UzatmaSonSrTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.
+                                                                                                        <br />
+                                                                                                    </span>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+
+                                                                                                    <input class="form-control form-control-inline input-medium date-pickerx" id="UzatmaSonSinavTarih_@item.SRTalepID" style="max-width:90px;height:22px;float:left;@(item.UzatmaSonrasiYeniSinavTalebiSonTarih.HasValue?"color:green;":"")" autocomplete="off" size="10" type="text" value="@item.UzatmaSonSrTarih.ToFormatDateInput()">
+                                                                                                    <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="UzatmaSonrasiSonSinavTarihKayit('@item.SRTalepID');"><i class="fa fa-save" aria-hidden="true"></i>  Kaydet</span>
+                                                                                                    <script>
+                                                                                                        function UzatmaSonrasiSonSinavTarihKayit(id) {
+                                                                                                            var val = $('#UzatmaSonSinavTarih_' + id).val();
+                                                                                                            var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
+                                                                                                            PanelRefresh(_panel, false);
+                                                                                                            $.ajax({
+                                                                                                                url: '@Url.Action("UzatmaSonrasiSonSinavTarihiKaydet", "MezuniyetGelenBasvurular")',
+                                                                                                                data: { 'id': id, 'sonSinavTarih': val },
+                                                                                                                success: function (result) {
+                                                                                                                    PanelRefresh(_panel, true);
+                                                                                                                    toastr[result.IsSuccess ? "success" : "error"](result.MmMessage.Messages.join('<br/>'), result.MmMessage.Title);
+                                                                                                                     if (result.IsSuccess) {
+                                                                                                                        getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                error: function (err) {
+                                                                                                                    PanelRefresh(_panel, true);
+                                                                                                                    alert(err.responseText);
+                                                                                                                }
+                                                                                                            });
+                                                                                                        }
+
+                                                                                                    </script>
+
+                                                                                                }
+                                                                                            </td>
+                                                                                        </tr>
                                                                                         @if (showKayitDanisman)
                                                                                         {
                                                                                             <tr class="UzatmaDanismanOnayTaahhutRw_@item.SRTalepID @(item.IsDanismanUzatmaSonrasiOnay == true ? "" : "hide")">
@@ -960,7 +1047,7 @@
                                                                                                                 </div>
                                                                                                             }
                                                                                                         </div>
-                                                                                                    </div> 
+                                                                                                    </div>
                                                                                                 </td>
                                                                                             </tr>
                                                                                             <tr>
@@ -1152,7 +1239,7 @@
                                         },
                                         success: function (result) {
                                             PanelRefresh(pnlx, true);
-                                            if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                            if (result.Messages.length > 0) toastr[result.IsSuccess?"success":"error"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                             getDetailx(MBID);
                                             var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
                                             $(_clsBtn).click();

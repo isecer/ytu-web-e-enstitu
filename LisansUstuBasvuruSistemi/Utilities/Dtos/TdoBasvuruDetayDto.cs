@@ -32,8 +32,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DonemAdi { get; set; }
         public string AdSoyad { get; set; }
         public bool IsDuzeltSilYapabilir { get; set; }
+        public Guid? TezDanismaniUserKey { get; set; }
         public string VarolanDanismanAd { get; set; }
         public string TalepTipAdi { get; set; }
+        public Guid? VarolanTezDanismaniUserKey { get; set; }
         public bool VarolanDanismanGozuksun { get; set; }
         public bool VarolanDanismanOnayIslemiAcik { get; set; }
         public bool YeniDanismanOnayIslemiAcik { get; set; }

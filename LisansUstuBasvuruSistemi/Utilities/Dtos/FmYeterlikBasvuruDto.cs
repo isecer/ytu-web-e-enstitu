@@ -34,6 +34,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
     public class FrYeterlikBasvuruDto : YeterlikBasvuru
     {
+        public Guid? UserKey { get; set; }
         public string AdSoyad { get; set; }
         public string TcKimlikNo { get; set; }
         public string EMail { get; set; }

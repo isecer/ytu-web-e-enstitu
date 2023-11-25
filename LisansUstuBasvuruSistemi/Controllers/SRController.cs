@@ -95,6 +95,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         SRTalepID = s.SRTalepID,
                         EnstituKod = e.EnstituKod,
                         EnstituAdi = e.EnstituAd,
+                        UserKey = k.UserKey,
                         TalepYapanID = s.TalepYapanID,
                         TalepTipAdi = tt.TalepTipAdi,
                         SRTalepTipID = s.SRTalepTipID,

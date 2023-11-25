@@ -155,7 +155,7 @@
 
                         @if (Model.IslemYapanID > 0)
                         {
-                            <span style="cursor:pointer;" onclick="detayGor(@Model.IslemYapanID)"><i class="fa fa-user"></i> @Model.MailGonderen / @Model.IslemTarihi.ToFormatDateAndTime()</span>
+                            <span style="cursor:pointer;" onclick="DetayGor('@Model.UserKey')"><i class="fa fa-user"></i> @Model.MailGonderen / @Model.IslemTarihi.ToFormatDateAndTime()</span>
                         }
                         else
                         {

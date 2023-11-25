@@ -23,6 +23,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class SubMessagesDto
     {
         public int KullaniciID { get; set; }
+        public Guid? UserKey { get; set; }
         public string EMail { get; set; }
         public DateTime Tarih { get; set; }
         public string ResimYolu { get; set; }

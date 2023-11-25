@@ -17,7 +17,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string OgrenimTipAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
-        public string KayitDonemi { get; set; }  
+        public string KayitDonemi { get; set; }
+        public Guid? TezDanismaniUserKey{ get; set; }
         public string TezDanismanBilgiEslesen { get; set; }
 
         public string DurumClassName { get; set; }

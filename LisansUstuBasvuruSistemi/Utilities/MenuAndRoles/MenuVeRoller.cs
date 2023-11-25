@@ -210,6 +210,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string TosGelenBasvuruKayit = "Tos Gelen Başvurular Kayıt";
         [Role(GorunurAdi = "Tez Öneri Başvuruları Sil", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TosGelenBasvuruSil = "Tos Gelen Başvurular Sil";
+        [Role(GorunurAdi = "Tez Öneri Savunma Bitiş Tarih Düzeltme", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        public const string TosSavunmaBitisTarihDuzeltme = "Tez Öneri Savunma Bitiş Tarih Düzeltme";
         [Role(GorunurAdi = "Tez Öneri Toplantı Talebi Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TosToplantiTalebiYap = "Tos Toplantı Talebi Yap";
         [Role(GorunurAdi = "Tez Öneri Degerlendirme Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
@@ -308,6 +310,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 85000, MenuAdi = "Kullanıcılar", MenuCssClass = "fa fa-list-alt", MenuUrl = "Kullanicilar/Index", SiraNo = 1)]
         [Role(GorunurAdi = "Kullanıcılar", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]
         public const string Kullanicilar = "Kullanıcılar Listesi";
+        [Role(GorunurAdi = "Kullanıcı Hesabına Geçme Yetkisi", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]
+        public const string KullaniciHesabinaGecmeYetkisi = "Kullanıcı Hesabına Geçme Yetkisi";
         [Role(GorunurAdi = "Kullanıcılar İşlem Yetkileri", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]
         public const string KullanicilarIslemYetkileri = "Kullanıcılar İşlem Yetkileri";
         [Role(GorunurAdi = "Kullanıcılar Enstitü Yetkileri", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]

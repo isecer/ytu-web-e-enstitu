@@ -50,6 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EMail = kullanicilar.EMail,
                         CepTel = kullanicilar.CepTel,
                         KullaniciID = yeterlikBasvuru.KullaniciID,
+                        UserKey = kullanicilar.UserKey,
                         AdSoyad = kullanicilar.Ad + " " + kullanicilar.Soyad,
                         TcKimlikNo = kullanicilar.TcKimlikNo,
                         OgrenciNo = yeterlikBasvuru.OgrenciNo,

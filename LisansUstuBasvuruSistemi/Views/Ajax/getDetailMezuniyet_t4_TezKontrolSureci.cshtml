@@ -16,8 +16,8 @@
 
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
-    var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true);
-    var onayBekleyen = Model.MezuniyetBasvurulariTezDosyalaris.FirstOrDefault(p => !p.IsOnaylandiOrDuzeltme.HasValue);
+    var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true);
+    var onayBekleyen = Model.MezuniyetBasvurulariTezDosyalariDtos.FirstOrDefault(p => !p.IsOnaylandiOrDuzeltme.HasValue);
     var frmId = "TezDosyaEklePost_" + Model.MezuniyetBasvurulariID;
 }
 
@@ -96,7 +96,7 @@
                                     </div>
                                 }
                             }
-                            @if (Model.MezuniyetBasvurulariTezDosyalaris.Count > 0)
+                            @if (Model.MezuniyetBasvurulariTezDosyalariDtos.Count > 0)
                             {
                                 int inx = 0;
                                 <table id="yTable" class="table table-hover" style="width:100%;table-layout:fixed;">
@@ -109,43 +109,43 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var itemTD in Model.MezuniyetBasvurulariTezDosyalaris.OrderByDescending(o => o.SiraNo))
+                                        @foreach (var itemTd in Model.MezuniyetBasvurulariTezDosyalariDtos.OrderByDescending(o => o.SiraNo))
                                         {
                                             inx++;
                                             var showRow = inx == 1;
-                                            var rwColor = (itemTD.IsOnaylandiOrDuzeltme.HasValue ? (itemTD.IsOnaylandiOrDuzeltme.Value ? "green" : "maroon") : "black");
-                                            var icon = (itemTD.IsOnaylandiOrDuzeltme.HasValue ? (itemTD.IsOnaylandiOrDuzeltme.Value ? "fa fa-thumbs-o-up" : "fa fa-edit fa-lg") : "fa fa-clock-o");
-                                            var durumAdi = (itemTD.IsOnaylandiOrDuzeltme.HasValue ? (itemTD.IsOnaylandiOrDuzeltme.Value ? "Onaylandı" : "Düzeltme Talep Edildi") : "İşlem Bekliyor");
+                                            var rwColor = (itemTd.IsOnaylandiOrDuzeltme.HasValue ? (itemTd.IsOnaylandiOrDuzeltme.Value ? "green" : "maroon") : "black");
+                                            var icon = (itemTd.IsOnaylandiOrDuzeltme.HasValue ? (itemTd.IsOnaylandiOrDuzeltme.Value ? "fa fa-thumbs-o-up" : "fa fa-edit fa-lg") : "fa fa-clock-o");
+                                            var durumAdi = (itemTd.IsOnaylandiOrDuzeltme.HasValue ? (itemTd.IsOnaylandiOrDuzeltme.Value ? "Onaylandı" : "Düzeltme Talep Edildi") : "İşlem Bekliyor");
                                             var yetki = tdKayitYetki && Model.IsDelete == false && Model.MezuniyetBasvurulariTezTeslimFormlaris.Count == 0;
                                             <tr>
                                                 <td>
 
                                                     <ul class="panel-controls">
-                                                        <li id="iShow_Td_@itemTD.MezuniyetBasvurulariTezDosyaID" onclick="showDetailY('Td_@itemTD.MezuniyetBasvurulariTezDosyaID')">
+                                                        <li id="iShow_Td_@itemTd.MezuniyetBasvurulariTezDosyaID" onclick="showDetailY('Td_@itemTd.MezuniyetBasvurulariTezDosyaID')">
                                                             <a href="javascript:void(0)"><span class="fa fa-angle-@(showRow?"up":"down")"></span> </a>
                                                         </li>
                                                     </ul>
                                                 </td>
                                                 <td>
-                                                    @(itemTD.SiraNo + ". Kontrol") <br /> @itemTD.IslemTarihi.ToFormatDateAndTime()
+                                                    @(itemTd.SiraNo + ". Kontrol") <br /> @itemTd.IslemTarihi.ToFormatDateAndTime()
                                                 </td>
                                                 <td>
-                                                    <span class="openFl" style="cursor:pointer;" FPath="@itemTD.TezDosyaYolu" FName="@itemTD.TezDosyaAdi"><i class="fa fa-file-pdf-o fa-lg"></i> @itemTD.TezDosyaAdi</span>
+                                                    <span class="openFl" style="cursor:pointer;" FPath="@itemTd.TezDosyaYolu" FName="@itemTd.TezDosyaAdi"><i class="fa fa-file-pdf-o fa-lg"></i> @itemTd.TezDosyaAdi</span>
 
                                                 </td>
                                                 <td style="color:@rwColor">
                                                     <i class="@icon"></i> @durumAdi
-                                                    @if (itemTD.IsOnaylandiOrDuzeltme == true)
+                                                    @if (itemTd.IsOnaylandiOrDuzeltme == true)
                                                     {
                                                         <br />
-                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Tez Kontrol Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezKontrolFormu&ID=@itemTD.RowID' , 'auto', 'modal-dialog modal-lg' )">
+                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Tez Kontrol Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezKontrolFormu&ID=@itemTd.RowID' , 'auto', 'modal-dialog modal-lg' )">
                                                             <i class="fa fa-file-pdf-o"></i> Tez Kontrol Formunu İndir
                                                         </a>
                                                     }
                                                 </td>
                                             </tr>
-                                            <tr class="MainRow2 cls-Td_@itemTD.MezuniyetBasvurulariTezDosyaID" style="@(showRow?"":"display:none;")">
-                                                <td id="cls-Td_@itemTD.MezuniyetBasvurulariTezDosyaID" colspan="4" style="padding: 1px 1px 0px 50px;">
+                                            <tr class="MainRow2 cls-Td_@itemTd.MezuniyetBasvurulariTezDosyaID" style="@(showRow?"":"display:none;")">
+                                                <td id="cls-Td_@itemTd.MezuniyetBasvurulariTezDosyaID" colspan="4" style="padding: 1px 1px 0px 50px;">
                                                     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;min-height:20px;">
                                                         <table style="width:100%;">
                                                             <tbody>
@@ -154,22 +154,23 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td style="padding-left:10px;text-align:left;">
-                                                                        @using (Ajax.BeginForm("TdDurumKaydet", "MezuniyetGelenBasvurular", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TdDurumKaydet_" + itemTD.MezuniyetBasvurulariTezDosyaID }))
+                                                                        @using (Ajax.BeginForm("TdDurumKaydet", "MezuniyetGelenBasvurular", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TdDurumKaydet_" + itemTd.MezuniyetBasvurulariTezDosyaID }))
                                                                         {
-                                                                            @Html.Hidden("MezuniyetBasvurulariTezDosyaID", itemTD.MezuniyetBasvurulariTezDosyaID)
-                                                                            var aciklamaVar = !itemTD.Aciklama.IsNullOrWhiteSpace();
+                                                                            @Html.Hidden("MezuniyetBasvurulariTezDosyaID", itemTd.MezuniyetBasvurulariTezDosyaID)
+                                                                            var aciklamaVar = !itemTd.Aciklama.IsNullOrWhiteSpace();
                                                                             <table style="width:100%;table-layout:fixed;margin:0px;">
                                                                                 <tbody>
+
                                                                                     <tr>
                                                                                         <td class="CaptionTd" width="120" style="color:@rwColor">Durum</td>
                                                                                         <td class="CaptionTd" width="10" style="color:@rwColor">:</td>
                                                                                         <td class="ValueTd">
                                                                                             @if (yetki && showRow)
                                                                                             {
-                                                                                                <select name="IsOnaylandiOrDuzeltme" id="TdOnay_@itemTD.MezuniyetBasvurulariTezDosyaID" onchange="if ($(this).val() != '') { $('#TdAciklama_@itemTD.MezuniyetBasvurulariTezDosyaID').removeClass('hide');} else { $('#TdAciklama_@itemTD.MezuniyetBasvurulariTezDosyaID').addClass('hide'); }">
-                                                                                                    <option @(itemTD.IsOnaylandiOrDuzeltme.HasValue ? "" : "selected")></option>
-                                                                                                    <option value="true" @(itemTD.IsOnaylandiOrDuzeltme == true ? "selected" : "")>Onayla</option>
-                                                                                                    <option value="false" @(itemTD.IsOnaylandiOrDuzeltme == false ? "selected" : "")>Düzeltme Talep Et</option>
+                                                                                                <select name="IsOnaylandiOrDuzeltme" id="TdOnay_@itemTd.MezuniyetBasvurulariTezDosyaID" onchange="if ($(this).val() != '') { $('#TdAciklama_@itemTd.MezuniyetBasvurulariTezDosyaID').removeClass('hide');} else { $('#TdAciklama_@itemTd.MezuniyetBasvurulariTezDosyaID').addClass('hide'); }">
+                                                                                                    <option @(itemTd.IsOnaylandiOrDuzeltme.HasValue ? "" : "selected")></option>
+                                                                                                    <option value="true" @(itemTd.IsOnaylandiOrDuzeltme == true ? "selected" : "")>Onayla</option>
+                                                                                                    <option value="false" @(itemTd.IsOnaylandiOrDuzeltme == false ? "selected" : "")>Düzeltme Talep Et</option>
                                                                                                 </select>
                                                                                             }
                                                                                             else
@@ -178,12 +179,32 @@
                                                                                             }
                                                                                         </td>
                                                                                     </tr>
-                                                                                    <tr id="TdAciklama_@itemTD.MezuniyetBasvurulariTezDosyaID" class="@(itemTD.IsOnaylandiOrDuzeltme.HasValue?"":"hide")" style="@(aciklamaVar?"border-top:1px solid; border-bottom:1px solid;":"")">
+                                                                                    @if (!itemTd.TezKontrolYetkiliAdSoyad.IsNullOrWhiteSpace())
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd" width="120" style="color:@rwColor">Tez Kontrol Yetkilisi</td>
+                                                                                            <td class="CaptionTd" width="10" style="color:@rwColor">:</td>
+                                                                                            <td class="ValueTd" style="color:@rwColor">
+                                                                                                @itemTd.TezKontrolYetkiliAdSoyad
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                    @if (itemTd.IsOnaylandiOrDuzeltme.HasValue)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd" style="color:@rwColor">İşlem Yapan Yetkili</td>
+                                                                                            <td class="CaptionTd" style="color:@rwColor">:</td>
+                                                                                            <td class="ValueTd" style="color:@rwColor">
+                                                                                                @itemTd.OnayYapanTezKontrolYetkiliAdSoyad - @itemTd.OnayTarihi.ToFormatDateAndTime()
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                    <tr id="TdAciklama_@itemTd.MezuniyetBasvurulariTezDosyaID" class="@(itemTd.IsOnaylandiOrDuzeltme.HasValue ? "" : "hide")" style="@(aciklamaVar ? "border-top:1px solid; border-bottom:1px solid;" : "")">
 
-                                                                                        <td class="ValueTd" colspan="3" style="@(aciklamaVar?"padding-bottom:10px;padding-top:10px;":"")">
+                                                                                        <td class="ValueTd" colspan="3" style="@(aciklamaVar ? "padding-bottom:10px;padding-top:10px;" : "")">
                                                                                             @if (yetki && showRow)
                                                                                             {
-                                                                                                <textarea style="min-height:100px;height:100px;resize:vertical;" maxlength="2048" type="text" class="summernotex" name="Aciklama" id="TdDurumAciklamasi_@itemTD.MezuniyetBasvurulariTezDosyaID" autocomplete="off">@Html.Raw(itemTD.Aciklama??"")</textarea>
+                                                                                                <textarea style="min-height:100px;height:100px;resize:vertical;" maxlength="2048" type="text" class="summernotex" name="Aciklama" id="TdDurumAciklamasi_@itemTd.MezuniyetBasvurulariTezDosyaID" autocomplete="off">@Html.Raw(itemTd.Aciklama ?? "")</textarea>
                                                                                                 <script>
                                                                                                     $(function () {
                                                                                                         $('.summernotex').summernote({
@@ -213,21 +234,12 @@
                                                                                             else if (aciklamaVar)
                                                                                             {
 
-                                                                                                @Html.Raw(itemTD.Aciklama.Replace("<img src=", "<img style='max-width:700px;'src="))
+                                                                                                @Html.Raw(itemTd.Aciklama.Replace("<img src=", "<img style='max-width:700px;'src="))
 
                                                                                             }
                                                                                         </td>
                                                                                     </tr>
-                                                                                    @if (itemTD.IsOnaylandiOrDuzeltme.HasValue)
-                                                                                    {
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd" style="color:@rwColor">İşlem Yapan Yetkili</td>
-                                                                                            <td class="CaptionTd" style="color:@rwColor">:</td>
-                                                                                            <td class="ValueTd" style="color:@rwColor">
-                                                                                                @itemTD.IslemYapanIP - @itemTD.OnayTarihi.ToFormatDateAndTime()
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    }
+
                                                                                     @if (yetki && showRow)
                                                                                     {
 
@@ -235,7 +247,7 @@
                                                                                             <td></td>
                                                                                             <td></td>
                                                                                             <td class="ValueTd" style="padding-top:5px;font-size:11pt;">
-                                                                                                <span class="label label-primary" style="cursor:pointer;" onclick="TdDurumKayit(@Model.MezuniyetBasvurulariID, @itemTD.MezuniyetBasvurulariTezDosyaID,true);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
+                                                                                                <span class="label label-primary" style="cursor:pointer;" onclick="TdDurumKayit(@Model.MezuniyetBasvurulariID, @itemTd.MezuniyetBasvurulariTezDosyaID,true);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
                                                                                             </td>
                                                                                         </tr>
                                                                                     }
@@ -271,7 +283,7 @@
     function BasvuruBelgeKaydet(frmID, bID) {
         var pnlx = $('#bsvrDet_' + bID);
         PanelRefresh(pnlx, false);
-       
+
         $('#' + frmID).ajaxForm({
             success: function (result) {
                 PanelRefresh(pnlx, true);

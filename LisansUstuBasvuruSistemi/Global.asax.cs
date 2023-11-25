@@ -28,8 +28,8 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
-            RollerBus.UpdateRoles();
-            MenulerBus.UpdateMenus();
+            //RollerBus.UpdateRoles();
+            //MenulerBus.UpdateMenus();
 
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
@@ -257,6 +257,7 @@ namespace LisansUstuBasvuruSistemi
                 {
                     var user = UserBus.GetUser();
                     usr.KullaniciId = user.KullaniciID;
+                    usr.UserKey=user.UserKey;
                     usr.Name = user.Ad + " " + user.Soyad;
                     usr.UserName = user.KullaniciAdi;
                     usr.Platform = platform;

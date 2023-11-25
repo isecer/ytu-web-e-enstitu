@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Mvc; 
 using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
@@ -38,11 +38,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? EYKDaOnaylandi { get; set; }
 
         public string TezDanismanBilgiEslesen { get; set; }
+        public Guid? TezDanismaniUserKey { get; set; }
         public MezuniyetBasvurulariYayinDto SelectedYayin { get; set; }
 
 
         public MezuniyetSRModel MezuniyetSRModel { get; set; }
-
+        public List<MezuniyetBasvurulariTezDosyalariDto> MezuniyetBasvurulariTezDosyalariDtos { get; set; }
         public SrDurumSelectList MezuniyetDurumSelectList = new SrDurumSelectList();
 
         public SelectList SMezuniyetYayinKontrolDurum { get; set; }

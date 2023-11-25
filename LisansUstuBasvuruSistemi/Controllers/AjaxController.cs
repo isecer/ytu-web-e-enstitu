@@ -85,7 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (columnName == "BackgroundImage") UserIdentity.Current.Informations["BackgroundImage"] = value;
             return Json("true", "application/json", JsonRequestBehavior.AllowGet);
         }
-        
+
 
         public ActionResult LoginControl(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl, string dlgId)
         {
@@ -195,7 +195,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             loginUser.KullaniciID, tdoBasvuruId);
                     }
                 }
-                FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi,String.Empty, rememberMe.Value);
+                FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, String.Empty, rememberMe.Value);
                 UserBus.SetLastLogon();
             }
             return mmMessage.ToJsonResult();
@@ -310,22 +310,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpGet]
         [Authorize]
-        public ActionResult GetKullaniciDetay(int kullaniciId)
+        public ActionResult GetKullaniciDetay(Guid userKey)
         {
-            if (!(RoleNames.Kullanicilar.InRoleCurrent()
-                  || RoleNames.GelenBasvurular.InRoleCurrent()
-                  || RoleNames.SrGelenTalepler.InRoleCurrent()
-                  || RoleNames.GelenBelgeTalepleri.InRoleCurrent()))
-                kullaniciId = UserIdentity.Current.Id;
-            var data = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+
+            var data = _entities.Kullanicilars.First(p => p.UserKey == userKey);
             ViewBag.ResimVar = data.ResimAdi.IsNullOrWhiteSpace() == false;
             data.ResimAdi = data.ResimAdi.ToKullaniciResim();
 
 
             #region Enstituler
             var enstroles = EnstituBus.GetEnstituler(true);
-            var userEnstRoles = UserBus.GetKullaniciEnstituler(kullaniciId);
-            var kullanici = UserBus.GetUser(kullaniciId);
+            var userEnstRoles = UserBus.GetKullaniciEnstituler(data.KullaniciID);
+            var kullanici = UserBus.GetUser(data.KullaniciID);
             var dataEnst = enstroles.Select(s => new CheckObject<Enstituler>
             {
                 Value = s,
@@ -335,7 +331,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
             #region yetkiler
             var roles = RollerBus.GetAllRoles().ToList();
-            var userRoles = UserBus.GetUserRoles(kullaniciId);
+            var userRoles = UserBus.GetUserRoles(data.KullaniciID);
             ViewBag.EkRollerCount = userRoles.EklenenRoller.Count;
             ViewBag.Kullanici = kullanici;
             var dataR = roles.Select(s => new CheckObject<Roller>
@@ -355,7 +351,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
 
             #region programYetkileri
-            var dataKp = KullanicilarBus.GetKullaniciProgramlari(kullaniciId, null);
+            var dataKp = KullanicilarBus.GetKullaniciProgramlari(data.KullaniciID, null);
             ViewBag.KProgramlar = dataKp.Where(p => p.YetkiVar).ToList();
             #endregion
             if (data.KayitDonemID.HasValue)
@@ -1094,7 +1090,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MezuniyetJuriOneriFormu = model.MezuniyetJuriOneriFormlaris.FirstOrDefault(),
                 SrTalebi = srSonTalebi,
                 EYKTarihi = model.EYKTarihi,
-                MezuniyetBasvurulariTezDosyasi = model.MezuniyetBasvurulariTezDosyalaris.OrderByDescending(o => o.MezuniyetBasvurulariTezDosyaID).FirstOrDefault(),
+                MezuniyetBasvurulariTezDosyasi = model.MezuniyetBasvurulariTezDosyalariDtos.OrderByDescending(o => o.MezuniyetBasvurulariTezDosyaID).FirstOrDefault(),
                 TeslimFormDurumu = srSonTalebi != null && model.MezuniyetBasvurulariTezTeslimFormlaris.Any(),
                 IsMezunOldu = model.IsMezunOldu,
                 MezuniyetTarihi = model.MezuniyetTarihi,
@@ -1890,12 +1886,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.Aciklama = model.Aciklama ?? "";
                 kModel.AciklamaHtml = model.AciklamaHtml ?? "";
 
-                var eklenen = _entities.GonderilenMaillers.Add(kModel);
+                var eklenenGonderilenMail = _entities.GonderilenMaillers.Add(kModel);
 
                 foreach (var item in qDosyalar)
                 {
                     item.Dosya?.SaveAs(Server.MapPath("~" + item.DosyaYolu));
-                    eklenen.GonderilenMailEkleris.Add(new GonderilenMailEkleri
+                    eklenenGonderilenMail.GonderilenMailEkleris.Add(new GonderilenMailEkleri
                     {
                         EkAdi = item.FExtension,
                         EkDosyaYolu = item.DosyaYolu
@@ -1913,23 +1909,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
 
-                var mailList = new List<GonderilenMailKullanicilar>();
+                var gonderilenMailKullanicilari = new List<GonderilenMailKullanicilar>();
                 secilenAlicilar = secilenAlicilar.Distinct().ToList();
                 if (secilenAlicilar.Count > 0)
                 {
-                    var qscIDs = secilenAlicilar.Where(p => p.IsNumber()).Select(s => s.ToInt(0)).ToList();
-                    var qscMails = secilenAlicilar.Where(p => p.IsNumber() == false).ToList();
-                    var dataqx = (from s in _entities.Kullanicilars
-                                  where qscIDs.Contains(s.KullaniciID)
+                    var aliciKullaniciIds = secilenAlicilar.Where(p => p.IsNumber()).Select(s => s.ToInt(0)).ToList();
+                    var aliciEmails = secilenAlicilar.Where(p => p.IsNumber() == false).ToList();
+                    var secilenAliciKullanicilar = (from s in _entities.Kullanicilars
+                                  where aliciKullaniciIds.Contains(s.KullaniciID)
                                   select new
                                   {
                                       Email = s.EMail,
-                                      eklenen.GonderilenMailID,
+                                      eklenenGonderilenMail.GonderilenMailID,
                                       s.KullaniciID
                                   }).ToList();
-                    foreach (var item in dataqx)
+                    foreach (var item in secilenAliciKullanicilar)
                     {
-                        mailList.Add(new GonderilenMailKullanicilar
+                        gonderilenMailKullanicilari.Add(new GonderilenMailKullanicilar
                         {
 
                             Email = item.Email,
@@ -1937,21 +1933,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             KullaniciID = item.KullaniciID
                         });
                     }
-                    foreach (var item in qscMails)
+                    foreach (var item in aliciEmails)
                     {
-                        mailList.Add(new GonderilenMailKullanicilar
+                        gonderilenMailKullanicilari.Add(new GonderilenMailKullanicilar
                         {
 
                             Email = item,
-                            GonderilenMailID = eklenen.GonderilenMailID,
+                            GonderilenMailID = eklenenGonderilenMail.GonderilenMailID,
                             KullaniciID = null
                         });
                     }
 
                 }
-                eklenen.Gonderildi = true;
-                mailList = mailList.Distinct().ToList();
-                eklenen.GonderilenMailKullanicilars = mailList;
+                eklenenGonderilenMail.Gonderildi = true;
+                gonderilenMailKullanicilari = gonderilenMailKullanicilari.Distinct().ToList();
+                eklenenGonderilenMail.GonderilenMailKullanicilars = gonderilenMailKullanicilari;
 
                 _entities.SaveChanges();
                 if (model.MesajID.HasValue)
@@ -1984,7 +1980,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
 
-                var gidecekler = mailList.Select(s => s.Email).ToList();
+                var gidecekler = gonderilenMailKullanicilari.Select(s => s.Email).ToList();
                 var dct = new Dictionary<int, List<MailSendList>>();
                 model.IsToOrBCC = !model.BasvuruSurecID.HasValue && model.IsToOrBCC;
                 int inx = 0;
@@ -2016,7 +2012,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         try
                         {
-                            _entities.GonderilenMaillers.Remove(eklenen);
+                            _entities.GonderilenMaillers.Remove(eklenenGonderilenMail);
                             _entities.SaveChanges();
                             foreach (var item2 in qDosyalar)
                             {
@@ -2418,7 +2414,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetYtuOgretimEleman(string term)
         {
             var data = Management.GetWsPersisOe(term);
-            var YtuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == 67);
+            var ytuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == 67);
             var kul2 = data.Table.Select(s => new
             {
                 id = s.ADSOYAD,
@@ -2426,18 +2422,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 text = s.ADSOYAD,
                 BolumAdi = s.BOLUMADI.Replace("BÖLÜMÜ", ""),
                 UnvanAdi = s.AKADEMIKUNVAN.ToJuriUnvanAdi(),
-                UniversiteID = YtuUni?.UniversiteID ?? 67,
-                UniversiteAdi = (YtuUni != null ? YtuUni.Ad : "Yıldız Teknik Üniversitesi (İstanbul)").ToUpper(),
+                UniversiteID = ytuUni?.UniversiteID ?? 67,
+                UniversiteAdi = (ytuUni != null ? ytuUni.Ad : "Yıldız Teknik Üniversitesi").ToUpper(),
                 EMail = s.KURUMMAIL
             }).Where(p => UnvanlarBus.JuriUnvanList.Contains(p.UnvanAdi)).OrderBy(o => o.AdSoyad).Take(25).ToList();
 
             return kul2.ToJsonResult();
         }
         [Authorize]
+        public ActionResult GetUniversiteler(string term)
+        {
+            var univeriteler = _entities.Universitelers.Where(p => p.Ad.Contains(term)).OrderBy(o => o.Ad).OrderBy(o => o.Ad).Take(50).Select(s => new
+            {
+                id = s.Ad,
+                text = s.Ad
+
+            }).ToList();
+
+            return univeriteler.ToJsonResult();
+        }
+        [Authorize]
         public ActionResult GetTdoDanismans(string term)
         {
             var danismanUnvanIDs = new List<int>() { 17, 42, 73, 5, 66 }; //Doç.Dr Prof.Dr, Dr. Öğr. Üye ,arş gör dr, öğr gör dr,
-            var kul2 = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && danismanUnvanIDs.Contains(p.UnvanID ?? 0) && (p.Ad + " " + p.Soyad).StartsWith(term)).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).Take(25).Select(s => new
+            var danismanlar = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && danismanUnvanIDs.Contains(p.UnvanID ?? 0) && (p.Ad + " " + p.Soyad).StartsWith(term)).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).Take(25).Select(s => new
             {
                 id = s.KullaniciID,
                 AdSoyad = s.Ad + " " + s.Soyad,
@@ -2447,7 +2455,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }).ToList();
 
-            return kul2.ToJsonResult();
+            return danismanlar.ToJsonResult();
         }
         [Authorize]
         public ActionResult GetDxReport(int? raporTipi, bool isPdfStream = false)

@@ -172,7 +172,7 @@
                                                                         <div class="col-md-10">
                                                                             @if (item.data.KullaniciAdi.IsNullOrWhiteSpace() == false)
                                                                             {
-                                                                                <span style="cursor:pointer;" onclick="detayGor(@item.data.IslemYapanID)"><i class="fa fa-user"></i> @item.data.AdSoyad</span><br /><span>@item.data.KullaniciAdi</span>
+                                                                                <span style="cursor:pointer;" onclick="DetayGor('@item.data.UserKey')"><i class="fa fa-user"></i> @item.data.AdSoyad</span><br /><span>@item.data.KullaniciAdi</span>
                                                                             }
                                                                             else
                                                                             {

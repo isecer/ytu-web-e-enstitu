@@ -21,10 +21,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string ekd)
         {
 
-            return Index(new FmMezuniyetSureci() { PageSize = 15 },ekd);
+            return Index(new FmMezuniyetSureci() { PageSize = 15 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmMezuniyetSureci model,string ekd)
+        public ActionResult Index(FmMezuniyetSureci model, string ekd)
         {
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
@@ -138,7 +138,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.OgrenimTipModel = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(enstituKod, model.MezuniyetSurecID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? enstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", model.OgretimYili);
-            ViewBag.OgrenimTipleri = OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, false, true);
             ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(enstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
             ViewBag.kmMzOtoMail = mzMList;
             return View(model);
@@ -176,11 +175,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mBasvuruEtikNotKriteri = kModel.MBasvuruEtikNotKriteri.Select((s, inx) => new { Inx = inx, MBasvuruEtikNotKriteri = s }).ToList();
             var mBasvuruSeminerNotKriteri = kModel.MBasvuruSeminerNotKriteri.Select((s, inx) => new { Inx = inx, MBasvuruSeminerNotKriteri = s }).ToList();
             var mBasvuruToplamKrediKriteri = kModel.MBasvuruToplamKrediKriteri.Select((s, inx) => new { Inx = inx, MBasvuruToplamKrediKriteri = s }).ToList();
-            var mBasvuruAgnoKriteri = kModel.MBasvuruAGNOKriteri.Select((s, inx) => new { Inx = inx, MBasvuruAGNOKriteri = s }).ToList();
-            var mBasvuruAktsKriteri = kModel.MBasvuruAKTSKriteri.Select((s, inx) => new { Inx = inx, MBasvuruAKTSKriteri = s }).ToList();
-            var mbSinavUzatmaSuresiGun = kModel.MBSinavUzatmaSuresiGun.Select((s, inx) => new { Inx = inx, MBSinavUzatmaSuresiGun = s }).ToList();
-            var mbTezTeslimSuresiGun = kModel.MBTezTeslimSuresiGun.Select((s, inx) => new { Inx = inx, MBTezTeslimSuresiGun = s }).ToList();
-            var mbsrTalebiKacGunSonraAlabilir = kModel.MBSRTalebiKacGunSonraAlabilir.Select((s, inx) => new { Inx = inx, MBSRTalebiKacGunSonraAlabilir = s }).ToList();
+            var mBasvuruAgnoKriteri = kModel.MBasvuruAgnoKriteri.Select((s, inx) => new { Inx = inx, MBasvuruAGNOKriteri = s }).ToList();
+            var mBasvuruAktsKriteri = kModel.MBasvuruAktsKriteri.Select((s, inx) => new { Inx = inx, MBasvuruAKTSKriteri = s }).ToList();
+            var mbSinavUzatmaOgrenciTaahhutMaxGun = kModel.MbSinavUzatmaOgrenciTaahhutMaxGun.Select((s, inx) => new { Inx = inx, MbSinavUzatmaOgrenciTaahhutMaxGun = s }).ToList();
+            var mbSinavUzatmaSinavAlmaSuresiMaxGun = kModel.MbSinavUzatmaSinavAlmaSuresiMaxGun.Select((s, inx) => new { Inx = inx, MBSinavUzatmaSinavAlmaSuresiMaxGun = s }).ToList();
+            var mbTezTeslimSuresiGun = kModel.MbTezTeslimSuresiGun.Select((s, inx) => new { Inx = inx, MBTezTeslimSuresiGun = s }).ToList();
+            var mbsrTalebiKacGunSonraAlabilir = kModel.MbsrTalebiKacGunSonraAlabilir.Select((s, inx) => new { Inx = inx, MBSRTalebiKacGunSonraAlabilir = s }).ToList();
 
             var ogrenimTipleriLngs = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod).ToList();
             var mezuniyetSureciOgrenimTipKriterleri = (from kr in mezuniyetSureciOgrenimTipKriterId
@@ -192,7 +192,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                        join kk in mBasvuruToplamKrediKriteri on kr.Inx equals kk.Inx
                                                        join agk in mBasvuruAgnoKriteri on kr.Inx equals agk.Inx
                                                        join akts in mBasvuruAktsKriteri on kr.Inx equals akts.Inx
-                                                       join uzs in mbSinavUzatmaSuresiGun on kr.Inx equals uzs.Inx
+                                                       join uzt in mbSinavUzatmaOgrenciTaahhutMaxGun on kr.Inx equals uzt.Inx
+                                                       join uzs in mbSinavUzatmaSinavAlmaSuresiMaxGun on kr.Inx equals uzs.Inx
                                                        join tts in mbTezTeslimSuresiGun on kr.Inx equals tts.Inx
                                                        join srg in mbsrTalebiKacGunSonraAlabilir on kr.Inx equals srg.Inx
                                                        join otl in ogrenimTipleriLngs on ot.OgrenimTipID equals otl.OgrenimTipID
@@ -202,16 +203,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                            kr.MezuniyetSureciOgrenimTipKriterID,
                                                            ot.OgrenimTipID,
                                                            otk.OgrenimTipKod,
+                                                           otl.OgrenimTipAdi,
                                                            dk.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
                                                            enk.MBasvuruEtikNotKriteri,
                                                            snk.MBasvuruSeminerNotKriteri,
                                                            kk.MBasvuruToplamKrediKriteri,
                                                            agk.MBasvuruAGNOKriteri,
                                                            akts.MBasvuruAKTSKriteri,
-                                                           uzs.MBSinavUzatmaSuresiGun,
-                                                           tts.MBTezTeslimSuresiGun,
                                                            srg.MBSRTalebiKacGunSonraAlabilir,
-                                                           otl.OgrenimTipAdi,
+                                                           uzt.MbSinavUzatmaOgrenciTaahhutMaxGun,
+                                                           uzs.MBSinavUzatmaSinavAlmaSuresiMaxGun,
+                                                           tts.MBTezTeslimSuresiGun
                                                        }).ToList();
 
 
@@ -301,9 +303,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Min Akts bilgisi 0 dan büyük olmalı.");
                     }
-                    if (!item.MBSinavUzatmaSuresiGun.HasValue || item.MBSinavUzatmaSuresiGun <= 0)
+                    if (!item.MbSinavUzatmaOgrenciTaahhutMaxGun.HasValue || item.MbSinavUzatmaOgrenciTaahhutMaxGun <= 0)
                     {
-                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için T.S.U.S bilgisi 0 dan büyük olmalı.");
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için U.S.T.T bilgisi 0 dan büyük olmalı.");
+                    }
+                    if (!item.MBSinavUzatmaSinavAlmaSuresiMaxGun.HasValue || item.MBSinavUzatmaSinavAlmaSuresiMaxGun <= 0)
+                    {
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için U.S.S.R bilgisi 0 dan büyük olmalı.");
                     }
                     if (!item.MBTezTeslimSuresiGun.HasValue || item.MBTezTeslimSuresiGun <= 0)
                     {
@@ -319,8 +325,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
-                int oldBSurecId = kModel.MezuniyetSurecID;
-                bool isnewOrEdit = kModel.MezuniyetSurecID <= 0;
+                var isnewOrEdit = kModel.MezuniyetSurecID <= 0;
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
@@ -399,11 +404,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     OgrenimTipKod = s.OgrenimTipKod.Value,
                     MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = s.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
                     MBasvuruEtikNotKriteri = s.MBasvuruEtikNotKriteri,
-                    MBasvuruSeminerNotKriteri=s.MBasvuruSeminerNotKriteri,
+                    MBasvuruSeminerNotKriteri = s.MBasvuruSeminerNotKriteri,
                     MBasvuruToplamKrediKriteri = s.MBasvuruToplamKrediKriteri.Value,
                     MBasvuruAGNOKriteri = s.MBasvuruAGNOKriteri.Value,
                     MBasvuruAKTSKriteri = s.MBasvuruAKTSKriteri.Value,
-                    MBSinavUzatmaSuresiGun = s.MBSinavUzatmaSuresiGun.Value,
+                    MBSinavUzatmaOgrenciTaahhutMaxGun = s.MbSinavUzatmaOgrenciTaahhutMaxGun.Value,
+                    MBSinavUzatmaSinavAlmaSuresiMaxGun = s.MBSinavUzatmaSinavAlmaSuresiMaxGun.Value,
                     MBTezTeslimSuresiGun = s.MBTezTeslimSuresiGun.Value,
                     MBSRTalebiKacGunSonraAlabilir = s.MBSRTalebiKacGunSonraAlabilir.Value,
                     IslemTarihi = DateTime.Now,
@@ -424,6 +430,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             kModel.OgrenimTipModel = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(kModel.EnstituKod, kModel.MezuniyetSurecID);
+
             foreach (var item in kModel.OgrenimTipModel.OgrenimTipKriterList)
             {
                 var sItem = mezuniyetSureciOgrenimTipKriterleri.First(p => p.OgrenimTipID == item.OgrenimTipID);
@@ -431,9 +438,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.MBasvuruToplamKrediKriteri = sItem.MBasvuruToplamKrediKriteri ?? 0;
                 item.MBasvuruAGNOKriteri = sItem.MBasvuruAGNOKriteri ?? 0;
                 item.MBasvuruAKTSKriteri = sItem.MBasvuruAKTSKriteri ?? 0;
-                item.MBSinavUzatmaSuresiGun = sItem.MBSinavUzatmaSuresiGun ?? 0;
+                item.MBSinavUzatmaOgrenciTaahhutMaxGun = sItem.MbSinavUzatmaOgrenciTaahhutMaxGun ?? 0;
+                item.MBSinavUzatmaSinavAlmaSuresiMaxGun = sItem.MBSinavUzatmaSinavAlmaSuresiMaxGun ?? 0;
                 item.MBTezTeslimSuresiGun = sItem.MBTezTeslimSuresiGun ?? 0;
                 item.MBSRTalebiKacGunSonraAlabilir = sItem.MBSRTalebiKacGunSonraAlabilir ?? 0;
+                item.MBasvuruEtikNotKriteri = sItem.MBasvuruEtikNotKriteri;
+                item.MBasvuruSeminerNotKriteri = sItem.MBasvuruSeminerNotKriteri; 
+
             }
             var zmMList = Management.GetZmMailZamanData();
 
@@ -444,7 +455,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.kmMzOtoMail = zmMList;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
-            ViewBag.OgrenimTipleri = OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod, false, true);
             ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
@@ -477,7 +487,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(enstituKod, mezuniyetSurecId);
             return View(model);
         }
-        public ActionResult GetMsDetail(int id, int tbInx, bool isDelete)
+        public ActionResult GetMsDetail(int id, int tbInx)
         {
 
             var mdl = (from s in _entities.MezuniyetSurecis.Where(p => p.MezuniyetSurecID == id)
@@ -501,8 +511,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                            IslemYapan = (k.Ad + " " + k.Soyad),
                            IslemYapanIP = s.IslemYapanIP
                        }).First();
-
-            ViewBag.IsDelete = isDelete;
+             
             mdl.SelectedTabIndex = tbInx;
 
             return View(mdl);

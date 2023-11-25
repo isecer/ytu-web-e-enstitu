@@ -10,6 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     {
         public bool IsAuthenticated { get; set; }
         public int? KullaniciId { get; set; }
+        public Guid? UserKey { get; set; }
         public string Tc { get; set; }
         public string Name { get; set; }
         public string UserName { get; set; }

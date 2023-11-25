@@ -46,6 +46,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsDegerlendirmeSuvecinde { get; set; }
         public DateTime BasTar { get; set; }
         public DateTime BitTar { get; set; }
+        public Guid? UserKey { get; set; }
         public string ResimAdi { get; set; }
         public string TcKimlikNo { get; set; }
         public string AdSoyad { get; set; }
@@ -86,6 +87,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
         public string KayitDonemi { get; set; }
+        public Guid? TezDanismaniUserKey { get; set; }
         public string TezDanismanBilgiEslesen { get; set; }
         public int? ToplamBasarisizTezOneriSavunmaHak { get; set; }
         public int BasarisizTezOneriSavunmaSayisi { get; set; }

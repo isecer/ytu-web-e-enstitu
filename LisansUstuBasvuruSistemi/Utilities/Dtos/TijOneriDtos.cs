@@ -31,6 +31,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FrTijBasvuru : TijBasvuru
     {
         public bool KayitVar { get; set; }
+        public Guid? UserKey { get; set; }
         public string AdSoyad { get; set; }
         public string ResimAdi { get; set; }
         public string DurumColor { get; set; }

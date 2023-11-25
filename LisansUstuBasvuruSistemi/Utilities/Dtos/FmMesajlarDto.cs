@@ -28,6 +28,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string GidenGelen { get; set; }
         public string EnstituAdi { get; set; }
         public string KategoriAdi { get; set; }
+        public Guid? UserKey { get; set; }
         public string ResimAdi { get; set; }
         public string KullaniciTipAdi { get; set; }
         public string OgrenciNo { get; set; }

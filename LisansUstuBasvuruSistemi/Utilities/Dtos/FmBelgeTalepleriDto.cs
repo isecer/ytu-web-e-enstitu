@@ -24,7 +24,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     }
     public class FrBelgeTalepleriDto : BelgeTalepleri
     { 
+
         public string ResimAdi { get; set; }
+        public Guid? UserKey { get; set; }
         public string ClassName { get; set; }
         public string Color { get; set; }
         public string OgrenimTipAdi { get; set; }

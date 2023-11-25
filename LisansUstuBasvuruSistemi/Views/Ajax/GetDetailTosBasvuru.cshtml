@@ -13,10 +13,11 @@
 
     var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
     var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
-    bool toplantiYetki = RoleNames.TosToplantiTalebiYap.InRoleCurrent();
-    bool degerlendirmeYetki = RoleNames.TosDegerlendirmeYap.InRoleCurrent();
-    bool degerlendirmeDuzeltmeYetki = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
-    bool formOlusturmaYetki = (degerlendirmeYetki || degerlendirmeDuzeltmeYetki || isDanismani || Model.KullaniciID == UserIdentity.Current.Id);
+    var toplantiYetki = RoleNames.TosToplantiTalebiYap.InRoleCurrent();
+    var degerlendirmeYetki = RoleNames.TosDegerlendirmeYap.InRoleCurrent();
+    var degerlendirmeDuzeltmeYetki = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
+    var tosSavunmaBitisTarihDuzeltmeYetki = RoleNames.TosSavunmaBitisTarihDuzeltme.InRoleCurrent();
+    var formOlusturmaYetki = (degerlendirmeYetki || degerlendirmeDuzeltmeYetki || isDanismani || Model.KullaniciID == UserIdentity.Current.Id);
 
 }
 <style>
@@ -98,7 +99,7 @@
                                                     <td class="ValueTd">
                                                         @if (Model.TezDanismanID.HasValue)
                                                         {
-                                                            <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
+                                                            <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
                                                         }
                                                     </td>
 
@@ -364,7 +365,7 @@
                                 <td class="ValueTd">
                                     @if (Model.TezDanismanID.HasValue)
                                     {
-                                        <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
+                                        <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
                                     }
                                 </td>
                             </tr>
@@ -391,7 +392,7 @@
 
                         </td>
                     </tr>
-                    if (degerlendirmeDuzeltmeYetki || UserIdentity.Current.IsAdmin)
+                    if (tosSavunmaBitisTarihDuzeltmeYetki)
                     {
                         var muafContent = $"<ul style='font-size:8.5pt;'>  " +
                                       $"<li><p>Yeterlik başarı tarihi itibari ile belirlenen gün içinde sınav yapma</p></li>  " +

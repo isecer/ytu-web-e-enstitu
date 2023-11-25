@@ -68,6 +68,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.TalepGelenTalepID,
                         s.TalepSurecID,
                         s.KullaniciID,
+                        kul.UserKey,
                         kul.KullaniciTipID,
                         kul.ResimAdi,
                         kul.EMail,
@@ -136,6 +137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList().Select(item => new FrTalep()
             {
                 TalepGelenTalepID = item.TalepGelenTalepID,
+                UserKey = item.UserKey,
                 IsbelgeYuklemesiVar = item.IsBelgeYuklemeVar,
                 YtuOgrencisi = item.YtuOgrencisi,
                 TalepDurumID = item.TalepDurumID,

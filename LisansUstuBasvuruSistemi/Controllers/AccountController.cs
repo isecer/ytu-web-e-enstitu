@@ -817,6 +817,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var yeniKullanici = kModel.KullaniciID <= 0;
                 if (yeniKullanici)
                 {
+                    kModel.UserKey=Guid.NewGuid();
                     kModel.YetkiGrupID = erisimYetki ? kModel.YetkiGrupID : (kModel.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && KullanicilarBus.GetDanismanUnvanIds().Contains(kModel.UnvanID ?? 0) ? 6 : 1);//danışman yetkisi vermek için
                     kModel.OlusturmaTarihi = DateTime.Now;
                     kModel.IsAktif = true;

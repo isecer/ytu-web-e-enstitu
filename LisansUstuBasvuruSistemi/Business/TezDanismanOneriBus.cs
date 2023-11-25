@@ -70,6 +70,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.EnstituKod = basvuru.EnstituKod;
                 model.TDOBasvuruDanisman = basvuru.TDOBasvuruDanisman;
                 model.TDOBasvuruDanismanList = (from s in basvuru.TDOBasvuruDanismen
+                                                let varolanTdUserkey = db.Kullanicilars.Where(f => f.KullaniciID == s.VarolanTezDanismanID).Select(sv => sv.UserKey).FirstOrDefault()
+                                                let tdUserkey = db.Kullanicilars.Where(f => f.KullaniciID == s.TezDanismanID).Select(sv => sv.UserKey).FirstOrDefault()
                                                 select new TdoBasvuruDanismanDto
                                                 {
                                                     UniqueID = s.UniqueID,
@@ -93,15 +95,16 @@ namespace LisansUstuBasvuruSistemi.Business
                                                     SinavPuani = s.SinavPuani,
                                                     SinavYili = s.SinavYili,
                                                     VarolanTezDanismanID = s.VarolanTezDanismanID,
+                                                    VarolanTezDanismaniUserKey = varolanTdUserkey,
                                                     VarolanDanismanOnayladi = s.VarolanDanismanOnayladi,
                                                     VarolanDanismanOnayTarihi = s.VarolanDanismanOnayTarihi,
                                                     VarolanDanismanOnaylanmadiAciklama = s.VarolanDanismanOnaylanmadiAciklama,
-                                                      
+                                                    TezDanismaniUserKey = tdUserkey,
                                                     TezDanismanID = s.TezDanismanID,
                                                     TDAdSoyad = s.TDAdSoyad,
                                                     TDUnvanAdi = s.TDUnvanAdi,
                                                     TDAnabilimDaliAdi = s.TDAnabilimDaliAdi,
-                                                    TDProgramAdi = s.TDProgramAdi, 
+                                                    TDProgramAdi = s.TDProgramAdi,
                                                     TDOgrenciSayisiDR = s.TDOgrenciSayisiDR,
                                                     TDOgrenciSayisiYL = s.TDOgrenciSayisiYL,
                                                     TDTezSayisiDR = s.TDTezSayisiDR,

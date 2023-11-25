@@ -133,10 +133,9 @@
             .elementToHide {
                 display: none;
             }
-           
         }
     </style>
-</head> 
+</head>
 <body class="@(boxedOrFullWidth?("page-container-boxed "+backgroundImage):"") ">
     <div class="js">
         <div id="preloader"></div>
@@ -263,7 +262,7 @@
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="xn-drop-left animated zoomIn" style="z-index:997;">
-                                <li><a href="javascript:void(0)" onclick="detayGor(@UserIdentity.Current.Id)"><i class="fa fa-user"></i> Hesap Bilgileri</a></li>
+                                <li><a href="javascript:void(0)" onclick="DetayGor('@UserIdentity.Current.UserKey')"><i class="fa fa-user"></i> Hesap Bilgileri</a></li>
                                 <li><a href="javascript:void(0);" onclick="HesapKayit(@UserIdentity.Current.Id)"><span class="fa fa-id-card-o fa-lg"></span>Hesap Bilgilerini Düzenle</a></li>
                                 @if (RoleNames.Kullanicilar.InRoleCurrent())
                                 {
@@ -308,7 +307,7 @@
 
                                 @if (prevUserKey.Key != null)
                                 {
-                                    <li><a href="@Url.Action("SetLogin","Kullanicilar",new {kullaniciId=UserIdentity.Current.Id,key=prevUserKey.Value })"><i class="fa fa-user"></i> Önceki Hesaba Geç</a></li>
+                                    <li><a href="@Url.Action("SetLogin","Kullanicilar",new { UserIdentity.Current.UserKey,key=prevUserKey.Value })"><i class="fa fa-user"></i> Önceki Hesaba Geç</a></li>
                                 }
 
                                 @if (UserIdentity.Current.IsActiveDirectoryUser == false)
@@ -1793,7 +1792,7 @@
     @if (UserIdentity.Current.IsAuthenticated)
     {
         <script>
-                function detayGor(KullaniciID, elID) {
+                function DetayGor(userKey, elID) {
                 if(elID!=null && elID!="")       {
                     var el = $(elID);
                     PanelRefresh(el, false);
@@ -1801,7 +1800,7 @@
                 setTimeout(function () {
                     $.ajax({
                         url: '@Url.Action("getKullaniciDetay", "Ajax")',
-                        data: { 'KullaniciID': KullaniciID},
+                        data: { userKey },
                         success: function (result) {
                             var _btbxx = bootbox.dialog({
                                 message: result,

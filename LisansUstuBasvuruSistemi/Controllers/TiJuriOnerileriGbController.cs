@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using BiskaUtil;
 using DevExpress.XtraPrinting;
+using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Models.ObsService;
@@ -51,6 +52,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.BasvuruTarihi,
                         s.Programlar.AnabilimDaliID,
                         s.KullaniciID,
+                        ogrenci.UserKey,
                         AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                         s.OgrenciNo,
                         ogrenci.ResimAdi,
@@ -153,6 +155,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 EnstituKod = s.EnstituKod,
                 BasvuruTarihi = s.BasvuruTarihi,
                 KullaniciID = s.KullaniciID,
+                UserKey = s.UserKey,
                 AdSoyad = s.AdSoyad,
                 OgrenciNo = s.OgrenciNo,
                 ResimAdi = s.ResimAdi,
@@ -236,7 +239,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         obsOgrenci.OgrenciYeters.FirstOrDefault(p => p.DR_YET_GNL_SNV_DURUM == "Başarılı" && p.DR_YET_SOZ_SNV_DURUM == "Başarılı");
                     if (ogrenciYeterlikBilgi == null)
                     {
-                        mMessage.Messages.Add("Başvuru yapacağınız öğrencinin yeterlik sınavından başarılı olması gerekmetkedir.");
+                        mMessage.Messages.Add("Başvuru yapacağınız öğrencinin yeterlik sınavından başarılı olması gerekmektedir.");
                     }
                     else if (ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.IsNullOrWhiteSpace())
                     {
@@ -1057,6 +1060,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
 
+                if (!mmMessage.Messages.Any())
+                {
+
+                    var isEykdaOnaylandiOrGonderildiDurum = eykDaOnayOrEykYaGonderim
+                        ? tijBasvuruOneri.EYKDaOnaylandi
+                        : tijBasvuruOneri.EYKYaGonderildi;
+
+                    // eyk yada eykya gönderimi onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
+                    if (isEykdaOnaylandiOrGonderildiDurum.HasValue || onaylandi != false)
+                    { 
+                        var ogrenciObsBilgi =
+                            KullanicilarBus.OgrenciBilgisiGuncelleObs(tijBasvuruOneri.TijBasvuru.KullaniciID);
+
+                        if (!ogrenciObsBilgi.KayitVar)
+                        {
+                            mmMessage.Messages.Add(
+                                "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                        }
+                        else if (tijBasvuruOneri.TijBasvuru.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
+                        {
+                            mmMessage.Messages.Add(
+                                "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir. Onay işlemi yapılamaz.");
+                        }
+                    }
+                }
+
                 if (mmMessage.Messages.Count == 0)
                 {
                     var isDegisiklikVar = false;
@@ -1228,15 +1257,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 rprTijTutanakModels.Add(rprTijTutanakModel);
             }
-            RprTijTutanak rpr = new RprTijTutanak();
-            rpr.DataSource = rprTijTutanakModels.Count > 0 ? rprTijTutanakModels[0] : new RprTijTutanakModel();
-            rpr.CreateDocument();
+
 
 
             var rprTijTutanakModels2 = new List<RprTijTutanakModel>();
             var rprTijTutanakModel2 = new RprTijTutanakModel
             {
-
 
 
                 TutanakAdi = "Tez izleme Komitesi Değişikliği Hk.",
@@ -1281,23 +1307,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 rprTijTutanakModels2.Add(rprTijTutanakModel2);
             }
 
+            var report = new XtraReport();
 
-            RprTijTutanak rpr2 = new RprTijTutanak();
-            rpr2.DataSource = rprTijTutanakModels2.Count > 0 ? rprTijTutanakModels2[0] : new RprTijTutanakModel();
-            rpr2.CreateDocument();
+            if (rprTijTutanakModels.Count > 0)
+            {
+                var rpr = new RprTijTutanak();
+                rpr.DataSource = rprTijTutanakModels[0];
+                rpr.CreateDocument();
 
-            rpr.Pages.AddRange(rpr2.Pages);
-            rpr.ExportOptions.Html.ExportMode = HtmlExportMode.SingleFilePageByPage;
-            string html = "";
+                report.Pages.AddRange(rpr.Pages);
+            }
+            if (rprTijTutanakModels2.Count > 0)
+            {
+                var rpr2 = new RprTijTutanak();
+
+                rpr2.DataSource = rprTijTutanakModels2[0];
+                rpr2.CreateDocument();
+                report.Pages.AddRange(rpr2.Pages);
+            }
+
+            report.ExportOptions.Html.ExportMode = HtmlExportMode.SingleFilePageByPage;
             using (MemoryStream ms = new MemoryStream())
             {
-                rpr.ExportToHtml(ms);
+                report.ExportToHtml(ms);
                 ms.Position = 0;
                 var sr = new StreamReader(ms);
-                html = sr.ReadToEnd();
+                var html = sr.ReadToEnd();
+                var raporAdi = (isDegisiklik ? "Tez izleme komite değişiklikleri" : "Tez izleme komite önerileri");
+                return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
+
             }
-            var raporAdi = "Doktra Tez Sınav Jürileri Atama Önerileri";
-            return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
         }
         public ActionResult SilDetay(Guid tijBasvuruOneriUniqueId)
         {

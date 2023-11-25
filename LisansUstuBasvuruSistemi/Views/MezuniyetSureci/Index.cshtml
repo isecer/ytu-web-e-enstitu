@@ -144,26 +144,21 @@
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
-    function getDetail(id, Isdelete, sndr) {
+    function getDetail(id, sndr) {
 
         var tbName = "@TabAdiEnum.MezuniyetSureciTn-" + id;
         var tID = GetSelectedTabID(tbName);
         if ($('#SelectedTb-' + tbName).length > 0) {
-            subData(id, Isdelete, sndr);
+            subData(id,sndr);
         }
         else {
             $.ajax({
                 url: '@Url.Action("GetMsDetail", "MezuniyetSureci")',
-                data: { id: id, tbInx: tID, IsDelete: (Isdelete == true) },
+                data: { id: id, tbInx: tID },
                 async: false,
-                success: function (result) {
-                    if (Isdelete != true) {
+                success: function (result) { 
                         $('#cls-ana-' + id).html(result);
-                        subData(id, Isdelete);
-                    }
-                    else {
-                        subData(id, Isdelete, result);
-                    }
+                        subData(id); 
                 },
                 error: function (err) {
                     alert(err.responseText);
@@ -175,12 +170,11 @@
 
 
 
-    function subData(id, IsDelete) {
+    function subData(id) {
 
         var _panel = $('#pnglDB_' + id);
         var tbName = "@TabAdiEnum.MezuniyetSureciTn-" + id;
-        var tID = GetSelectedTabID(tbName);
-        if (IsDelete == true) tID = 1;
+        var tID = GetSelectedTabID(tbName); 
         PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetMsSubData", "MezuniyetSureci")',

@@ -329,6 +329,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var eslesenDanisman = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == (basvuru.TezDanismanID ?? 0));
                 if (eslesenDanisman != null)
                 {
+                    model.TezDanismaniUserKey = eslesenDanisman.UserKey;
                     var unvanAdi = eslesenDanisman.Unvanlar != null ? eslesenDanisman.Unvanlar.UnvanAdi : "";
                     model.TezDanismanBilgiEslesen = unvanAdi + " " + eslesenDanisman.Ad + " " + eslesenDanisman.Soyad;
                 }

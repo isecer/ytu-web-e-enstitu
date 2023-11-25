@@ -47,7 +47,14 @@
                                         <input type="text" name="OgrenimTipAdi" id="OgrenimTipAdi" value="@Model.OgrenimTipAdi" class="form-control" />
                                     </div>
                                 </div>
-                                
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-4 control-label">Mezuniyet Başvurusu Yapabilir</label>
+                                    <div class="col-md-8 col-xs-8">
+                                        <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsMezuniyetBasvurusuYapabilir" class="toggle" @Model.IsMezuniyetBasvurusuYapabilir.ToChecked() onchange="if ($(this).prop('checked')) { $('.MBYapabilir').removeClass('hide'); } else { $('.MBYapabilir').addClass('hide'); }" />
+                                        </div>
+                                    </div>
+                                </div>
                                 @if (Model.OgrenimTipID > 0)
                                 {
                                     <div class="form-group">
@@ -61,106 +68,12 @@
                                 }
 
                             </div>
-                        </div> 
-                        <div class="panel" style="margin:0px; margin-top:10px;">
-                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                <h3 class="panel-title">
-                                    <i class="fa fa-gears"></i> Mezuniyet Başvurusu Ayarları
-                                </h3>
-
-                            </div>
-                            <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                <div class="panel" style="margin:0px; margin:0px;">
-                                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                        <h3 class="panel-title" style="float:right;">
-                                            <i class="fa fa-gears"></i> Başvuru Kriterleri
-                                        </h3>
-
-                                    </div>
-                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                        <div class="form-group">
-                                            <label class="col-md-4 col-xs-4 control-label">Mezuniyet Başvurusu Yapabilir</label>
-                                            <div class="col-md-8 col-xs-8">
-                                                <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                                    <input type="checkbox" value="true" name="IsMezuniyetBasvurusuYapabilir" class="toggle" @Model.IsMezuniyetBasvurusuYapabilir.ToChecked() onchange="if ($(this).prop('checked')) { $('.MBYapabilir').removeClass('hide'); } else { $('.MBYapabilir').addClass('hide'); }" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="MBYapabilir @(Model.IsMezuniyetBasvurusuYapabilir ? "" : "hide")">
-                                            <div class="form-group">
-                                                <label class="col-md-4 col-xs-4 control-label">Son Dönem Kayıt Yaptırması Gereken Ders Kodları</label>
-                                                <div class="col-md-8 col-xs-8">
-                                                    <input type="text" name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" id="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" value="@Model.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" class="form-control" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-4 col-xs-4 control-label">Tüm Dönem Toplam Kredi Kriteri</label>
-                                                <div class="col-md-8 col-xs-8">
-                                                    <input type="text" name="MBasvuruToplamKrediKriteri" id="MBasvuruToplamKrediKriteri" value="@Model.MBasvuruToplamKrediKriteri" class="form-control" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-4 col-xs-4 control-label">Min Etik Ders Notu Kriteri</label>
-                                                <div class="col-md-8 col-xs-8">
-                                                    @Html.DropDownList("MBasvuruEtikNotKriteri", null,"", new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-4 col-xs-4 control-label">Min Seminer Ders Notu Kriteri</label>
-                                                <div class="col-md-8 col-xs-8">
-                                                    @Html.DropDownList("MBasvuruSeminerNotKriteri", null,"", new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-4 col-xs-4 control-label">Genel AGNO Kriteri</label>
-                                                <div class="col-md-8 col-xs-8">
-                                                    <input type="text" name="MBasvuruAGNOKriteri" id="MBasvuruAGNOKriteri" value="@Model.MBasvuruAGNOKriteri" class="form-control" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-4 col-xs-4 control-label">Genel AKTS Kriteri</label>
-                                                <div class="col-md-8 col-xs-8">
-                                                    <input type="text" name="MBasvuruAKTSKriteri" id="MBasvuruAKTSKriteri" value="@Model.MBasvuruAKTSKriteri" class="form-control" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-4 col-xs-4 control-label">SR Talebini Kaç Gün Sonra Alabilir</label>
-                                                <div class="col-md-8 col-xs-8">
-                                                    <input type="text" name="MBSRTalebiKacGunSonraAlabilir" id="MBSRTalebiKacGunSonraAlabilir" value="@Model.MBSRTalebiKacGunSonraAlabilir" class="form-control" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel MBYapabilir @(Model.IsMezuniyetBasvurusuYapabilir?"":"hide")" style="margin:0px; margin:0px;">
-                                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                        <h3 class="panel-title" style="float:right;">
-                                            <i class="fa fa-gears"></i> Tez Sınavı ve Tez Teslimi Kriterleri
-                                        </h3>
-
-                                    </div>
-                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                        <div class="form-group">
-                                            <label class="col-md-4 col-xs-4 control-label">Tez Sınavı Uzatma Süresi (Gün)</label>
-                                            <div class="col-md-8 col-xs-8">
-                                                <input type="text" name="MBSinavUzatmaSuresiGun" id="MBSinavUzatmaSuresiGun" value="@Model.MBSinavUzatmaSuresiGun" class="form-control" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-4 col-xs-4 control-label">Tez Teslim Süresi (Gün)</label>
-                                            <div class="col-md-8 col-xs-8">
-                                                <input type="text" name="MBTezTeslimSuresiGun" id="MBTezTeslimSuresiGun" value="@Model.MBTezTeslimSuresiGun" class="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </div>  
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
-                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i> Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save"></i>Kaydet</button>
                 </div>
             </div>
            

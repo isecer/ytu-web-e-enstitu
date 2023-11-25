@@ -111,8 +111,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bbModel.Enstitü = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
             bbModel.Kullanici = kul;
 
-            #endregion
-            var nowDate = DateTime.Now;
+            #endregion 
             var q = from s in _entities.TDOBasvurus
                     join en in _entities.Enstitulers on s.EnstituKod equals en.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
@@ -134,12 +133,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnabilimdaliAdi = ab.AnabilimDaliAdi,
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
-                        AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                        TcKimlikNo = s.Kullanicilar.TcKimlikNo,
+                        UserKey = k.UserKey,
+                        AdSoyad = k.Ad + " " + k.Soyad,
+                        TcKimlikNo = k.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo,
-                        Kullanicilar = s.Kullanicilar,
-                        ResimAdi = s.Kullanicilar.ResimAdi,
-                        KullaniciTipID = s.Kullanicilar.KullaniciTipID,
+                        ResimAdi = k.ResimAdi,
+                        KullaniciTipID = k.KullaniciTipID,
                         KullaniciTipAdi = ktip.KullaniciTipAdi,
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
@@ -164,7 +163,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.TDOBasvuruID.HasValue) q = q.Where(p => p.TDOBasvuruID == model.TDOBasvuruID.Value);
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();
-            //IndexModel.Toplam = model.RowCount;
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
             var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             model.TdoBasvuruDtos = qdata;
@@ -624,7 +622,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                 PropertyName = "TDProgramKod"
             });
-           
+
 
             if (!mMessage.Messages.Any() && kModel.TDOBasvuruDanismanID <= 0)
             {
@@ -644,7 +642,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.SinavTipID = null;
                     kModel.SinavAdi = null;
                     kModel.SinavPuani = null;
-                    kModel.SinavYili = null; 
+                    kModel.SinavYili = null;
                 }
 
                 kModel.BasvuruTarihi = DateTime.Now;
@@ -700,7 +698,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.TDAnabilimDaliAdi = kModel.TDAnabilimDaliAdi;
                     tdoBasvuruDanis.TDProgramKod = kModel.TDProgramKod;
                     tdoBasvuruDanis.TDProgramAdi = kModel.TDProgramAdi;
-                    tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi; 
+                    tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi;
                     tdoBasvuruDanis.IslemYapanID = kModel.IslemYapanID;
                     tdoBasvuruDanis.IslemYapanIP = kModel.IslemYapanIP;
                 }
@@ -903,7 +901,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                         PropertyName = "TDProgramKod"
-                    }); 
+                    });
 
                 }
             }
@@ -947,7 +945,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     kModel.SinavAdi = null;
                     kModel.SinavPuani = null;
-                    kModel.SinavYili = null; 
+                    kModel.SinavYili = null;
                 }
 
                 TDOBasvuruDanisman tdoBasvuruDanis;
@@ -986,7 +984,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.TDAnabilimDaliAdi = kModel.TDAnabilimDaliAdi;
                     tdoBasvuruDanis.TDProgramKod = kModel.TDProgramKod;
                     tdoBasvuruDanis.TDProgramAdi = kModel.TDProgramAdi;
-                    tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi; 
+                    tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi;
                     tdoBasvuruDanis.IslemYapanID = kModel.IslemYapanID;
                     tdoBasvuruDanis.IslemYapanIP = kModel.IslemYapanIP;
                     tdoBasvuruDanis.DanismanOnayladi = null;
@@ -1558,7 +1556,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
                     PropertyName = "TDProgramKod"
                 });
-               
+
             }
 
             if (!mMessage.Messages.Any())
@@ -1593,7 +1591,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.SinavTipID = null;
                     kModel.SinavAdi = null;
                     kModel.SinavPuani = null;
-                    kModel.SinavYili = null; 
+                    kModel.SinavYili = null;
                 }
 
                 kModel.BasvuruTarihi = DateTime.Now;
@@ -1653,8 +1651,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.TDAnabilimDaliID = kModel.TDAnabilimDaliID;
                     tdoBasvuruDanis.TDAnabilimDaliAdi = kModel.TDAnabilimDaliAdi;
                     tdoBasvuruDanis.TDProgramKod = kModel.TDProgramKod;
-                    tdoBasvuruDanis.TDProgramAdi = kModel.TDProgramAdi; 
-                    tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi; 
+                    tdoBasvuruDanis.TDProgramAdi = kModel.TDProgramAdi;
+                    tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi;
                     tdoBasvuruDanis.IslemYapanID = kModel.IslemYapanID;
                     tdoBasvuruDanis.IslemYapanIP = kModel.IslemYapanIP;
                 }
@@ -1910,6 +1908,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (!mMessage.Messages.Any())
             {
+                if (tdoBasvuruDanis.EYKYaGonderildi.HasValue || eykYaGonderildi != false)
+                {
+                    // eykya gönderimi onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
+                    var ogrenciObsBilgi =
+                        KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBasvuruDanis.TDOBasvuru.KullaniciID);
+
+                    if (!ogrenciObsBilgi.KayitVar)
+                    {
+                        mMessage.Messages.Add(
+                            "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                    }
+                    else if (tdoBasvuruDanis.TDOBasvuru.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
+                    {
+                        mMessage.Messages.Add(
+                            "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir.");
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
 
                 tdoBasvuruDanis.EYKYaGonderildi = eykYaGonderildi;
                 tdoBasvuruDanis.EYKYaGonderildiIslemTarihi = DateTime.Now;
@@ -1976,6 +1994,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mMessage.Messages.Add((isYeniTezBasligiGozuksun ? "Yeni " : "") + "Tez Başlığı İngilizce bilgisi boş bırakılamaz");
                         mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "TezBaslikEn_" + tdoBasvuruDanismanId });
 
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
+                if (tdoBasvuruDanis.EYKDaOnaylandi.HasValue || eykDaOnaylandi != false)
+                {
+                    // eyk'da onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
+                    var ogrenciObsBilgi =
+                        KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBasvuruDanis.TDOBasvuru.KullaniciID);
+
+                    if (!ogrenciObsBilgi.KayitVar)
+                    {
+                        mMessage.Messages.Add(
+                            "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                    }
+                    else if (tdoBasvuruDanis.TDOBasvuru.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
+                    {
+                        mMessage.Messages.Add(
+                            "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir.");
                     }
                 }
             }

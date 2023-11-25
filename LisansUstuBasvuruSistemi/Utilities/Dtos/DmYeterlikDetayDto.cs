@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int AnabilimDaliID { get; set; }
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
+        public Guid? TezDanismaniUserKey { get; set; }
         public string DanismanAdi { get; set; }
         public int AbdYeterlikKomiteUyeCount { get; set; }
         public YeterlikSurecOgrenimTipleri YeterlikSurecOgrenimTipleri { get; set; } 
@@ -26,6 +27,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
      
     public sealed class DmYeterlikKomite : YeterlikBasvuruKomiteler
     {
+        public Guid? UserKey { get; set; }
         public string UnvanAdi { get; set; }
         public string AdSoyad { get; set; }
         public string EMail { get; set; }

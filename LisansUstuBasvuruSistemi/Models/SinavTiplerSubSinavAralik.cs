@@ -19,6 +19,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public string SubSinavAralikAdi { get; set; }
         public double SubSinavMin { get; set; }
         public double SubSinavMax { get; set; }
+        public bool NotDonusum { get; set; }
+        public string NotDonusumFormulu { get; set; }
     
         public virtual SinavTipleri SinavTipleri { get; set; }
     }

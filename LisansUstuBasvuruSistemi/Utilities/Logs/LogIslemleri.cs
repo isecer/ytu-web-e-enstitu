@@ -17,6 +17,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
     {
         public static void LogEkle(string tabloAdi, string islemTipi, string tableData)
         {
+            LogEkle(tabloAdi, null, islemTipi, tableData);
+        }
+        public static void LogEkle(string tabloAdi, string aciklama, string islemTipi, string tableData)
+        {
             try
             {
 
@@ -27,6 +31,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
                     {
                         TabloAdi = tabloAdi,
                         IslemTipi = islemTipi,
+                        Aciklama = aciklama,
                         TableData = tableData,
                         IslemTarihi = DateTime.Now,
                         IslemYapanID = UserIdentity.Current.Id,

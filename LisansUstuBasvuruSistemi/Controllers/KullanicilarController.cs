@@ -42,6 +42,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     select new
                     {
                         s.KullaniciID,
+                        s.UserKey,
                         en.EnstituAd,
                         en.EnstituKisaAd,
                         s.YetkiGrupID,
@@ -109,6 +110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.KullanicilarDtos = q.Select(s => new FrKullanicilarDto
             {
                 KullaniciID = s.KullaniciID,
+                UserKey = s.UserKey,
                 EnstituAdi = s.EnstituAd,
                 EnstituKod = s.EnstituKod,
                 YetkiGrupAdi = s.EnstituKisaAd + " - " + s.YetkiGrupAdi + (s.YetkiSayisi > 0 ? " (+ " + s.YetkiSayisi + " yetki)" : ""),
@@ -561,6 +563,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (yeniKullanici)
                 {
                     var sfr = kModel.Sifre;
+                    kModel.UserKey=Guid.NewGuid();
                     kModel.YetkiGrupID = erisimYetki ? kModel.YetkiGrupID : 1;
                     kModel.OlusturmaTarihi = DateTime.Now;
                     kModel.Sifre = kModel.Sifre.ComputeHash(Management.Tuz);
@@ -825,9 +828,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return RedirectToAction("Index");
         }
         [Authorize(Roles = RoleNames.KullanicilarSil)]
-        public ActionResult Sil(int id)
+        public ActionResult Sil(Guid userKey)
         {
-            var kayit = _entities.Kullanicilars.Single(p => p.KullaniciID == id);
+            var kayit = _entities.Kullanicilars.Single(p => p.UserKey == userKey);
 
             string message = "";
             bool success = true;
@@ -854,23 +857,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [AllowAnonymous]
-        public ActionResult SetLogin(int kullaniciId, string key = "")
+        public ActionResult SetLogin(Guid userKey, string key = "")
         {
+
             if (!key.IsNullOrWhiteSpace())
             {
-                var skullaniciId = UserIdentity.Current.Informations.Where(p => p.Key == key).Select(s => s.Value.ToIntObj()).FirstOrDefault();
-                kullaniciId = skullaniciId ?? UserIdentity.Current.Id;
+                var sUserKey = UserIdentity.Current.Informations.Where(p => p.Key == key).Select(s => s.Value.ToGuidObj()).FirstOrDefault();
+                userKey = sUserKey ?? UserIdentity.Current.UserKey;
 
             }
-            else if (!RoleNames.KullanicilarKayit.InRoleCurrent()) return RedirectToAction("Index", "Home");
-            var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+            else if (!RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent()) return RedirectToAction("Index", "Home");
+            var kullanici = _entities.Kullanicilars.First(p => p.UserKey == userKey);
 
             var prevUserKey = Guid.NewGuid().ToString();
 
             FormsAuthenticationUtil.SetAuthCookie(kullanici.KullaniciAdi, String.Empty, false);
             var ui = UserBus.GetUserIdentity(kullanici.KullaniciAdi);
             ui.Informations.Add("PrevUserKey", prevUserKey);
-            ui.Informations.Add(prevUserKey, UserIdentity.Current.Id);
+            ui.Informations.Add(prevUserKey, UserIdentity.Current.UserKey);
             Session["UserIdentity"] = ui;
             UserIdentity.SetCurrent();
 

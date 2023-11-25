@@ -76,6 +76,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
     
         public int KullaniciID { get; set; }
+        public System.Guid UserKey { get; set; }
         public int YetkiGrupID { get; set; }
         public string EnstituKod { get; set; }
         public int KullaniciTipID { get; set; }

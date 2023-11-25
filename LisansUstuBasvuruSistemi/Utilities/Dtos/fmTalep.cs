@@ -24,6 +24,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FrTalep : TalepGelenTalepler
     {
         public bool YtuOgrencisi { get; set; }
+        public Guid? UserKey { get; set; }
         public bool IsbelgeYuklemesiVar { get; set; }
         public string TalepTipAdi { get; set; }
         public string ResimAdi { get; set; }

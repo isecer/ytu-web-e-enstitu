@@ -41,8 +41,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public string ProgramKod { get; set; }
         public int AnabilimDaliID { get; set; }
         public string AnabilimDaliKod { get; set; }
-        public string ProgramAdi { get; set; }
         public bool Ingilizce { get; set; }
+        public string ProgramAdi { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }

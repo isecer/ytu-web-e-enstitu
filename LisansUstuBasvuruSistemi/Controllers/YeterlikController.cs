@@ -8,6 +8,7 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
+using DevExpress.Data.WcfLinq.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -82,6 +83,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         UniqueID = yeterlikBasvuru.UniqueID,
                         BasvuruTarihi = yeterlikBasvuru.BasvuruTarihi,
                         ResimAdi = kullanicilar.ResimAdi,
+                        UserKey = kullanicilar.UserKey,
                         KullaniciID = yeterlikBasvuru.KullaniciID,
                         AdSoyad = kullanicilar.Ad + " " + kullanicilar.Soyad,
                         OgrenciNo = yeterlikBasvuru.OgrenciNo,
@@ -306,6 +308,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     UniqueID = sk.UniqueID,
                     KullaniciID = sk.KullaniciID,
+                    UserKey = sk.Kullanicilar.UserKey,
                     AdSoyad = sk.Kullanicilar.Ad + " " + sk.Kullanicilar.Soyad,
                     UnvanAdi = sk.Kullanicilar.Unvanlar.UnvanAdi,
                     EMail = sk.Kullanicilar.EMail,
@@ -327,6 +330,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var basvuru = query.First();
             var danisman = _entities.Kullanicilars.First(p => p.KullaniciID == basvuru.TezDanismanID);
             basvuru.DanismanAdi = danisman.Unvanlar.UnvanAdi + " " + danisman.Ad + " " + danisman.Soyad;
+            basvuru.TezDanismaniUserKey = danisman.UserKey;
 
 
             return View(basvuru);
@@ -363,7 +367,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 UnvanAdi = danisman.Unvanlar.UnvanAdi.Replace(" ", ""),
             });
             model.SelectListUndan = new SelectList(UnvanlarBus.GetCmbJuriUnvanlar(true), "Value", "Caption", null);
-            model.SelectListUniversite = new SelectList(Management.CmbGetAktifUniversiteler(true), "Value", "Caption", null);
+            model.SelectListUniversite = new SelectList(Management.CmbGetAktifUniversiteler(true, true), "Value", "Caption", null);
             model.SelectListAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallariStr(basvuru.YeterlikSureci.EnstituKod, true), "Value", "Caption", null);
 
             var view = ViewRenderHelper.RenderPartialView("Yeterlik", "YeterlikJuriFormu", model);
@@ -580,6 +584,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                           basvuru.Programlar.AnabilimDallari.AnabilimDaliAdi +
                                           "anabilim dalında 5 adet komite tanımlı olması gerekmektedir.");
 
+                }
+                else if (abdKomiteler.All(a =>
+                             basvuru.YeterlikBasvuruKomitelers.Any(ak => ak.KullaniciID == a.KullaniciID)))
+                {
+                    mMessage.Messages.Add("Değişiklik işlemi yapılmadı. Anabilim dalında tanımlı olan komite üyeleri ile yeterlik başvurusundaki komite üyeleri aynıdır!");
                 }
 
                 if (!mMessage.Messages.Any())

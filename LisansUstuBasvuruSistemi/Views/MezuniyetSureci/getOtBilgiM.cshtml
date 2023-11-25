@@ -1,5 +1,7 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@model kmMezuniyetSureciOgrenimTipModel
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model KmMezuniyetSureciOgrenimTipModel
 @{
     Layout = null;
 }
@@ -14,15 +16,16 @@
             <thead>
                 <tr>
                     <th>Öğrenim Tipleri</th>
-                    <th width="120" title="Son Dönem Kayıt Yaptırması Gereken Ders Kodları">K.Y.D.K</th>
+                    <th width="120" title="Son dönem kayıt yaptırması gereken ders kodları">K.Y.D.K</th>
                     <th width="60" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
                     <th width="60" title="Seminer dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Smnr Not</th>
-                    <th width="60" title="Tüm Dönem Toplam Kredi Kriteri">Min Kredi</th>
-                    <th width="60" title="Genel AGNO Kriteri">Min AGNO</th>
-                    <th width="60" title="Genel AKTS Kriteri">Min AKTS</th>
-                    <th width="40" title="EYK Tarihinden Sonra Salon Rezervasyonu Kaç Gün Sonra Alınabilir (Gün)">S.R.G</th>
-                    <th width="50" title="Tez Sınavı Uzatma Süresi (Gün)">T.S.U.S</th>
-                    <th width="40" title="Tez Teslim Süresi (Gün)">T.T.S</th>
+                    <th width="60" title="Tüm dönem toplam kredi kriteri">Min Kredi</th>
+                    <th width="60" title="Genel AGNO kriteri">Min AGNO</th>
+                    <th width="60" title="Genel AKTS kriteri">Min AKTS</th>
+                    <th width="40" title="EYK tarihinden sonra sınav talebi en geç kaç gün sonra yapılabilir (Gün)">S.R.G</th>
+                    <th width="50" title="Tez sınavı uzatma sonrası en geç kaç gün içinde öğrenci tez teslimi yapmalı (Gün)">U.S.T.T</th>
+                    <th width="50" title="Tez sınavı uzatma sonrası en geç kaç gün içinde sınav alınmalı (Gün)">U.S.S.R</th>
+                    <th width="40" title="Tez sınavdan başarılı olunduktan sonra tez teslimi en geç kaç gün içinde yapılmalı (Gün)">T.T.S</th>
                 </tr>
             </thead>
             <tbody id="Rw_tbody">
@@ -46,12 +49,26 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                @Html.DropDownList("MBasvuruEtikNotKriteri", item.SlistEtikNots, "", new { @class = "form-control" })
+                                <select class="form-control" name="MBasvuruEtikNotKriteri">
+                                    <option value=""></option>
+                                    @foreach (var itemNot in YeterlikBus.NotDegerleri)
+                                    {
+                                        <option @((itemNot == item.MBasvuruEtikNotKriteri).ToSelected())>@itemNot</option>
+
+                                    }
+                                </select> 
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                @Html.DropDownList("MBasvuruSeminerNotKriteri", item.SlistSeminerNots, "", new { @class = "form-control" })
+                                <select class="form-control" name="MBasvuruSeminerNotKriteri">
+                                    <option value=""></option>
+                                    @foreach (var itemNot in YeterlikBus.NotDegerleri)
+                                    {
+                                        <option @((itemNot == item.MBasvuruSeminerNotKriteri).ToSelected())>@itemNot</option>
+
+                                    }
+                                </select>  
                             </div>
                         </td>
                         <td>
@@ -76,7 +93,12 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <input type="text" class="form-control" name="MBSinavUzatmaSuresiGun" value="@item.MBSinavUzatmaSuresiGun">
+                                <input type="text" class="form-control" name="MBSinavUzatmaOgrenciTaahhutMaxGun" value="@item.MBSinavUzatmaOgrenciTaahhutMaxGun">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="MBSinavUzatmaSinavAlmaSuresiMaxGun" value="@item.MBSinavUzatmaSinavAlmaSuresiMaxGun">
                             </div>
                         </td>
                         <td>

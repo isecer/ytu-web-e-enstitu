@@ -30,9 +30,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? AktifAraRaporSayisi { get; set; }
         public int? TIAraRaporSayisi { get; set; }
 
-        public IEnumerable<frTIBasvuru> Data { get; set; }
+        public IEnumerable<FrTiBasvuru> Data { get; set; }
     }
-    public class frTIBasvuru : TIBasvuru
+    public class FrTiBasvuru : TIBasvuru
     {
         public string EnstituAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
@@ -43,6 +43,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DonemAdi { get; set; }
         public DateTime BasTar { get; set; }
         public DateTime BitTar { get; set; }
+        public Guid? UserKey { get; set; }
         public string ResimAdi { get; set; } 
         public  string TcKimlikNo { get; set; }
         public string AdSoyad { get; set; }
@@ -58,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? IsOyBirligiOrCoklugu { get; set; }
         public bool? IsBasariliOrBasarisiz { get; set; }
         public  DateTime? RaporTarihi { get; set; }
-        public List<TIAraraporFiltreModel> tIAraraporFiltreModels { get; set; }
+        public List<TiAraraporFiltreModel> tIAraraporFiltreModels { get; set; }
         public int? AraRaporDanismanID { get; set; }
         public string TIAraRaporAktifDonemID { get; set; }
         public string TiAraRaporAktifDonemAdi { get; set; }
@@ -66,7 +67,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public TimeSpan? ToplantiSaati { get; set; }
 
     }
-    public class TIAraraporFiltreModel
+    public class TiAraraporFiltreModel
     {
         public string FormKodu { get; set; }
         public string RaporDonemID { get; set; }

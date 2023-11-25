@@ -26,14 +26,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> MBasvuruSeminerNotKriteri { get; set; }
 
         public List<int?> MBasvuruToplamKrediKriteri { get; set; }
-        public List<double?> MBasvuruAGNOKriteri { get; set; }
-        public List<int?> MBasvuruAKTSKriteri { get; set; }
-        public List<int?> MBSinavUzatmaSuresiGun { get; set; }
-        public List<int?> MBTezTeslimSuresiGun { get; set; }
-        public List<int?> MBSRTalebiKacGunSonraAlabilir { get; set; }
+        public List<double?> MBasvuruAgnoKriteri { get; set; }
+        public List<int?> MBasvuruAktsKriteri { get; set; }
+        public List<int?> MbsrTalebiKacGunSonraAlabilir { get; set; }
+        public List<int?> MbSinavUzatmaOgrenciTaahhutMaxGun { get; set; }
+        public List<int?> MbSinavUzatmaSinavAlmaSuresiMaxGun { get; set; }
+        public List<int?> MbTezTeslimSuresiGun { get; set; }
 
 
-        public kmMezuniyetSureciOgrenimTipModel OgrenimTipModel { get; set; }
+        public KmMezuniyetSureciOgrenimTipModel OgrenimTipModel { get; set; }
         public KmMezuniyetSureci()
         {
             GId = new List<int>();
@@ -41,27 +42,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             ZamanTipID = new List<string>();
             Zaman = new List<string>();
             MailSablonTipID = new List<string>();
-            OgrenimTipModel = new kmMezuniyetSureciOgrenimTipModel();
+            OgrenimTipModel = new KmMezuniyetSureciOgrenimTipModel();
             MezuniyetSureciOgrenimTipKriterID = new List<int?>();
             OgrenimTipID = new List<int?>();
             OgrenimTipKod = new List<int?>();
             MBasvuruToplamKrediKriteri = new List<int?>();
             MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = new List<string>();
-            MBasvuruAGNOKriteri = new List<double?>();
-            MBasvuruAKTSKriteri = new List<int?>();
+            MBasvuruAgnoKriteri = new List<double?>();
+            MBasvuruAktsKriteri = new List<int?>();
             MBasvuruSeminerNotKriteri = new List<string>();
             MBasvuruEtikNotKriteri = new List<string>();
-            MBSinavUzatmaSuresiGun = new List<int?>();
-            MBTezTeslimSuresiGun = new List<int?>();
-            MBSRTalebiKacGunSonraAlabilir = new List<int?>();
+            MbSinavUzatmaSinavAlmaSuresiMaxGun = new List<int?>();
+            MbTezTeslimSuresiGun = new List<int?>();
+            MbsrTalebiKacGunSonraAlabilir = new List<int?>();
 
         }
     }
-    public class kmMezuniyetSureciOgrenimTipModel
+    public class KmMezuniyetSureciOgrenimTipModel
     {
-        public List<kmMezuniyetSureciOgrenimTipKriterleri> OgrenimTipKriterList { get; set; }
+        public List<KmMezuniyetSureciOgrenimTipKriterleri> OgrenimTipKriterList { get; set; }
     }
-    public class kmMezuniyetSureciOgrenimTipKriterleri : MezuniyetSureciOgrenimTipKriterleri
+    public class KmMezuniyetSureciOgrenimTipKriterleri : MezuniyetSureciOgrenimTipKriterleri
     {
         public int? SelectedOgrenimTipID { get; set; }
 

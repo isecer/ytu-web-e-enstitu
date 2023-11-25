@@ -27,8 +27,7 @@
                     <tbody>
                         <tr>
                             <td style="vertical-align:middle;" width="50">
-
-                                <img style="width:50px;height:50px;@(item.IsAuthenticated?"cursor:pointer;":"")" src="@item.ResimAdi" @(item.IsAuthenticated ? "onclick=detayGor(" + item.KullaniciId.Value + ",'#kulPnl')" : "") class="pull-left" alt="@item.Name" />
+                                <img style="width:50px;height:50px;@(item.IsAuthenticated?"cursor:pointer;":"")" src="@item.ResimAdi" @(item.IsAuthenticated ? "onclick=DetayGor('" + item.UserKey + "','#kulPnl')" : "") class="pull-left" alt="@item.Name" />
                             </td>
                             <td style="vertical-align:middle;">
                                 <table class="table table-striped" style="margin:0px;border-top:none;">

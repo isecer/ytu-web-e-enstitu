@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -31,6 +32,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.Message,
                         s.StackTrace,
                         s.IslemYapanID,
+                        UserKey= kd!=null ? kd.UserKey : (Guid?)null,
                         AdSoyad = s.IslemYapanID.HasValue ? (kd.Ad + " " + kd.Soyad) : (string)null,
                         KullaniciAdi = s.IslemYapanID.HasValue ? "[" + kd.KullaniciAdi + "]" : (string)null,
                         s.IslemTarihi,
@@ -63,6 +65,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 StackTrace = s.StackTrace,
                 KullaniciAdi = s.KullaniciAdi,
                 AdSoyad = s.AdSoyad,
+                UserKey = s.UserKey,
                 IslemYapanID = s.IslemYapanID,
                 IslemZamani = s.IslemTarihi,
                 IpAdresi = s.IslemYapanIP

@@ -37,8 +37,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>LisansUstuBasvuruSistemi.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>LisansUstuBasvuruSistemi.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
@@ -247,6 +249,7 @@
     <Compile Include="Controllers\BelgeTipDetayController.cs" />
     <Compile Include="Controllers\BelgeTipleriController.cs" />
     <Compile Include="Controllers\DosyaKontrolController.cs" />
+    <Compile Include="Utilities\Dtos\MezuniyetBasvurulariTezDosyalariDto.cs" />
     <Compile Include="Controllers\TdoAyarlarController.cs" />
     <Compile Include="Controllers\TdoBasvuruController.cs" />
     <Compile Include="Controllers\TdoGelenBasvurularController.cs" />
@@ -5045,6 +5048,7 @@
     <Content Include="Content\fontawesome-free-6.4.2-web\webfonts\fa-solid-900.woff2" />
     <Content Include="Content\fontawesome-free-6.4.2-web\webfonts\fa-v4compatibility.ttf" />
     <Content Include="Content\fontawesome-free-6.4.2-web\webfonts\fa-v4compatibility.woff2" />
+    <Content Include="LisansUstuBasvuruSistemi.ruleset" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -5745,6 +5749,7 @@
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>LisansUstuBasvuruSistemi.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\</OutputPath>
@@ -5753,6 +5758,10 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>LisansUstuBasvuruSistemi.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -5768,7 +5777,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57186</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57352/</IISUrl>
+          <IISUrl>http://localhost:57354/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

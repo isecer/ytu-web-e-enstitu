@@ -28,15 +28,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public int OgrenimTipKod { get; set; }
         public string OgrenimTipAdi { get; set; }
         public bool IsMezuniyetBasvurusuYapabilir { get; set; }
-        public string MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari { get; set; }
-        public string MBasvuruEtikNotKriteri { get; set; }
-        public string MBasvuruSeminerNotKriteri { get; set; }
-        public Nullable<int> MBasvuruToplamKrediKriteri { get; set; }
-        public Nullable<double> MBasvuruAGNOKriteri { get; set; }
-        public Nullable<int> MBasvuruAKTSKriteri { get; set; }
-        public Nullable<int> MBSinavUzatmaSuresiGun { get; set; }
-        public Nullable<int> MBTezTeslimSuresiGun { get; set; }
-        public Nullable<int> MBSRTalebiKacGunSonraAlabilir { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }

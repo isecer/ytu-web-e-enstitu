@@ -15,7 +15,7 @@
     var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
     var tiJuriOnerileriEykYaGonre = RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
     var tiJuriOnerileriEykDaOnay = RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent();
-    bool formOlusturmaYetki = RoleNames.TiJuriOnerileriOgrenciAdina.InRole() || isOgrenci;
+    var formOlusturmaYetki = RoleNames.TiJuriOnerileriOgrenciAdina.InRole() || isOgrenci;
 
 }
 <style>
@@ -207,7 +207,7 @@
                                                             </td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">
-                                                                <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @item.DanismanAdi</a>
+                                                                <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @item.DanismanAdi</a>
                                                             </td>
                                                         </tr>
                                                     }

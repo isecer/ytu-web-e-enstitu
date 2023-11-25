@@ -1,10 +1,8 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @model MSurecDetay
 @{
     Layout = null;
-    var isDelete = (bool)ViewBag.IsDelete;
-    string id = isDelete ? Model.MezuniyetSurecID.ToString() + "_cp" : Model.MezuniyetSurecID.ToString();
     string color = "color=blue";
     var tbName = TabAdiEnum.MezuniyetSureciTn + "-" + id;
 }
@@ -36,13 +34,13 @@
 <div class="panel panel-success" style="vertical-align:top;height:95%;" id="pnglDB_@Model.MezuniyetSurecID">
     <div class="panel-body" style="margin: 0px; padding: 0px;">
         <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
-            <ul class="nav nav-tabs MsTabBtn_@id" role="tablist">
-                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tbChangeSetPage('@tbName','@id',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="glyphicon glyphicon-time myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Süreç</span></a></li>
-                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@id',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Yönetmelik Bilgileri</span></a></li>
-                     @if (!isDelete)
-                {
-                    <li><a href="javascript:void(0);" onclick="subData('@id');" class="panel-refresh"><span class="fa fa-refresh myValueTdx" style="@color"></span></a></li>
-                }
+            <ul class="nav nav-tabs MsTabBtn_@Model.MezuniyetSurecID" role="tablist">
+                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="glyphicon glyphicon-time myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Süreç</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Yönetmelik Bilgileri</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',3)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Tez Kontrol Bilgileri</span></a></li>
+
+                <li><a href="javascript:void(0);" onclick="subData('@Model.MezuniyetSurecID');" class="panel-refresh"><span class="fa fa-refresh myValueTdx" style="@color"></span></a></li>
+
             </ul>
             <div class="panel-body tab-content" style="padding:0px;">
                 <input type="text" id="SelectedTb-@tbName" style="display:none;" value="@Model.SelectedTabIndex" />
@@ -52,9 +50,10 @@
                 <div class="tab-pane @(Model.SelectedTabIndex == 2 ? "active" : "") " id="@tbName-2">
 
                 </div>
-              
+                <div class="tab-pane @(Model.SelectedTabIndex == 3 ? "active" : "") " id="@tbName-3">
+
+                </div>
             </div>
         </div>
     </div>
 </div>
- 

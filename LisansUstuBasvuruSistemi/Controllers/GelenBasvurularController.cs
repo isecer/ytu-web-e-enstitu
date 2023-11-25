@@ -56,6 +56,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     select new
                     {
                         s.KullaniciID,
+                        s.Kullanicilar.UserKey,
                         s.BasvuruSurecID,
                         s.BasvuruID,
                         en.EnstituKod,
@@ -126,6 +127,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 new FrBasvurularDto
                 {
                     KullaniciID = s.KullaniciID,
+                    UserKey = s.UserKey,
                     BasvuruSurecID = s.BasvuruSurecID,
                     BasvuruID = s.BasvuruID,
                     EnstituKod = s.EnstituKod,

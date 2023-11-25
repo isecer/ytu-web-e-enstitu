@@ -113,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join ard in _entities.TIBasvuruAraRapors on s.AktifTIBasvuruAraRaporID equals ard.TIBasvuruAraRaporID into defard
                     from ard in defard.DefaultIfEmpty()
                     where s.EnstituKod == enstituKod && s.KullaniciID == (model.IsDegerlendirme.HasValue ? s.KullaniciID : model.KullaniciID.Value)
-                    select new frTIBasvuru
+                    select new FrTiBasvuru
                     {
                         TIBasvuruID = s.TIBasvuruID,
                         TezDanismanID = s.TezDanismanID,
@@ -124,10 +124,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnabilimdaliAdi = ab.AnabilimDaliAdi,
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
-                        AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
+                        UserKey = k.UserKey,
+                        AdSoyad = k.Ad + " " + k.Soyad,
                         OgrenciNo = s.OgrenciNo,
-                        Kullanicilar = s.Kullanicilar,
-                        ResimAdi = s.Kullanicilar.ResimAdi,
+                        ResimAdi = k.ResimAdi,
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,

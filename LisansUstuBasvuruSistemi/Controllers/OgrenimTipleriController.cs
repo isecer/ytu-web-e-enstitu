@@ -43,18 +43,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanID = s.IslemYapanID,
                         IslemYapanIP = s.IslemYapanIP,
                         IslemYapan = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                        OgrenimTipAdi = s.OgrenimTipAdi,
-
-                        IsMezuniyetBasvurusuYapabilir = s.IsMezuniyetBasvurusuYapabilir,
-                        MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = s.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
-                        MBasvuruEtikNotKriteri = s.MBasvuruEtikNotKriteri,
-                        MBasvuruSeminerNotKriteri = s.MBasvuruSeminerNotKriteri,
-                        MBasvuruToplamKrediKriteri = s.MBasvuruToplamKrediKriteri,
-                        MBasvuruAGNOKriteri = s.MBasvuruAGNOKriteri,
-                        MBasvuruAKTSKriteri = s.MBasvuruAKTSKriteri,
-                        MBSinavUzatmaSuresiGun = s.MBSinavUzatmaSuresiGun,
-                        MBTezTeslimSuresiGun = s.MBTezTeslimSuresiGun,
-                        MBSRTalebiKacGunSonraAlabilir = s.MBSRTalebiKacGunSonraAlabilir
+                        OgrenimTipAdi = s.OgrenimTipAdi, 
+                        IsMezuniyetBasvurusuYapabilir = s.IsMezuniyetBasvurusuYapabilir 
                     };
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             if (model.EnstituKod.IsNullOrWhiteSpace() == false) q = q.Where(p => p.EnstituKod == model.EnstituKod);
@@ -87,10 +77,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 model = _entities.OgrenimTipleris.First(p => p.OgrenimTipID == id);
                 if (!UserIdentity.Current.EnstituKods.Contains(model.EnstituKod)) model = new OgrenimTipleri(); 
-            }
-
-            ViewBag.MBasvuruEtikNotKriteri = new SelectList(YeterlikBus.NotDegerleri, model.MBasvuruEtikNotKriteri);
-            ViewBag.MBasvuruSeminerNotKriteri = new SelectList(YeterlikBus.NotDegerleri, model.MBasvuruSeminerNotKriteri);
+            } 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             return View(model);
         }
@@ -123,54 +110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgrenimTipAdi" });
 
-            if (kModel.IsMezuniyetBasvurusuYapabilir)
-            {
-                if (kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("Son döneminde kayıt yaptırması gereken ders kodlarını giriniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" });
-                if (kModel.MBasvuruToplamKrediKriteri.HasValue == false)
-                {
-                    mmMessage.Messages.Add("Toplam Kredi kriteri bilgisini giriniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBasvuruToplamKrediKriteri" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBasvuruToplamKrediKriteri" });
-                if (kModel.MBasvuruAGNOKriteri.HasValue == false || !(kModel.MBasvuruAGNOKriteri > 0 && kModel.MBasvuruAGNOKriteri <= 4))
-                {
-                    mmMessage.Messages.Add("Genel AGNO kriteri 1 ile 4 arasında bir değer olmalıdır!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBasvuruAGNOKriteri" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBasvuruAGNOKriteri" });
-                if (kModel.MBasvuruAKTSKriteri.HasValue == false)
-                {
-                    mmMessage.Messages.Add("Toplam AKTS kriteri bilgisini giriniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBasvuruAKTSKriteri" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBasvuruAKTSKriteri" });
-
-                if (kModel.MBSinavUzatmaSuresiGun.HasValue == false)
-                {
-                    mmMessage.Messages.Add("Sınav Uzatma Süresi Gün bilgisi boş bırakılamaz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBSinavUzatmaSuresiGun" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBSinavUzatmaSuresiGun" });
-                if (kModel.MBTezTeslimSuresiGun.HasValue == false)
-                {
-                    mmMessage.Messages.Add("Tez Teslim Süresi Gün bilgisi boş bırakılamaz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBTezTeslimSuresiGun" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBTezTeslimSuresiGun" });
-                if (kModel.MBSRTalebiKacGunSonraAlabilir.HasValue == false)
-                {
-                    mmMessage.Messages.Add("SR Talebi Kaç Gün Sonra Alabilir bilgisi boş bırakılamaz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "MBSRTalebiKacGunSonraAlabilir" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "MBSRTalebiKacGunSonraAlabilir" });
-
-            }
-
+            
             if (mmMessage.Messages.Count == 0)
             {
 
@@ -184,17 +124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
-                if (kModel.IsMezuniyetBasvurusuYapabilir == false)
-                {
-                    kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = "";
-                    kModel.MBasvuruToplamKrediKriteri = null;
-                    kModel.MBasvuruAGNOKriteri = null;
-                    kModel.MBasvuruAKTSKriteri = null;
-                    kModel.MBTezTeslimSuresiGun = null;
-                    kModel.MBSinavUzatmaSuresiGun = null;
-                    kModel.MBSRTalebiKacGunSonraAlabilir = null;
-                }
-
+               
                 if (kModel.OgrenimTipID <= 0)
                 {
                     kModel.IsAktif = true;
@@ -202,19 +132,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         EnstituKod = kModel.EnstituKod,
                         OgrenimTipKod = kModel.OgrenimTipKod,
-                        OgrenimTipAdi = kModel.OgrenimTipAdi,
-
-                        IsMezuniyetBasvurusuYapabilir = kModel.IsMezuniyetBasvurusuYapabilir,
-                        MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
-                        MBasvuruEtikNotKriteri = kModel.MBasvuruEtikNotKriteri,
-                        MBasvuruSeminerNotKriteri = kModel.MBasvuruSeminerNotKriteri,
-                        MBasvuruToplamKrediKriteri = kModel.MBasvuruToplamKrediKriteri,
-                        MBasvuruAGNOKriteri = kModel.MBasvuruAGNOKriteri,
-                        MBasvuruAKTSKriteri = kModel.MBasvuruAKTSKriteri,
-                        MBSinavUzatmaSuresiGun = kModel.MBSinavUzatmaSuresiGun,
-                        MBTezTeslimSuresiGun = kModel.MBTezTeslimSuresiGun,
-
-                        MBSRTalebiKacGunSonraAlabilir = kModel.MBSRTalebiKacGunSonraAlabilir,
+                        OgrenimTipAdi = kModel.OgrenimTipAdi, 
+                        IsMezuniyetBasvurusuYapabilir = kModel.IsMezuniyetBasvurusuYapabilir ,
                         IsAktif = kModel.IsAktif,
                         IslemYapanID = UserIdentity.Current.Id,
                         IslemYapanIP = UserIdentity.Ip,
@@ -229,16 +148,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kayit.EnstituKod = kModel.EnstituKod;
                     kayit.OgrenimTipKod = kModel.OgrenimTipKod;
                     kayit.OgrenimTipAdi = kModel.OgrenimTipAdi;
-                    kayit.IsMezuniyetBasvurusuYapabilir = kModel.IsMezuniyetBasvurusuYapabilir;
-                    kayit.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari;
-                    kayit.MBasvuruEtikNotKriteri = kModel.MBasvuruEtikNotKriteri;
-                    kayit.MBasvuruSeminerNotKriteri = kModel.MBasvuruSeminerNotKriteri;
-                    kayit.MBasvuruToplamKrediKriteri = kModel.MBasvuruToplamKrediKriteri;
-                    kayit.MBasvuruAGNOKriteri = kModel.MBasvuruAGNOKriteri;
-                    kayit.MBasvuruAKTSKriteri = kModel.MBasvuruAKTSKriteri;
-                    kayit.MBSinavUzatmaSuresiGun = kModel.MBSinavUzatmaSuresiGun;
-                    kayit.MBTezTeslimSuresiGun = kModel.MBTezTeslimSuresiGun;
-                    kayit.MBSRTalebiKacGunSonraAlabilir = kModel.MBSRTalebiKacGunSonraAlabilir;
+                    kayit.IsMezuniyetBasvurusuYapabilir = kModel.IsMezuniyetBasvurusuYapabilir; 
                     kayit.IsAktif = kModel.IsAktif;
                     kayit.IslemYapanID = UserIdentity.Current.Id;
                     kayit.IslemYapanIP = UserIdentity.Ip;
@@ -250,11 +160,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
-            }
-
-
-            ViewBag.MBasvuruEtikNotKriteri = new SelectList(YeterlikBus.NotDegerleri, kModel.MBasvuruEtikNotKriteri);
-            ViewBag.MBasvuruSeminerNotKriteri = new SelectList(YeterlikBus.NotDegerleri, kModel.MBasvuruSeminerNotKriteri);
+            } 
             ViewBag.MmMessage = mmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             return View(kModel);

@@ -129,10 +129,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnabilimdaliAdi = ab.AnabilimDaliAdi,
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
-                        AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
+                        UserKey = k.UserKey,
+                        AdSoyad = k.Ad + " " + k.Soyad,
                         OgrenciNo = s.OgrenciNo,
-                        Kullanicilar = s.Kullanicilar,
-                        ResimAdi = s.Kullanicilar.ResimAdi,
+                        ResimAdi = k.ResimAdi,
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
@@ -205,7 +205,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else mMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın lisansustu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
             }
-            else if (toBasvuruSavunma==null && studentInfo.OgrenciTez.TEZ_DILI.IsNullOrWhiteSpace())
+            else if (toBasvuruSavunma == null && studentInfo.OgrenciTez.TEZ_DILI.IsNullOrWhiteSpace())
             {
                 mMessage.Messages.Add("OBS sisteminde tez bilgilerinize ait tez dili bilginiz boş gelmektedir. Bu durumu enstitü yetkililerine iletiniz.");
 
@@ -256,7 +256,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
 
-               
+
                 if (!tosUniqueId.HasValue)
                 {
                     mMessage.Messages.AddRange(TezOneriSavunmaBus.TosKalanHakSavunmaBaslangicTarihKriter(toUniqueId).MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message));
@@ -339,7 +339,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     model.ToBasvuruSavunmaKomites = komites;
                                 }
                                 else
-                                { 
+                                {
                                     var isdegisiklikVar = false;
                                     foreach (var itemkom in komites)
                                     {
@@ -355,7 +355,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                             if (itemkom.AdSoyad != dbKom.AdSoyad
                                                 || itemkom.UnvanAdi != dbKom.UnvanAdi
                                                 || itemkom.UniversiteAdi != dbKom.UniversiteAdi
-                                                || itemkom.AnabilimdaliAdi != dbKom.AnabilimdaliAdi )
+                                                || itemkom.AnabilimdaliAdi != dbKom.AnabilimdaliAdi)
                                             {
                                                 isdegisiklikVar = true;
                                                 dbKom.AdSoyad = itemkom.AdSoyad;
@@ -430,9 +430,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (enstituYetki && !donemSecim.IsNullOrWhiteSpace())
             {
                 baslangicYil = donemSecim.Substring(0, 4).ToInt(0);
-                donemId = donemSecim.Substring(4, 1).ToInt(0); 
-            } 
-            var danismanTc = studentInfo.OgrenciInfo.DANISMAN_TC1; 
+                donemId = donemSecim.Substring(4, 1).ToInt(0);
+            }
+            var danismanTc = studentInfo.OgrenciInfo.DANISMAN_TC1;
             if (!degerlendirmeYetki)
             {
                 mMessage.Messages.Add("kayıt yetkisine sahip değilsiniz.");
@@ -634,7 +634,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (isYeniKayit)
                             {
                                 var td = _entities.Kullanicilars.First(p => p.KullaniciID == kul.DanismanID);
-                                toBasvuru.TezDanismanID = td.KullaniciID; 
+                                toBasvuru.TezDanismanID = td.KullaniciID;
 
                                 toBasvuruSavunma.TezDanismanID = td.KullaniciID;
                                 toBasvuruSavunma.SavunmaBasvuruTarihi = DateTime.Now;
@@ -795,7 +795,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             if (mmMessage.Messages.Count == 0)
-            { 
+            {
 
                 if (kModel.Tarih == DateTime.MinValue)
                 {
@@ -806,7 +806,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("Toplantı tarihi bilgisi günümüz tarihten küçük olamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
-                } 
+                }
                 if (kModel.SalonAdi.IsNullOrWhiteSpace())
                 {
                     mmMessage.Messages.Add(kModel.IsOnline ? "Toplantı katılım linkini giriniz." : "Toplantı yeri bilgisini giriniz.");
@@ -1206,11 +1206,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-        public ActionResult SavunmaBitisTarihGuncelle(Guid toUniqueId,DateTime? ilkOneriBitisTarihi, DateTime? ikinciOneriBitisTarihi)
+        public ActionResult SavunmaBitisTarihGuncelle(Guid toUniqueId, DateTime? ilkOneriBitisTarihi, DateTime? ikinciOneriBitisTarihi)
         {
             var mMessage = new MmMessage
             {
-                IsSuccess = false 
+                IsSuccess = false
             };
             var tosDegerlendirmeDuzeltmeRole = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
             if (!UserIdentity.Current.IsAdmin && !tosDegerlendirmeDuzeltmeRole)
@@ -1236,9 +1236,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     toBasvuru.IlkOneriBitisTarihi = ilkOneriBitisTarihi;
-                    toBasvuru.IkinciOneriBitisTarihi= ikinciOneriBitisTarihi;
+                    toBasvuru.IkinciOneriBitisTarihi = ikinciOneriBitisTarihi;
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("ToBasvuru",  LogCrudType.Update, toBasvuru.ToJson());
+                    LogIslemleri.LogEkle("ToBasvuru", LogCrudType.Update, toBasvuru.ToJson());
 
                     mMessage.Messages.Add("Tez Önerisi savunma bitiş tarihi bilgileri güncellendi.");
                     mMessage.IsSuccess = true;
@@ -1259,8 +1259,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 IsSuccess = false
             };
-            var tosDegerlendirmeDuzeltmeRole = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
-            if (!UserIdentity.Current.IsAdmin && !tosDegerlendirmeDuzeltmeRole)
+            var tosDegerlendirmeDuzeltmeRole = RoleNames.TosSavunmaBitisTarihDuzeltme.InRoleCurrent();
+            if (!tosDegerlendirmeDuzeltmeRole)
             {
                 mMessage.Messages.Add("<span style='color:maroon;'>Bu işlemi yapmaya yetkili değilsiniz.</span>");
 
@@ -1277,7 +1277,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (retDuzeltmeBitisTarihi.Value <= sonSavunma.SRTalepleris.First().Tarih)
                 {
                     mMessage.Messages.Add("<span style='color:maroon;'>Ret/Düzeltme bitiş tarihi Son savunma sınavı tarihinden büyük olmalı.</span>");
-                } 
+                }
                 else
                 {
                     toBasvuru.RetDuzeltmeBitisTarihi = retDuzeltmeBitisTarihi;

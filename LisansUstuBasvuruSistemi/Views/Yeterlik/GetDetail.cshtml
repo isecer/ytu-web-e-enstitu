@@ -7,7 +7,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model DmYeterlikDetayDto
 @{
-    Layout = null; 
+    Layout = null;
     var abdKayitYetki = RoleNames.AnabilimDallari.InRoleCurrent();
 }
 <style>
@@ -87,18 +87,10 @@
                             <td class="CaptionTd">Danışman</td>
                             <td class="CaptionTd">:</td>
                             <td class="ValueTd">
-                                @if (RoleNames.Kullanicilar.InRoleCurrent())
-                                {
-                                    <a href="javascript:void(0);" onclick="detayGor(@Model.TezDanismanID)">@Model.DanismanAdi</a>
-                                }
-                                else
-                                {
-                                    @Model.DanismanAdi
-                                }
-
+                                <a href="javascript:void(0);" onclick="DetayGor('@Model.TezDanismaniUserKey')">@Model.DanismanAdi</a> 
                             </td>
                         </tr>
-                     
+
 
                     </table>
                 </td>
@@ -356,7 +348,7 @@
 </script>
 @if (abdKayitYetki)
 {
-<script>
+    <script>
        function GetYeterlikKomiteUyeleriView(id) {
         var view = "";
         $.ajax({
@@ -385,6 +377,6 @@
         });
 
     }
-</script>
+    </script>
 }
 

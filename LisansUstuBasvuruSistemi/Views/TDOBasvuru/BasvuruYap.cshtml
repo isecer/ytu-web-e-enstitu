@@ -3,7 +3,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
      
-    var _MmMessage = (MmMessage)ViewBag._MmMessage;
+    var mmMessage = (MmMessage)ViewBag._MmMessage;
 
 
 }
@@ -78,7 +78,7 @@
 </div>
 <script>
       $(function () {
-        var model = '@Html.Raw(Json.Encode(_MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 </script>

@@ -91,6 +91,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             Aciklama = s.Aciklama,
                             AciklamaHtml = s.AciklamaHtml,
                             MailGonderen = k.Ad + " " + k.Soyad,
+                            UserKey = k.UserKey,
                             IslemYapanID = s.IslemYapanID,
                             IslemYapanIP = s.IslemYapanIP,
                             EkSayisi = s.GonderilenMailEkleris.Count,

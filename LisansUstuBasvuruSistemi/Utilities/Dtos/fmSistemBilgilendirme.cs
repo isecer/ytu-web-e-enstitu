@@ -25,6 +25,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string Message { get; set; }
         public string StackTrace { get; set; }
         public DateTime? IslemZamani { get; set; }
+        public Guid? UserKey { get; set; }
         public int? IslemYapanID { get; set; }
         public string IpAdresi { get; set; }
         public string AdSoyad { get; set; }

@@ -11,6 +11,7 @@
     Layout = null;
     bool resimVar = (bool)ViewBag.ResimVar;
     bool kYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
+    bool kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent();
     bool islemYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
     bool eYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
     bool pYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
@@ -96,9 +97,9 @@
                                     <td>Kullanıcı Adı</td>
                                     <td>:</td>
                                     <td>
-                                        @Model.KullaniciAdi  @if (kYetki)
+                                        @Model.KullaniciAdi  @if (kHesabaGecme)
                                         {
-                                            <a href="@Url.Action("SetLogin","Kullanicilar", new { Model.KullaniciID })" target="_blank"><i class="fa fa-arrow-circle-o-left"></i> Hesaba Geç</a>
+                                            <a href="@Url.Action("SetLogin","Kullanicilar", new { Model.UserKey })" target="_blank"><i class="fa fa-arrow-circle-o-left"></i> Hesaba Geç</a>
                                         }
                                     </td>
                                 </tr>
@@ -320,7 +321,7 @@
                         <td>
                             @if (danisman != null)
                             {
-                                <a href="javascript:void(0)" onclick="detayGor(@danisman.KullaniciID)">
+                                <a href="javascript:void(0)" onclick="DetayGor('@danisman.UserKey')">
                                     @danisman.Unvanlar.UnvanAdi @danisman.Ad @danisman.Soyad
                                 </a>
                             }

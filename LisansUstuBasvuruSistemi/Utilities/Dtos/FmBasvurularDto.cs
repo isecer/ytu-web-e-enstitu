@@ -37,6 +37,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string BasvuruSurecAdi { get; set; } 
         public DateTime BasTar { get; set; }
         public DateTime BitTar { get; set; }
+        public Guid? UserKey { get; set; }
         public string KullaniciTipAdi { get; set; }
         public string AdSoyad { get; set; }
         public int TercihSayisi { get; set; }

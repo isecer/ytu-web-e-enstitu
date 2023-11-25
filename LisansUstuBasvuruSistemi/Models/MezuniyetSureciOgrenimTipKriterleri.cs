@@ -24,9 +24,10 @@ namespace LisansUstuBasvuruSistemi.Models
         public int MBasvuruToplamKrediKriteri { get; set; }
         public double MBasvuruAGNOKriteri { get; set; }
         public int MBasvuruAKTSKriteri { get; set; }
-        public int MBSinavUzatmaSuresiGun { get; set; }
-        public int MBTezTeslimSuresiGun { get; set; }
         public int MBSRTalebiKacGunSonraAlabilir { get; set; }
+        public int MBSinavUzatmaOgrenciTaahhutMaxGun { get; set; }
+        public int MBSinavUzatmaSinavAlmaSuresiMaxGun { get; set; }
+        public int MBTezTeslimSuresiGun { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

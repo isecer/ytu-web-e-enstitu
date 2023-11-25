@@ -390,7 +390,7 @@
                                                             <td class="ValueTd">
                                                                 @if (isKullaniciGormeYetki)
                                                                 {
-                                                                    <a href="javascript:void(0)" onclick="detayGor(@item.VarolanTezDanismanID)">
+                                                                    <a href="javascript:void(0)" onclick="DetayGor('@item.VarolanTezDanismaniUserKey')">
                                                                         @item.VarolanDanismanAd
                                                                     </a>
                                                                 }
@@ -480,7 +480,7 @@
                                                         <td class="ValueTd">
                                                             @if (isKullaniciGormeYetki)
                                                             {
-                                                                <a href="javascript:void(0)" onclick="detayGor(@item.TezDanismanID)">
+                                                                <a href="javascript:void(0)" onclick="DetayGor('@item.TezDanismaniUserKey')">
                                                                     @item.TDUnvanAdi @item.TDAdSoyad
                                                                 </a>
                                                             }

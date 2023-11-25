@@ -40,7 +40,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EnstituAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
-        public string ProgramAdi { get; set; } 
+        public string ProgramAdi { get; set; }
+        public Guid? UserKey { get; set; }
         public string KullaniciTipAdi { get; set; }
         public string AdSoyad { get; set; }
         public string EMail { get; set; }

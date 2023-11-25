@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Protocols.WSTrust;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -54,7 +55,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IslemYapanIP,
                         EkSayisi = s.ToplamEkSayisi,
                         s.IsAktif,
-                        s.KullaniciID
+                        s.KullaniciID,
+                        UserKey = kul != null ? kul.UserKey : (Guid?)null,
                     };
 
 
@@ -150,6 +152,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ResimAdi = s.ResimAdi,
                 EkSayisi = s.EkSayisi,
                 KullaniciID = s.KullaniciID ?? 0,
+                UserKey = s.UserKey,
                 IslemYapanIP = s.IslemYapanIP,
                 IsAktif = s.IsAktif
             }).ToList();
@@ -239,12 +242,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MesajID = s.MesajID,
                 Konu = s.Konu,
                 KullaniciID = s.KullaniciID,
-                Email = s.Kullanicilar != null ? s.Kullanicilar.EMail : s.Email,
+                UserKey = s.KullaniciID.HasValue ? s.Kullanicilar.UserKey : (Guid?)null,
+                Email = s.KullaniciID.HasValue ? s.Kullanicilar.EMail : s.Email,
                 Aciklama = s.Aciklama,
                 AciklamaHtml = s.AciklamaHtml,
                 Tarih = s.Tarih,
                 AdSoyad = s.AdSoyad,
-                ResimAdi = s.Kullanicilar != null ? s.Kullanicilar.ResimAdi : null,
+                ResimAdi = s.KullaniciID.HasValue ? s.Kullanicilar.ResimAdi : null,
                 IslemYapanIP = s.IslemYapanIP,
                 IsAktif = s.IsAktif,
                 MesajEkleris = s.MesajEkleris.ToList()
@@ -254,6 +258,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MesajID = s.MesajID,
                 KullaniciID = s.KullaniciID ?? 0,
+                UserKey = s.KullaniciID.HasValue ? s.Kullanicilar.UserKey : (Guid?)null,
                 EMail = s.KullaniciID.HasValue ? s.Kullanicilar.EMail : s.Email,
                 AdSoyad = s.AdSoyad,
                 Tarih = s.Tarih,
@@ -269,6 +274,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MesajID = mesaj.MesajID,
                 KullaniciID = mesaj.KullaniciID ?? 0,
+                UserKey = mesaj.UserKey,
                 EMail = mesaj.Email,
                 AdSoyad = mesaj.AdSoyad,
                 Tarih = mesaj.Tarih,
@@ -285,6 +291,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 groupMesajs.Add(new SubMessagesDto
                 {
                     MesajID = item.MesajID.Value,
+                    UserKey =  kul.UserKey,
                     KullaniciID = kul.KullaniciID,
                     EMail = kul.EMail,
                     AdSoyad = kul.Ad + " " + kul.Soyad,

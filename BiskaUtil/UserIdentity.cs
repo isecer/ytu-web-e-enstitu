@@ -22,6 +22,7 @@ namespace BiskaUtil
         private List<string> _roles = new List<string>();
         private Dictionary<string, object> _informations = new Dictionary<string, object>();
         public int Id { get; set; }
+        public Guid UserKey { get; set; }
         public int PersonelId { get; set; }
         public string NameSurname { get; set; }
         public string Description { get; set; }

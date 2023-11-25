@@ -19,9 +19,20 @@
 
     if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
     {
-        tabAdi = "Yeni Başvuru";
+        tabAdi = "İptal Edildi";
         tabIconClass = "fa fa-list-alt fa-lg";
         durumAdi = "Başvuru İptal Edildi";
+        durumIconClass = "fa fa-thumbs-o-down";
+        durumColor = "maroon";
+        durumDetay = item.MezuniyetYayinKontrolDurumAciklamasi.IsNullOrWhiteSpace() ? "" : (item.MezuniyetYayinKontrolDurumAciklamasi.Substring(0, (item.MezuniyetYayinKontrolDurumAciklamasi.Length > 45 ? 45 : item.MezuniyetYayinKontrolDurumAciklamasi.Length)) + "...");
+        durumDetayIconClass = "fa fa-comments-o";
+        aciklamaDetay = item.MezuniyetYayinKontrolDurumAciklamasi;
+    }
+    else if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi)
+    {
+        tabAdi = "Kayıt Silindi";
+        tabIconClass = "fa fa-list-alt fa-lg";
+        durumAdi = "Öğrenci Kaydı Silindi";
         durumIconClass = "fa fa-thumbs-o-down";
         durumColor = "maroon";
         durumDetay = item.MezuniyetYayinKontrolDurumAciklamasi.IsNullOrWhiteSpace() ? "" : (item.MezuniyetYayinKontrolDurumAciklamasi.Substring(0, (item.MezuniyetYayinKontrolDurumAciklamasi.Length > 45 ? 45 : item.MezuniyetYayinKontrolDurumAciklamasi.Length)) + "...");
@@ -226,7 +237,7 @@
                         durumDetay = "Sınav Sonucunu Enstitü Onayladı. Öğrenci Tez Teslim Taahhütü Yapmalı.";
                     }
                     else
-                    { 
+                    {
                         durumDetay = "Sınav Sonucunu Enstitü Onayladı. Öğrenci Yeni Tez Sınavı Talebi Yapmalı.";
                     }
                     durumDetayIconClass = "fa fa-comments-o";

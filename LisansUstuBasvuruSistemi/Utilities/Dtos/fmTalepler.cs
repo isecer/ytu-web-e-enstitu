@@ -24,6 +24,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FrTalepler : SRTalepleri
     {
         public string EnstituAdi { get; set; }
+        public Guid? UserKey { get; set; }
         public string OgrenciNo { get; set; }
         public string SicilNo { get; set; }
         public string TalepYapan { get; set; }

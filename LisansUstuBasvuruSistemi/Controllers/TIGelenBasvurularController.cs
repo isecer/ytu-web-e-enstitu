@@ -55,7 +55,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                       s.TIBasvuruAraRapors.FirstOrDefault(p => baslangicYil.HasValue ? (p.TIBasvuruID == s.TIBasvuruID && p.DonemID == donemId && p.DonemBaslangicYil == baslangicYil) : p.TIBasvuruAraRaporID == s.AktifTIBasvuruAraRaporID)
 
 
-                    select new frTIBasvuru
+                    select new FrTiBasvuru
                     {
                         TIBasvuruID = s.TIBasvuruID,
                         TezDanismanID = s.TezDanismanID,
@@ -67,6 +67,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnabilimdaliAdi = ab.AnabilimDaliAdi,
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
+                        UserKey = k.UserKey,
                         AdSoyad = k.Ad + " " + k.Soyad,
                         EMail = k.EMail,
                         CepTel = k.CepTel,
@@ -86,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         RaporTarihi = ard != null ? ard.RaporTarihi : (DateTime?)null,
                         ToplantiTarihi = baslangicYil.HasValue ? ard.SRTalepleris.Select(sr => sr.Tarih).FirstOrDefault() : (DateTime?)null,
                         ToplantiSaati = baslangicYil.HasValue ? ard.SRTalepleris.Select(sr => sr.BasSaat).FirstOrDefault() : (TimeSpan?)null,
-                        tIAraraporFiltreModels = s.TIBasvuruAraRapors.Select(ti => new TIAraraporFiltreModel
+                        tIAraraporFiltreModels = s.TIBasvuruAraRapors.Select(ti => new TiAraraporFiltreModel
                         {
                             AraRaporSayisi = ti.AraRaporSayisi,
                             FormKodu = ti.FormKodu,

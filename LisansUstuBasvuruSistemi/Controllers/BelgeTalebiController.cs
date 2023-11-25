@@ -107,6 +107,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.AdiSoyadi,
                         ResimAdi = kl != null ? kl.ResimAdi : "",
                         KullaniciID = kl != null ? kl.KullaniciID : (int?)null,
+                        UserKey = kl != null ? kl.UserKey : (Guid?)null,
                         s.OgrenciNo,
                         s.ErisimKodu,
                         s.ProgramKod,
@@ -145,8 +146,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
 
-            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi); 
-            model.RowCount = q.Count(); 
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
+            model.RowCount = q.Count();
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount
@@ -171,6 +172,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 AdiSoyadi = item.AdiSoyadi,
                 ResimAdi = item.ResimAdi,
                 KullaniciID = item.KullaniciID,
+                UserKey = item.UserKey,
                 OgrenciNo = item.OgrenciNo,
                 ProgramKod = item.ProgramKod,
                 Email = item.Email,
@@ -336,7 +338,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         }
                         else if (belge.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi || belge.BelgeDurumID == BelgeTalepDurumEnum.Kapatildi || belge.BelgeDurumID == BelgeTalepDurumEnum.Verildi)
-                        { 
+                        {
                             mmMessage.Messages.Add("Bu Belge Talebini Düzeltemezsiniz.");
                         }
 

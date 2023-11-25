@@ -38,11 +38,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join ot in _entities.OgrenimTipleris on new { s.EnstituKod, s.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
                     join od in _entities.OgrenimDurumlaris on s.OgrenimDurumID equals od.OgrenimDurumID
                     join kul in _entities.Kullanicilars on s.OgrenciNo equals kul.OgrenciNo into defk
-                    where s.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
                     from kl in defk.DefaultIfEmpty()
+                    where s.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
                     select new
                     {
                         s.BelgeTalepID,
+
                         bdrm.ClassName,
                         bdrm.Color,
                         s.EnstituKod,
@@ -66,6 +67,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.AdiSoyadi,
                         ResimAdi = kl != null ? kl.ResimAdi : "",
                         KullaniciID = kl != null ? kl.KullaniciID : (int?)null,
+                        UserKey = kl != null ? kl.UserKey : (Guid?)null,
                         s.OgrenciNo,
                         s.ErisimKodu,
                         s.ProgramKod,
@@ -156,6 +158,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 DonemAdi = item.DonemAdi,
                 AdiSoyadi = item.AdiSoyadi,
                 ResimAdi = item.ResimAdi,
+                UserKey = item.UserKey,
                 KullaniciID = item.KullaniciID,
                 OgrenciNo = item.OgrenciNo,
                 ProgramKod = item.ProgramKod,

@@ -51,6 +51,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int DonemID { get; set; }
         public DateTime BasTar { get; set; }
         public DateTime BitTar { get; set; }
+        public Guid? UserKey { get; set; } 
         public string KullaniciTipAdi { get; set; }
         public string AdSoyad { get; set; }
         public string EMail { get; set; }

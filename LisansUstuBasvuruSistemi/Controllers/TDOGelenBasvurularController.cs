@@ -60,12 +60,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnabilimdaliAdi = ab.AnabilimDaliAdi,
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
+                        UserKey = k.UserKey,
                         AdSoyad = k.Ad + " " + k.Soyad,
                         EMail = k.EMail,
                         CepTel = k.CepTel,
                         TcKimlikNo = k.TcKimlikNo,
-                        OgrenciNo = s.OgrenciNo,
-                        Kullanicilar = s.Kullanicilar,
+                        OgrenciNo = s.OgrenciNo, 
                         ResimAdi = k.ResimAdi,
                         KullaniciTipID = k.KullaniciTipID,
                         KullaniciTipAdi = ktip.KullaniciTipAdi,
@@ -343,7 +343,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 return File(System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString()), Response.ContentType, raporAdi);
             }
 
-            var danismanTalepTipId = isDegisiklikOrYeniOneri.HasValue ? TdoDanismanTalepTipEnum.TezDanismaniOnerisi : (int?)null;
+
+            var danismanDegisiklikTipIds = new List<int>();
+            if (!isDegisiklikOrYeniOneri.HasValue)
+                danismanDegisiklikTipIds = new List<int>
+                {
+                    TdoDanismanTalepTipEnum.TezDanismaniOnerisi,
+                    TdoDanismanTalepTipEnum.TezDanismaniDegisikligi,
+                    TdoDanismanTalepTipEnum.TezBasligiDegisikligi,
+                    TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi
+                };
+            else if (isDegisiklikOrYeniOneri.Value) danismanDegisiklikTipIds = new List<int>
+            {
+                TdoDanismanTalepTipEnum.TezDanismaniDegisikligi,
+                TdoDanismanTalepTipEnum.TezBasligiDegisikligi,
+                TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi
+            };
+            else danismanDegisiklikTipIds = new List<int>
+            {
+                TdoDanismanTalepTipEnum.TezDanismaniOnerisi
+            };
+          
+
 
             if (tutanakTipId == 1)
             {
@@ -353,7 +374,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var qData = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.EnstituKod == enstituKod
                                                                     && p.EYKYaGonderildi == (!isEykdaOnayOrGonderim ? true : p.EYKYaGonderildi)
                                                                     && p.EYKDaOnaylandi == (isEykdaOnayOrGonderim ? true : (bool?)null) //eyk ya gönderildi ise eyk da onay null olanlar gelecek  
-                                                                    && p.TDODanismanTalepTipID == (danismanTalepTipId ?? p.TDODanismanTalepTipID)
+                                                                    && danismanDegisiklikTipIds.Contains(p.TDODanismanTalepTipID)
                                                                     && (
                                                                         (isEykdaOnayOrGonderim ? p.EYKDaOnaylandiOnayTarihi : p.EYKYaGonderildiIslemTarihi) >= baslangicTarihi && (isEykdaOnayOrGonderim ? p.EYKDaOnaylandiOnayTarihi : p.EYKYaGonderildiIslemTarihi) <= bitisTarihi)
                     )
@@ -389,7 +410,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             var raporData = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.EnstituKod == enstituKod
-                                                                    && p.TDODanismanTalepTipID == (danismanTalepTipId ?? p.TDODanismanTalepTipID)
+                                                                    && danismanDegisiklikTipIds.Contains(p.TDODanismanTalepTipID)
                                                                     && p.EYKYaGonderildi == (!isEykdaOnayOrGonderim ? true : p.EYKYaGonderildi)
                                                                     && p.EYKDaOnaylandi == (isEykdaOnayOrGonderim ? true : (bool?)null) //eyk ya gönderildi ise eyk da onay null olanlar gelecek  
                                                                     && (
