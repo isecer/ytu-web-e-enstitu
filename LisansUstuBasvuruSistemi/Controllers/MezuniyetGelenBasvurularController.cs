@@ -117,7 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IsOnaylandiOrDuzeltme = td != null ? td.IsOnaylandiOrDuzeltme : null,
                         MezuniyetBasvurulariTezDosyasi = td,
                         UzatmaSuresiGun = mOt.MBSinavUzatmaSuresiGun,
-                        MezuniyetSuresiGun = mOt.MBSinavUzatmaSuresiGun,
+                        MezuniyetSuresiGun = mOt.MBSinavUzatmaSinavAlmaSuresiMaxGun,
                         EYKTarihi = s.EYKTarihi,
                         MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Select(sy => sy.MezuniyetYayinTurID).ToList(),
                         FormNo = jOf != null ? jOf.UniqueID : "",
