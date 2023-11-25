@@ -34,6 +34,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? TDDurumID { get; set; }
         public bool? TeslimFormDurumu { get; set; }
         public int? MezuniyetDurumID { get; set; }
+        public int? TezKontrolKullaniciId { get; set; }
         public DateTime? MBaslangicTarihi { get; set; }
         public DateTime? MBitisTarihi { get; set; }
 

@@ -11,6 +11,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
     {
 
         public const string MezuniyetBasvurusuAcikmi = "Mezuniyet Başvurusu Açık";
+        public const string TezDosyasiYuklendigindeSorumluyaAta = "Tez Dosyası Yüklendiğinde Tez Sorumlusuna Ata";
         public const string YeniMezuniyetBasvurusundaMailGonder = "Yeni Mezuniyet Başvurusunda Mail Gönder"; 
 
         public static void SetAyarMz(string ayarAdi, string ayarDegeri, string enstituKod)

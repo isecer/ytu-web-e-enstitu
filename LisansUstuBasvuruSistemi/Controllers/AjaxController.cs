@@ -2325,19 +2325,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var itemE = sablon.Enstituler;
                         var enstituL = sablon.Enstituler;
-                        var paramereDegerleri = new List<MailReplaceParameterDto>();
+                        var mailParameterDtos = new List<MailParameterDto>();
                         var parametreler = sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
 
                         if (parametreler.Any(a => a == "@EnstituAdi"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EnstituAdi", Value = enstituL.EnstituAd });
+                            mailParameterDtos.Add(new MailParameterDto { Key = "EnstituAdi", Value = enstituL.EnstituAd });
                         if (parametreler.Any(a => a == "@WebAdresi"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = itemE.WebAdresi, IsLink = true });
+                            mailParameterDtos.Add(new MailParameterDto { Key = "WebAdresi", Value = itemE.WebAdresi, IsLink = true });
                         if (parametreler.Any(a => a == "@AdSoyad"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = kModel.AdSoyad });
+                            mailParameterDtos.Add(new MailParameterDto { Key = "AdSoyad", Value = kModel.AdSoyad });
                         var eMailList = new List<MailSendList> { new MailSendList { EMail = kModel.Email, ToOrBcc = true } };
                         if (sablon.GonderilecekEkEpostalar.IsNullOrWhiteSpace() == false)
                             eMailList.AddRange(sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }).ToList());
-                        var mCOntent = SystemMails.GetSystemMailContent(enstituL.EnstituAd, sablon.SablonHtml, sablon.SablonAdi, paramereDegerleri);
+                        var mCOntent = SystemMails.GetSystemMailContent(enstituL.EnstituAd, sablon.SablonHtml, sablon.SablonAdi, mailParameterDtos);
                         var attach = new List<Attachment>();
                         foreach (var item in sablon.MailSablonlariEkleris)
                         {

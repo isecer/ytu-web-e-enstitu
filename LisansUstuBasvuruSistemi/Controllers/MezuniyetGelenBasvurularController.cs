@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new FmMezuniyetBasvurulari() { PageSize = 50 };
             var mbGelenBKayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-            if (mbGelenBKayitYetki)
+            if (mbGelenBKayitYetki && !sMezuniyetBid.HasValue)
             {
                 model.MezuniyetSurecID = MezuniyetBus.GetMezuniyetAktifSurecId(EnstituBus.GetSelectedEnstitu(ekd));
             }
@@ -114,6 +114,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MezuniyetTarihi = s.MezuniyetTarihi,
                         SrTalebi = srT,
                         SRDurumID = srT.SRDurumID,
+                        TezKontrolKullaniciID = s.TezKontrolKullaniciID,
                         TeslimFormDurumu = srT != null && s.MezuniyetBasvurulariTezTeslimFormlaris.Any(),
                         IsOnaylandiOrDuzeltme = td != null ? td.IsOnaylandiOrDuzeltme : null,
                         MezuniyetBasvurulariTezDosyasi = td,
@@ -215,6 +216,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     ? q.Where(p => !p.SrTalebi.MezuniyetSinavDurumID.HasValue || p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value)
                     : q.Where(p => p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value);
             }
+
+            if (model.TezKontrolKullaniciId.HasValue) q = q.Where(p => p.TezKontrolKullaniciID == model.TezKontrolKullaniciId);
             if (model.TeslimFormDurumu.HasValue) q = q.Where(p => p.TeslimFormDurumu == model.TeslimFormDurumu.Value);
             if (model.MezuniyetDurumID != -1)
             {
@@ -317,6 +320,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.TDDurumID = new SelectList(MezuniyetBus.GetCmbTezDurumListe(true), "Value", "Caption", model.TDDurumID);
             ViewBag.IsTezDiliTr = new SelectList(MezuniyetBus.GetCmbTezDili(true), "Value", "Caption", model.IsTezDiliTr);
             ViewBag.MezuniyetSinavDurumID = new SelectList(MezuniyetBus.GetCmbMzSinavDurumListe(true), "Value", "Caption", model.MezuniyetSinavDurumID);
+            ViewBag.TezKontrolKullaniciId = new SelectList(MezuniyetBus.GetCmbAktifTezKontrolSorumlulari(true), "Value", "Caption", model.TezKontrolKullaniciId);
             ViewBag.TeslimFormDurumu = new SelectList(MezuniyetBus.GetCmbTeslimFormDurumu(true), "Value", "Caption", model.TeslimFormDurumu);
             ViewBag.MezuniyetDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetDurumId(true), "Value", "Caption", model.MezuniyetDurumID);
             return View(model);

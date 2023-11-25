@@ -443,7 +443,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.MBTezTeslimSuresiGun = sItem.MBTezTeslimSuresiGun ?? 0;
                 item.MBSRTalebiKacGunSonraAlabilir = sItem.MBSRTalebiKacGunSonraAlabilir ?? 0;
                 item.MBasvuruEtikNotKriteri = sItem.MBasvuruEtikNotKriteri;
-                item.MBasvuruSeminerNotKriteri = sItem.MBasvuruSeminerNotKriteri; 
+                item.MBasvuruSeminerNotKriteri = sItem.MBasvuruSeminerNotKriteri;
 
             }
             var zmMList = Management.GetZmMailZamanData();
@@ -511,7 +511,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                            IslemYapan = (k.Ad + " " + k.Soyad),
                            IslemYapanIP = s.IslemYapanIP
                        }).First();
-             
+
             mdl.SelectedTabIndex = tbInx;
 
             return View(mdl);
@@ -565,7 +565,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.ToplamBasvuruBilgisi = indexModel;
 
                 #endregion
-                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "getMsDetAnaBilgi", mdl);
+                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "GetMsDetAnaBilgi", mdl);
             }
             if (tbInx == 2)
             {
@@ -610,7 +610,34 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              }).ToList();
 
                 #endregion
-                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "getYonetmelikBilgi", qData);
+                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "GetYonetmelikBilgi", qData);
+            }
+            if (tbInx == 3)
+            {
+                #region YayinKontrolBilgileri
+
+                var surec = _entities.MezuniyetSurecis.First(f => f.MezuniyetSurecID == id);
+
+
+
+                var yayinKontrolData = (from kul in _entities.Kullanicilars.Where(p => p.YetkiGrupID == 13 && p.IsAktif && p.EnstituKod == surec.EnstituKod)
+
+                                        select new MezuniyetSureciYayinKontrolBilgiDto
+                                        {
+                                            KullaniciId = kul.KullaniciID,
+                                            UserKey = kul.UserKey,
+                                            ResimAdi = kul.ResimAdi,
+                                            AdSoyad = kul.Ad + " " + kul.Soyad,
+                                            SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
+                                            SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == c.TezKontrolKullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+                                            SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+                                            GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
+                                            GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == c.TezKontrolKullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+                                            GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.IslemYapanID == kul.KullaniciID)),
+                                        }).OrderByDescending(o => o.GenelToplamOnay).ToList();
+
+                #endregion
+                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "GetMsYayinKontrolBilgileri", yayinKontrolData);
             }
             return Content(page, "text/html");
         }

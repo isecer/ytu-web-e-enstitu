@@ -2,12 +2,11 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @model MSurecDetay
 @{
-    Layout = null;
-    string color = "color=blue";
-    var tbName = TabAdiEnum.MezuniyetSureciTn + "-" + id;
+    Layout = null; 
+    var tbName = TabAdiEnum.MezuniyetSureciTn + "-" + Model.MezuniyetSurecID;
 }
 <style>
-    .myCaptionTdx {
+    . {
         text-align: right;
         font-weight: bold;
         font-size: 11pt;
@@ -35,11 +34,11 @@
     <div class="panel-body" style="margin: 0px; padding: 0px;">
         <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
             <ul class="nav nav-tabs MsTabBtn_@Model.MezuniyetSurecID" role="tablist">
-                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="glyphicon glyphicon-time myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Süreç</span></a></li>
-                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Yönetmelik Bilgileri</span></a></li>
-                <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',3)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Tez Kontrol Bilgileri</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="glyphicon glyphicon-time" ></i> <span class="" style="text-align:right;font-size:9pt;margin:0px;">Süreç</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt fa-lg" ></i> <span class="" style="text-align:right;font-size:9pt;margin:0px;">Yönetmelik Bilgileri</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',3)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-file-text-o fa-lg" ></i> <span class="" style="text-align:right;font-size:9pt;margin:0px;">Tez Kontrol Bilgileri</span></a></li>
 
-                <li><a href="javascript:void(0);" onclick="subData('@Model.MezuniyetSurecID');" class="panel-refresh"><span class="fa fa-refresh myValueTdx" style="@color"></span></a></li>
+                <li><a href="javascript:void(0);" onclick="subData('@Model.MezuniyetSurecID');" class="panel-refresh"><span class="fa fa-refresh myValueTdx" ></span></a></li>
 
             </ul>
             <div class="panel-body tab-content" style="padding:0px;">

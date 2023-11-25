@@ -28,29 +28,18 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public bool IsJuriBilgi { get; set; }
         public string AciklamaBasligi { get; set; }
         public string AciklamaDetayi { get; set; }
-        public bool AciklamaTextAlingCenter { get; set; }
+        public bool AciklamaTextAlingCenter { get; set; } = false;
         public string GrupBasligi { get; set; }
-        public int CaptTdWidth { get; set; }
-        public List<MailTableRowDto> Detaylar { get; set; }
+        public int CaptTdWidth { get; set; } = 200;
+        public List<MailTableRowDto> Detaylar { get; set; } = new List<MailTableRowDto>();
         public bool Success { get; set; }
-        public MailTableContentDto()
-        {
-            CaptTdWidth = 200;
-            Detaylar = new List<MailTableRowDto>();
-            AciklamaTextAlingCenter = false;
-        }
-
     }
     public class MailTableRowDto
     {
-        public bool Colspan2 { get; set; }
+        public bool Colspan2 { get; set; } = false;
         public int SiraNo { get; set; }
         public string Baslik { get; set; }
         public string Aciklama { get; set; }
-        public MailTableRowDto()
-        {
-            Colspan2 = false;
-        }
     }
     public class MailSendList
     {
@@ -186,13 +175,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public string Title { get; set; }
         public string Content { get; set; }
         public string HtmlContent { get; set; }
-        public List<string> AddMailList { get; set; }
-        public MailContentDetailDto()
-        {
-            AddMailList = new List<string>();
-        }
+        public List<string> AddMailList { get; set; } = new List<string>();
     }
-    public class MailReplaceParameterDto
+    public class MailParameterDto
     {
         public string Key { get; set; }
         public string Value { get; set; }
@@ -200,9 +185,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     }
     public static class SystemMails
     {
-        public static MailContentDetailDto GetSystemMailContent(string enstituAdi, string sablonHtml, string sablonAdi, List<MailReplaceParameterDto> rpModel)
+        public static MailContentDetailDto GetSystemMailContent(string enstituAdi, string sablonHtml, string sablonAdi, List<MailParameterDto> rpModel)
         {
-            rpModel = rpModel ?? new List<MailReplaceParameterDto>();
+            rpModel = rpModel ?? new List<MailParameterDto>();
             var model = new MailContentDetailDto
             {
                 Title = sablonAdi,

@@ -45,6 +45,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int MezTezKontrolTezDosyasiYuklendi = 73;
         public const int MezTezKontrolTezDosyasiBasarili = 74;
         public const int MezTezKontrolTezDosyasiOnaylanmadi = 75;
+        public const int MezTezKontrolTezDosyasiYuklendiKontrolYetkilisi = 76;
 
         public const int MezSinavDegerlendirmeHatirlantmaDanismanDr = 140;
         public const int MezSinavDegerlendirmeHatirlantmaDanismanYl = 141;

@@ -212,9 +212,12 @@
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="150">Salon Rez. Durumu</td>
+                                            <td width="150">Salon Rez / Sınav</td>
                                             <td>
                                                 @Html.DropDownList("SRDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("MezuniyetSinavDurumID", null, new { @class = "form-control" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -226,11 +229,9 @@
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="150">Sınav / Tez Kontrol</td>
-                                            <td>
-                                                @Html.DropDownList("MezuniyetSinavDurumID", null, new { @class = "form-control" })
-                                            </td>
+                                            <td width="150">Tez Kontrol / Yetkili</td>
                                             <td> @Html.DropDownList("TDDurumID", null, new { @class = "form-control" })</td>
+                                            <td> @Html.DropDownList("TezKontrolKullaniciId", null, new { @class = "form-control" })</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -401,7 +402,7 @@
 </div>
 <div id="msgsB" style="display: none;">
 </div>
-@if (Model.RowCount > 0 && Model.Data.First().TezDanismanID == UserIdentity.Current.Id)
+@if (Model.RowCount > 0 && (Model.Data.First().TezDanismanID == UserIdentity.Current.Id || Model.SMezuniyetBID.HasValue))
 {
     <script>
         $(function () {
@@ -1206,7 +1207,7 @@
                                          success: function (result) {
                                              PanelRefresh(pnlx, true);
                                              if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                             getDetailx(MBID); 
+                                             getDetailx(MBID);
                                              var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
                                              $(_clsBtn).click();
 
