@@ -16,7 +16,7 @@
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
     var tab2IsVisible = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.MezuniyetJuriOneriFormlaris.Any());
-    var tab3IsVisible = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.EYKDaOnaylandi == true && Model.EYKTarihi.HasValue && Model.MezuniyetSRModel != null);
+    var tab3IsVisible = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.EykDaOnaylandi == true && Model.EYKTarihi.HasValue && Model.MezuniyetSrModel != null);
     var tab4IsVisible = (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili) || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.MezuniyetBasvurulariTezDosyalariDtos.Any());
     var tab5IsVisible = (Model.KullaniciID == UserIdentity.Current.Id || kayitYetki) && (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi) && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili && (isTdYuklemeKapali || bezCiltForm != null);
 }

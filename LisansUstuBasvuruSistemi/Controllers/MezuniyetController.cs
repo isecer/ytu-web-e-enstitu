@@ -1198,12 +1198,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Salon rezervasyonu " + srDurum.DurumAdi + " olduğundan düzeltme işlemi yapılamaz.");
                 }
             }
+            else
+            {
+                if (!mezuniyetBasvurusu.EYKTarihi.HasValue)
+                {
+                    mmMessage.Messages.Add("Enstitü tarafındanEyk tarihi girilmeden salon rezervasyonu yapılamaz!");
+                }
+            }
             if (kModel.MezuniyetSinavDurumID.HasValue && mezuniyetBasvurusu.MezuniyetSinavDurumID != MezuniyetSinavDurumEnum.SonucGirilmedi)
             {
                 mmMessage.Messages.Add("Sınav sonuç bilgisi girilen rezervasyonlar üzerinde düzeltme işlemi yapılamaz!");
 
             }
 
+           
             if (mezuniyetBasvurusu.SRTalepleris.Any(a => (a.SRDurumID == SrSalonDurumEnum.Alındı || a.SRDurumID == SrSalonDurumEnum.OnTalep) && a.MezuniyetSinavDurumID != MezuniyetSinavDurumEnum.Uzatma && a.SRTalepID != kModel.SRTalepID))
             {
                 mmMessage.Messages.Add("Aktif bir salon rezervasyonu kaydınız bulunmaktadır. Tekrar rezervasyon işlemi yapamazsınız.");

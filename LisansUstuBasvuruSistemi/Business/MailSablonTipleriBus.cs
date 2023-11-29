@@ -8,6 +8,8 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class MailSablonTipleriBus
     {
+
+
         public static List<CmbIntDto> GetCmbMailSablonlari(string enstituKodu, bool bosSecimVar = false, bool? sistemMailFiltre = null)
         {
             var dct = new List<CmbIntDto>();
@@ -28,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.MailSablonTipleris.Where(p => isOlusturulmayanlar == true ? !p.MailSablonlaris.Any() : true && p.SistemMaili == (sistemMaili ?? p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
+                var data = db.MailSablonTipleris.Where(p => isOlusturulmayanlar == true ? !p.MailSablonlaris.Any() : p.SistemMaili == (sistemMaili ?? p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MailSablonTipID, Caption = item.SablonTipAdi });
@@ -36,19 +38,7 @@ namespace LisansUstuBasvuruSistemi.Business
             } 
             return dct;
 
-        }
-
-        public static List<int> GetOgrenimTurKods()
-        {
-            var oTurList = new List<int>
-            {
-                1, // - NORMAL ÖĞRETİM
-                //oTurList.Add(2);// - İKİNCİ ÖĞRETİM
-                3, // - UZAKTAN ÖĞRETİM
-                4 // - AÇIK ÖĞRETİM 
-            };
-            return oTurList;
-        }
+        } 
     }
 
 }

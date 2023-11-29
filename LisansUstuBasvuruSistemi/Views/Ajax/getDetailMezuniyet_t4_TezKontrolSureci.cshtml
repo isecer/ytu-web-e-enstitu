@@ -10,10 +10,8 @@
     Layout = null;
     var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
     var tdKayitYetki = kayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
-
-
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-
+    var tezKontrolYetkiliAta = RoleNames.MezuniyetGelenBasvurularTezKontrolYetkiliAtama.InRole();
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
     var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true);
@@ -28,72 +26,171 @@
             <table style="width:100%;">
                 <tbody>
                     <tr>
-                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-file-text-o fa-lg"></i> Tez Kontrol Süreci <small style="font-weight:normal;">(Tez kontrolü için tezinizin pdf formatındaki kopyasını buraya yükleyiniz)</small></td>
+                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-file-text-o fa-lg"></i> Tez Kontrol Süreci</td>
                     </tr>
                     <tr>
                         <td style="padding-left:10px;text-align:left;">
                             @using (Ajax.BeginForm("TezDosyaEklePost", "Mezuniyet", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = frmId }))
                             {
+                                var colorTky = !Model.TezKontrolKullaniciID.HasValue ? "#353333" : "#2f8c8d";
+                                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8pt;padding:6px 10px;min-height:30px;">
+                                    <b>Tez Kontrol Yetkilisi:</b><br />
+                                    <div class="input-group">
+                                        <table style="width:100%;table-layout:fixed;">
+                                            <tr>
+
+                                                <td width="35">
+                                                    <span class="input-group-addon" style="cursor:pointer;background-color:@colorTky;"><span class="fa fa-user fa-lg"></span></span>
+                                                </td>
+
+
+                                                @if (tezKontrolYetkiliAta && !isTdYuklemeKapali)
+                                                {
+                                                    <td>
+                                                        <input type="text" class="form-control tezKontrolYetkilis" id="TezKontrolYetkilisi_@Model.MezuniyetBasvurulariID" style="width: 100%;" />
+                                                        <script>
+
+                                                            $('#TezKontrolYetkilisi_@Model.MezuniyetBasvurulariID').select2({
+                                                                    tags: true,
+                                                                    tokenSeparators: [",", " "],
+                                                                    minimumInputLength: 0,
+                                                                    maximumSelectionSize: 1,
+                                                                    multiple: false,
+                                                                    ajax: {
+                                                                        url: '@Url.Action("GetTezkontrolYetkilisi", "Ajax")',
+                                                                        dataType: "json",
+                                                                        data: function (term, page) {
+                                                                            return {
+                                                                                'term': term
+                                                                            }
+
+                                                                        },
+                                                                        results: function (data, page) {
+                                                                            return {
+                                                                                results: data
+                                                                            };
+                                                                        }
+                                                                    },
+                                                                    formatResult: function (result) {
+                                                                        var returnhtml =
+                                                                              "<table  style='margin:0px;border-top:none;font-size:8pt;text-align:left;'>"+
+                                                                                    "<tr>" +
+                                                                                         "<td width='30'><img src='" + result.ResimAdi + "' style='width:25px;height:25px;cursor:pointer;' class='img-circle img-thumbnail'></td>" +
+                                                                                         "<td>" + result.text + "</td>" +
+                                                                                    "</tr>"+
+                                                                            "</table>";
+                                                                        return returnhtml;
+                                                                    }
+                                                                });
+                                                        </script>
+
+                                                        @if (Model.TezKontrolKullaniciID.HasValue)
+                                                        {
+                                                            <script>
+                                                                setTimeout(function () {
+                                                                    var secilen = @Html.Raw(Json.Encode(new { id = Model.TezKontrolKullaniciID, text = Model.TezKontrolYetkilisiAdSoyad }));
+                                                                    $("#TezKontrolYetkilisi_@Model.MezuniyetBasvurulariID").select2('data', secilen);
+                                                                }, 1200);
+                                                            </script>
+                                                        }
+
+
+
+                                                    </td>
+                                                    <td width="104" style="padding:1px;">
+                                                        <span class="input-group-addon" onclick="TezKontrolYetkilisiKaydet(@Model.MezuniyetBasvurulariID);" style="background-color:@colorTky;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(Model.TezKontrolKullaniciID.HasValue ? "Değiştir" : "Kaydet")</span>
+
+                                                        <script>
+                                                            function TezKontrolYetkilisiKaydet(mezuniyetBasvurulariID) {
+                                                                var tezKontrolKullaniciID = $('#TezKontrolYetkilisi_' + mezuniyetBasvurulariID).val();
+                                                                var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
+                                                                PanelRefresh(_panel, false);
+                                                                $.ajax({
+                                                                    url: '@Url.Action("TezKontrolYetkilisiKaydet", "MezuniyetGelenBasvurular")',
+                                                                    data: { mezuniyetBasvurulariID, tezKontrolKullaniciID },
+                                                                    success: function (result) {
+                                                                        PanelRefresh(_panel, true);
+                                                                        toastr[result.IsSuccess ? "success" : "error"](result.MmMessage.Messages.join('<br/>'), result.MmMessage.Title);
+                                                                        if (result.IsSuccess) {
+                                                                            getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                        }
+                                                                    },
+                                                                    error: function (err) {
+                                                                        PanelRefresh(_panel, true);
+                                                                        alert(err.responseText);
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script>
+                                                    </td>
+                                                    <td width="120">
+                                                      
+                                                    </td>
+                                                  
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        <input type="text" class="form-control" readonly="readonly" value="@(Model.TezKontrolYetkilisiAdSoyad.IsNullOrWhiteSpace() ? "Belirlenmedi.." : Model.TezKontrolYetkilisiAdSoyad)" style="width: 100%;color:black;" />
+                                                    </td>
+                                                }
+
+                                            </tr>
+
+                                        </table>
+                                        <input type="text" class="hide" name="RowID" value="@Model.RowID" />
+                                        <input type="text" class="hide" name="MezuniyetBasvurulariTezDosyaID" value="@(onayBekleyen != null ? onayBekleyen.MezuniyetBasvurulariTezDosyaID.ToString() : "")" />
+                                        <input class="hide" type="file" name="BelgeDosyasi" accept="application/pdf" id="Belge_@Model.MezuniyetBasvurulariID" onchange="ChangeFile(this,'@Model.MezuniyetBasvurulariID');" />
+
+                                    </div>
+                                </div>
+
+
                                 var isBelgeVar = onayBekleyen != null;
                                 var isOnaylandi = isBelgeVar && onayBekleyen.IsOnaylandiOrDuzeltme.HasValue;
                                 var colorKb = !isBelgeVar ? "#353333" : "#2f8c8d";
                                 if (bezCiltForm == null && !isTdYuklemeKapali)
                                 {
                                     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8pt;padding:6px 10px;min-height:30px;">
-                                        <table style="width:100%;">
-                                            <tbody>
+                                        <b>Tez kontrolü için tezinizin pdf formatındaki kopyasını buraya yükleyiniz</b><br />
+                                        <div class="input-group">
+                                            <table style="width:100%;table-layout:fixed;">
                                                 <tr>
-                                                    <td style="padding-left:10px;text-align:left;">
-                                                        <table style="width:100%;table-layout:fixed;">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td style="text-align:left;">
-                                                                        <div class="input-group">
-                                                                            <table style="width:100%;table-layout:fixed;">
-                                                                                <tr>
-                                                                                    @if (isBelgeVar)
-                                                                                    {
-                                                                                        <td width="35">
-                                                                                            <span class="input-group-addon openFl" id="BelgeIcon_@Model.MezuniyetBasvurulariID" FPath="@onayBekleyen.TezDosyaYolu" FName="@onayBekleyen.TezDosyaAdi" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" class="form-control openFl" id="BelgeAdi_@Model.MezuniyetBasvurulariID" FPath="@onayBekleyen.TezDosyaYolu" FName="@onayBekleyen.TezDosyaAdi" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(isBelgeVar ? onayBekleyen.TezDosyaAdi : "Dosya Yüklenmedi")">
-                                                                                        </td>
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        <td width="35">
-                                                                                            <span class="input-group-addon" id="BelgeIcon_@Model.MezuniyetBasvurulariID" style="background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" class="form-control" id="BelgeAdi_@Model.MezuniyetBasvurulariID" style="cursor:default;color:@colorKb;" readonly="readonly" value="@(isBelgeVar ? "" : "Belge Seçilmedi")">
-                                                                                        </td>
-                                                                                    }
-                                                                                    <td width="104" style="padding:1px;" class="@(isOnaylandi ? "hide" : "")">
-                                                                                        <span class="input-group-addon" id="DosyaSec_@Model.MezuniyetBasvurulariID" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@Model.MezuniyetBasvurulariID').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
-                                                                                    </td>
-                                                                                    <td width="120" style="padding:1px;">
-                                                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@Model.MezuniyetBasvurulariID" onclick="BasvuruBelgeKaydet('@frmId',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(isBelgeVar ? "Değiştir" : "Kaydet")</span>
-                                                                                    </td>
-
-                                                                                </tr>
-
-                                                                            </table>
-                                                                            <input type="text" class="hide" name="RowID" value="@Model.RowID" />
-                                                                            <input type="text" class="hide" name="MezuniyetBasvurulariTezDosyaID" value="@(onayBekleyen != null ? onayBekleyen.MezuniyetBasvurulariTezDosyaID.ToString() : "")" />
-                                                                            <input class="hide" type="file" name="BelgeDosyasi" accept="application/pdf" id="Belge_@Model.MezuniyetBasvurulariID" onchange="ChangeFile(this,'@Model.MezuniyetBasvurulariID');" />
-
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-
-                                                            </tbody>
-                                                        </table>
+                                                    @if (isBelgeVar)
+                                                    {
+                                                        <td width="35">
+                                                            <span class="input-group-addon openFl" id="BelgeIcon_@Model.MezuniyetBasvurulariID" FPath="@onayBekleyen.TezDosyaYolu" FName="@onayBekleyen.TezDosyaAdi" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control openFl" id="BelgeAdi_@Model.MezuniyetBasvurulariID" FPath="@onayBekleyen.TezDosyaYolu" FName="@onayBekleyen.TezDosyaAdi" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(isBelgeVar ? onayBekleyen.TezDosyaAdi : "Dosya Yüklenmedi")">
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td width="35">
+                                                            <span class="input-group-addon" id="BelgeIcon_@Model.MezuniyetBasvurulariID" style="background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control" id="BelgeAdi_@Model.MezuniyetBasvurulariID" style="cursor:default;color:@colorKb;" readonly="readonly" value="@(isBelgeVar ? "" : "Belge Seçilmedi")">
+                                                        </td>
+                                                    }
+                                                    <td width="104" style="padding:1px;" class="@(isOnaylandi ? "hide" : "")">
+                                                        <span class="input-group-addon" id="DosyaSec_@Model.MezuniyetBasvurulariID" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@Model.MezuniyetBasvurulariID').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
                                                     </td>
+                                                    <td width="120" style="padding:1px;">
+                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@Model.MezuniyetBasvurulariID" onclick="BasvuruBelgeKaydet('@frmId',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(isBelgeVar ? "Değiştir" : "Kaydet")</span>
+                                                    </td>
+
                                                 </tr>
-                                            </tbody>
-                                        </table>
+
+                                            </table>
+                                            <input type="text" class="hide" name="RowID" value="@Model.RowID" />
+                                            <input type="text" class="hide" name="MezuniyetBasvurulariTezDosyaID" value="@(onayBekleyen != null ? onayBekleyen.MezuniyetBasvurulariTezDosyaID.ToString() : "")" />
+                                            <input class="hide" type="file" name="BelgeDosyasi" accept="application/pdf" id="Belge_@Model.MezuniyetBasvurulariID" onchange="ChangeFile(this,'@Model.MezuniyetBasvurulariID');" />
+
+                                        </div>
                                     </div>
+
                                 }
                             }
                             @if (Model.MezuniyetBasvurulariTezDosyalariDtos.Count > 0)
@@ -103,7 +200,7 @@
                                     <thead>
                                         <tr class="info">
                                             <th width="45"></th>
-                                            <th width="125" title="Kontrol Sayısı / Dosya Yükleme Tarihi">K. Sayısı / Tarih</th>
+                                            <th width="125" title="Kontrol Sayısı / Dosya Yükleme Tarihi">Kontrol No</th>
                                             <th>Tez Dosyası</th>
                                             <th width="180">Onay Durum</th>
                                         </tr>
@@ -127,7 +224,7 @@
                                                     </ul>
                                                 </td>
                                                 <td>
-                                                    @(itemTd.SiraNo + ". Kontrol") <br /> @itemTd.IslemTarihi.ToFormatDateAndTime()
+                                                    @(itemTd.SiraNo + ". Kontrol") <br /> @itemTd.YuklemeTarihi.ToFormatDateAndTime()
                                                 </td>
                                                 <td>
                                                     <span class="openFl" style="cursor:pointer;" FPath="@itemTd.TezDosyaYolu" FName="@itemTd.TezDosyaAdi"><i class="fa fa-file-pdf-o fa-lg"></i> @itemTd.TezDosyaAdi</span>
@@ -179,16 +276,7 @@
                                                                                             }
                                                                                         </td>
                                                                                     </tr>
-                                                                                    @if (!itemTd.TezKontrolYetkiliAdSoyad.IsNullOrWhiteSpace())
-                                                                                    {
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd" width="120" style="color:@rwColor">Tez Kontrol Yetkilisi</td>
-                                                                                            <td class="CaptionTd" width="10" style="color:@rwColor">:</td>
-                                                                                            <td class="ValueTd" style="color:@rwColor">
-                                                                                                @itemTd.TezKontrolYetkiliAdSoyad
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    }
+
                                                                                     @if (itemTd.IsOnaylandiOrDuzeltme.HasValue)
                                                                                     {
                                                                                         <tr>

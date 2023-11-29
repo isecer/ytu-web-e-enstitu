@@ -328,7 +328,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var enstitu = tiAraRapor.TIBasvuru.Enstituler;
 
-                    var sablonlar = db.MailSablonlaris.Where(p => sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var abdL = tiAraRapor.TIBasvuru.Programlar.AnabilimDallari;
@@ -548,7 +548,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         JuriTipAdi = item.JuriTipAdi,
                     }));
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
 

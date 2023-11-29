@@ -110,6 +110,7 @@ namespace BiskaUtil
         {
             var fields = RoleFields();
             var roles = new List<RoleAttribute>();
+            int siraNo = 0;
             foreach (var field in fields)
             {
                 //var attr = field.GetCustomAttribute<RoleAttribute>(); 
@@ -123,9 +124,10 @@ namespace BiskaUtil
                     attr.RolAdi = key;
                     var rolKey = field.DeclaringType?.FullName + "." + field.Name;
                     if (attr.RolID == 0) attr.RolID = 1000000000 + ToCrc16(rolKey);
+                    attr.SiraNo = siraNo++;
                     roles.Add(attr);
                 }
-            }
+            } 
             return roles.ToArray();
         }
     

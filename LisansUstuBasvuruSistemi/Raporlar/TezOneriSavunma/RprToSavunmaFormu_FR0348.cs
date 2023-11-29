@@ -2,6 +2,7 @@
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
@@ -28,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                             {
                                 k.OgrenciNo,
                                 s.FormKodu,
+                                mb.YeterlikSozluSinavTarihi,
                                 AdSoyad = k.Ad + " " + k.Soyad,
                                 e.EnstituAd,
                                 abd.AnabilimDaliAdi,
@@ -59,6 +61,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 xrQRCode.ImageUrl = data.urlAdd;
                 xrQRCode.Image = data.urlAdd.CreateQrCode();
 
+                cellYeterlikBasariTarihi.Text = data.YeterlikSozluSinavTarihi.ToFormatDate();
                 cellOgrenciNo.Text = data.OgrenciNo;
                 cellOgrenciAdSoyad.Text = data.AdSoyad;
                 cellOgrenciEnstituAdi.Text = data.EnstituAd;

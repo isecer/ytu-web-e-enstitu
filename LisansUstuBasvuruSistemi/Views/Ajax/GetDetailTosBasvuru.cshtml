@@ -690,7 +690,7 @@
                                                         @foreach (var itemJr in item.ToBasvuruSavunmaKomites)
                                                         {
                                                             var isKomiteTezDanismani = itemJr.IsTezDanismani;
-                                                            var openRow =  (isDanismani && isKomiteTezDanismani);
+                                                            var openRow = (isDanismani && isKomiteTezDanismani);
                                                             var openDegerlendirme = inxRw == 1 && srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.ToBasvuruSavunmaDurumID.HasValue) || degerlendirmeDuzeltmeYetki);
                                                             var sendLink = inxRw == 1 && srTalebiYapildi && (isDanismani && !isKomiteTezDanismani && item.ToBasvuruSavunmaKomites.Count != item.ToBasvuruSavunmaKomites.Count(c => c.ToBasvuruSavunmaDurumID.HasValue) || (degerlendirmeDuzeltmeYetki));
 
@@ -883,7 +883,7 @@
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            @("Henüz Değerlendirilmedi")
+                                                                                            @(itemJr.ToBasvuruSavunmaDurumID.HasValue ? (itemJr.ToBasvuruSavunmaDurumlari.DurumAdi) : "Henüz Değerlendirilmedi")
                                                                                         }
                                                                                     </td>
                                                                                 </tr>
@@ -900,9 +900,9 @@
                                                                                                     {
                                                                                                         <textarea placeholder="Tez Önerisi Savunma Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
                                                                                                     }
-                                                                                                    else
+                                                                                                    else if(!itemJr.Aciklama.IsNullOrWhiteSpace())
                                                                                                     {
-                                                                                                        @itemJr.Aciklama
+                                                                                                        <b>Açıklama:</b> @itemJr.Aciklama
                                                                                                     }
                                                                                                 </td>
                                                                                             </tr>

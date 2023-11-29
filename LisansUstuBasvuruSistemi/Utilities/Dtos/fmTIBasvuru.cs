@@ -65,6 +65,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string TiAraRaporAktifDonemAdi { get; set; }
         public DateTime? ToplantiTarihi { get; set; }
         public TimeSpan? ToplantiSaati { get; set; }
+        public List<string> OnayYapmayanKomiteEmails { get; set; }
 
     }
     public class TiAraraporFiltreModel

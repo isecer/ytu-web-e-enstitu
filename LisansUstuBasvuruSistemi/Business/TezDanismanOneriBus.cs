@@ -689,7 +689,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipID).ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var prgL = tdoBasvuru.Programlar;
@@ -902,7 +902,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipID).ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var prgL = tdoBasvuru.Programlar;
@@ -1129,7 +1129,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipID).ToList();
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
-                    var sablonlar = db.MailSablonlaris.Where(p => sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     var prgL = tdoBasvuru.Programlar;
                     var ogrS = db.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
 
@@ -1300,7 +1300,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipID).ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var prgL = tdoBasvuru.Programlar;
@@ -1505,7 +1505,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipID).ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var prgL = tdoBasvuru.Programlar;

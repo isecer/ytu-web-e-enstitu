@@ -11,6 +11,8 @@
     var kontrolEdilmeyenBasvuruIds = (List<int>)ViewBag.kontrolEdilmeyenBasvuruIds;
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
+    var onayYapmayanKomiteIds = (List<int>)ViewBag.onayYapmayanKomiteIds;
+    var onayYapmayanJuriEmails = (List<string>)ViewBag.onayYapmayanJuriEmails;
     var kayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
 }
 
@@ -107,7 +109,18 @@
                                         <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
                                     </li>
                                 }
-
+                                if (onayYapmayanKomiteIds.Any())
+                                {
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",onayYapmayanKomiteIds)',true,false)" title="Listelenen Başvurular için Onay Yapmayan @onayYapmayanKomiteIds.Count  Komite Üyesine Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> K</i></a>
+                                    </li>
+                                }
+                                if (onayYapmayanJuriEmails.Any())
+                                {
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",onayYapmayanJuriEmails)',true,false)" title="Listelenen Başvurular için Değerlendirme Yapmayan @onayYapmayanJuriEmails.Count Jüri Üyesine Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> J</i></a>
+                                    </li>
+                                }
 
                             }
                             <li>

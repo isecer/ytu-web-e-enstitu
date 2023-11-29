@@ -14,6 +14,7 @@
     var toplantiTalepYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var onayYapmayanKomiteEmails = (List<string>)ViewBag.onayYapmayanKomiteEmails;
 }
 
 <div class="row">
@@ -48,6 +49,12 @@
                             {
                                 <li>
                                     <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                </li>
+                            }
+                            if (onayYapmayanKomiteEmails.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",onayYapmayanKomiteEmails)',true,false)" title="Listelenen Başvurular için Değerlendirme Yapmayan @onayYapmayanKomiteEmails.Count Komite Üyesine Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> K</i></a>
                                 </li>
                             }
 

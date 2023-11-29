@@ -320,7 +320,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.TDDurumID = new SelectList(MezuniyetBus.GetCmbTezDurumListe(true), "Value", "Caption", model.TDDurumID);
             ViewBag.IsTezDiliTr = new SelectList(MezuniyetBus.GetCmbTezDili(true), "Value", "Caption", model.IsTezDiliTr);
             ViewBag.MezuniyetSinavDurumID = new SelectList(MezuniyetBus.GetCmbMzSinavDurumListe(true), "Value", "Caption", model.MezuniyetSinavDurumID);
-            ViewBag.TezKontrolKullaniciId = new SelectList(MezuniyetBus.GetCmbAktifTezKontrolSorumlulari(true), "Value", "Caption", model.TezKontrolKullaniciId);
+            ViewBag.TezKontrolKullaniciId = new SelectList(MezuniyetBus.GetCmbAktifTezKontrolSorumlulari(enstituKod, true), "Value", "Caption", model.TezKontrolKullaniciId);
             ViewBag.TeslimFormDurumu = new SelectList(MezuniyetBus.GetCmbTeslimFormDurumu(true), "Value", "Caption", model.TeslimFormDurumu);
             ViewBag.MezuniyetDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetDurumId(true), "Value", "Caption", model.MezuniyetDurumID);
             return View(model);
@@ -743,7 +743,61 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Messages = strView
             }.ToJsonResult();
         }
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularTezKontrolYetkiliAtama)]
+        public ActionResult TezKontrolYetkilisiKaydet(int mezuniyetBasvurulariId, int? tezKontrolKullaniciId)
+        {
+            var mmMessage = new MmMessage
+            {
+                IsSuccess = false,
+                Title = "Mezuniyet tez kontrol yetkilisi atama işlemi"
+            };
 
+            if (!RoleNames.MezuniyetGelenBasvurularTezKontrolYetkiliAtama.InRoleCurrent())
+            {
+                mmMessage.Messages.Add("Tez Kontrol Yetkilisi ataması için yetkiniz yok.");
+            }
+            else
+            {
+                var mezuniyetBasvurusu =
+                    _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+
+                if (mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.All(a => a.IsOnaylandiOrDuzeltme == true))
+                {
+                    mmMessage.Messages.Add("Tezi onaylanan bir başvuru için Tez Kontrol Yetkilisi atayamazsınız.");
+                }
+
+                if (mmMessage.Messages.Count == 0)
+                {
+                    var sendMailKontrolyetkilisi = tezKontrolKullaniciId != mezuniyetBasvurusu.TezKontrolKullaniciID &&
+                                                   tezKontrolKullaniciId.HasValue &&
+                                                   mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any();
+                    mezuniyetBasvurusu.TezKontrolKullaniciID = tezKontrolKullaniciId;
+                    mezuniyetBasvurusu.IslemYapanID = UserIdentity.Current.Id;
+                    mezuniyetBasvurusu.IslemYapanIP = UserIdentity.Ip;
+                    mezuniyetBasvurusu.IslemTarihi = DateTime.Now;
+                    _entities.SaveChanges();
+                    if (sendMailKontrolyetkilisi)
+                    {
+                        var mezuniyetBasvurulariTezDosyaId = mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris
+                            .OrderByDescending(o => o.MezuniyetBasvurulariTezDosyaID)
+                            .Select(s => s.MezuniyetBasvurulariTezDosyaID).First();
+                        MezuniyetBus.SendMailMezuniyetTezSablonKontrol(mezuniyetBasvurulariTezDosyaId,
+                            MailSablonTipiEnum.MezTezKontrolTezDosyasiYuklendi);
+                    }
+
+                    mmMessage.Messages.Add("Tez Kontrol Yetkilisi güncellendi.");
+                    LogIslemleri.LogEkle("MezuniyetBasvurulari", "Tez Kontrol Yetkilisi Kayıt İşlemi",
+                        LogCrudType.Update, mezuniyetBasvurusu.ToJson());
+                    mmMessage.IsSuccess = true;
+                }
+            }
+
+            return new
+            {
+                mmMessage.IsSuccess,
+                MmMessage = mmMessage
+            }.ToJsonResult();
+        }
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult TdDurumKaydet(MezuniyetBasvurulariTezDosyalari kModel)

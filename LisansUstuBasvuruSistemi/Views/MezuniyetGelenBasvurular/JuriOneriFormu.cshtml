@@ -449,7 +449,7 @@
                                             @for (int i = 1; i <= 4; i++)
                                             {
                                                 var activeCls = i == 1 ? "active" : "";
-                                                var rowData = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "YtuDisiJuri" + i).FirstOrDefault();
+                                                var rowData = Model.JoFormJuriList.FirstOrDefault(p => p.JuriTipAdi == "YtuDisiJuri" + i);
 
                                                 <div class="tab-pane @activeCls" id="tab-YtuDisiJuri-@i">
                                                     <div class="widget widget-default" style="padding:3px;margin:0px;">

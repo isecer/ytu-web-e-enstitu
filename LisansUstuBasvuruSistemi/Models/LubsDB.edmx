@@ -1179,7 +1179,7 @@ warning 6013: The table/view 'LisansustuBasvuruSistemi.dbo._HakclenenUsers' does
           <Property Name="InpType" Type="nvarchar" MaxLength="50" />
           <Property Name="SItems" Type="nvarchar(max)" />
           <Property Name="Kategori" Type="nvarchar" MaxLength="255" />
-          <Property Name="Aciklama" Type="nvarchar" MaxLength="255" />
+          <Property Name="Aciklama" Type="nvarchar" MaxLength="2048" />
           <Property Name="Varsayilanlar" Type="nvarchar" MaxLength="4000" />
           <Property Name="SiraNo" Type="int" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
@@ -1791,6 +1791,7 @@ warning 6013: The table/view 'LisansustuBasvuruSistemi.dbo._HakclenenUsers' does
             <PropertyRef Name="RolID" />
           </Key>
           <Property Name="RolID" Type="int" Nullable="false" />
+          <Property Name="SiraNo" Type="int" />
           <Property Name="RolAdi" Type="nvarchar" MaxLength="4000" Nullable="false" />
           <Property Name="Aciklama" Type="nvarchar" MaxLength="4000" />
           <Property Name="Kategori" Type="nvarchar" MaxLength="255" />
@@ -11570,7 +11571,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="InpType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SItems" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Kategori" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Aciklama" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Aciklama" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
           <Property Name="Varsayilanlar" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="SiraNo" Type="Int32" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
@@ -12310,6 +12311,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <PropertyRef Name="RolID" />
           </Key>
           <Property Name="RolID" Type="Int32" Nullable="false" />
+          <Property Name="SiraNo" Type="Int32" />
           <Property Name="RolAdi" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="Aciklama" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="Kategori" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
@@ -19626,6 +19628,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="Kategori" ColumnName="Kategori" />
                 <ScalarProperty Name="Aciklama" ColumnName="Aciklama" />
                 <ScalarProperty Name="RolAdi" ColumnName="RolAdi" />
+                <ScalarProperty Name="SiraNo" ColumnName="SiraNo" />
                 <ScalarProperty Name="RolID" ColumnName="RolID" />
               </MappingFragment>
             </EntityTypeMapping>

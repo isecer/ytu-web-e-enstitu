@@ -33,6 +33,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(FmYeterlikBasvuruDto model, string ekd, bool export)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var isOnayBekleyenKomite = model.BasvuruDurumID == YeterlikBasvuruFilterEnum.KomiteOnayiBekleyenler;
+            var isOnayBekleyenJuri = model.BasvuruDurumID == YeterlikBasvuruFilterEnum.SinavSurecindeOlanlar;
             var q = from yeterlikBasvuru in _entities.YeterlikBasvurus
                     join yeterlikSureci in _entities.YeterlikSurecis.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)) on yeterlikBasvuru.YeterlikSurecID equals yeterlikSureci.YeterlikSurecID
                     join kullanicilar in _entities.Kullanicilars on yeterlikBasvuru.KullaniciID equals kullanicilar.KullaniciID
@@ -61,6 +63,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnabilimDaliAdi = programlar.AnabilimDallari.AnabilimDaliAdi,
                         KayitTarihi = yeterlikBasvuru.KayitTarihi,
                         OkuduguDonemNo = yeterlikBasvuru.OkuduguDonemNo,
+                        OnayYapmayanKomiteIds = yeterlikBasvuru.YeterlikBasvuruKomitelers.Where(p => isOnayBekleyenKomite && !p.IsJuriOnaylandi.HasValue).Select(sk => sk.KullaniciID).ToList(),
+                        OnayYapmayanJuriEmails = yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Where(p => isOnayBekleyenJuri && p.IsLinkGonderildi == true && !p.IsSonucOnaylandi.HasValue).Select(sj => sj.EMail).ToList(),
                         TezDanismanID = yeterlikBasvuru.TezDanismanID,
                         TezDanismanAdi = tezDanismani.Unvanlar.UnvanAdi + " " + tezDanismani.Ad + " " + tezDanismani.Soyad,
                         TezDanismanEmail = tezDanismani.EMail,
@@ -87,12 +91,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.YeterlikSurecID.HasValue) q = q.Where(p => p.YeterlikSurecID == model.YeterlikSurecID);
             if (model.OgrenimTipID.HasValue) q = q.Where(p => p.OgrenimTipID == model.OgrenimTipID);
             if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) 
+            if (!model.AdSoyad.IsNullOrWhiteSpace())
                 q = q.Where(p =>
-                    p.AdSoyad.Contains(model.AdSoyad) 
-                    || p.OgrenciNo.Contains(model.AdSoyad) 
+                    p.AdSoyad.Contains(model.AdSoyad)
+                    || p.OgrenciNo.Contains(model.AdSoyad)
                     || p.TezDanismanAdi.Contains(model.AdSoyad)
-                    || p.ProgramAdi.Contains(model.AdSoyad) 
+                    || p.ProgramAdi.Contains(model.AdSoyad)
                     || p.AnabilimDaliAdi.Contains(model.AdSoyad));
             if (model.BasvuruDurumID.HasValue)
             {
@@ -153,14 +157,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
 
             ViewBag.kontrolEdilmeyenBasvuruIds = isFiltered ? q.Where(p => !p.IsEnstituOnaylandi.HasValue).Select(s => s.YeterlikBasvuruID).ToList() : new List<int>();
-            ViewBag.filteredOgrenciIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
-            ViewBag.filteredDanismanIds = isFiltered ? q.Select(s => s.TezDanismanID).Distinct().ToList() : new List<int>();
+            ViewBag.filteredOgrenciIds = isFiltered ? q.Select(s => s.KullaniciID).Distinct().ToList() : new List<int>();
+            ViewBag.filteredDanismanIds = isFiltered ? q.Select(s => s.TezDanismanID).Distinct().Distinct().ToList() : new List<int>();
+            ViewBag.onayYapmayanKomiteIds = isFiltered ? q.SelectMany(s => s.OnayYapmayanKomiteIds).Distinct().ToList() : new List<int>();
+            ViewBag.onayYapmayanJuriEmails = isFiltered ? q.SelectMany(s => s.OnayYapmayanJuriEmails).Distinct().ToList() : new List<string>();
+
 
             ViewBag.YeterlikSurecID = new SelectList(YeterlikBus.GetCmbYeterlikSurecleri(enstituKod, true), "Value", "Caption", model.YeterlikSurecID);
             ViewBag.AnabilimDaliID = new SelectList(YeterlikBus.GetCmbFilterYeterlikAnabilimDallari(enstituKod, model.YeterlikSurecID, true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.BasvuruDurumID = new SelectList(YeterlikBus.GetCmbBasvuruDurumu(true), "Value", "Caption", model.BasvuruDurumID);
             ViewBag.OgrenimTipID = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipIdDoktora(enstituKod, true), "Value", "Caption", model.OgrenimTipID);
-           
+
             return View(model);
         }
 

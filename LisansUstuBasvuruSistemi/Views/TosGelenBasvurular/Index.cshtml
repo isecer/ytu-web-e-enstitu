@@ -8,9 +8,10 @@
 @model  FmTosBasvuru
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var kyetki = RoleNames.TosGelenBasvuruKayit.InRoleCurrent(); 
+    var kyetki = RoleNames.TosGelenBasvuruKayit.InRoleCurrent();
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var onayYapmayanJuriEmails = (List<string>)ViewBag.onayYapmayanJuriEmails;
 }
 
 <div class="row">
@@ -45,6 +46,12 @@
                             {
                                 <li>
                                     <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                </li>
+                            }
+                            if (onayYapmayanJuriEmails.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",onayYapmayanJuriEmails)',true,false)" title="Listelenen Başvurular için Değerlendirme Yapmayan @onayYapmayanJuriEmails.Count Jüri Üyesine Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> J</i></a>
                                 </li>
                             }
 
@@ -190,8 +197,8 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td id="tosDonemContent_@item.ToBasvuruID"> 
-                                            @(item.AktifSavunmaNo > 0 ? item.AktifDonemAdi: "----")<br/>@(item.AktifSavunmaNo > 0 ? item.AktifSavunmaNo + ". Savunma" : "----")
+                                        <td id="tosDonemContent_@item.ToBasvuruID">
+                                            @(item.AktifSavunmaNo > 0 ? item.AktifDonemAdi: "----")<br />@(item.AktifSavunmaNo > 0 ? item.AktifSavunmaNo + ". Savunma" : "----")
                                         </td>
                                         <td id="tosDurumContent_@item.ToBasvuruID">@item.DurumModel.TosBasvuruDurumView()</td>
 
@@ -217,7 +224,7 @@
                 <div class="panel-footer">
                     @Model.ToPagerString()
                 </div>
-            </div> 
+            </div>
         </div>
     }
 </div>
@@ -231,7 +238,7 @@
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
-    function YeniBasvuruDuyuruKontrol(toUniqueId) { 
+    function YeniBasvuruDuyuruKontrol(toUniqueId) {
         var popupSetting = {
             title: '||',
             popupTipId:@DuyuruPopupTipiEnum.TezOneriSavunma,

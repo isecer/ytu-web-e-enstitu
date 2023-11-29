@@ -44,6 +44,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 donemId = model.AktifTIAraRaporDonemID.Substring(4, 1).ToInt(0);
             }
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var isDegerlendirmeSurecinde = model.AktifTIAraRaporRaporDurumID == TiAraRaporDurumuEnum.DegerlendirmeSureciBaslatildi;
             var q = from s in _entities.TIBasvurus
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
@@ -87,6 +88,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         RaporTarihi = ard != null ? ard.RaporTarihi : (DateTime?)null,
                         ToplantiTarihi = baslangicYil.HasValue ? ard.SRTalepleris.Select(sr => sr.Tarih).FirstOrDefault() : (DateTime?)null,
                         ToplantiSaati = baslangicYil.HasValue ? ard.SRTalepleris.Select(sr => sr.BasSaat).FirstOrDefault() : (TimeSpan?)null,
+                        OnayYapmayanKomiteEmails = ard.TIBasvuruAraRaporKomites.Where(p => isDegerlendirmeSurecinde && p.IsLinkGonderildi == true && !p.IsBasarili.HasValue).Select(ss => ss.EMail).ToList(),
                         tIAraraporFiltreModels = s.TIBasvuruAraRapors.Select(ti => new TiAraraporFiltreModel
                         {
                             AraRaporSayisi = ti.AraRaporSayisi,
@@ -98,7 +100,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
                         IsBasariliOrBasarisiz = ard != null ? ard.IsBasariliOrBasarisiz : (bool?)null
 
-                    }; 
+                    };
 
             q = q.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
             var q2 = q;
@@ -204,6 +206,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.filteredOgrenciIds = isFiltered && !model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace() ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.filteredDanismanIds = isFiltered && !model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace() ? q.Where(p => p.AraRaporDanismanID.HasValue).Select(s => s.AraRaporDanismanID.Value).Distinct().ToList() : new List<int>();
+            ViewBag.onayYapmayanKomiteEmails = isFiltered && isDegerlendirmeSurecinde ? q.SelectMany(s => s.OnayYapmayanKomiteEmails).Distinct().ToList() : new List<string>();
 
             ViewBag.AktifTIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiDonemListe(enstituKod, true), "Value", "Caption", model.AktifTIAraRaporDonemID);
             ViewBag.AktifTIAraRaporRaporDurumID = new SelectList(TezIzlemeBus.CmbTiAraRaporDurumListe(true), "Value", "Caption", model.AktifTIAraRaporRaporDurumID);

@@ -34,7 +34,7 @@
                 <br />
                 @foreach (var cat in cats)
                 {
-                    var roles = roller.Where(p => p.Value.Kategori == cat.Caption).OrderBy(o => o.Value.GorunurAdi).ToArray();
+                    var roles = roller.Where(p => p.Value.Kategori == cat.Caption).OrderBy(o => o.Value.SiraNo).ToArray();
                     var allchecked = roles.All(a => a.Checked.Value);
                     <div class="col-md-4">
                         <div class="panel panel-default">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="panel-body padding-0" style="height: 300px; overflow: auto;">
                                 <table class="chks" style="width:100%;table-layout:fixed;">
-                                    @foreach (var role in roles.OrderBy(o => o.Value.GorunurAdi))
+                                    @foreach (var role in roles)
                                     {
                                         <tr>
                                             <td>

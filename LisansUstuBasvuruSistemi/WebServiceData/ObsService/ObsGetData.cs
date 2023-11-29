@@ -106,7 +106,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                                     var tez = tezBilgi.ogrencitez.LastOrDefault();
                                     if (tez != null)
                                     {
-                                        model.IsTezDiliTr = tez.TEZ_DILI.ToLower() == "türkçe";
+                                        model.IsTezDiliTr = tez.TEZ_DILI.ToLower().Contains("türkçe");
                                         model.OgrenciTez = tez;
 
                                         var sonTezIzlemeBilgiler = tez.tezizlemebilgileri

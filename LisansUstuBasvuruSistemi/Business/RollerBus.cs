@@ -35,6 +35,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         db.Rollers.Add(new Roller
                         {
                             RolID = attr.RolID,
+                            SiraNo = attr.SiraNo,
                             GorunurAdi = attr.GorunurAdi,
                             Aciklama = attr.Aciklama,
                             Kategori = attr.Kategori,
@@ -44,6 +45,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     else
                     {
                         dbrole.RolID = attr.RolID;
+                        dbrole.SiraNo = attr.SiraNo;
                         dbrole.GorunurAdi = attr.GorunurAdi;
                         dbrole.Aciklama = attr.Aciklama;
                         dbrole.Kategori = attr.Kategori;

@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     var kalanGun = Convert.ToInt32((qAktifMs.BitisTarihi - tarih).TotalDays);
                                     foreach (var itmZmn in bsOtoZamanBilgi)
                                     {
-                                        if (itmZmn.ZamanTipID == ZamanTipi.Gun && itmZmn.Zaman == kalanGun)
+                                        if (itmZmn.ZamanTipID == ZamanTipiEnum.Gun && itmZmn.Zaman == kalanGun)
                                         {
                                             SendMailMsTaslak(qAktifMs, kalanGun, itmZmn.ZamanTipID, itmZmn.Zaman);
                                         }
@@ -211,7 +211,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                             }
                                         }
                                         //mailleri gönder
-                                        if (item.ZamanTipID == ZamanTipi.Gun && gunIsSuccess && eMailList.Count > 0)
+                                        if (item.ZamanTipID == ZamanTipiEnum.Gun && gunIsSuccess && eMailList.Count > 0)
                                         {
                                             var enstituL = itemE;
                                             var mailParameterDtos = new List<MailParameterDto>();

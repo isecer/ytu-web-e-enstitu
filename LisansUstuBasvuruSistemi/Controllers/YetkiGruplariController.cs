@@ -53,8 +53,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult Kayit(int? id)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new YetkiGruplari();
             if (id.HasValue && id > 0)
             {
@@ -80,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 dct.Add(new CmbIntDto { Value = item.SiraNo.Value, Caption = item.MenuAdi });
             }
             ViewBag.cats = dct;
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             return View(model);
         }
         [HttpPost]
@@ -90,7 +90,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mmMessage = new MmMessage();
             if (model.YetkiGrupAdi.IsNullOrWhiteSpace())
             {
-                string msg = "Yetki Grup Adı Giriniz.";
+                const string msg = "Yetki Grup Adı Giriniz.";
                 mmMessage.Messages.Add(msg);
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "YetkiGrupAdi" });
             }

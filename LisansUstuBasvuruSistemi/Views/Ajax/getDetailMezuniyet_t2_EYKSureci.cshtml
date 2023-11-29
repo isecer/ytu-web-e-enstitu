@@ -9,8 +9,8 @@
 @{
     Layout = null;
     bool juriOneriFormuKyetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
-    bool juriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
-    bool juriOneriFormuOnayYetkiEykDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
+    bool juriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && Model.MezuniyetSrModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
+    bool juriOneriFormuOnayYetkiEykDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSrModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
     var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
 
@@ -35,9 +35,18 @@
                         <td colspan="2" style="padding-left:10px;text-align:left;">
                             @if (juriOneriFormu == null)
                             {
+                             
                                 <table style="width:100%;table-layout:fixed;">
                                     <tr>
-                                        <td style="color:maroon;font-size:13pt; text-align:center;height:250px;">Mezuniyet Başvurusuna Ait Jüri Öneri Formu Oluşturulmadı!</td>
+                                        <td style="text-align:center;height:250px;">
+                                            <div class="tasks">
+                                                <div class="task-item task-danger" style="margin-bottom: 0px; cursor: auto;">
+                                                    <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                        Süreç Devamı için Jüri Öneri Formu oluşturulmalı!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </table>
                             }
@@ -121,7 +130,6 @@
                                             <tr>
                                                 <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> Önerilen Jüriler</td>
                                                 <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
-                                                   
                                                 </td>
                                             </tr>
                                             <tr>
@@ -396,18 +404,18 @@
                                                     </table>
                                                 </td>
                                             </tr>
-                                            @if (Model.IsTezDiliTr == false && juriOneriFormu!=null)
+                                            @if (Model.IsTezDiliTr == false && juriOneriFormu != null)
                                             {
                                                 <tr>
                                                     <td colspan="2">
-                                                        <br/>
+                                                        <br />
                                                         <div class="tasks">
                                                             <div class="task-item task-info" style="margin-bottom: 0px; cursor: auto;">
                                                                 <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
                                                                     <b>Danışman Dil Şartı Taahhüt Onayı:</b><br> Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
                                                                 </div>
                                                                 <div class="task-footer" style="padding-top:0pt;padding-bottom:0px;color:green;">
-                                                                    <div class="pull-left"><span class="fa fa-check-circle-o"></span> @juriOneriFormu.IslemTarihi.ToFormatDateAndTime()</div> 
+                                                                    <div class="pull-left"><span class="fa fa-check-circle-o"></span> @juriOneriFormu.IslemTarihi.ToFormatDateAndTime()</div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -438,7 +446,7 @@
                                                                 <td class="ValueTd">
                                                                     @if (juriOneriFormuOnayYetki && juriOneriFormu.EYKDaOnaylandi != true)
                                                                     {
-                                                                        @Html.DropDownList("EYKYaGonderildi", Model.SEYKYaGonderildi, new { id = "EYKYaGonderildi_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ", false)", @class = "form-control" })
+                                                                        @Html.DropDownList("EYKYaGonderildi", Model.SeykYaGonderildi, new { id = "EYKYaGonderildi_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ", false)", @class = "form-control" })
                                                                     }
                                                                     else
                                                                     {
@@ -465,7 +473,7 @@
                                                                 <td class="ValueTd">
                                                                     @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true)
                                                                     {
-                                                                        @Html.DropDownList("EYKDaOnaylandi", Model.SEYKDaOnaylandi, new { id = "EYKDaOnaylandi_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoOnayDurumAcklmVisible(this," + juriOneriFormu.MezuniyetJuriOneriFormID + ")", @class = "form-control" })
+                                                                        @Html.DropDownList("EYKDaOnaylandi", Model.SeykDaOnaylandi, new { id = "EYKDaOnaylandi_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoOnayDurumAcklmVisible(this," + juriOneriFormu.MezuniyetJuriOneriFormID + ")", @class = "form-control" })
 
                                                                     }
                                                                     else

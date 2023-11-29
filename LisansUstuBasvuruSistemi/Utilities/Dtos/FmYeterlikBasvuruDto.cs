@@ -49,6 +49,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string TezDanismanEmail { get; set; }
         public string TezDanismanCepTel { get; set; }
         public bool IsJuriOlusturuldu { get; set; }
+        public List<int> OnayYapmayanKomiteIds { get; set; }
+        public List<string> OnayYapmayanJuriEmails { get; set; }
         public bool IsYaziliSinaviYapildi { get; set; }
         public bool IsSozluSinaviYapildi { get; set; }
     }

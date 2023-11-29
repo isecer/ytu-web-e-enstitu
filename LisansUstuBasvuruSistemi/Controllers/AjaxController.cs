@@ -1076,7 +1076,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.SelectedTabIndex = tbInx;
 
 
-            var srSonTalebi = model.MezuniyetSRModel.SalonRezervasyonlari.OrderByDescending(o => o.SRTalepID).FirstOrDefault();
+            var srSonTalebi = model.MezuniyetSrModel.SalonRezervasyonlari.OrderByDescending(o => o.SRTalepID).FirstOrDefault();
             var modelBasvuruDurum = new FrMezuniyetBasvurulari
             {
                 IsDanismanOnay = model.IsDanismanOnay,
@@ -1105,8 +1105,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             model.IsDelete = isDelete;
             model.SMezuniyetYayinKontrolDurum = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurum(false, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
-            model.SEYKYaGonderildi = new SelectList(ComboData.GetCmbEykGonderimDurumData(true, onayTarihi), "Value", "Caption", model.EYKYaGonderildi);
-            model.SEYKDaOnaylandi = new SelectList(ComboData.GetCmbEykOnayDurumData(true), "Value", "Caption", model.EYKDaOnaylandi);
+            model.SeykYaGonderildi = new SelectList(ComboData.GetCmbEykGonderimDurumData(true, onayTarihi), "Value", "Caption", model.EykYaGonderildi);
+            model.SeykDaOnaylandi = new SelectList(ComboData.GetCmbEykOnayDurumData(true), "Value", "Caption", model.EykDaOnaylandi);
 
             model.SIsAsilOryedek = new SelectList(ComboData.GetCmbAsilYedekDurumData(true), "Value", "Caption");
 
@@ -1916,13 +1916,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var aliciKullaniciIds = secilenAlicilar.Where(p => p.IsNumber()).Select(s => s.ToInt(0)).ToList();
                     var aliciEmails = secilenAlicilar.Where(p => p.IsNumber() == false).ToList();
                     var secilenAliciKullanicilar = (from s in _entities.Kullanicilars
-                                  where aliciKullaniciIds.Contains(s.KullaniciID)
-                                  select new
-                                  {
-                                      Email = s.EMail,
-                                      eklenenGonderilenMail.GonderilenMailID,
-                                      s.KullaniciID
-                                  }).ToList();
+                                                    where aliciKullaniciIds.Contains(s.KullaniciID)
+                                                    select new
+                                                    {
+                                                        Email = s.EMail,
+                                                        eklenenGonderilenMail.GonderilenMailID,
+                                                        s.KullaniciID
+                                                    }).ToList();
                     foreach (var item in secilenAliciKullanicilar)
                     {
                         gonderilenMailKullanicilari.Add(new GonderilenMailKullanicilar
@@ -2429,10 +2429,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return kul2.ToJsonResult();
         }
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularTezKontrolYetkiliAtama)]
+        public ActionResult GetTezkontrolYetkilisi(string term, string ekd)
+        {
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+
+            var query = MezuniyetBus.GetAktifTezKontrolSorumlulari(enstituKod).AsQueryable();
+            if (!term.IsNullOrWhiteSpace())
+            {
+                query = query.Where(p =>
+                    (p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo == term || p.EMail.Contains(term));
+            }
+            var tezKontrolSorumlulari = query.Select(s => new
+            {
+                id = s.KullaniciID,
+                ResimAdi=s.ResimAdi.ToKullaniciResim(),
+                text = s.Ad + " " + s.Soyad
+            }).ToList();
+
+            return tezKontrolSorumlulari.ToJsonResult();
+        }
         [Authorize]
         public ActionResult GetUniversiteler(string term)
         {
-            var univeriteler = _entities.Universitelers.Where(p => p.Ad.Contains(term)).OrderBy(o => o.Ad).OrderBy(o => o.Ad).Take(50).Select(s => new
+            var univeriteler = _entities.Universitelers.Where(p => p.Ad.Contains(term)).OrderBy(o => o.Ad).Take(50).Select(s => new
             {
                 id = s.Ad,
                 text = s.Ad

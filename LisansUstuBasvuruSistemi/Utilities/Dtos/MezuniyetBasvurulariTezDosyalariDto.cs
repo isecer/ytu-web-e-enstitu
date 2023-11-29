@@ -8,8 +8,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class MezuniyetBasvurulariTezDosyalariDto: MezuniyetBasvurulariTezDosyalari
 
-    {
-        public string TezKontrolYetkiliAdSoyad { get; set; }
+    { 
         public string OnayYapanTezKontrolYetkiliAdSoyad { get; set; }
     }
 }

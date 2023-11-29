@@ -411,12 +411,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");
                     }
+
+
+
                     var tiks = ogrenciBilgi.TezIzlJuriBilgileri.Where(p => p.TEZ_DANISMAN != "1").ToList();
                     if (tiks.Count < 2)
                     {
                         mMessage.Messages.Add("Tik üye bilgileri OBS sisteminden alınamadı.");
                     }
-
+                    else if (ogrenciBilgi.TezIzlJuriBilgileri.All(p => p.TEZ_DANISMAN != "1"))
+                    {
+                        mMessage.Messages.Add("Tik üye bilgileri tez danışmanı bilgisine rastlanmadı.");
+                    }
                     if (mMessage.Messages.Count > 0)
                     {
                         mMessage.Messages.Add("Rapor formunu oluşturabilmeniz için bu durumu enstitü yetkililerine iletiniz.");

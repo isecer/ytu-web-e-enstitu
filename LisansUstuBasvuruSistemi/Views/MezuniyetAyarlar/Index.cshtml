@@ -135,7 +135,7 @@
     }
     function checkControl(sndr) {
         var chk = $(sndr).prop("checked");
-        var pContent = $(sndr).parents(".form-group").first();
+        var pContent = $(sndr).parents(".inputContent").first();
         var pvalFielt = $(pContent).find("input[name='AyarDegeri']").first();
         $(pvalFielt).val(chk);
     }

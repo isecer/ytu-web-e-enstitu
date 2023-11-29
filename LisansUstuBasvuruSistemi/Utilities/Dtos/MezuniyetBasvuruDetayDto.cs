@@ -12,7 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public IHtmlString BasvuruDurumHtml { get; set; }
         public bool IsDelete { get; set; }
         public bool GelenBasvuru { get; set; }
-        public bool sonucGirisSureciAktif { get; set; }
+        public bool SonucGirisSureciAktif { get; set; }
         public bool IsYerli { get; set; }
         public string EnstituAdi { get; set; }
         public int SelectedTabIndex { get; set; }
@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string BasvuruKayitSureciTarihi { get; set; }
         public string KullaniciTipAdi { get; set; }
 
-        public List<MezuniyetBasvurulariYayinDto> YayinBilgileri { get; set; }
+        public List<MezuniyetBasvurulariYayinDto> YayinBilgileri { get; set; } = new List<MezuniyetBasvurulariYayinDto>();
 
         public string MezuniyetYayinKontrolDurumAdi { get; set; }
         public string DurumClassName { get; set; }
@@ -34,35 +34,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsAnketVar { get; set; }
         public bool IsAnketDolduruldu { get; set; }
         public string AnketView { get; set; }
-        public bool? EYKYaGonderildi { get; set; }
-        public bool? EYKDaOnaylandi { get; set; }
+        public bool? EykYaGonderildi { get; set; }
+        public bool? EykDaOnaylandi { get; set; }
 
         public string TezDanismanBilgiEslesen { get; set; }
         public Guid? TezDanismaniUserKey { get; set; }
+        public string TezKontrolYetkilisiAdSoyad { get; set; } 
         public MezuniyetBasvurulariYayinDto SelectedYayin { get; set; }
 
 
-        public MezuniyetSRModel MezuniyetSRModel { get; set; }
+        public MezuniyetSrModel MezuniyetSrModel { get; set; } = new MezuniyetSrModel();
         public List<MezuniyetBasvurulariTezDosyalariDto> MezuniyetBasvurulariTezDosyalariDtos { get; set; }
         public SrDurumSelectList MezuniyetDurumSelectList = new SrDurumSelectList();
 
         public SelectList SMezuniyetYayinKontrolDurum { get; set; }
-        public SelectList SEYKYaGonderildi { get; set; }
-        public SelectList SEYKDaOnaylandi { get; set; }
+        public SelectList SeykYaGonderildi { get; set; }
+        public SelectList SeykDaOnaylandi { get; set; }
         public SelectList SIsAsilOryedek { get; set; }
-
-
-
-        public MezuniyetBasvuruDetayDto()
-        {
-            YayinBilgileri = new List<MezuniyetBasvurulariYayinDto>();
-            MezuniyetSRModel = new MezuniyetSRModel();
-
-
-        }
     }
 
-    public class MezuniyetSRModel
+    public class MezuniyetSrModel
     {
         public bool IsSrEykSureAsimi { get; set; }
         public DateTime? EykIlkSrMaxTarih { get; set; }

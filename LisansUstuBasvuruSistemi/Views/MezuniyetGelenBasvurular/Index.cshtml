@@ -13,6 +13,7 @@
 
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var hideFilterRow = !kYetki && Model.Data.Select(s => s.TezDanismanID).FirstOrDefault() == UserIdentity.Current.Id ? "hide" : "";
 }
 
 <div class="row">
@@ -167,7 +168,7 @@
                                 </table>
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="@hideFilterRow">
                             <td>
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
@@ -194,7 +195,7 @@
                                 </table>
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="@hideFilterRow">
                             <td>
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
@@ -224,7 +225,7 @@
                                 </table>
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="@hideFilterRow">
                             <td>
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>

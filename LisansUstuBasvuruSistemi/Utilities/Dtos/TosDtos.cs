@@ -64,6 +64,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AktifDonemAdi { get; set; }
         public DateTime? ToplantiTarihi { get; set; }
         public TimeSpan? ToplantiSaati { get; set; }
+        public List<string> OnayYapmayanJuriEmails { get; set; }
         public TosDurumDto DurumModel { get; set; }
 
     }

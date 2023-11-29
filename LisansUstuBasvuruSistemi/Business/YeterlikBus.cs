@@ -392,7 +392,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         });
                     }
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
 
@@ -524,7 +524,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         });
                     }
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
                         var komite = komiteler.FirstOrDefault(p => p.UniqueID == item.UniqueID);
@@ -679,7 +679,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     //    });
                     //}
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipID);
@@ -898,7 +898,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
 
@@ -1105,7 +1105,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         });
                     }
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
 

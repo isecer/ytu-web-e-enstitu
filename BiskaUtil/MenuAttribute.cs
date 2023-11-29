@@ -30,6 +30,7 @@ namespace BiskaUtil
     public class RoleAttribute: System.Attribute
     {
         public int RolID { get; set; }
+        public int SiraNo { get; set; }
         public string RolAdi { get; set; }
         public string Aciklama { get; set; }
         public string ModulAdi { get; set; }

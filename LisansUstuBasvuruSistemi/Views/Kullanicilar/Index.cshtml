@@ -1,7 +1,7 @@
-﻿@using LisansUstuBasvuruSistemi.Business 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles 
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model FmKullanicilarDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -179,12 +179,13 @@
                                                         <li>
                                                             <a href="@Url.Action("Kayit", new { id=item.KullaniciID })"><i class="fa fa-edit fa-lg"></i>Düzenle</a>
                                                         </li>
-                                                        if (kHesabaGecme)
-                                                        {
-                                                            <li>
-                                                                <a href="@Url.Action("SetLogin", new { item.UserKey })" target="_blank"><i class="fa fa-user fa-lg"></i>Kullanıcı Hesabına Geç</a>
-                                                            </li>
-                                                        }
+
+                                                    }
+                                                    @if (kHesabaGecme)
+                                                    {
+                                                        <li>
+                                                            <a href="@Url.Action("SetLogin", new { item.UserKey })" target="_blank"><i class="fa fa-user fa-lg"></i>Kullanıcı Hesabına Geç</a>
+                                                        </li>
                                                     }
                                                     <li>
                                                         <a href="javascript:void(0)" onclick="DetayGor('@item.UserKey','#kulPnl')"><i class="fa fa-file-text-o"></i>Detay Göster</a>

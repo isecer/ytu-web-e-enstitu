@@ -1212,7 +1212,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 IsSuccess = false
             };
-            var tosDegerlendirmeDuzeltmeRole = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
+            var tosDegerlendirmeDuzeltmeRole = RoleNames.TosSavunmaBitisTarihDuzeltme.InRoleCurrent();
             if (!UserIdentity.Current.IsAdmin && !tosDegerlendirmeDuzeltmeRole)
             {
                 mMessage.Messages.Add("<span style='color:maroon;'>Bu işlemi yapmaya yetkili değilsiniz.</span>");

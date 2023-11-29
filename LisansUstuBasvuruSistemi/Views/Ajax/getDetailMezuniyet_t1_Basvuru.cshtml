@@ -16,7 +16,7 @@
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
 
     var isTezDanisman = Model.TezDanismanID == UserIdentity.Current.Id;
-    var sonucGirisSureciAktif = (Model.sonucGirisSureciAktif || kayitYetki);// && Model.MezuniyetJuriOneriFormlaris.All(a => a.EYKYaGonderildi != true);
+    var sonucGirisSureciAktif = (Model.SonucGirisSureciAktif || kayitYetki);// && Model.MezuniyetJuriOneriFormlaris.All(a => a.EYKYaGonderildi != true);
 
 }
 <div class="tab-pane @(Model.SelectedTabIndex==1?"active":"") " id="@tbName-1">

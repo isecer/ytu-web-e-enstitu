@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
-    public class ZamanTipi
+    public class ZamanTipiEnum
     {
         public const int Yil = 1;
         public const int Ay = 2;

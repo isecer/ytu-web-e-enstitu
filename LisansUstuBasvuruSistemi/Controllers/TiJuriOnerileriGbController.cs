@@ -441,8 +441,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (!mMessage.Messages.Any())
                     {
+
+                        if (ogrenciInfo.OgrenciTez.TEZ_DILI.IsNullOrWhiteSpace())
+                        {
+                            mMessage.Messages.Add("Tez dili bilgisi OBS sisteminden boş gelmektedir.");
+                        }
                         if (ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.IsNullOrWhiteSpace())
-                            mMessage.Messages.Add("Danışman Bilgisi Çekilemedi.");
+                            mMessage.Messages.Add("Danışman bilgisi OBS sisteminden boş gelmektedir.");
 
                         if (mMessage.Messages.Count > 0)
                         {

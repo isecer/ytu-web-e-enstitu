@@ -23,6 +23,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
     
         public int RolID { get; set; }
+        public Nullable<int> SiraNo { get; set; }
         public string RolAdi { get; set; }
         public string Aciklama { get; set; }
         public string Kategori { get; set; }

@@ -71,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (attr.BagliRoller != null && attr.BagliRoller.Length > 0)
                         {
                             var dbRoller = db.Rollers.Where(p => attr.BagliRoller.Contains(p.RolAdi)).ToArray(); 
-                            var yeni = dbRoller.Where(p => !dbmenu.Rollers.Any(a => a.RolID == p.RolID)).ToList();
+                            var yeni = dbRoller.Where(p => dbmenu.Rollers.All(a => a.RolID != p.RolID)).ToList();
                             foreach (var yeniRol in yeni)
                             {
                                 dbmenu.Rollers.Add(yeniRol);
@@ -87,6 +87,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     db.Menulers.Remove(menu);
 
                 }
+
+                 
 
                 db.SaveChanges();
             }

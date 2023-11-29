@@ -33,6 +33,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 baslangicYil = model.AktifDonemID.Substring(0, 4).ToInt(0);
                 donemId = model.AktifDonemID.Substring(4, 1).ToInt(0);
             }
+
+            var isDegerlendirmeSurecinde = model.AktifDurumID == 1002;
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var q = from s in _entities.ToBasvurus.Where(p => !model.IsDegerlendirme.HasValue || p.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaKomites.Any(a2 => a2.UniqueID == model.IsDegerlendirme)))
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
@@ -70,6 +72,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
                         DurumID = ard == null ? null : ard.ToBasvuruSavunmaDurumID,
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
+                        OnayYapmayanJuriEmails =  ard.ToBasvuruSavunmaKomites.Where(p => isDegerlendirmeSurecinde && p.IsLinkGonderildi == true && !p.ToBasvuruSavunmaDurumID.HasValue).Select(ss => ss.EMail).ToList(),
                         DurumModel = new TosDurumDto
                         {
                             IsTezOnerisiVar = ard != null,
@@ -142,6 +145,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.AktifDurumID = new SelectList(TezOneriSavunmaBus.CmbTosDurumListe(true), "Value", "Caption", model.AktifDurumID);
             ViewBag.AnabilimDaliID = new SelectList(TezOneriSavunmaBus.GetCmbFilterAnabilimDallari(enstituKod, true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.SavunmaNo = new SelectList(TezOneriSavunmaBus.CmbTosNumarasi(true), "Value", "Caption", model.SavunmaNo);
+            ViewBag.onayYapmayanJuriEmails = isFiltered && isDegerlendirmeSurecinde ? q.SelectMany(s => s.OnayYapmayanJuriEmails).Distinct().ToList() : new List<string>();
 
             ViewBag.IndexModel = indexModel;
             return View(model);

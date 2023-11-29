@@ -5,9 +5,15 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class MezuniyetSureciYayinKontrolBilgiDto
+    public class MezuniyetSureciTezKontrolDto
     {
         public int MezuniyetSurecId { get; set; }
+        public string DonemAdi { get; set; }
+        public List<MezuniyetSureciTezKontrolBilgiDto> AktifMezuniyetSureciTezKontrolBilgiDtos { get; set; }
+        public List<MezuniyetSureciTezKontrolBilgiDto> PasifMezuniyetSureciTezKontrolBilgiDtos { get; set; }
+    }
+    public class MezuniyetSureciTezKontrolBilgiDto
+    {
         public int KullaniciId { get; set; }
         public string ResimAdi { get; set; }
         public Guid UserKey { get; set; }

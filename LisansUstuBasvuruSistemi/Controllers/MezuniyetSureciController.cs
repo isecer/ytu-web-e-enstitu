@@ -614,30 +614,65 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (tbInx == 3)
             {
-                #region YayinKontrolBilgileri
 
                 var surec = _entities.MezuniyetSurecis.First(f => f.MezuniyetSurecID == id);
 
 
 
-                var yayinKontrolData = (from kul in _entities.Kullanicilars.Where(p => p.YetkiGrupID == 13 && p.IsAktif && p.EnstituKod == surec.EnstituKod)
+                var aktifMezuniyetSureciTezKontrolBilgiDtos = (from kul in _entities.Kullanicilars.Where(p => p.YetkiGrupID == 13 && p.IsAktif && p.EnstituKod == surec.EnstituKod)
 
-                                        select new MezuniyetSureciYayinKontrolBilgiDto
-                                        {
-                                            KullaniciId = kul.KullaniciID,
-                                            UserKey = kul.UserKey,
-                                            ResimAdi = kul.ResimAdi,
-                                            AdSoyad = kul.Ad + " " + kul.Soyad,
-                                            SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
-                                            SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == c.TezKontrolKullaniciID && a.IsOnaylandiOrDuzeltme == true)),
-                                            SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
-                                            GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
-                                            GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == c.TezKontrolKullaniciID && a.IsOnaylandiOrDuzeltme == true)),
-                                            GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.IslemYapanID == kul.KullaniciID)),
-                                        }).OrderByDescending(o => o.GenelToplamOnay).ToList();
+                                                               select new MezuniyetSureciTezKontrolBilgiDto
+                                                               {
+                                                                   KullaniciId = kul.KullaniciID,
+                                                                   UserKey = kul.UserKey,
+                                                                   ResimAdi = kul.ResimAdi,
+                                                                   AdSoyad = kul.Ad + " " + kul.Soyad,
+                                                                   SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
+                                                                   SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
+                                                                   SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+                                                                   GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
+                                                                   GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
+                                                                   GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.IslemYapanID == kul.KullaniciID)),
+                                                               }).OrderByDescending(o => o.GenelToplamOnay).ToList();
+                var aktifKullaniciIds = aktifMezuniyetSureciTezKontrolBilgiDtos.Select(s => s.KullaniciId).ToList();
 
-                #endregion
-                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "GetMsYayinKontrolBilgileri", yayinKontrolData);
+                var digerMezuniyetBasvurulariTezDosyalaKontrolYapanIds = _entities.MezuniyetBasvurulariTezDosyalaris
+                    .Where(p => p.IsOnaylandiOrDuzeltme==true && p.MezuniyetBasvurulari.MezuniyetSureci.EnstituKod == surec.EnstituKod && !aktifKullaniciIds.Contains(p.IslemYapanID)).Select(s => s.IslemYapanID).Distinct()
+                    .ToList();
+                var digerMezuniyetBasvuruTezDosyaKontrolSorumluId = _entities.MezuniyetBasvurularis
+                    .Where(p => p.MezuniyetSureci.EnstituKod == surec.EnstituKod && p.TezKontrolKullaniciID.HasValue &&
+                                !aktifKullaniciIds.Contains(p.TezKontrolKullaniciID.Value))
+                    .Select(s => s.TezKontrolKullaniciID.Value).Distinct().ToList();
+
+                var secilenDigerKullaniciIds = digerMezuniyetBasvurulariTezDosyalaKontrolYapanIds;
+                secilenDigerKullaniciIds.AddRange(digerMezuniyetBasvuruTezDosyaKontrolSorumluId);
+                secilenDigerKullaniciIds = secilenDigerKullaniciIds.Distinct().ToList();
+
+
+                var pasifMezuniyetSureciTezKontrolBilgiDtos = (from kul in _entities.Kullanicilars.Where(p => secilenDigerKullaniciIds.Contains(p.KullaniciID))
+
+                                                               select new MezuniyetSureciTezKontrolBilgiDto
+                                                               {
+                                                                   KullaniciId = kul.KullaniciID,
+                                                                   UserKey = kul.UserKey,
+                                                                   ResimAdi = kul.ResimAdi,
+                                                                   AdSoyad = kul.Ad + " " + kul.Soyad,
+                                                                   SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
+                                                                   SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
+                                                                   SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+                                                                   GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
+                                                                   GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
+                                                                   GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.IslemYapanID == kul.KullaniciID)),
+                                                               }).OrderByDescending(o => o.GenelToplamOnay).ToList();
+                var model = new MezuniyetSureciTezKontrolDto
+                {
+                    DonemAdi = surec.BaslangicYil + " - " + surec.BitisYil + " " + surec.Donemler.DonemAdi + " " + surec.SiraNo,
+                    MezuniyetSurecId = surec.MezuniyetSurecID,
+                    AktifMezuniyetSureciTezKontrolBilgiDtos = aktifMezuniyetSureciTezKontrolBilgiDtos,
+                    PasifMezuniyetSureciTezKontrolBilgiDtos = pasifMezuniyetSureciTezKontrolBilgiDtos
+
+                };
+                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "GetMsTezKontrolBilgileri", model);
             }
             return Content(page, "text/html");
         }

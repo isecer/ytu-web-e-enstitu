@@ -292,8 +292,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
             return rsm;
-        }
-
+        } 
 
         public static DateTime ToGetBitisTarihi(this DateTime baslangicTarihi, int ay)
         {

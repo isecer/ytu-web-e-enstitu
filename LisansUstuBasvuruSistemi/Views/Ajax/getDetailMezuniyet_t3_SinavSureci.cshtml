@@ -13,7 +13,7 @@
 
     var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
     var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
-    var sonSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault();
+    var sonSr = Model.MezuniyetSrModel.SalonRezervasyonlari.FirstOrDefault();
 
     var isJuriDegerlendirmeVar = false;
     var isSrTalebiYapilabilir = false;
@@ -39,41 +39,52 @@
                     <tr>
                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-edit fa-lg"></i> Sınav Süreci</td>
                         <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
-                            @if (isSrTalebiYapilabilir)
-                            {
-                                <span class="label label-primary" style="cursor:pointer;" onclick="showSRDialog(@Model.MezuniyetBasvurulariID,0)">Yeni Sınav Talebi Oluştur</span>
-                            }
-                            else if (Model.EYKTarihi.HasValue == false)
+
+                            @if (Model.EYKTarihi.HasValue == false)
                             {
                                 <span class="label label-danger" style="cursor:pointer;">Enstitü tarafından EYK Tarihi girilmeden rezervasyon işlemi yapılamaz</span>
+                            }
+                            else if (isSrTalebiYapilabilir)
+                            {
+                                <span class="label label-primary" style="cursor:pointer;" onclick="showSRDialog(@Model.MezuniyetBasvurulariID,0)">Yeni Sınav Talebi Oluştur</span>
                             }
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2">
 
-                            @if (Model.MezuniyetSRModel.SalonRezervasyonlari.Count == 0)
+                            @if (Model.MezuniyetSrModel.SalonRezervasyonlari.Count == 0)
                             {
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td style="color:maroon;font-size:13pt; text-align:center;height:250px;">
+                                            <td style=" text-align:center;height:250px;">
+                                                <div class="tasks">
+                                                    <div class="task-item task-danger" style="margin-bottom: 0px; cursor: auto;">
+                                                        <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                            @if (isSrTalebiYapilabilir)
+                                                            {
+                                                                if (Model.MezuniyetSrModel.IsSrEykSureAsimi)
+                                                                {
+                                                                    @("Belirlenen Eyk tarihine göre salon rezervasyonu " + Model.MezuniyetSrModel.EykIlkSrMaxTarih.ToFormatDate() + " tarihine kadar alınmamış ve rezervasyon için belirlenen süre aşılmıştır.")
+                                                                }
+                                                                else if (Model.EYKTarihi.HasValue)
+                                                                {
+                                                                    @("Belirlenen Eyk tarihine göre salon rezervasyonu işlemi en geç " + Model.MezuniyetSrModel.EykIlkSrMaxTarih.ToFormatDate() + " tarihine kadar yapılması gerekmektedir.")
+                                                                }
+                                                                else
+                                                                {
+                                                                    @("Enstitü tarafından EYK Tarihi girilmeden rezervasyon işlemi yapılamaz")
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @("Kayıtlı Salon Rezervasyonu Bilgisi Bulunamadı.")
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                                @if (isSrTalebiYapilabilir)
-                                                {
-                                                    if (Model.MezuniyetSRModel.IsSrEykSureAsimi)
-                                                    {
-                                                        @("Belirlenen Eyk tarihine göre salon rezervasyonu " + Model.MezuniyetSRModel.EykIlkSrMaxTarih.ToFormatDate() + " tarihine kadar alınmamış ve rezervasyon için belirlenen süre aşılmıştır.")
-                                                    }
-                                                    else
-                                                    {
-                                                        @("Belirlenen Eyk tarihine göre salon rezervasyonu işlemi en geç " + Model.MezuniyetSRModel.EykIlkSrMaxTarih.ToFormatDate() + " tarihine kadar yapılması gerekmektedir.")
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    @("Kayıtlı Salon Rezervasyonu Bilgisi Bulunamadı.")
-                                                }
                                             </td>
                                         </tr>
                                     </tbody>
@@ -98,8 +109,8 @@
                                             <td colspan="6" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;@Model.DurumColor;margin:0px;">
                                                     @{
-                                                        int rowIndex = Model.MezuniyetSRModel.SalonRezervasyonlari.Count;
-                                                        foreach (var item in Model.MezuniyetSRModel.SalonRezervasyonlari)
+                                                        int rowIndex = Model.MezuniyetSrModel.SalonRezervasyonlari.Count;
+                                                        foreach (var item in Model.MezuniyetSrModel.SalonRezervasyonlari)
                                                         {
                                                             var juriOnayiOlmayacak = item.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi && !(item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi);
                                                             var isJuriSonucGirildi = item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
@@ -114,7 +125,7 @@
                                                                             <td>
                                                                                 <ul class="panel-controls">
                                                                                     <li id="iShow_Ap_@item.SRTalepID" onclick="showDetailY('Ap_@item.SRTalepID')">
-                                                                                        <a href="javascript:void(0)"><span class="fa @(rowIndex == Model.MezuniyetSRModel.SalonRezervasyonlari.Count ? "fa-angle-down" : "fa-angle-up")"></span> </a>
+                                                                                        <a href="javascript:void(0)"><span class="fa @(rowIndex == Model.MezuniyetSrModel.SalonRezervasyonlari.Count ? "fa-angle-down" : "fa-angle-up")"></span> </a>
                                                                                     </li>
                                                                                 </ul>
                                                                             </td>
@@ -187,7 +198,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="MainRow2 cls-Ap_@item.SRTalepID" style="@(rowIndex == Model.MezuniyetSRModel.SalonRezervasyonlari.Count ? "" : "display:none;")">
+                                                            <tr class="MainRow2 cls-Ap_@item.SRTalepID" style="@(rowIndex == Model.MezuniyetSrModel.SalonRezervasyonlari.Count ? "" : "display:none;")">
                                                                 <td id="cls-Ap_@item.SRTalepID" colspan="6" style="padding: 1px 1px 2px 50px;">
 
                                                                     <div class="widget widget-default" style="border-top:1px solid;color:@item.Color;border-top-color:@item.Color; margin-bottom:8px;padding:6px 10px;min-height:20px;">
@@ -364,18 +375,18 @@
                                                                                     <td class="CaptionTd" width="300">Tez sanayi ile iş birliği kapsamında mı gerçekleşti?</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
-                                                                                        @if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null)
+                                                                                        @if (juriOneriFormu?.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null)
                                                                                         {
                                                                                             <span>
                                                                                                 <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapılması Bekleniyor.</span>
                                                                                             </span>
                                                                                         }
-                                                                                        else if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true)
+                                                                                        else if (juriOneriFormu?.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true)
                                                                                         {
                                                                                             <span>Tez sanayi ile iş birliği kapsamında gerçekleşti</span>
 
                                                                                         }
-                                                                                        else if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false)
+                                                                                        else if (juriOneriFormu?.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false)
                                                                                         {
                                                                                             <span>Tez sanayi ile iş birliği kapsamında gerçekleşmedi</span>
                                                                                         }

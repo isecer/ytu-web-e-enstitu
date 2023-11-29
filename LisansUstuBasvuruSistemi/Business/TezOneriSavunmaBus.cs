@@ -94,6 +94,10 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                         }
+                        else
+                        {
+                            MessageBox.Show("Uyarı", MessageBox.MessageType.Information, "Başvuru işleminin yapılabilmesi için OBS sisteminde yeterlik sözlü sınavından başarılı olunması gerekmetkedir.");
+                        }
 
                     }
                     else
@@ -558,7 +562,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var enstitu = toBasvuruSavunma.ToBasvuru.Enstituler;
 
-                    var sablonlar = db.MailSablonlaris.Where(p => sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var abdL = toBasvuruSavunma.ToBasvuru.Programlar.AnabilimDallari;
@@ -789,7 +793,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         JuriTipAdi = item.IsTezDanismani ? "Tez Danışmanı" : "Komite Üyesi",
                     }));
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
 

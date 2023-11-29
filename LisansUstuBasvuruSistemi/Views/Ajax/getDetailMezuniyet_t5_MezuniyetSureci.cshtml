@@ -10,7 +10,7 @@
     Layout = null;
     bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent(); 
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-    var itemOnaylananSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
+    var itemOnaylananSr = Model.MezuniyetSrModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
 
     var mezuniyetBasvurulariTezTeslimFormu = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(); 
     var item = itemOnaylananSr; 
