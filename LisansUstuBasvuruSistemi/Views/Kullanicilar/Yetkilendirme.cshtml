@@ -100,13 +100,13 @@
                     }
                 </div>
                 <div class="panel-footer">
-                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i> Geri Dön</a>
 
-                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save"></i> Kaydet</button>
                     @if (programYetki)
                     {
                         <input type="hidden" id="ProgramYetkilerineGit" name="ProgramYetkilerineGit" value="false" />
-                        <a href="javascript:void(0);" class="btn btn-default pull-right" onclick="$('#ProgramYetkilerineGit').val('true'); $('form').submit();"><i class="fa fa-save">&nbsp</i>Kaydet ve Program Yetkilerine Git</a>
+                        <a href="javascript:void(0);" class="btn btn-default pull-right" onclick="$('#ProgramYetkilerineGit').val('true'); $('form').submit();"><i class="fa fa-save"></i> Kaydet ve Program Yetkilerine Git</a>
                     }
                 </div>
             </div>

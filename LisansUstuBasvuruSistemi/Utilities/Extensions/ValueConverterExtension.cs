@@ -221,6 +221,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             return dateTime == DateTime.MinValue ? "" : dateTime.ToString("yyyy-MM-dd HH:mm");
         }
+        public static string ToFormatDateAndTimeInput2(this DateTime dateTime)
+        {
+            return dateTime == DateTime.MinValue ? "" : dateTime.ToString("dd-MM-yyyy HH:mm");
+        }
         public static string ToFormatTime(this DateTime? datetime)
         {
             if (!datetime.HasValue) return "";

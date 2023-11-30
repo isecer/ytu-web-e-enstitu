@@ -7,6 +7,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class YetkiGrupBus
     {
+        public const int TezKontrolYetkiGrupId = 13;
         public static List<Roller> GetYetkiGrupRoles(int yetkiGrupId)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())

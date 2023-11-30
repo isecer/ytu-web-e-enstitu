@@ -482,6 +482,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             _entities.SaveChanges();
         }
 
+ 
         public ActionResult GetOtBilgiM(string enstituKod, int mezuniyetSurecId)
         {
             var model = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(enstituKod, mezuniyetSurecId);
@@ -619,7 +620,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-                var aktifMezuniyetSureciTezKontrolBilgiDtos = (from kul in _entities.Kullanicilars.Where(p => p.YetkiGrupID == 13 && p.IsAktif && p.EnstituKod == surec.EnstituKod)
+                var aktifMezuniyetSureciTezKontrolBilgiDtos = (from kul in _entities.Kullanicilars.Where(p => p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif && p.EnstituKod == surec.EnstituKod)
 
                                                                select new MezuniyetSureciTezKontrolBilgiDto
                                                                {
@@ -629,15 +630,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                    AdSoyad = kul.Ad + " " + kul.Soyad,
                                                                    SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
                                                                    SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+                                                                   SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.OnayYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
                                                                    GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
                                                                    GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.IslemYapanID == kul.KullaniciID)),
+                                                                   GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.OnayYapanID == kul.KullaniciID)),
                                                                }).OrderByDescending(o => o.GenelToplamOnay).ToList();
                 var aktifKullaniciIds = aktifMezuniyetSureciTezKontrolBilgiDtos.Select(s => s.KullaniciId).ToList();
 
                 var digerMezuniyetBasvurulariTezDosyalaKontrolYapanIds = _entities.MezuniyetBasvurulariTezDosyalaris
-                    .Where(p => p.IsOnaylandiOrDuzeltme==true && p.MezuniyetBasvurulari.MezuniyetSureci.EnstituKod == surec.EnstituKod && !aktifKullaniciIds.Contains(p.IslemYapanID)).Select(s => s.IslemYapanID).Distinct()
+                    .Where(p => p.IsOnaylandiOrDuzeltme==true && p.OnayYapanID.HasValue && p.MezuniyetBasvurulari.MezuniyetSureci.EnstituKod == surec.EnstituKod && !aktifKullaniciIds.Contains(p.OnayYapanID.Value)).Select(s => s.OnayYapanID.Value).Distinct()
                     .ToList();
                 var digerMezuniyetBasvuruTezDosyaKontrolSorumluId = _entities.MezuniyetBasvurularis
                     .Where(p => p.MezuniyetSureci.EnstituKod == surec.EnstituKod && p.TezKontrolKullaniciID.HasValue &&
@@ -659,10 +660,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                    AdSoyad = kul.Ad + " " + kul.Soyad,
                                                                    SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
                                                                    SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IslemYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+                                                                   SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.OnayYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
                                                                    GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
                                                                    GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.IslemYapanID == kul.KullaniciID)),
+                                                                   GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.OnayYapanID == kul.KullaniciID)),
                                                                }).OrderByDescending(o => o.GenelToplamOnay).ToList();
                 var model = new MezuniyetSureciTezKontrolDto
                 {
