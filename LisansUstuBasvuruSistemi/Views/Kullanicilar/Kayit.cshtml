@@ -289,12 +289,12 @@
                     </div>
 
                     <div class="panel-footer">
-                        <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i> Geri Dön</a>
-                        <button class="btn btn-primary pull-right"><i class="fa fa-save"></i> Kaydet</button>
+                        <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i>Geri Dön</a>
+                        <button class="btn btn-primary pull-right"><i class="fa fa-save"></i>Kaydet</button>
                         @if (ErisimYetki)
                         {
                             <input type="hidden" id="YetkilendirmeyeGit" name="YetkilendirmeyeGit" value="false" />
-                            <a href="javascript:void(0);" class="btn btn-default pull-right" onclick="$('#YetkilendirmeyeGit').val('true'); $('#kulSbmtFrm').submit();"><i class="fa fa-save"></i> Kaydet ve Yetkilendirmeye Git</a>
+                            <a href="javascript:void(0);" class="btn btn-default pull-right" onclick="$('#YetkilendirmeyeGit').val('true'); $('#kulSbmtFrm').submit();"><i class="fa fa-save"></i>Kaydet ve Yetkilendirmeye Git</a>
                         }
 
                     </div>

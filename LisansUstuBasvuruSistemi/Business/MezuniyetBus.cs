@@ -2132,13 +2132,12 @@ namespace LisansUstuBasvuruSistemi.Business
                             AdSoyad = danisman.Ad + " " + danisman.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = !srDanisman.Email.IsNullOrWhiteSpace() ? srDanisman.Email : danisman.EMail, ToOrBcc = true } },
                             MailSablonTipID = mb.OgrenimTipKod.IsDoktora() ? MailSablonTipiEnum.MezSinavSonucBilgiGonderimDanismanDr : MailSablonTipiEnum.MezSinavSonucBilgiGonderimDanismanYl,
-                            JuriTipAdi = "",
+                            JuriTipAdi = "TezDanismani",
                         });
                         var ogrenci = db.Kullanicilars.First(p => p.KullaniciID == mb.KullaniciID);
                         mModel.Add(new SablonMailModel
                         {
-                            UniqueID = null,
-
+                            UniqueID = null, 
                             UnvanAdi = "",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
@@ -2158,6 +2157,10 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (!isLinkOrSonuc)
                         {
                             var ids = new List<int?>() { srTalepId };
+                            if (item.JuriTipAdi == "TezDanismani")
+                            {
+                                ids.Add(1);
+                            }
                             var ekler = Management.ExportRaporPdf(RaporTipiEnum.MezuniyetTezSinavSonucFormu, ids);
                             gonderilenMailEkleri.AddRange(ekler.Select(s => new GonderilenMailEkleri { EkAdi = s.Name, EkDosyaYolu = "" }));
                             item.Attachments.AddRange(ekler);

@@ -13,14 +13,11 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System.IO;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
-using DevExpress.XtraPrinting.Native.Lines;
-using LisansUstuBasvuruSistemi.Ws_GsisMezuniyetBilgi;
-using static System.Net.WebRequestMethods;
-using System.Web.Helpers;
+ 
 
 namespace LisansUstuBasvuruSistemi.Business
 {
-    public static class TezOneriSavunmaBus
+    public static class TosBus
     {
         public static IHtmlString TosBasvuruDurumView(this TosDurumDto model)
         {

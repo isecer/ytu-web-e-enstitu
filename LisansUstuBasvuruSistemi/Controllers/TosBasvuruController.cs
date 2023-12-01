@@ -99,7 +99,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     bbModel.OgrenciNo = kul.OgrenciNo;
 
                     if (bbModel.SistemBasvuruyaAcik)
-                        TezOneriSavunmaBus.BasvuruOlustur(kul.KullaniciID);
+                        TosBus.BasvuruOlustur(kul.KullaniciID);
                 }
 
 
@@ -244,11 +244,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        if (TezDanismanOneriBus.IsAktifDanismanOneriVar(kul.KullaniciID))
+                        if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                         {
                             mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
-                        else if (TezDanismanOneriBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                        else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                         {
                             mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
@@ -259,7 +259,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (!tosUniqueId.HasValue)
                 {
-                    mMessage.Messages.AddRange(TezOneriSavunmaBus.TosKalanHakSavunmaBaslangicTarihKriter(toUniqueId).MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message));
+                    mMessage.Messages.AddRange(TosBus.TosKalanHakSavunmaBaslangicTarihKriter(toUniqueId).MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message));
                 }
                 if (mMessage.Messages.Count == 0)
                 {
@@ -383,7 +383,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             var donemSelectedValue = (tosUniqueId.HasValue
                                 ? (toBasvuruSavunma.DonemBaslangicYil + "" + toBasvuruSavunma.DonemID)
                                 : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemID));
-                            model.SListDonemSecim = new SelectList(TezIzlemeBus.CmbTiDonemListeBasvuru(toBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
+                            model.SListDonemSecim = new SelectList(TiBus.CmbTiDonemListeBasvuru(toBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
 
                             mMessage.MessageType = MsgTypeEnum.Information;
                             mMessage.IsSuccess = true;
@@ -472,11 +472,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        if (TezDanismanOneriBus.IsAktifDanismanOneriVar(kul.KullaniciID))
+                        if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                         {
                             mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
-                        else if (TezDanismanOneriBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                        else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                         {
                             mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
@@ -656,7 +656,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
 
                                 if (isDegisiklikVar && !isYeniKayit && toBasvuruSavunma.SRTalepleris.Any()) srTalepId = toBasvuruSavunma.SRTalepleris.First().SRTalepID;
-                                TezOneriSavunmaBus.SendMailTosBilgisi(toBasvuruSavunma.ToBasvuruSavunmaID, srTalepId);
+                                TosBus.SendMailTosBilgisi(toBasvuruSavunma.ToBasvuruSavunmaID, srTalepId);
                                 if (srTalepId.HasValue && mMessage.IsSuccess)
                                     mMessage.Messages.Add("<br/><i class='fa fa-lg fa-envelope-o' style='font-size:11pt;'></i> <span style=font-size:10pt;'>Tez Önerisi Savunma bilgilerinde değişiklik yapıldığı için Tez Önerisi Savunma, Toplantı bilgileri Danışman ve Öğrenciye mail olarak tekrar gönderildi!</span>");
 
@@ -816,7 +816,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (!mmMessage.Messages.Any())
                 {
-                    var basvuruKiterKontrolMsg = TezOneriSavunmaBus.TosKalanHakSavunmaBaslangicTarihKriter(toBasvuruSavunma.ToBasvuru.UniqueID, kModel.Tarih)
+                    var basvuruKiterKontrolMsg = TosBus.TosKalanHakSavunmaBaslangicTarihKriter(toBasvuruSavunma.ToBasvuru.UniqueID, kModel.Tarih)
                         .MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message).ToList();
                     if (basvuruKiterKontrolMsg.Any()) mmMessage.Messages.AddRange(basvuruKiterKontrolMsg);
                 }
@@ -829,7 +829,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kModel.IslemYapanID = UserIdentity.Current.Id;
                         kModel.IslemYapanIP = UserIdentity.Ip;
                         var tarih = kModel.Tarih;
-                        toBasvuruSavunma.SavunmaNo = TezOneriSavunmaBus.TosSavunmaNo(toBasvuruSavunma.ToBasvuru.UniqueID, toBasvuruSavunma.UniqueID, tarih);
+                        toBasvuruSavunma.SavunmaNo = TosBus.TosSavunmaNo(toBasvuruSavunma.ToBasvuru.UniqueID, toBasvuruSavunma.UniqueID, tarih);
 
 
                         kModel.Tarih = tarih.Date;
@@ -922,7 +922,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         if (isSendMail)
                         {
-                            var messages = TezOneriSavunmaBus.SendMailTosBilgisi(null, srTalep.SRTalepID);
+                            var messages = TosBus.SendMailTosBilgisi(null, srTalep.SRTalepID);
                             mmMessage.Messages.Add(messages.IsSuccess
                                 ? "<br/><i class='fa fa-envelope-o'></i> <span style=font-size:10pt;'>Toplantı bilgisi Komite üyelerine ve öğrenciye mail olarak gönderildi.</span>"
                                 : "<br/><i class='fa fa-lg fa-envelope-o' style='font-size:11pt;'></i> <span style=font-size:10pt;'>Toplantı bilgisi Komite üyelerine ve öğrenciye mail olarak gönderilemedi!</span>");
@@ -1128,7 +1128,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mMessage.IsSuccess = true;
                         if (sendMailLink)
                         {
-                            var messages = TezOneriSavunmaBus.SendMailTosDegerlendirmeLink(komite.ToBasvuruSavunma.UniqueID, null, true);
+                            var messages = TosBus.SendMailTosDegerlendirmeLink(komite.ToBasvuruSavunma.UniqueID, null, true);
                             if (isTezDanismani || degerlendirmeDuzeltmeYetki)
                             {
                                 if (messages.IsSuccess)
@@ -1168,7 +1168,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             toBasvuruSavunma.ToBasvuru.IkinciOneriBitisTarihi = null;
                             toBasvuruSavunma.ToBasvuru.RetDuzeltmeBitisTarihi = null;
                             _entities.SaveChanges();
-                            var messages = TezOneriSavunmaBus.SendMailTosDegerlendirmeLink(toBasvuruSavunma.UniqueID, null, false);
+                            var messages = TosBus.SendMailTosDegerlendirmeLink(toBasvuruSavunma.UniqueID, null, false);
                             if (isTezDanismani || degerlendirmeDuzeltmeYetki)
                             {
                                 if (messages.IsSuccess)
@@ -1301,7 +1301,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult SilDetay(Guid tosUniqueId)
         {
-            var mmMessage = TezOneriSavunmaBus.GetTosSilKontrol(tosUniqueId);
+            var mmMessage = TosBus.GetTosSilKontrol(tosUniqueId);
             var removedAllData = false;
             if (mmMessage.IsSuccess)
             {
@@ -1388,7 +1388,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                     }
                 }
-                var messages = TezOneriSavunmaBus.SendMailTosDegerlendirmeLink(tosUniqueId, tosKomiteUniqueId, true);
+                var messages = TosBus.SendMailTosDegerlendirmeLink(tosUniqueId, tosKomiteUniqueId, true);
                 if (messages.IsSuccess)
                 {
 

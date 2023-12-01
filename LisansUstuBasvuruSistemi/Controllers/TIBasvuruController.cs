@@ -177,7 +177,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullaniciId.Value);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
 
-            var mmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(enstituKod, kullaniciId, tiBasvuruId);
+            var mmMessage = TiBus.GetAktifTezIzlemeSurecKontrol(enstituKod, kullaniciId, tiBasvuruId);
 
             if (model.TIBasvuruID <= 0 && mmMessage.IsSuccess)
             {
@@ -246,7 +246,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult BasvuruYap(KmTiBasvuru kModel, string ekd)
         {
             if (RoleNames.TiGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
-            var mmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.ToNullIntZero());
+            var mmMessage = TiBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.ToNullIntZero());
 
             var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
@@ -599,10 +599,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             ? (tiBasvuruAraRapor.DonemBaslangicYil + "" + tiBasvuruAraRapor.DonemID)
                             : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemID));
                         model.SListDonemSecim =
-                            new SelectList(TezIzlemeBus.CmbTiDonemListeBasvuru(tiBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
+                            new SelectList(TiBus.CmbTiDonemListeBasvuru(tiBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
                         model.SListUnvanAdi = new SelectList(cmbUnvanList);
                         model.SListUniversiteId = new SelectList(cmbUniversiteList, "Value", "Caption");
-                        model.SListAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.AraRaporSayisi);
+                        model.SListAraRaporSayisi = new SelectList(TiBus.CmbAraRaporSayisi(true), "Value", "Caption", model.AraRaporSayisi);
 
                         mMessage.MessageType = MsgTypeEnum.Information;
                         mMessage.IsSuccess = true;
@@ -1085,7 +1085,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     _entities.SaveChanges();
                                 }
                                 if (isDegisiklikVar && !isYeniJo && tiBasvuruAraRapor.SRTalepleris.Any()) srTalepId = tiBasvuruAraRapor.SRTalepleris.First().SRTalepID;
-                                TezIzlemeBus.SendMailTiBilgisi(tiBasvuruAraRapor.TIBasvuruAraRaporID, srTalepId);
+                                TiBus.SendMailTiBilgisi(tiBasvuruAraRapor.TIBasvuruAraRaporID, srTalepId);
                                 if (srTalepId.HasValue && mMessage.IsSuccess) mMessage.Messages.Add("<br/><i class='fa fa-lg fa-envelope-o' style='font-size:11pt;'></i> <span style=font-size:10pt;'>Rapor bilgilerinde değişiklik yapıldığı için Rapor, Toplantı bilgileri Danışman ve Öğrenciye mail olarak tekrar gönderildi!</span>");
 
                             }
@@ -1348,7 +1348,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         if (isSendMail)
                         {
-                            var messages = TezIzlemeBus.SendMailTiBilgisi(null, srTalep.SRTalepID);
+                            var messages = TiBus.SendMailTiBilgisi(null, srTalep.SRTalepID);
                             mmMessage.Messages.Add(messages.IsSuccess
                                 ? "<br/><i class='fa fa-envelope-o'></i> <span style=font-size:10pt;'>Toplantı bilgisi Komite üyelerine ve öğrenciye mail olarak gönderildi.</span>"
                                 : "<br/><i class='fa fa-lg fa-envelope-o' style='font-size:11pt;'></i> <span style=font-size:10pt;'>Toplantı bilgisi Komite üyelerine ve öğrenciye mail olarak gönderilemedi!</span>");
@@ -1507,7 +1507,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mMessage.IsSuccess = true;
                         if (sendMailLink)
                         {
-                            var messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(komite.TIBasvuruAraRaporID, null, true);
+                            var messages = TiBus.SendMailTiDegerlendirmeLink(komite.TIBasvuruAraRaporID, null, true);
                             if (isTezDanismani || degerlendirmeDuzeltmeYetki)
                             {
                                 if (messages.IsSuccess)
@@ -1544,7 +1544,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             tiBasvuruAraRapor.IsBasariliOrBasarisiz = tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == true) > tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == false);
                             tiBasvuruAraRapor.IsOyBirligiOrCoklugu = tiBasvuruAraRaporKomites.Count == tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == tiBasvuruAraRapor.IsBasariliOrBasarisiz);
 
-                            var messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(komite.TIBasvuruAraRaporID, null, false);
+                            var messages = TiBus.SendMailTiDegerlendirmeLink(komite.TIBasvuruAraRaporID, null, false);
                             if (isTezDanismani || degerlendirmeDuzeltmeYetki)
                             {
                                 if (messages.IsSuccess)
@@ -1593,7 +1593,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int id)
         {
 
-            var mmMessage = TezIzlemeBus.GetTiBasvuruSilKontrol(id);
+            var mmMessage = TiBus.GetTiBasvuruSilKontrol(id);
 
             if (mmMessage.IsSuccess)
             {
@@ -1748,7 +1748,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                     }
                 }
-                var messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(tiBasvuruAraRaporId, uniqueId, true);
+                var messages = TiBus.SendMailTiDegerlendirmeLink(tiBasvuruAraRaporId, uniqueId, true);
                 if (messages.IsSuccess)
                 {
 

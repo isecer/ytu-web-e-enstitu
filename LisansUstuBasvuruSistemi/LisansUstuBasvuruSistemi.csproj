@@ -232,11 +232,11 @@
     <Compile Include="Business\SistemBilgilendirmeBus.cs" />
     <Compile Include="Business\SrTalepleriBus.cs" />
     <Compile Include="Business\TaleplerBus.cs" />
-    <Compile Include="Business\TezDanismanOneriBus.cs" />
-    <Compile Include="Business\TezIzlemeBus.cs" />
+    <Compile Include="Business\TdoBus.cs" />
+    <Compile Include="Business\TiBus.cs" />
     <Compile Include="Business\KullanicilarBus.cs" />
-    <Compile Include="Business\TezIzlemeJuriOneriBus.cs" />
-    <Compile Include="Business\TezOneriSavunmaBus.cs" />
+    <Compile Include="Business\TijBus.cs" />
+    <Compile Include="Business\TosBus.cs" />
     <Compile Include="Business\UnvanlarBus.cs" />
     <Compile Include="Business\UserBus.cs" />
     <Compile Include="Business\YeterlikBus.cs" />
@@ -249,6 +249,12 @@
     <Compile Include="Controllers\BelgeTipDetayController.cs" />
     <Compile Include="Controllers\BelgeTipleriController.cs" />
     <Compile Include="Controllers\DosyaKontrolController.cs" />
+    <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.Designer.cs">
+      <DependentUpon>RprTezSinavSonucTutanagi_Detay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariTezDosyalariDto.cs" />
     <Compile Include="Controllers\TdoAyarlarController.cs" />
     <Compile Include="Controllers\TdoBasvuruController.cs" />
@@ -5677,6 +5683,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezTeslimFormu_0338.resx">
       <DependentUpon>RprMezuniyetTezTeslimFormu_0338.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.resx">
+      <DependentUpon>RprTezSinavSonucTutanagi_Detay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTdoTutanak.resx">
       <DependentUpon>RprTdoTutanak.cs</DependentUpon>

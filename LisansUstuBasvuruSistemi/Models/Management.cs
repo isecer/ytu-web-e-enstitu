@@ -361,7 +361,7 @@ namespace LisansUstuBasvuruSistemi.Models
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.Universitelers.Where(p=>!isYtuHaric || p.UniversiteID!=UniversiteYtuKod).OrderBy(o => o.Ad).ToList();
+                var data = db.Universitelers.Where(p => !isYtuHaric || p.UniversiteID != UniversiteYtuKod).OrderBy(o => o.Ad).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.UniversiteID, Caption = item.Ad + (item.KisaAd.IsNullOrWhiteSpace() ? "" : " (" + item.KisaAd + ")") });
@@ -371,8 +371,8 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
         public static List<CmbIntDto> CmbGetAktifUniversiteler(bool bosSecimVar = false)
-        { 
-            return CmbGetAktifUniversiteler(bosSecimVar, false); 
+        {
+            return CmbGetAktifUniversiteler(bosSecimVar, false);
         }
         public static List<CmbIntDto> CmbGetOgrenciBolumleri(string enstituKod, bool bosSecimVar = false)
         {
@@ -991,6 +991,16 @@ namespace LisansUstuBasvuruSistemi.Models
                             var rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(srTalep.UniqueID.Value);
 
                             rpr.CreateDocument();
+                            var isSwhoRaporDetay = false;
+                            if (dataId.Count > 1) isSwhoRaporDetay = dataId[1].ToIntToBooleanObj() ?? false;
+
+                            if (isSwhoRaporDetay)
+                            {
+                                var rpr2 = new RprTezSinavSonucTutanagi_Detay(srTalep.SRTalepID);
+                                rpr2.CreateDocument();
+                                rpr.Pages.AddRange(rpr2.Pages);
+                            }
+
                             rpr.DisplayName += ".pdf";
                             rpr.ExportOptions.Pdf.Compressed = true;
                             ms = new MemoryStream();

@@ -13,7 +13,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
-    public static class TezDanismanOneriBus
+    public static class TdoBus
     {
         public static bool IsAktifDanismanOneriVar(int kullaniciId)
         {
@@ -271,6 +271,113 @@ namespace LisansUstuBasvuruSistemi.Business
 
         }
 
+
+        //public static bool TosBasvuruOlustur(int kullaniciId)
+        //{
+        //    using (var entities = new LisansustuBasvuruSistemiEntities())
+        //    {
+        //        var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+        //        var isBasvuruEklenebilecekKullanici = kul.YtuOgrencisi &&
+        //                                       kul.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci &&
+        //                                       (kul.OgrenimTipKod.IsDoktora() ||
+        //                                        kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans);
+        //        if (!isBasvuruEklenebilecekKullanici) return false;
+
+        //        var tdoBasvurusu = entities.TDOBasvurus.FirstOrDefault(f =>
+        //            f.KullaniciID == kul.KullaniciID && f.OgrenciNo == kul.OgrenciNo &&
+        //            f.ProgramKod == kul.ProgramKod && f.OgrenimTipKod == kul.OgrenimTipKod);
+
+        //        if (tdoBasvurusu != null) return false;
+
+
+
+               //var insertModel = new TDOBasvuru
+               //{
+               //    OgrenimTipKod = kul.OgrenimTipKod.Value,
+               //    ResimAdi = kul.ResimAdi,
+               //    KullaniciTipID = kul.KullaniciTipID,
+               //    KayitOgretimYiliBaslangic = kul.KayitYilBaslangic,
+               //    KayitOgretimYiliDonemID = kul.KayitDonemID,
+               //    KayitTarihi = kul.KayitTarihi,
+               //    OgrenciNo = kul.OgrenciNo,
+               //    IslemYapanID = UserIdentity.Current.Id,
+               //    IslemTarihi = DateTime.Now,
+               //    IslemYapanIP = UserIdentity.Ip
+               //};
+
+        //         insertModel.OgrenciNo = kul.OgrenciNo;
+        //        insertModel.OgrenimDurumID = kul.OgrenimDurumID.Value;
+        //        insertModel.ProgramKod = kul.ProgramKod;
+        //        insertModel.Ad = kul.Ad;
+        //        insertModel.Soyad = kul.Soyad;
+        //        TDOBasvuru data;
+        //        var isNewRecord = false;
+        //        if (kModel.TDOBasvuruID <= 0)
+        //        {
+        //            isNewRecord = true;
+        //            kModel.BasvuruTarihi = DateTime.Now;
+
+        //            data = _entities.TDOBasvurus.Add(new TDOBasvuru
+        //            {
+        //                EnstituKod = kModel.EnstituKod,
+        //                UniqueID = Guid.NewGuid(),
+        //                BasvuruTarihi = kModel.BasvuruTarihi,
+        //                KullaniciID = kModel.KullaniciID,
+        //                KullaniciTipID = kModel.KullaniciTipID,
+        //                ResimAdi = kModel.ResimAdi,
+        //                Ad = kModel.Ad,
+        //                Soyad = kModel.Soyad,
+        //                UyrukKod = kModel.UyrukKod,
+        //                TcKimlikNo = kModel.TcKimlikNo,
+        //                OgrenciNo = kModel.OgrenciNo,
+        //                OgrenimDurumID = kModel.OgrenimDurumID,
+        //                OgrenimTipKod = kModel.OgrenimTipKod,
+        //                ProgramKod = kModel.ProgramKod,
+        //                KayitOgretimYiliBaslangic = kModel.KayitOgretimYiliBaslangic,
+        //                KayitOgretimYiliDonemID = kModel.KayitOgretimYiliDonemID,
+        //                KayitTarihi = kModel.KayitTarihi,
+        //                IslemTarihi = DateTime.Now,
+        //                IslemYapanID = UserIdentity.Current.Id,
+        //                IslemYapanIP = UserIdentity.Ip
+
+        //            });
+        //            _entities.SaveChanges();
+        //            TdoBus.ObsDanismanBasvuruBilgiEslestir(data.KullaniciID, data.TDOBasvuruID);
+
+        //        }
+        //        else
+        //        {
+
+        //            data = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID);
+        //            data.EnstituKod = kModel.EnstituKod;
+        //            data.BasvuruTarihi = kModel.BasvuruTarihi;
+        //            data.KullaniciID = kModel.KullaniciID;
+        //            data.KullaniciTipID = kModel.KullaniciTipID;
+        //            data.ResimAdi = kModel.ResimAdi;
+        //            data.Ad = kModel.Ad;
+        //            data.Soyad = kModel.Soyad;
+        //            data.UyrukKod = kModel.UyrukKod;
+        //            data.TcKimlikNo = kModel.TcKimlikNo;
+        //            data.OgrenciNo = kModel.OgrenciNo;
+        //            data.OgrenimDurumID = kModel.OgrenimDurumID;
+        //            data.OgrenimTipKod = kModel.OgrenimTipKod;
+        //            data.ProgramKod = kModel.ProgramKod;
+        //            data.KayitOgretimYiliBaslangic = kModel.KayitOgretimYiliBaslangic;
+        //            data.KayitOgretimYiliDonemID = kModel.KayitOgretimYiliDonemID;
+        //            data.KayitTarihi = kModel.KayitTarihi;
+        //            data.IslemTarihi = DateTime.Now;
+        //            data.IslemYapanID = UserIdentity.Current.Id;
+        //            data.IslemYapanIP = UserIdentity.Ip;
+        //            _entities.SaveChanges();
+
+
+        //        }
+        //        LogIslemleri.LogEkle("TDOBasvuru", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, data.ToJson());
+
+        //    }
+
+        //    return true;
+        //}
 
         public static Tuple<bool, string> ObsDanismanBasvuruBilgiEslestir(int kullaniciId, int tDoBasvuruId)
         {

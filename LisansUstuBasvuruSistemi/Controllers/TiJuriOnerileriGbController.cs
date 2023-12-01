@@ -105,7 +105,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     || p.JuriAdis.Contains(model.AdSoyad)
                     );
             }
-            var tijFormTips = TezIzlemeJuriOneriBus.CmbTijOneriTipListe(true);
+            var tijFormTips = TijBus.CmbTijOneriTipListe(true);
             if (model.TijFormTipID.HasValue)
             {
                 isFiltered = true;
@@ -167,9 +167,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.filteredDanismanIds = isFiltered ? q.Where(p => p.SonBasvuru != null && p.SonBasvuru.TezDanismanID.HasValue).Select(s => s.SonBasvuru.TezDanismanID.Value).Distinct().ToList() : new List<int>();
 
             ViewBag.IndexModel = indexModel;
-            ViewBag.AktifTijDonemId = new SelectList(TezIzlemeJuriOneriBus.CmbTiDonemListe(model.EnstituKod, true), "Value", "Caption", model.AktifTijDonemId);
-            ViewBag.AnabilimDaliID = new SelectList(TezIzlemeJuriOneriBus.GetCmbFilterTiAnabilimDallari(model.EnstituKod, true), "Value", "Caption", model.AnabilimDaliID);
-            ViewBag.AktifDurumID = new SelectList(TezIzlemeJuriOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
+            ViewBag.AktifTijDonemId = new SelectList(TijBus.CmbTiDonemListe(model.EnstituKod, true), "Value", "Caption", model.AktifTijDonemId);
+            ViewBag.AnabilimDaliID = new SelectList(TijBus.GetCmbFilterTiAnabilimDallari(model.EnstituKod, true), "Value", "Caption", model.AnabilimDaliID);
+            ViewBag.AktifDurumID = new SelectList(TijBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
             tijFormTips.Add(new CmbIntDto { Caption = "Tüm Değişenler", Value = 1000 });
             ViewBag.TijFormTipID = new SelectList(tijFormTips, "Value", "Caption", model.TijFormTipID);
 
@@ -191,7 +191,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (tiJuriOnerileriOgrenciAdina && !UserIdentity.Current.IsYetkiliTij)
                 danismanId = UserIdentity.Current.Id;
 
-            var jsonResult = TezIzlemeJuriOneriBus.GetFilterOgrenciJsonResult(term, enstituKod, danismanId);
+            var jsonResult = TijBus.GetFilterOgrenciJsonResult(term, enstituKod, danismanId);
             return jsonResult;
         }
 
@@ -223,7 +223,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 KullanicilarBus.OgrenciBilgisiGuncelleObs(kul.KullaniciID);
 
-                var ogrencilers = TezIzlemeJuriOneriBus.GetDanismanOgrencileriKullaniciId(danismanId.Value);
+                var ogrencilers = TijBus.GetDanismanOgrencileriKullaniciId(danismanId.Value);
                 if (ogrencilers.All(a => a != kullaniciId))
                 {
                     mMessage.Messages.Add("Sadece danışmanı olduğunuz öğrenciler için jüri öneri formu oluşturabilirsiniz.");
@@ -252,11 +252,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             !f.IsYeniBasvuruYapilabilir);
                         if (devamEdenBasvuru == null)
                         {
-                            if (TezDanismanOneriBus.IsAktifDanismanOneriVar(kul.KullaniciID))
+                            if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                             {
                                 mMessage.Messages.Add("Öğrencinin yapmış olduğu bir Tez Danışman Öneri başvurusu bulunmakta. Jüri önerisi yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                             }
-                            else if (TezDanismanOneriBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                            else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                             {
                                 mMessage.Messages.Add("Öğrencinin yapmış olduğu bir Tez Eş Danışman Öneri başvurusu bulunmakta. Jüri önerisi yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                             }
@@ -273,7 +273,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             else
                             {
-                                basvuruUniqueId = TezIzlemeJuriOneriBus.TezIzlemeJuriOneriSenkronizasyon(kullaniciId);
+                                basvuruUniqueId = TijBus.TezIzlemeJuriOneriSenkronizasyon(kullaniciId);
                             }
                         }
                         else
@@ -340,11 +340,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 KullaniciId = tijBasvuru?.KullaniciID ?? kullaniciId.Value,
                 TezDanismanID = tijBasvuru?.TezDanismanID ?? kul.DanismanID,
                 TijBasvuruID = tijBasvuru?.TijBasvuruID ?? 0,
-                SListTijDegisiklikTip = new SelectList(TezIzlemeJuriOneriBus.CmbTijDegisiklikTipListe(true), "Value", "Caption", tijBasvuruOneri?.TijDegisiklikTipID),
+                SListTijDegisiklikTip = new SelectList(TijBus.CmbTijDegisiklikTipListe(true), "Value", "Caption", tijBasvuruOneri?.TijDegisiklikTipID),
                 SListUnvanAdi = new SelectList(unvanlar, "Value", "Caption"),
                 SListUniversiteID = new SelectList(universiteler, "Value", "Caption"),
             };
-            model.SListTijFormTip = new SelectList(TezIzlemeJuriOneriBus.CmbTijFormTipListe(true, model.IsIlkOneri), "Value", "Caption",
+            model.SListTijFormTip = new SelectList(TijBus.CmbTijFormTipListe(true, model.IsIlkOneri), "Value", "Caption",
                 tijBasvuruOneri?.TijFormTipID);
 
 
@@ -436,7 +436,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (tijBasvuru != null && tijBasvuru.TijBasvuruOneris.Any(a => a.IsObsData || (a.TijFormTipID == TijFormTipiEnum.YeniForm && a.EYKDaOnaylandi == true)))
                     {
-                        mMessage.Messages.AddRange(TezIzlemeJuriOneriBus.TezIzlemeJuriOneriSenkronizasyonMsg(kul.KullaniciID));
+                        mMessage.Messages.AddRange(TijBus.TezIzlemeJuriOneriSenkronizasyonMsg(kul.KullaniciID));
                     }
 
                     if (!mMessage.Messages.Any())
@@ -512,7 +512,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Jüri öneri formu başvuru süreci kapalıdır. Detaylı bilgi almak için " + enstituAdi + " ile iletişime geçiniz.");
             }
-            else if (danismanId.HasValue && TezIzlemeJuriOneriBus.GetDanismanOgrencileriKullaniciId(danismanId.Value).All(a => a != kul.KullaniciID))
+            else if (danismanId.HasValue && TijBus.GetDanismanOgrencileriKullaniciId(danismanId.Value).All(a => a != kul.KullaniciID))
             {
                 mMessage.Messages.Add("Sadece danışmanı olduğunuz öğrenciler için jüri öneri formu oluşturabilirsiniz.");
             }
@@ -532,14 +532,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var messages = TezIzlemeJuriOneriBus.GetTijBasvuruDetayIslemKontrol(tijBasvuruOneri.UniqueID);
+                    var messages = TijBus.GetTijBasvuruDetayIslemKontrol(tijBasvuruOneri.UniqueID);
                     mMessage.Messages.AddRange(messages.Messages);
                 }
 
 
                 if (kModel.TijFormTipID != TijFormTipiEnum.YeniForm)
                 {
-                    mMessage.Messages.AddRange(TezIzlemeJuriOneriBus.TezIzlemeJuriOneriSenkronizasyonMsg(kul.KullaniciID));
+                    mMessage.Messages.AddRange(TijBus.TezIzlemeJuriOneriSenkronizasyonMsg(kul.KullaniciID));
                 }
 
 
@@ -835,12 +835,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 if (tijBasvuruOneri.DanismanOnayladi == true)
                                 {
-                                    TezIzlemeJuriOneriBus.SendMailDanismanOnay(uniqueId);
+                                    TijBus.SendMailDanismanOnay(uniqueId);
 
                                 }
                                 else if (!tijBasvuruOneri.DanismanOnayladi.HasValue)
                                 {
-                                    TezIzlemeJuriOneriBus.SendMailBasvuruYapildi(uniqueId);
+                                    TijBus.SendMailBasvuruYapildi(uniqueId);
                                 }
                             }
                         }
@@ -913,7 +913,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add(isDanismanOnay.HasValue ? (isDanismanOnay.Value ? "Jüri öneri formu Onaylandı." : "Jüri öneri formu Ret Edildi.") : "Onaylama İşlemi Geril Alındı.");
                     if (sendMail)
                     {
-                        var resul = TezIzlemeJuriOneriBus.SendMailDanismanOnay(tijBasvuruOneri.UniqueID);
+                        var resul = TijBus.SendMailDanismanOnay(tijBasvuruOneri.UniqueID);
                         if (!resul.IsSuccess)
                         {
                             mmMessage.Messages.AddRange(resul.Messages);
@@ -1125,7 +1125,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (onaylandi.HasValue && isDegisiklikVar)
                     {
-                        var result = TezIzlemeJuriOneriBus.SendMailEykOnay(tijBasvuruOneriUniqueId, eykDaOnayOrEykYaGonderim,
+                        var result = TijBus.SendMailEykOnay(tijBasvuruOneriUniqueId, eykDaOnayOrEykYaGonderim,
                                 onaylandi.Value);
                     }
 
@@ -1345,7 +1345,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult SilDetay(Guid tijBasvuruOneriUniqueId)
         {
-            var mmMessage = TezIzlemeJuriOneriBus.GetTijBasvuruDetayIslemKontrol(tijBasvuruOneriUniqueId);
+            var mmMessage = TijBus.GetTijBasvuruDetayIslemKontrol(tijBasvuruOneriUniqueId);
             var removedAllData = false;
             if (mmMessage.IsSuccess)
             {

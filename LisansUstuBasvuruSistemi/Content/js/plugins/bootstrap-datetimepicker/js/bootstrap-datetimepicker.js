@@ -1262,16 +1262,17 @@
 			return [31, (DPGlobal.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 		},
 		getDefaultFormat: function (type, field) {
+			debugger
 			if (type == "standard") {
 				if (field == 'input')
-					return 'yyyy-mm-dd hh:ii';
+					return 'dd.mm.yyyy hh:ii';
 				else
-					return 'yyyy-mm-dd hh:ii:ss';
+					return 'dd.mm.yyyy hh:ii:ss';
 			} else if (type == "php") {
 				if (field == 'input')
-					return 'Y-m-d H:i';
+					return 'd.m.Y H:i';
 				else
-					return 'Y-m-d H:i:s';
+					return 'd.m.Y H:i:s';
 			} else {
 				throw new Error("Invalid format type.");
 			}

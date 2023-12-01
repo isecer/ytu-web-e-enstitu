@@ -141,10 +141,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.filteredOgrenciIds = isFiltered && !model.AktifDonemID.IsNullOrWhiteSpace() ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.filteredDanismanIds = isFiltered && !model.AktifDonemID.IsNullOrWhiteSpace() ? q.Where(p => p.TezDanismanID.HasValue).Select(s => s.TezDanismanID.Value).Distinct().ToList() : new List<int>();
 
-            ViewBag.AktifDonemID = new SelectList(TezOneriSavunmaBus.CmbDonemListe(true), "Value", "Caption", model.AktifDonemID);
-            ViewBag.AktifDurumID = new SelectList(TezOneriSavunmaBus.CmbTosDurumListe(true), "Value", "Caption", model.AktifDurumID);
-            ViewBag.AnabilimDaliID = new SelectList(TezOneriSavunmaBus.GetCmbFilterAnabilimDallari(enstituKod, true), "Value", "Caption", model.AnabilimDaliID);
-            ViewBag.SavunmaNo = new SelectList(TezOneriSavunmaBus.CmbTosNumarasi(true), "Value", "Caption", model.SavunmaNo);
+            ViewBag.AktifDonemID = new SelectList(TosBus.CmbDonemListe(true), "Value", "Caption", model.AktifDonemID);
+            ViewBag.AktifDurumID = new SelectList(TosBus.CmbTosDurumListe(true), "Value", "Caption", model.AktifDurumID);
+            ViewBag.AnabilimDaliID = new SelectList(TosBus.GetCmbFilterAnabilimDallari(enstituKod, true), "Value", "Caption", model.AnabilimDaliID);
+            ViewBag.SavunmaNo = new SelectList(TosBus.CmbTosNumarasi(true), "Value", "Caption", model.SavunmaNo);
             ViewBag.onayYapmayanJuriEmails = isFiltered && isDegerlendirmeSurecinde ? q.SelectMany(s => s.OnayYapmayanJuriEmails).Distinct().ToList() : new List<string>();
 
             ViewBag.IndexModel = indexModel;

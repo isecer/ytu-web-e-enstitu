@@ -15,7 +15,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
-    public static class TezIzlemeBus
+    public static class TiBus
     {
 
         public static TiBasvuruDetayDto GetSecilenBasvuruTiDetay(int tiBasvuruId, Guid? uniqueId)

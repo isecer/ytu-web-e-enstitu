@@ -105,7 +105,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                         .FirstOrDefault();
                                     if (tdoBasvuruId > 0)
                                     {
-                                        TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(loginUser.KullaniciID, tdoBasvuruId);
+                                        TdoBus.ObsDanismanBasvuruBilgiEslestir(loginUser.KullaniciID, tdoBasvuruId);
                                     }
                                 }
                             }

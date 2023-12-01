@@ -16,7 +16,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
-    public static class TezIzlemeJuriOneriBus
+    public static class TijBus
     {
         public static bool IsAktifDevamEdenTijVarMi(int kullaniciId, string ogrenciNo)
         {
@@ -198,12 +198,12 @@ namespace LisansUstuBasvuruSistemi.Business
                             if (ogrenciYeterlikBilgi != null)
                             {
 
-                                if (TezDanismanOneriBus.IsAktifDanismanOneriVar(kul.KullaniciID))
+                                if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                                 {
                                     model.BasvuruKontrolBilgi.IsBasvuruAcik = false;
                                     model.BasvuruKontrolBilgi.Aciklama = "Adınıza ait yapılan bir Tez Danışman Öneri başvurusunuz bulunmakta. Jüri önerisi yapılabilmesi bu sürecinin tamamlanması gerekmektedir.";
                                 }
-                                else if (TezDanismanOneriBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                                else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                                 {
                                     model.BasvuruKontrolBilgi.IsBasvuruAcik = false;
                                     model.BasvuruKontrolBilgi.Aciklama = "Adınıza ait yapılan bir Tez Eş Danışman başvurunuz bulunmakta. Jüri önerisi yapılabilmesi için Eş Danışman sürecinin tamamlanması gerekmektedir.";

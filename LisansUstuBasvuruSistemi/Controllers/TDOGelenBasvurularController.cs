@@ -218,12 +218,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.TdoBasvuruDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.filteredOgrenciIds = isFiltered ? q.Select(s => s.KullaniciID).Distinct().ToList() : new List<int>();
             ViewBag.filteredDanismanIds = isFiltered ? q.Where(p => p.TezDanismanID.HasValue).Select(s => s.TezDanismanID.Value).Distinct().ToList() : new List<int>();
-            ViewBag.AktifDonemID = new SelectList(TezDanismanOneriBus.CmbTdoDonemListe(enstituKod, true), "Value", "Caption", model.AktifDonemID);
-            ViewBag.TDODanismanTalepTipID = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(true), "Value", "Caption", model.TDODanismanTalepTipID);
-            ViewBag.AktifDurumID = new SelectList(TezDanismanOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
-            ViewBag.DurumID = new SelectList(TezDanismanOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.DurumID);
-            ViewBag.AktifEsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.AktifEsDurumID);
-            ViewBag.EsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.EsDurumID);
+            ViewBag.AktifDonemID = new SelectList(TdoBus.CmbTdoDonemListe(enstituKod, true), "Value", "Caption", model.AktifDonemID);
+            ViewBag.TDODanismanTalepTipID = new SelectList(TdoBus.CmbTdoDanismanTalepTip(true), "Value", "Caption", model.TDODanismanTalepTipID);
+            ViewBag.AktifDurumID = new SelectList(TdoBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
+            ViewBag.DurumID = new SelectList(TdoBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.DurumID);
+            ViewBag.AktifEsDurumID = new SelectList(TdoBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.AktifEsDurumID);
+            ViewBag.EsDurumID = new SelectList(TdoBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.EsDurumID);
             return View(model);
         }
 
