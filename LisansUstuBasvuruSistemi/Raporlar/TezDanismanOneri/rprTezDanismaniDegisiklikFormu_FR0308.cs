@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                              urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TDOF_" + s.TDOBasvuruDanismanID + "_" + s.UniqueID,
                              s.UniqueID,
                              b.OgrenciNo,
-                             AdSoyad = b.Ad + " " + b.Soyad,
+                             AdSoyad = k.Ad + " " + k.Soyad,
                              e.EnstituAd,
                              abd.AnabilimDaliAdi,
                              prg.ProgramAdi,

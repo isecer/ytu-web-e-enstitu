@@ -25,14 +25,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public string EnstituKod { get; set; }
         public System.DateTime BasvuruTarihi { get; set; }
         public int KullaniciID { get; set; }
-        public Nullable<int> KullaniciTipID { get; set; }
-        public string ResimAdi { get; set; }
-        public string Ad { get; set; }
-        public string Soyad { get; set; }
-        public Nullable<int> UyrukKod { get; set; }
-        public string TcKimlikNo { get; set; }
         public string OgrenciNo { get; set; }
-        public int OgrenimDurumID { get; set; }
         public int OgrenimTipKod { get; set; }
         public string ProgramKod { get; set; }
         public Nullable<int> KayitOgretimYiliBaslangic { get; set; }
@@ -46,8 +39,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Donemler Donemler { get; set; }
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
-        public virtual KullaniciTipleri KullaniciTipleri { get; set; }
-        public virtual OgrenimDurumlari OgrenimDurumlari { get; set; }
         public virtual Programlar Programlar { get; set; }
         public virtual TDOBasvuruDanisman TDOBasvuruDanisman { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

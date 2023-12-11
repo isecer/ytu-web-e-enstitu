@@ -1604,11 +1604,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 ValueB = true
             };
-            if (talepYapanId.HasValue)
-            {
-                kotaBilgi = SrTalepleriBus.GetSrKotaBilgi(talepYapanId.Value, srTalepTipId, id);
-            }
-            return new { IsTezSinavi = ttip.IsTezSinavi, kotaBilgi = kotaBilgi, data = cmbmld.Select(s => new { s.Value, s.Caption }) }.ToJsonResult();
+            return new { IsTezSinavi = ttip.IsTezSinavi, data = cmbmld.Select(s => new { s.Value, s.Caption }) }.ToJsonResult();
         }
         [Authorize]
         public ActionResult GetGunler(int srSalonId, int srTalepTipId, DateTime tarih, DateTime? tarih2 = null, int? srOzelTanimId = null)
@@ -1627,8 +1623,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 var resmiTatilDegisen = _entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
                 var resmiTatilSabit = _entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
-                var rezervasyonlar = _entities.SROzelTanimlars.Where(p => p.SROzelTanimID != (srOzelTanimId ?? 0) && p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon && p.SRSalonID == srSalonId && p.Tarih == nTarih).ToList();
-                var rezerve = _entities.SROzelTanimlars.Where(p => p.SROzelTanimID != (srOzelTanimId ?? 0) && p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve && p.SRSalonID == srSalonId && p.Tarih == nTarih).ToList();
                 bool isSuccess = true;
                 var qTalepEslesen = _entities.SRTalepleris.Where(a => a.SRSalonID == srSalonId && a.Tarih == nTarih).Any(p => p.SRDurumID == SrTalepDurumEnum.Onaylandı || p.SRDurumID == SrTalepDurumEnum.TalepEdildi);
                 if (qTalepEslesen)
@@ -1639,21 +1633,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     isSuccess = false;
                 }
-                else if (rezerve.Count > 0)
-                {
-                    foreach (var itemRo in rezerve.Where(p => p.SROzelTanimGunlers.Any(a => a.HaftaGunID == dofW)))
-                    {
-                        if (rezerve.Any(p => p.SROzelTanimGunlers.Any(a => a.HaftaGunID == dofW)))
-                        {
-                            isSuccess = false;
-                        }
-                    }
-                }
-                else if (rezervasyonlar.Count > 0)
-                {
-                    isSuccess = false;
-
-                }
+                
                 var sgun = gunL.FirstOrDefault(p => p.Value == dofW);
                 if (sgun != null && isSuccess == false) gunL.Remove(sgun);
             }
@@ -3223,10 +3203,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var id = Request["UniqueID"].ToString();
                     var uniqueId = new Guid(id);
                     var rapor = _entities.TDOBasvuruDanismen.First(p => p.UniqueID == uniqueId);
-
+                    var ogrenci = rapor.TDOBasvuru.Kullanicilar;
                     var rpr = new RprTezDanismaniOneriFormu_FR0347(rapor.TDOBasvuruDanismanID);
                     rpr.CreateDocument();
-                    rpr.DisplayName = rapor.TDOBasvuru.Ad + " " + rapor.TDOBasvuru.Soyad + " " + rpr.DisplayName;
+                    rpr.DisplayName = ogrenci.Ad + " " + ogrenci.Soyad + " " + rpr.DisplayName;
 
                     rprX = rpr;
                 }
@@ -3236,9 +3216,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var uniqueId = new Guid(id);
                     var rapor = _entities.TDOBasvuruDanismen.First(p => p.UniqueID == uniqueId);
 
+                    var ogrenci = rapor.TDOBasvuru.Kullanicilar;
                     var rpr = new RprTezDanismaniDegisiklikFormu_FR0308(rapor.TDOBasvuruDanismanID);
                     rpr.CreateDocument();
-                    rpr.DisplayName = rapor.TDOBasvuru.Ad + " " + rapor.TDOBasvuru.Soyad + " " + rpr.DisplayName;
+                    rpr.DisplayName = ogrenci.Ad + " " + ogrenci.Soyad + " " + rpr.DisplayName;
                     rprX = rpr;
                 }
                 else if (raporTipi == RaporTipiEnum.TezEsDanismanOneriFormu)
@@ -3246,9 +3227,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var id = Request["UniqueID"].ToString();
                     var uniqueId = new Guid(id);
                     var rapor = _entities.TDOBasvuruEsDanismen.First(p => p.UniqueID == uniqueId);
+                    var ogrenci = rapor.TDOBasvuruDanisman.TDOBasvuru.Kullanicilar;
                     var rpr = new RprTezEsDanismaniOneriFormu_FR0320(rapor.TDOBasvuruEsDanismanID);
                     rpr.CreateDocument();
-                    rpr.DisplayName = rapor.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + rapor.TDOBasvuruDanisman.TDOBasvuru.Soyad + " " + rpr.DisplayName;
+                    rpr.DisplayName = ogrenci.Ad + " " + ogrenci.Soyad + " " + rpr.DisplayName;
                     rprX = rpr;
                 }
                 else if (raporTipi == RaporTipiEnum.YeterlikDoktoraSinavSonucFormu)

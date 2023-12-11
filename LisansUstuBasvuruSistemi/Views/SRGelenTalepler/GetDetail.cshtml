@@ -1,0 +1,150 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model FrTalepler
+@{
+    Layout = null;
+    var color = Model.Color;
+    var kRole = RoleNames.SrTalepDuzelt.InRoleCurrent();
+
+    var bilgiModel = (SrTalepBasvuranInfoDto)ViewBag.SrTalepBasvuranInfoDto;
+
+
+}
+<div class="panel" id="SRDetay_@Model.SRTalepID" style="color:@color">
+    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
+        <table style="width:100%;">
+            <tr>
+                <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-calendar fa-lg"></i> Rezervasyon Bilgileri</td>
+                <td width="100" style="font-weight:bold;font-size:15pt; border-bottom:1px solid; text-align:right;">
+                    <a href="javascript:void(0);" onclick="GetDetail('@Model.SRTalepID')" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                </td>
+
+            </tr>
+            <tr>
+
+                <td style="padding-left:10px;text-align:left;">
+
+                    <table style="width:100%;">
+                        <tr>
+                            <td class="CaptionTd" width="140">Ad Soyad</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                @bilgiModel.AdSoyad (@bilgiModel.OgrenciNo)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Öğrenim Seviyesi</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@bilgiModel.OgrenimTipAdi</td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Anabilim Dalı</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@bilgiModel.AnabilimDaliAdi</td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Program</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@bilgiModel.ProgramAdi</td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="100" style="text-align:center;">
+                    <img src="@(Model.ResimAdi.ToKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                </td>
+            </tr>
+            <tr>
+
+
+                <td style="padding-left:10px;text-align:left;">
+
+                    <table style="width:100%;">
+                        <tr>
+                            <td class="CaptionTd" width="140">Talep Türü</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                @Model.TalepTipAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Talep Tarihi</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@Model.Tarih.ToFormatDate() @Model.HaftaGunAdi, @string.Format("{0:hh\\:mm}", Model.BasSaat) - @string.Format("{0:hh\\:mm}", Model.BitSaat)</td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Salon Adı</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@Model.SalonAdi</td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Talep Durumu</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">
+                                @if (kRole && bilgiModel.ShowSaveButon)
+                                {
+                                    <table>
+                                        <tr>
+                                            <td>@Html.DropDownList("SRDurumID", null, new { @class = "form-control", style = "width:120px;", id = "SRDurumID_" + Model.SRTalepID, onchange = "DurumKontrol(" + Model.SRTalepID + ")" })</td>
+                                            <td> <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="RezervasyonDurumKayit(@Model.SRTalepID)"><i class="fa fa-save"></i> Kaydet</a></td>
+                                        </tr>
+                                    </table>
+
+
+                                }
+                                else
+                                {
+                                    <i class="@Model.ClassName" style="font-weight:bold;"></i> @Model.DurumListeAdi
+
+                                } 
+                            </td>
+                        </tr>
+                        <tr class="@(Model.SRDurumID == SrTalepDurumEnum.Reddedildi ? "" : "hide")" id="aciklamabilgi_@Model.SRTalepID">
+                            <td class="CaptionTd">Ret Açıklaması</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">
+                                @if (kRole)
+                                {
+                                    <textarea style="width:100%;" class="form-control" rows="5" id="SRDurumAciklamasi_@Model.SRTalepID">@Model.SRDurumAciklamasi</textarea>
+                                }
+                                else
+                                {
+                                    @Model.SRDurumAciklamasi
+                                }
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+
+</div>
+<script>
+
+    function DurumKontrol(id) {
+        var secimval = $('#SRDurumID_' + id).val();
+        if (secimval == null || secimval == "") {
+            $('#btnKyt_' + id).addClass("hide");
+        } else {
+
+            $('#btnKyt_' + id).removeClass("hide");
+        }
+        if (secimval == '@SrTalepDurumEnum.Reddedildi') {
+            $('#aciklamabilgi_' + id).removeClass("hide");
+        }
+        else {
+            $('#aciklamabilgi_' + id).addClass("hide")
+        }
+    }
+
+</script>
+
+

@@ -1306,7 +1306,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (mmMessage.IsSuccess)
             {
                 var tezOneriSavunma = _entities.ToBasvuruSavunmas.First(f => f.UniqueID == tosUniqueId);
-                var toUniqueId = tezOneriSavunma.ToBasvuru.UniqueID;
 
                 try
                 {

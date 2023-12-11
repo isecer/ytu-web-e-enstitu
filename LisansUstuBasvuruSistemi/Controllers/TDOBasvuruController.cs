@@ -138,8 +138,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         TcKimlikNo = k.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo,
                         ResimAdi = k.ResimAdi,
-                        KullaniciTipID = k.KullaniciTipID,
-                        KullaniciTipAdi = ktip.KullaniciTipAdi,
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
@@ -195,7 +193,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             var kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
-
+            model.AdSoyad = kul.Ad + " " + kul.Soyad;
             var mmMessage = TdoBus.GetAktifTezDanismanOneriSurecKontrol(enstituKod, kullaniciId, tdoBasvuruId);
 
 
@@ -209,13 +207,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.TDOBasvuruID = basvuru.TDOBasvuruID;
                     model.BasvuruTarihi = DateTime.Now;
                     model.KullaniciID = basvuru.KullaniciID;
-                    model.KullaniciTipID = basvuru.KullaniciTipID;
-                    model.ResimAdi = basvuru.ResimAdi;
-                    model.Ad = basvuru.Ad;
-                    model.Soyad = basvuru.Soyad;
-                    model.OgrenciNo = basvuru.OgrenciNo;
-                    model.TcKimlikNo = basvuru.TcKimlikNo;
-                    model.UyrukKod = basvuru.UyrukKod;
                     model.OgrenimTipKod = basvuru.OgrenimTipKod;
 
 
@@ -226,12 +217,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.EnstituKod = enstituKod;
                     model.BasvuruTarihi = DateTime.Now;
                     model.KullaniciID = kullaniciId.Value;
-                    model.KullaniciTipID = kul.KullaniciTipID;
-                    model.ResimAdi = kul.ResimAdi;
-                    model.Ad = kul.Ad;
-                    model.Soyad = kul.Soyad;
                     model.OgrenciNo = kul.OgrenciNo;
-                    model.TcKimlikNo = kul.TcKimlikNo;
                     model.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
                 }
@@ -263,12 +249,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (RoleNames.TdoGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
             var mmMessage = TdoBus.GetAktifTezDanismanOneriSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TDOBasvuruID.ToNullIntZero());
 
+            var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
+            kModel.AdSoyad = kul.Ad + " " + kul.Soyad;
             if (mmMessage.Messages.Count == 0)
             {
-                var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
                 kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
-                kModel.ResimAdi = kul.ResimAdi;
-                kModel.KullaniciTipID = kul.KullaniciTipID;
+
                 kModel.KayitOgretimYiliBaslangic = kul.KayitYilBaslangic;
                 kModel.KayitOgretimYiliDonemID = kul.KayitDonemID;
                 kModel.KayitTarihi = kul.KayitTarihi;
@@ -277,10 +263,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.IslemYapanIP = UserIdentity.Ip;
                 kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
                 kModel.OgrenciNo = kul.OgrenciNo;
-                kModel.OgrenimDurumID = kul.OgrenimDurumID.Value;
                 kModel.ProgramKod = kul.ProgramKod;
-                kModel.Ad = kul.Ad;
-                kModel.Soyad = kul.Soyad;
                 TDOBasvuru data;
                 var isNewRecord = false;
                 if (kModel.TDOBasvuruID <= 0)
@@ -294,14 +277,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         UniqueID = Guid.NewGuid(),
                         BasvuruTarihi = kModel.BasvuruTarihi,
                         KullaniciID = kModel.KullaniciID,
-                        KullaniciTipID = kModel.KullaniciTipID,
-                        ResimAdi = kModel.ResimAdi,
-                        Ad = kModel.Ad,
-                        Soyad = kModel.Soyad,
-                        UyrukKod = kModel.UyrukKod,
-                        TcKimlikNo = kModel.TcKimlikNo,
                         OgrenciNo = kModel.OgrenciNo,
-                        OgrenimDurumID = kModel.OgrenimDurumID,
                         OgrenimTipKod = kModel.OgrenimTipKod,
                         ProgramKod = kModel.ProgramKod,
                         KayitOgretimYiliBaslangic = kModel.KayitOgretimYiliBaslangic,
@@ -323,14 +299,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.EnstituKod = kModel.EnstituKod;
                     data.BasvuruTarihi = kModel.BasvuruTarihi;
                     data.KullaniciID = kModel.KullaniciID;
-                    data.KullaniciTipID = kModel.KullaniciTipID;
-                    data.ResimAdi = kModel.ResimAdi;
-                    data.Ad = kModel.Ad;
-                    data.Soyad = kModel.Soyad;
-                    data.UyrukKod = kModel.UyrukKod;
-                    data.TcKimlikNo = kModel.TcKimlikNo;
                     data.OgrenciNo = kModel.OgrenciNo;
-                    data.OgrenimDurumID = kModel.OgrenimDurumID;
                     data.OgrenimTipKod = kModel.OgrenimTipKod;
                     data.ProgramKod = kModel.ProgramKod;
                     data.KayitOgretimYiliBaslangic = kModel.KayitOgretimYiliBaslangic;
@@ -382,7 +351,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
             if (tdoBas == null) return null;
-            model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
+            var ogrenci = tdoBas.Kullanicilar;
+            model.OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + "-" + tdoBas.OgrenciNo;
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
             {
                 mMessage.Messages.Add("Tez Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
@@ -408,7 +378,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.TDOBasvuruID = tdoBd.TDOBasvuruID;
                     model.UniqueID = tdoBd.UniqueID;
                     model.FormKodu = tdoBd.FormKodu;
-                    model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
+                    model.OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + "-" + tdoBas.OgrenciNo;
                     model.YeniTezBaslikTr = tdoBd.YeniTezBaslikTr;
                     model.YeniTezBaslikEn = tdoBd.YeniTezBaslikEn;
                     model.IsTezDiliTr = tdoBd.IsTezDiliTr;
@@ -730,7 +700,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
-            model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
+            var ogrenci = tdoBas.Kullanicilar;
+            model.OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + "-" + tdoBas.OgrenciNo;
 
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
             {
@@ -774,7 +745,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.TDOBasvuruID = tdoBd.TDOBasvuruID;
                 model.IsTezDiliTr = tdoBd.IsYeniTezDiliTr ?? tdoBd.IsTezDiliTr;
                 model.UniqueID = tdoBd.UniqueID;
-                model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
+                model.OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + "-" + tdoBas.OgrenciNo;
                 model.VarolanTezDanismanID = tdoBd.TezDanismanID;
                 if (isNew)
                 {
@@ -1028,7 +999,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
-            model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
+            var ogrenci = tdoBas.Kullanicilar;
+            model.OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + "-" + tdoBas.OgrenciNo;
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
             {
                 mMessage.Messages.Add("Tez dil/başlık öneri formu oluşturmaya yetkili değilsiniz.");
@@ -1050,7 +1022,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var tdoBd = tdoBas.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
 
                 model.TDOBasvuruID = tdoBd.TDOBasvuruID;
-                model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
+                model.OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + "-" + tdoBas.OgrenciNo;
                 model.SinavTipID = tdoBd.SinavTipID;
                 model.SinavAdi = tdoBd.SinavAdi;
                 model.SinavPuani = tdoBd.SinavPuani;
@@ -1318,7 +1290,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
-            model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
+            var ogrenci = tdoBas.Kullanicilar;
+            model.OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + "-" + tdoBas.OgrenciNo;
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
             {
                 mMessage.Messages.Add("Tez dil/başlık öneri formu oluşturmaya yetkili değilsiniz.");
@@ -1339,7 +1312,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var tdoBd = tdoBas.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
 
                 model.TDOBasvuruID = tdoBd.TDOBasvuruID;
-                model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
+                model.OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad + "-" + tdoBas.OgrenciNo;
                 model.SinavTipID = tdoBd.SinavTipID;
                 model.SinavAdi = tdoBd.SinavAdi;
                 model.SinavPuani = tdoBd.SinavPuani;

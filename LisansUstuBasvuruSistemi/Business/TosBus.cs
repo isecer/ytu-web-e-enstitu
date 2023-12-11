@@ -566,6 +566,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var prgL = toBasvuruSavunma.ToBasvuru.Programlar;
                     var oncekiMailTarihi = isSavunmaOrToplanti ? toBasvuruSavunma.ToSavunmaBaslatildiMailGonderimTarihi : toBasvuruSavunma.ToplantiBilgiGonderimTarihi;
 
+                    var donemAdi = (toBasvuruSavunma.DonemBaslangicYil + " - " + (toBasvuruSavunma.DonemBaslangicYil + 1) + " " + toBasvuruSavunma.Donemler.DonemAdi);
                     var isSended = false;
                     foreach (var item in mModel)
                     {
@@ -613,9 +614,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@YokDrBursiyeriBilgi"))
                             mailParameterDtos.Add(new MailParameterDto { Key = "YokDrBursiyeriBilgi", Value = toBasvuruSavunma.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + toBasvuruSavunma.YokDrOncelikliAlan + ")" : "Yok" });
                         if (item.SablonParametreleri.Any(a => a == "@DonemAdi"))
-                        {
-                            var donemBilgi = toBasvuruSavunma.SavunmaBasvuruTarihi.ToAraRaporDonemBilgi();
-                            mailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = donemBilgi.DonemAdiLong });
+                        { 
+                             mailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = donemAdi });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@OncekiMailTarihi"))
                         {
@@ -791,6 +791,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }));
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
                     var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var donemAdi = (toBasvuruSavunma.DonemBaslangicYil + " - " + (toBasvuruSavunma.DonemBaslangicYil + 1) + " " + toBasvuruSavunma.Donemler.DonemAdi);
                     foreach (var item in mModel)
                     {
 
@@ -852,9 +853,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@YokDrBursiyeriBilgi"))
                             mailParameterDtos.Add(new MailParameterDto { Key = "YokDrBursiyeriBilgi", Value = toBasvuruSavunma.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + toBasvuruSavunma.YokDrOncelikliAlan + ")" : "Yok" });
                         if (item.SablonParametreleri.Any(a => a == "@DonemAdi"))
-                        {
-                            var donemBilgi = toBasvuruSavunma.SavunmaBasvuruTarihi.ToAraRaporDonemBilgi();
-                            mailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = donemBilgi.DonemAdiLong });
+                        { 
+                            mailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = donemAdi });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {

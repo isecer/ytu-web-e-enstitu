@@ -157,11 +157,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<SinavTiplerSubSinavAralik> SinavTiplerSubSinavAraliks { get; set; }
         public virtual DbSet<SistemBilgilendirme> SistemBilgilendirmes { get; set; }
         public virtual DbSet<SistemDilleri> SistemDilleris { get; set; }
-        public virtual DbSet<SRAyarlar> SRAyarlars { get; set; }
         public virtual DbSet<SRDurumlari> SRDurumlaris { get; set; }
-        public virtual DbSet<SROzelTanimGunler> SROzelTanimGunlers { get; set; }
         public virtual DbSet<SROzelTanimlar> SROzelTanimlars { get; set; }
-        public virtual DbSet<SROzelTanimSaatler> SROzelTanimSaatlers { get; set; }
         public virtual DbSet<SROzelTanimTipleri> SROzelTanimTipleris { get; set; }
         public virtual DbSet<SRSaatler> SRSaatlers { get; set; }
         public virtual DbSet<SRSalonDurumlari> SRSalonDurumlaris { get; set; }
@@ -169,9 +166,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<SRSalonTalepTipleri> SRSalonTalepTipleris { get; set; }
         public virtual DbSet<SRTalepleri> SRTalepleris { get; set; }
         public virtual DbSet<SRTaleplerJuri> SRTaleplerJuris { get; set; }
-        public virtual DbSet<SRTalepTipKullanicilar> SRTalepTipKullanicilars { get; set; }
         public virtual DbSet<SRTalepTipleri> SRTalepTipleris { get; set; }
-        public virtual DbSet<SRTalepTipleriAktifAylar> SRTalepTipleriAktifAylars { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TalepArGorStatuleri> TalepArGorStatuleris { get; set; }
         public virtual DbSet<TalepDurumlari> TalepDurumlaris { get; set; }

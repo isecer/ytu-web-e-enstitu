@@ -42,11 +42,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
         public Guid? UserKey { get; set; }
-        public string KullaniciTipAdi { get; set; }
+        public string ResimAdi { get; set; }
+        public string TcKimlikNo { get; set; } 
         public string AdSoyad { get; set; }
         public string EMail { get; set; }
-        public string CepTel { get; set; }
-        public DateTime? GsisKayitTarihi { get; set; }
+        public string CepTel { get; set; } 
         public string DurumClassName { get; set; }
         public string DurumColor { get; set; }
         public int? TDODanismanTalepTipID { get; set; }

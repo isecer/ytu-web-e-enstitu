@@ -18,7 +18,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public HaftaGunleri()
         {
             this.BelgeTipDetaySaatlers = new HashSet<BelgeTipDetaySaatler>();
-            this.SROzelTanimGunlers = new HashSet<SROzelTanimGunler>();
             this.SRSaatlers = new HashSet<SRSaatler>();
             this.SRTalepleris = new HashSet<SRTalepleri>();
         }
@@ -29,8 +28,6 @@ namespace LisansUstuBasvuruSistemi.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BelgeTipDetaySaatler> BelgeTipDetaySaatlers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SROzelTanimGunler> SROzelTanimGunlers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRSaatler> SRSaatlers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

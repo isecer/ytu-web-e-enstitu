@@ -34,7 +34,6 @@ namespace LisansUstuBasvuruSistemi.Models
             this.OgrenimTipleris = new HashSet<OgrenimTipleri>();
             this.SinavTipleris = new HashSet<SinavTipleri>();
             this.SinavTipleriOTNotAraliklaris = new HashSet<SinavTipleriOTNotAraliklari>();
-            this.SROzelTanimlars = new HashSet<SROzelTanimlar>();
             this.SRSalonlars = new HashSet<SRSalonlar>();
             this.SRTalepleris = new HashSet<SRTalepleri>();
             this.TalepSurecleris = new HashSet<TalepSurecleri>();
@@ -100,8 +99,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<SinavTipleri> SinavTipleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SinavTipleriOTNotAraliklari> SinavTipleriOTNotAraliklaris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SROzelTanimlar> SROzelTanimlars { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRSalonlar> SRSalonlars { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

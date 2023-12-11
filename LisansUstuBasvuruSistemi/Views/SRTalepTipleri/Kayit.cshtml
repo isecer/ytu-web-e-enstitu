@@ -2,10 +2,8 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model LisansUstuBasvuruSistemi.Models.SRTalepTipleri
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    var Aylars = (List<CmbIntDto>)ViewBag.Aylars;
-    var KullaniciTipleris = (List<CmbIntDto>)ViewBag.KullaniciTipleris;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
 
 }
 <div class="row">
@@ -39,47 +37,8 @@
                                         <input type="checkbox" value="true" name="IsTezSinavi" onchange="TzChange(this);" class="toggle" @Model.IsTezSinavi.ToChecked()/>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group isTezSinavi @(Model.IsTezSinavi ? "" : "hide")">
-                                <label class="col-md-3 col-xs-4 control-label">Zorunlu Eklenecen Doktora Jüri Sayısı</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="IstenenJuriSayisiDR" id="IstenenJuriSayisiDR" value="@Model.IstenenJuriSayisiDR" class="form-control"/>
-                                </div>
-                            </div>
-                            <div class="form-group isTezSinavi @(Model.IsTezSinavi ? "" : "hide")">
-                                <label class="col-md-3 col-xs-4 control-label">Zorunlu Eklenecen TYL Jüri Sayısı</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="IstenenJuriSayisiYL" id="IstenenJuriSayisiYL" value="@Model.IstenenJuriSayisiYL" class="form-control"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Maks Talep</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="MaxCevaplanmamisTalep" id="MaxCevaplanmamisTalep" value="@Model.MaxCevaplanmamisTalep" class="form-control"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Kullanıcı Tipleri</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <select id="KullaniciTipIDs" name="KullaniciTipIDs" multiple class="form-control select">
-                                        @foreach (var itemKt in KullaniciTipleris)
-                                        {
-                                            <option value="@itemKt.Value" @(Model.SRTalepTipKullanicilars.Any(a => a.KullaniciTipID == itemKt.Value) ? "selected=selected" : "")>@itemKt.Caption</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Aktif Aylar</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <select id="AyIDs" name="AyIDs" multiple class="form-control select">
-                                        @foreach (var itemAy in Aylars)
-                                        {
-                                            <option value="@itemAy.Value" @(Model.SRTalepTipleriAktifAylars.Any(a => a.AyID == itemAy.Value) ? "selected=selected" : "")>@itemAy.Caption</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
+                            </div> 
+                             
 
                             @if (Model.SRTalepTipID > 0)
                             {
@@ -111,13 +70,10 @@
         }
         else {
             $('.isTezSinavi').addClass('hide');
-        }
-        wozelNot($('#OzelNot'));
-        wozelTarih($('#OzelTarih'));
-        wozelNotD($('#NotDonusum'));
+        } 
     }
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 </script>

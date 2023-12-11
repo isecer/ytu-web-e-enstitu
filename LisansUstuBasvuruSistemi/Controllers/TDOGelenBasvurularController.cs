@@ -66,9 +66,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         CepTel = k.CepTel,
                         TcKimlikNo = k.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo, 
-                        ResimAdi = k.ResimAdi,
-                        KullaniciTipID = k.KullaniciTipID,
-                        KullaniciTipAdi = ktip.KullaniciTipAdi,
+                        ResimAdi = k.ResimAdi, 
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
@@ -320,7 +318,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                            EykYaGonderimTarihi = s.EYKYaGonderildiIslemTarihi,
                            EYKTarihi = s.EYKDaOnaylandiOnayTarihi,
                            s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
-                           OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
+                           OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Kullanicilar.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Kullanicilar.Soyad,
                            OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
                            YL_DR = s.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
                            DanismanAdSoyad = s.TDAdSoyad.IsNullOrWhiteSpace() ? s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad : (s.TDUnvanAdi + " " + s.TDAdSoyad),
@@ -384,7 +382,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.TDODanismanTalepTipleri.TalepTipAdi,
                         EYKTarihi = s.EYKDaOnaylandiOnayTarihi,
                         s.TDOBasvuru.OgrenciNo,
-                        OgrenciAdSoyad = s.TDOBasvuru.Ad + " " + s.TDOBasvuru.Soyad,
+                        OgrenciAdSoyad = s.TDOBasvuru.Kullanicilar.Ad + " " + s.TDOBasvuru.Kullanicilar.Soyad,
                         OgrenciAnabilimdaliProgram = s.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +
                                                      s.TDOBasvuru.Programlar.ProgramAdi,
                         YL_DR = s.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
@@ -429,8 +427,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var row = new RprTdoEykDto
                 {
                     SiraNo = raporRowNum + 1,
-                    OgrenciBilgi = item.TDOBasvuru.OgrenciNo + " " + item.TDOBasvuru.Ad + " " +
-                                   item.TDOBasvuru.Soyad +
+                    OgrenciBilgi = item.TDOBasvuru.OgrenciNo + " " + item.TDOBasvuru.Kullanicilar.Ad + " " +
+                                   item.TDOBasvuru.Kullanicilar.Soyad +
                                    " (" + item.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +
                                    item.TDOBasvuru.Programlar.ProgramAdi + ")",
                     Title = (isDoktora ? "DOKTORA :" : "YÜKSEK LİSANS :") + talepTipi,

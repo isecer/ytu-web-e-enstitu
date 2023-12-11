@@ -14,16 +14,7 @@ namespace LisansUstuBasvuruSistemi.Models
     
     public partial class Aylar
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Aylar()
-        {
-            this.SRTalepTipleriAktifAylars = new HashSet<SRTalepTipleriAktifAylar>();
-        }
-    
         public int AyID { get; set; }
         public string AyAdi { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SRTalepTipleriAktifAylar> SRTalepTipleriAktifAylars { get; set; }
     }
 }

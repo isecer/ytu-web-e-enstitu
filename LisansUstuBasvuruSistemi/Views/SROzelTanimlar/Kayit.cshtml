@@ -7,14 +7,12 @@
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-    var hGunleri = (List<CmbIntDto>)ViewBag.HaftaGunleri;
-    var hGSecilenler = (List<int>)ViewBag.hGSecilenler;
+     
 
 }
 <div class="row">
     <form method="post" class="form-horizontal" role="form">
-        <input type="text" style="display:none;" id="SROzelTanimID" name="SROzelTanimID" value="@Model.SROzelTanimID" />
+        <input type="text" style="display:none;" id="SROzelTanimID" name="SROzelTanimID" value="@Model.SROzelTanimID" /> 
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
@@ -26,17 +24,11 @@
                 <div class="panel-body">
                     <div class="panel panel-default form-horizontal">
                         <div class="panel-body form-group-separated">
+                            
                             <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Enstitü</label>
+                                <label class="col-md-3 col-xs-4 control-label">Resmi Tatil Tipi</label>
                                 <div class="col-md-9 col-xs-8">
-                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onchange = "getSalonlar()" })
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Özel Tanım Tipi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    @Html.DropDownList("SROzelTanimTipID", null, new { @class = "form-control", onchange = "setWisible(this)" })
+                                    @Html.DropDownList("SROzelTanimTipID", null, new { @class = "form-control", onchange = "SetWisible(this)" })
                                 </div>
                             </div>
                             <div class="_Sabit form-group @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.ResmiTatilSabit ? "" : "hide")">
@@ -84,76 +76,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="_Rezervasyon @((Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezervasyon || Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezerve) ? "" : "hide")">
-
-                                <div class="panel panel-default" style="margin:0px;">
-                                    <div class="panel-heading padding-0" style="padding:0px;">
-                                        <h3 class="panel-title"><i class="fa fa-pencil"></i> <span id="rezTipAd">@(Model.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon ? "Rezervasyon" : "Rezerve")</span> </h3>
-                                    </div>
-                                    <div class="panel-body" style="padding:0px;">
-                                        <div class="form-group">
-                                            <label class="col-md-3 col-xs-3 control-label">Rezervasyon Tipi</label>
-                                            <div class="col-md-9 col-xs-9">
-                                                @Html.DropDownList("SRTalepTipID", null, new { @class = "form-control", onChange = "getSalonlar()" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 col-xs-3 control-label">Salon Seçiniz</label>
-                                            <div class="col-md-9 col-xs-9">
-                                                @Html.DropDownList("SRSalonID", null, new { @class = "form-control", onChange = "getSaatler();getGunler();" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezerve ? "" : "hide")">
-                                            <label class="col-md-3 col-xs-3 control-label">Başlangıç Tarihi</label>
-                                            <div class="col-md-9 col-xs-9">
-                                                <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BasTarih.ToFormatDateInput()" name="BasTarih2" id="BasTarih2">
-                                            </div>
-                                        </div>
-                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezerve ? "" : "hide")">
-                                            <label class="col-md-3 col-xs-3 control-label">Bitiş Tarihi</label>
-                                            <div class="col-md-9 col-xs-9">
-                                                <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitTarih.ToFormatDateInput()" name="BitTarih2" id="BitTarih2">
-                                            </div>
-                                        </div>
-                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezerve ? "" : "hide")">
-                                            <label class="col-md-3 col-xs-4 control-label">Hafta Günleri</label>
-                                            <div class="col-md-9 col-xs-8" id="hgunDrpd">
-                                                <select id="HaftaGunIDs" name="HaftaGunIDs" multiple class="form-control select">
-                                                    @foreach (var item2 in hGunleri)
-                                                    {
-                                                        <option value="@item2.Value" @(hGSecilenler.Contains(item2.Value.Value) ? "selected=selected" : "")>@item2.Caption</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <table class="_SubRezervasyon @(Model.SROzelTanimTipID==SrOzelTanimTipiEnum.Rezervasyon ? "" : "hide")" style="width:100%;table-layout:fixed;">
-                                            <tr>
-                                                <td width="260">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading padding-0" style="padding:0px;">
-                                                            <h3 class="panel-title"><span class="glyphicon glyphicon-time myCaptionTd"></span> Tarih Seçiniz</h3>
-                                                            <div class="pull-right">
-                                                                <span class="panel-refresh"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="panel-body" style="height:228px;padding:0px;">
-                                                            <input type="text" id="Tarih" name="Tarih" value="@Model.Tarih.ToFormatDateInput()" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group" id="saatLstContnt">
-
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-
-
-                            </div>
+                            </div> 
                             @if (Model.SROzelTanimID > 0)
                             {
                                 <div class="form-group">
@@ -186,7 +109,9 @@
     </form>
 </div>
 <script>
-    function setWisible(sndr) {
+   
+
+    function SetWisible(sndr) { 
         var _val = $(sndr).val();
         if (_val == '@SrOzelTanimTipiEnum.ResmiTatilSabit') {
             $('._Sabit').removeClass('hide');
@@ -201,25 +126,7 @@
             $('._Rezervasyon').addClass('hide');
             $('._Rezerve').addClass('hide');
             $('._SubRezervasyon').addClass('hide');
-        }
-        else if (_val == '@SrOzelTanimTipiEnum.Rezervasyon') {
-            $('._Sabit').addClass('hide');
-            $('._Degisen').addClass('hide');
-            $('._Rezervasyon').removeClass('hide');
-            $('._Rezerve').addClass('hide');
-            $('._SubRezervasyon').removeClass('hide');
-            $('#rezTipAd').html("Rezervasyon");
-
-        }
-        else if (_val == '@SrOzelTanimTipiEnum.Rezerve') {
-            $('._Sabit').addClass('hide');
-            $('._Degisen').addClass('hide');
-            $('._Rezervasyon').removeClass('hide');
-            $('._Rezerve').removeClass('hide');
-            $('._SubRezervasyon').addClass('hide');
-            $('#rezTipAd').html("Rezerve");
-
-        }
+        } 
         else {
             $('._Sabit').addClass('hide');
             $('._Degisen').addClass('hide');
@@ -229,26 +136,27 @@
         }
     }
     $(function () {
-         $('#Tarih').datetimepicker({
-            lang: 'tr',
-            inline: true,
-            timepicker: false,
-            format: 'Y-m-d'
-            onSelectDate: function () {
-                getSaatler();
-            },
-            onChangeMonth: function (sndr) {
-                var date = new Date(sndr);
-                var qdate = getFormattedDate(date);
-                $('#Tarih').val(qdate); getSaatler();
-            },
-            onChangeYear: function (sndr) {
-                var date = new Date(sndr);
-                var qdate = getFormattedDate(date);
-                $('#Tarih').val(qdate);
-                getSaatler();
-            },
-        }); 
+        getSalonlar();
+        // $('#Tarih').datetimepicker({
+        //    lang: 'tr',
+        //    inline: true,
+        //    timepicker: false,
+        //    format: 'Y-m-d'
+        //    onSelectDate: function () {
+        //        getSaatler();
+        //    },
+        //    onChangeMonth: function (sndr) {
+        //        var date = new Date(sndr);
+        //        var qdate = getFormattedDate(date);
+        //        $('#Tarih').val(qdate); getSaatler();
+        //    },
+        //    onChangeYear: function (sndr) {
+        //        var date = new Date(sndr);
+        //        var qdate = getFormattedDate(date);
+        //        $('#Tarih').val(qdate);
+        //        getSaatler();
+        //    },
+        //}); 
         setTimeout(getSaatler(), 250);
         $('#BasTarih').datetimepicker({
             lang: 'tr',

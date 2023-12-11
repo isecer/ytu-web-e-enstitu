@@ -2137,7 +2137,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         var ogrenci = db.Kullanicilars.First(p => p.KullaniciID == mb.KullaniciID);
                         mModel.Add(new SablonMailModel
                         {
-                            UniqueID = null, 
+                            UniqueID = null,
                             UnvanAdi = "",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
@@ -2493,7 +2493,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             db.SaveChanges();
                         }
                     }
-                    var message = "'" + talep.Kullanicilar.Ad + " " + talep.Kullanicilar.Soyad + "'  kullanıcısının yapmış olduğu salon rezervasyonuna ait " + juriler.Count + " adet jüriye mail olarak gönderildi!";
+                    var message = "'" + talep.Kullanicilar.Ad + " " + talep.Kullanicilar.Soyad + "'  kullanıcısının yapmış olduğu salon rezervasyonu bilgisi " + juriler.Count + " adet jüriye mail olarak gönderildi!";
                     mmMessage.IsSuccess = true;
                     mmMessage.Messages.Add(message);
                     mmMessage.MessageType = MsgTypeEnum.Success;
@@ -2502,9 +2502,8 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             catch (Exception ex)
             {
-                var message = "Salon rezervasyonuna ait jürilere mail gönderilirken bir hata oluştu! \r\nSRTalepID:" + srTalepId;
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "MezuniyetBus/sendMailMezuniyetSinavYerBilgisi \r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
-                //mmMessage.Title = "Hata";
+                var message = "Salon rezervasyonuna ait jürilere mail gönderilirken bir hata oluştu!";
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;

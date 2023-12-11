@@ -1,7 +1,9 @@
-﻿@using LisansUstuBasvuruSistemi.Models
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Models
 @model SRTaleplerJuri
 @{
     Layout = null;
+    var unvanList = UnvanlarBus.GetCmbJuriUnvanlar();
 }
 
 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
@@ -11,81 +13,40 @@
                 <td width="160">Jüri Adı</td>
                 <td width="10">:</td>
                 <td>
-                    @Model.UnvanAdi @Model.JuriAdi
+                    <table style="width:100%;">
+                        <tr>
+                            <td>
+                                <select id="juriUnvanAdi_@Model.UniqueID" class="form-control">
+                                    @foreach (var unvan in unvanList)
+                                    {
+                                        <option value="@unvan.Value" @(unvan.Value.ToLower() == Model.UnvanAdi.ToLower() ? "selected=selected" : "")>@unvan.Caption</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" id="juriAdSoyad_@Model.UniqueID" class="form-control" value="@Model.JuriAdi" />
+                            </td>
+                        </tr>
+                    </table> 
                 </td>
-            </tr>
+            </tr> 
             <tr>
-                <td>Varsayılan E-Posta</td>
-                <td>:</td>
-                <td>
-                    @Model.Email
-                </td>
-            </tr>
-            <tr>
-                <td>Gönderilecek E-Posta</td>
+                <td>E-Posta</td>
                 <td>:</td>
                 <td>
                     <input type="text" class="form-control" id="EMail_@Model.UniqueID" value="@Model.Email" />
                 </td>
             </tr>
             <tr>
-                <td>Jüri E-Postası Düzeltilsin Mi?</td>
+                <td>Link Gönderim Durumu</td>
                 <td>:</td>
                 <td>
-                    <select class="form-control" id="IsJuriEmailGuncellensin_@Model.UniqueID" onchange="EpostaGuncellemeDrmChange(this)">
-                        <option value="true" selected>Evet</option>
-                        <option value="false">Hayır</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Gönderim Tipi</td>
-                <td>:</td>
-                <td>
-                    <select class="form-control" id="IsYeniLink_@Model.UniqueID" onchange="EpostaGonderimSekliChange(this)">
-                        <option value="true" selected>Yeni Link Gönder (Eski linkler geçersiz olur.)</option>
-                        <option value="false">Varolan Linki Gönder</option>
+                    <select class="form-control" id="IsYeniLink_@Model.UniqueID">
+                        <option value="true">Yeni Değerlendirme Link Gönder (Eski linkler geçersiz olur.)</option>
+                        <option value="false" selected="selected">Link Gönderme</option>
                     </select>
                 </td>
             </tr>
         </tbody>
     </table>
-</div>
-<div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
-    <table style="width:100%;">
-        <tbody>
-            <tr>
-                <td width="50">Not 1</td>
-                <td width="10">:</td>
-                <td class="TdJuriEpostaGuncellemeDrm">Jüri ye ait E-Posta bilgisi yeni E-Posta ile güncellenecek.</td>
-            </tr>
-            <tr>
-                <td>Not 2</td>
-                <td>:</td>
-                <td class="TdJuriGonderimSekliDrm">E-Posta gönderilirken sistem tarafından yeni link üretilecek ve eski linkler geçersiz kalacak.</td>
-            </tr>
-            <tr>
-                <td colspan="3" style="text-align:center;color:maroon;"><br />Yukarıdaki bilgilere göre değerlendirme linki göndermek istiyor musunuz?</td>
-            </tr>
-
-        </tbody>
-    </table>
-</div>
-<script>
-    function EpostaGuncellemeDrmChange(sndr) { 
-        if ($(sndr).val() == 'true') {
-            $('.TdJuriEpostaGuncellemeDrm').html('Jüri ye ait E-Posta bilgisi yeni E-Posta ile güncellenecek.');
-        }
-        else {
-            $('.TdJuriEpostaGuncellemeDrm').html('Jüri ye ait E-Posta değişmeyecek.');
-        }
-    }
-    function EpostaGonderimSekliChange(sndr) {
-        if ($(sndr).val() == 'true') {
-            $('.TdJuriGonderimSekliDrm').html('E-Posta gönderilirken sistem tarafından yeni link üretilecek ve eski linkler geçersiz kalacak.');
-        }
-        else {
-            $('.TdJuriGonderimSekliDrm').html('E-Posta gönderilirken sistem var olan geçerli link gönderilecek.');
-        }
-    }
-</script>
+</div> 

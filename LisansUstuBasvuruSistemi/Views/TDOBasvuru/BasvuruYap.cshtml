@@ -21,10 +21,7 @@
                             <input type="text" style="display:none;" id="EnstituKod" name="EnstituKod" value="@Model.EnstituKod" />
                             <input type="text" style="display:none;" id="TDOBasvuruID" name="TDOBasvuruID" value="@Model.TDOBasvuruID" />
                             <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
-                            <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
-                            <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" /> 
-                            <input type="text" style="display:none;" id="ResimAdi" name="ResimAdi" value="@Model.ResimAdi" />
-                            <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
+                            <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" /> 
                             
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-2 control-label">Öğrenim Seviyesi</label>
@@ -56,10 +53,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-2 control-label">Ad Soyad</label>
-                                <div class="col-md-9 col-xs-10">
-                                    <input class="hide" name="Ad" id="Ad" value="@Model.Ad" />
-                                    <input class="hide" name="Soyad" id="Soyad" value="@Model.Soyad" />
-                                    @Model.Ad @Model.Soyad
+                                <div class="col-md-9 col-xs-10"> 
+                                    @Model.AdSoyad
                                 </div>
                             </div>
 

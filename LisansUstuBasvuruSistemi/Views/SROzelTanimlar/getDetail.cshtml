@@ -4,10 +4,8 @@
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model FrOzelTanimlar
-@{
-    ViewBag.Title = "getDetay";
+@{ 
     Layout = null;
-    var haftaGunleri = (List<HaftaGunleri>)ViewBag.HaftaGunleri;
 }
 
 <div class="panel panel-success" id="dvDetay_@Model.SROzelTanimID">
@@ -21,10 +19,7 @@
             <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
                 <div class="panel-body" style="margin: 0px; padding: 0px;">
                     <div class="panel-body form-group-separated">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Enstitü</label>
-                            <div class="col-md-9">@Model.EnstituAdi</div>
-                        </div>
+                        
                         <div class="form-group">
                             <label class="col-md-3 control-label">Özel Tanım Tipi</label>
                             <div class="col-md-9">@Model.SROzelTanimTipAdi</div>
@@ -46,42 +41,7 @@
                                 else if (Model.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen)
                                 {
                                     <span>@Model.BasTarih.Value.ToFormatDate() - @Model.BitTarih.Value.ToFormatDate() </span>
-                                }
-                                else if (Model.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
-                                {
-                                    var dofW = Model.Tarih.Value.DayOfWeek.ToString("d").ToInt().Value;
-                                    var haftaGunu = haftaGunleri.Where(p => p.HaftaGunID == dofW).First();
-
-                                    <span>
-                                        @Model.SalonAdi <br />
-                                        @Model.Tarih.ToFormatDate() @haftaGunu.HaftaGunAdi
-                                        @foreach (var item2 in Model.SROzelTanimSaatlers)
-                                        {
-                                            <br />
-                                                                                        <span>@string.Format("{0:hh\\:mm}", item2.BasSaat) -@string.Format("{0:hh\\:mm}", item2.BitSaat)</span>
-                                        }
-                                    </span>
-                                }
-                                else if (Model.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
-                                {
-                                    @Model.SalonAdi <br />
-                                                                                <span>@Model.BasTarih.Value.ToFormatDate() - @Model.BitTarih.Value.ToFormatDate() Tarih Arası</span>
-                                    if (Model.SROzelTanimGunlers.Count > 0)
-                                    {
-                                        <table style="width:100%;table-layout:fixed;" class="table">
-                                            <tr>
-                                                <th>Hafta Günü</th>
-                                            </tr>
-                                            @foreach (var itmHg in Model.SROzelTanimGunlers)
-                                            {
-                                                <tr>
-                                                    <td>@haftaGunleri.Where(p => p.HaftaGunID == itmHg.HaftaGunID).First().HaftaGunAdi</td>
-                                                </tr>
-                                            }
-                                        </table>
-                                    }
-
-                                }
+                                } 
                             </div>
                         </div>
                         <div class="form-group">

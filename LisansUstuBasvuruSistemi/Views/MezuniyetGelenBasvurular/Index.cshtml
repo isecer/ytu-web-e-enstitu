@@ -1172,76 +1172,75 @@
                 }
             });
         }
-         function showDLinkGonder(MBID,SRTalepID,UniqueID) {
+        function SinavJuriBilgiGuncelle(MBID, SRTalepID, UniqueID) {
+            var _panel = $('#bsvrDet_' + MBID);
+            PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("DegerlendirmeLinkView", "Mezuniyet")',
+                data: {
+                    'UniqueID': UniqueID,
+                },
+                success: function (result) {
+                    PanelRefresh(_panel, true);
+                    var btbxxFS = bootbox.dialog({
+                        message: result,
+                        title: "<i class='fa fa-envelope fa-lg'></i> Jüri Bilgileri Düzeltme / Linki Gönderme İşlemi",
+                        buttons: {
+                            success: {
+                                label: "Kaydet",
+                                className: "btn-info",
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    var eMail = $('#EMail_' + UniqueID).val(); 
+                                    var unvanAdi = $('#juriUnvanAdi_' + UniqueID).val();
+                                    var juriAdi = $('#juriAdSoyad_' + UniqueID).val();
+                                    var IsYeniLink = $('#IsYeniLink_' + UniqueID).val();
+                                    $.ajax({
+                                        url: '@Url.Action("SinavJuriBilgiGuncelle", "Mezuniyet")',
+                                        data: {
+                                            SRTalepID,
+                                            UniqueID,
+                                            unvanAdi,
+                                            juriAdi,
+                                            eMail,
+                                            IsYeniLink
+                                        },
+                                        success: function (result) {
+                                            PanelRefresh(pnlx, true);
+                                            if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 }); 
+                                            if (result.mMessage.IsSuccess) {
+                                                getDetailx(MBID);
+                                                var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                            }
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                            alert(err.responseText);
 
-               var _panel = $('#bsvrDet_' + MBID);
-             PanelRefresh(_panel, false);
-             $.ajax({
-                 url: '@Url.Action("DegerlendirmeLinkView", "Mezuniyet")',
-                 data: {
-                     'UniqueID': UniqueID,
-                 },
-                 success: function (result) {
-                     PanelRefresh(_panel, true);
-                     var btbxxFS = bootbox.dialog({
-                         message: result,
-                         title: "<i class='fa fa-envelope fa-lg'></i> Yeni Değerlendirme Linki Gönderme İşlemi",
-                         buttons: {
-                             success: {
-                                 label: "Gönder",
-                                 className: "btn-info",
-                                 callback: function (event) {
-                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                     PanelRefresh(pnlx, false);
-                                     var EMail = $('#EMail_' + UniqueID).val();
-                                     var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + UniqueID).val();
-                                     var IsYeniLink = $('#IsYeniLink_' + UniqueID).val();
-                                     $.ajax({
-                                         url: '@Url.Action("DegerlendirmeLinkiGonder", "Mezuniyet")',
-                                         data: {
-                                             'SRTalepID': SRTalepID,
-                                             'UniqueID': UniqueID,
-                                             'EMail': EMail,
-                                             'IsJuriEmailGuncellensin': IsJuriEmailGuncellensin,
-                                             'IsYeniLink': IsYeniLink
-                                         },
-                                         success: function (result) {
-                                             PanelRefresh(pnlx, true);
-                                             if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                             getDetailx(MBID);
-                                             var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
-                                             $(_clsBtn).click();
+                                        }
+                                    });
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: "Kapat",
+                                className: "btn-primary",
+                                callback: function () {
+                                    PanelRefresh(_panel, true);
+                                }
+                            }
+                        }
+                    });
 
-                                         },
-                                         error: function (err) {
-                                             PanelRefresh(pnlx, true);
-                                             alert(err.responseText);
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
 
-                                         }
-                                     });
-                                     return false;
-                                 }
-                             },
-                             danger: {
-                                 label: "Kapat",
-                                 className: "btn-primary",
-                                 callback: function () {
-                                     PanelRefresh(_panel, true);
-                                 }
-                             }
-                         }
-                     });
-
-                 },
-                 error: function (err) {
-                     PanelRefresh(_panel, true);
-                     alert(err.responseText);
-
-                 }
-             });
-
-
-
+                }
+            });
         }
 
     </script>

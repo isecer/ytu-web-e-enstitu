@@ -287,10 +287,7 @@
     <Compile Include="Controllers\RaporlarBTController.cs" />
     <Compile Include="Controllers\RaporlarLUBController.cs" />
     <Compile Include="Controllers\SikcaSorulanSorularController.cs" />
-    <Compile Include="Controllers\SrSalonBilgiController.cs" />
     <Compile Include="Controllers\SrTalepTipleriController.cs" />
-    <Compile Include="Controllers\SrAyarlarController.cs" />
-    <Compile Include="Controllers\SrController.cs" />
     <Compile Include="Controllers\SrGelenTaleplerController.cs" />
     <Compile Include="Controllers\SrOzelTanimlarController.cs" />
     <Compile Include="Controllers\SrSalonlarController.cs" />
@@ -730,19 +727,10 @@
     <Compile Include="Models\SistemDilleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SRAyarlar.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SRDurumlari.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SROzelTanimGunler.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SROzelTanimlar.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SROzelTanimSaatler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SROzelTanimTipleri.cs">
@@ -766,13 +754,7 @@
     <Compile Include="Models\SRTaleplerJuri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SRTalepTipKullanicilar.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SRTalepTipleri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SRTalepTipleriAktifAylar.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagram.cs">
@@ -958,6 +940,7 @@
     <Compile Include="Utilities\Dtos\DmYeterlikDetayDto.cs" />
     <Compile Include="Utilities\Dtos\MbYayinEkleViewDto.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetSureciTezKontrolBilgiDto.cs" />
+    <Compile Include="Utilities\Dtos\SrTalepBasvuranInfoDto.cs" />
     <Compile Include="Utilities\Dtos\TijBasvuruDetayDto.cs" />
     <Compile Include="Utilities\Dtos\TijOneriDtos.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikBasvuruDto.cs" />
@@ -1172,7 +1155,6 @@
     <Compile Include="Models\YokApi\ServiceManager.cs" />
     <Compile Include="Models\YokApi\YokdilDataModel.cs" />
     <Compile Include="Utilities\SystemSetting\SistemAyar.cs" />
-    <Compile Include="Utilities\SystemSetting\SrAyar.cs" />
     <Compile Include="Utilities\Helpers\ThreeDHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raporlar\Genel\RprAnket.cs">
@@ -5433,20 +5415,15 @@
     <Content Include="Views\Ajax\GetMailTableJuriContent.cshtml" />
     <Content Include="Views\SRSalonlar\Index.cshtml" />
     <Content Include="Views\SRGelenTalepler\Index.cshtml" />
-    <Content Include="Views\SR\Index.cshtml" />
     <Content Include="Views\SRSalonlar\Kayit.cshtml" />
     <Content Include="Views\AppEvent\Error.cshtml" />
-    <Content Include="Views\SRAyarlar\Index.cshtml" />
-    <Content Include="Views\SR\TalepYap.cshtml" />
     <Content Include="Views\Ajax\GetSaatlerView.cshtml" />
-    <Content Include="Views\SR\GetDetail.cshtml" />
     <Content Include="Views\SROzelTanimlar\Index.cshtml" />
     <Content Include="Views\SRTalepTipleri\Index.cshtml" />
     <Content Include="Views\SROzelTanimlar\Kayit.cshtml" />
     <Content Include="Views\SRTalepTipleri\Kayit.cshtml" />
     <Content Include="Views\SROzelTanimlar\GetSaatlerView.cshtml" />
     <Content Include="Views\Ajax\GetGunler.cshtml" />
-    <Content Include="Views\SRSalonBilgi\Index.cshtml" />
     <Content Include="Views\SROzelTanimlar\GetDetail.cshtml" />
     <Content Include="Views\KDuyurular\DuyuruHtml.cshtml" />
     <Content Include="Views\SinavTipleri\GetDetail.cshtml" />
@@ -5590,6 +5567,7 @@
     <Content Include="Views\TiJuriOnerileriGb\BasvuruDonemView.cshtml" />
     <Content Include="Views\TosBasvuru\BasvuruDonemView.cshtml" />
     <Content Include="Views\MezuniyetSureci\GetMsTezKontrolBilgileri.cshtml" />
+    <Content Include="Views\SRGelenTalepler\GetDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

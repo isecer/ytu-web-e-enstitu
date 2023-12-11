@@ -1792,7 +1792,7 @@
     @if (UserIdentity.Current.IsAuthenticated)
     {
         <script>
-            function ExportToExcel(tableID, filename = '') { 
+            function ExportToExcel(tableID, filename = '') {
                 var downloadLink;
                 var dataType = 'application/vnd.ms-excel';
                 var tableSelect = document.getElementById(tableID);
@@ -1809,7 +1809,7 @@
                     }
                 });
 
-                var tableHTML = clonedTable.outerHTML.replace(/ /g, '%20');
+                var tableHTML = clonedTable.outerHTML;
 
                 // Specify file name
                 filename = filename ? filename + '.xls' : 'excel_data.xls';
@@ -1820,18 +1820,18 @@
                 document.body.appendChild(downloadLink);
 
                 if (navigator.msSaveOrOpenBlob) {
-                    var blob = new Blob(['\ufeff', tableHTML], {
-                        type: dataType
-                    });
+                    // Internet Explorer
+                    var blob = new Blob(['\ufeff', tableHTML], { type: dataType });
                     navigator.msSaveOrOpenBlob(blob, filename);
                 } else {
+                    // Other browsers
                     // Create a link to the file
-                    downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+                    downloadLink.href = 'data:' + dataType + ';charset=utf-8, ' + encodeURIComponent('\ufeff' + tableHTML);
 
                     // Setting the file name
                     downloadLink.download = filename;
 
-                    //triggering the function
+                    // Triggering the function
                     downloadLink.click();
                 }
             }

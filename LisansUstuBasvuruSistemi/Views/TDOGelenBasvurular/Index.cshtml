@@ -10,7 +10,7 @@
     var danismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
 
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
-    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
 
     var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
     var silmeYetki = RoleNames.TdoGelenBasvuruSil.InRoleCurrent();
@@ -115,9 +115,7 @@
                                                         success: {
                                                             label: 'Çıktı Al',
                                                             className: "btn btn-info",
-                                                            callback: function (event) {
-
-
+                                                            callback: function (event) { 
                                                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                                                 PanelRefresh(pnlx, false);
                                                                 $('#TutanakRprForm').ajaxForm({
@@ -336,7 +334,7 @@
                                             <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
                                                 <tr>
                                                     <td class="clsHide" style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail"></td>
-                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.KullaniciTipAdi</td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.OgrenciNo</td>
                                                 </tr>
                                             </table>
                                         </td>

@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model SRSalonSaatlerModel
 @{ 
     Layout = null;
@@ -7,8 +8,8 @@
 
 <div class="panel panel-default">
     <div class="panel-heading padding-0" style="padding:0px;">
-        <h3 class="panel-title" style="font-size:11pt;">
-            <span>@(Model.Tarih.ToString("yyyy.MM.dd") + " " + Model.HaftaGunAdi) Tarihine ait saatler</span>
+        <h3 class="panel-title" style="font-size:8.5pt;">
+            <span>@Model.Tarih.ToFormatDate() @Model.HaftaGunAdi gününe ait saatler</span>
         </h3>
         <div class="pull-right">
             <span class="panel-refresh"></span>
@@ -30,7 +31,7 @@
             }
             <input type="text" style="display:none;" name="HaftaGunID" value="@Model.HaftaGunID" />
 
-            <table class="" style="width:100%;table-layout:fixed;" cellpadding="0" cellspacing="0">
+            <table class="" style="width:100%;table-layout:fixed;">
                 <tr>
                     <th width="10px">
 
@@ -50,7 +51,7 @@
                 <tr>
                     <td colspan="4" style="padding:0px;">
                         <div class="scrlSaatler" style="max-height:206px;overflow:auto;">
-                            <table style="width:100%;table-layout:fixed;" cellpadding="0" cellspacing="0">
+                            <table style="width:100%;table-layout:fixed;">
                                 @foreach (var item in Model.Data)
                                 {
 

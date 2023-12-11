@@ -53,6 +53,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> OnayYapmayanJuriEmails { get; set; }
         public bool IsYaziliSinaviYapildi { get; set; }
         public bool IsSozluSinaviYapildi { get; set; }
+        public YeterlikBasvuru BirOncekiBasvuru { get; set; }
     }
 
 }

@@ -341,7 +341,7 @@
                                                                                 @if (item.IsTezBasligiDegisti.HasValue)
                                                                                 {
                                                                                     <tr>
-                                                                                        <td class="CaptionTd" width="140">Tez başlığı değişti mi?</td>
+                                                                                        <td class="CaptionTd" width="140">Tez Daşlığı Değişti mi?</td>
                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                         <td class="ValueTd">
                                                                                             @(item.IsTezBasligiDegisti == true ? "Tez Başlığı Değişti" : "Tez Başlığı Değişmedi")
@@ -349,14 +349,14 @@
                                                                                     </tr>
                                                                                 }
                                                                                 <tr>
-                                                                                    <td class="CaptionTd" width="140">Tez dili</td>
+                                                                                    <td class="CaptionTd" width="140">Tez Dili</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
                                                                                         @(item.IsTezDiliTr ? "Türkçe" : "İngilizce")
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez başlığı türkçe</td>
+                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez Başlığı Türkçe</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
                                                                                         @(item.IsTezBasligiDegisti == true ? item.YeniTezBaslikTr : item.TezBaslikTr)
@@ -364,7 +364,7 @@
                                                                                 </tr>
 
                                                                                 <tr>
-                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez başlığı ingilizce</td>
+                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez Başlığı İngilizce</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
                                                                                         @(item.IsTezBasligiDegisti == true ? item.YeniTezBaslikEn : item.TezBaslikEn)
@@ -372,7 +372,7 @@
                                                                                 </tr>
 
                                                                                 <tr>
-                                                                                    <td class="CaptionTd" width="300">Tez sanayi ile iş birliği kapsamında mı gerçekleşti?</td>
+                                                                                    <td class="CaptionTd" width="140" title="Tez Sanayi İş Birliği Kapsamında mı Gerçekleşti?">Tez Sanayi İşbirliği</td>
                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                     <td class="ValueTd">
                                                                                         @if (juriOneriFormu?.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null)
@@ -516,7 +516,7 @@
                                                                                                                 <td>
                                                                                                                     @if ((kayitYetki || isDanismani) && !isEnstituSonucuGirdi && isJuriDegerlendirmeVar)
                                                                                                                     {
-                                                                                                                        <span class="fa fa-envelope" style="cursor:pointer;font-size:16pt;" title="Değerlendirme Linkini Tekrar Gönder" onclick="showDLinkGonder(@Model.MezuniyetBasvurulariID,@item.SRTalepID,'@itemJuri.UniqueID');" aria-hidden="true"></span><span class="sr-only">Değerlendirme Linkini Tekrar Gönder</span>
+                                                                                                                        <span class="fa fa-edit" style="cursor:pointer;font-size:16pt;" title="Sınav Jüri Bilgisi Güncelle" onclick="SinavJuriBilgiGuncelle(@Model.MezuniyetBasvurulariID,@item.SRTalepID,'@itemJuri.UniqueID');" aria-hidden="true"></span><span class="sr-only">Jüri Bilgilerini Güncelle</span>
                                                                                                                     }
                                                                                                                 </td>
                                                                                                             }
@@ -943,8 +943,7 @@
                                                                                             <td class="ValueTd">
                                                                                                 <select id="IsOgrenciUzatmaSonrasiOnay_@item.SRTalepID">
                                                                                                     <option></option>
-                                                                                                    <option value="true" @(item.IsOgrenciUzatmaSonrasiOnay == true ? "selected" : "")>Taahhütü Onaylıyorum</option>
-                                                                                                    <option value="false" @(item.IsOgrenciUzatmaSonrasiOnay == false ? "selected" : "")>Taahhütü Reddediyorum</option>
+                                                                                                    <option value="true" @(item.IsOgrenciUzatmaSonrasiOnay == true ? "selected" : "")>Taahhütü Onaylıyorum</option> 
                                                                                                 </select>  <a href="javascript:void(0);" onclick="OgrenciUzatmaOnayKayit(@item.SRTalepID,@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
 
                                                                                             </td>

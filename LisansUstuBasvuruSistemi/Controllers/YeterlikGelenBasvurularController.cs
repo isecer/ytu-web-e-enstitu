@@ -41,6 +41,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join programlar in _entities.Programlars on yeterlikBasvuru.ProgramKod equals programlar.ProgramKod
                     join ogrenimTipleri in _entities.OgrenimTipleris on yeterlikBasvuru.OgrenimTipID equals ogrenimTipleri.OgrenimTipID
                     join tezDanismani in _entities.Kullanicilars on yeterlikBasvuru.TezDanismanID equals tezDanismani.KullaniciID
+                    let birOncekiBasvuru = _entities.YeterlikBasvurus.Where(p => p.KullaniciID == yeterlikBasvuru.KullaniciID &&
+                                                                                                                    p.ProgramKod == yeterlikBasvuru.ProgramKod &&
+                                                                                                                    p.OgrenciNo == yeterlikBasvuru.OgrenciNo &&
+                                                                                                                    p.YeterlikBasvuruID < yeterlikBasvuru.YeterlikBasvuruID).OrderByDescending(o => o.YeterlikBasvuruID).FirstOrDefault()
                     select new FrYeterlikBasvuruDto
                     {
                         YeterlikSurecID = yeterlikBasvuru.YeterlikSurecID,
@@ -84,7 +88,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IsSozluSinavinaKatildi = yeterlikBasvuru.IsSozluSinavinaKatildi,
                         SozluSinaviOrtalamaNotu = yeterlikBasvuru.SozluSinaviOrtalamaNotu,
                         GenelBasariNotu = yeterlikBasvuru.GenelBasariNotu,
-                        IsGenelSonucBasarili = yeterlikBasvuru.IsGenelSonucBasarili
+                        IsGenelSonucBasarili = yeterlikBasvuru.IsGenelSonucBasarili,
+                        BirOncekiBasvuru = birOncekiBasvuru
 
                     };
             var q2 = q;
@@ -140,6 +145,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      s.TezDanismanEmail,
                                      EnstituOnayDurum = s.IsEnstituOnaylandi.HasValue ? (s.IsEnstituOnaylandi == true ? "Onaylandı" : "İptal Edildi") : "İşlem Bekliyor",
                                      BasariDurumu = s.IsEnstituOnaylandi == true && s.IsGenelSonucBasarili.HasValue ? (s.IsGenelSonucBasarili == true ? "Başarılı" : "Başarısız") : "İşlem Bekliyor",
+                                     BirOncekiBasvuruDonemAdi = s.BirOncekiBasvuru != null ? (s.BirOncekiBasvuru.YeterlikSureci.BaslangicYil + "/" + s.BirOncekiBasvuru.YeterlikSureci.BitisYil + " " + s.BirOncekiBasvuru.Donemler.DonemAdi) : "Başvuru Yok",
+                                     BirOnekiBasvuruDurumu = s.BirOncekiBasvuru != null ? s.BirOncekiBasvuru.IsEnstituOnaylandi == true ? (s.BirOncekiBasvuru.IsGenelSonucBasarili.HasValue ? (s.BirOncekiBasvuru.IsGenelSonucBasarili == true ? "Başarılı" : "Başarısız") : "İşlem Bekliyor") : (s.BirOncekiBasvuru.IsEnstituOnaylandi == false ? "İptal Edildi" : "İşlem Bekliyor") : "Başvuru Yok",
                                  }).ToList();
                 gv.DataBind();
                 Response.ContentType = "application/ms-excel";

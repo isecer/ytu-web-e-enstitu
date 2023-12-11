@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string ekd)
         {
-            return Index(new FmSinavTipleri { PageSize = 15 },ekd);
+            return Index(new FmSinavTipleri { PageSize = 15 }, ekd);
         }
         [HttpPost]
         public ActionResult Index(FmSinavTipleri model, string ekd)
@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         SinavTipGrupID = s.SinavTipGrupID,
                         SinavTipGrupAdi = s.SinavTipGruplari.SinavTipGrupAdi,
                         OzelNot = s.OzelNot,
-                        OzelNotTipID = s.OzelNotTipID, 
+                        OzelNotTipID = s.OzelNotTipID,
                         IsAktif = s.IsAktif,
                         IslemTarihi = s.IslemTarihi,
                         IslemYapan = s.Kullanicilar.KullaniciAdi,
@@ -91,8 +91,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     SinavTipKod = s.SinavTipKod,
                     SinavAdi = s.SinavAdi,
                     OzelNot = s.OzelNot,
-                    OzelNotTipID = s.OzelNotTipID, 
-                    IsAktif = s.IsAktif,  
+                    OzelNotTipID = s.OzelNotTipID,
+                    IsAktif = s.IsAktif,
                     SinavNotlaris = s.SinavNotlaris,
                     SinavTiplerSubSinavAraliks = s.SinavTiplerSubSinavAraliks,
                     SinavTipleriOTNotAraliklaris = s.SinavTipleriOTNotAraliklaris,
@@ -341,7 +341,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 #region DetayData
-             
+
                 var newSinavNotlaris = qSinavNotlari.Select(s => new SinavNotlari
                 {
                     SinavNotlariID = s.SinavNotlariID,
@@ -378,11 +378,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         SinavTipKod = kModel.SinavTipKod,
                         SinavAdi = kModel.SinavAdi,
                         OzelNot = kModel.OzelNot,
-                        OzelNotTipID = kModel.OzelNot ? kModel.OzelNotTipID : null, 
+                        OzelNotTipID = kModel.OzelNot ? kModel.OzelNotTipID : null,
                         IsAktif = kModel.IsAktif,
                         IslemYapanID = UserIdentity.Current.Id,
                         IslemYapanIP = UserIdentity.Ip,
-                        IslemTarihi = DateTime.Now,  
+                        IslemTarihi = DateTime.Now,
                         SinavNotlaris = newSinavNotlaris,
                         SinavTiplerSubSinavAraliks = newSinavTiplerSubSinavAraliks,
                         SinavTipleriOTNotAraliklaris = newSinavTipleriOtNotAraliklaris
@@ -396,15 +396,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.SinavTipKod = kModel.SinavTipKod;
                     data.SinavAdi = kModel.SinavAdi;
                     data.OzelNot = kModel.OzelNot;
-                    data.OzelNotTipID = kModel.OzelNot ? kModel.OzelNotTipID : null; 
+                    data.OzelNotTipID = kModel.OzelNot ? kModel.OzelNotTipID : null;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
-                    data.IslemTarihi = DateTime.Now;  
+                    data.IslemTarihi = DateTime.Now;
                     _entities.SinavNotlaris.RemoveRange(data.SinavNotlaris);
                     _entities.SinavTiplerSubSinavAraliks.RemoveRange(data.SinavTiplerSubSinavAraliks);
                     _entities.SinavTipleriOTNotAraliklaris.RemoveRange(data.SinavTipleriOTNotAraliklaris);
-                      
+
                     data.SinavNotlaris = newSinavNotlaris;
                     data.SinavTiplerSubSinavAraliks = newSinavTiplerSubSinavAraliks;
                     data.SinavTipleriOTNotAraliklaris = newSinavTipleriOtNotAraliklaris;
@@ -431,8 +431,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 SubSinavMax = s.SubSinavMax,
             }).ToList();
 
-            
-           
+
+
 
             var ogrenimTipleris = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod && p.IsAktif).ToList();
             var sinavTipleriOtNotAraliklaris = new List<SinavTipleriOTNotAraliklari>();
@@ -536,15 +536,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              SinavTipGrupID = s.SinavTipGrupID,
                              SinavTipGrupAdi = s.SinavTipGruplari.SinavTipGrupAdi,
                              OzelNot = s.OzelNot,
-                             OzelNotTipID = s.OzelNotTipID, 
+                             OzelNotTipID = s.OzelNotTipID,
                              IsAktif = s.IsAktif,
                              IslemTarihi = s.IslemTarihi,
                              IslemYapan = s.Kullanicilar.KullaniciAdi,
                              IslemYapanID = s.IslemYapanID,
                              IslemYapanIP = s.IslemYapanIP,
                              SinavNotlaris = s.SinavNotlaris.ToList(),
-                             SinavTiplerSubSinavAraliks = s.SinavTiplerSubSinavAraliks.ToList(), 
-                            
+                             SinavTiplerSubSinavAraliks = s.SinavTiplerSubSinavAraliks.ToList(),
+
 
                              SinavTipleriOtNotAraliklariList = (from s2 in s.SinavTipleriOTNotAraliklaris.Where(p => p.EnstituKod == s.EnstituKod && p.SinavTipID == s.SinavTipID)
                                                                 join ot in _entities.OgrenimTipleris on new { s.EnstituKod, s2.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
@@ -886,7 +886,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
             var kayit = _entities.SinavTipleris.FirstOrDefault(p => p.SinavTipID == id && enstKods.Contains(p.EnstituKod) && p.EnstituKod == enstituKod);
-            var pAdi = _entities.SinavTipleris.First(p => p.SinavTipID == id);
+
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -894,15 +894,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 try
                 {
-                    message = "'" + pAdi.SinavAdi + "' İsimli Sınav Tipi Silindi!";
+                    message = "'" + kayit.SinavAdi + "' İsimli Sınav Tipi Silindi!";
                     _entities.SinavTipleris.Remove(kayit);
                     _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
-                    message = "'" + pAdi.SinavAdi + "' Sınav Tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Ünvanlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    message = "'" + kayit.SinavAdi + "' Sınav Tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

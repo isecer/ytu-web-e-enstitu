@@ -14,15 +14,7 @@ namespace LisansUstuBasvuruSistemi.Models
     
     public partial class SROzelTanimlar
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public SROzelTanimlar()
-        {
-            this.SROzelTanimGunlers = new HashSet<SROzelTanimGunler>();
-            this.SROzelTanimSaatlers = new HashSet<SROzelTanimSaatler>();
-        }
-    
         public int SROzelTanimID { get; set; }
-        public string EnstituKod { get; set; }
         public int SROzelTanimTipID { get; set; }
         public Nullable<int> SRTalepTipID { get; set; }
         public Nullable<int> SRSalonID { get; set; }
@@ -37,12 +29,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        public virtual Enstituler Enstituler { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SROzelTanimGunler> SROzelTanimGunlers { get; set; }
         public virtual SROzelTanimTipleri SROzelTanimTipleri { get; set; }
         public virtual SRTalepTipleri SRTalepTipleri { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SROzelTanimSaatler> SROzelTanimSaatlers { get; set; }
     }
 }

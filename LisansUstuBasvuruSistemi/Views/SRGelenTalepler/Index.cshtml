@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos  
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -8,7 +8,7 @@
 @{
     ViewBag.Title = "Index";
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var kYetki = RoleNames.SrTalepDuzelt.InRoleCurrent();
 }
 
@@ -22,9 +22,8 @@
                     <ul class="panel-controls">
                         @foreach (var item in indexModel.ListB)
                         {
-                            <li style="color:@item.Color">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
+                            <li style="color:@item.Color"> <i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
                         }
-                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -35,9 +34,8 @@
                                 </th>
                                 <th class="sirala" width="230" field="TalepYapan">Ad Soyad</th>
                                 <th class="sirala" width="230" field="TalepTipAdi">Talep Tipi</th>
-                                <th class="sirala" field="SalonAdi">Salon Bilgisi</th> 
-                                <th class="sirala" field="DurumListeAdi" width="100">Durum</th>
-                                <th width="40"></th>
+                                <th class="sirala" field="SalonAdi">Salon Bilgisi</th>
+                                <th class="sirala" field="DurumListeAdi" width="130">Durum</th>
                             </tr>
 
                         </thead>
@@ -53,25 +51,25 @@
                                 <th>@Html.DropDownList("SRSalonID", null, new { @class = "form-control" })</th>
                                 @*<th></th>*@
                                 <th>@Html.DropDownList("SRDurumID", null, new { @class = "form-control" })</th>
-                                <th></th>
+
                             </tr>
                             @if (Model.RowCount > 0)
                             {
 
-                                int rowIndex = Model.StartRowIndex; 
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.data)
                                 {
                                     var starih = Convert.ToDateTime(item.Tarih.ToShortDateString() + " " + item.BasSaat.ToString());
-                                    var _fWeight = starih > DateTime.Now ? "font-weight:bold;" : "";
-                                    rowIndex++; 
-                                    <tr class="mColor_@item.SRTalepID" style="@_fWeight color:@item.Color">
+                                    var fWeight = starih > DateTime.Now ? "font-weight:bold;" : "";
+                                    rowIndex++;
+                                    <tr class="mColor_@item.SRTalepID" style="@fWeight color:@item.Color">
                                         <td>
                                             <table>
                                                 <tr>
                                                     <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.SRTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.SRTalepID')">
+                                                            <li id="iShow_@item.SRTalepID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.SRTalepID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
@@ -85,21 +83,14 @@
                                                     <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail"></td>
                                                     <td style="margin:0px;border:none;">
                                                         @item.TalepYapan
-                                                        <br />
-                                                        @if (item.OgrenciNo.IsNullOrWhiteSpace() == false)
-                                                        {
-                                                            <span>Öğrenci No:@item.OgrenciNo</span>
-                                                        }
-                                                        else if (item.SicilNo.IsNullOrWhiteSpace() == false)
-                                                        {
-                                                            <span>Sicil No:@item.SicilNo</span>
-                                                        }
+                                                        <br />@item.OgrenciNo
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
-                                            @item.TalepTipAdi @(!item.OgrenimTipAdi.IsNullOrWhiteSpace() ? "(" + item.OgrenimTipAdi + ")" : "")<br />
-                                            @item.Tarih.ToFormatDate() @item.HaftaGunAdi @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                            @item.TalepTipAdi <br />
+                                            @item.Tarih.ToFormatDate() @item.HaftaGunAdi @item.BasSaat.ToFormatTime() - @item.BitSaat.ToFormatTime()
 
                                         </td>
                                         <td>
@@ -109,11 +100,6 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        @*<td>
-                                                @item.Tarih.ToFormatDate() @item.HaftaGunAdi <br />
-                                                @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
-                                            </td>*@
-                                       
                                         <td>
                                             <table style="width:100%;table-layout:fixed;">
                                                 <tr>
@@ -121,12 +107,12 @@
                                                         @if (!item.ClassName.IsNullOrWhiteSpace())
                                                         {
                                                             <span class="tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="@item.SRDurumAciklamasi">
-                                                                <i id="bticon_@item.SRTalepID" class="@item.ClassName" style="font-size:17pt;@_fWeight"></i>
+                                                                <i id="bticon_@item.SRTalepID" class="@item.ClassName" style="font-size:17pt;@fWeight"></i>
                                                             </span>
                                                         }
                                                         else
                                                         {
-                                                            <i class="@item.ClassName mColor_@item.SRTalepID" style="font-size:17pt;@_fWeight color:@item.Color"></i>
+                                                            <i class="@item.ClassName mColor_@item.SRTalepID" style="font-size:17pt;@fWeight color:@item.Color"></i>
                                                         }
                                                     </td>
                                                     <td>
@@ -137,23 +123,16 @@
                                             </table>
 
                                         </td>
-                                        <td>
-                                            @if (!item.MezuniyetBasvurulariID.HasValue)
-                                            {
-                                                <a href="@Url.Action("TalepYap", "Sr" , new { id=item.SRTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="getDetail('@item.SRTalepID',true,this)"><i style="font-size:11pt; color:@item.Color" class="glyphicon glyphicon-trash tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Sil"></i></a>
-                                            }
-                                        </td>
                                     </tr>
                                     <tr class="cls-@item.SRTalepID" style="display:none">
-                                        <td id="cls-@item.SRTalepID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                        <td id="cls-@item.SRTalepID" colspan="5" style="padding: 1px 1px 2px 75px;"></td>
                                     </tr>
                                 }
                             }
                             else
                             {
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">
+                                    <td colspan="5" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>
@@ -172,111 +151,65 @@
 @if (kYetki)
 {
     <script>
-        function kaydet(id) {
+        function RezervasyonDurumKayit(id) {
             var ibtID = $('#SRDurumID_' + id).val();
             var ibTipAciklama = $('#SRDurumAciklamasi_' + id).val();
+            var _panel = $('#SRDetay_' + id);
+            PanelRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("Istenenkaydet", "SrGelenTalepler")',
+                url: '@Url.Action("RezervasyonDurumKayit", "SrGelenTalepler")',
                 data: {
                     'id': id,
                     'SRDurumID': ibtID,
                     'SRDurumAciklamasi': ibTipAciklama
                 },
-                success: function (result) {
-                    getDetail(id, false, null);
+                success: function (result) { 
                     $(".mColor_" + id).each(function (inx, itmx) {
-                        $(itmx).attr("style", result.Color + " " + result.FontWeight);
+                        $(itmx).attr("style", "color:" + result.Color + (result.IsFontWeightBold?";font-weight:bold;":""));
                     });
                     $("#btCapt_" + id).html(result.IslemTipListeAdi);
                     $("#bticon_" + id).attr("Class", "");
                     $("#bticon_" + id).addClass(result.ClassName);
-                    //$("#td2_" + id).html(result.verilmeBilgi);
-
-                    if (result.strView != "") {
-                        var btbx = bootbox.dialog({
-                            message: result.strView,
-                            title: "Bilgi",
-                            buttons: {
-                                success: {
-                                    label: 'Tamam',
-                                    className: "btn-info",
-                                    callback: function () {
-                                    }
-                                }
-                            }
+                    if (result.IsSuccess)
+                        GetDetail(id, false, null);
+                    if (result.messageView)
+                        swal.fire({
+                            html: result.messageView,
+                            icon: (result.IsSuccess ? "success" : "error"),
+                            type: (result.IsSuccess ? "success" : "error"),
+                            confirmButtonText: 'tamam',
+                            padding: '2em'
                         });
-                    }
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
+                    PanelRefresh(_panel, true);
 
-                }
-            });
-        }
-        function sil(sndr, id) {
-            $.ajax({
-                url: '@Url.Action("Sil", "Sr")',
-                data: { id: id },
-                success: function (result) {
-                    if (result.IsSuccess) {
-                        $(sndr).closest("tr").remove();
-                        $(".cls-" + id).remove();
-                    }
-                    showMmMessage(result.Messages, 'Tamam');
-                },
-                error: function (err) {
-                    alert(err.responseText);
                 }
             });
         }
     </script>
 }
-    <script type="text/javascript">
+<script type="text/javascript">
 
     function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled) getDetail(id);
+        if (unTogled) GetDetail(id);
     }
-    function getDetail(id, Isdelete, sndr) {
+    function GetDetail(id) {
 
         var _panel = $('#SRDetay_' + id);
         PanelRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("GetDetail", "Sr")',
-            data: { id: id, IsDelete: (Isdelete == true)  },
+            url: '@Url.Action("GetDetail", "SrGelenTalepler")',
+            data: { id: id  },
             success: function (result) {
-                if (Isdelete != true) {
-                    $('#cls-' + id).html(result);
-                    PanelRefresh(_panel, true);
-                }
-                else {
-                    PanelRefresh(_panel, true);
-                    var btbx = bootbox.dialog({
-                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Salon Rezervasyon Talebini Silmek İstiyor Musunuz?</td></tr></table>",
-                        title: "Salon Rezervasyonu Silme İşlemi",
-                        buttons: {
-                            success: {
-                                label: 'Rezervasyonu Sil',
-                                className: "btn-danger",
-                                callback: function () {
-                                    sil(sndr, id);
-                                }
-                            },
-                            danger: {
-                                label: 'Vazgeç',
-                                className: "btn-primary",
-                                callback: function () {
-                                }
-                            }
-                        }
-                    });
-                    $(btbx).find('.modal-dialog').addClass('modal-lg');
-
-                }
-                onload();
+                $('#cls-' + id).html(result);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
@@ -284,28 +217,4 @@
             }
         });
     }
-    function sil(sndr, id) {
-        $.ajax({
-            url: '@Url.Action("Sil", "SrGelenTalepler")',
-            data: { id: id },
-            success: function (result) {
-                if (result.IsSuccess) {
-                    $(sndr).closest("tr").remove();
-                    $(".cls-" + id).remove();
-                }
-                showMmMessage(result.Messages, 'Tamam');
-            },
-            error: function (err) {
-                alert(err.responseText);
-            }
-        });
-    }
-    </script>
-
-
-
-<script type="text/javascript">
-    $(function () {
-        jQuery('.popovers').popover();
-    });
 </script>

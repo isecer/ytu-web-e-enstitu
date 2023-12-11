@@ -18,9 +18,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FrSrTalepTipleri : SRTalepTipleri
     {
         
-        public string IslemYapan { get; set; }
-        public List<int> TalepTipAktifAyIds { get; set; }
-        public List<int> KullaniciTipIDs { get; set; }
+        public string IslemYapan { get; set; } 
 
     }
 }

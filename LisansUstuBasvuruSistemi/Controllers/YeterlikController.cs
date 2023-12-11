@@ -730,6 +730,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (herkesOnayladi == true)
                         {
                             var messages = YeterlikBus.SendMailKomiteDegerlendirmeSonuc(komite.YeterlikBasvuru.UniqueID);
+                            var yeterlikBasvuru = komite.YeterlikBasvuru;
+
+                            // bütün komite onayladığı zaman öğrencinin bir önceki yeterlik başvurusu kontrol edilir ve eğer yazılıdan başarılı ve genel olarak başarısız ise yazılı sınavı yeni yeterlik başvurusuna güncellenir.
+                            if (!yeterlikBasvuru.YaziliSinaviNotu.HasValue)
+                            {
+                                var birOncekiBasvuru = _entities.YeterlikBasvurus.Where(p =>
+                                        p.IsEnstituOnaylandi == true &&
+                                        p.KullaniciID == yeterlikBasvuru.KullaniciID &&
+                                        p.ProgramKod == yeterlikBasvuru.ProgramKod &&
+                                        p.OgrenciNo == yeterlikBasvuru.OgrenciNo &&
+                                        p.YeterlikBasvuruID < yeterlikBasvuru.YeterlikBasvuruID)
+                                    .OrderByDescending(o => o.YeterlikBasvuruID).FirstOrDefault();
+
+                                if (birOncekiBasvuru != null && birOncekiBasvuru.IsGenelSonucBasarili == false && birOncekiBasvuru.IsYaziliSinavBasarili == true)
+                                {
+                                    yeterlikBasvuru.YaziliSinaviNotu = birOncekiBasvuru.YaziliSinaviNotu;
+                                    yeterlikBasvuru.YaziliSinavTarihi = birOncekiBasvuru.YaziliSinavTarihi;
+                                    yeterlikBasvuru.YaziliSinavYeri = birOncekiBasvuru.YaziliSinavYeri;
+                                    yeterlikBasvuru.IsYaziliSinavBasarili = birOncekiBasvuru.IsYaziliSinavBasarili;
+                                    yeterlikBasvuru.IsYaziliSinavinaKatildi = birOncekiBasvuru.IsYaziliSinavinaKatildi;
+                                    _entities.SaveChanges();
+                                }
+
+                            }
                         }
                         if (komite.IsJuriOnaylandi == true) mMessage.Messages.Add("Onay işlemi yapıldı.");
                         if (komite.IsJuriOnaylandi != true) mMessage.Messages.Add("Onay işlemi kaldırıldı.");

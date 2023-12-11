@@ -7,233 +7,156 @@
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var aylar = (List<CmbIntDto>)ViewBag.Aylar;
-    var kTipleri = (List<CmbIntDto>)ViewBag.KullaniciTipleri;
 }
 
 <div class="row">
-@using (Html.BeginForm())
-{
-    <div class="col-md-12">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
 
-    <!-- START SIMPLE DATATABLE -->
-    <div class="panel panel-danger">
-    <div class="panel-heading padding-0">
-        <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;Salon Rez.Tipleri</h3>
-        <ul class="panel-controls">
-            <li>
-                <span class="label label-success label-form">T:@indexModel.Toplam</span>
-            </li>
-            <li>
-                <span class="label label-info label-form">A:@indexModel.Aktif</span>
-            </li>
-            <li>
-                <span class="label label-danger label-form">P:@indexModel.Pasif</span>
-            </li>
-            <li>
-                <a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh">
-                    <span class="fa fa-refresh"></span>
-                </a>
-            </li>
-        </ul>
-    </div>
-    <div class="panel-body">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th width="75"></th>
-                <th class="sirala" field="Ad">Talep Tip Adı</th>
-                <th class="sirala">Kullanıcı Tipleri</th>
-                <th class="sirala" field="IsTezSinavi" width="60">Tez Sınavı</th>
-                <th class="sirala" field="IsAktif" width="60">Durum</th>
-                <th width="50">
-                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width: 100%;" data-style="blue" data-original-title="Yeni">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="filtrele">
-                <th></th>
-                <th>
-                    <input name="TalepTipAdi" type="text" value="@Model.TalepTipAdi" class="form-control"/>
-                </th>
-                <th></th>
-                <th>
-                    @Html.DropDownList("IsTezSinavi", null, new { @class = "form-control", style = "padding:0px;" })
-                </th>
-                <th>
-                    @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
-                </th>
-                <th></th>
-            </tr>
-            @if (Model.RowCount > 0)
-            {
-                var RowIndex = Model.StartRowIndex;
-                foreach (var item in Model.Data)
-                {
-                    RowIndex++;
-                    <tr>
-                        <td>
-                            <table>
-                                <tr>
-                                    <td style="width: 30px;">@RowIndex</td>
-                                    <td>
-                                        <ul class="panel-controls">
-                                            <li id="iShow_@item.SRTalepTipID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.SRTalepTipID')">
-                                                <a href="javascript:void(0)">
-                                                    <span class="fa fa-angle-down"></span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Salon Rezervasyonu Talep Tipleri</h3>
+                    <ul class="panel-controls">
+                        <li>
+                            <span class="label label-success label-form">T:@indexModel.Toplam</span>
+                        </li>
+                        <li>
+                            <span class="label label-info label-form">A:@indexModel.Aktif</span>
+                        </li>
+                        <li>
+                            <span class="label label-danger label-form">P:@indexModel.Pasif</span>
+                        </li> 
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th class="sirala" field="Ad">Talep Tip Adı</th>
+                                <th class="sirala" field="IsTezSinavi" width="60">Tez Sınavı</th>
+                                <th class="sirala" field="IsAktif" width="60">Durum</th>
+                                <th width="50">   </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th></th>
+                                <th></th>
+                                <th>
+                                    @Html.DropDownList("IsTezSinavi", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
+                                <th>
+                                    @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
+                                <th></th>
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                var rowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    rowIndex++;
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@rowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.SRTalepTipID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.SRTalepTipID')">
+                                                                <a href="javascript:void(0)">
+                                                                    <span class="fa fa-angle-down"></span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
 
-                        <td id="tdMad_@item.SRTalepTipID">
-                            @item.TalepTipAdi
-                        </td>
-                        <td>
-                            @string.Join(", ", kTipleri.Where(p => item.KullaniciTipIDs.Contains(p.Value.Value)).Select(s => s.Caption))
-                        </td>
-                        <td id="tdTz_@item.SRTalepTipID" style="text-align: center;">
-                            <span class="label label-@(item.IsTezSinavi ? "info" : "danger")">@item.IsTezSinavi.ToEvetHayir()</span>
-                        </td>
-                        <td id="tdIa_@item.SRTalepTipID" style="text-align: center;">
-                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
-                        </td>
-                        <td>
-                            <a href="@Url.Action("Kayit")">
-                                <i class="fa fa-plus tooltips" data-style="blue" data-original-title="Yeni"></i>
-                            </a>
-                            <a href="@Url.Action("Kayit", "SrTalepTipleri", new { id = item.SRTalepTipID })">
-                                <i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i>
-                            </a>
-                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.SRTalepTipID')">
-                                <i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="cls-@item.SRTalepTipID" style="display: none">
-                        <td id="cls-@item.SRTalepTipID" colspan="6" style="padding: 1px 1px 2px 75px;">
+                                        <td id="tdMad_@item.SRTalepTipID">
+                                            @item.TalepTipAdi
+                                        </td>
 
-                            <div class="panel panel-success">
-                                <div class="panel-heading  padding-0">
-                                    <div class="portlet-title">
-                                        <h3 class="panel-title"><i class="fa fa-file-text"></i> Detay</h3>
-                                    </div>
-                                </div>
-                                <div class="panel-body" style="padding: 0px;">
-                                    <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
-                                        <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
-                                            <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                                <div class="panel-body form-group-separated">
+                                        <td id="tdTz_@item.SRTalepTipID" style="text-align: center;">
+                                            <span class="label label-@(item.IsTezSinavi ? "info" : "danger")">@item.IsTezSinavi.ToEvetHayir()</span>
+                                        </td>
+                                        <td id="tdIa_@item.SRTalepTipID" style="text-align: center;">
+                                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Kayit", "SrTalepTipleri", new { id = item.SRTalepTipID })">
+                                                <i class="fa fa-edit fa-lg" title="Düzelt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.SRTalepTipID" style="display: none">
+                                        <td id="cls-@item.SRTalepTipID" colspan="5" style="padding: 1px 1px 2px 75px;">
 
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-3 control-label">Talep Tip Adı</label>
-                                                        <div class="col-md-9 col-xs-9">@item.TalepTipAdi</div>
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading  padding-0">
+                                                    <div class="portlet-title">
+                                                        <h3 class="panel-title"><i class="fa fa-file-text"></i> Detay</h3>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-3 control-label" title="Maks Talep Edilebilecek Rezervasyon Sayısı">Zorunlu Eklenecen Jüri Sayısı</label>
-                                                        <div class="col-md-9 col-xs-9" style="max-height: 200px; overflow: auto; text-align: left;">
-                                                            <table class="table">
-                                                                <tr>
-                                                                    <th>Doktora</th>
-                                                                    <th>Tezli YL</th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        @if (item.IstenenJuriSayisiDR.HasValue)
-                                                                        {
-                                                                            <span class="label label-info">@item.IstenenJuriSayisiDR Adet Jüri</span>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <span class="label label-warning">Zorunlu Jüri Bilgi Talebi Bulunmuyor</span>
-                                                                        }
-                                                                    </td>
-                                                                    <td>
-                                                                        @if (item.IstenenJuriSayisiYL.HasValue)
-                                                                        {
-                                                                            <span class="label label-info">@item.IstenenJuriSayisiYL Adet Jüri</span>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <span class="label label-warning">Zorunlu Jüri Bilgi Talebi Bulunmuyor</span>
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
+                                                </div>
+                                                <div class="panel-body" style="padding: 0px;">
+                                                    <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+                                                        <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                                                            <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                                                <div class="panel-body form-group-separated">
 
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 col-xs-3 control-label">Talep Tip Adı</label>
+                                                                        <div class="col-md-9 col-xs-9">@item.TalepTipAdi</div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 col-xs-3 control-label">Tez Sınavı Mı?</label>
+                                                                        <div class="col-md-9 col-xs-9">@item.IsTezSinavi.ToEvetHayir()</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 col-xs-3 control-label">Durum</label>
+                                                                        <div class="col-md-9 col-xs-9" style="max-height: 200px; overflow: auto; text-align: left;">
+                                                                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 col-xs-3 control-label">İşlem Yapan</label>
+                                                                        <div class="col-md-9 col-xs-9">@item.IslemYapan [@item.IslemTarihi.ToFormatDateAndTime()]</div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-3 control-label" title="Maks Talep Edilebilecek Rezervasyon Sayısı">Maks Talep</label>
-                                                        <div class="col-md-9 col-xs-9" style="max-height: 200px; overflow: auto; text-align: left;">
-                                                            @if (item.MaxCevaplanmamisTalep.HasValue)
-                                                            {
-                                                                <span class="label label-info">@item.MaxCevaplanmamisTalep</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span class="label label-warning">Tanımlanmadı</span>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-3 control-label">Tez Sınavı Mı?</label>
-                                                        <div class="col-md-9 col-xs-9">@item.IsTezSinavi.ToEvetHayir()</div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-3 control-label">Kullanıcı Tipleri</label>
-                                                        <div class="col-md-9 col-xs-9">@string.Join(", ", kTipleri.Where(p => item.KullaniciTipIDs.Contains(p.Value.Value)).Select(s => s.Caption))</div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-3 control-label">Aktif Aylar</label>
-                                                        <div class="col-md-9 col-xs-9">@string.Join(", ", aylar.Where(p => item.TalepTipAktifAyIds.Contains(p.Value.Value)).Select(s => s.Caption))</div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-3 control-label">Durum</label>
-                                                        <div class="col-md-9 col-xs-9" style="max-height: 200px; overflow: auto; text-align: left;">
-                                                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-3 control-label">İşlem Yapan</label>
-                                                        <div class="col-md-9 col-xs-9">@item.IslemYapan [@item.IslemTarihi.ToFormatDateAndTime()]</div>
-                                                    </div>
 
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
 
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="6" style="text-align: center;">
-                        [ Listelenen Kayıt Yok ]
-                    </td>
-                </tr>
-            }
-
-            </tbody>
-        </table>
-    </div>
-    <div class="panel-footer">
-        @Model.ToPagerString()
-    </div>
-    </div>
-    </div>
-}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
 </div>
 <script type="text/javascript">
     function ShowDetail(id) {
@@ -243,43 +166,5 @@
         toggleByClass(sndr, cls, unTogled);
 
     }
-    function silmeOnay(sndr, id) {
-        var gMesaj = $("#tdMad_" + id).html();
-        bootbox.dialog({
-            message: "Belge Tip Adı: " + gMesaj + " <br/> Seçilen Belge Tipini Silmek İstiyor Musunuz?",
-            title: "Belge Tipi Silme İşlemi",
-            buttons: {
-                success: {
-                    label: "Talep Tipini Sil",
-                    className: "btn-danger",
-                    callback: function () {
-                        sil(sndr, id);
-                    }
-                },
-                danger: {
-                    label: "Vazgeç",
-                    className: "btn-primary",
-                    callback: function () {
-                    }
-                }
-            }
-        });
-    }
-    function sil(sndr, id) {
-        $.ajax({
-            url: '@Url.Action("Sil", "SrTalepTipleri")',
-            data: { id: id },
-            success: function (result) {
-                toastr[result.success ? "success" : "error"](result.message, "Talep Tipi Silme İşlemi")
-                if (result.success) {
-                    $(sndr).closest("tr").remove();
-                    $(".cls-" + id).remove();
-                }
 
-            },
-            error: function (err) {
-                alert(err.responseText);
-            }
-        });
-    }
 </script>

@@ -20,15 +20,10 @@ namespace LisansUstuBasvuruSistemi.Models
             this.SROzelTanimlars = new HashSet<SROzelTanimlar>();
             this.SRSalonTalepTipleris = new HashSet<SRSalonTalepTipleri>();
             this.SRTalepleris = new HashSet<SRTalepleri>();
-            this.SRTalepTipKullanicilars = new HashSet<SRTalepTipKullanicilar>();
-            this.SRTalepTipleriAktifAylars = new HashSet<SRTalepTipleriAktifAylar>();
         }
     
         public int SRTalepTipID { get; set; }
         public bool IsTezSinavi { get; set; }
-        public Nullable<int> IstenenJuriSayisiDR { get; set; }
-        public Nullable<int> IstenenJuriSayisiYL { get; set; }
-        public Nullable<int> MaxCevaplanmamisTalep { get; set; }
         public string TalepTipAdi { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
@@ -41,9 +36,5 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<SRSalonTalepTipleri> SRSalonTalepTipleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTalepleri> SRTalepleris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SRTalepTipKullanicilar> SRTalepTipKullanicilars { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SRTalepTipleriAktifAylar> SRTalepTipleriAktifAylars { get; set; }
     }
 }

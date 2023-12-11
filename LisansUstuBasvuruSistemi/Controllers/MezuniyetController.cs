@@ -1211,7 +1211,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-           
+
             if (mezuniyetBasvurusu.SRTalepleris.Any(a => (a.SRDurumID == SrSalonDurumEnum.Alındı || a.SRDurumID == SrSalonDurumEnum.OnTalep) && a.MezuniyetSinavDurumID != MezuniyetSinavDurumEnum.Uzatma && a.SRTalepID != kModel.SRTalepID))
             {
                 mmMessage.Messages.Add("Aktif bir salon rezervasyonu kaydınız bulunmaktadır. Tekrar rezervasyon işlemi yapamazsınız.");
@@ -1283,9 +1283,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (mmMessage.Messages.Count == 0 && kModel.IsSalonSecilsin)
                 {
-                    var ssts = new List<SROzelTanimSaatler> { new SROzelTanimSaatler { BasSaat = kModel.BasSaat.Value, BitSaat = kModel.BitSaat.Value } };
-                    var msg = SrTalepleriBus.SrKayitKontrol(kModel.SRSalonID.Value, kModel.SRTalepTipID, kModel.Tarih, ssts, kModel.SRTalepID, null, null, null, mezuniyetBasvurusu.EYKTarihi);
-                    mmMessage.Messages.AddRange(msg.Messages);
+                    if (kModel.SRSalonID != null && kModel.BasSaat != null && kModel.BitSaat != null)
+                    {
+                        var srKayitKontrolMessage = SrTalepleriBus.SrKayitKontrol(kModel.SRSalonID.Value, kModel.Tarih, kModel.BasSaat.Value, kModel.BitSaat.Value, kModel.SRTalepID, mezuniyetBasvurusu.EYKTarihi);
+                        mmMessage.Messages.AddRange(srKayitKontrolMessage.Messages);
+                    }
                 }
                 kModel.SRSalonID = kModel.IsSalonSecilsin ? kModel.SRSalonID : null;
                 kModel.SalonAdi = kModel.IsSalonSecilsin && kModel.SRSalonID.HasValue ? _entities.SRSalonlars.First(p => p.SRSalonID == kModel.SRSalonID).SalonAdi : kModel.SalonAdi;
@@ -2136,11 +2138,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize]
-        public ActionResult DegerlendirmeLinkiGonder(int srTalepId, Guid? uniqueId, string eMail, bool isJuriEmailGuncellensin, bool isYeniLink)
+        public ActionResult SinavJuriBilgiGuncelle(int srTalepId, Guid? uniqueId, string unvanAdi, string juriAdi, string eMail, bool isYeniLink)
         {
             var mMessage = new MmMessage
             {
                 IsSuccess = false,
+                MessageType = MsgTypeEnum.Warning,
                 Title = "Tez sınavı değerlendirme linki gönderme işlemi"
             };
             var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == srTalepId);
@@ -2160,22 +2163,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (uzatmaSonrasiOgrenciTaahhutu)
             {
-                mMessage.MessageType = MsgTypeEnum.Warning;
-                mMessage.Messages.Add("Öğrenci uzatma işleminden sonra tez teslim taahhütü yaptığı için jüri üyesine değerlendirme linki gönderilemez");
+                mMessage.Messages.Add("Öğrenci uzatma işleminden sonra tez teslim taahhütü yaptığı için jüri üyesine değerlendirme linki gönderilemez.");
             }
             else if (srTalep.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi)
             {
-                mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("Değerlendirme işlemi tüm Jüri üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
+            }
+            else if (unvanAdi.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("Jüri ünvanını seçiniz.");
+            }
+            else if (juriAdi.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("Jüri adı giriniz.");
             }
             else if (eMail.IsNullOrWhiteSpace())
             {
-                mMessage.MessageType = MsgTypeEnum.Warning;
-                mMessage.Messages.Add("E-Posta giriniz");
+                mMessage.Messages.Add("E-Posta giriniz.");
             }
             else if (eMail.ToIsValidEmail())
             {
-                mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("E-Posta formatı uygun değildir.");
             }
             else
@@ -2185,24 +2192,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (uye == null) mMessage.Messages.Add("Değerlendirme linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı yenileyip tekrar deneyiniz.");
                     else
                     {
-                        if (isJuriEmailGuncellensin)
-                        {
-                            uye.Email = eMail;
-                            _entities.SaveChanges();
-                        }
+                        uye.UnvanAdi = unvanAdi;
+                        uye.JuriAdi = juriAdi;
+                        uye.Email = eMail;
+                        _entities.SaveChanges();
+                        mMessage.IsSuccess = true;
+                        mMessage.Messages.Add("Jüri bilgileri güncellendi.");
+
                     }
                 }
-                var messages = MezuniyetBus.SendMailMezuniyetDegerlendirmeLink(srTalep.SRTalepID, uniqueId, true, isYeniLink, eMail);
-                if (messages.IsSuccess)
+                if (isYeniLink)
                 {
-                    srTalep.JuriSonucMezuniyetSinavDurumID = null;
-                    _entities.SaveChanges();
-                    mMessage.IsSuccess = true;
-                    mMessage.Messages.Add("Değerlendirme linki jüri üyesine gönderildi.");
-                }
-                else
-                {
-                    mMessage.Messages.AddRange(messages.Messages);
+                    var messages = MezuniyetBus.SendMailMezuniyetDegerlendirmeLink(srTalep.SRTalepID, uniqueId, true, true, eMail);
+                    if (messages.IsSuccess)
+                    {
+                        srTalep.JuriSonucMezuniyetSinavDurumID = null;
+                        _entities.SaveChanges();
+                        mMessage.IsSuccess = true;
+                        mMessage.MessageType = MsgTypeEnum.Success;
+                        mMessage.Messages.Add("Değerlendirme linki jüri üyesine gönderildi.");
+                    }
+                    else
+                    {
+                        mMessage.Messages.AddRange(messages.Messages);
+                    }
                 }
             }
             var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";

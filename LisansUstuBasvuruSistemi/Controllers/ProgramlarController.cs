@@ -80,15 +80,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (data != null)
                 {
                     model = data;
-                    enstituKod = data.AnabilimDallari.EnstituKod;
-
-
+                    enstituKod = data.AnabilimDallari.EnstituKod; 
                 }
             }
 
-            ViewBag.AnabilimDaliID = new SelectList(Management.CmbGetYetkiliAnabilimDallari(true), "Value", "Caption", model.AnabilimDaliID);
-            ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
-            ViewBag.Diller2 = new SelectList(Management.GetDiller(true), "Value", "Caption");
+            ViewBag.AnabilimDaliID = new SelectList(Management.CmbGetYetkiliAnabilimDallari(true, enstituKod), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.KullaniciID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.OgrenciBolumID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
 
@@ -96,8 +92,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var kuls = UserBus.GetRoluOlanKullanicilar(roleName, enstituKod);
             var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, model.ProgramKod);
             ViewBag.KullaniciIDs = rolls.Where(p => p.Checked == true).Select(s => s.Value.KullaniciID).ToList();
-
-            var oBolIds = _entities.BolumEslestirs.Where(p => p.ProgramKod == model.ProgramKod).Select(s => s.OgrenciBolumID).ToList();
+             
 
             ViewBag.OldID = model.ProgramKod;
             ViewBag.EnstituKod = enstituKod;
@@ -209,7 +204,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = enstituKod;
             ViewBag.MmMessage = mmMessage;
             ViewBag.OldID = oldId;
-            ViewBag.AnabilimDaliID = new SelectList(Management.CmbGetYetkiliAnabilimDallari(true), "Value", "Caption", kModel.AnabilimDaliID);
+            ViewBag.AnabilimDaliID = new SelectList(Management.CmbGetYetkiliAnabilimDallari(true, enstituKod), "Value", "Caption", kModel.AnabilimDaliID);
             ViewBag.KullaniciID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.OgrenciBolumID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
 

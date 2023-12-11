@@ -10,7 +10,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public bool GelenBasvuru { get; set; }
         public string EnstituAdi { get; set; }
-        public string OgrenimDurumAdi { get; set; }
+        public string ResimAdi { get; set; }
+        public string OgrenciAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }

@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                              select new
                              {
                                  b.OgrenciNo,
-                                 AdSoyad = b.Ad + " " + b.Soyad,
+                                 AdSoyad = k.Ad + " " + k.Soyad,
                                  e.EnstituAd,
                                  prg.ProgramAdi,
                                  abd.AnabilimDaliAdi,
@@ -46,7 +46,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                                  EdTDProgramAdi = ed.TDProgramAdi,
                                  s.SinavAdi,
                                  s.SinavYili,
-                                 s.SinavPuani, 
+                                 s.SinavPuani,
                                  ed.BasvuruTarihi,
                                  ed.IsDegisiklikTalebi,
                                  EdAdSoyad = ed.AdSoyad,

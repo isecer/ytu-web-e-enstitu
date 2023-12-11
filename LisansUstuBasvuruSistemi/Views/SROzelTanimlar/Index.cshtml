@@ -1,12 +1,9 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
-@using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmOzelTanimlar
 @{
     ViewBag.Title = "Index";
-    var haftaGunleri = (List<HaftaGunleri>)ViewBag.HaftaGunleri;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row">
@@ -17,13 +14,12 @@
                 <div class="panel-heading padding-0">
                     <table style="table-layout:fixed;width:100%;">
                         <tr>
-                            <td><h3 class="panel-title"><i class="fa fa-list-alt"></i> Özel Tanımlar Listesi</h3></td>
-                            <td width="220px;">
-                                @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;", onchange = "$(this).parents('form').first().submit();" })
-                            </td>
+                            <td><h3 class="panel-title"><i class="fa fa-list-alt"></i> Resmi Tatil Listesi</h3></td> 
                             <td width="40px;">
                                 <ul class="panel-controls">
-                                    <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                    <li>
+                                        <span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Resmi Tatil Bilgisi Ekle</span>
+                                     </li>
                                 </ul>
                             </td>
                         </tr>
@@ -33,8 +29,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th width="75"></th>
-                                @*<th class="sirala" field="EnstituAdi" width="180">Enstitü Adı</th>*@
+                                <th width="75"></th> 
                                 <th class="sirala" field="SROzelTanimTipAdi" width="120">Tip</th>
                                 <th class="sirala" field="TTarih" width="220">Tarih</th>
                                 <th class="sirala" field="IslemTarihi">Açıklama</th>
@@ -46,11 +41,8 @@
                         <tbody>
                             <tr class="filtrele">
                                 <th>
-                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
-                                </th>
-                                @*<th>
-                                        @Html.DropDownList("EnstituKod", null, new { @class = "form-control" })
-                                    </th>*@
+                                   
+                                </th> 
                                 <th>
                                     @Html.DropDownList("SROzelTanimTipID", null, new { @class = "form-control" })
                                 </th>
@@ -66,16 +58,15 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                int rowIndex = Model.StartRowIndex; 
                                 foreach (var item in Model.FrOzelTanimlars)
                                 {
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    rowIndex++; 
                                     <tr>
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.SROzelTanimID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.SROzelTanimID')">
@@ -85,10 +76,7 @@
                                                     </td>
                                                 </tr>
                                             </table>
-                                        </td>
-                                        @*<td>
-                                                @item.EnstituAdi
-                                            </td>*@
+                                        </td> 
                                         <td>
                                             @item.SROzelTanimTipAdi
                                         </td>
@@ -99,25 +87,9 @@
                                             }
                                             else if (item.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen)
                                             {
-                                                <span>@item.BasTarih.Value.ToFormatDate() - @item.BitTarih.Value.ToFormatDate() </span>
+                                                <span>@item.BasTarih.ToFormatDate() - @item.BitTarih.ToFormatDate() </span>
                                             }
-                                            else if (item.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
-                                            {
-                                                var dofW = item.Tarih.Value.DayOfWeek.ToString("d").ToInt().Value;
-                                                var haftaGunu = haftaGunleri.First(p => p.HaftaGunID == dofW);
-
-                                                <span>
-                                                    @item.SalonAdi   <br />
-                                                    @item.Tarih.ToFormatDate() @haftaGunu.HaftaGunAdi
-                                                    <br />
-                                                    <span>@string.Join(", ", item.SROzelTanimSaatlers.Select(s => string.Format("{0:hh\\:mm}", s.BasSaat) + "-" + string.Format("{0:hh\\:mm}", s.BitSaat)).ToList())</span>
-                                                </span>
-                                            }
-                                            else if (item.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezerve)
-                                            {
-                                                @item.SalonAdi <br />
-                                                <span>@item.BasTarih.Value.ToFormatDate() - @item.BitTarih.Value.ToFormatDate() Tarih Arası</span>
-                                            }
+                                            
                                         </td>
                                         <td>
                                             @if (item.TalepTipAdi.IsNullOrWhiteSpace() == false)
@@ -136,14 +108,14 @@
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.SROzelTanimID" style="display:none">
-                                        <td id="cls-@item.SROzelTanimID" colspan="8" style="padding: 1px 1px 2px 75px;"></td>
+                                        <td id="cls-@item.SROzelTanimID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
                                     </tr>
                                 }
                             }
                             else
                             {
                                 <tr>
-                                    <td colspan="8" style="text-align: center;">
+                                    <td colspan="6" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>
@@ -228,10 +200,4 @@
             }
         });
     }
-</script>
-
-<script type="text/javascript">
-    $(function () {
-        jQuery('.popovers').popover();
-    });
-</script>
+</script> 

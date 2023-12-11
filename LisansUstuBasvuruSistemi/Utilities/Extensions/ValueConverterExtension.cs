@@ -176,6 +176,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
 
         #region Datetime Convert
+        public static string ToFormatTime(this TimeSpan? time)
+        {
+            time = time ?? TimeSpan.MinValue; 
+            return time.ToFormatTime();
+        }
+        public static string ToFormatTime(this TimeSpan time)
+        {
+            return time == TimeSpan.MinValue ? "" : $"{time:hh\\:mm}";
+        }
         public static string ToFormatDate(this DateTime? dateTime)
         {
             if (!dateTime.HasValue) return "";
@@ -296,7 +305,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
             return rsm;
-        } 
+        }
 
         public static DateTime ToGetBitisTarihi(this DateTime baslangicTarihi, int ay)
         {
