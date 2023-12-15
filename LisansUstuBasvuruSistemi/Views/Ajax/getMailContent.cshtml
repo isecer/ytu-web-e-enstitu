@@ -1,4 +1,4 @@
-﻿@model LisansUstuBasvuruSistemi.Utilities.Helpers.MailMainContentDto
+﻿@model LisansUstuBasvuruSistemi.Utilities.MailManager.MailMainContentDto
 @{
     Layout = null;
 }
@@ -20,7 +20,7 @@
         </table>
     </div>
     <div style="background-color:#ffffff;max-width:750px;margin:0px auto; padding: 10px 0px 5px 0px;">  
-        <table style="table-layout: fixed;">
+        <table style="width:100%;">
             <tr>
                 <td style="padding: 4px;">
                     @Html.Raw(Model.Content) 

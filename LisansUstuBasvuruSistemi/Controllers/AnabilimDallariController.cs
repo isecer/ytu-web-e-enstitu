@@ -267,7 +267,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.AnabilimDaliAdi + "' İsimli Anabilim Dalı Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "AnabilimDallari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

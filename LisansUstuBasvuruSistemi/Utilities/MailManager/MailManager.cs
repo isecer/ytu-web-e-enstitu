@@ -10,11 +10,12 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
-namespace LisansUstuBasvuruSistemi.Utilities.Helpers
+namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 {
-
+    #region  MailDtos 
     public class MailMainContentDto
     {
         public string LogoPath { get; set; }
@@ -46,8 +47,70 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public string EMail { get; set; }
         public bool ToOrBcc { get; set; }
     }
+
+    public class MailContentDetailDto
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string HtmlContent { get; set; }
+        public List<string> AddMailList { get; set; } = new List<string>();
+    }
+    public class MailParameterDto
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public bool IsLink { get; set; }
+    }
+    #endregion
     public static class MailManager
-    { 
+    {
+        public static MailContentDetailDto CreateMailContentDetailModel(string enstituAdi, string sablonHtml, string sablonAdi, List<MailParameterDto> rpModel)
+        {
+            rpModel = rpModel ?? new List<MailParameterDto>();
+            var model = new MailContentDetailDto
+            {
+                Title = sablonAdi,
+                HtmlContent = sablonHtml
+            };
+
+            model.Title = model.Title.Replace("{{", "{{_removeRw_");
+            var titleStrList = model.Title.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
+
+            foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
+            {
+                titleStrList = titleStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
+            }
+            model.Title = string.Join("", titleStrList);
+
+
+            model.HtmlContent = model.HtmlContent.Replace("{{", "{{_removeRw_");
+
+            var contentStrList = model.HtmlContent.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
+
+            foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
+            {
+                contentStrList = contentStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
+            }
+            model.HtmlContent = string.Join("", contentStrList);
+            foreach (var itemRp in rpModel.Where(p => !p.Value.IsNullOrWhiteSpace()))
+            {
+                itemRp.Value = itemRp.Value ?? "";
+                model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
+                model.HtmlContent = model.HtmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
+            }
+            var mmmC = new MailMainContentDto
+            {
+                UniversiteAdi = "Yıldız Teknik Üniversitesi",
+                EnstituAdi = enstituAdi,
+                LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png",
+                Content = model.HtmlContent.Replace("_removeRw_", "")
+            };
+            model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+
+
+            return model;
+
+        }
         public static Exception SendMailRetVal(string enstituKod, string konu, string icerik, string eMail, List<Attachment> attach, bool toOrBcc = true)
         {
             Exception exRet = null;
@@ -136,9 +199,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             {
                 ePosta.From = new MailAddress(emailAdresi, name, Encoding.UTF8);
                 ePosta.IsBodyHtml = true;
-                
+
                 foreach (var item in eMails)
-                { 
+                {
                     if (!mailBilgi.TestEmailAddress.IsNullOrWhiteSpace()) item.EMail = mailBilgi.TestEmailAddress;
                     if (item.ToOrBcc) ePosta.To.Add(item.EMail);
                     else ePosta.Bcc.Add(item.EMail);
@@ -164,75 +227,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return true;
 
 
-        }
+        } 
 
     }
 
 
 
-    public class MailContentDetailDto
-    {
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public string HtmlContent { get; set; }
-        public List<string> AddMailList { get; set; } = new List<string>();
-    }
-    public class MailParameterDto
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public bool IsLink { get; set; }
-    }
-    public static class SystemMails
-    {
-        public static MailContentDetailDto GetSystemMailContent(string enstituAdi, string sablonHtml, string sablonAdi, List<MailParameterDto> rpModel)
-        {
-            rpModel = rpModel ?? new List<MailParameterDto>();
-            var model = new MailContentDetailDto
-            {
-                Title = sablonAdi,
-                HtmlContent = sablonHtml
-            };
-        
-            model.Title = model.Title.Replace("{{", "{{_removeRw_");
-            var titleStrList = model.Title.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
-
-            foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
-            {
-                titleStrList = titleStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
-            }
-            model.Title = string.Join("", titleStrList);
 
 
-            model.HtmlContent = model.HtmlContent.Replace("{{", "{{_removeRw_");
-
-            var contentStrList = model.HtmlContent.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
-
-            foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
-            {
-                contentStrList = contentStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
-            }
-            model.HtmlContent = string.Join("", contentStrList);
-            foreach (var itemRp in rpModel.Where(p => !p.Value.IsNullOrWhiteSpace()))
-            {
-                itemRp.Value = itemRp.Value ?? "";
-                model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
-                model.HtmlContent = model.HtmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
-            }
-            var mmmC = new MailMainContentDto
-            {
-                UniversiteAdi = "Yıldız Teknik Üniversitesi",
-                EnstituAdi = enstituAdi,
-                LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png",
-                Content = model.HtmlContent.Replace("_removeRw_", "")
-            };
-            model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-
-
-            return model;
-
-        }
-    }
 
 
 

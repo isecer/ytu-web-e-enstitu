@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
@@ -23,10 +24,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                                 s.MezuniyetBasvurulari.OgrenimTipKod,
                                 s.IsYokDrBursiyeriVar,
                                 Danisman = s.SRTaleplerJuris.FirstOrDefault(p => p.JuriTipAdi == "TezDanismani"),
-                                TikUyesi1 = s.SRTaleplerJuris.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi1"),
-                                TikUyesi2 = s.SRTaleplerJuris.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi2"),
-                                JuriUyesi1 = s.SRTaleplerJuris.FirstOrDefault(p => p.JuriTipAdi.Contains("YtuIciJuri")),
-                                JuriUyesi2 = s.SRTaleplerJuris.FirstOrDefault(p => p.JuriTipAdi.Contains("YtuDisiJuri")),
+                                TikUyeleris = s.SRTaleplerJuris.Where(p => p.JuriTipAdi != "TezDanismani").ToList(),
+
                             }).First();
 
 
@@ -44,18 +43,21 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 sbBandTikUyeleri.Visible = isDoktora;
                 if (isDoktora)
                 {
-                    this.DisplayName = "FR-0377 DOKTORA TEZ SAVUNMA SINAV SONUÇ TUTANAĞI EKİ";
-                    cellTik1UnvanAdSoyad.Text = data.TikUyesi1.UnvanAdi + " \r\n" + data.TikUyesi1.JuriAdi;
-                    cellTik1AbdUniversiteAdi.Text = data.TikUyesi1.AnabilimdaliProgramAdi.Trim() + "\r\n" + data.TikUyesi1.UniversiteAdi.Trim();
-                    cellTik1DegerlendirmeSonucu.Text = data.TikUyesi1.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "BAŞARILI (SUCCESSFUL)" : (data.TikUyesi1.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? "DÜZELTME (REVISION)" : "BAŞARISIZ (UNSUCCESSFUL)");
-                    cellTik1DegerlendirmeAciklama.Text = data.TikUyesi1.Aciklama.IsNullOrWhiteSpace() ? "" : data.TikUyesi1.Aciklama;
-                    cellTik1TarihImza.Text = data.TikUyesi1.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + " \r\nTarihinde Elektronik Olarak Onaylandı";
+                    var tikUyesi1 = data.TikUyeleris.First(p => p.JuriTipAdi == "TikUyesi1");
+                    var tikUyesi2 = data.TikUyeleris.First(p => p.JuriTipAdi == "TikUyesi2");
 
-                    cellTik2UnvanAdSoyad.Text = data.TikUyesi2.UnvanAdi + "\r\n" + data.TikUyesi2.JuriAdi;
-                    cellTik2AbdUniversiteAdi.Text = data.TikUyesi2.AnabilimdaliProgramAdi.Trim() + "\r\n" + data.TikUyesi2.UniversiteAdi.Trim();
-                    cellTik2DegerlendirmeSonucu.Text = data.TikUyesi2.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "BAŞARILI (SUCCESSFUL)" : (data.TikUyesi2.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? "DÜZELTME (REVISION)" : "BAŞARISIZ (UNSUCCESSFUL)");
-                    cellTik2DegerlendirmeAciklama.Text = data.TikUyesi2.Aciklama.IsNullOrWhiteSpace() ? "" : data.TikUyesi2.Aciklama;
-                    cellTik2TarihImza.Text = data.TikUyesi2.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + " \r\nTarihinde Elektronik Olarak Onaylandı";
+                    this.DisplayName = "FR-0377 DOKTORA TEZ SAVUNMA SINAV SONUÇ TUTANAĞI EKİ";
+                    cellTik1UnvanAdSoyad.Text = tikUyesi1.UnvanAdi + " \r\n" + tikUyesi1.JuriAdi;
+                    cellTik1AbdUniversiteAdi.Text = tikUyesi1.AnabilimdaliProgramAdi.Trim() + "\r\n" + tikUyesi1.UniversiteAdi.Trim();
+                    cellTik1DegerlendirmeSonucu.Text = tikUyesi1.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "BAŞARILI (SUCCESSFUL)" : (tikUyesi1.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? "DÜZELTME (REVISION)" : "BAŞARISIZ (UNSUCCESSFUL)");
+                    cellTik1DegerlendirmeAciklama.Text = tikUyesi1.Aciklama.IsNullOrWhiteSpace() ? "" : tikUyesi1.Aciklama;
+                    cellTik1TarihImza.Text = tikUyesi1.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + " \r\nTarihinde Elektronik Olarak Onaylandı";
+
+                    cellTik2UnvanAdSoyad.Text = tikUyesi2.UnvanAdi + "\r\n" + tikUyesi2.JuriAdi;
+                    cellTik2AbdUniversiteAdi.Text = tikUyesi2.AnabilimdaliProgramAdi.Trim() + "\r\n" + tikUyesi2.UniversiteAdi.Trim();
+                    cellTik2DegerlendirmeSonucu.Text = tikUyesi2.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "BAŞARILI (SUCCESSFUL)" : (tikUyesi2.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? "DÜZELTME (REVISION)" : "BAŞARISIZ (UNSUCCESSFUL)");
+                    cellTik2DegerlendirmeAciklama.Text = tikUyesi2.Aciklama.IsNullOrWhiteSpace() ? "" : tikUyesi2.Aciklama;
+                    cellTik2TarihImza.Text = tikUyesi2.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + " \r\nTarihinde Elektronik Olarak Onaylandı";
                 }
                 else
                 {
@@ -66,17 +68,22 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     lblTutanakAdiEn.Text = "MSc. THESIS DEFENSE EXAM RESULT REPORT ANNEX";
 
                 }
-                cellJuri1UnvanAdSoyad.Text = data.JuriUyesi1.UnvanAdi + " \r\n" + data.JuriUyesi1.JuriAdi;
-                cellJuri1AbdUniversiteAdi.Text = data.JuriUyesi1.AnabilimdaliProgramAdi.Trim() + "\r\n" + data.JuriUyesi1.UniversiteAdi.Trim();
-                cellJuri1DegerlendirmeSonucu.Text = data.JuriUyesi1.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "BAŞARILI (SUCCESSFUL)" : (data.JuriUyesi1.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? "DÜZELTME (REVISION)" : "BAŞARISIZ (UNSUCCESSFUL)");
-                cellJuri1DegerlendirmeAciklama.Text = data.JuriUyesi1.Aciklama.IsNullOrWhiteSpace() ? "" : data.JuriUyesi1.Aciklama;
-                cellJuri1TarihImza.Text = data.JuriUyesi1.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + " \r\nTarihinde Elektronik Olarak Onaylandı";
 
-                cellJuri2UnvanAdSoyad.Text = data.JuriUyesi2.UnvanAdi + "\r\n" + data.JuriUyesi2.JuriAdi;
-                cellJuri2AbdUniversiteAdi.Text = data.JuriUyesi2.AnabilimdaliProgramAdi.Trim() + "\r\n" + data.JuriUyesi2.UniversiteAdi.Trim();
-                cellJuri2DegerlendirmeSonucu.Text = data.JuriUyesi2.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "BAŞARILI (SUCCESSFUL)" : (data.JuriUyesi2.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? "DÜZELTME (REVISION)" : "BAŞARISIZ (UNSUCCESSFUL)");
-                cellJuri2DegerlendirmeAciklama.Text = data.JuriUyesi2.Aciklama.IsNullOrWhiteSpace() ? "" : data.JuriUyesi2.Aciklama;
-                cellJuri2TarihImza.Text = data.JuriUyesi2.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + "\r\nTarihinde Elektronik Olarak Onaylandı";
+                var juris = data.TikUyeleris.Where(p => p.JuriTipAdi.Contains("Juri")).ToList();
+                var juriUyesi1 = juris[0];
+                var juriUyesi2 = juris[1];
+
+                cellJuri1UnvanAdSoyad.Text = juriUyesi1.UnvanAdi + " \r\n" + juriUyesi1.JuriAdi;
+                cellJuri1AbdUniversiteAdi.Text = juriUyesi1.AnabilimdaliProgramAdi.Trim() + "\r\n" + juriUyesi1.UniversiteAdi.Trim();
+                cellJuri1DegerlendirmeSonucu.Text = juriUyesi1.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "BAŞARILI (SUCCESSFUL)" : (juriUyesi1.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? "DÜZELTME (REVISION)" : "BAŞARISIZ (UNSUCCESSFUL)");
+                cellJuri1DegerlendirmeAciklama.Text = juriUyesi1.Aciklama.IsNullOrWhiteSpace() ? "" : juriUyesi1.Aciklama;
+                cellJuri1TarihImza.Text = juriUyesi1.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + " \r\nTarihinde Elektronik Olarak Onaylandı";
+
+                cellJuri2UnvanAdSoyad.Text = juriUyesi2.UnvanAdi + "\r\n" + juriUyesi2.JuriAdi;
+                cellJuri2AbdUniversiteAdi.Text = juriUyesi2.AnabilimdaliProgramAdi.Trim() + "\r\n" + juriUyesi2.UniversiteAdi.Trim();
+                cellJuri2DegerlendirmeSonucu.Text = juriUyesi2.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? "BAŞARILI (SUCCESSFUL)" : (juriUyesi2.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? "DÜZELTME (REVISION)" : "BAŞARISIZ (UNSUCCESSFUL)");
+                cellJuri2DegerlendirmeAciklama.Text = juriUyesi2.Aciklama.IsNullOrWhiteSpace() ? "" : juriUyesi2.Aciklama;
+                cellJuri2TarihImza.Text = juriUyesi2.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + "\r\nTarihinde Elektronik Olarak Onaylandı";
 
             }
         }

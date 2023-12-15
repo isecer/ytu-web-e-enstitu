@@ -288,7 +288,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Baslik + "' Başlıklı Duyuru! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Duyurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

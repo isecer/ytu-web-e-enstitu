@@ -242,7 +242,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + pAdi.ProgramAdi + "' İsimli Program Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Programlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

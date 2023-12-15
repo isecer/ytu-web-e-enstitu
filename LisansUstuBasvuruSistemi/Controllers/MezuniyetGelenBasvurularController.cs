@@ -400,7 +400,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Index Bilgisi Güncellenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/YayinIndexUpdate<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
@@ -840,7 +840,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Tez dosyası kontrolü durum bilgisi kayıt edilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/TdDurumKaydet<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
                 }
             }
             mmMessage.Title = "Tez Kontrol Durumu Kayıt İşlemi";
@@ -1965,7 +1965,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }

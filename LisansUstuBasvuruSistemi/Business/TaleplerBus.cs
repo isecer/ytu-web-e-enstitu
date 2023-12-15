@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -16,20 +17,20 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 var nowDate = DateTime.Now;
                 var xD = (from s in db.TalepSurecleris.Where(p => p.TalepSurecID == talepSurecId)
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    select new FrTalepSurec
-                    {
-                        TalepSurecID = s.TalepSurecID,
-                        EnstituKod = s.EnstituKod,
-                        BaslangicTarihi = s.BaslangicTarihi,
-                        BitisTarihi = s.BitisTarihi,
-                        IsAktif = s.IsAktif,
-                        IslemYapanID = s.IslemYapanID,
-                        IslemYapan = k.KullaniciAdi,
-                        IslemTarihi = s.IslemTarihi,
-                        IslemYapanIP = s.IslemYapanIP,
-                        AktifSurec = (s.BaslangicTarihi <= nowDate && s.BitisTarihi >= nowDate)
-                    }).FirstOrDefault();
+                          join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                          select new FrTalepSurec
+                          {
+                              TalepSurecID = s.TalepSurecID,
+                              EnstituKod = s.EnstituKod,
+                              BaslangicTarihi = s.BaslangicTarihi,
+                              BitisTarihi = s.BitisTarihi,
+                              IsAktif = s.IsAktif,
+                              IslemYapanID = s.IslemYapanID,
+                              IslemYapan = k.KullaniciAdi,
+                              IslemTarihi = s.IslemTarihi,
+                              IslemYapanIP = s.IslemYapanIP,
+                              AktifSurec = (s.BaslangicTarihi <= nowDate && s.BitisTarihi >= nowDate)
+                          }).FirstOrDefault();
                 return xD;
             }
         }
@@ -84,7 +85,10 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
         }
 
-      
+        public static MmMessage SendTopluBilgiMaili(List<int> talepGelenTalepIDs, string enstituKod, string aciklama = "")
+        {
+            return MailSenderTalep.SendTopluBilgiMaili(talepGelenTalepIDs, enstituKod, aciklama);
+        }
 
         public static List<CmbIntDto> GetCmbTalepTipleri(bool bosSecimVar = false)
         {
@@ -108,13 +112,13 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = (from s in db.TalepSurecleris.Where(p => p.EnstituKod == enstituKod)
-                    orderby s.BaslangicTarihi descending
-                    select new
-                    {
-                        s.TalepSurecID,
-                        s.BaslangicTarihi,
-                        s.BitisTarihi
-                    }).ToList();
+                            orderby s.BaslangicTarihi descending
+                            select new
+                            {
+                                s.TalepSurecID,
+                                s.BaslangicTarihi,
+                                s.BitisTarihi
+                            }).ToList();
                 foreach (var item in data)
                 {
                     lst.Add(new CmbIntDto { Value = item.TalepSurecID, Caption = item.BaslangicTarihi.ToFormatDate() + " - " + item.BitisTarihi.ToFormatDate() });

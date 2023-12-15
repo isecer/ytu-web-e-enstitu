@@ -26,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public string FormKodu { get; set; }
         public int TijFormTipID { get; set; }
         public Nullable<int> TijDegisiklikTipID { get; set; }
+        public string DegisiklikAciklamasi { get; set; }
         public bool IsObsData { get; set; }
         public System.DateTime BasvuruTarihi { get; set; }
         public int DonemBaslangicYil { get; set; }

@@ -1107,7 +1107,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, "TIBasvuru/TIAraRaporFormuPost\r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj,  ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                         }
 
 
@@ -1361,7 +1361,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.IsSuccess = false;
                         mmMessage.MessageType = MsgTypeEnum.Error;
                         mmMessage.Messages.Add("İşlem yapılırken bir hata oluştu.");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez izleme toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(), "TIBasvuru/RezervasyonAlPost<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez izleme toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
                     }
 
                 }
@@ -1641,7 +1641,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TIBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }
@@ -1689,7 +1689,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(araRapor.AraRaporSayisi + ". Rapor sistemden silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TIBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;

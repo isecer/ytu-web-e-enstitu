@@ -170,7 +170,7 @@
                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
                                                 <table style="width:100%;">
                                                     <tr>
-                                                        <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book fa-lg"></i> Tez Bilgileri</td>
+                                                        <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book fa-lg"></i> Öneri / Tez Bilgileri</td>
                                                     </tr>
 
                                                     <tr>
@@ -178,6 +178,18 @@
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">@(item.SozluSinavBasariTarihi.ToFormatDate())</td>
                                                     </tr>
+                                                    @if (!item.DegisiklikAciklamasi.IsNullOrWhiteSpace())
+                                                    {
+                                                        <tr>
+                                                            <td class="CaptionTd">
+                                                                Değişiklik Açıklaması
+                                                            </td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">
+                                                                @item.DegisiklikAciklamasi
+                                                            </td>
+                                                        </tr>
+                                                    }
                                                     <tr>
                                                         <td class="CaptionTd" width="160">Tez Dili</td>
                                                         <td class="CaptionTd" width="10">:</td>
@@ -211,6 +223,7 @@
                                                             </td>
                                                         </tr>
                                                     }
+                                                  
                                                     @if (!item.IsObsData && item.DanismanOnayladi == true)
                                                     {
                                                         var title = (item.TijFormTipID == TijFormTipiEnum.YeniForm ? "FR-0306 Doktora Tez İzleme Komitesi Öneri Formu" : "FR-1460 Doktora Tez İzleme Komitesi Değişikliği Formu");

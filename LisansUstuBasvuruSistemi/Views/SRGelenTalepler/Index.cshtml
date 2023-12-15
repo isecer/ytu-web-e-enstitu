@@ -13,8 +13,106 @@
 }
 
 <div class="row">
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Index", "SrGelenTalepler", FormMethod.Post, new { id = "frmGBasvurular" }))
     {
+        <div class="col-md-12">
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info" id="pnlFltr">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Talep Tipi</td>
+                                            <td>
+                                                @Html.DropDownList("SRTalepTipID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left: 10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                    <tr>
+                                        <td width="160">Öğrenim Seviyesi</td>
+                                        <td>
+                                            @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table> 
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                    <tr>
+                                        <td width="160">Salon</td>
+                                        <td>
+                                            @Html.DropDownList("SRSalonID", null, new { @class = "form-control", id = "FTijFormTipID" })
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                              
+                            </td>
+                            <td style="padding-left: 10px; vertical-align: top;">
+                                <table style="width: 100%; table-layout: fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Rezervasyon Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("SRDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                            </td>
+                            <td style="padding-left: 10px; vertical-align: top;">
+
+                                <table style="width: 100%; table-layout: fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Aranacak Kelime</td>
+                                            <td>
+
+                                                <table style="width: 100%; table-layout: fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td> <input name="Aranan" type="text" value="@Model.Aranan" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width: 110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
         <div class="col-md-12">
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
@@ -27,7 +125,7 @@
                     </ul>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-hover">
+                    <table class="table table-hover" style="font-size:8pt;">
                         <thead>
                             <tr>
                                 <th width="75">
@@ -40,19 +138,6 @@
 
                         </thead>
                         <tbody>
-                            <tr class="filtrele">
-                                <th>
-
-                                </th>
-                                <th>
-                                    <input name="Aciklama" type="text" value="@Model.Aciklama" class="form-control" />
-                                </th>
-                                <th>@Html.DropDownList("SRTalepTipID", null, new { @class = "form-control" })</th>
-                                <th>@Html.DropDownList("SRSalonID", null, new { @class = "form-control" })</th>
-                                @*<th></th>*@
-                                <th>@Html.DropDownList("SRDurumID", null, new { @class = "form-control" })</th>
-
-                            </tr>
                             @if (Model.RowCount > 0)
                             {
 
@@ -82,8 +167,8 @@
                                                 <tr>
                                                     <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail"></td>
                                                     <td style="margin:0px;border:none;">
-                                                        @item.TalepYapan
-                                                        <br />@item.OgrenciNo
+                                                        @item.TalepYapan (@item.OgrenciNo)
+                                                        <br />@item.OgrenimTipAdi
                                                     </td>
                                                 </tr>
                                             </table>
@@ -100,19 +185,20 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td>
-                                            <table style="width:100%;table-layout:fixed;">
+                                        <td  style="font-size:10pt;">
+                                            <table class="mColor_@item.SRTalepID" style="width:100%;table-layout:fixed;">
                                                 <tr>
-                                                    <td style="width:30px;">
+                                                    <td style="width: 30px; font-size: 12pt;">
                                                         @if (!item.ClassName.IsNullOrWhiteSpace())
                                                         {
-                                                            <span class="tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="@item.SRDurumAciklamasi">
-                                                                <i id="bticon_@item.SRTalepID" class="@item.ClassName" style="font-size:17pt;@fWeight"></i>
+                                                            <span class="tooltips " data-style="blue" data-original-title="@item.SRDurumAciklamasi">
+                                                                <i id="bticon_@item.SRTalepID" class="@item.ClassName fa-lg" style="@fWeight"></i>
                                                             </span>
                                                         }
                                                         else
                                                         {
-                                                            <i class="@item.ClassName mColor_@item.SRTalepID" style="font-size:17pt;@fWeight color:@item.Color"></i>
+
+                                                            <i class="@item.ClassName fa-lg" style="@fWeight color:@item.Color"></i>
                                                         }
                                                     </td>
                                                     <td>
@@ -163,7 +249,7 @@
                     'SRDurumID': ibtID,
                     'SRDurumAciklamasi': ibTipAciklama
                 },
-                success: function (result) { 
+                success: function (result) {
                     $(".mColor_" + id).each(function (inx, itmx) {
                         $(itmx).attr("style", "color:" + result.Color + (result.IsFontWeightBold?";font-weight:bold;":""));
                     });

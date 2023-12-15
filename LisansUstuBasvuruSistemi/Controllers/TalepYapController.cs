@@ -13,6 +13,7 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -68,8 +69,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kullanici.Programlar.AnabilimDallari.EnstituKod != enstituKod)
                 {
 
-                    var gelenEnstituKisaAd = EnstituBus.Enstitulers.First(p => p.EnstituKod==enstituKod).EnstituKisaAd.ToLower();
-                    var gidilecekEnstituKisaAd = EnstituBus.Enstitulers.First(p => p.EnstituKod == kullanici.Programlar.AnabilimDallari.EnstituKod).EnstituKisaAd.ToLower();  
+                    var gelenEnstituKisaAd = EnstituBus.Enstitulers.First(p => p.EnstituKod == enstituKod).EnstituKisaAd.ToLower();
+                    var gidilecekEnstituKisaAd = EnstituBus.Enstitulers.First(p => p.EnstituKod == kullanici.Programlar.AnabilimDallari.EnstituKod).EnstituKisaAd.ToLower();
                     var urlStr = Url.Action("Index", "TalepYap")?.Replace(gelenEnstituKisaAd, gidilecekEnstituKisaAd);
                     return Redirect(urlStr);
                 }
@@ -132,9 +133,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IslemYapanID,
                         s.IslemYapanIP,
                         s.TalepGelenTalepBelgeleris
-                    }; 
-            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi); 
-            model.RowCount = q.Count(); 
+                    };
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
+            model.RowCount = q.Count();
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount
@@ -540,7 +541,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     talep = _entities.TalepGelenTaleplers.Add(kModel);
                     _entities.SaveChanges();
-                    BilgiMaili(new List<int> { talep.TalepGelenTalepID }, enstituKod);
+                    TaleplerBus.SendTopluBilgiMaili(new List<int> { talep.TalepGelenTalepID }, enstituKod);
 
                 }
                 else
@@ -643,140 +644,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
         }
 
-        void BilgiMaili(List<int> talepGelenTalepIDs, string enstituKod, string aciklama = "")
-        {
-
-
-            var taleps = (from s in _entities.TalepGelenTaleplers
-                          join ts in _entities.TalepSurecleris on s.TalepSurecID equals ts.TalepSurecID
-                          join kul in _entities.Kullanicilars on s.KullaniciID equals kul.KullaniciID
-                          join tt in _entities.TalepTipleris on s.TalepTipID equals tt.TalepTipID
-                          join td in _entities.TalepDurumlaris on s.TalepDurumID equals td.TalepDurumID
-                          join ags in _entities.TalepArGorStatuleris on s.TalepArGorStatuID equals ags.TalepArGorStatuID into defAgs
-                          from Ags in defAgs.DefaultIfEmpty()
-                          join ot in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod into defO
-                          from Ot in defO.DefaultIfEmpty()
-                          join otl in _entities.OgrenimTipleris on Ot.OgrenimTipID equals otl.OgrenimTipID into defOtl
-                          from Otl in defOtl.DefaultIfEmpty()
-                          join prl in _entities.Programlars on s.ProgramKod equals prl.ProgramKod into defprl
-                          from Prl in defprl.DefaultIfEmpty()
-                          join abl in _entities.AnabilimDallaris on new { AnabilimDaliID = (Prl != null ? Prl.AnabilimDaliID : (int?)null) } equals new { AnabilimDaliID = (int?)abl.AnabilimDaliID } into defabl
-                          from Abl in defabl.DefaultIfEmpty()
-                          where talepGelenTalepIDs.Contains(s.TalepGelenTalepID)
-                          select new
-                          {
-                              s.TalepGelenTalepID,
-                              s.TalepSurecID,
-                              s.KullaniciID,
-                              kul.ResimAdi,
-                              kul.EMail,
-                              kul.YtuOgrencisi,
-                              s.TalepTipID,
-                              tt.TalepTipAdi,
-                              tt.TalepTipAciklama,
-                              s.TalepDurumID,
-                              s.TalepDurumAciklamasi,
-
-                              td.TalepDurumAdi,
-                              td.ClassName,
-                              td.Color,
-                              s.TalepTarihi,
-                              s.AdSoyad,
-                              s.OgrenciNo,
-                              s.OgrenimTipID,
-                              s.OgrenimTipKod,
-                              s.DoktoraTezOneriTarihi,
-                              Otl.OgrenimTipAdi,
-                              Abl.AnabilimDaliAdi,
-                              Prl.ProgramAdi,
-                              s.IsYtuArGor,
-                              s.TalepArGorStatuID,
-                              Ags.StatuAdi,
-                              s.IsDersYukuTamamlandi,
-                              s.IsHarcBorcuVar,
-                              s.IslemTarihi,
-                              s.IslemYapanID,
-                              s.IslemYapanIP,
-                          }).ToList();
-            foreach (var talep in taleps)
-            {
-                var htmlBigliRow = new List<MailTableRowDto>();
-                var contentBilgi = new MailTableContentDto();
-                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Ad Soyad", Aciklama = talep.AdSoyad });
-                if (talep.YtuOgrencisi)
-                {
-                    if (!talep.OgrenciNo.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenci No", Aciklama = talep.OgrenciNo });
-                    if (talep.OgrenimTipKod.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenim Seviyesi", Aciklama = talep.OgrenimTipAdi });
-                    if (!talep.ProgramAdi.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Program", Aciklama = talep.ProgramAdi });
-                }
-
-                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tipi", Aciklama = talep.TalepTipAdi });
-                string talepTipAciklama = "";
-                if (talep.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi)
-                {
-                    talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
-                        "Bu talep tipini seçecek öğrenciler, doktora tez önerisinden başarılı olmuş ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir. "
-                        :
-                        "Bu talep tipini seçecek öğrenciler Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşamasını tamamlamış ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir.";
-                }
-                else if (talep.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi)
-                {
-                    talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
-                        "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
-                        :
-                        "Bu talep tipini seçecek olan öğrencilerimizden: YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşaması tamamlanmış ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir Aksi takdirde talebiniz kabul edilmeyecektir.";
-                }
-                else talepTipAciklama = talep.TalepTipAciklama;
-                if (!talepTipAciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tipi Açıklaması", Aciklama = talepTipAciklama });
-                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tarihi", Aciklama = talep.TalepTarihi.ToFormatDateAndTime() });
-                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Durumu", Aciklama = talep.TalepDurumAdi });
-                if (talep.TalepDurumID == TalepDurumuEnum.Rededildi) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Red Açıklaması", Aciklama = talep.TalepDurumAciklamasi });
-                if (!aciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Not", Aciklama = aciklama });
-
-                contentBilgi.GrupBasligi = "'" + talep.TalepTipAdi + "' talebiniz " + talep.TalepDurumAdi;
-                contentBilgi.Detaylar = htmlBigliRow;
-
-                var mmmC = new MailMainContentDto();
-                var enstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod).EnstituAd;
-                mmmC.EnstituAdi = enstituAdi;
-                mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
-                var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKod);
-                var erisimAdresi = mailBilgi.SistemErisimAdresi;
-                var wurlAddr = erisimAdresi.Split('/').ToList();
-                if (erisimAdresi.Contains("//"))
-                    erisimAdresi = wurlAddr[0] + "//" + wurlAddr.Skip(2).Take(1).First();
-                else
-                    erisimAdresi = "http://" + wurlAddr.First();
-                mmmC.LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-                var hcb = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
-                mmmC.Content = hcb;
-                string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                var emailSend = MailManager.SendMail(mailBilgi.EnstituKod, "Talep İşleminiz Hk.", htmlMail, talep.EMail, null);
-
-                if (emailSend)
-                {
-                    var kModel = new GonderilenMailler
-                    {
-                        Tarih = DateTime.Now,
-                        EnstituKod = mailBilgi.EnstituKod,
-                        MesajID = null,
-                        Konu = "Talep İşlemleri: " + talep.TalepTipAdi + "  (" + talep.AdSoyad + " [" + talep.TalepDurumAdi + "])",
-                        Aciklama = "",
-                        AciklamaHtml = htmlMail,
-                        IslemYapanID = UserIdentity.Current.Id,
-                        IslemTarihi = DateTime.Now,
-                        IslemYapanIP = UserIdentity.Ip,
-                        Gonderildi = true,
-                        GonderilenMailKullanicilars = new List<GonderilenMailKullanicilar>()
-                    };
-
-                    kModel.GonderilenMailKullanicilars.Add(new GonderilenMailKullanicilar { Email = talep.EMail });
-                    _entities.GonderilenMaillers.Add(kModel);
-                    _entities.SaveChanges();
-                }
-            }
-
-        }
 
         [Authorize(Roles = RoleNames.GelenTalepKayit)]
         public ActionResult Istenenkaydet(int id, int talepDurumId, string talepDurumAciklamasi)
@@ -795,7 +662,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (talepDurumId != TalepDurumuEnum.TalepYapildi && talepDurumId != oldTdid)
             {
-                BilgiMaili(new List<int> { talep.TalepGelenTalepID }, talep.TalepSurecleri.EnstituKod);
+                TaleplerBus.SendTopluBilgiMaili(new List<int> { talep.TalepGelenTalepID }, talep.TalepSurecleri.EnstituKod);
             }
             var qbDrm = talep.TalepDurumlari;
 
@@ -836,13 +703,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add(talepler.Count + " Talep onaylandı");
                     try
                     {
-                        BilgiMaili(kTalepGelenTalepIDs, enstituKod, onayAciklamasi);
+                        TaleplerBus.SendTopluBilgiMaili(kTalepGelenTalepIDs, enstituKod, onayAciklamasi);
                         mmMessage.Messages.Add("Onaylanan " + talepler.Count + " Talep'e mail gönderildi.");
                     }
                     catch (Exception ex)
                     {
                         mmMessage.Messages.Add("Onaylanan Taleplere mail gönderilirken bir hata oluştu.");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                     }
                     LogIslemleri.LogEkle("TalepGelenTalepler", LogCrudType.Update, talepler.ToJson());
 
@@ -852,7 +719,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Toplu Talep Onay işlemi yapılırken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu Talep Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu Talep Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 }
             }
             else
@@ -916,7 +783,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             bool duzenleYetki = RoleNames.GelenTalepSil.InRoleCurrent();
             var talep = _entities.TalepGelenTaleplers.First(p => p.TalepGelenTalepID == id && p.KullaniciID == (duzenleYetki ? p.KullaniciID : UserIdentity.Current.Id));
-           
+
             if (duzenleYetki == false)
             {
                 if (Management.GetAktifTalepSurecId(talep.TalepSurecleri.EnstituKod, talep.TalepSurecID).HasValue)
@@ -942,7 +809,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var bDurumAdi = talep.TalepDurumlari.TalepDurumAdi;
                     mmMessage.Messages.Add("Talep durumu '" + bDurumAdi + "' olan talebi silemezsiniz.");
                 }
-              
+
             }
             if (mmMessage.IsSuccess)
             {
@@ -957,7 +824,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (System.IO.File.Exists(dosya.DosyaYolu))
                         {
                             try
-                            { 
+                            {
                                 System.IO.File.Delete(dosya.DosyaYolu);
                             }
                             catch (Exception)
@@ -976,7 +843,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Talep silinirken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id, "TalepYap /Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);

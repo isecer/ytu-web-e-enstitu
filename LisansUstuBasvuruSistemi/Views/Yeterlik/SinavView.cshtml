@@ -113,7 +113,7 @@
 
     </script>
 }
-else if (Model.IsYaziliSinavBasarili == false || Model.IsYaziliSinavinaKatildi == false || Model.IsSozluSinavinaKatildi.HasValue)
+@if (Model.IsYaziliSinavBasarili == false || Model.IsYaziliSinavinaKatildi == false || Model.IsSozluSinavinaKatildi.HasValue)
 {
     @Model.ToJuriDegerlendirmeListView()
 }

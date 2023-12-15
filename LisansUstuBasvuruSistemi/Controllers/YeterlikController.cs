@@ -18,7 +18,7 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize]
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class YeterlikController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
@@ -113,8 +113,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             return View(model);
         }
-
-
         public ActionResult BasvuruYap(Guid? id, string ekd = "")
         {
             var model = new KmYeterlikBasvuruDto();
@@ -139,8 +137,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.AdSoyad = basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad;
                     model.OgrenciNo = basvuru.OgrenciNo;
                     model.OgrenimTipID = basvuru.OgrenimTipID;
-                    model.KayitYil = basvuru.Kullanicilar.KayitYilBaslangic.Value;
-                    model.KayitDonemID = basvuru.Kullanicilar.KayitDonemID.Value;
+                    if (basvuru.Kullanicilar.KayitYilBaslangic.HasValue) model.KayitYil = basvuru.Kullanicilar.KayitYilBaslangic.Value;
+                    if (basvuru.Kullanicilar.KayitDonemID.HasValue) model.KayitDonemID = basvuru.Kullanicilar.KayitDonemID.Value;
                     model.OkuduguDonemNo = ogrenciBilgi.OkuduguDonemNo;
                     model.OgrenimTipAdi = ogrenimTip.OgrenimTipAdi;
                     model.AnabilimdaliAdi = basvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
@@ -166,8 +164,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.AdSoyad = kul.Ad + " " + kul.Soyad;
                     model.OgrenciNo = kul.OgrenciNo;
                     model.OgrenimTipID = ogrenimTip.OgrenimTipID;
-                    model.KayitYil = kul.KayitYilBaslangic.Value;
-                    model.KayitDonemID = kul.KayitDonemID.Value;
+                    if (kul.KayitYilBaslangic.HasValue) model.KayitYil = kul.KayitYilBaslangic.Value;
+                    if (kul.KayitDonemID.HasValue) model.KayitDonemID = kul.KayitDonemID.Value;
                     model.OkuduguDonemNo = ogrenciBilgi.OkuduguDonemNo;
                     model.OgrenimTipAdi = ogrenimTip.OgrenimTipAdi;
                     model.AnabilimdaliAdi = kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
@@ -195,6 +193,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ogrenciBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
                 var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
                 var ogrenimTip = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kullanici.OgrenimTipKod);
+
 
 
                 if (kModel.UniqueID.HasValue)
@@ -274,6 +273,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsKomiteOrJuri = isKomiteOrJuri,
                 IsDegerlendirme = isDegerlendirme,
                 YeterlikSurecID = s.YeterlikSurecID,
+                IsSinavOnlineYapilabilir = s.YeterlikSureci.IsSinavOnlineYapilabilir,
                 ResimAdi = s.Kullanicilar.ResimAdi,
                 AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
                 OgrenciNo = s.OgrenciNo,
@@ -648,25 +648,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
 
-            }
 
-            if (!mMessage.Messages.Any())
-            {
-                var messages = YeterlikBus.SendMailKomiteDegerlendirmeLink(uye.YeterlikBasvuru.UniqueID, uniqueId);
-                if (messages.IsSuccess)
+
+                if (!mMessage.Messages.Any())
                 {
+                    var messages = YeterlikBus.SendMailKomiteDegerlendirmeLink(uye.YeterlikBasvuru.UniqueID, uniqueId);
+                    if (messages.IsSuccess)
+                    {
 
-                    uye.YeterlikBasvuru.IsAbdKomitesiJuriyiOnayladi = null;
-                    _entities.SaveChanges();
-                    mMessage.IsSuccess = true;
-                    mMessage.Messages.Add("Değerlendirme Linki Komite Üyesine Gönderildi.");
+                        uye.YeterlikBasvuru.IsAbdKomitesiJuriyiOnayladi = null;
+                        _entities.SaveChanges();
+                        mMessage.IsSuccess = true;
+                        mMessage.Messages.Add("Değerlendirme Linki Komite Üyesine Gönderildi.");
 
+                    }
+                    else
+                    {
+                        mMessage.Messages.AddRange(messages.Messages);
+
+                    }
                 }
-                else
-                {
-                    mMessage.Messages.AddRange(messages.Messages);
 
-                }
             }
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
@@ -729,7 +731,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", LogCrudType.Update, komite.ToJson());
                         if (herkesOnayladi == true)
                         {
-                            var messages = YeterlikBus.SendMailKomiteDegerlendirmeSonuc(komite.YeterlikBasvuru.UniqueID);
+                            YeterlikBus.SendMailKomiteDegerlendirmeSonuc(komite.YeterlikBasvuru.UniqueID);
                             var yeterlikBasvuru = komite.YeterlikBasvuru;
 
                             // bütün komite onayladığı zaman öğrencinin bir önceki yeterlik başvurusu kontrol edilir ve eğer yazılıdan başarılı ve genel olarak başarısız ise yazılı sınavı yeni yeterlik başvurusuna güncellenir.
@@ -891,11 +893,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     if (!kModel.SozluSinavTarihi.HasValue)
                     {
-                        mmMessage.Messages.Add("Sınav Tarihi Giriniz");
+                        mmMessage.Messages.Add("Sınav Tarihi Giriniz.");
                     }
                     if (kModel.SozluSinavYeri.IsNullOrWhiteSpace())
                     {
-                        mmMessage.Messages.Add("Sınav Yeri Giriniz");
+                        mmMessage.Messages.Add("Sınav Yeri Giriniz.");
                     }
                 }
                 else
@@ -905,6 +907,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.IsSozluSinavinaKatildi = null;
                 }
 
+                if (!mmMessage.Messages.Any())
+                {
+                    if (kModel.IsSozluSinavOnline == true && !yeterlikBasvuru.YeterlikSureci.IsSinavOnlineYapilabilir)
+                    {
+                        mmMessage.Messages.Add("Sözlü sınav online olarak yapılamaz. Yüz Yüze yapılması gerekmektedir.");
+                    }
+                }
                 if (!mmMessage.Messages.Any())
                 {
                     bool sendMail = yeterlikBasvuru.SozluSinavTarihi != kModel.SozluSinavTarihi ||
@@ -1279,11 +1288,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
-
-
-
-
-
         public ActionResult Sil(Guid uniqueId)
         {
             var kayit = _entities.YeterlikBasvurus.First(p => p.UniqueID == uniqueId);

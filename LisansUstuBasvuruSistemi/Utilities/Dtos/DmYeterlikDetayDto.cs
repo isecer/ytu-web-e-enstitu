@@ -12,6 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? IsKomiteOrJuri { get; set; }
         public Guid? IsDegerlendirme { get; set; }
         public string KayitDonemi { get; set; }
+        public bool IsSinavOnlineYapilabilir { get; set; }
         public string ResimAdi { get; set; }
         public string AdSoyad { get; set; }
         public string OgrenimTipAdi { get; set; }

@@ -138,9 +138,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int YeterlikYaziliSinavTalebiYapildiOgrenciye = 256;
         public const int YeterlikYaziliSinavTalebiYapildiJurilere = 257;
 
-        public const int YeterlikYaziliSinavBasariliGirisiYapidliDanismana = 258;
-        public const int YeterlikYaziliSinavBasariliGirisiYapidliOgrenciye = 259;
-        public const int YeterlikYaziliSinavBasariliGirisiYapidliJurilere = 260;
+        public const int YeterlikYaziliSinavBasariliGirisiYapildiDanismana = 258;
+        public const int YeterlikYaziliSinavBasariliGirisiYapildiOgrenciye = 259;
+        public const int YeterlikYaziliSinavBasariliGirisiYapildiJurilere = 260;
 
         public const int YeterlikYaziliSinavBasarisizOnayYapildiDanismana = 261;
         public const int YeterlikYaziliSinavBasarisizOnayYapildiOgrenciye = 262;

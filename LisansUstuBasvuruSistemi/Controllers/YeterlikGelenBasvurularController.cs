@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -19,7 +18,7 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize(Roles = RoleNames.YeterlikGelenBasvurular)]
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class YeterlikGelenBasvurularController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
@@ -152,13 +151,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Response.ContentType = "application/ms-excel";
                 Response.ContentEncoding = System.Text.Encoding.UTF8;
                 Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
-                StringWriter sw = new StringWriter();
-                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                var sw = new StringWriter();
+                var htw = new HtmlTextWriter(sw);
                 gv.RenderControl(htw);
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_YeterlikBasvuruListesi_" + DateTime.Now.ToFormatDate() + ".xls");
             }
             #endregion 
-            var isFiltered = q2 != q;
+            var isFiltered = !Equals(q, q2);
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
@@ -218,7 +217,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult EnstituTopluOnay(List<int> kontrolEdilmeyenTalepIds)
         {
             var success = true;
-            var message = "";
+            string message;
 
             if (UserIdentity.Current.IsAdmin)
             {

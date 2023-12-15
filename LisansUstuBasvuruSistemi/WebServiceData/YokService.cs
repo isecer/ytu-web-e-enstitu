@@ -4,10 +4,11 @@ using System.Linq;
 using System.ServiceModel;
 using System.Web;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using  LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
 
@@ -63,7 +64,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData
                     model.KayitVar = false;
                     model.Mesaj = "Yök öğrenci sorgulama servisinden sorgulanan öğrenci için sonuç bilgisi başarılı dönmemektedir." + " \r\n\r\nSonuç Kod:" + deger.Sonuc.SonucKod + "\r\nSonucMesaj:" + deger.Sonuc.SonucMesaj;
                     model.Mesaj += "\r\n\r\n" + JsonConvert.SerializeObject(deger);
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl", LogTipiEnum.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(model.Mesaj, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Kritik);
 
                 }
             }
@@ -72,7 +73,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData
                 model.KayitVar = false;
                 model.Hata = true;
                 model.Mesaj = "YÖK Servisinden Öğrenci Bilgisi kontrol edilirken bir hata oluştu.Hata:" + ex.ToExceptionMessage();
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl", LogTipiEnum.Kritik);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.Mesaj, ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
             }
 
             return model;

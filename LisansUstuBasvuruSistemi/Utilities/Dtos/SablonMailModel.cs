@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {

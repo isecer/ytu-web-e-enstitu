@@ -13,6 +13,7 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -40,6 +41,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var kayitBilgi = new StudentControl();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
+
                 var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
                 if (kul.YtuOgrencisi)
                 {
@@ -62,13 +64,12 @@ namespace LisansUstuBasvuruSistemi.Business
 
                             }
 
-                            kul.DanismanID = danismanId;
-                            //kul.OkuduguDonemNo = kayitBilgi.OkuduguDonemNo;
+                            kul.DanismanID = danismanId; 
                             kayitBilgi.AktifDanismanID = danismanId;
                         }
 
                     }
-                    else
+                    else if (!kayitBilgi.Hata)
                     {
                         kul.YtuOgrencisi = false;
                         kul.OgrenimTipKod = null;
@@ -76,8 +77,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         kul.OgrenciNo = null;
                         kul.KayitDonemID = null;
                         kul.KayitYilBaslangic = null;
-                        kul.KayitTarihi = null;
-                        //kul.OkuduguDonemNo = null;
+                        kul.KayitTarihi = null; 
                     }
                     db.SaveChanges();
                 }
@@ -291,7 +291,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         File.Delete(path2);
                         if (rotasYonDegisimLog)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu, "Management/resimKaydet", LogTipiEnum.Bilgi);
+
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Bilgi);
                         }
                     }
                 }
@@ -346,59 +347,10 @@ namespace LisansUstuBasvuruSistemi.Business
 
             return rotateFlipType;
         }
-        public static Exception YeniHesapMailGonder(Kullanicilar kModel, string sfr)
+
+        public static MmMessage SendMailYeniHesap(Kullanicilar kModel, string sfr)
         {
-
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-
-                var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
-                var mRowModel = new List<MailTableRowDto>();
-                var enstitu = db.Enstitulers.First(p => p.EnstituKod == kModel.EnstituKod);
-
-
-                var erisimAdresi = mailBilgi.SistemErisimAdresi;
-                var erisimAdresiSpl = erisimAdresi.Split('/').ToList();
-                if (erisimAdresi.Contains("//"))
-                    erisimAdresi = erisimAdresiSpl[0] + "//" + erisimAdresiSpl.Skip(2).Take(1).First();
-                else
-                    erisimAdresi = "http://" + erisimAdresiSpl.First();
-                mRowModel.Add(new MailTableRowDto { Baslik = "Ad Soyad", Aciklama = kModel.Ad + " " + kModel.Soyad });
-
-                if (kModel.BirimID.HasValue)
-                {
-                    var birim = db.Birimlers.First(p => p.BirimID == kModel.BirimID);
-                    mRowModel.Add(new MailTableRowDto { Baslik = "Birim", Aciklama = birim.BirimAdi });
-                }
-                if (kModel.UnvanID.HasValue)
-                {
-                    var unvan = db.Unvanlars.First(p => p.UnvanID == kModel.UnvanID);
-                    mRowModel.Add(new MailTableRowDto { Baslik = "Unvan", Aciklama = unvan.UnvanAdi });
-                }
-                if (kModel.SicilNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Sicil No", Aciklama = kModel.SicilNo });
-                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
-                if (kModel.CepTel.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
-
-                mRowModel.Add(new MailTableRowDto { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });
-                mRowModel.Add(new MailTableRowDto { Baslik = "Şifre", Aciklama = kModel.IsActiveDirectoryUser ? "Email şifreniz ile aynı" : sfr });
-                mRowModel.Add(new MailTableRowDto { Baslik = "Sistem Erişim Adresi", Aciklama = "<a href='" + mailBilgi.SistemErisimAdresi + "' target='_blank'>" + mailBilgi.SistemErisimAdresi + "</a>" });
-                var mmmC = new MailMainContentDto();
-
-                mmmC.EnstituAdi = enstitu.EnstituAd;
-                var mtc = new MailTableContentDto();
-                mtc.AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.";
-                mtc.Detaylar = mRowModel;
-                var tavleContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
-                mmmC.Content = tavleContent;
-                mmmC.LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-                mmmC.UniversiteAdi = "Yıldız Tekni Üniversitesi";
-                var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                var user = mailBilgi.SmtpKullaniciAdi;
-                var snded = MailManager.SendMailRetVal(kModel.EnstituKod, user, htmlMail, kModel.EMail, null);
-                return snded;
-
-            }
-
+            return MailSenderKullanici.SendMailYeniHesap(kModel, sfr);
         }
     }
 }

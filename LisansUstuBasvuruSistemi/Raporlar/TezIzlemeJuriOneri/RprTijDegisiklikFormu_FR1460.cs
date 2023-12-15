@@ -29,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                                 mb.KullaniciID,
                                 s.TijFormTipID,
                                 s.TijDegisiklikTipID,
+                                s.DegisiklikAciklamasi,
                                 k.OgrenciNo,
                                 s.FormKodu,
                                 AdSoyad = k.Ad + " " + k.Soyad,
@@ -58,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 cellTezDili.Text = data.TezDiliText;
                 cellTezBasligiTr.Text = data.TezBaslikTr;
                 cellTezBasligiEn.Text = data.TezBaslikEn;
-
+                cellDegisiklikAciklamasi.Text = data.DegisiklikAciklamasi;
                 rwTaahhut.Visible = !data.IsTezDiliTr;
 
 
@@ -71,7 +72,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 var oncekiTd = db.Kullanicilars.First(f => f.KullaniciID == oncekibasvuru.TezDanismanID);
                 var varolanTikler = oncekiJuriler.Where(f => !f.IsTezDanismani).ToList();
 
-                cellMevcutUyeTdUnvanAdSoyad.Text = oncekiTd.Unvanlar.UnvanAdi + " " + oncekiTd.Ad+" "+oncekiTd.Soyad;
+                cellMevcutUyeTdUnvanAdSoyad.Text = oncekiTd.Unvanlar.UnvanAdi + " " + oncekiTd.Ad + " " + oncekiTd.Soyad;
                 cellVarolanTik1TrCapt.Text = varolanTikler[0].IsYtuIciJuri ? "YTÜ TİK Üyesi" : "YTU DIŞI TİK Üyesi ";
                 cellVarolanTik1EnCapt.Text = varolanTikler[0].IsYtuIciJuri ? "YTU TMC Member" : "Non-YTU TMC Member";
 
@@ -82,11 +83,26 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 cellVarolanTik2UnvanAdSoyad.Text = varolanTikler[1].UnvanAdi + " " + varolanTikler[1].AdSoyad;
 
 
+                ChkMevcutUye1Evet.Checked = varolanTikler[0].IsYtuIciJuri
+                    ? (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciDegisiklik ||
+                       data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik)
+                    : (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuDisiDegisiklik ||
+                       data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik);
+                ChkMevcutUye1Hayir.Checked = !ChkMevcutUye1Evet.Checked;
+
+                ChkMevcutUye2Evet.Checked = varolanTikler[1].IsYtuIciJuri
+                    ? (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciDegisiklik ||
+                       data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik)
+                    : (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuDisiDegisiklik ||
+                       data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik);
+                ChkMevcutUye2Hayir.Checked = !ChkMevcutUye2Evet.Checked;
+
+
+
                 var yeniJuriler = data.Juriler.Where(p => p.IsYeniOrOnceki).ToList();
                 if (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciDegisiklik ||
                     data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik)
-                {
-                    ChkMevcutUyeYtuIciEvet.Checked = true;
+                { 
                     var ytuIci1 = yeniJuriler.FirstOrDefault(f => f.IsYtuIciJuri && f.RowNum == 1);
                     if (ytuIci1 != null)
                     {
@@ -114,13 +130,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                         cellYtuIciJuri3AnabilimDali.Text = ytuIci3.AnabilimdaliAdi;
                     }
 
-                }
-                else ChkMevcutUyeYtuIciHayir.Checked = true;
+                } 
 
                 if (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuDisiDegisiklik ||
                     data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik)
-                {
-                    ChkMevcutUyeYtuDisiEvet.Checked = true;
+                { 
                     var ytuDisi1 = data.Juriler.FirstOrDefault(f => !f.IsYtuIciJuri && f.RowNum == 4);
                     if (ytuDisi1 != null)
                     {
@@ -149,8 +163,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                         cellYtuDisiJuri3Universite.Text = ytuDisi3.UniversiteAdi;
                         cellYtuDisiJuri3AnabilimDali.Text = ytuDisi3.AnabilimdaliAdi;
                     }
-                }
-                else ChkMevcutUyeYtuDisiHayir.Checked = true;
+                } 
 
 
 

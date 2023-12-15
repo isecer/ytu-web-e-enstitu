@@ -13,6 +13,7 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -781,8 +782,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mailParameterDtos.Add(new MailParameterDto { Key = "DanismanUnvanAdi", Value = mBasvuru.TezDanismanUnvani });
 
 
-                        var mCOntent = SystemMails.GetSystemMailContent(enstituL.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, mailParameterDtos);
-                        var snded = MailManager.SendMail(enstitu.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, item.EMails, null);
+                        var contentDetailDto = MailManager.CreateMailContentDetailModel(enstituL.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, mailParameterDtos);
+                        var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, null);
                         if (snded)
                         {
                             var gm = new GonderilenMailler
@@ -795,7 +796,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
                                 IslemYapanIP = UserIdentity.Ip,
                                 Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = mCOntent.HtmlContent ?? "",
+                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                                 Gonderildi = true,
                                 GonderilenMailKullanicilars = item.EMails.Select(s => new GonderilenMailKullanicilar { Email = s.EMail }).ToList()
                             };
@@ -1131,7 +1132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var srTalebi = mezuniyetBasvuru.SRTalepleris.First(p => p.SRTalepID == srTalepId);
                 var tarih = model.IsSalonSecilsin ? srTalebi.Tarih : (srTalebi.Tarih.AddHours(srTalebi.BasSaat.Hours).AddMinutes(srTalebi.BasSaat.Minutes));
-                model.MzRowID = mezuniyetBasvuru.RowID.ToString();
+                model.MzRowId = mezuniyetBasvuru.RowID.ToString();
                 model.SRTalepID = srTalebi.SRTalepID;
                 model.SRTalepTipID = srTalebi.SRTalepTipID;
                 model.TalepYapanID = srTalebi.TalepYapanID;
@@ -1143,7 +1144,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                model.MzRowID = mezuniyetBasvuru.RowID.ToString();
+                model.MzRowId = mezuniyetBasvuru.RowID.ToString();
                 model.SRTalepTipID = 1;
                 model.TalepYapanID = mezuniyetBasvuru.KullaniciID;
                 var ogrenimTipKriterleri = mezuniyetBasvuru.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == mezuniyetBasvuru.OgrenimTipKod);
@@ -2138,24 +2139,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize]
-        public ActionResult SinavJuriBilgiGuncelle(int srTalepId, Guid? uniqueId, string unvanAdi, string juriAdi, string eMail, bool isYeniLink)
+        public ActionResult SinavJuriBilgiGuncelle(int srTalepId, Guid? uniqueId, string unvanAdi, string juriAdi, string eMail)
         {
             var mMessage = new MmMessage
             {
                 IsSuccess = false,
                 MessageType = MsgTypeEnum.Warning,
-                Title = "Tez sınavı değerlendirme linki gönderme işlemi"
+                Title = "Tez sınavı jüri bilgisi güncelleme işlemi"
             };
-            var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == srTalepId);
-            var basvuru = srTalep.MezuniyetBasvurulari;
+            var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == srTalepId); 
             var sinavDuzeltmeYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
             var uzatmaSonrasiOgrenciTaahhutu = srTalep.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && srTalep.IsOgrenciUzatmaSonrasiOnay.HasValue;
             var uye = srTalep.SRTaleplerJuris.FirstOrDefault(p => p.UniqueID == uniqueId);
 
-            if (!sinavDuzeltmeYetki && basvuru.TezDanismanID != UserIdentity.Current.Id)
+            if (!sinavDuzeltmeYetki)
             {
                 mMessage.MessageType = MsgTypeEnum.Warning;
-                mMessage.Messages.Add("Değerlendirme linkini göndermek için yetkili değilsiniz.");
+                mMessage.Messages.Add("Jüri bilgisini güncellemek için yetkili değilsiniz.");
             }
             else if (srTalep.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
             {
@@ -2163,11 +2163,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (uzatmaSonrasiOgrenciTaahhutu)
             {
-                mMessage.Messages.Add("Öğrenci uzatma işleminden sonra tez teslim taahhütü yaptığı için jüri üyesine değerlendirme linki gönderilemez.");
+                mMessage.Messages.Add("Öğrenci uzatma işleminden sonra tez teslim taahhütü yaptığı için Jüri bilgisi güncellenemez.");
             }
             else if (srTalep.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi)
             {
-                mMessage.Messages.Add("Değerlendirme işlemi tüm Jüri üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
+                mMessage.Messages.Add("Değerlendirme işlemi tüm Jüri üyeler tarafından tamamlandığı için Jüri bilgisi güncellenemez.");
             }
             else if (unvanAdi.IsNullOrWhiteSpace())
             {
@@ -2200,23 +2200,77 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mMessage.Messages.Add("Jüri bilgileri güncellendi.");
 
                     }
-                }
-                if (isYeniLink)
+                } 
+            }
+            var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
+            return new { mMessage, MessageView = strView, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult();
+        }
+        [Authorize]
+        public ActionResult SinavJuriyeMailGonder(int srTalepId, Guid? uniqueId, string eMail)
+        {
+            var mMessage = new MmMessage
+            {
+                IsSuccess = false,
+                MessageType = MsgTypeEnum.Warning,
+                Title = "Tez sınavı değerlendirme linki gönderme işlemi"
+            };
+            var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == srTalepId);
+            var basvuru = srTalep.MezuniyetBasvurulari;
+            var sinavDuzeltmeYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+            var uzatmaSonrasiOgrenciTaahhutu = srTalep.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && srTalep.IsOgrenciUzatmaSonrasiOnay.HasValue;
+            var uye = srTalep.SRTaleplerJuris.FirstOrDefault(p => p.UniqueID == uniqueId);
+
+            if (!sinavDuzeltmeYetki && basvuru.TezDanismanID != UserIdentity.Current.Id)
+            {
+                mMessage.MessageType = MsgTypeEnum.Warning;
+                mMessage.Messages.Add("Değerlendirme linkini göndermek için yetkili değilsiniz.");
+            }
+            else if (srTalep.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+            {
+                mMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
+            else if (uzatmaSonrasiOgrenciTaahhutu)
+            {
+                mMessage.Messages.Add("Öğrenci uzatma işleminden sonra tez teslim taahhütü yaptığı için jüri üyesine değerlendirme linki gönderilemez.");
+            }
+            else if (srTalep.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi)
+            {
+                mMessage.Messages.Add("Değerlendirme işlemi tüm Jüri üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
+            }
+            else if (eMail.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("E-Posta giriniz.");
+            }
+            else if (eMail.ToIsValidEmail())
+            {
+                mMessage.Messages.Add("E-Posta formatı uygun değildir.");
+            }
+            else
+            {
+                if (uniqueId.HasValue)
                 {
-                    var messages = MezuniyetBus.SendMailMezuniyetDegerlendirmeLink(srTalep.SRTalepID, uniqueId, true, true, eMail);
-                    if (messages.IsSuccess)
-                    {
-                        srTalep.JuriSonucMezuniyetSinavDurumID = null;
-                        _entities.SaveChanges();
-                        mMessage.IsSuccess = true;
-                        mMessage.MessageType = MsgTypeEnum.Success;
-                        mMessage.Messages.Add("Değerlendirme linki jüri üyesine gönderildi.");
-                    }
+                    if (uye == null) mMessage.Messages.Add("Değerlendirme linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı yenileyip tekrar deneyiniz.");
                     else
                     {
-                        mMessage.Messages.AddRange(messages.Messages);
+                        uye.Email = eMail;
+                        _entities.SaveChanges();
+                        var messages = MezuniyetBus.SendMailMezuniyetDegerlendirmeLink(srTalep.SRTalepID, uniqueId, true, true, eMail);
+                        if (messages.IsSuccess)
+                        {
+                            srTalep.JuriSonucMezuniyetSinavDurumID = null;
+                            _entities.SaveChanges();
+                            mMessage.IsSuccess = true;
+                            mMessage.MessageType = MsgTypeEnum.Success;
+                            mMessage.Messages.Add("Değerlendirme linki jüri üyesine gönderildi.");
+                        }
+                        else
+                        {
+                            mMessage.Messages.AddRange(messages.Messages);
+                        }
                     }
                 }
+
+
             }
             var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
             return new { mMessage, MessageView = strView, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult();
@@ -2227,7 +2281,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = _entities.SRTaleplerJuris.First(p => p.UniqueID == uniqueId);
             return View(model);
         }
-
+        [Authorize]
+        public ActionResult DegerlendirmeJuriView(Guid? uniqueId)
+        {
+            var model = _entities.SRTaleplerJuris.First(p => p.UniqueID == uniqueId);
+            return View(model);
+        }
         public ActionResult OgrenciUzatmaOnayKayit(int srTalepId, bool? isOgrenciUzatmaSonrasiOnay)
         {
             var mmMessage = new MmMessage
@@ -2335,7 +2394,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Mezuniyet/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }

@@ -2407,7 +2407,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoBasvuruDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Danışman Öneri Formu sistemden silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
@@ -2452,7 +2452,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySilEs<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
@@ -2508,7 +2508,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }

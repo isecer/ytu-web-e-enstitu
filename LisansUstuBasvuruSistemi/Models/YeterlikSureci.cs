@@ -29,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public int DonemID { get; set; }
         public System.DateTime BaslangicTarihi { get; set; }
         public System.DateTime BitisTarihi { get; set; }
+        public bool IsSinavOnlineYapilabilir { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }

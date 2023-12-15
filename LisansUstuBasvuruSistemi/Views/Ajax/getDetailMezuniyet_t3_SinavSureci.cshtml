@@ -419,7 +419,7 @@
                                                                                     <tr>
                                                                                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> Jüri Üyeleri Değerlendirme Bilgileri</td>
                                                                                         <td width="40" style=" border-bottom:1px solid;">
-                                                                                            @if (kayitYetki && !isJuriSonucGirildi && !isEnstituSonucuGirdi  && item.SRTaleplerJuris.Any(a =>!a.JuriTipAdi.IsNullOrWhiteSpace() && (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && (!a.MezuniyetSinavDurumID.HasValue || a.MezuniyetSinavDurumID == 1)))
+                                                                                            @if (kayitYetki && !isJuriSonucGirildi && !isEnstituSonucuGirdi && item.SRTaleplerJuris.Any(a => !a.JuriTipAdi.IsNullOrWhiteSpace() && (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && (!a.MezuniyetSinavDurumID.HasValue || a.MezuniyetSinavDurumID == 1)))
                                                                                             {
                                                                                                 <span class="label label-info" style="cursor:pointer;font-size:8pt;" onclick="SrJuriDegistir(@Model.MezuniyetBasvurulariID,'@item.UniqueID')"><i class="fa fa-group"></i> Jüri Değiştir</span>
                                                                                             }
@@ -436,7 +436,7 @@
                                                                                                     @if (!juriOnayiOlmayacak)
                                                                                                     {
                                                                                                         <th>Tez Sınavı Değerlendirmesi</th>
-                                                                                                        <th width="25"></th>
+                                                                                                        <th width="45"></th>
                                                                                                     }
                                                                                                 </tr>
                                                                                                 <tbody>
@@ -513,12 +513,18 @@
                                                                                                                         }
                                                                                                                     }
                                                                                                                 </td>
+
                                                                                                                 <td>
+                                                                                                                    @if (kayitYetki && !isEnstituSonucuGirdi && isJuriDegerlendirmeVar)
+                                                                                                                    {
+                                                                                                                        <a href="javascript:void(0)" title="Jüri üyesi bilgisini düzelt" onclick="SinavJuriBilgiGuncelle(@Model.MezuniyetBasvurulariID,@item.SRTalepID,'@itemJuri.UniqueID');"><i class="fa fa-edit fa-lg"></i></a>
+                                                                                                                    }
                                                                                                                     @if ((kayitYetki || isDanismani) && !isEnstituSonucuGirdi && isJuriDegerlendirmeVar)
                                                                                                                     {
-                                                                                                                        <span class="fa fa-edit" style="cursor:pointer;font-size:16pt;" title="Sınav Jüri Bilgisi Güncelle" onclick="SinavJuriBilgiGuncelle(@Model.MezuniyetBasvurulariID,@item.SRTalepID,'@itemJuri.UniqueID');" aria-hidden="true"></span><span class="sr-only">Jüri Bilgilerini Güncelle</span>
+                                                                                                                        <a href="javascript:void(0)" title="Değerlendirme Linkini Gönder" onclick="SinavJuriMailGonder(@Model.MezuniyetBasvurulariID,@item.SRTalepID,'@itemJuri.UniqueID');"><i class="fa fa-envelope fa-lg"></i></a>
                                                                                                                     }
                                                                                                                 </td>
+
                                                                                                             }
                                                                                                         </tr>
                                                                                                         <tr class="MainRow2 cls-SJo_@itemJuri.SRTalepJuriID" style="@(showDanismanRow ? "" : "display: none;")">
@@ -943,7 +949,7 @@
                                                                                             <td class="ValueTd">
                                                                                                 <select id="IsOgrenciUzatmaSonrasiOnay_@item.SRTalepID">
                                                                                                     <option></option>
-                                                                                                    <option value="true" @(item.IsOgrenciUzatmaSonrasiOnay == true ? "selected" : "")>Taahhütü Onaylıyorum</option> 
+                                                                                                    <option value="true" @(item.IsOgrenciUzatmaSonrasiOnay == true ? "selected" : "")>Taahhütü Onaylıyorum</option>
                                                                                                 </select>  <a href="javascript:void(0);" onclick="OgrenciUzatmaOnayKayit(@item.SRTalepID,@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
 
                                                                                             </td>

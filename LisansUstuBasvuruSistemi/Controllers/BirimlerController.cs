@@ -129,7 +129,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.BirimAdi + "' İsimli Birim Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage(); 
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Birimler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

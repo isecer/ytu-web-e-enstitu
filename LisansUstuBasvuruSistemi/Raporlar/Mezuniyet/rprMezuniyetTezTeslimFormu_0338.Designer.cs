@@ -2805,8 +2805,7 @@
             // ChkOgrenciOnayi
             // 
             this.ChkOgrenciOnayi.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.ChkOgrenciOnayi.Checked = true;
-            this.ChkOgrenciOnayi.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChkOgrenciOnayi.Checked = true; 
             this.ChkOgrenciOnayi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.ChkOgrenciOnayi.LocationFloat = new DevExpress.Utils.PointFloat(177.7695F, 47.15952F);
             this.ChkOgrenciOnayi.Name = "ChkOgrenciOnayi";
@@ -6223,8 +6222,7 @@
             // chkDanismanOnay2
             // 
             this.chkDanismanOnay2.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.chkDanismanOnay2.Checked = true;
-            this.chkDanismanOnay2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDanismanOnay2.Checked = true; 
             this.chkDanismanOnay2.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.chkDanismanOnay2.LocationFloat = new DevExpress.Utils.PointFloat(177.7695F, 35.31057F);
             this.chkDanismanOnay2.Name = "chkDanismanOnay2";
@@ -6302,8 +6300,7 @@
             // chkDanismanOnay
             // 
             this.chkDanismanOnay.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.chkDanismanOnay.Checked = true;
-            this.chkDanismanOnay.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDanismanOnay.Checked = true; 
             this.chkDanismanOnay.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.chkDanismanOnay.LocationFloat = new DevExpress.Utils.PointFloat(177.7695F, 58.62494F);
             this.chkDanismanOnay.Name = "chkDanismanOnay";

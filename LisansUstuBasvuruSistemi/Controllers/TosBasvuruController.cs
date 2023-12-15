@@ -935,7 +935,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.IsSuccess = false;
                         mmMessage.MessageType = MsgTypeEnum.Error;
                         mmMessage.Messages.Add("İşlem yapılırken bir hata oluştu.");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez Öneri Savunma toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(), "TIBasvuru/RezervasyonAlPost<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez Öneri Savunma toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
                     }
 
                 }
@@ -1328,7 +1328,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tezOneriSavunma.SavunmaBasvuruTarihi + " Tarihli Tez Önerisi Savunma silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TosBasvuru/SilDetay<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }

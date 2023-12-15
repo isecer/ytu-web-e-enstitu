@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ac9e9f61-d1da-4168-842a-c9157dfdbf8d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="c4a1ff62-7403-4845-8f9b-9edb4ad3ce34" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,8 +22,8 @@
     <MetadataSource Address="https://obsservice.yildiz.edu.tr/proliz_ytu_enstitu_miner/proliz_ytu_enstitu_miner.asmx " Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="proliz_ytu_enstitu_miner.wsdl" MetadataType="Wsdl" ID="629bde8c-e134-420c-9072-d830645ee93c" SourceId="1" SourceUrl="https://obsservice.yildiz.edu.tr/proliz_ytu_enstitu_miner/proliz_ytu_enstitu_miner.asmx?wsdl" />
-    <MetadataFile FileName="proliz_ytu_enstitu_miner.disco" MetadataType="Disco" ID="1569d636-accb-40b1-80a8-372c39c7a98b" SourceId="1" SourceUrl="https://obsservice.yildiz.edu.tr/proliz_ytu_enstitu_miner/proliz_ytu_enstitu_miner.asmx?disco" />
+    <MetadataFile FileName="proliz_ytu_enstitu_miner.wsdl" MetadataType="Wsdl" ID="fe434ae9-ea8d-487e-a788-82f27e2a5741" SourceId="1" SourceUrl="https://obsservice.yildiz.edu.tr/proliz_ytu_enstitu_miner/proliz_ytu_enstitu_miner.asmx?wsdl" />
+    <MetadataFile FileName="proliz_ytu_enstitu_miner.disco" MetadataType="Disco" ID="5d98a564-f9be-4287-8794-6d47f987df20" SourceId="1" SourceUrl="https://obsservice.yildiz.edu.tr/proliz_ytu_enstitu_miner/proliz_ytu_enstitu_miner.asmx?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

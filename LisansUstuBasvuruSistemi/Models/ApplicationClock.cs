@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using BiskaUtil;
-using System.Threading;
+﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Models
 {
@@ -278,9 +276,9 @@ namespace LisansUstuBasvuruSistemi.Models
                                                 }
                                             }
                                             // EMailList = new List<MailSendList> { new MailSendList { EMail = "irfansecer@gmail.com", ToOrBcc = true } };
-                                            var mCOntent = SystemMails.GetSystemMailContent(enstituL.EnstituAd, sablon.SablonHtml, sablon.SablonAdi, mailParameterDtos);
+                                            var contentDetailDto = MailManager.CreateMailContentDetailModel(enstituL.EnstituAd, sablon.SablonHtml, sablon.SablonAdi, mailParameterDtos);
 
-                                            var snded = MailManager.SendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, eMailList, attachments);
+                                            var snded = MailManager.SendMail(itemE.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, eMailList, attachments);
                                             if (snded)
                                             {
                                                 gonderilecekMbiDs.Add(itemB.MezuniyetBasvurulariID);
@@ -291,11 +289,11 @@ namespace LisansUstuBasvuruSistemi.Models
                                                     EnstituKod = mailBilgi.EnstituKod,
                                                     MesajID = null,
                                                     IslemTarihi = DateTime.Now,
-                                                    Konu = mCOntent.Title + " (" + itemB.Ad + " " + itemB.Soyad + ")",
+                                                    Konu = contentDetailDto.Title + " (" + itemB.Ad + " " + itemB.Soyad + ")",
                                                     IslemYapanID = 1,
                                                     IslemYapanIP = UserIdentity.Ip,
                                                     Aciklama = sablon.Sablon ?? "",
-                                                    AciklamaHtml = mCOntent.HtmlContent ?? "",
+                                                    AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                                                     Gonderildi = true,
                                                     GonderilenMailKullanicilars = eMailList.Select(s => new GonderilenMailKullanicilar { Email = s.EMail }).ToList(),
                                                     GonderilenMailEkleris = gonderilenMEkleris
@@ -402,8 +400,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     foreach (var itemMailD in dct)
                     {
 
-
-                        string dilKodu = itemMailD.Key;
+                         
                         string basvuruDurumAdi = bdurumAds.First().BasvuruDurumAdi;
                         var mmmC = new MailMainContentDto();
                         var enstitu = db.Enstitulers.First(p => p.EnstituKod == bsurec.EnstituKod);

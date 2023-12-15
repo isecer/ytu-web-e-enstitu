@@ -1,7 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model FmYeterlikSureciDto
@@ -9,9 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     var kayit = RoleNames.YeterlikSureciKayıt.InRoleCurrent();
-    var silme = RoleNames.YeterlikSureciSil.InRoleCurrent();
-
-
+    var silme = RoleNames.YeterlikSureciSil.InRoleCurrent(); 
 }
 
 <div class="row">

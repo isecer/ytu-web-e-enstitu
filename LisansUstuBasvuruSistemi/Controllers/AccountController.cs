@@ -157,7 +157,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var users = OnlineUsersHelper.GetUsers.ToList();
             return View(users);
-        } 
+        }
         public ActionResult ParolaSifirla(string psKod, int? kullaniciId = null, string dlgId = "")
         {
 
@@ -776,10 +776,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else kModel.KullaniciAdi = kModel.EMail;
                 }
                 kModel.Sifre = Guid.NewGuid().ToString().Substring(0, 6);
-                var excpt = KullanicilarBus.YeniHesapMailGonder(kModel, kModel.Sifre);
-                if (excpt != null)
+                var sended = KullanicilarBus.SendMailYeniHesap(kModel, kModel.Sifre);
+                if (!sended.IsSuccess)
                 {
-                    messageModel.Messages.Add("Mail gönderme hatası, Hesap oluşturulamadı!  Hata" + " : " + excpt.ToExceptionMessage());
+                    messageModel.Messages.AddRange(sended.Messages);
                 }
             }
 
@@ -817,7 +817,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var yeniKullanici = kModel.KullaniciID <= 0;
                 if (yeniKullanici)
                 {
-                    kModel.UserKey=Guid.NewGuid();
+                    kModel.UserKey = Guid.NewGuid();
                     kModel.YetkiGrupID = erisimYetki ? kModel.YetkiGrupID : (kModel.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && KullanicilarBus.GetDanismanUnvanIds().Contains(kModel.UnvanID ?? 0) ? 6 : 1);//danışman yetkisi vermek için
                     kModel.OlusturmaTarihi = DateTime.Now;
                     kModel.IsAktif = true;

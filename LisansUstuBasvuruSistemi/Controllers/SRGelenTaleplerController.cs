@@ -31,6 +31,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join k in _entities.Kullanicilars on s.TalepYapanID equals k.KullaniciID
                     join hg in _entities.HaftaGunleris on s.HaftaGunID equals hg.HaftaGunID
                     join d in _entities.SRDurumlaris on s.SRDurumID equals d.SRDurumID
+                    join ot in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod)
+                        on s.TIBasvuruAraRaporID.HasValue ?
+                            s.TIBasvuruAraRapor.TIBasvuru.OgrenimTipKod :
+                            (s.MezuniyetBasvurulariID.HasValue ?
+                                s.MezuniyetBasvurulari.OgrenimTipKod :
+                                (s.ToBasvuruSavunmaID.HasValue ?
+                                    s.ToBasvuruSavunma.ToBasvuru.OgrenimTipKod : k.YtuOgrencisi ? k.OgrenimTipKod : null)) equals ot.OgrenimTipKod into defOt
+                    from ot in defOt.DefaultIfEmpty()
                     where s.EnstituKod == enstituKod
                     select new
                     {
@@ -40,6 +48,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         tt.TalepTipAdi,
                         s.SRTalepTipID,
                         k.UserKey,
+                        OgrenimTipKod = ot != null ? ot.OgrenimTipKod : (int?)null,
+                        OgrenimTipAdi = ot != null ? ot.OgrenimTipAdi : "",
                         k.OgrenciNo,
                         k.SicilNo,
                         TalepYapan = k.Ad + " " + k.Soyad,
@@ -66,10 +76,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IslemYapanIP,
                         OrderInx = SqlFunctions.DateAdd("day", 0, (s.Tarih + " " + s.BasSaat)).Value > DateTime.Now ? (s.SRDurumID == SrTalepDurumEnum.TalepEdildi ? 0 : (s.SRDurumID == SrTalepDurumEnum.Onaylandı ? 1 : 2)) : (s.SRDurumID == SrTalepDurumEnum.TalepEdildi ? 3 : (s.SRDurumID == SrTalepDurumEnum.Onaylandı ? 4 : 5))
                     };
+            if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod.Value);
             if (model.SRSalonID.HasValue) q = q.Where(p => p.SRSalonID == model.SRSalonID.Value);
             if (model.SRDurumID.HasValue) q = q.Where(p => p.SRDurumID == model.SRDurumID.Value);
             if (model.SRTalepTipID.HasValue) q = q.Where(p => p.SRTalepTipID == model.SRTalepTipID.Value);
-            if (!model.Aciklama.IsNullOrWhiteSpace()) q = q.Where(p => p.TalepYapan.Contains(model.Aciklama));
+            if (!model.Aranan.IsNullOrWhiteSpace()) q = q.Where(p => p.TalepYapan.Contains(model.Aranan) || p.OgrenciNo.StartsWith(model.Aranan));
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.OrderInx).ThenByDescending(t => t.Tarih).ThenByDescending(t => t.BasSaat).ThenByDescending(t => t.IslemTarihi);
             var indexModel = new MIndexBilgi();
@@ -87,6 +98,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 TalepYapanID = s.TalepYapanID,
                 TalepTipAdi = s.TalepTipAdi,
                 SRTalepTipID = s.SRTalepTipID,
+                OgrenimTipAdi = s.OgrenimTipAdi,
                 UserKey = s.UserKey,
                 OgrenciNo = s.OgrenciNo,
                 SicilNo = s.SicilNo,
@@ -117,7 +129,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.IndexModel = indexModel;
             ViewBag.SRTalepTipID = new SelectList(SrTalepleriBus.GetCmbSrTalepTipleri(true), "Value", "Caption", model.SRTalepTipID);
             ViewBag.SRSalonID = new SelectList(SrTalepleriBus.GetCmbSalonlar(enstituKod, true), "Value", "Caption", model.SRSalonID);
-            ViewBag.SRDurumID = new SelectList(SrTalepleriBus.GetCmbSrDurumListe(true), "Value", "Caption", model.SRDurumID);
+            ViewBag.SRDurumID = new SelectList(SrTalepleriBus.GetCmbSrDurumListe(true), "Value", "Caption", model.SRDurumID); 
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             return View(model);
         }
 

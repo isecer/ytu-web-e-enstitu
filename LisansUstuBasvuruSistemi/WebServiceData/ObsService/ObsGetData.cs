@@ -14,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
 {
     public class ObsGetData
     {
-      
+
 
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
@@ -151,8 +151,8 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
             catch (Exception ex)
             {
                 model.Hata = true;
-                model.HataMsj = "OBS sisteminden kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz! Hata:" + ex.ToExceptionMessage();
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.HataMsj, "Management/studentControl\r\n" + ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                model.HataMsj = "OBS sisteminden kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz!";
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.HataMsj + "\r\nHata:" + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
             }
 
             if (model.OgrenciInfo == null) model.OgrenciInfo = new Ogrenci();
@@ -180,11 +180,12 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                     {
                         model.Ogrenci = ogrencis[0].ogrenci.OrderBy(p => (p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8") ? 1 : 2).FirstOrDefault();
+
                         var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null, donemId);
                         if (ogrenciDers.Any() && ogrenciDers[0].Sucess)
                         {
                             model.OgrenciDersNot = ogrenciDers[0].ogrencidersnot[0];
-                        }
+                        } 
                         var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
                         if (ogrenciTez.Any() && ogrenciTez[0].Sucess)
                         {

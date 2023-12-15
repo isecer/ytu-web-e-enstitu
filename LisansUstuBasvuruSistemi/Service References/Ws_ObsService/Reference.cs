@@ -191,6 +191,24 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ES_DANISMAN_ADSOYADField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OGR_DANISMAN_TC1Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OGR_DANISMAN_SICIL_NO1Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OGR_DANISMAN_UNVAN1Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OGR_DANISMAN_AD_SOYAD1Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OGR_DANISMAN_EPOSTA1Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OGR_DANISMAN_TELEFON1Field;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -600,6 +618,84 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
                 if ((object.ReferenceEquals(this.ES_DANISMAN_ADSOYADField, value) != true)) {
                     this.ES_DANISMAN_ADSOYADField = value;
                     this.RaisePropertyChanged("ES_DANISMAN_ADSOYAD");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=31)]
+        public string OGR_DANISMAN_TC1 {
+            get {
+                return this.OGR_DANISMAN_TC1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OGR_DANISMAN_TC1Field, value) != true)) {
+                    this.OGR_DANISMAN_TC1Field = value;
+                    this.RaisePropertyChanged("OGR_DANISMAN_TC1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=32)]
+        public string OGR_DANISMAN_SICIL_NO1 {
+            get {
+                return this.OGR_DANISMAN_SICIL_NO1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OGR_DANISMAN_SICIL_NO1Field, value) != true)) {
+                    this.OGR_DANISMAN_SICIL_NO1Field = value;
+                    this.RaisePropertyChanged("OGR_DANISMAN_SICIL_NO1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=33)]
+        public string OGR_DANISMAN_UNVAN1 {
+            get {
+                return this.OGR_DANISMAN_UNVAN1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OGR_DANISMAN_UNVAN1Field, value) != true)) {
+                    this.OGR_DANISMAN_UNVAN1Field = value;
+                    this.RaisePropertyChanged("OGR_DANISMAN_UNVAN1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=34)]
+        public string OGR_DANISMAN_AD_SOYAD1 {
+            get {
+                return this.OGR_DANISMAN_AD_SOYAD1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OGR_DANISMAN_AD_SOYAD1Field, value) != true)) {
+                    this.OGR_DANISMAN_AD_SOYAD1Field = value;
+                    this.RaisePropertyChanged("OGR_DANISMAN_AD_SOYAD1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=35)]
+        public string OGR_DANISMAN_EPOSTA1 {
+            get {
+                return this.OGR_DANISMAN_EPOSTA1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OGR_DANISMAN_EPOSTA1Field, value) != true)) {
+                    this.OGR_DANISMAN_EPOSTA1Field = value;
+                    this.RaisePropertyChanged("OGR_DANISMAN_EPOSTA1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=36)]
+        public string OGR_DANISMAN_TELEFON1 {
+            get {
+                return this.OGR_DANISMAN_TELEFON1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OGR_DANISMAN_TELEFON1Field, value) != true)) {
+                    this.OGR_DANISMAN_TELEFON1Field = value;
+                    this.RaisePropertyChanged("OGR_DANISMAN_TELEFON1");
                 }
             }
         }
@@ -1317,6 +1413,9 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string AKTIF_DNM_DERSField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AKTIF_DNM_TUM_DERSField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -1466,6 +1565,19 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
                 if ((object.ReferenceEquals(this.AKTIF_DNM_DERSField, value) != true)) {
                     this.AKTIF_DNM_DERSField = value;
                     this.RaisePropertyChanged("AKTIF_DNM_DERS");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=11)]
+        public string AKTIF_DNM_TUM_DERS {
+            get {
+                return this.AKTIF_DNM_TUM_DERSField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AKTIF_DNM_TUM_DERSField, value) != true)) {
+                    this.AKTIF_DNM_TUM_DERSField = value;
+                    this.RaisePropertyChanged("AKTIF_DNM_TUM_DERS");
                 }
             }
         }

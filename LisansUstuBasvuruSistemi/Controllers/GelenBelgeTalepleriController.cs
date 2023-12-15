@@ -1,8 +1,4 @@
-﻿using System;
-using System.Data.Objects;
-using System.Linq;
-using System.Web.Mvc;
-using BiskaUtil;
+﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -10,10 +6,15 @@ using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using System;
+using System.Data.Entity;
+using System.Data.Objects;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize]
     public class GelenBelgeTalepleriController : Controller
     {
@@ -96,10 +97,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.BelgeDurumId.HasValue) q = q.Where(p => p.BelgeDurumID == model.BelgeDurumId.Value);
             if (model.OgretimYili.IsNullOrWhiteSpace() == false)
             {
-                var oy = model.OgretimYili.Split('/').ToList();
-                var bas = oy[0].ToInt().Value;
-                var bit = oy[1].ToInt().Value;
-                var done = oy[2].ToInt().Value;
+                var oy = model.OgretimYili.Split('/').Select(s=>s.ToInt(0)).ToList();
+                var bas = oy[0];
+                var bit = oy[1];
+                var done = oy[2];
                 q = q.Where(p => p.OgretimYiliBaslangic == bas && p.OgretimYiliBitis == bit && p.DonemID == done);
             }
 
@@ -110,7 +111,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var t1 = DateTime.Now.TodateToShortDate();
                     var t2 = Convert.ToDateTime((DateTime.Now.ToShortDateString() + " 23:59:59"));
-                    q = q.Where(p => EntityFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) >= t1 && EntityFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) <= t2);
+                    q = q.Where(p => DbFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) >= t1 && EntityFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) <= t2);
                 }
                 else
                 {
@@ -122,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     q = q.Where(p => p.TalepTarihi >= guncTar &&
                                    (
-                                    (EntityFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) >= t1 && EntityFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) <= t2)
+                                    (DbFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) >= t1 && DbFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) <= t2)
                                     && p.TeslimBaslangicSaat == basS && p.TeslimBitisSaat == bitS
                                     )
                               );
@@ -198,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int id)
         {
             var mmMessage = new MmMessage();
-            var kayit = _entities.BelgeTalepleris.FirstOrDefault(p => p.BelgeTalepID == id);
+            var kayit = _entities.BelgeTalepleris.First(p => p.BelgeTalepID == id);
             try
             {
                 _entities.BelgeTalepleris.Remove(kayit);

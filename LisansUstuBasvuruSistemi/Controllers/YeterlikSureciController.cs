@@ -49,6 +49,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DonemAdi = s.BaslangicYil + "/" + s.BitisYil + " " + d.DonemAdi,
                         BaslangicTarihi = s.BaslangicTarihi,
                         BitisTarihi = s.BitisTarihi,
+                        IsSinavOnlineYapilabilir = s.IsSinavOnlineYapilabilir,
                         IsAktif = s.IsAktif,
                         IslemTarihi = s.IslemTarihi,
                         IslemYapanID = s.IslemYapanID,
@@ -64,7 +65,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BaslangicTarihi);
             model.FrYeterlikSurecis = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
-            ViewBag.IndexModel = indexModel;
+            ViewBag.IndexModel = indexModel; 
             return View(model);
         }
 
@@ -79,6 +80,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var data = _entities.YeterlikSurecis.First(p => p.YeterlikSurecID == id);
                 model.YeterlikSurecID = data.YeterlikSurecID;
+                model.IsSinavOnlineYapilabilir = data.IsSinavOnlineYapilabilir;
                 model.EnstituKod = data.EnstituKod;
                 model.BaslangicYil = data.BaslangicYil;
                 model.BitisYil = data.BitisYil;
@@ -281,6 +283,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DonemID = kModel.DonemID,
                         BaslangicTarihi = kModel.BaslangicTarihi,
                         BitisTarihi = kModel.BitisTarihi,
+                        IsSinavOnlineYapilabilir = kModel.IsSinavOnlineYapilabilir,
                         IsAktif = true,
                         IslemTarihi = kModel.IslemTarihi,
                         IslemYapanID = kModel.IslemYapanID,
@@ -298,6 +301,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.BaslangicYil = kModel.BaslangicYil;
                     data.BitisYil = kModel.BitisYil;
                     data.DonemID = kModel.DonemID;
+                    data.IsSinavOnlineYapilabilir = kModel.IsSinavOnlineYapilabilir;
                     data.IsAktif = kModel.IsAktif;
                     data.BaslangicTarihi = kModel.BaslangicTarihi;
                     data.BitisTarihi = kModel.BitisTarihi;
@@ -412,7 +416,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     var errMessage = "'" + donemAdi + "' Dönemine ait Yeterlik süreci silinirken bir hata oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(errMessage, "YeterlikSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(errMessage,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                     mmMessage.Messages.Add(errMessage);
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;

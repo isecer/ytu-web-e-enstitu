@@ -249,11 +249,19 @@
     <Compile Include="Controllers\BelgeTipDetayController.cs" />
     <Compile Include="Controllers\BelgeTipleriController.cs" />
     <Compile Include="Controllers\DosyaKontrolController.cs" />
+    <Compile Include="Models\ProgramObsEslestirmeleri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.Designer.cs">
       <DependentUpon>RprTezSinavSonucTutanagi_Detay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\Ws_ObsService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariTezDosyalariDto.cs" />
     <Compile Include="Controllers\TdoAyarlarController.cs" />
@@ -1039,11 +1047,20 @@
     <Compile Include="Utilities\Enums\YeterlikBasvuruFilterEnum.cs" />
     <Compile Include="Utilities\Enums\ZamanTipiEnum.cs" />
     <Compile Include="Utilities\Extensions\IconExtension.cs" />
+    <Compile Include="Utilities\Extensions\ObjectExtensions.cs" />
     <Compile Include="Utilities\Helpers\Dynamic.cs" />
     <Compile Include="Utilities\Dtos\PagerModel.cs" />
     <Compile Include="Utilities\Helpers\JsonConverter.cs" />
     <Compile Include="Utilities\Logs\RequestLogger.cs" />
     <Compile Include="Utilities\Filters\IPFilterAttribute.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderKullanici.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderMezuniyet.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderTalep.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderTdo.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderTi.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderTij.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderTos.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderYeterlik.cs" />
     <Compile Include="Utilities\SystemData\ComboData.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
     <Compile Include="Utilities\Dtos\KmSinavTipleri.cs" />
@@ -1144,7 +1161,7 @@
     <Compile Include="Utilities\SystemSetting\BelgeTalepAyar.cs" />
     <Compile Include="Utilities\Helpers\DevexpressHelper.cs" />
     <Compile Include="Utilities\Logs\LogIslemleri.cs" />
-    <Compile Include="Utilities\Helpers\MailManager.cs" />
+    <Compile Include="Utilities\MailManager\MailManager.cs" />
     <Compile Include="Models\Management.cs" />
     <Compile Include="Utilities\MenuAndRoles\MenuVeRoller.cs" />
     <Compile Include="WebServiceData\ObsService\ObsGetData.cs" />
@@ -1345,11 +1362,6 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\Ws_Kotalar\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Service References\Ws_ObsService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -5160,16 +5172,19 @@
     <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgi.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
+    <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDrYeterBilgileriGetirResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
     <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezBilgi.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
     <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezBilgileriGetirResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.PersonelBilgi.datasource">
+    <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezizlemeJuriBilgileriGetirResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDrYeterBilgileriGetirResponse.datasource">
+    <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezJuri.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
     <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezOneriBilgi.datasource">
@@ -5181,10 +5196,7 @@
     <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciYeterBilgi.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezizlemeJuriBilgileriGetirResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
-    <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezJuri.datasource">
+    <Content Include="Service References\Ws_ObsService\LisansUstuBasvuruSistemi.Ws_ObsService.PersonelBilgi.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
     <None Include="Service References\Ws_ObsService\proliz_ytu_enstitu_miner.wsdl" />
@@ -5568,6 +5580,7 @@
     <Content Include="Views\TosBasvuru\BasvuruDonemView.cshtml" />
     <Content Include="Views\MezuniyetSureci\GetMsTezKontrolBilgileri.cshtml" />
     <Content Include="Views\SRGelenTalepler\GetDetail.cshtml" />
+    <Content Include="Views\Mezuniyet\DegerlendirmeJuriView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

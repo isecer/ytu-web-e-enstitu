@@ -1779,6 +1779,14 @@
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
+        <EntityType Name="ProgramObsEslestirmeleri">
+          <Key>
+            <PropertyRef Name="ProgramObsEslestirmeID" />
+          </Key>
+          <Property Name="ProgramObsEslestirmeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProgramKod" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ObsProgramID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Roller">
           <Key>
             <PropertyRef Name="RolID" />
@@ -2550,6 +2558,7 @@
           <Property Name="FormKodu" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="TijFormTipID" Type="int" Nullable="false" />
           <Property Name="TijDegisiklikTipID" Type="int" />
+          <Property Name="DegisiklikAciklamasi" Type="nvarchar" MaxLength="1024" />
           <Property Name="IsObsData" Type="bit" Nullable="false" />
           <Property Name="BasvuruTarihi" Type="datetime" Nullable="false" />
           <Property Name="DonemBaslangicYil" Type="int" Nullable="false" />
@@ -2845,6 +2854,7 @@
           <Property Name="DonemID" Type="int" Nullable="false" />
           <Property Name="BaslangicTarihi" Type="datetime" Nullable="false" />
           <Property Name="BitisTarihi" Type="datetime" Nullable="false" />
+          <Property Name="IsSinavOnlineYapilabilir" Type="bit" Nullable="false" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
@@ -6996,6 +7006,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="OzelNotTipleri" EntityType="Self.OzelNotTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OzelTarihTipleri" EntityType="Self.OzelTarihTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Programlar" EntityType="Self.Programlar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProgramObsEslestirmeleri" EntityType="Self.ProgramObsEslestirmeleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roller" EntityType="Self.Roller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sehirler" EntityType="Self.Sehirler" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceLog" EntityType="Self.ServiceLog" Schema="dbo" store:Type="Tables" />
@@ -8476,6 +8487,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="OzelNotTipleris" EntityType="LisansustuBasvuruSistemiModel.OzelNotTipleri" />
           <EntitySet Name="OzelTarihTipleris" EntityType="LisansustuBasvuruSistemiModel.OzelTarihTipleri" />
           <EntitySet Name="Programlars" EntityType="LisansustuBasvuruSistemiModel.Programlar" />
+          <EntitySet Name="ProgramObsEslestirmeleris" EntityType="LisansustuBasvuruSistemiModel.ProgramObsEslestirmeleri" />
           <EntitySet Name="Rollers" EntityType="LisansustuBasvuruSistemiModel.Roller" />
           <EntitySet Name="Sehirlers" EntityType="LisansustuBasvuruSistemiModel.Sehirler" />
           <EntitySet Name="ServiceLogs" EntityType="LisansustuBasvuruSistemiModel.ServiceLog" />
@@ -12013,6 +12025,14 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="ToBasvurus" Relationship="LisansustuBasvuruSistemiModel.FK_ToBasvuru_Programlar" FromRole="Programlar" ToRole="ToBasvuru" />
           <NavigationProperty Name="YeterlikBasvurus" Relationship="LisansustuBasvuruSistemiModel.FK_YeterlikBasvuru_Programlar" FromRole="Programlar" ToRole="YeterlikBasvuru" />
         </EntityType>
+        <EntityType Name="ProgramObsEslestirmeleri">
+          <Key>
+            <PropertyRef Name="ProgramObsEslestirmeID" />
+          </Key>
+          <Property Name="ProgramObsEslestirmeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ObsProgramID" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="Roller">
           <Key>
             <PropertyRef Name="RolID" />
@@ -12911,6 +12931,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="FormKodu" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
           <Property Name="TijFormTipID" Type="Int32" Nullable="false" />
           <Property Name="TijDegisiklikTipID" Type="Int32" />
+          <Property Name="DegisiklikAciklamasi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="IsObsData" Type="Boolean" Nullable="false" />
           <Property Name="BasvuruTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DonemBaslangicYil" Type="Int32" Nullable="false" />
@@ -13248,6 +13269,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="DonemID" Type="Int32" Nullable="false" />
           <Property Name="BaslangicTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="BitisTarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsSinavOnlineYapilabilir" Type="Boolean" Nullable="false" />
           <Property Name="IsAktif" Type="Boolean" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
@@ -19124,6 +19146,15 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ProgramObsEslestirmeleris">
+            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.ProgramObsEslestirmeleri">
+              <MappingFragment StoreEntitySet="ProgramObsEslestirmeleri">
+                <ScalarProperty Name="ObsProgramID" ColumnName="ObsProgramID" />
+                <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />
+                <ScalarProperty Name="ProgramObsEslestirmeID" ColumnName="ProgramObsEslestirmeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Rollers">
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.Roller">
               <MappingFragment StoreEntitySet="Roller">
@@ -19956,6 +19987,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="DonemBaslangicYil" ColumnName="DonemBaslangicYil" />
                 <ScalarProperty Name="BasvuruTarihi" ColumnName="BasvuruTarihi" />
                 <ScalarProperty Name="IsObsData" ColumnName="IsObsData" />
+                <ScalarProperty Name="DegisiklikAciklamasi" ColumnName="DegisiklikAciklamasi" />
                 <ScalarProperty Name="TijDegisiklikTipID" ColumnName="TijDegisiklikTipID" />
                 <ScalarProperty Name="TijFormTipID" ColumnName="TijFormTipID" />
                 <ScalarProperty Name="FormKodu" ColumnName="FormKodu" />
@@ -20248,6 +20280,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
+                <ScalarProperty Name="IsSinavOnlineYapilabilir" ColumnName="IsSinavOnlineYapilabilir" />
                 <ScalarProperty Name="BitisTarihi" ColumnName="BitisTarihi" />
                 <ScalarProperty Name="BaslangicTarihi" ColumnName="BaslangicTarihi" />
                 <ScalarProperty Name="DonemID" ColumnName="DonemID" />

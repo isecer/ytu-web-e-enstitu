@@ -33,6 +33,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -2002,7 +2003,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         catch (Exception ex)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Ajax/MailGonderPost<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                         }
                     }
                 }
@@ -2317,7 +2318,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var eMailList = new List<MailSendList> { new MailSendList { EMail = kModel.Email, ToOrBcc = true } };
                         if (sablon.GonderilecekEkEpostalar.IsNullOrWhiteSpace() == false)
                             eMailList.AddRange(sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }).ToList());
-                        var mCOntent = SystemMails.GetSystemMailContent(enstituL.EnstituAd, sablon.SablonHtml, sablon.SablonAdi, mailParameterDtos);
+                        var contentDetailDto = MailManager.CreateMailContentDetailModel(enstituL.EnstituAd, sablon.SablonHtml, sablon.SablonAdi, mailParameterDtos);
                         var attach = new List<Attachment>();
                         foreach (var item in sablon.MailSablonlariEkleris)
                         {
@@ -2332,7 +2333,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         try
                         {
-                            var snded = MailManager.SendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, eMailList, attach);
+                            var snded = MailManager.SendMail(itemE.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, eMailList, attach);
                         }
                         catch (Exception e)
                         {

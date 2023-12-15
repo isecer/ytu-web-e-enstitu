@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
-   public static class ExceptionExtension
+    public static class ExceptionExtension
     {
         public static string ToExceptionMessage(this Exception ex)
         {
@@ -38,13 +39,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                 }
             }
 
+
             return returnMsg;
         }
         public static string ToExceptionStackTrace(this Exception ex)
         {
-            Dictionary<int, string> stck = new Dictionary<int, string>();
+            var stck = new Dictionary<int, string>();
 
-            int ix = 1;
+            var ix = 1;
             var innException = ex;
             stck.Add(ix, ex.StackTrace);
             while ((innException = innException.InnerException) != null)
@@ -52,7 +54,41 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                 ix++;
                 stck.Add(ix, innException.StackTrace);
             }
-            return string.Join("\r\n", stck.Select(s => s.Key + "- " + s.Value).ToArray());
+            var returnStakCtraceStr = string.Join("\r\n", stck.Select(s => s.Key + "- " + s.Value).ToArray());
+
+            var lineNumberStr = ExceptionLines(ex);
+            if (!lineNumberStr.IsNullOrWhiteSpace())
+                returnStakCtraceStr = lineNumberStr;
+            return returnStakCtraceStr;
+        }
+
+        private static string ExceptionLines(Exception ex)
+        {
+            try
+            { 
+                var stackTrace = new StackTrace(ex, true);
+                var linenumbers = (stackTrace.GetFrames() ?? Array.Empty<StackFrame>())
+                    .Where(p => p.GetFileLineNumber() > 0).Select(s =>
+                        s.GetFileName() +
+                        (s.GetMethod().Name.IsNullOrWhiteSpace() ? "" : "\\" + (s.GetMethod()?.Name + "(" + string.Join(", ", s.GetMethod().GetParameters().Select(p => $"{p.ParameterType.Name} {p.Name}")) + ")")) +
+                        " : " + s.GetFileLineNumber()
+                    ).ToList();
+                if (linenumbers.Any())
+                {
+                    var lineArray = linenumbers.Select(s => s.Split('\\')).ToArray();
+                    var lineArrayIndexs = lineArray.Select(s => new { s, Index = Array.IndexOf(s, "LisansUstuBasvuruSistemi") })
+                        .ToList();
+                    var lines = lineArrayIndexs.Select(p => string.Join(".", p.s.Where((p2, inx) => p.Index < inx).ToList())).ToList();
+                    var lineNumberStr = string.Join("\r\n", lines);
+                    return lineNumberStr;
+                }
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+
+            return "";
         }
     }
 }

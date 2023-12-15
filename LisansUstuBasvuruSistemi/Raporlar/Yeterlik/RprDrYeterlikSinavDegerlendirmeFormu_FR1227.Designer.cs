@@ -733,8 +733,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // checkboxx
             // 
             this.checkboxx.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.checkboxx.Checked = true;
-            this.checkboxx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkboxx.Checked = true; 
             this.checkboxx.LocationFloat = new DevExpress.Utils.PointFloat(1.999992F, 14.0303F);
             this.checkboxx.Name = "checkboxx";
             this.checkboxx.SizeF = new System.Drawing.SizeF(134.0566F, 19.0799F);

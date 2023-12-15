@@ -130,7 +130,14 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label padding-top-0 padding-bottom-0">Sözlü Sınav Online Yapılabilir</label>
+                                <div class="col-md-9 col-xs-7 padding-top-0 padding-bottom-0">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsSinavOnlineYapilabilir" class="toggle" @Model.IsSinavOnlineYapilabilir.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
                             @if (Model.YeterlikSurecID > 0)
                             {
                                 <div class="form-group">

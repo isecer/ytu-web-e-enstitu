@@ -357,6 +357,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.TijBasvuruID = tijBasvuruOneri.TijBasvuruID;
                 model.TijDegisiklikTipID = tijBasvuruOneri.TijDegisiklikTipID;
                 model.TijFormTipID = tijBasvuruOneri.TijFormTipID;
+                model.DegisiklikAciklamasi = tijBasvuruOneri.DegisiklikAciklamasi;
                 model.IsTezDiliTr = ogrenciInfo.IsTezDiliTr;
                 model.TezBaslikTr = ogrenciInfo.OgrenciTez.TEZ_BASLIK;
                 model.TezBaslikEn = ogrenciInfo.OgrenciTez.TEZ_BASLIK_ENG;
@@ -562,7 +563,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mMessage.Messages.Add("Değişiklik nedenini seçiniz.");
                     }
                     mMessage.MessagesDialog.Add(new MrMessage { MessageType = kModel.TijFormTipID <= 0 ? MsgTypeEnum.Warning : MsgTypeEnum.Success, PropertyName = "TijFormTipID" });
-
+                    if (kModel.TijFormTipID != TijFormTipiEnum.YeniForm &&
+                        kModel.DegisiklikAciklamasi.IsNullOrWhiteSpace())
+                    {
+                        mMessage.Messages.Add("Değişiklik Açıklaması bilgisini giriniz.");
+                    }
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = kModel.DegisiklikAciklamasi.IsNullOrWhiteSpace() ? MsgTypeEnum.Warning : MsgTypeEnum.Success, PropertyName = "DegisiklikAciklamasi" });
                     if (kModel.TijFormTipID != TijFormTipiEnum.YeniForm && !kModel.TijDegisiklikTipID.HasValue)
                     {
                         mMessage.Messages.Add("Değiştirilecek jüri grubu seçiniz.");
@@ -822,6 +828,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 BasvuruTarihi = tijBasvuruOneri?.TijBasvuruOneriID > 0 ? tijBasvuruOneri.BasvuruTarihi : DateTime.Now,
                                 DonemBaslangicYil = donemBilgi.BaslangicYil,
                                 DonemID = donemBilgi.DonemID,
+                                DegisiklikAciklamasi = kModel.TijFormTipID != TijFormTipiEnum.YeniForm ? kModel.DegisiklikAciklamasi : null,
                                 SozluSinavBasariTarihi = ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().Value,
                                 IsTezDiliTr = obsOgrenci.IsTezDiliTr,
                                 TezBaslikTr = obsOgrenci.OgrenciTez.TEZ_BASLIK,
@@ -1074,7 +1081,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     // eyk yada eykya gönderimi onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
                     if (isEykdaOnaylandiOrGonderildiDurum.HasValue || onaylandi != false)
-                    { 
+                    {
                         var ogrenciObsBilgi =
                             KullanicilarBus.OgrenciBilgisiGuncelleObs(tijBasvuruOneri.TijBasvuru.KullaniciID);
 
@@ -1379,7 +1386,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli tez izleme jüri önerisi silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TijBasvuru/SilDetay<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }

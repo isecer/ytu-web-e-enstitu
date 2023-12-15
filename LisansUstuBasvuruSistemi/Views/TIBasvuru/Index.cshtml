@@ -152,10 +152,10 @@
                                 @if (Model.RowCount > 0)
                                 {
 
-                                    int rowIndex = Model.StartRowIndex; 
+                                    int rowIndex = Model.StartRowIndex;
                                     foreach (var item in Model.Data)
                                     {
-                                        rowIndex++; 
+                                        rowIndex++;
                                         <tr style="color:@item.DurumColor;">
                                             <td>
                                                 <table>
@@ -270,9 +270,19 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
             redirectUrl: '@Url.Action("BasvuruYap",new { Model.KullaniciID})',
             callbackFnc: ''
         }
-        ShowDuyuru(popupSetting); 
+        ShowDuyuru(popupSetting);
     }
-
+  function YeniBasvuruDuyuruKontrol2(tiBasvuruID, tiBasvuruAraRaporID) {
+        var popupSetting = {
+            title: '||',
+            popupTipId:@DuyuruPopupTipiEnum.TiBasvuru,
+            btnAdi: 'Yeni Rapor Oluştur',
+            redirectUrl: '',
+            fncparameter: { tiBasvuruID, tiBasvuruAraRaporID },
+            callbackFnc: GetTIAraRaporFormu
+        }
+        ShowDuyuru(popupSetting);
+    }
 
     function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
@@ -453,90 +463,92 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
             }
         });
     }
-      function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
-          var _panel = $('#bsvrDet_' + TIBasvuruID);
-            PanelRefresh(_panel, false);
-            $.ajax({
-                url: '@Url.Action("GetTiAraRaporFormu", "TIBasvuru")',
-                data: {
-                    'TIBasvuruID': TIBasvuruID,
-                    'TIBasvuruAraRaporID': TIBasvuruAraRaporID
-                },
-                success: function (resultG) {
-                    PanelRefresh(_panel, true);
-                    if (resultG.IsSuccess) {
-                        var btbxxFS = bootbox.dialog({
-                            message: resultG.Content,
-                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
-                            buttons: {
+    function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
+        if (TIBasvuruID.tiBasvuruID) TIBasvuruID = TIBasvuruID.tiBasvuruID;
+        if (TIBasvuruID.tiBasvuruAraRaporID) TIBasvuruAraRaporID = TIBasvuruID.tiBasvuruAraRaporID;
+        var _panel = $('#bsvrDet_' + TIBasvuruID);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetTiAraRaporFormu", "TIBasvuru")',
+            data: {
+                'TIBasvuruID': TIBasvuruID,
+                'TIBasvuruAraRaporID': TIBasvuruAraRaporID
+            },
+            success: function (resultG) {
+                PanelRefresh(_panel, true);
+                if (resultG.IsSuccess) {
+                    var btbxxFS = bootbox.dialog({
+                        message: resultG.Content,
+                        //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                        buttons: {
 
-                                success: {
-                                    label: 'İleri',
-                                    className: "btn-info btnKaydet",
-                                    callback: function (event) {
-                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        PanelRefresh(pnlx, false);
-                                        $('#FrmTIAraRaporFormu').ajaxForm({
-                                            success: function (result) {
-                                                if (result.mMessage.IsSuccess && result.SaveData) {
-                                                    if (result.mMessage.Messages.length > 0) toastr["success"](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                    var _clsBtn = $('.bootbox-close-button').first();
-                                                    $(_clsBtn).click();
-                                                    GetDetail(TIBasvuruID);
+                            success: {
+                                label: 'İleri',
+                                className: "btn-info btnKaydet",
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmTIAraRaporFormu').ajaxForm({
+                                        success: function (result) {
+                                            if (result.mMessage.IsSuccess && result.SaveData) {
+                                                if (result.mMessage.Messages.length > 0) toastr["success"](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                GetDetail(TIBasvuruID);
+
+                                            }
+                                            else {
+                                                $('#SelectedTabID').val(result.SelectedTabID);
+
+                                                if (result.SelectedTabID == "4" || !result.IsYeniJO) {
+
+                                                    $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
+                                                    $('.btnKaydet').text('Kaydet');
+                                                    $('#SaveData').val("true");
 
                                                 }
                                                 else {
-                                                    $('#SelectedTabID').val(result.SelectedTabID);
-
-                                                    if (result.SelectedTabID == "4" || !result.IsYeniJO) {
-
-                                                        $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
-                                                        $('.btnKaydet').text('Kaydet');
-                                                        $('#SaveData').val("true");
-
-                                                    }
-                                                    else {
-                                                        $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
-                                                        $('.btnKaydet').text('İleri');
-                                                        $('#SaveData').val("false");
-                                                    }
-                                                    $("[href='#tab-" + result.SelectedTabID + "']").first().click();
-                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
-                                                    return false;
+                                                    $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
+                                                    $('.btnKaydet').text('İleri');
+                                                    $('#SaveData').val("false");
                                                 }
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            complete: function (cmp) {
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            error: function (err) {
-                                                PanelRefresh(pnlx, true);
+                                                $("[href='#tab-" + result.SelectedTabID + "']").first().click();
+                                                if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                return false;
                                             }
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                        }
 
-                                        });
-                                        $('#FrmTIAraRaporFormu').submit();
-                                        return false;
-                                    }
+                                    });
+                                    $('#FrmTIAraRaporFormu').submit();
+                                    return false;
                                 }
                             }
-                        });
+                        }
+                    });
 
-                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
-
-                    }
-                    else {
-                        showMmMessage(resultG.Messages, 'Tamam');
-                    }
-
-                },
-                error: function (err) {
-                    PanelRefresh(_panel, true);
-                    alert(err.responseText);
+                    $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
                 }
-            })
-        }
+                else {
+                    showMmMessage(resultG.Messages, 'Tamam');
+                }
+
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+
+            }
+        })
+    }
 </script>
 @if (Model.IsDegerlendirme.HasValue && Model.RowCount > 0)
 {

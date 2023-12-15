@@ -11,13 +11,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FmTalepler : PagerModel
     {
         public string EnstituKod { get; set; }
+        public int? OgrenimTipKod { get; set; }
         public int? SRTalepTipID { get; set; }
         public int? SRSalonID { get; set; }
         public int? HaftaGunID { get; set; }
         public TimeSpan? BasSaat { get; set; }
         public TimeSpan? BitSaat { get; set; }
         public int? SRDurumID { get; set; }
-        public string Aciklama { get; set; }
+        public string Aranan { get; set; }
         public IEnumerable<FrTalepler> data { get; set; }
 
     }

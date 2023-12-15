@@ -313,6 +313,17 @@
         });
 
     }
+    function YeniBasvuruDuyuruKontrol2(tiBasvuruID, tiBasvuruAraRaporID) { 
+        var popupSetting = {
+            title: '||',
+            popupTipId:@DuyuruPopupTipiEnum.TiBasvuru,
+            btnAdi: 'Yeni Rapor Oluştur',
+            redirectUrl: '',
+            fncparameter: { tiBasvuruID, tiBasvuruAraRaporID },
+            callbackFnc: GetTIAraRaporFormu
+        } 
+        ShowDuyuru(popupSetting);
+    }
 </script>
 @if (toplantiTalepYetki || tiTezDegerlendirmeDuzeltme)
 {
@@ -595,7 +606,9 @@
 @if (degerlendirmeYetki || tiTezDegerlendirmeDuzeltme)
 {
     <script>
-         function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
+        function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) { 
+            if (TIBasvuruID.tiBasvuruID) TIBasvuruID = TIBasvuruID.tiBasvuruID;
+            if (TIBasvuruID.tiBasvuruAraRaporID) TIBasvuruAraRaporID = TIBasvuruID.tiBasvuruAraRaporID;
              var _panel = $('#bsvrDet_' + TIBasvuruID);
             PanelRefresh(_panel, false);
             $.ajax({

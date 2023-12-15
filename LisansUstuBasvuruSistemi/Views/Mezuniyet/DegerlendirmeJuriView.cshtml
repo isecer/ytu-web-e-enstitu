@@ -1,0 +1,42 @@
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Models
+@model SRTaleplerJuri
+@{
+    Layout = null;
+    var unvanList = UnvanlarBus.GetCmbJuriUnvanlar(); 
+}
+
+<div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:30px;">
+    <table style="width:100%;">
+        <tbody>
+            <tr>
+                <td width="160">Jüri Adı</td>
+                <td width="10">:</td>
+                <td>
+                    <table style="width:100%;">
+                        <tr>
+                            <td>
+                                <select id="juriUnvanAdi_@Model.UniqueID" class="form-control">
+                                    @foreach (var unvan in unvanList)
+                                    {
+                                        <option value="@unvan.Value" @(unvan.Value.ToLower() == Model.UnvanAdi.ToLower() ? "selected=selected" : "")>@unvan.Caption</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" id="juriAdSoyad_@Model.UniqueID" class="form-control" value="@Model.JuriAdi" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>E-Posta</td>
+                <td>:</td>
+                <td>
+                    <input type="text" class="form-control" id="EMail_@Model.UniqueID" value="@Model.Email" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div> 

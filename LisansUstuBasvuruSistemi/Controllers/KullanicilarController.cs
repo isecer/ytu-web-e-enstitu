@@ -597,10 +597,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     });
                     _entities.SaveChanges();
 
-                    var excpt = KullanicilarBus.YeniHesapMailGonder(kModel, sfr);
-                    if (excpt != null)
+                    var sended = KullanicilarBus.SendMailYeniHesap(kModel, sfr);
+                    if (!sended.IsSuccess)
                     {
-                        mmMessage.Messages.Add(kModel.KullaniciAdi + " kullanıcı hesabı oluşturuldu fakat kullanıcıya bilgi maili atılırken bir hata oluştu! Hata:" + excpt.ToExceptionMessage());
+                        mmMessage.Messages.Add(kModel.KullaniciAdi + " kullanıcı hesabı oluşturuldu fakat kullanıcıya bilgi maili atılırken bir hata oluştu!");
+                        mmMessage.Messages.AddRange(sended.Messages);
                         MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
                     }
                 }
@@ -846,7 +847,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Ad + " " + kayit.Soyad + "' Kullanıcısı  Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Kullanicilar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

@@ -1,50 +1,24 @@
-﻿@using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Models
+﻿@using LisansUstuBasvuruSistemi.Models
 @model SRTaleplerJuri
 @{
-    Layout = null;
-    var unvanList = UnvanlarBus.GetCmbJuriUnvanlar();
+    Layout = null; 
 }
 
-<div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 30px;">
     <table style="width:100%;">
         <tbody>
             <tr>
-                <td width="160">Jüri Adı</td>
+                <td width="160">Link Gönderilecek Jüri</td>
                 <td width="10">:</td>
                 <td>
-                    <table style="width:100%;">
-                        <tr>
-                            <td>
-                                <select id="juriUnvanAdi_@Model.UniqueID" class="form-control">
-                                    @foreach (var unvan in unvanList)
-                                    {
-                                        <option value="@unvan.Value" @(unvan.Value.ToLower() == Model.UnvanAdi.ToLower() ? "selected=selected" : "")>@unvan.Caption</option>
-                                    }
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" id="juriAdSoyad_@Model.UniqueID" class="form-control" value="@Model.JuriAdi" />
-                            </td>
-                        </tr>
-                    </table> 
-                </td>
-            </tr> 
-            <tr>
-                <td>E-Posta</td>
-                <td>:</td>
-                <td>
-                    <input type="text" class="form-control" id="EMail_@Model.UniqueID" value="@Model.Email" />
+                    @Model.UnvanAdi @Model.JuriAdi
                 </td>
             </tr>
             <tr>
-                <td>Link Gönderim Durumu</td>
+                <td width="160">E-Posta</td>
                 <td>:</td>
                 <td>
-                    <select class="form-control" id="IsYeniLink_@Model.UniqueID">
-                        <option value="true">Yeni Değerlendirme Link Gönder (Eski linkler geçersiz olur.)</option>
-                        <option value="false" selected="selected">Link Gönderme</option>
-                    </select>
+                    <input type="text" class="form-control" id="EMail_@Model.UniqueID" value="@Model.Email" />
                 </td>
             </tr>
         </tbody>

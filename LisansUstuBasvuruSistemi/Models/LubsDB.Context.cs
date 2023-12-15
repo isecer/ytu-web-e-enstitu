@@ -138,6 +138,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<OzelNotTipleri> OzelNotTipleris { get; set; }
         public virtual DbSet<OzelTarihTipleri> OzelTarihTipleris { get; set; }
         public virtual DbSet<Programlar> Programlars { get; set; }
+        public virtual DbSet<ProgramObsEslestirmeleri> ProgramObsEslestirmeleris { get; set; }
         public virtual DbSet<Roller> Rollers { get; set; }
         public virtual DbSet<Sehirler> Sehirlers { get; set; }
         public virtual DbSet<ServiceLog> ServiceLogs { get; set; }

@@ -66,6 +66,12 @@
                     </div>
                 </div>
                 <div class="form-group @(Model.IsIlkOneri?"hide":"")">
+                    <label class="col-md-3 col-xs-2 control-label">Değişiklik Açıklaması</label>
+                    <div class="col-md-9 col-xs-10">
+                        <textarea class="form-control" name="DegisiklikAciklamasi" id="DegisiklikAciklamasi" style="max-height:100px;" placeholder="Değişiklik nedenini kısaca açıklayınız.">@Model.DegisiklikAciklamasi</textarea>
+                    </div>
+                </div>
+                <div class="form-group @(Model.IsIlkOneri?"hide":"")">
                     <label class="col-md-3 col-xs-2 control-label">Değişecek Jüri Grubu</label>
                     <div class="col-md-9 col-xs-10">
                         @Html.DropDownList("TijDegisiklikTipID", Model.SListTijDegisiklikTip, new { @class = "form-control", onchange = "DegisiklikTipChange()" })

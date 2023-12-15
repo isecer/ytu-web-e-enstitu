@@ -1,12 +1,16 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model DmYeterlikDetayDto
 @{
     Layout = null;
     var isOnaylayanVar = Model.YeterlikBasvuruJuriUyeleris.Any(a => a.IsSecilenJuri && a.IsSonucOnaylandi.HasValue);
     var readOnly = Model.IsGenelSonucBasarili.HasValue || isOnaylayanVar || Model.IsDegerlendirme.HasValue;
     var closeContent = Model.IsGenelSonucBasarili.HasValue && !Model.IsDegerlendirme.HasValue;
-
+    var toplantiYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() || Model.TezDanismanID == UserIdentity.Current.Id;
+    readOnly = readOnly || !toplantiYetki;
 }
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 10px;">
 
@@ -31,7 +35,10 @@
                         <td class="ValueTd">
                             <select class="form-control" style="color: black;" id="IsSozluSinavOnline_@Model.UniqueID" @(readOnly ? "disabled" : "") onchange="if ($(this).val() != '') { $('.SinavSekliRw_@Model.UniqueID').removeClass('hide');}else {$('.SinavSekliRw_@Model.UniqueID').addClass('hide');}">
                                 <option value=""></option>
-                                <option value="true" @Model.IsSozluSinavOnline.ToSelected()>Online</option>
+                                @if (Model.IsSinavOnlineYapilabilir || Model.IsSozluSinavOnline == true)
+                                {
+                                    <option value="true" @Model.IsSozluSinavOnline.ToSelected()>Online</option>
+                                }
                                 <option value="false" @((Model.IsSozluSinavOnline == false).ToSelected())>Yüz Yüze</option>
                             </select>
                         </td>

@@ -1,10 +1,7 @@
-﻿@using BiskaUtil
-@using DevExpress.Office.Utils
-@using LisansUstuBasvuruSistemi.Business
+﻿@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model DmYeterlikDetayDto
 @{
     Layout = null;
@@ -65,7 +62,7 @@
                         @if (abdKayitYetki)
                         {
                             <tr>
-                                <td class="CaptionTd">ABD Komite Durum</td>
+                                <td class="CaptionTd">ABD Komite Üyeleri</td>
                                 <td class="CaptionTd">:</td>
                                 <td class="ValueTd">
                                     <label class="label label-@(Model.AbdYeterlikKomiteUyeCount>0 ? "success" : "default") label-form" onclick="GetYeterlikKomiteUyeleri(@Model.AnabilimDaliID);" style="cursor: pointer; margin: 0px; padding: 2px 5px;" id="yeterlikUyeRowContent_@Model.AnabilimDaliID"><i class="fa fa-group fa-lg"></i> @Model.AbdYeterlikKomiteUyeCount Üye</label>
@@ -342,7 +339,7 @@
             timepicker: true,
             format: 'Y-m-d H:i'
         });
-        $.datetimepicker.setLocale('tr');
+        $.datetimepicker.setLocale('tr'); 
     });
 
 </script>
