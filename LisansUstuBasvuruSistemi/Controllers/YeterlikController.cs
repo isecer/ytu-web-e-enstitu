@@ -993,8 +993,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (juriDegerlendirmeleri.All(a => a.IsSonucOnaylandi.HasValue))
                 {
-
-
                     if (basvuru.IsYaziliSinavBasarili == true && basvuru.IsSozluSinavinaKatildi == true)
                     {
                         var kriterler = basvuru.YeterlikSureci.YeterlikSurecOgrenimTipleris.First(p =>
@@ -1009,6 +1007,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                   (sozluOrtalama * kriterler.SozluYuzde / 100);
                             basvuru.GenelBasariNotu = genelBasariNotu;
                             basvuru.IsGenelSonucBasarili = kriterler.OrtalamaGecerNot <= genelBasariNotu;
+
                         }
                         else
                         {
@@ -1032,6 +1031,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, basvuru.ToJson());
                     YeterlikBus.SendMailSinavBilgi(basvuru.UniqueID, !basvuru.IsSozluSinavinaKatildi.HasValue);
+                    if (basvuru.IsGenelSonucBasarili == true)
+                    {
+                        TosBus.BasvuruOlustur(basvuru.KullaniciID, basvuru.SozluSinavTarihi);
+                    }
 
                 }
                 else
@@ -1085,7 +1088,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var duzeltmeyetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRole();
 
             var juri = _entities.YeterlikBasvuruJuriUyeleris.First(p => p.UniqueID == kModel.UniqueID);
-            if (!duzeltmeyetki)
+            var isTezDanismani = juri.YeterlikBasvuru.TezDanismanID == UserIdentity.Current.Id;
+            if (!duzeltmeyetki && !isTezDanismani)
             {
                 mMessage.Messages.Add("Jüri üyeleri düzeltme işlemi için yetkili değilsiniz.");
             }
@@ -1125,20 +1129,48 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (!mMessage.Messages.Any())
                 {
+                    Guid? senMailJuriUniqueId = null;
                     if (kModel.EMailOrJuriDegisiklik == true)
                     {
-                        juri.EMail = kModel.EMail;
+                        if (juri.EMail.Trim() != kModel.EMail.Trim())
+                        {
+                            juri.EMail = kModel.EMail;
+                            juri.IslemTarihi = DateTime.Now;
+                            juri.IslemYapanID = UserIdentity.Current.Id;
+                            juri.IslemYapanIP = UserIdentity.Ip;
+                            if (!juri.DegerlendirmeTarihi.HasValue) senMailJuriUniqueId = juri.UniqueID;
+                        }
                     }
                     else
                     {
 
-                        var yeniJuri =
-                                juri.YeterlikBasvuru.YeterlikBasvuruJuriUyeleris.First(p => p.UniqueID == kModel.YeniJuriUniqueID);
+                        var yeniJuri = juri.YeterlikBasvuru.YeterlikBasvuruJuriUyeleris.First(p => p.UniqueID == kModel.YeniJuriUniqueID);
                         yeniJuri.IsSecilenJuri = true;
+                        yeniJuri.IslemTarihi = DateTime.Now;
+                        yeniJuri.IslemYapanID = UserIdentity.Current.Id;
+                        yeniJuri.IslemYapanIP = UserIdentity.Ip;
                         juri.IsSecilenJuri = false;
+                        juri.IslemTarihi = DateTime.Now;
+                        juri.IslemYapanID = UserIdentity.Current.Id;
+                        juri.IslemYapanIP = UserIdentity.Ip;
+                        senMailJuriUniqueId = yeniJuri.UniqueID;
                     }
+
                     _entities.SaveChanges();
+                    mMessage.Messages.Add("Jüri üyesi bilgisi güncellendi.");
                     mMessage.IsSuccess = true;
+                    if (senMailJuriUniqueId.HasValue)
+                    {
+                        var mailMessage = YeterlikBus.SendMailSinavJuriLink(juri.YeterlikBasvuru.UniqueID, !juri.YeterlikBasvuru.IsSozluSinavinaKatildi.HasValue, senMailJuriUniqueId);
+                        if (mailMessage.IsSuccess)
+                        {
+                            mMessage.Messages.Add("Yeni Değerlendirme Linki Jüri Üyesine Gönderildi.");
+                        }
+                        else
+                        {
+                            mMessage.Messages.AddRange(mMessage.Messages);
+                        }
+                    }
                     LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", LogCrudType.Update, juri.ToJson());
 
                 }

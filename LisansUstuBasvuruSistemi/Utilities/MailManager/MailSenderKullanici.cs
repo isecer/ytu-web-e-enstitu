@@ -81,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         UniversiteAdi = "Yıldız Tekni Üniversitesi"
                     };
                     var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                    var snded = MailManager.SendMail(enstitu.EnstituKod, "Yeni Kullanıcı Hesabınız Hakkında", htmlMail, kModel.EMail, null);
+                    MailManager.SendMail(enstitu.EnstituKod, "Yeni Kullanıcı Hesabınız Hakkında", htmlMail, kModel.EMail, null);
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
                     return mmMessage;

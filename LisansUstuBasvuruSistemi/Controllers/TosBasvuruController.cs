@@ -248,10 +248,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
-                        else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
-                        {
-                            mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
-                        }
+                        //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                        //{
+                        //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                        //}
                     }
 
                 }
@@ -476,10 +476,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
-                        else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
-                        {
-                            mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
-                        }
+                        //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                        //{
+                        //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                        //}
                     }
                 }
 
@@ -935,7 +935,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.IsSuccess = false;
                         mmMessage.MessageType = MsgTypeEnum.Error;
                         mmMessage.Messages.Add("İşlem yapılırken bir hata oluştu.");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez Öneri Savunma toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez Öneri Savunma toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
                     }
 
                 }
@@ -1342,7 +1342,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [Authorize]
-        public ActionResult DegerlendirmeLinkiGonder(Guid tosUniqueId, Guid? tosKomiteUniqueId, string eMail, bool isJuriEmailGuncellensin)
+        public ActionResult DegerlendirmeLinkiGonder(Guid tosUniqueId, Guid? tosKomiteUniqueId, string eMail)
         {
             var mMessage = new MmMessage
             {
@@ -1360,7 +1360,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (!tiTezDegerlendirmeDuzeltme && toBasvuruSavunma.ToBasvuruSavunmaKomites.Count == toBasvuruSavunma.ToBasvuruSavunmaKomites.Count(c => c.ToBasvuruSavunmaDurumID.HasValue))
             {
                 mMessage.MessageType = MsgTypeEnum.Warning;
-                mMessage.Messages.Add("Değerlendirme işlemi tüm Komite üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
+                mMessage.Messages.Add("Tüm Komite üyeleri tarafından değerlendirme işlemi tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
             }
             else if (eMail.IsNullOrWhiteSpace())
             {
@@ -1380,11 +1380,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (uye == null) mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
                     else
                     {
-                        if (isJuriEmailGuncellensin)
-                        {
-                            uye.EMail = eMail;
-                            _entities.SaveChanges();
-                        }
+                        uye.EMail = eMail;
+                        _entities.SaveChanges();
+
                     }
                 }
                 var messages = TosBus.SendMailTosDegerlendirmeLink(tosUniqueId, tosKomiteUniqueId, true);

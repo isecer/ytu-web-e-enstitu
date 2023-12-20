@@ -313,7 +313,7 @@
         });
 
     }
-    function YeniBasvuruDuyuruKontrol2(tiBasvuruID, tiBasvuruAraRaporID) { 
+    function YeniBasvuruDuyuruKontrol2(tiBasvuruID, tiBasvuruAraRaporID) {
         var popupSetting = {
             title: '||',
             popupTipId:@DuyuruPopupTipiEnum.TiBasvuru,
@@ -321,7 +321,7 @@
             redirectUrl: '',
             fncparameter: { tiBasvuruID, tiBasvuruAraRaporID },
             callbackFnc: GetTIAraRaporFormu
-        } 
+        }
         ShowDuyuru(popupSetting);
     }
 </script>
@@ -472,24 +472,28 @@
                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                      PanelRefresh(pnlx, false);
                                      var EMail = $('#EMail_' + UniqueID).val();
-                                     var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + UniqueID).val();
                                      $.ajax({
                                          url: '@Url.Action("DegerlendirmeLinkiGonder", "TiBasvuru")',
                                          data: {
                                              'TIBasvuruID': TIBasvuruID,
                                              'TIBasvuruAraRaporID': TIBasvuruAraRaporID,
                                              'UniqueID': UniqueID,
-                                             'EMail': EMail,
-                                             'IsJuriEmailGuncellensin': IsJuriEmailGuncellensin
+                                             'EMail': EMail
                                          },
                                          success: function (result) {
                                              PanelRefresh(pnlx, true);
-                                             if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                              GetDetail(TIBasvuruID);
-                                             showMmMessage(result.MessageView, 'Tamam');
-                                             var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
-                                             $(_clsBtn).click();
-
+                                             swal.fire({
+                                                 html: result.messageView,
+                                                 icon: (result.IsSuccess ? "success" : "error"),
+                                                 type: (result.IsSuccess ? "success" : "error"),
+                                                 confirmButtonText: 'tamam',
+                                                 padding: '2em'
+                                             }); 
+                                             if (result.IsSuccess) {
+                                                 var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
+                                                 $(_clsBtn).click();
+                                             }
                                          },
                                          error: function (err) {
                                              PanelRefresh(pnlx, true);
@@ -540,7 +544,8 @@
                                     GetDetail(id);
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
-                            }, complete: function (httpObj, textStatus) {
+                            },
+                            complete: function (httpObj, textStatus) {
                                 PanelRefresh(_panel, true);
                                 ShowMessageAjaxRequest(httpObj.status, textStatus);
                             }
@@ -606,7 +611,7 @@
 @if (degerlendirmeYetki || tiTezDegerlendirmeDuzeltme)
 {
     <script>
-        function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) { 
+        function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
             if (TIBasvuruID.tiBasvuruID) TIBasvuruID = TIBasvuruID.tiBasvuruID;
             if (TIBasvuruID.tiBasvuruAraRaporID) TIBasvuruAraRaporID = TIBasvuruID.tiBasvuruAraRaporID;
              var _panel = $('#bsvrDet_' + TIBasvuruID);

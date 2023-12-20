@@ -390,7 +390,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.EnstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
 
             var kulTipi = _entities.KullaniciTipleris.FirstOrDefault(p => p.KullaniciTipID == model.KullaniciTipID);

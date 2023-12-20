@@ -30,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var pagerString = model.ToRenderPartialViewHtml("TosBasvuru", "BasvuruDonemView");
             return pagerString;
         }
-        public static bool BasvuruOlustur(int kullaniciId)
+        public static bool BasvuruOlustur(int kullaniciId, DateTime? yeterlikSozluSinavTarihi = null)
         {
 
             using (var entities = new LisansustuBasvuruSistemiEntities())
@@ -47,11 +47,14 @@ namespace LisansUstuBasvuruSistemi.Business
                         var ogrenciYeterlikBilgi =
                             obsOgrenci.OgrenciYeters.FirstOrDefault(p => p.DR_YET_GNL_SNV_DURUM == "Başarılı" && p.DR_YET_SOZ_SNV_DURUM == "Başarılı");
 
-
-                        if (ogrenciYeterlikBilgi != null && ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().HasValue)
+                        if(!yeterlikSozluSinavTarihi.HasValue && ogrenciYeterlikBilgi != null && ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().HasValue)
                         {
-                            var yeterlikBasariTarihi = ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().Value;
+                           yeterlikSozluSinavTarihi = ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().Value;
 
+                        } 
+                        //Yeterlik sözlü sınavı tarihi bulunuyor ise  tez öneri savunmas başvurusu oluşturulabilir
+                        if (yeterlikSozluSinavTarihi.HasValue)
+                        {  
                             var basvuru = entities.ToBasvurus.FirstOrDefault(f =>
                                 f.KullaniciID == kul.KullaniciID && f.EnstituKod == kul.EnstituKod &&
                                 (f.ProgramKod == kul.ProgramKod || f.OgrenciNo == kul.OgrenciNo));
@@ -62,7 +65,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 basvuru.OgrenimTipKod = kul.OgrenimTipKod.Value;
                                 basvuru.KayitOgretimYiliBaslangic = kul.KayitYilBaslangic;
                                 basvuru.KayitOgretimYiliDonemID = kul.KayitDonemID;
-                                basvuru.YeterlikSozluSinavTarihi = yeterlikBasariTarihi;
+                                basvuru.YeterlikSozluSinavTarihi = yeterlikSozluSinavTarihi.Value;
                                 basvuru.IslemTarihi = DateTime.Now;
                                 basvuru.IslemYapanID = UserIdentity.Current.Id;
                                 basvuru.IslemYapanIP = UserIdentity.Ip;
@@ -82,19 +85,13 @@ namespace LisansUstuBasvuruSistemi.Business
                                     KayitOgretimYiliDonemID = kul.KayitDonemID,
                                     KayitTarihi = kul.KayitTarihi,
                                     TezDanismanID = kul.DanismanID,
-                                    YeterlikSozluSinavTarihi = yeterlikBasariTarihi,
+                                    YeterlikSozluSinavTarihi = yeterlikSozluSinavTarihi.Value,
                                     IslemTarihi = DateTime.Now,
                                     IslemYapanID = UserIdentity.Current.Id,
                                     IslemYapanIP = UserIdentity.Ip
                                 });
                             }
                             entities.SaveChanges();
-
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("Uyarı", MessageBox.MessageType.Information, "Başvuru işleminin yapılabilmesi için OBS sisteminde yeterlik sözlü sınavından başarılı olunması gerekmetkedir.");
                         }
 
                     }
@@ -470,7 +467,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     model.SavunmaBasvurusuYapmaSureBilgisiInfo = string.Join("<br/>", basvuruKiterKontrol.MessagesDialog.Select(s => s.Message));
                 }
-                var basvuru2 = db.ToBasvurus.First(p => p.UniqueID == toUniqueId);
                 model.IlkOneriBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.IlkOneriBitisTarihi;
                 model.IkinciOneriBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.IkinciOneriBitisTarihi;
                 model.RetDuzeltmeBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.RetDuzeltmeBitisTarihi;

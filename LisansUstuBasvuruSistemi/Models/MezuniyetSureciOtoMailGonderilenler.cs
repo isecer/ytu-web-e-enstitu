@@ -12,10 +12,13 @@ namespace LisansUstuBasvuruSistemi.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ProgramObsEslestirmeleri
+    public partial class MezuniyetSureciOtoMailGonderilenler
     {
-        public int ProgramObsEslestirmeID { get; set; }
-        public string ProgramKod { get; set; }
-        public int ObsProgramID { get; set; }
+        public int MezuniyetSureciOtoMailGonderilenID { get; set; }
+        public int MezuniyetSureciOtoMailID { get; set; }
+        public int MezuniyetBasvurulariID { get; set; }
+        public Nullable<System.DateTime> Tarih { get; set; }
+    
+        public virtual MezuniyetSureciOtoMail MezuniyetSureciOtoMail { get; set; }
     }
 }

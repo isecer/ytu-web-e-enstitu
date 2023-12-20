@@ -1178,7 +1178,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 const string msg = "Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!";
                 mmMessage.Messages.Add(msg);
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + kModel.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "Mezuniyet/RezervasyonAlPost", LogTipiEnum.Saldırı);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + kModel.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
             }
             if (sonSrTalebi != null && sonSrTalebi.SRDurumID == SrTalepDurumEnum.Onaylandı && !sonSrTalebi.MezuniyetSinavDurumID.HasValue)
             {

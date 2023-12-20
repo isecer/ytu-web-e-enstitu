@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity; 
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -59,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var basvuru = db.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                 if (!MezuniyetAyar.TezDosyasiYuklendigindeSorumluyaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false)) return;
 
-                //Dosya yüklendiğinde Kullanıcı atansa bile varolan kullanıcı yetki grubu ve aktiflik durumunu kontrol et bu kriterlere uymuyor ise yeni kullanıcı atamaya izin ver
+                //Dosya yüklendiğinde Kullanıcı atansa bile varolan kullanıcı yetki grubu ve aktiflik durumunu kontrol et eğer aktif bir tez kontrol yetkilisi var ise yeni kullanıcı atamaya izin verme
                 if (basvuru.TezKontrolKullaniciID.HasValue && db.Kullanicilars.Any(a => a.KullaniciID == basvuru.TezKontrolKullaniciID && a.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && a.IsAktif)) return;
 
 
@@ -73,13 +73,14 @@ namespace LisansUstuBasvuruSistemi.Business
                                  .KullaniciID
                              equals mez.TezKontrolKullaniciID into defMez
                      from mezBas in defMez.DefaultIfEmpty()
-                     group new { kul.KullaniciID, IsAtandi = mezBas != null } by new { kul.KullaniciID }
+                     group new { kul.KullaniciID, mezBas.MezuniyetSurecID, IsAtandi = mezBas != null } by new { kul.KullaniciID }
                         into g1
                      select new
                      {
                          g1.Key.KullaniciID,
-                         ToplamAtama = g1.Count(c => c.IsAtandi)
-                     }).OrderBy(o => o.ToplamAtama).ThenBy(t => Guid.NewGuid()).ToList();
+                         //SurecAtamaCount = g1.Count(c => c.MezuniyetSurecID == basvuru.MezuniyetSurecID),
+                         ToplamAtamaCount = g1.Count(c => c.IsAtandi)
+                     }).OrderBy(o => o.ToplamAtamaCount).ThenBy(t => Guid.NewGuid()).ToList();
                 var enAzAtanan = groupToplamAtamaList.FirstOrDefault();
                 if (enAzAtanan == null) return;
                 basvuru.TezKontrolKullaniciID = enAzAtanan.KullaniciID;
@@ -516,7 +517,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var model = new MezuniyetBasvuruDetayDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
-            { 
+            {
                 var basvuru = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
 
                 var bsurec = basvuru.MezuniyetSureci;
@@ -788,14 +789,14 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                    IsSonSrTalebi = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID),
                                                                    UzatmaSonrasiOgrenciTaahhutSonTarih = s.UzatmaSonrasiOgrenciTaahhutSonTarih,
                                                                    UzatmaTaahhutSonTarih = s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ?
-                                                                                                          s.UzatmaSonrasiOgrenciTaahhutSonTarih ??  (DbFunctions.AddDays(s.Tarih, bSurecOtKriter.MBSinavUzatmaOgrenciTaahhutMaxGun).Value)
-                                                                                                          : DateTime.Now, 
+                                                                                                          s.UzatmaSonrasiOgrenciTaahhutSonTarih ?? (DbFunctions.AddDays(s.Tarih, bSurecOtKriter.MBSinavUzatmaOgrenciTaahhutMaxGun).Value)
+                                                                                                          : DateTime.Now,
 
                                                                    UzatmaSonrasiYeniSinavTalebiSonTarih = s.UzatmaSonrasiYeniSinavTalebiSonTarih,
                                                                    UzatmaSonSrTarih = s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ?
                                                                                                 s.UzatmaSonrasiYeniSinavTalebiSonTarih ?? DbFunctions.AddDays(s.Tarih, bSurecOtKriter.MBSinavUzatmaSinavAlmaSuresiMaxGun).Value
-                                                                                                : DateTime.Now, 
-                                                                   TezTeslimSonTarih = model.TezTeslimSonTarih ?? DbFunctions.AddDays(s.Tarih, bSurecOtKriter.MBTezTeslimSuresiGun).Value, 
+                                                                                                : DateTime.Now,
+                                                                   TezTeslimSonTarih = model.TezTeslimSonTarih ?? DbFunctions.AddDays(s.Tarih, bSurecOtKriter.MBTezTeslimSuresiGun).Value,
 
                                                                    IsOgrenciUzatmaSonrasiOnay = s.IsOgrenciUzatmaSonrasiOnay,
                                                                    OgrenciOnayTarihi = s.OgrenciOnayTarihi,
@@ -816,7 +817,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 model.MezuniyetDurumSelectList.IsMezunOldu = new SelectList(MezuniyetBus.GetCmbMezuniyetDurum(), "Value", "Caption", model.IsMezunOldu);
                 model.MezuniyetSrModel.EykIlkSrMaxTarih = model.EYKTarihi.HasValue ? (model.TezTeslimSonTarih ?? model.EYKTarihi.Value.AddDays(bSurecOtKriter.MBTezTeslimSuresiGun)) : (DateTime?)null;
-                model.MezuniyetSrModel.IsSrEykSureAsimi = model.EYKTarihi.HasValue && model.MezuniyetSrModel.EykIlkSrMaxTarih < DateTime.Now;
+                model.MezuniyetSrModel.IsSrEykSureAsimi = model.EYKTarihi.HasValue && model.MezuniyetSrModel.EykIlkSrMaxTarih < DateTime.Now.Date;
 
 
                 #endregion
@@ -1693,32 +1694,32 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
         public static MmMessage SendMailBasvuruDanismanOnay(int mezuniyetBasvurulariId)
-        { 
+        {
             return MailSenderMezuniyet.SendMailBasvuruDanismanOnay(mezuniyetBasvurulariId);
         }
         public static MmMessage SendMailBasvuruDurum(int mezuniyetBasvurulariId)
-        { 
+        {
             return MailSenderMezuniyet.SendMailBasvuruDurum(mezuniyetBasvurulariId);
         }
         public static MmMessage SendMailJuriOneriFormuOnay(int mezuniyetJuriOneriFormId)
-        { 
+        {
             return MailSenderMezuniyet.SendMailJuriOneriFormuOnay(mezuniyetJuriOneriFormId);
         }
         public static MmMessage SendMailMezuniyetDegerlendirmeLink(int srTalepId, Guid? uniqueId = null, bool isLinkOrSonuc = false, bool isYeniLink = true, string eMail = "")
-        { 
-            return MailSenderMezuniyet.SendMailMezuniyetDegerlendirmeLink(srTalepId,uniqueId,isLinkOrSonuc,isYeniLink,eMail);
+        {
+            return MailSenderMezuniyet.SendMailMezuniyetDegerlendirmeLink(srTalepId, uniqueId, isLinkOrSonuc, isYeniLink, eMail);
         }
         public static MmMessage SendMailMezuniyetSinavYerBilgisi(int srTalepId, bool isOnaylandi)
-        { 
-            return MailSenderMezuniyet.SendMailMezuniyetSinavYerBilgisi(srTalepId,isOnaylandi);
+        {
+            return MailSenderMezuniyet.SendMailMezuniyetSinavYerBilgisi(srTalepId, isOnaylandi);
         }
         public static MmMessage SendMailMezuniyetSinavSonucu(int srTalepId, int mezuniyetSinavDurumId)
-        { 
-            return MailSenderMezuniyet.SendMailMezuniyetSinavSonucu(srTalepId,mezuniyetSinavDurumId);
+        {
+            return MailSenderMezuniyet.SendMailMezuniyetSinavSonucu(srTalepId, mezuniyetSinavDurumId);
         }
         public static MmMessage SendMailMezuniyetTezSablonKontrol(int mezuniyetBasvurulariTezDosyaId, int sablonTipId, string aciklama = "")
-        { 
-            return MailSenderMezuniyet.SendMailMezuniyetTezSablonKontrol(mezuniyetBasvurulariTezDosyaId,sablonTipId,aciklama);
+        {
+            return MailSenderMezuniyet.SendMailMezuniyetTezSablonKontrol(mezuniyetBasvurulariTezDosyaId, sablonTipId, aciklama);
         }
     }
 }

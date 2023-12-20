@@ -103,26 +103,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             var eoY = DateTime.Now.ToEgitimOgretimYilBilgi();
-            model.OgretimYili = eoY.BaslangicYili + "/" + eoY.BitisYili + "/" + eoY.Donem;
-            var mzMList = Management.GetZmMailZamanData(!id.HasValue || id <= 0);
+            model.OgretimYili = eoY.BaslangicYili + "/" + eoY.BitisYili + "/" + eoY.Donem; 
             if (id > 0)
             {
                 var data = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == id);
-
-                var bsmailData = data.MezuniyetSurecOtoMails.ToList();
-                foreach (var item in mzMList)
-                {
-                    var bsm = bsmailData.FirstOrDefault(p => p.ZamanTipID == item.ZamanTipID && p.MailSablonTipID == item.MailSablonTipID && p.Zaman == item.Zaman);
-                    if (bsm != null)
-                    {
-                        item.Checked = true;
-                        item.Zaman = bsm.Zaman;
-                        item.ZamanTipID = bsm.ZamanTipID;
-                        item.MezuniyetSurecOtoMailID = bsm.MezuniyetSurecOtoMailID;
-                        item.Gonderildi = bsm.Gonderildi;
-                        item.GonderilenCount = bsm.GonderilenCount;
-                    }
-                }
                 model.MezuniyetSurecID = id.Value;
                 model.EnstituKod = data.EnstituKod;
                 model.BaslangicYil = data.BaslangicYil;
@@ -139,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? enstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", model.OgretimYili);
             ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(enstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
-            ViewBag.kmMzOtoMail = mzMList;
+
             return View(model);
         }
         [HttpPost]
@@ -150,26 +134,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 IsDialog = !dlgid.IsNullOrWhiteSpace(),
                 DialogID = dlgid
-            };
-
-
-            var qgId = kModel.GId.Select((s, inx) => new { Key = s, Inx = inx }).ToList();
-            var qZamanTipId = kModel.ZamanTipID.Select((s, inx) => new { gID = s.Split('_')[0].ToInt().Value, Key = s.Split('_')[1].ToInt(), Inx = inx }).ToList();
-            var qMailSablonTipId = kModel.MailSablonTipID.Select((s, inx) => new { gID = s.Split('_')[0].ToInt().Value, Key = s.Split('_')[1].ToInt(), Inx = inx }).ToList();
-            var qZaman = kModel.Zaman.Select((s, inx) => new { gID = s.Split('_')[0].ToInt().Value, Key = s.Split('_')[1], Inx = inx }).ToList();
-            var qMailZamanlari = (from s in qgId
-                                  join z in qZamanTipId on s.Key equals z.gID
-                                  join tt in qMailSablonTipId on s.Key equals tt.gID
-                                  join za in qZaman on s.Key equals za.gID
-                                  select new KmMzOtoMail
-                                  {
-                                      ZamanTipID = z.Key.Value,
-                                      Zaman = za.Key.ToInt().Value,
-                                      MailSablonTipID = tt.Key,
-                                  }).ToList();
-
-            var mezuniyetSureciOgrenimTipKriterId = kModel.MezuniyetSureciOgrenimTipKriterID.Select((s, inx) => new { Inx = inx, MezuniyetSureciOgrenimTipKriterID = s }).ToList();
-            var ogrenimTipId = kModel.OgrenimTipID.Select((s, inx) => new { Inx = inx, OgrenimTipID = s }).ToList();
+            }; 
+            var mezuniyetSureciOgrenimTipKriterId = kModel.MezuniyetSureciOgrenimTipKriterId.Select((s, inx) => new { Inx = inx, MezuniyetSureciOgrenimTipKriterID = s }).ToList();
+            var ogrenimTipId = kModel.OgrenimTipId.Select((s, inx) => new { Inx = inx, OgrenimTipID = s }).ToList();
             var ogrenimTipKod = kModel.OgrenimTipKod.Select((s, inx) => new { Inx = inx, OgrenimTipKod = s }).ToList();
             var mBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Select((s, inx) => new { Inx = inx, MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = s }).ToList();
             var mBasvuruEtikNotKriteri = kModel.MBasvuruEtikNotKriteri.Select((s, inx) => new { Inx = inx, MBasvuruEtikNotKriteri = s }).ToList();
@@ -351,6 +318,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     });
                     _entities.SaveChanges();
                     kModel.MezuniyetSurecID = eklenen.MezuniyetSurecID;
+                    MezuniyetSureciBus.MezuniyetSureciOtoMailOlustur(eklenen.MezuniyetSurecID);
 
                 }
                 else
@@ -370,33 +338,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.MezuniyetSureciOgrenimTipKriterleris.RemoveRange(data.MezuniyetSureciOgrenimTipKriterleris);
                 }
 
-                var otoMailList = _entities.MezuniyetSurecOtoMails.Where(p => p.MezuniyetSurecID == kModel.MezuniyetSurecID).ToList();
-                var silinecekler = otoMailList.Where(p => p.Gonderildi == false && !qMailZamanlari.Any(a => a.ZamanTipID == p.ZamanTipID && a.MailSablonTipID == p.MailSablonTipID && a.Zaman == p.Zaman)).ToList();
-                var guncellenecekler = qMailZamanlari.Where(p => otoMailList.Any(a => a.ZamanTipID == p.ZamanTipID && a.MailSablonTipID == p.MailSablonTipID && a.Zaman == p.Zaman)).ToList();
-                var eklenecekler = qMailZamanlari.Where(p => !otoMailList.Any(a => a.ZamanTipID == p.ZamanTipID && a.MailSablonTipID == p.MailSablonTipID && a.Zaman == p.Zaman)).ToList();
-                foreach (var item in guncellenecekler)
-                {
-                    var qzaman = otoMailList.FirstOrDefault(p => p.ZamanTipID == item.ZamanTipID && p.MailSablonTipID == item.MailSablonTipID && p.Zaman == item.Zaman);
-                    if (qzaman != null)
-                    {
-                        qzaman.ZamanTipID = item.ZamanTipID;
-                        qzaman.Zaman = item.Zaman;
-                        qzaman.MailSablonTipID = item.MailSablonTipID;
-
-                    }
-                }
-                if (silinecekler.Count > 0) _entities.MezuniyetSurecOtoMails.RemoveRange(silinecekler);
-                foreach (var item in eklenecekler)
-                {
-                    _entities.MezuniyetSurecOtoMails.Add(new MezuniyetSurecOtoMail
-                    {
-                        MezuniyetSurecID = kModel.MezuniyetSurecID,
-                        ZamanTipID = item.ZamanTipID,
-                        MailSablonTipID = item.MailSablonTipID,
-                        Zaman = item.Zaman
-                    });
-
-                }
                 _entities.MezuniyetSureciOgrenimTipKriterleris.AddRange(mezuniyetSureciOgrenimTipKriterleri.Select(s => new Models.MezuniyetSureciOgrenimTipKriterleri
                 {
                     MezuniyetSurecID = kModel.MezuniyetSurecID,
@@ -446,13 +387,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.MBasvuruSeminerNotKriteri = sItem.MBasvuruSeminerNotKriteri;
 
             }
-            var zmMList = Management.GetZmMailZamanData();
-
-            if (qMailZamanlari.Any())
-                foreach (var item in zmMList)
-                    item.Checked = qMailZamanlari.Any(a => a.MailSablonTipID == item.MailSablonTipID && a.Zaman == item.Zaman && a.ZamanTipID == item.ZamanTipID);
-
-            ViewBag.kmMzOtoMail = zmMList;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
@@ -482,7 +416,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             _entities.SaveChanges();
         }
 
- 
+
         public ActionResult GetOtBilgiM(string enstituKod, int mezuniyetSurecId)
         {
             var model = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(enstituKod, mezuniyetSurecId);
@@ -638,7 +572,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var aktifKullaniciIds = aktifMezuniyetSureciTezKontrolBilgiDtos.Select(s => s.KullaniciId).ToList();
 
                 var digerMezuniyetBasvurulariTezDosyalaKontrolYapanIds = _entities.MezuniyetBasvurulariTezDosyalaris
-                    .Where(p => p.IsOnaylandiOrDuzeltme==true && p.OnayYapanID.HasValue && p.MezuniyetBasvurulari.MezuniyetSureci.EnstituKod == surec.EnstituKod && !aktifKullaniciIds.Contains(p.OnayYapanID.Value)).Select(s => s.OnayYapanID.Value).Distinct()
+                    .Where(p => p.IsOnaylandiOrDuzeltme == true && p.OnayYapanID.HasValue && p.MezuniyetBasvurulari.MezuniyetSureci.EnstituKod == surec.EnstituKod && !aktifKullaniciIds.Contains(p.OnayYapanID.Value)).Select(s => s.OnayYapanID.Value).Distinct()
                     .ToList();
                 var digerMezuniyetBasvuruTezDosyaKontrolSorumluId = _entities.MezuniyetBasvurularis
                     .Where(p => p.MezuniyetSureci.EnstituKod == surec.EnstituKod && p.TezKontrolKullaniciID.HasValue &&
@@ -677,7 +611,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             return Content(page, "text/html");
         }
+        public ActionResult GetOtoMailAyarView(int id)
+        {
+            var surec = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == id);
+            var otoMailData = MezuniyetSureciBus.GetOtoMailData();
+            var otoMails = (from surecOtoMail in surec.MezuniyetSureciOtoMails.ToList()
+                join otoMail in otoMailData on surecOtoMail.OtoMailID equals otoMail.OtoMailID
+                select new MezuniyetOtoMailDto
+                {
+                    MezuniyetSurecID = id,
+                    MezuniyetSureciOtoMailID = surecOtoMail.MezuniyetSureciOtoMailID,
+                    OtoMailID = surecOtoMail.OtoMailID,
+                    Aciklama = otoMail.Aciklama,
+                    IsAktif = surecOtoMail.IsAktif
+                }).ToList();
+            ViewBag.OtoMailData = otoMails;
+            return View(surec);
+        }
+        [Authorize(Roles = RoleNames.MezuniyetSureciKayıt)]
+        public ActionResult OtoMailAyarGuncelle(int mezuniyetSureciOtoMailId, bool isAktif)
+        {
+            var otoMail = _entities.MezuniyetSureciOtoMails.First(f => f.MezuniyetSureciOtoMailID == mezuniyetSureciOtoMailId);
+            otoMail.IsAktif = isAktif;
+            _entities.SaveChanges();
+            return true.ToJsonResult();
 
+        }
         public ActionResult KriterMuafOgrenciler(int id)
         {
             var surec = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == id);
@@ -849,7 +808,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     message = "'" + qBil.BaslangicYil + "/" + qBil.BitisYil + " " + qBil.DonemAdi + "' Dönemine ait mezuniyet süreci silinirken bir hata oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                     mmMessage.Title = "Hata";
                     mmMessage.Messages.Add(message);
                     mmMessage.MessageType = MsgTypeEnum.Error;

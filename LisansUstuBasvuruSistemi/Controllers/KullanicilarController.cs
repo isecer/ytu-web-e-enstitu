@@ -147,7 +147,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.IsAdmin = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsAdmin);
             ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(false), "Value", "Caption", model.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
             ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
             ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
@@ -194,7 +194,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
             ViewBag.IsKurumIci = isKurumIci;
             ViewBag.IsYerli = isYerli;
@@ -692,7 +692,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler(true), "Value", "Caption", kModel.CinsiyetID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod, true), "Value", "Caption", kModel.OgrenimTipKod);
             ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(kModel.EnstituKod, true, true), "Value", "Caption", kModel.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", kModel.YetkiGrupID);
 
             return View(kModel);

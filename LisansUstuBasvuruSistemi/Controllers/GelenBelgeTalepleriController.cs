@@ -7,8 +7,7 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
-using System.Data.Entity;
-using System.Data.Objects;
+using System.Data.Entity; 
 using System.Linq;
 using System.Web.Mvc;
 
@@ -111,7 +110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var t1 = DateTime.Now.TodateToShortDate();
                     var t2 = Convert.ToDateTime((DateTime.Now.ToShortDateString() + " 23:59:59"));
-                    q = q.Where(p => DbFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) >= t1 && EntityFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) <= t2);
+                    q = q.Where(p => DbFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) >= t1 && DbFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) <= t2);
                 }
                 else
                 {
@@ -187,7 +186,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipId);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(true, 0), "Value", "Caption", model.OgretimYili);
             ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumId);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumId);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumId);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", model.ProgramKod);
             ViewBag.DilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", model.DilKodu);

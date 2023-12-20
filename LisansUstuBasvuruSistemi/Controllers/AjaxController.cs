@@ -1957,7 +1957,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var fExtension = Path.GetExtension(ekTamYol);
                         attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.FExtension.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
                     }
-                    else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.FExtension + " <br/>Dosya Yolu:" + ekTamYol, "Ajax/MailGonderPost", LogTipiEnum.Hata);
+                    else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.FExtension + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Hata);
                 }
 
 
@@ -2328,7 +2328,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 var fExtension = Path.GetExtension(ekTamYol);
                                 attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.EkAdi.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
                             }
-                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Ajax/MesajKaydetPost", LogTipiEnum.Uyarı);
+                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Uyarı);
                         }
 
                         try

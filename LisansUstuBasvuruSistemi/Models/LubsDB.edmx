@@ -857,7 +857,6 @@
           <Property Name="SistemErisimAdresi" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="WebAdresi" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="ToplamKayitKota" Type="int" Nullable="false" />
-          <Property Name="LUBMailGonder" Type="bit" Nullable="false" />
           <Property Name="TestEmailAddress" Type="nvarchar" MaxLength="250" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
@@ -1416,6 +1415,26 @@
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
+        <EntityType Name="MezuniyetSureciOtoMail">
+          <Key>
+            <PropertyRef Name="MezuniyetSureciOtoMailID" />
+          </Key>
+          <Property Name="MezuniyetSureciOtoMailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OtoMailID" Type="int" Nullable="false" />
+          <Property Name="MezuniyetSurecID" Type="int" Nullable="false" />
+          <Property Name="MailSablonTipID" Type="int" Nullable="false" />
+          <Property Name="Sure" Type="int" Nullable="false" />
+          <Property Name="IsAktif" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MezuniyetSureciOtoMailGonderilenler">
+          <Key>
+            <PropertyRef Name="MezuniyetSureciOtoMailGonderilenID" />
+          </Key>
+          <Property Name="MezuniyetSureciOtoMailGonderilenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MezuniyetSureciOtoMailID" Type="int" Nullable="false" />
+          <Property Name="MezuniyetBasvurulariID" Type="int" Nullable="false" />
+          <Property Name="Tarih" Type="datetime" />
+        </EntityType>
         <EntityType Name="MezuniyetSureciYayinTurleri">
           <Key>
             <PropertyRef Name="MezuniyetSureciYayinTurID" />
@@ -1480,20 +1499,6 @@
           <Property Name="IsZorunlu" Type="bit" Nullable="false" />
           <Property Name="GrupKodu" Type="nvarchar" MaxLength="10" />
           <Property Name="IsVeOrVeya" Type="bit" />
-        </EntityType>
-        <EntityType Name="MezuniyetSurecOtoMail">
-          <Key>
-            <PropertyRef Name="MezuniyetSurecOtoMailID" />
-          </Key>
-          <Property Name="MezuniyetSurecOtoMailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="MezuniyetSurecID" Type="int" Nullable="false" />
-          <Property Name="MailSablonTipID" Type="int" />
-          <Property Name="ZamanTipID" Type="int" Nullable="false" />
-          <Property Name="Zaman" Type="int" Nullable="false" />
-          <Property Name="Gonderildi" Type="bit" Nullable="false" />
-          <Property Name="GonderilenCount" Type="int" />
-          <Property Name="Gonderilenler" Type="text" />
-          <Property Name="GonderilenMBID" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="MezuniyetYayinBelgeTurleri">
           <Key>
@@ -1778,14 +1783,6 @@
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ProgramObsEslestirmeleri">
-          <Key>
-            <PropertyRef Name="ProgramObsEslestirmeID" />
-          </Key>
-          <Property Name="ProgramObsEslestirmeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ProgramKod" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="ObsProgramID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Roller">
           <Key>
@@ -2465,11 +2462,11 @@
           <Property Name="IsTezDiliTr" Type="bit" Nullable="false" />
           <Property Name="IsTezDiliDegisecek" Type="bit" Nullable="false" />
           <Property Name="YeniTezDiliTr" Type="bit" />
-          <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="512" Nullable="false" />
-          <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="512" Nullable="false" />
+          <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="1024" Nullable="false" />
+          <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="1024" Nullable="false" />
           <Property Name="IsTezBasligiDegisti" Type="bit" Nullable="false" />
-          <Property Name="YeniTezBaslikTr" Type="nvarchar" MaxLength="512" />
-          <Property Name="YeniTezBaslikEn" Type="nvarchar" MaxLength="512" />
+          <Property Name="YeniTezBaslikTr" Type="nvarchar" MaxLength="1024" />
+          <Property Name="YeniTezBaslikEn" Type="nvarchar" MaxLength="1024" />
           <Property Name="TezBasligiDegisimGerekcesi" Type="nvarchar" MaxLength="512" />
           <Property Name="SinavAdi" Type="nvarchar" MaxLength="64" />
           <Property Name="SinavPuani" Type="nvarchar" MaxLength="16" />
@@ -5114,6 +5111,20 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail">
+          <End Role="MezuniyetSureciOtoMail" Type="Self.MezuniyetSureciOtoMail" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MezuniyetSureciOtoMailGonderilenler" Type="Self.MezuniyetSureciOtoMailGonderilenler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MezuniyetSureciOtoMail">
+              <PropertyRef Name="MezuniyetSureciOtoMailID" />
+            </Principal>
+            <Dependent Role="MezuniyetSureciOtoMailGonderilenler">
+              <PropertyRef Name="MezuniyetSureciOtoMailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MezuniyetSureciYonetmelikleri_Enstituler">
           <End Role="Enstituler" Type="Self.Enstituler" Multiplicity="1" />
           <End Role="MezuniyetSureciYonetmelikleri" Type="Self.MezuniyetSureciYonetmelikleri" Multiplicity="*" />
@@ -5156,12 +5167,12 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <End Role="MezuniyetSureci" Type="Self.MezuniyetSureci" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="MezuniyetSurecOtoMail" Type="Self.MezuniyetSurecOtoMail" Multiplicity="*" />
+          <End Role="MezuniyetSureciOtoMail" Type="Self.MezuniyetSureciOtoMail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MezuniyetSureci">
               <PropertyRef Name="MezuniyetSurecID" />
             </Principal>
-            <Dependent Role="MezuniyetSurecOtoMail">
+            <Dependent Role="MezuniyetSureciOtoMail">
               <PropertyRef Name="MezuniyetSurecID" />
             </Dependent>
           </ReferentialConstraint>
@@ -6980,10 +6991,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="MezuniyetSureci" EntityType="Self.MezuniyetSureci" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciKriterMuafOgrenciler" EntityType="Self.MezuniyetSureciKriterMuafOgrenciler" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciOgrenimTipKriterleri" EntityType="Self.MezuniyetSureciOgrenimTipKriterleri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MezuniyetSureciOtoMail" EntityType="Self.MezuniyetSureciOtoMail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MezuniyetSureciOtoMailGonderilenler" EntityType="Self.MezuniyetSureciOtoMailGonderilenler" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciYayinTurleri" EntityType="Self.MezuniyetSureciYayinTurleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciYonetmelikleri" EntityType="Self.MezuniyetSureciYonetmelikleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciYonetmelikleriOT" EntityType="Self.MezuniyetSureciYonetmelikleriOT" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MezuniyetSurecOtoMail" EntityType="Self.MezuniyetSurecOtoMail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetYayinBelgeTurleri" EntityType="Self.MezuniyetYayinBelgeTurleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetYayinIndexTurleri" EntityType="Self.MezuniyetYayinIndexTurleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetYayinKontrolDurumlari" EntityType="Self.MezuniyetYayinKontrolDurumlari" Schema="dbo" store:Type="Tables" />
@@ -7006,7 +7018,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="OzelNotTipleri" EntityType="Self.OzelNotTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OzelTarihTipleri" EntityType="Self.OzelTarihTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Programlar" EntityType="Self.Programlar" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ProgramObsEslestirmeleri" EntityType="Self.ProgramObsEslestirmeleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roller" EntityType="Self.Roller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sehirler" EntityType="Self.Sehirler" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceLog" EntityType="Self.ServiceLog" Schema="dbo" store:Type="Tables" />
@@ -7792,6 +7803,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="OgrenimTipleri" EntitySet="OgrenimTipleri" />
             <End Role="MezuniyetSureciOgrenimTipKriterleri" EntitySet="MezuniyetSureciOgrenimTipKriterleri" />
           </AssociationSet>
+          <AssociationSet Name="FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail" Association="Self.FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail">
+            <End Role="MezuniyetSureciOtoMail" EntitySet="MezuniyetSureciOtoMail" />
+            <End Role="MezuniyetSureciOtoMailGonderilenler" EntitySet="MezuniyetSureciOtoMailGonderilenler" />
+          </AssociationSet>
           <AssociationSet Name="FK_MezuniyetSureciYonetmelikleri_Enstituler" Association="Self.FK_MezuniyetSureciYonetmelikleri_Enstituler">
             <End Role="Enstituler" EntitySet="Enstituler" />
             <End Role="MezuniyetSureciYonetmelikleri" EntitySet="MezuniyetSureciYonetmelikleri" />
@@ -7806,7 +7821,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_MezuniyetSurecOtoMail_MezuniyetSureci" Association="Self.FK_MezuniyetSurecOtoMail_MezuniyetSureci">
             <End Role="MezuniyetSureci" EntitySet="MezuniyetSureci" />
-            <End Role="MezuniyetSurecOtoMail" EntitySet="MezuniyetSurecOtoMail" />
+            <End Role="MezuniyetSureciOtoMail" EntitySet="MezuniyetSureciOtoMail" />
           </AssociationSet>
           <AssociationSet Name="FK_MezuniyetYayinTurleri_Kullanicilar" Association="Self.FK_MezuniyetYayinTurleri_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilar" />
@@ -8461,10 +8476,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="MezuniyetSurecis" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureci" />
           <EntitySet Name="MezuniyetSureciKriterMuafOgrencilers" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciKriterMuafOgrenciler" />
           <EntitySet Name="MezuniyetSureciOgrenimTipKriterleris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOgrenimTipKriterleri" />
+          <EntitySet Name="MezuniyetSureciOtoMails" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMail" />
+          <EntitySet Name="MezuniyetSureciOtoMailGonderilenlers" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMailGonderilenler" />
           <EntitySet Name="MezuniyetSureciYayinTurleris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYayinTurleri" />
           <EntitySet Name="MezuniyetSureciYonetmelikleris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleri" />
           <EntitySet Name="MezuniyetSureciYonetmelikleriOTs" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleriOT" />
-          <EntitySet Name="MezuniyetSurecOtoMails" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSurecOtoMail" />
           <EntitySet Name="MezuniyetYayinBelgeTurleris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinBelgeTurleri" />
           <EntitySet Name="MezuniyetYayinIndexTurleris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinIndexTurleri" />
           <EntitySet Name="MezuniyetYayinKontrolDurumlaris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinKontrolDurumlari" />
@@ -8487,7 +8503,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="OzelNotTipleris" EntityType="LisansustuBasvuruSistemiModel.OzelNotTipleri" />
           <EntitySet Name="OzelTarihTipleris" EntityType="LisansustuBasvuruSistemiModel.OzelTarihTipleri" />
           <EntitySet Name="Programlars" EntityType="LisansustuBasvuruSistemiModel.Programlar" />
-          <EntitySet Name="ProgramObsEslestirmeleris" EntityType="LisansustuBasvuruSistemiModel.ProgramObsEslestirmeleri" />
           <EntitySet Name="Rollers" EntityType="LisansustuBasvuruSistemiModel.Roller" />
           <EntitySet Name="Sehirlers" EntityType="LisansustuBasvuruSistemiModel.Sehirler" />
           <EntitySet Name="ServiceLogs" EntityType="LisansustuBasvuruSistemiModel.ServiceLog" />
@@ -9485,11 +9500,15 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_MezuniyetSurecOtoMail_MezuniyetSureci" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSurecOtoMail_MezuniyetSureci">
             <End Role="MezuniyetSureci" EntitySet="MezuniyetSurecis" />
-            <End Role="MezuniyetSurecOtoMail" EntitySet="MezuniyetSurecOtoMails" />
+            <End Role="MezuniyetSureciOtoMail" EntitySet="MezuniyetSureciOtoMails" />
           </AssociationSet>
           <AssociationSet Name="FK_MezuniyetSureciOgrenimTipKriterleri_OgrenimTipleri" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOgrenimTipKriterleri_OgrenimTipleri">
             <End Role="OgrenimTipleri" EntitySet="OgrenimTipleris" />
             <End Role="MezuniyetSureciOgrenimTipKriterleri" EntitySet="MezuniyetSureciOgrenimTipKriterleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail">
+            <End Role="MezuniyetSureciOtoMail" EntitySet="MezuniyetSureciOtoMails" />
+            <End Role="MezuniyetSureciOtoMailGonderilenler" EntitySet="MezuniyetSureciOtoMailGonderilenlers" />
           </AssociationSet>
           <AssociationSet Name="FK_MezuniyetSureciYonetmelikleriOT_MezuniyetSureciYonetmelikleri" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetSureciYonetmelikleri">
             <End Role="MezuniyetSureciYonetmelikleri" EntitySet="MezuniyetSureciYonetmelikleris" />
@@ -10858,7 +10877,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="SistemErisimAdresi" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="WebAdresi" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="ToplamKayitKota" Type="Int32" Nullable="false" />
-          <Property Name="LUBMailGonder" Type="Boolean" Nullable="false" />
           <Property Name="TestEmailAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="IsAktif" Type="Boolean" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
@@ -11537,7 +11555,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="MezuniyetBasvurularis" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_MezuniyetSureci" FromRole="MezuniyetSureci" ToRole="MezuniyetBasvurulari" />
           <NavigationProperty Name="MezuniyetSureciKriterMuafOgrencilers" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciKriterMuafOgrenciler_MezuniyetSureci" FromRole="MezuniyetSureci" ToRole="MezuniyetSureciKriterMuafOgrenciler" />
           <NavigationProperty Name="MezuniyetSureciOgrenimTipKriterleris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOgrenimTipKriterleri_MezuniyetSureci" FromRole="MezuniyetSureci" ToRole="MezuniyetSureciOgrenimTipKriterleri" />
-          <NavigationProperty Name="MezuniyetSurecOtoMails" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSurecOtoMail_MezuniyetSureci" FromRole="MezuniyetSureci" ToRole="MezuniyetSurecOtoMail" />
+          <NavigationProperty Name="MezuniyetSureciOtoMails" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSurecOtoMail_MezuniyetSureci" FromRole="MezuniyetSureci" ToRole="MezuniyetSureciOtoMail" />
         </EntityType>
         <EntityType Name="MezuniyetSureciKriterMuafOgrenciler">
           <Key>
@@ -11574,6 +11592,29 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MezuniyetSureci" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOgrenimTipKriterleri_MezuniyetSureci" FromRole="MezuniyetSureciOgrenimTipKriterleri" ToRole="MezuniyetSureci" />
           <NavigationProperty Name="OgrenimTipleri" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOgrenimTipKriterleri_OgrenimTipleri" FromRole="MezuniyetSureciOgrenimTipKriterleri" ToRole="OgrenimTipleri" />
+        </EntityType>
+        <EntityType Name="MezuniyetSureciOtoMail">
+          <Key>
+            <PropertyRef Name="MezuniyetSureciOtoMailID" />
+          </Key>
+          <Property Name="MezuniyetSureciOtoMailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OtoMailID" Type="Int32" Nullable="false" />
+          <Property Name="MezuniyetSurecID" Type="Int32" Nullable="false" />
+          <Property Name="MailSablonTipID" Type="Int32" Nullable="false" />
+          <Property Name="Sure" Type="Int32" Nullable="false" />
+          <Property Name="IsAktif" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="MezuniyetSureci" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSurecOtoMail_MezuniyetSureci" FromRole="MezuniyetSureciOtoMail" ToRole="MezuniyetSureci" />
+          <NavigationProperty Name="MezuniyetSureciOtoMailGonderilenlers" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail" FromRole="MezuniyetSureciOtoMail" ToRole="MezuniyetSureciOtoMailGonderilenler" />
+        </EntityType>
+        <EntityType Name="MezuniyetSureciOtoMailGonderilenler">
+          <Key>
+            <PropertyRef Name="MezuniyetSureciOtoMailGonderilenID" />
+          </Key>
+          <Property Name="MezuniyetSureciOtoMailGonderilenID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MezuniyetSureciOtoMailID" Type="Int32" Nullable="false" />
+          <Property Name="MezuniyetBasvurulariID" Type="Int32" Nullable="false" />
+          <Property Name="Tarih" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="MezuniyetSureciOtoMail" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail" FromRole="MezuniyetSureciOtoMailGonderilenler" ToRole="MezuniyetSureciOtoMail" />
         </EntityType>
         <EntityType Name="MezuniyetSureciYayinTurleri">
           <Key>
@@ -11643,21 +11684,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IsVeOrVeya" Type="Boolean" />
           <NavigationProperty Name="MezuniyetSureciYonetmelikleri" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetSureciYonetmelikleri" FromRole="MezuniyetSureciYonetmelikleriOT" ToRole="MezuniyetSureciYonetmelikleri" />
           <NavigationProperty Name="MezuniyetYayinTurleri" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetYayinTurleri" FromRole="MezuniyetSureciYonetmelikleriOT" ToRole="MezuniyetYayinTurleri" />
-        </EntityType>
-        <EntityType Name="MezuniyetSurecOtoMail">
-          <Key>
-            <PropertyRef Name="MezuniyetSurecOtoMailID" />
-          </Key>
-          <Property Name="MezuniyetSurecOtoMailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MezuniyetSurecID" Type="Int32" Nullable="false" />
-          <Property Name="MailSablonTipID" Type="Int32" />
-          <Property Name="ZamanTipID" Type="Int32" Nullable="false" />
-          <Property Name="Zaman" Type="Int32" Nullable="false" />
-          <Property Name="Gonderildi" Type="Boolean" Nullable="false" />
-          <Property Name="GonderilenCount" Type="Int32" />
-          <Property Name="Gonderilenler" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="GonderilenMBID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="MezuniyetSureci" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSurecOtoMail_MezuniyetSureci" FromRole="MezuniyetSurecOtoMail" ToRole="MezuniyetSureci" />
         </EntityType>
         <EntityType Name="MezuniyetYayinBelgeTurleri">
           <Key>
@@ -12024,14 +12050,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="TijBasvurus" Relationship="LisansustuBasvuruSistemiModel.FK_TijBasvuru_Programlar" FromRole="Programlar" ToRole="TijBasvuru" />
           <NavigationProperty Name="ToBasvurus" Relationship="LisansustuBasvuruSistemiModel.FK_ToBasvuru_Programlar" FromRole="Programlar" ToRole="ToBasvuru" />
           <NavigationProperty Name="YeterlikBasvurus" Relationship="LisansustuBasvuruSistemiModel.FK_YeterlikBasvuru_Programlar" FromRole="Programlar" ToRole="YeterlikBasvuru" />
-        </EntityType>
-        <EntityType Name="ProgramObsEslestirmeleri">
-          <Key>
-            <PropertyRef Name="ProgramObsEslestirmeID" />
-          </Key>
-          <Property Name="ProgramObsEslestirmeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ObsProgramID" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Roller">
           <Key>
@@ -12822,11 +12840,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IsTezDiliTr" Type="Boolean" Nullable="false" />
           <Property Name="IsTezDiliDegisecek" Type="Boolean" Nullable="false" />
           <Property Name="YeniTezDiliTr" Type="Boolean" />
-          <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
-          <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="IsTezBasligiDegisti" Type="Boolean" Nullable="false" />
-          <Property Name="YeniTezBaslikTr" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-          <Property Name="YeniTezBaslikEn" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="YeniTezBaslikTr" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="YeniTezBaslikEn" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="TezBasligiDegisimGerekcesi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="SinavAdi" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="SinavPuani" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
@@ -16237,12 +16255,12 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <End Type="LisansustuBasvuruSistemiModel.MezuniyetSureci" Role="MezuniyetSureci" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="LisansustuBasvuruSistemiModel.MezuniyetSurecOtoMail" Role="MezuniyetSurecOtoMail" Multiplicity="*" />
+          <End Type="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMail" Role="MezuniyetSureciOtoMail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MezuniyetSureci">
               <PropertyRef Name="MezuniyetSurecID" />
             </Principal>
-            <Dependent Role="MezuniyetSurecOtoMail">
+            <Dependent Role="MezuniyetSureciOtoMail">
               <PropertyRef Name="MezuniyetSurecID" />
             </Dependent>
           </ReferentialConstraint>
@@ -16256,6 +16274,20 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="MezuniyetSureciOgrenimTipKriterleri">
               <PropertyRef Name="OgrenimTipID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail">
+          <End Type="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMail" Role="MezuniyetSureciOtoMail" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMailGonderilenler" Role="MezuniyetSureciOtoMailGonderilenler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MezuniyetSureciOtoMail">
+              <PropertyRef Name="MezuniyetSureciOtoMailID" />
+            </Principal>
+            <Dependent Role="MezuniyetSureciOtoMailGonderilenler">
+              <PropertyRef Name="MezuniyetSureciOtoMailID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -18175,7 +18207,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
                 <ScalarProperty Name="TestEmailAddress" ColumnName="TestEmailAddress" />
-                <ScalarProperty Name="LUBMailGonder" ColumnName="LUBMailGonder" />
                 <ScalarProperty Name="ToplamKayitKota" ColumnName="ToplamKayitKota" />
                 <ScalarProperty Name="WebAdresi" ColumnName="WebAdresi" />
                 <ScalarProperty Name="SistemErisimAdresi" ColumnName="SistemErisimAdresi" />
@@ -18757,6 +18788,28 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MezuniyetSureciOtoMails">
+            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMail">
+              <MappingFragment StoreEntitySet="MezuniyetSureciOtoMail">
+                <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
+                <ScalarProperty Name="Sure" ColumnName="Sure" />
+                <ScalarProperty Name="MailSablonTipID" ColumnName="MailSablonTipID" />
+                <ScalarProperty Name="MezuniyetSurecID" ColumnName="MezuniyetSurecID" />
+                <ScalarProperty Name="OtoMailID" ColumnName="OtoMailID" />
+                <ScalarProperty Name="MezuniyetSureciOtoMailID" ColumnName="MezuniyetSureciOtoMailID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MezuniyetSureciOtoMailGonderilenlers">
+            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMailGonderilenler">
+              <MappingFragment StoreEntitySet="MezuniyetSureciOtoMailGonderilenler">
+                <ScalarProperty Name="Tarih" ColumnName="Tarih" />
+                <ScalarProperty Name="MezuniyetBasvurulariID" ColumnName="MezuniyetBasvurulariID" />
+                <ScalarProperty Name="MezuniyetSureciOtoMailID" ColumnName="MezuniyetSureciOtoMailID" />
+                <ScalarProperty Name="MezuniyetSureciOtoMailGonderilenID" ColumnName="MezuniyetSureciOtoMailGonderilenID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="MezuniyetSureciYayinTurleris">
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetSureciYayinTurleri">
               <MappingFragment StoreEntitySet="MezuniyetSureciYayinTurleri">
@@ -18822,21 +18875,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="OgrenimTipKod" ColumnName="OgrenimTipKod" />
                 <ScalarProperty Name="MezuniyetSureciYonetmelikID" ColumnName="MezuniyetSureciYonetmelikID" />
                 <ScalarProperty Name="MezuniyetSureciYonetmelikleriOTID" ColumnName="MezuniyetSureciYonetmelikleriOTID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MezuniyetSurecOtoMails">
-            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetSurecOtoMail">
-              <MappingFragment StoreEntitySet="MezuniyetSurecOtoMail">
-                <ScalarProperty Name="GonderilenMBID" ColumnName="GonderilenMBID" />
-                <ScalarProperty Name="Gonderilenler" ColumnName="Gonderilenler" />
-                <ScalarProperty Name="GonderilenCount" ColumnName="GonderilenCount" />
-                <ScalarProperty Name="Gonderildi" ColumnName="Gonderildi" />
-                <ScalarProperty Name="Zaman" ColumnName="Zaman" />
-                <ScalarProperty Name="ZamanTipID" ColumnName="ZamanTipID" />
-                <ScalarProperty Name="MailSablonTipID" ColumnName="MailSablonTipID" />
-                <ScalarProperty Name="MezuniyetSurecID" ColumnName="MezuniyetSurecID" />
-                <ScalarProperty Name="MezuniyetSurecOtoMailID" ColumnName="MezuniyetSurecOtoMailID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -19143,15 +19181,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="AnabilimDaliKod" ColumnName="AnabilimDaliKod" />
                 <ScalarProperty Name="AnabilimDaliID" ColumnName="AnabilimDaliID" />
                 <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProgramObsEslestirmeleris">
-            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.ProgramObsEslestirmeleri">
-              <MappingFragment StoreEntitySet="ProgramObsEslestirmeleri">
-                <ScalarProperty Name="ObsProgramID" ColumnName="ObsProgramID" />
-                <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />
-                <ScalarProperty Name="ProgramObsEslestirmeID" ColumnName="ProgramObsEslestirmeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

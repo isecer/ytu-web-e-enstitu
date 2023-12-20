@@ -110,26 +110,7 @@ namespace LisansUstuBasvuruSistemi.Models
         #endregion
 
         #region ComboData 
-        public static List<KmMzOtoMail> GetZmMailZamanData(bool? isChecked = null)
-        {
-
-            var bsMList = new List<KmMzOtoMail>
-            {
-                new KmMzOtoMail { gID = 1, Checked = isChecked ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipiEnum.Gun, Zaman = 1, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 1 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" },
-                new KmMzOtoMail { gID = 2, Checked = isChecked ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipiEnum.Gun, Zaman = 2, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 2 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" },
-                new KmMzOtoMail { gID = 3, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezEykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipiEnum.Gun, Zaman = 10, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 10 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" },
-                new KmMzOtoMail { gID = 4, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezEykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipiEnum.Gun, Zaman = 5, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 5 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" },
-                new KmMzOtoMail { gID = 5, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezEykTarihineGoreSrAlinmadi, ZamanTipID = ZamanTipiEnum.Gun, Zaman = -5, Gonderildi = false, Aciklama = "SR talebi yapma sürecini 5 Gün aşanları bildir (Enstitü)" },
-                new KmMzOtoMail { gID = 10, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezSinavDegerlendirmeHatirlantmaDanismanDr, ZamanTipID = ZamanTipiEnum.Gun, Zaman = -1, Gonderildi = false, Aciklama = "DR Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" },
-                new KmMzOtoMail { gID = 11, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezSinavDegerlendirmeHatirlantmaDanismanYl, ZamanTipID = ZamanTipiEnum.Gun, Zaman = -1, Gonderildi = false, Aciklama = "YL Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" },
-                new KmMzOtoMail { gID = 6, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezTezSinavSonucuSistemeGirilmedi, ZamanTipID = ZamanTipiEnum.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Sınav olup sonucunu 5 gün içinde getirmeyenleri bildir (Estitü,Danışman,Öğrenci)" },
-                new KmMzOtoMail { gID = 7, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezTezKontrolTezDosyasiYuklenmeli, ZamanTipID = ZamanTipiEnum.Gun, Zaman = -7, Gonderildi = false, Aciklama = "Sınav olup Tez Dosyasını 7 gün içinde yüklemeyenleri bildir (Öğrenci)" },
-                new KmMzOtoMail { gID = 8, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezCiltliTezTeslimYapilmali, ZamanTipID = ZamanTipiEnum.Gun, Zaman = 5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihine 5 gün kala teslim etmeyenleri bildir (Danışman,Öğrenci)" },
-                new KmMzOtoMail { gID = 9, Checked = isChecked ?? false, MailSablonTipID = MailSablonTipiEnum.MezCiltliTezTeslimYapilmadi, ZamanTipID = ZamanTipiEnum.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihini 5 gün geçirenleri bildir (Enstitü)" }
-            };
-
-            return bsMList;
-        }
+      
         public static List<CmbIntDto> GetbasvuruSurecleri(string enstituKod, int basvuruSurecTipId, bool bosSecimVar = false)
         {
             var lst = new List<CmbIntDto>();
@@ -818,7 +799,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> CmbAktifOgrenimDurumu(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? IsHesapKayittaGozuksun = null)
+        public static List<CmbIntDto> CmbAktifOgrenimDurumu(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? isHesapKayittaGozuksun = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -828,7 +809,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
                 if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
                 if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
-                if (IsHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == IsHesapKayittaGozuksun.Value);
+                if (isHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
                 var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
                 foreach (var item in qData)
                 {
@@ -838,7 +819,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> CmbAktifOgrenimDurumu2(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? IsHesapKayittaGozuksun = null)
+        public static List<CmbIntDto> CmbAktifOgrenimDurumu2(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? isHesapKayittaGozuksun = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -848,7 +829,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
                 if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
                 if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
-                if (IsHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == IsHesapKayittaGozuksun.Value);
+                if (isHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
                 var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
                 foreach (var item in qData)
                 {

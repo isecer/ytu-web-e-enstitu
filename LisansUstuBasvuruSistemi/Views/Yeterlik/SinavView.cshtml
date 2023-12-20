@@ -113,14 +113,17 @@
 
     </script>
 }
-@if (Model.IsYaziliSinavBasarili == false || Model.IsYaziliSinavinaKatildi == false || Model.IsSozluSinavinaKatildi.HasValue)
+else
 {
     @Model.ToJuriDegerlendirmeListView()
 }
+@*@if (Model.IsYaziliSinavBasarili == false || Model.IsYaziliSinavinaKatildi == false || Model.IsSozluSinavinaKatildi.HasValue)
+    {
+        @Model.ToJuriDegerlendirmeListView()
+    }*@
 <script>
    function SinavDegerlendir(id, uniqueId)
  {
-       if ('@onayDuzeltmeYetki' != 'True') "Sınav değerlendirmenizi kaydetmek istiyor musunuz.";
        Swal.fire({
            html: "Sınav değerlendirmenizi kaydetmek istior musunuz ?",
            type: 'warning',

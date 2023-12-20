@@ -63,9 +63,9 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-             
 
-                var data = db.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod  && p.IsAktif).OrderBy(o => o.OgrenimTipAdi).ToList();
+
+                var data = db.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif).OrderBy(o => o.OgrenimTipAdi).ToList();
                 data = data.Where(p => IsDoktora(p.OgrenimTipKod)).ToList();
                 foreach (var item in data)
                 {
@@ -75,14 +75,19 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
-        public static bool IsDoktora(this int ogrenimTipKod)
+
+        public static List<int> DoktoraKods()
         {
-            return new List<int> { OgrenimTipi.ButunlesikDoktora, OgrenimTipi.SanattaYeterlilik, OgrenimTipi.Doktra }
-                .Contains(ogrenimTipKod);
+            return new List<int> { OgrenimTipi.ButunlesikDoktora, OgrenimTipi.SanattaYeterlilik, OgrenimTipi.Doktra };
+        }
+
+        public static bool IsDoktora(this int ogrenimTipKod)
+        { 
+            return DoktoraKods().Contains(ogrenimTipKod);
         }
         public static bool IsDoktora(this int? ogrenimTipKod)
         {
-            return  ogrenimTipKod.HasValue && IsDoktora(ogrenimTipKod.Value); 
+            return ogrenimTipKod.HasValue && IsDoktora(ogrenimTipKod.Value);
         }
     }
 }

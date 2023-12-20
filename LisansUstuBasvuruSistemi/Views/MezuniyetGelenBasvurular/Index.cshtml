@@ -494,7 +494,7 @@
             message = "kayıt işlemini yapabilmek için başvuru durumunu seçiniz";
             successSave = false;
         }
-        else if (durumID == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" || durumID == "@MezuniyetYayinKontrolDurumuEnum.KaydiSilindi" && durumAck.trim() == "") {
+        else if ((durumID == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" || durumID == "@MezuniyetYayinKontrolDurumuEnum.KaydiSilindi") && durumAck.trim() == "") {
             successSave = false;
             message ="Açıklaması giriniz";
         }

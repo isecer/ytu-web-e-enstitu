@@ -57,7 +57,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public string SistemErisimAdresi { get; set; }
         public string WebAdresi { get; set; }
         public int ToplamKayitKota { get; set; }
-        public bool LUBMailGonder { get; set; }
         public string TestEmailAddress { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }

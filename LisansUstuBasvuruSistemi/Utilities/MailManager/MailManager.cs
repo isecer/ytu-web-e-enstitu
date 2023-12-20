@@ -64,9 +64,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
     #endregion
     public static class MailManager
     {
-        public static MailContentDetailDto CreateMailContentDetailModel(string enstituAdi, string sablonHtml, string sablonAdi, List<MailParameterDto> rpModel)
+        public static MailContentDetailDto CreateMailContentDetailModel(string enstituAdi, string sablonHtml, string sablonAdi, List<MailParameterDto> parameterDtos)
         {
-            rpModel = rpModel ?? new List<MailParameterDto>();
+            parameterDtos = parameterDtos ?? new List<MailParameterDto>();
             var model = new MailContentDetailDto
             {
                 Title = sablonAdi,
@@ -76,7 +76,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             model.Title = model.Title.Replace("{{", "{{_removeRw_");
             var titleStrList = model.Title.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
-            foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in parameterDtos.Where(p => p.Value.IsNullOrWhiteSpace()))
             {
                 titleStrList = titleStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
             }
@@ -87,12 +87,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
             var contentStrList = model.HtmlContent.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
-            foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in parameterDtos.Where(p => p.Value.IsNullOrWhiteSpace()))
             {
                 contentStrList = contentStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
             }
             model.HtmlContent = string.Join("", contentStrList);
-            foreach (var itemRp in rpModel.Where(p => !p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in parameterDtos.Where(p => !p.Value.IsNullOrWhiteSpace()))
             {
                 itemRp.Value = itemRp.Value ?? "";
                 model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
@@ -231,8 +231,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
     }
 
-
-
+ 
 
 
 

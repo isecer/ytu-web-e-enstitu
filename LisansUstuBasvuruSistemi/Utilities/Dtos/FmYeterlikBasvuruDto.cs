@@ -40,6 +40,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EMail { get; set; }
         public string CepTel { get; set; }
         public string ResimAdi { get; set; }
+        public int OgrenimTipKod { get; set; }
         public int AnabilimDaliID { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimDaliAdi { get; set; }

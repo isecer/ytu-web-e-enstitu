@@ -420,7 +420,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", belge.ProgramKod);
             //ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod true), "Value", "Caption", belge.OgrenimTipKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", belge.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", belge.OgrenimDurumID);
             ViewBag.BelgeDilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", belge.BelgeDilKodu);
             ViewBag.MmMessage = mmMessage;
             if (belge.BelgeTalepID > 0)
@@ -674,7 +674,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurum(true, belgeDuzenleYetki, kModel.BelgeTalepID <= 0), "Value", "Caption", kModel.BelgeDurumID);
             ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true, kModel.OgrenimDurumID, enstituKod), "Value", "Caption", kModel.BelgeTipID);
             ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", kModel.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             ViewBag.BelgeDilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", kModel.BelgeDilKodu);
             ViewBag.MmMessage = mmMessage;
             int sayi = 10;

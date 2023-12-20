@@ -112,10 +112,11 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<MezuniyetSureci> MezuniyetSurecis { get; set; }
         public virtual DbSet<MezuniyetSureciKriterMuafOgrenciler> MezuniyetSureciKriterMuafOgrencilers { get; set; }
         public virtual DbSet<MezuniyetSureciOgrenimTipKriterleri> MezuniyetSureciOgrenimTipKriterleris { get; set; }
+        public virtual DbSet<MezuniyetSureciOtoMail> MezuniyetSureciOtoMails { get; set; }
+        public virtual DbSet<MezuniyetSureciOtoMailGonderilenler> MezuniyetSureciOtoMailGonderilenlers { get; set; }
         public virtual DbSet<MezuniyetSureciYayinTurleri> MezuniyetSureciYayinTurleris { get; set; }
         public virtual DbSet<MezuniyetSureciYonetmelikleri> MezuniyetSureciYonetmelikleris { get; set; }
         public virtual DbSet<MezuniyetSureciYonetmelikleriOT> MezuniyetSureciYonetmelikleriOTs { get; set; }
-        public virtual DbSet<MezuniyetSurecOtoMail> MezuniyetSurecOtoMails { get; set; }
         public virtual DbSet<MezuniyetYayinBelgeTurleri> MezuniyetYayinBelgeTurleris { get; set; }
         public virtual DbSet<MezuniyetYayinIndexTurleri> MezuniyetYayinIndexTurleris { get; set; }
         public virtual DbSet<MezuniyetYayinKontrolDurumlari> MezuniyetYayinKontrolDurumlaris { get; set; }
@@ -138,7 +139,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<OzelNotTipleri> OzelNotTipleris { get; set; }
         public virtual DbSet<OzelTarihTipleri> OzelTarihTipleris { get; set; }
         public virtual DbSet<Programlar> Programlars { get; set; }
-        public virtual DbSet<ProgramObsEslestirmeleri> ProgramObsEslestirmeleris { get; set; }
         public virtual DbSet<Roller> Rollers { get; set; }
         public virtual DbSet<Sehirler> Sehirlers { get; set; }
         public virtual DbSet<ServiceLog> ServiceLogs { get; set; }

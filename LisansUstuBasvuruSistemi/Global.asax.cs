@@ -13,9 +13,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using LisansUstuBasvuruSistemi.Utilities.ApplicationTasks;
 
 namespace LisansUstuBasvuruSistemi
 {
@@ -35,11 +37,9 @@ namespace LisansUstuBasvuruSistemi
             RollerBus.Roles = RollerBus.GetAllRoles();
             MenulerBus.Menulers = MenulerBus.GetAllMenu();
 
-            bool otomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
-            if (otomatikMailBilgilendirmeServisiniCalistir)
-            {
-              new ApplicationClock().Start(); 
-            }
+
+            new MailTaskRunner().Start();
+
             ScriptPermissionManager.GlobalInstance = new ScriptPermissionManager(ExecutionMode.Unrestricted);
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Disabled;
             DevExpress.XtraReports.Web.ASPxWebDocumentViewer.StaticInitialize();
@@ -48,11 +48,13 @@ namespace LisansUstuBasvuruSistemi
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
                     | SecurityProtocolType.Tls11
                     | SecurityProtocolType.Tls12
-                    | SecurityProtocolType.Ssl3; 
+                    | SecurityProtocolType.Ssl3;
 
 
             try
             {
+
+
                 //DevExpress.XtraReports.Web.Native.ClientControls.Services.DefaultLoggingService.SetInstance(new MyLoggingService());
             }
             catch
@@ -229,7 +231,7 @@ namespace LisansUstuBasvuruSistemi
         }
 
         private static void Membership_OnRequireUserIdentity(string userName, ref UserIdentity userIdentity)
-        { 
+        {
             userIdentity = UserBus.GetUserIdentity(userName);
         }
         protected void Application_AcquireRequestState(object sender, EventArgs e)
@@ -247,7 +249,7 @@ namespace LisansUstuBasvuruSistemi
                 else
                 {
                     platform = HttpContext.Current.Request.Browser.Platform;
-                }    
+                }
                 var uniqueId = Session["UserId"].ToStrObj();
 
                 if (uniqueId == null) return;
@@ -257,7 +259,7 @@ namespace LisansUstuBasvuruSistemi
                 {
                     var user = UserBus.GetUser();
                     usr.KullaniciId = user.KullaniciID;
-                    usr.UserKey=user.UserKey;
+                    usr.UserKey = user.UserKey;
                     usr.Name = user.Ad + " " + user.Soyad;
                     usr.UserName = user.KullaniciAdi;
                     usr.Platform = platform;

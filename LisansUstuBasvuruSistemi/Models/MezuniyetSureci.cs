@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Models
             this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
             this.MezuniyetSureciKriterMuafOgrencilers = new HashSet<MezuniyetSureciKriterMuafOgrenciler>();
             this.MezuniyetSureciOgrenimTipKriterleris = new HashSet<MezuniyetSureciOgrenimTipKriterleri>();
-            this.MezuniyetSurecOtoMails = new HashSet<MezuniyetSurecOtoMail>();
+            this.MezuniyetSureciOtoMails = new HashSet<MezuniyetSureciOtoMail>();
         }
     
         public int MezuniyetSurecID { get; set; }
@@ -48,6 +48,6 @@ namespace LisansUstuBasvuruSistemi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureciOgrenimTipKriterleri> MezuniyetSureciOgrenimTipKriterleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MezuniyetSurecOtoMail> MezuniyetSurecOtoMails { get; set; }
+        public virtual ICollection<MezuniyetSureciOtoMail> MezuniyetSureciOtoMails { get; set; }
     }
 }

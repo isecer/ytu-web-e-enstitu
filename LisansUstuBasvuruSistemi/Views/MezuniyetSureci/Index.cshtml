@@ -72,6 +72,9 @@
                                                                         <a href="@Url.Action("Kayit", new { id = item.MezuniyetSurecID })"><i class="fa fa-edit"></i>Düzenle</a>
                                                                     </li>
                                                                     <li>
+                                                                        <a href="javascript:void(0)" onclick="GetOtoMailAyarView(@item.MezuniyetSurecID)"><i class="fa fa-cog"></i>Oto Mail Ayarları</a>
+                                                                    </li>
+                                                                    <li>
                                                                         <a href="javascript:void(0)" onclick="GetKriterMuafOgrenciler(@item.MezuniyetSurecID)"><i class="fa fa-group"></i>Kriterden Muaf Tutulanlar</a>
                                                                     </li>
                                                                 }
@@ -156,9 +159,9 @@
                 url: '@Url.Action("GetMsDetail", "MezuniyetSureci")',
                 data: { id: id, tbInx: tID },
                 async: false,
-                success: function (result) { 
+                success: function (result) {
                         $('#cls-ana-' + id).html(result);
-                        subData(id); 
+                        subData(id);
                 },
                 error: function (err) {
                     alert(err.responseText);
@@ -174,7 +177,7 @@
 
         var _panel = $('#pnglDB_' + id);
         var tbName = "@TabAdiEnum.MezuniyetSureciTn-" + id;
-        var tID = GetSelectedTabID(tbName); 
+        var tID = GetSelectedTabID(tbName);
         PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetMsSubData", "MezuniyetSureci")',
@@ -195,16 +198,37 @@
 </script>
 
 <script type="text/javascript">
-      function GetKriterMuafOgrencilerView(id) {
-        var view = "";
+    function GetOtoMailAyarView(id) {
         $.ajax({
-            url: '@Url.Action("KriterMuafOgrenciler")',
+            url: '@Url.Action("GetOtoMailAyarView")',
             data: { id: id },
             async: false,
             success: function (result) {
-                view = result;
+                bootbox.dialog({
+                    message: "<div id='otoMailAyarView'>" + result + "</div>",
+                    title: "Mezuniyet Süreci Otomatik Bilgilendirme Mail Gönderim Ayarları",
+                    buttons: {
+                        danger: {
+                            label: "Kapat",
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
             }
         });
+    }
+      function GetKriterMuafOgrencilerView(id) {
+        var view = "";
+          $.ajax({
+              url: '@Url.Action("KriterMuafOgrenciler")',
+              data: { id: id },
+              async: false,
+              success: function (result) {
+                  view = result;
+              }
+          });
         return view;
     }
     function GetKriterMuafOgrenciler(id) {

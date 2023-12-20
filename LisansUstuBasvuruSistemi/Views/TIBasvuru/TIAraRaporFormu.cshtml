@@ -98,57 +98,15 @@
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-4 control-label">Tez Başlığı Türkçe (*)</label>
                                                 <div class="col-md-9 col-xs-8">
-                                                    <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="512" value="@Model.TezBaslikTr" class="form-control" style="color: black;" />
+                                                    <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="1024" value="@Model.TezBaslikTr" class="form-control" style="color: black;" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-4 control-label">Tez Başlığı İngilizce (*)</label>
                                                 <div class="col-md-9 col-xs-8">
-                                                    <input type="text" name="TezBaslikEn" autocomplete="off" id="TezBaslikEn" maxlength="512" value="@Model.TezBaslikEn" class="form-control" style="color: black;" />
+                                                    <input type="text" name="TezBaslikEn" autocomplete="off" id="TezBaslikEn" maxlength="1024" value="@Model.TezBaslikEn" class="form-control" style="color: black;" />
                                                 </div>
-                                            </div>
-                                            @*<div class="form-group">
-                                                <label class="col-md-3 col-xs-4 control-label">Tez Dili Değişecek mi?</label>
-                                                <div class="col-md-9 col-xs-8">
-                                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                                        <input type="checkbox" value="true" name="IsTezDiliDegisecek" id="IsTezDiliDegisecek" onchange="TezDiliKontrol()" class="toggle" @Model.IsTezDiliDegisecek.ToChecked() />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group YeniTezDiliTr @(Model.IsTezDiliDegisecek ? "" : "hide")">
-                                                <label class="col-md-3 col-xs-4 control-label">Yeni Tez Dili (*)</label>
-                                                <div class="col-md-9 col-xs-8">
-                                                    <select class="form-control" name="YeniTezDiliTr" id="YeniTezDiliTr" onchange="TezDiliKontrol()">
-                                                        <option></option>
-                                                        <option value="true" @(Model.YeniTezDiliTr == true ? "selected" : "")>Türkçe</option>
-                                                        <option value="false" @(Model.YeniTezDiliTr == false ? "selected" : "")>İngilizce</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group DvDil @(Model.IsTezDiliDegisecek && Model.YeniTezDiliTr == false ? "" : "hide")">
-                                                <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                    Dil Sınavı Adı (*)
-                                                </label>
-                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" maxlength="64" name="SinavAdi" value="@Model.SinavAdi" style="width: 100%;" id="SinavAdi" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group DvDil @(Model.IsTezDiliDegisecek && Model.YeniTezDiliTr == false ? "" : "hide")">
-                                                <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                    Dil Sınavı Puanı (*)
-                                                </label>
-                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" maxlength="16" name="SinavPuani" value="@Model.SinavPuani" style="width: 100%;" id="SinavPuani" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group DvDil @(Model.IsTezDiliDegisecek && Model.YeniTezDiliTr == false ? "" : "hide")">
-                                                <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
-                                                    Dil Sınavı Yılı (*)
-                                                </label>
-                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" maxlength="4" name="SinavYili" value="@Model.SinavYili" style="width: 100%;" id="SinavYili" />
-                                                </div>
-                                            </div>*@
+                                            </div> 
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-4 control-label">Tez Başlığı Değişecek mi?</label>
                                                 <div class="col-md-9 col-xs-8">
@@ -160,13 +118,13 @@
                                             <div class="form-group YeniTez @(Model.IsTezBasligiDegisti ? "" : "hide")">
                                                 <label class="col-md-3 col-xs-4 control-label">Yeni Tez Başlığı Türkçe(*)</label>
                                                 <div class="col-md-9 col-xs-8">
-                                                    <input type="text" name="YeniTezBaslikTr" autocomplete="off" id="YeniTezBaslikTr" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control" />
+                                                    <input type="text" name="YeniTezBaslikTr" autocomplete="off" id="YeniTezBaslikTr" maxlength="1024" value="@Model.YeniTezBaslikTr" class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="form-group YeniTez @(Model.IsTezBasligiDegisti ? "" : "hide")">
                                                 <label class="col-md-3 col-xs-4 control-label">Yeni Tez Başlığı İngilizce (*)</label>
                                                 <div class="col-md-9 col-xs-8">
-                                                    <input type="text" name="YeniTezBaslikEn" autocomplete="off" id="YeniTezBaslikEn" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control" />
+                                                    <input type="text" name="YeniTezBaslikEn" autocomplete="off" id="YeniTezBaslikEn" maxlength="1024" value="@Model.YeniTezBaslikEn" class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="form-group YeniTez @(Model.IsTezBasligiDegisti ? "" : "hide")">

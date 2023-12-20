@@ -117,7 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.TDODanismanTalepTipID.HasValue) q = q.Where(p => p.TDODanismanTalepTipID == model.TDODanismanTalepTipID);
             if (model.AktifDurumID.HasValue)
             {
-                if (model.AktifDurumID == TdoDansimanDurumuEnum.DanismanOnayiBekliyor) q = q.Where(p => !p.DanismanOnayladi.HasValue);
+                if (model.AktifDurumID == TdoDansimanDurumuEnum.DanismanOnayiBekliyor) q = q.Where(p =>!p.DanismanOnayladi.HasValue);
                 else if (model.AktifDurumID == TdoDansimanDurumuEnum.DanismanTarafindanOnaylandi) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
                 else if (model.AktifDurumID == TdoDansimanDurumuEnum.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.DanismanOnayladi == false && !p.EYKYaGonderildi.HasValue);
                 else if (model.AktifDurumID == TdoDansimanDurumuEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);

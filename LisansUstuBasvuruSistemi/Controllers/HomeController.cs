@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -19,23 +20,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         public ActionResult Index(string ekd, string mesajGroupId, int? basvuruId, string rowId, bool isMesajGonder = false)
-        {
-
-           
-
-
+        { 
 
             var enstitu = _entities.Enstitulers.First(p => p.EnstituKisaAd.Contains(ekd));
-            var donemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
 
 
-
+           
 
             #region duyurular 
             var q = from s in _entities.Duyurulars
                     join e in _entities.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
                     join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    where s.IsAktif && s.Tarih <= DateTime.Now && (s.YayinSonTarih.HasValue ? s.YayinSonTarih.Value >= DateTime.Now : 1 == 1) && e.EnstituKisaAd.Contains(ekd) && s.AnaSayfadaGozuksun
+                    where s.IsAktif && s.Tarih <= DateTime.Now && (!s.YayinSonTarih.HasValue || s.YayinSonTarih.Value >= DateTime.Now) && e.EnstituKisaAd.Contains(ekd) && s.AnaSayfadaGozuksun
                     select new
                     {
                         s.EnstituKod,

@@ -27,13 +27,13 @@
                     </h3>
                     <ul class="panel-controls">
 
-                        @if (!Model.AktifDonemID.IsNullOrWhiteSpace() && Model.RowCount > 0)
+                        @*@if (!Model.AktifDonemID.IsNullOrWhiteSpace() && Model.RowCount > 0)
                         {
                             <li>
                                 <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
                             </li>
 
-                        }
+                        }*@
                         @if (kyetki)
                         {
                             if (filteredOgrenciIds.Any())

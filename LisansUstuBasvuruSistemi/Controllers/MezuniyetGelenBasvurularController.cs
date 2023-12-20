@@ -1172,7 +1172,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             string view = "";
             var mbjo = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-            var ogrenciInfo = KullanicilarBus.OgrenciKontrol(mb.TcKimlikNo);
+            var ogrenciInfo = KullanicilarBus.OgrenciKontrol(mb.OgrenciNo);
 
             if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent())
             {

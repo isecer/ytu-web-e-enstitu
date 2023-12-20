@@ -1,0 +1,55 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model MezuniyetSureci
+@{
+    Layout = null;
+    var otoMailData = (List<MezuniyetOtoMailDto>)ViewBag.OtoMailData;
+}
+
+<div class="panel" id="otoMailpanel" style="border-top: 1px solid; border-top-color: lightgray; background-color: white; margin-bottom: 8px; padding: 6px 10px; min-height: 20px; max-height: 350px; overflow: auto;">
+    <table class="table table-hover" style="width: 100%;">
+        @if (otoMailData.Any())
+        {
+            var rowIndex = 0;
+            foreach (var otomail in otoMailData)
+            {
+                rowIndex++;
+                <tr>
+                    <td width="20">
+                        <input type="checkbox" value="true" style="width: 14px; height: 14px " id="otoChk_@otomail.OtoMailID" onchange="SetIsAktif(this,@otomail.MezuniyetSureciOtoMailID)" class="toggle" @otomail.IsAktif.ToChecked() />
+
+                    </td>
+                    <td style="cursor:pointer;" onclick="$('#otoChk_@otomail.OtoMailID').click();">@rowIndex) @otomail.Aciklama</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2" style="text-align: center;">Eklenen Öğrenci Yok</td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<script>
+    function SetIsAktif(sndr, mezuniyetSureciOtoMailId) {
+        var _panel = $('#otoMailpanel'); 
+        var isAktif = $(sndr).prop('checked');
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("OtoMailAyarGuncelle", "MezuniyetSureci")',
+            data: { mezuniyetSureciOtoMailId, isAktif },
+            success: function (result) { 
+                toastr[isAktif ? "success" : "warning"]((isAktif ? "Oto mail ayarı aktifleştirildi." :"Oto mail ayarı pasifleştirildi"), "Oto Mail Ayarı Güncelleme");
+                PanelRefresh(_panel, true); 
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(_panel, true);
+            }
+        });
+    }
+</script>

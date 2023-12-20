@@ -248,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (RoleNames.TiGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
             var mmMessage = TiBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.ToNullIntZero());
 
-            var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
+            KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
             kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
@@ -319,6 +319,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemTarihi = DateTime.Now;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
+                  
                     _entities.SaveChanges();
 
 
@@ -1107,7 +1108,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj,  ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                         }
 
 
@@ -1361,7 +1362,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.IsSuccess = false;
                         mmMessage.MessageType = MsgTypeEnum.Error;
                         mmMessage.Messages.Add("İşlem yapılırken bir hata oluştu.");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez izleme toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez izleme toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
                     }
 
                 }
@@ -1641,7 +1642,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
 
             }
@@ -1689,7 +1690,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(araRapor.AraRaporSayisi + ". Rapor sistemden silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
@@ -1703,14 +1704,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [Authorize]
-        public ActionResult DegerlendirmeLinkiGonder(int tiBasvuruId, int tiBasvuruAraRaporId, Guid? uniqueId, string eMail, bool isJuriEmailGuncellensin)
+        public ActionResult DegerlendirmeLinkiGonder(int tiBasvuruId, int tiBasvuruAraRaporId, Guid? uniqueId, string eMail)
         {
             var mMessage = new MmMessage
             {
                 IsSuccess = false,
                 Title = "Tez İzleme Raporu Değerlendirme Linki Gönderme İşlemi"
             };
-            var araRapor = _entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
+            var araRapor = _entities.TIBasvuruAraRapors.First(p => p.TIBasvuruID == tiBasvuruId && p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
             var basvuru = araRapor.TIBasvuru;
             var tiTezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
             if (!tiTezDegerlendirmeDuzeltme && basvuru.TezDanismanID != UserIdentity.Current.Id)
@@ -1741,11 +1742,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (uye == null) mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
                     else
                     {
-                        if (isJuriEmailGuncellensin)
-                        {
-                            uye.EMail = eMail;
-                            _entities.SaveChanges();
-                        }
+                        uye.EMail = eMail;
+                        _entities.SaveChanges();
+
                     }
                 }
                 var messages = TiBus.SendMailTiDegerlendirmeLink(tiBasvuruAraRaporId, uniqueId, true);
@@ -1774,7 +1773,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
-            return new { mMessage, MessageView = strView, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult();
+            return new { mMessage.IsSuccess, messageView = strView}.ToJsonResult();
         }
 
 

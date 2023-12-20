@@ -1,7 +1,7 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
@@ -183,7 +183,7 @@
                                                     <td style="width:30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.MesajID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MesajID)">
+                                                            <li id="iShow_@item.MesajID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MesajID)">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
                                                             </li>
                                                         </ul>
@@ -192,7 +192,7 @@
                                             </table>
                                         </td>
                                         <td>
-                                            @if (item.KullaniciID>0)
+                                            @if (item.KullaniciID > 0)
                                             {
                                                 <table>
                                                     <tr>
@@ -246,7 +246,7 @@
                                             }
                                         </td>
                                         <td>
-                                            <b>@item.Tarih.ToFormatDateAndTime()</b> 
+                                            <b>@item.Tarih.ToFormatDateAndTime()</b>
                                         </td>
                                         <td style="text-align:center;">
                                             <input style="width:18px;height:18px;cursor:pointer;" type="checkbox" @item.IsAktif.ToChecked() onchange="dKayit(this,@item.MesajID)" id="msjCvpDurum_@item.MesajID" />
@@ -293,7 +293,7 @@
 </div>
 <script type="text/javascript">
     function senMx(id, mID) {
-        var _konu = $('#konu_' + mID).val();
+        var _konu = $('#konu_' + mID).val(); 
         mGonder(id, _konu, '', mID);
 
     }
@@ -374,7 +374,6 @@
     }
     function SilmeOnay(sndr, id) {
         var htmlCont = $("#cls-" + id).html();
-        var eks = $("#tdEk_" + id).html();
         var SoruHtml = "<table style='color:maroon;table-layout:fixed;width:100%;'><tr><td width='30' style='padding-left:10px;'><i class='fa fa-info fa-2x'></i></td><td style='padding-right:10px;'>Seçtiğiniz mesaj ile birlikte bu mesaja cevap yazılan tüm mail bilgileri silinecek! <br/>Seçilen Mesajı Silmek İstiyor Musunuz?</td></tr></table>";
         bootbox.dialog({
             message: htmlCont + SoruHtml,

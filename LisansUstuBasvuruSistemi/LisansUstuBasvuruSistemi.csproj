@@ -219,6 +219,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\RouteSet.cs" />
+    <Compile Include="Business\AnketlerBus.cs" />
     <Compile Include="Business\BelgeTalepBus.cs" />
     <Compile Include="Business\DonemlerBus.cs" />
     <Compile Include="Business\EnstituBus.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="Business\MenulerBus.cs" />
     <Compile Include="Business\MesajlarBus.cs" />
     <Compile Include="Business\MezuniyetBus.cs" />
+    <Compile Include="Business\MezuniyetSureciBus.cs" />
     <Compile Include="Business\OgrenimTipleriBus.cs" />
     <Compile Include="Business\RollerBus.cs" />
     <Compile Include="Business\SistemBilgilendirmeBus.cs" />
@@ -249,7 +251,10 @@
     <Compile Include="Controllers\BelgeTipDetayController.cs" />
     <Compile Include="Controllers\BelgeTipleriController.cs" />
     <Compile Include="Controllers\DosyaKontrolController.cs" />
-    <Compile Include="Models\ProgramObsEslestirmeleri.cs">
+    <Compile Include="Models\MezuniyetSureciOtoMail.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MezuniyetSureciOtoMailGonderilenler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.cs">
@@ -263,6 +268,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\ApplicationTasks\MailTaskRunner.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariTezDosyalariDto.cs" />
     <Compile Include="Controllers\TdoAyarlarController.cs" />
     <Compile Include="Controllers\TdoBasvuruController.cs" />
@@ -607,9 +613,6 @@
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MezuniyetSureciYonetmelikleriOT.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MezuniyetSurecOtoMail.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MezuniyetYayinBelgeTurleri.cs">
@@ -1157,7 +1160,6 @@
     <Compile Include="Utilities\Helpers\StaticDefinitions.cs" />
     <Compile Include="Utilities\Helpers\UrlInfoHelper.cs" />
     <Compile Include="Utilities\Helpers\ViewRenderHelper.cs" />
-    <Compile Include="Models\ApplicationClock.cs" />
     <Compile Include="Utilities\SystemSetting\BelgeTalepAyar.cs" />
     <Compile Include="Utilities\Helpers\DevexpressHelper.cs" />
     <Compile Include="Utilities\Logs\LogIslemleri.cs" />
@@ -1168,7 +1170,6 @@
     <Compile Include="Utilities\SystemSetting\TdoAyar.cs" />
     <Compile Include="Utilities\SystemSetting\TiAyar.cs" />
     <Compile Include="Utilities\SystemSetting\MezuniyetAyar.cs" />
-    <Compile Include="Models\OSYMBinding.cs" />
     <Compile Include="Models\YokApi\ServiceManager.cs" />
     <Compile Include="Models\YokApi\YokdilDataModel.cs" />
     <Compile Include="Utilities\SystemSetting\SistemAyar.cs" />
@@ -5581,6 +5582,7 @@
     <Content Include="Views\MezuniyetSureci\GetMsTezKontrolBilgileri.cshtml" />
     <Content Include="Views\SRGelenTalepler\GetDetail.cshtml" />
     <Content Include="Views\Mezuniyet\DegerlendirmeJuriView.cshtml" />
+    <Content Include="Views\MezuniyetSureci\GetOtoMailAyarView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

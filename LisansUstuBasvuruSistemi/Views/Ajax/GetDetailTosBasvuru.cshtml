@@ -568,7 +568,16 @@
                         {
                             <table style="width:100%;table-layout:fixed;">
                                 <tr>
-                                    <td style="color:maroon;font-size:13pt; text-align:center;height:250px;">Herhangi bir Rapor girişi bulunamadı</td>
+                                    <td style="color:maroon;font-size:13pt; text-align:center;height:250px;">
+                                        <div class="tasks">
+                                            <div class="task-item task-danger" style="margin-bottom: 0px; cursor: auto;">
+                                                <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                    Herhangi Bir Tez Öneri Savunma Başvurusu Bulunamadı.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
                                 </tr>
                             </table>
                         }
@@ -900,7 +909,7 @@
                                                                                                     {
                                                                                                         <textarea placeholder="Tez Önerisi Savunma Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
                                                                                                     }
-                                                                                                    else if(!itemJr.Aciklama.IsNullOrWhiteSpace())
+                                                                                                    else if (!itemJr.Aciklama.IsNullOrWhiteSpace())
                                                                                                     {
                                                                                                         <b>Açıklama:</b> @itemJr.Aciklama
                                                                                                     }
@@ -1221,15 +1230,13 @@
                                  callback: function (event) {
                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                      PanelRefresh(pnlx, false);
-                                     var eMail = $('#EMail_' + tosKomiteUniqueId).val();
-                                     var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + tosKomiteUniqueId).val();
+                                     var eMail = $('#EMail_' + tosKomiteUniqueId).val(); 
                                      $.ajax({
                                          url: '@Url.Action("DegerlendirmeLinkiGonder", "TosBasvuru")',
                                          data: {
                                              'tosUniqueId': tosUniqueId,
                                              'tosKomiteUniqueId': tosKomiteUniqueId,
-                                             'eMail': eMail,
-                                             'IsJuriEmailGuncellensin': IsJuriEmailGuncellensin
+                                             'eMail': eMail 
                                          },
                                          success: function (result) {
                                              PanelRefresh(pnlx, true);

@@ -39,8 +39,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1254" />
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-9" />
     <meta http-equiv="Content-Type" content="text/html; charset=x-mac-turkish" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
     <meta name="description" content="Yıldız Teknik Üniversitesi @selectedEnstitu.EnstituAd Online Başvuru Sistemi. Sıkça Sorulan Sorular, Tez Danışman Öneri / Konu / Başlık Değişiklik işlemleri, Yeterlik İşlemleri, Tez izleme işlemleri ve Mezuniyet işlemleri için web sitesini ziyarete edin.">
 
 
@@ -1098,7 +1099,9 @@
             });
 
         }
-        function mesGdialogShow(result,_type){
+        function mesGdialogShow(result, _type) {
+            var isShowMsgMailDialog = $('.isShowMsgMailDialog').length > 0; 
+            if (!isShowMsgMailDialog)
             var btbx = bootbox.dialog({
                 message: result,
                 title: 'Dilek / Öneri / Şikayet',
@@ -1155,6 +1158,7 @@
             });
             $(btbx).removeAttr("tabindex");
             $(btbx).find('.modal-dialog').addClass('modal-lg');
+            $(btbx).find('.modal-dialog').addClass('isShowMsgMailDialog');
             $(btbx).find('.modal-body').addClass('padding-0');
         }
     </script>
@@ -1252,6 +1256,10 @@
 
             }
             function mGdialogShow(result, msID, RowID, BasvuruID) {
+
+                var isShowMsgMailDialog = $('.isShowMsgMailDialog').length > 0; 
+                if (!isShowMsgMailDialog)
+
                 var btbx2 = bootbox.dialog({
                     message: result,
                     title: "Mail Gönderme İşlemi",
@@ -1312,6 +1320,7 @@
                 });
                 $(btbx2).removeAttr("tabindex");
                 $(btbx2).find('.modal-dialog').addClass('modal-lg');
+                $(btbx2).find('.modal-dialog').addClass('isShowMsgMailDialog');
                 $(btbx2).find('.modal-body').addClass('padding-0');
             }
         </script>

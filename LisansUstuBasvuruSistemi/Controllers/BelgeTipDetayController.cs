@@ -140,7 +140,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  GunNos = g1.Where(p => p.TalepBaslangicSaat == g1.Key.TalepBaslangicSaat && p.TalepBitisSaat == g1.Key.TalepBitisSaat && p.TeslimBaslangicSaat == g1.Key.TeslimBaslangicSaat && p.TeslimBitisSaat == g1.Key.TeslimBitisSaat && p.EklenecekGun == g1.Key.EklenecekGun).Select(s2 => new CmbIntDto { Value = s2.HaftaGunID, Caption = s2.HaftaGunAdi }).OrderByDescending(o => o.Value > 0).ThenBy(t => t.Value.Value).ToList()
                              }).OrderBy(t => t.GunNos.Min(m => m.Value)).ThenBy(t => t.TalepBaslangicSaat).ToList();
 
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             return View(model);
         }
         [HttpPost]
@@ -311,7 +311,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.HaftaGunleri = haftaGunleri;
             ViewBag.BelgeTipleriList = BelgeTalepBus.GetCmbBelgeTipleri(false);
             ViewBag.MmMessage = mmMessage;
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             return View(kModel);
         }
 

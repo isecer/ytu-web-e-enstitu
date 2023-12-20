@@ -5,7 +5,7 @@
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var kmMzOtoMail = (List<KmMzOtoMail>)ViewBag.kmMzOtoMail;
+    var kmMzOtoMail = (List<MezuniyetOtoMailDto>)ViewBag.kmMzOtoMail;
     var isYonetmelikKopyala = (bool?)ViewBag.IsYonetmelikKopyala;
 }
 
@@ -49,43 +49,12 @@
                                     </table>
 
                                 </div>
-                            </div>
-                           
-                           
+                            </div> 
                             <div class="form-group">
                                 <div class="col-md-12 col-xs-12" id="_otBilgi">
                                     @{Html.RenderPartial("GetOtBilgiM", Model.OgrenimTipModel);}
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-5 control-label">Başvurlara Otomatik Mail Gönderme</label>
-                                <div class="col-md-9 col-xs-7">
-                                    <table class="table" style="width:100%;table-layout:fixed;">
-
-                                        <tbody>
-                                            @foreach (var item in kmMzOtoMail)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        <div class="checkbox pull-left">
-                                                            <label>
-                                                                <input type="checkbox" class="icheckbox" name="gID" value="@(item.gID)" @item.Checked.ToChecked()>
-                                                                @item.Aciklama
-
-                                                            </label>
-                                                        </div>
-                                                        <input type="hidden" class="form-control" name="MezuniyetSurecOtoMailID" value="@(item.gID + "_" + item.MezuniyetSurecOtoMailID)">
-                                                        <input type="hidden" class="form-control" name="MailSablonTipID" value="@(item.gID + "_" + item.MailSablonTipID)">
-                                                        <input type="hidden" class="form-control" name="ZamanTipID" value="@(item.gID + "_" + item.ZamanTipID)">
-                                                        <input type="hidden" class="form-control" name="Zaman" value="@(item.gID + "_" + item.Zaman)">
-
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            </div> 
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-5 control-label">Bezcilt Oluşturulurken İstenen Anket</label>
                                 <div class="col-md-9 col-xs-7">

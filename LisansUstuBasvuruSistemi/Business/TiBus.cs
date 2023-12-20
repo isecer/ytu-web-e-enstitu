@@ -26,17 +26,30 @@ namespace LisansUstuBasvuruSistemi.Business
             {
 
                 var basvuru = db.TIBasvurus.First(p => p.TIBasvuruID == tiBasvuruId);
+
+                if (!basvuru.TezDanismanID.HasValue || basvuru.TezDanismanID.Value <= 0)
+                {
+                    var ogrenci = basvuru.Kullanicilar;
+                    if (ogrenci.YtuOgrencisi && basvuru.OgrenciNo == ogrenci.OgrenciNo &&
+                        basvuru.ProgramKod == ogrenci.ProgramKod)
+                    {
+                        basvuru.TezDanismanID = ogrenci.DanismanID;
+                        db.SaveChanges();
+                    }
+                }
+
                 var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
 
                 var eslesenDanisman = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == (basvuru.TezDanismanID ?? 0));
                 if (eslesenDanisman != null)
                 {
-                    model.TezDanismaniUserKey = eslesenDanisman.UserKey;
+                    model.TezDanismaniUserKey = eslesenDanisman.UserKey; 
                     var unvanAdi = eslesenDanisman.Unvanlar != null ? eslesenDanisman.Unvanlar.UnvanAdi : "";
                     model.TezDanismanBilgiEslesen = unvanAdi + " " + eslesenDanisman.Ad + " " + eslesenDanisman.Soyad;
                 }
                 else
                 {
+                    model.TezDanismanID = null;
                     model.TezDanismanBilgiEslesen = "Sistemde eşleşen tez danışmanı bulunamadı.";
                 }
                 model.TIBasvuruAraRaporList = basvuru.TIBasvuruAraRapors.Where(p => !uniqueId.HasValue || p.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == uniqueId)).Select(s => new TiBasvuruAraRaporDto

@@ -31,6 +31,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int MezTezSinavSonucuSistemeGirilmedi = 12;
         public const int MezCiltliTezTeslimYapilmali = 13;
         public const int MezCiltliTezTeslimYapilmadi = 14;
+        public const int MezBasvuruTaslakHalinde = 15;
         public const int GelenIlkMesajOtoCvpMaili = 55;
         public const int MezYayinSartiSaglandiDanisman = 60;
         public const int MezYayinSartiSaglandiOgrenciYl = 61;

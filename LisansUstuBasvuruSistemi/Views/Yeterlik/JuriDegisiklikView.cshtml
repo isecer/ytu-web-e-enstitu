@@ -22,7 +22,10 @@
                             <select id="JuriDegisiklikSekli_@Model.UniqueID" onchange="DuzeltmeSekiKontrol('@Model.UniqueID')" class="form-control">
                                 <option value=""></option>
                                 <option value="true">E-Posta düzeltmesi</option>
-                                <option value="false">Jüri yerine yeni jüri seçimi</option>
+                                @if (Model.JuriTipAdi != "TezDanismani")
+                                {
+                                    <option value="false">Jüri yerine yeni jüri seçimi</option>
+                                }
                             </select>
                         </td>
                     </tr>
@@ -33,7 +36,7 @@
                             <input maxlength="128" class="form-control" id="JuriEMail_@Model.UniqueID" value="@Model.EMail">
                         </td>
                     </tr>
-                    <tr id="YeniJuriRw_@Model.UniqueID"  class="hide">
+                    <tr id="YeniJuriRw_@Model.UniqueID" class="hide">
                         <td class="CaptionTd">Yeni Jüri Seçimi</td>
                         <td class="CaptionTd">:</td>
                         <td class="ValueTd">
@@ -45,8 +48,16 @@
         </tr>
     </table>
 </div>
+<div class="tasks">
+    <div class="task-item task-warning" style="margin-bottom: 0px; cursor: auto;">
+        <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+            Jüri E-Posta bilgisi değiştirilirse ve henüz değerlendirme yapmamışsa yeni E-Postaya değerlendirme linki gönderilecektir.
+            <br />Jüri değişikliği yapılırsa varolan jüri değerlendirmesi iptal edilecek ve yeni seçilen jüriye değerlendirme linki gönderilecektir.
+        </div>
+    </div>
+</div>
 <script>
-    function DuzeltmeSekiKontrol(id) { 
+    function DuzeltmeSekiKontrol(id) {
         var dVal = $('#JuriDegisiklikSekli_' + id).val();
         if (dVal == "") {
             $('#JuriEpostaRw_' + id).addClass('hide');
@@ -60,6 +71,6 @@
             $('#JuriEpostaRw_' + id).addClass('hide');
             $('#YeniJuriRw_' + id).removeClass('hide');
         }
-    } 
+    }
 </script>
 
