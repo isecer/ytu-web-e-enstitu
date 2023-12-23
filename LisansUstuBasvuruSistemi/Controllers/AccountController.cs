@@ -857,56 +857,56 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var data = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
-                    data.EnstituKod = kModel.EnstituKod;
-                    if (erisimYetki) data.YetkiGrupID = kModel.YetkiGrupID;
-                    data.KullaniciTipID = kModel.KullaniciTipID;
-                    data.Ad = kModel.Ad;
-                    data.Soyad = kModel.Soyad;
-                    data.TcKimlikNo = kModel.TcKimlikNo;
-                    data.CinsiyetID = kModel.CinsiyetID;
-                    data.CepTel = kModel.CepTel;
-                    data.EMail = kModel.EMail;
-                    data.Adres = kModel.Adres;
-                    if (data.EMail != kModel.EMail.Trim() && (data.KullaniciTipID == KullaniciTipiEnum.YerliOgrenci || data.KullaniciTipID == KullaniciTipiEnum.YabanciOgrenci)) data.KullaniciAdi = kModel.EMail.Trim();
-                    data.YtuOgrencisi = kModel.YtuOgrencisi;
-                    data.OgrenimDurumID = kModel.OgrenimDurumID;
-                    data.OgrenimTipKod = kModel.OgrenimTipKod;
-                    data.OgrenciNo = kModel.OgrenciNo;
-                    data.ProgramKod = kModel.ProgramKod;
-                    data.KayitTarihi = kModel.KayitTarihi;
-                    data.KayitYilBaslangic = kModel.KayitYilBaslangic;
-                    data.KayitDonemID = kModel.KayitDonemID;
+                    var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
+                    kullanici.EnstituKod = kModel.EnstituKod;
+                    if (erisimYetki) kullanici.YetkiGrupID = kModel.YetkiGrupID;
+                    kullanici.KullaniciTipID = kModel.KullaniciTipID;
+                    kullanici.Ad = kModel.Ad;
+                    kullanici.Soyad = kModel.Soyad;
+                    kullanici.TcKimlikNo = kModel.TcKimlikNo;
+                    kullanici.CinsiyetID = kModel.CinsiyetID;
+                    kullanici.CepTel = kModel.CepTel;
+                    kullanici.EMail = kModel.EMail;
+                    kullanici.Adres = kModel.Adres;
+                    if (kullanici.EMail != kModel.EMail.Trim() && (kullanici.KullaniciTipID == KullaniciTipiEnum.YerliOgrenci || kullanici.KullaniciTipID == KullaniciTipiEnum.YabanciOgrenci)) kullanici.KullaniciAdi = kModel.EMail.Trim();
+                    kullanici.YtuOgrencisi = kModel.YtuOgrencisi;
+                    kullanici.OgrenimDurumID = kModel.OgrenimDurumID;
+                    kullanici.OgrenimTipKod = kModel.OgrenimTipKod;
+                    kullanici.OgrenciNo = kModel.OgrenciNo;
+                    kullanici.ProgramKod = kModel.ProgramKod;
+                    kullanici.KayitTarihi = kModel.KayitTarihi;
+                    kullanici.KayitYilBaslangic = kModel.KayitYilBaslangic;
+                    kullanici.KayitDonemID = kModel.KayitDonemID;
 
-                    data.BirimID = kModel.BirimID;
-                    data.UnvanID = kModel.UnvanID;
-                    data.SicilNo = kModel.SicilNo;
+                    kullanici.BirimID = kModel.BirimID;
+                    kullanici.UnvanID = kModel.UnvanID;
+                    kullanici.SicilNo = kModel.SicilNo;
 
                     if (RoleNames.KullanicilarKayit.InRoleCurrent())
                     {
-                        data.KullaniciAdi = kModel.KullaniciAdi;
+                        kullanici.KullaniciAdi = kModel.KullaniciAdi;
                         if (!kModel.Sifre.IsNullOrWhiteSpace())
-                            data.Sifre = kModel.Sifre.ComputeHash(Management.Tuz);
-                        data.SifresiniDegistirsin = kModel.SifresiniDegistirsin;
-                        data.Aciklama = kModel.Aciklama;
-                        data.IsActiveDirectoryUser = kModel.IsActiveDirectoryUser;
+                            kullanici.Sifre = kModel.Sifre.ComputeHash(Management.Tuz);
+                        kullanici.SifresiniDegistirsin = kModel.SifresiniDegistirsin;
+                        kullanici.Aciklama = kModel.Aciklama;
+                        kullanici.IsActiveDirectoryUser = kModel.IsActiveDirectoryUser;
                         if (UserIdentity.Current.IsAdmin)
                         {
-                            data.IsAdmin = kModel.IsAdmin;
+                            kullanici.IsAdmin = kModel.IsAdmin;
                         }
-                        data.IsAktif = kModel.IsAktif;
+                        kullanici.IsAktif = kModel.IsAktif;
                     }
-                    data.ResimAdi = kModel.ResimAdi;
-                    data.IslemYapanID = kModel.IslemYapanID;
-                    data.IslemTarihi = kModel.IslemTarihi;
-                    data.IslemYapanIP = kModel.IslemYapanIP;
-                    if (data.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = data.ResimAdi.ToKullaniciResim(); }
+                    kullanici.ResimAdi = kModel.ResimAdi;
+                    kullanici.IslemYapanID = kModel.IslemYapanID;
+                    kullanici.IslemTarihi = kModel.IslemTarihi;
+                    kullanici.IslemYapanIP = kModel.IslemYapanIP;
+                    if (kullanici.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = kullanici.ResimAdi.ToKullaniciResim(); }
                     _entities.SaveChanges();
-                    messageModel.Messages.Add("'" + data.Ad + " " + data.Soyad + "' Kullanıcı hesabı güncellendi.");
+                    messageModel.Messages.Add("'" + kullanici.Ad + " " + kullanici.Soyad + "' Kullanıcı hesabı güncellendi.");
                     messageModel.IsCloseDialog = true;
                     messageModel.IsSuccess = true;
                     messageModel.MessageType = MsgTypeEnum.Success;
-                    LogIslemleri.LogEkle("Kullanicilar", LogCrudType.Update, data.ToJson());
+                    LogIslemleri.LogEkle("Kullanicilar", LogCrudType.Update, kullanici.ToJson());
                 }
             }
             else

@@ -1179,29 +1179,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mRowModel.Add(new MailTableRowDto { Baslik = "Şifre Sıfırlama Linki", Aciklama = "<a target='_blank' href='" + mailBilgi.SistemErisimAdresi + "/Account/ParolaSifirla?psKod=" + guid + "'>Şifrenizi sıfırlamak için tıklayınız</a>" });
                         mRowModel.Add(new MailTableRowDto { Baslik = "Link Geçerlilik Tarihi", Aciklama = "Yukarıdaki link '" + gecerlilikTarihi.ToFormatDateAndTime() + "' tarihine kadar geçerlidir." });
 
-                        var mmmC = new MailMainContentDto
-                        {
-                            EnstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod).EnstituAd,
-                            UniversiteAdi = "Yıldız Teknik Üniversitesi"
-                        };
                         var sistemErisimAdresi = mailBilgi.SistemErisimAdresi;
                         var wurlAddr = sistemErisimAdresi.Split('/').ToList();
                         if (sistemErisimAdresi.Contains("//"))
                             sistemErisimAdresi = wurlAddr[0] + "//" + wurlAddr.Skip(2).Take(1).First();
                         else
                             sistemErisimAdresi = "http://" + wurlAddr.First();
-                        mmmC.LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-                        var mtc = new MailTableContentDto
-                        {
-                            AciklamaBasligi = "Şifre Sıfırlama İşlemi",
-                            AciklamaDetayi = "Şifrenizi sıfırlamak için aşağıda bulunan linke tıklayınız ve açılan sayfa da yeni şifrenizi tanımlayınız.",
-                            Detaylar = mRowModel
-                        };
-                        var tavleContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
-                        mmmC.Content = tavleContent;
 
+                        var mmmC = new MailMainContentDto
+                        {
+                            EnstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod).EnstituAd,
+                            UniversiteAdi = "Yıldız Teknik Üniversitesi",
+                            WebAdresi = mailBilgi.WebAdresi,
+                            Content = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent",
+                                        new MailTableContentDto
+                                        {
+                                            AciklamaBasligi = "Şifre Sıfırlama İşlemi",
+                                            AciklamaDetayi =  "Şifrenizi sıfırlamak için aşağıda bulunan linke tıklayınız ve açılan sayfa da yeni şifrenizi tanımlayınız.",
+                                            Detaylar = mRowModel
+                                        }),
+                            LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png"
+
+                        };
                         var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                        var eMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true } };
+                        var eMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true, KullaniciId = kul.KullaniciID } };
                         var rtVal = MailManager.SendMailRetVal(kul.EnstituKod, "Şifre Sıfırlama İşlemi", htmlMail, eMailList, null);
                         if (rtVal == null)
                         {
@@ -1332,7 +1333,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        public ActionResult GetAnket(KmAnketlerCevap model)
+        public ActionResult GetAnket()
         {
             return View();
         }
@@ -1578,7 +1579,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         }
 
-        public ActionResult GetAnketCevap(FrAnketDetayDto model)
+        public ActionResult GetAnketCevap()
         {
             return View();
         }
@@ -1634,7 +1635,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     isSuccess = false;
                 }
-                
+
                 var sgun = gunL.FirstOrDefault(p => p.Value == dofW);
                 if (sgun != null && isSuccess == false) gunL.Remove(sgun);
             }
@@ -2293,7 +2294,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    eklenen.SonMesajTarihi = eklenen.Mesajlar1.Any() ? eklenen.Mesajlar1.OrderByDescending(s2 => s2.Tarih).FirstOrDefault().Tarih : eklenen.Tarih;
+                    eklenen.SonMesajTarihi = eklenen.Mesajlar1.Any() ? eklenen.Mesajlar1.OrderByDescending(s2 => s2.Tarih).First().Tarih : eklenen.Tarih;
                     eklenen.ToplamEkSayisi = (eklenen.MesajEkleris.Count + eklenen.Mesajlar1.Sum(s => s.MesajEkleris.Count) + eklenen.GonderilenMaillers.Sum(s => s.GonderilenMailEkleris.Count));
                 }
                 _entities.SaveChanges();
@@ -2301,39 +2302,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (mesajId <= 0 && groupId.IsNullOrWhiteSpace())
                 {
-                    var sablon = _entities.MailSablonlaris.FirstOrDefault(p => p.EnstituKod == mesajKategorisi.EnstituKod && p.MailSablonTipID == MailSablonTipiEnum.GelenIlkMesajOtoCvpMaili && p.IsAktif == true);
-                    if (sablon != null)
+                    var item = new SablonMailModel
                     {
-                        var itemE = sablon.Enstituler;
-                        var enstituL = sablon.Enstituler;
-                        var mailParameterDtos = new List<MailParameterDto>();
-                        var parametreler = sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
+                        Sablon = _entities.MailSablonlaris.FirstOrDefault(p => p.EnstituKod == mesajKategorisi.EnstituKod && p.MailSablonTipID == MailSablonTipiEnum.GelenIlkMesajOtoCvpMaili && p.IsAktif == true)
+                    };
+                    if (item.Sablon != null)
+                    {
+                        var enstitu = item.Sablon.Enstituler; 
+                        item.EnstituAdi = enstitu.EnstituAd;
+                        item.WebAdresi = enstitu.WebAdresi;
 
-                        if (parametreler.Any(a => a == "@EnstituAdi"))
-                            mailParameterDtos.Add(new MailParameterDto { Key = "EnstituAdi", Value = enstituL.EnstituAd });
-                        if (parametreler.Any(a => a == "@WebAdresi"))
-                            mailParameterDtos.Add(new MailParameterDto { Key = "WebAdresi", Value = itemE.WebAdresi, IsLink = true });
-                        if (parametreler.Any(a => a == "@AdSoyad"))
-                            mailParameterDtos.Add(new MailParameterDto { Key = "AdSoyad", Value = kModel.AdSoyad });
-                        var eMailList = new List<MailSendList> { new MailSendList { EMail = kModel.Email, ToOrBcc = true } };
-                        if (sablon.GonderilecekEkEpostalar.IsNullOrWhiteSpace() == false)
-                            eMailList.AddRange(sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }).ToList());
-                        var contentDetailDto = MailManager.CreateMailContentDetailModel(enstituL.EnstituAd, sablon.SablonHtml, sablon.SablonAdi, mailParameterDtos);
-                        var attach = new List<Attachment>();
-                        foreach (var item in sablon.MailSablonlariEkleris)
-                        {
-                            var ekTamYol = Server.MapPath("~" + item.EkDosyaYolu);
-                            if (System.IO.File.Exists(ekTamYol))
-                            {
-                                var fExtension = Path.GetExtension(ekTamYol);
-                                attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.EkAdi.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
-                            }
-                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Uyarı);
-                        }
+                        item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.CustomSplit();
+                        item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
+                        item.EMails.Add(new MailSendList { EMail = kModel.Email, ToOrBcc = true });
+                        item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
 
+                        if (item.SablonParametreleri.Any(a => a == "@EnstituAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "EnstituAdi", Value = enstitu.EnstituAd });
+                        if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
+                        if (item.SablonParametreleri.Any(a => a == "@AdSoyad"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AdSoyad", Value = kModel.AdSoyad });
+
+                        var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         try
                         {
-                            var snded = MailManager.SendMail(itemE.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, eMailList, attach);
+                            var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
                         }
                         catch (Exception e)
                         {
@@ -2464,7 +2458,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             XtraReport rprX = null;
             if (raporTipi.HasValue == false)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Rapor almak için rapor tipinin gönderilmesi gerekmektedir!", "Ajax/GetDxReport", LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Rapor almak için rapor tipinin gönderilmesi gerekmektedir!", ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Hata);
             }
             else
             {
@@ -2789,7 +2783,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     #endregion
                 }
-
                 else if (raporTipi == RaporTipiEnum.BasvuruSonucSayisal)
                 {
                     #region BasvuruSonucSayisal
@@ -3010,7 +3003,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                      SiraNo = ss.SiraNo,
                                                                      SecenekAdi = ss.SecenekAdi,
                                                                      IsEkAciklamaGir = ss.IsEkAciklamaGir,
-                                                                     Count = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).Count(),
+                                                                     Count = cevaplar.Count(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID),
                                                                      AnketCevaplaris = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).ToList(),
 
                                                                  }
@@ -3068,7 +3061,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                         }
                         var t2 = DateTime.Now;
-                        var ts = (t2 - t1).TotalSeconds;
                         var rpr = new RprAnket(enstitu.EnstituAd, anket.AnketAdi, basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki anket sonuçları");
                         rpr.DataSource = qModel;
                         rpr.DisplayName = basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki " + anket.AnketAdi + " anket sonuçları";
@@ -3101,7 +3093,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var ilkTeslim = Request["IlkTeslim"].ToBooleanObj() ?? false;
                     var uniqueId = new Guid(Request["UniqueID"]);
-                    var rpr = new RprMezuniyetTezTeslimFormu_FR0338(uniqueId, ilkTeslim);
+                    var mezuniyetBasvuru = _entities.MezuniyetBasvurularis.First(f => f.RowID == uniqueId);
+                    var rpr = new RprMezuniyetTezTeslimFormu_FR0338(mezuniyetBasvuru.MezuniyetBasvurulariID, ilkTeslim);
 
                     rprX = rpr;
 
@@ -3111,7 +3104,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var uniqueId = new Guid(Request["UniqueID"]);
                     var srTalebi = _entities.SRTalepleris.First(p => p.UniqueID == uniqueId);
                     var mezuniyetBasvurusu = srTalebi.MezuniyetBasvurulari;
-                    var rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(uniqueId);
+                    var rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(srTalebi.SRTalepID);
                     rpr.CreateDocument();
                     if (mezuniyetBasvurusu.TezDanismanID == UserIdentity.Current.Id || RoleNames.MezuniyetGelenBasvurularSrTalebiYap.InRoleCurrent())
                     {
@@ -3246,7 +3239,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (raporTipi == RaporTipiEnum.TezIzlemeJuriOneriFormu)
                 {
-                    var id = Request["UniqueID"].ToString();
+                    var id = Request["UniqueID"];
                     var uniqueId = new Guid(id);
                     var rapor = _entities.TijBasvuruOneris.FirstOrDefault(p => p.UniqueID == uniqueId);
                     var kul = rapor.TijBasvuru.Kullanicilar;
@@ -3256,7 +3249,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var rpr = new RprTijOneriFormu_FR0306(rapor.TijBasvuruOneriID);
                         rpr.CreateDocument();
                         rpr.DisplayName = kul.Ad + " " + kul.Soyad + " " + rpr.DisplayName;
-
                         rprX = rpr;
 
                     }
@@ -3265,7 +3257,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var rpr = new RprTijDegisiklikFormu_FR1460(rapor.TijBasvuruOneriID);
                         rpr.CreateDocument();
                         rpr.DisplayName = kul.Ad + " " + kul.Soyad + " " + rpr.DisplayName;
-
                         rprX = rpr;
                     }
 
@@ -3278,14 +3269,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 rprX.ExportToPdf(ms);
                 rprX.ExportOptions.Pdf.Compressed = true;
                 ms.Seek(0, System.IO.SeekOrigin.Begin);
-
-
                 Response.AddHeader("Content-Disposition", "inline;filename=\"" + rprX.DisplayName + ".pdf\"");
                 return new FileStreamResult(ms, "application/pdf");
 
 
             }
-            else return View(rprX);
+            return View(rprX);
         }
 
 

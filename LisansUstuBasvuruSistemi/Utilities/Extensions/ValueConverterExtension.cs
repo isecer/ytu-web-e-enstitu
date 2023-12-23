@@ -178,7 +178,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         #region Datetime Convert
         public static string ToFormatTime(this TimeSpan? time)
         {
-            time = time ?? TimeSpan.MinValue; 
+            time = time ?? TimeSpan.MinValue;
             return time.ToFormatTime();
         }
         public static string ToFormatTime(this TimeSpan time)
@@ -271,6 +271,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return defaultDate;
         }
         #endregion
+
+
+        public static List<string> CustomSplit(this string input, char separator = ',')
+        {
+            if (input.IsNullOrWhiteSpace()) return new List<string>();
+            return input.Split(separator).Where(p => !p.IsNullOrWhiteSpace()).Select(s => s.Trim()).ToList();
+        }
         public static bool IsNullOrEmpty(this string @string)
         {
             return string.IsNullOrEmpty(@string);

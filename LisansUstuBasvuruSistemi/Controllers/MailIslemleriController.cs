@@ -30,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmMailGondermeDto model)
         {
-            var q = from s in _entities.GonderilenMaillers.Where(p => model.Aciklama != null && model.Aciklama.Trim() != "" ? p.Aciklama.Contains(model.Aciklama) : true)
+            var q = from s in _entities.GonderilenMaillers.Where(p => model.Aciklama == null || model.Aciklama.Trim() == "" || p.Aciklama.Contains(model.Aciklama))
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                     where s.Silindi == false && UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
@@ -247,7 +247,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var fExtension = Path.GetExtension(ekTamYol);
                     attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.mDosyaAdi.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
                 }
-                MailManager.SendMail(eklenen.GonderilenMailID, kModel.Konu, kModel.AciklamaHtml, mailList.Select(s => new MailSendList { EMail = s.Email, ToOrBcc = true }).ToList(), attach);
+                MailManager.SendMail(eklenen.GonderilenMailID, kModel.Konu, kModel.AciklamaHtml, mailList.Select(s => new MailSendList { EMail = s.Email,KullaniciId =s.KullaniciID, ToOrBcc = true }).ToList(), attach);
                 return RedirectToAction("Index");
             }
             else
@@ -320,7 +320,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult TekrarGonder(int id)
         {
             var gm = _entities.GonderilenMaillers.FirstOrDefault(p => p.GonderilenMailID == id);
-            var eMailList = gm.GonderilenMailKullanicilars.Select(s => new MailSendList { EMail = s.Email, ToOrBcc = true }).ToList();
+            var eMailList = gm.GonderilenMailKullanicilars.Select(s => new MailSendList { EMail = s.Email,KullaniciId =s.KullaniciID, ToOrBcc = true }).ToList();
             var gEk = gm.GonderilenMailEkleris.ToList();
             var attach = new List<Attachment>();
             foreach (var item in gEk)

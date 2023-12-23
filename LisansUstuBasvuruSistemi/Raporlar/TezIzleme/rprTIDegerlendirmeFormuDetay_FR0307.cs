@@ -7,14 +7,14 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
 {
     public partial class RprTiDegerlendirmeFormuDetay_FR0307 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprTiDegerlendirmeFormuDetay_FR0307(int id)
+        public RprTiDegerlendirmeFormuDetay_FR0307(int tiBasvuruAraRaporId)
         {
             InitializeComponent();
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = (from s in db.TIBasvuruAraRapors
-                            where s.TIBasvuruAraRaporID == id
+                            where s.TIBasvuruAraRaporID == tiBasvuruAraRaporId
                             select new
                             {
                                 s.IsYokDrBursiyeriVar,

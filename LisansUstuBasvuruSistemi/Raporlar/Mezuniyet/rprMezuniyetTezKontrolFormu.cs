@@ -10,13 +10,13 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
     public partial class RprMezuniyetTezKontrolFormu : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprMezuniyetTezKontrolFormu(Guid? rowId, int? mezuniyetBasvurulariTezDosyaId)
+        public RprMezuniyetTezKontrolFormu(Guid? tezDosyalariRowId, int? mezuniyetBasvurulariTezDosyaId)
         {
             InitializeComponent();
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var mezuniyetBasvurulariTezDosyasi = db.MezuniyetBasvurulariTezDosyalaris.First(p => p.RowID == (rowId ?? p.RowID) && p.MezuniyetBasvurulariTezDosyaID == (mezuniyetBasvurulariTezDosyaId ?? p.MezuniyetBasvurulariTezDosyaID));
+                var mezuniyetBasvurulariTezDosyasi = db.MezuniyetBasvurulariTezDosyalaris.First(p => p.RowID == (tezDosyalariRowId ?? p.RowID) && p.MezuniyetBasvurulariTezDosyaID == (mezuniyetBasvurulariTezDosyaId ?? p.MezuniyetBasvurulariTezDosyaID));
                 var basvuru = mezuniyetBasvurulariTezDosyasi.MezuniyetBasvurulari;
                 var enstituLng = basvuru.MezuniyetSureci.Enstituler;
                 lblEnstituAdi.Text = enstituLng.EnstituAd;

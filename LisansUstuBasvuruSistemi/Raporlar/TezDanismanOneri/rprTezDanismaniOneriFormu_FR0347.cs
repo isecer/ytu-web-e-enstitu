@@ -8,7 +8,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 {
     public partial class RprTezDanismaniOneriFormu_FR0347 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprTezDanismaniOneriFormu_FR0347(int id)
+        public RprTezDanismaniOneriFormu_FR0347(int tdoBasvuruDanismanId)
         {
             InitializeComponent();
 
@@ -16,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             {
                 this.DisplayName = "FR-0347 TEZ DANIŞMANI ÖNERİ FORMU";
 
-                var q = (from s in db.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID == id)
+                var q = (from s in db.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId)
                          join b in db.TDOBasvurus on s.TDOBasvuruID equals b.TDOBasvuruID
                          join k in db.Kullanicilars on b.KullaniciID equals k.KullaniciID
                          join e in db.Enstitulers on b.EnstituKod equals e.EnstituKod 

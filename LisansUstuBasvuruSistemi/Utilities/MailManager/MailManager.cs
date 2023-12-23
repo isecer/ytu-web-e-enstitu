@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading;
+using System.Web;
 using BiskaUtil;
+using HtmlAgilityPack;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -21,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
         public string LogoPath { get; set; }
         public string UniversiteAdi { get; set; }
         public string EnstituAdi { get; set; }
+        public string WebAdresi { get; set; }
         public string Content { get; set; }
 
     }
@@ -44,6 +50,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
     }
     public class MailSendList
     {
+        public int? KullaniciId { get; set; }
         public string EMail { get; set; }
         public bool ToOrBcc { get; set; }
     }
@@ -64,35 +71,37 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
     #endregion
     public static class MailManager
     {
-        public static MailContentDetailDto CreateMailContentDetailModel(string enstituAdi, string sablonHtml, string sablonAdi, List<MailParameterDto> parameterDtos)
+        public static long AttachmentMaxFileSize => (25 * 1024 * 1024); //25 MB 
+        public static MailContentDetailDto CreateMailContentDetailModel(SablonMailModel mailItem)
         {
-            parameterDtos = parameterDtos ?? new List<MailParameterDto>();
             var model = new MailContentDetailDto
             {
-                Title = sablonAdi,
-                HtmlContent = sablonHtml
+
+                Title = mailItem.Sablon.SablonAdi,
+                HtmlContent = mailItem.Sablon.SablonHtml
             };
+
+          
 
             model.Title = model.Title.Replace("{{", "{{_removeRw_");
             var titleStrList = model.Title.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
-            foreach (var itemRp in parameterDtos.Where(p => p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in mailItem.MailParameterDtos.Where(p => p.Value.IsNullOrWhiteSpace()))
             {
                 titleStrList = titleStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
             }
             model.Title = string.Join("", titleStrList);
 
-
             model.HtmlContent = model.HtmlContent.Replace("{{", "{{_removeRw_");
 
             var contentStrList = model.HtmlContent.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
-            foreach (var itemRp in parameterDtos.Where(p => p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in mailItem.MailParameterDtos.Where(p => p.Value.IsNullOrWhiteSpace()))
             {
                 contentStrList = contentStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
             }
             model.HtmlContent = string.Join("", contentStrList);
-            foreach (var itemRp in parameterDtos.Where(p => !p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in mailItem.MailParameterDtos.Where(p => !p.Value.IsNullOrWhiteSpace()))
             {
                 itemRp.Value = itemRp.Value ?? "";
                 model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
@@ -101,12 +110,37 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmmC = new MailMainContentDto
             {
                 UniversiteAdi = "Yıldız Teknik Üniversitesi",
-                EnstituAdi = enstituAdi,
+                EnstituAdi = mailItem.EnstituAdi,
                 LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png",
-                Content = model.HtmlContent.Replace("_removeRw_", "")
+                Content = model.HtmlContent.Replace("_removeRw_", ""),
+                WebAdresi = mailItem.WebAdresi
             };
             model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
 
+            if (mailItem.SablonEkleri.Any())
+            {
+                var doc = new HtmlDocument();
+                doc.LoadHtml(model.HtmlContent);
+
+                // Belirli bir elementin id bilgisine göre seçim
+                HtmlNode targetElement = doc.DocumentNode.SelectSingleNode("//td[@id='mSendContent']");
+
+                // Element bulunursa ve içine eklenecek HTML'i belirle
+                if (targetElement != null)
+                {
+                    var yeniHtml = "<br/><div><strong><u>İlgili Ekler:</u></strong>";
+                    foreach (var itemEk in mailItem.SablonEkleri)
+                    {
+                        yeniHtml += "</br><a href='" + mailItem.SistemErisimAdresi.Replace("/fbe", "").Replace("/sbe", "").Replace("/tet", "") + itemEk.EkDosyaYolu + "' target='_blank'>" + itemEk.EkAdi + "<a>";
+                    }
+                    yeniHtml += "</div></br>";
+
+                    // Yeni HTML'i ekleyerek hedef elementi güncelle
+                    var yeniDugum = doc.CreateTextNode(yeniHtml);
+                    targetElement.InnerHtml += yeniHtml;
+                    model.HtmlContent = doc.DocumentNode.OuterHtml;
+                }
+            }
 
             return model;
 
@@ -187,6 +221,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
         public static bool SendMail(string enstituKod, string konu, string icerik, List<MailSendList> eMails, List<Attachment> attachs)
         {
 
+            if (attachs != null && attachs.Any()) attachs = MailReportAttachment.CopyAttachments(attachs);
             var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKod);
             var emailAdresi = mailBilgi.SmtpMailAdresi;
             var name = mailBilgi.SmtpKullaniciAdi;
@@ -227,11 +262,55 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             return true;
 
 
-        } 
+        }
+
+
+        public static List<Attachment> GetFileToAttachment(this List<MailSablonlariEkleri> mailSablonlariEkleris)
+        {
+            var attachments = new List<Attachment>();
+            foreach (var itemEk in mailSablonlariEkleris)
+            {
+                var ekTamYol = HttpContext.Current.Server.MapPath("~" + itemEk.EkDosyaYolu);
+                if (File.Exists(ekTamYol))
+                {
+                    var fExtension = Path.GetExtension(ekTamYol);
+                    attachments.Add(new Attachment(new MemoryStream(File.ReadAllBytes(ekTamYol)),
+                        itemEk.EkAdi.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
+                }
+                else SistemBilgilendirmeBus.SistemBilgisiKaydet("Dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemEk.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Uyarı, null, "::");
+
+            }
+            return attachments;
+        }
+
+        public static List<MailSendList> ToSplitEmailSendList(this string emailsString, bool toOrBcc = false)
+        {
+            if (emailsString.IsNullOrWhiteSpace()) return new List<MailSendList>();
+            return emailsString.Split(',').Where(p => !p.IsNullOrWhiteSpace())
+                .Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = toOrBcc }).ToList();
+        }
+
+        //public static List<MailSablonlariEkleri> GetFileSizeControl(this List<MailSablonlariEkleri> files,
+        //    List<Attachment> attachments)
+        //{ 
+        //    var fileSizes = files.Select((file, inx) => new { inx, file, fileSize = file.EkDosyaYolu.GetFileSize() })
+        //        .OrderBy(o => o.fileSize).ToList();
+
+        //    var attachmentsSize = attachments.Sum(s => s.ContentStream.Length);
+        //    //Boyutuna göre sıralanmış dosyaları indexe göre önceki dosya boyutları ile ve attahc olarak eklenen doysa boyutu ile topla
+        //    var fileMaxSizeSort = fileSizes.Select(s => new
+        //    {
+        //        s.file,
+        //        s.fileSize,
+        //        beforeIndexSumSize = attachmentsSize + fileSizes.Where(p => p.inx <= s.inx).Sum(sm => sm.fileSize)
+        //    }).ToList();
+        //    //Sıralamaya göre maximum dosya gönderme boyutu aşmayan dosyaları al
+        //    return fileMaxSizeSort.Where(p => p.beforeIndexSumSize <= AttachmentMaxFileSize).Select(s => s.file).ToList();
+        //}
 
     }
 
- 
+
 
 
 

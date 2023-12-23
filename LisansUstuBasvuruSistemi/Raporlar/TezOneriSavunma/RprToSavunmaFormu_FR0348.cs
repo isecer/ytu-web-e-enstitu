@@ -9,7 +9,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
 {
     public partial class RprToSavunmaFormu_FR0348 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprToSavunmaFormu_FR0348(int id)
+        public RprToSavunmaFormu_FR0348(int toBasvuruSavunmaId)
         {
             InitializeComponent();
 
@@ -24,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                             join e in db.Enstitulers on mb.EnstituKod equals e.EnstituKod
                             join prg in db.Programlars on mb.ProgramKod equals prg.ProgramKod
                             join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                            where s.ToBasvuruSavunmaID == id
+                            where s.ToBasvuruSavunmaID == toBasvuruSavunmaId
                             select new
                             {
                                 k.OgrenciNo,

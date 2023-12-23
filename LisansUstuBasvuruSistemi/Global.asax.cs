@@ -30,6 +30,7 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
+            
             //RollerBus.UpdateRoles();
             //MenulerBus.UpdateMenus();
 
@@ -50,19 +51,7 @@ namespace LisansUstuBasvuruSistemi
                     | SecurityProtocolType.Tls12
                     | SecurityProtocolType.Ssl3;
 
-
-            try
-            {
-
-
-                //DevExpress.XtraReports.Web.Native.ClientControls.Services.DefaultLoggingService.SetInstance(new MyLoggingService());
-            }
-            catch
-            {
-                // ignored
-            }
-
-
+ 
             var captchaManager = (DefaultCaptchaManager)CaptchaUtils.CaptchaManager;
             captchaManager.CharactersFactory = () => "my characters";
             captchaManager.PlainCaptchaPairFactory = length =>

@@ -107,8 +107,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
                     join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, e.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
-                    join pr in _entities.Programlars on k.ProgramKod equals pr.ProgramKod
-                    join ab in _entities.AnabilimDallaris on k.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
+                    join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
+                    join ab in _entities.AnabilimDallaris on s.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
                     join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
                     join ard in _entities.TIBasvuruAraRapors on s.AktifTIBasvuruAraRaporID equals ard.TIBasvuruAraRaporID into defard
                     from ard in defard.DefaultIfEmpty()

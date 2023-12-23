@@ -11,7 +11,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
     public partial class RprMezuniyetTezTeslimFormu_FR0338 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprMezuniyetTezTeslimFormu_FR0338(Guid rowId, bool ilkTeslimOrIkinciTeslim = true)
+        public RprMezuniyetTezTeslimFormu_FR0338(int mezuniyetBasvurulariId, bool ilkTeslimOrIkinciTeslim = true)
         {
             InitializeComponent();
 
@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
 
 
-                var mBasvuru = db.MezuniyetBasvurularis.Where(p => p.RowID == rowId).First();
+                var mBasvuru = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                 var enstL = mBasvuru.MezuniyetSureci.Enstituler;
                 var prgL = mBasvuru.Programlar;
                 var abdL = mBasvuru.Programlar.AnabilimDallari;

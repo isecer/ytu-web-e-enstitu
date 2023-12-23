@@ -9,7 +9,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
 {
     public partial class RprTijDegisiklikFormu_FR1460 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprTijDegisiklikFormu_FR1460(int id)
+        public RprTijDegisiklikFormu_FR1460(int tijBasvuruOneriId)
         {
             InitializeComponent();
 
@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                             join e in db.Enstitulers on mb.EnstituKod equals e.EnstituKod
                             join prg in db.Programlars on mb.ProgramKod equals prg.ProgramKod
                             join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                            where s.TijBasvuruOneriID == id
+                            where s.TijBasvuruOneriID == tijBasvuruOneriId
                             select new
                             {
                                 mb.KullaniciID,
@@ -63,7 +63,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 rwTaahhut.Visible = !data.IsTezDiliTr;
 
 
-                var oncekibasvuru = db.TijBasvuruOneris.Where(p => p.TijBasvuruOneriID != id &&
+                var oncekibasvuru = db.TijBasvuruOneris.Where(p => p.TijBasvuruOneriID != tijBasvuruOneriId &&
                     p.TijBasvuru.KullaniciID == data.KullaniciID &&
                     (p.IsObsData || p.EYKDaOnaylandi == true)).OrderByDescending(o => o.TijBasvuruOneriID).First();
                 var oncekiJuriler = data.Juriler.Where(p => !p.IsYeniOrOnceki).ToList();

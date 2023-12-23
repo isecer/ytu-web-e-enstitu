@@ -893,7 +893,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             contentBilgi.Detaylar = htmlBigliRow;
 
             var mmmC = new MailMainContentDto();
-            var enstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == enstituKodu).EnstituAd;
+            var enstitu = _entities.Enstitulers.First(p => p.EnstituKod == enstituKodu);
+            var enstituAdi = enstitu.EnstituAd;
             mmmC.EnstituAdi = enstituAdi;
             mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
             var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKodu);
@@ -906,6 +907,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mmmC.LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
             var hcb = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
             mmmC.Content = hcb;
+            mmmC.WebAdresi = enstitu.WebAdresi;
             string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
             MailManager.SendMail(mailBilgi.EnstituKod, konu, htmlMail, kModel.Email, null);
         }

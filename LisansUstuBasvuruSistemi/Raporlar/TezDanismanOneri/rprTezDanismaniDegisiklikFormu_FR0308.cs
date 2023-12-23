@@ -9,7 +9,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 {
     public partial class RprTezDanismaniDegisiklikFormu_FR0308 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprTezDanismaniDegisiklikFormu_FR0308(int id)
+        public RprTezDanismaniDegisiklikFormu_FR0308(int tdoBasvuruDanismanId)
         {
             InitializeComponent();
 
@@ -17,10 +17,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             {
                 DisplayName = "FR-0308 TEZ DANIŞMANI KONU DİL DEĞİŞİKLİK FORMU";
 
-                var basvuru = db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == id);
+                var basvuru = db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
 
 
-                var q = (from s in db.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID == id)
+                var q = (from s in db.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId)
                          join b in db.TDOBasvurus on s.TDOBasvuruID equals b.TDOBasvuruID
                          join k in db.Kullanicilars on b.KullaniciID equals k.KullaniciID
                          join e in db.Enstitulers on b.EnstituKod equals e.EnstituKod

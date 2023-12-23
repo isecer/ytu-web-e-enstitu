@@ -733,7 +733,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // checkboxx
             // 
             this.checkboxx.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.checkboxx.Checked = true; 
+            this.checkboxx.CheckBoxState = DevExpress.XtraPrinting.CheckBoxState.Checked;
+            this.checkboxx.Checked = true;
             this.checkboxx.LocationFloat = new DevExpress.Utils.PointFloat(1.999992F, 14.0303F);
             this.checkboxx.Name = "checkboxx";
             this.checkboxx.SizeF = new System.Drawing.SizeF(134.0566F, 19.0799F);
@@ -1700,7 +1701,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell9.StylePriority.UseTextAlignment = false;
             this.xrTableCell9.Text = "Level";
             this.xrTableCell9.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell9.Weight = 0.50833762176253316D;
+            this.xrTableCell9.Weight = 0.50833762176253317D;
             // 
             // cellOgrenciOgrenimSeviyesi
             // 
@@ -1730,7 +1731,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell11.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableCell11.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable3});
-            this.xrTableCell11.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
+            this.xrTableCell11.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {
+            new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell11.Multiline = true;
             this.xrTableCell11.Name = "xrTableCell11";
             this.xrTableCell11.StylePriority.UseBorders = false;
@@ -1900,7 +1902,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell76.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
             this.xrTableCell76.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable36});
-            this.xrTableCell76.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
+            this.xrTableCell76.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {
+            new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell76.Name = "xrTableCell76";
             this.xrTableCell76.StylePriority.UseBackColor = false;
             this.xrTableCell76.StylePriority.UseBorders = false;
@@ -1908,7 +1911,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell76.StylePriority.UseTextAlignment = false;
             this.xrTableCell76.Text = "Öğrenci No. ";
             this.xrTableCell76.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell76.Weight = 1.0359263329576478D;
+            this.xrTableCell76.Weight = 1.0977694244785379D;
             // 
             // xrTable36
             // 
@@ -1932,7 +1935,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell77
             // 
-            this.xrTableCell77.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
+            this.xrTableCell77.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {
+            new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell77.Name = "xrTableCell77";
             this.xrTableCell77.StylePriority.UseFont = false;
             this.xrTableCell77.StylePriority.UseTextAlignment = false;
@@ -1964,7 +1968,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell79.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable38});
-            this.xrTableCell79.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
+            this.xrTableCell79.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {
+            new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell79.Name = "xrTableCell79";
             this.xrTableCell79.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
             this.xrTableCell79.StylePriority.UseBackColor = false;
@@ -1974,12 +1979,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell79.StylePriority.UseTextAlignment = false;
             this.xrTableCell79.Text = "xrTableCell63";
             this.xrTableCell79.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell79.Weight = 1.8311560256979966D;
+            this.xrTableCell79.Weight = 1.6368262174730095D;
             // 
             // xrTable38
             // 
             this.xrTable38.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTable38.LocationFloat = new DevExpress.Utils.PointFloat(80.78583F, 3.60251F);
+            this.xrTable38.LocationFloat = new DevExpress.Utils.PointFloat(66.78583F, 3.60251F);
             this.xrTable38.Name = "xrTable38";
             this.xrTable38.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow73,
@@ -1998,7 +2003,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell80
             // 
-            this.xrTableCell80.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
+            this.xrTableCell80.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {
+            new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell80.Name = "xrTableCell80";
             this.xrTableCell80.StylePriority.UseFont = false;
             this.xrTableCell80.StylePriority.UseTextAlignment = false;
@@ -2030,7 +2036,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell82.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable39});
-            this.xrTableCell82.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
+            this.xrTableCell82.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {
+            new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell82.Multiline = true;
             this.xrTableCell82.Name = "xrTableCell82";
             this.xrTableCell82.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
@@ -2041,12 +2048,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell82.StylePriority.UseTextAlignment = false;
             this.xrTableCell82.Text = "xrTableCell82";
             this.xrTableCell82.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell82.Weight = 0.8683592708590907D;
+            this.xrTableCell82.Weight = 1.0008459875631877D;
             // 
             // xrTable39
             // 
             this.xrTable39.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTable39.LocationFloat = new DevExpress.Utils.PointFloat(3F, 3.602539F);
+            this.xrTable39.LocationFloat = new DevExpress.Utils.PointFloat(17F, 3.602539F);
             this.xrTable39.Name = "xrTable39";
             this.xrTable39.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow75,
@@ -2065,7 +2072,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell83
             // 
-            this.xrTableCell83.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
+            this.xrTableCell83.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {
+            new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell83.Name = "xrTableCell83";
             this.xrTableCell83.StylePriority.UseFont = false;
             this.xrTableCell83.StylePriority.UseTextAlignment = false;
@@ -2113,7 +2121,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell74.StylePriority.UsePadding = false;
             this.xrTableCell74.StylePriority.UseTextAlignment = false;
             this.xrTableCell74.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell74.Weight = 1.0359263329576478D;
+            this.xrTableCell74.Weight = 1.0977694244785379D;
             // 
             // xrTableCell94
             // 
@@ -2130,7 +2138,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell94.StylePriority.UsePadding = false;
             this.xrTableCell94.StylePriority.UseTextAlignment = false;
             this.xrTableCell94.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell94.Weight = 1.8311560256979966D;
+            this.xrTableCell94.Weight = 1.6368262174730095D;
             // 
             // xrTableCell104
             // 
@@ -2146,8 +2154,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell104.StylePriority.UseFont = false;
             this.xrTableCell104.StylePriority.UsePadding = false;
             this.xrTableCell104.StylePriority.UseTextAlignment = false;
-            this.xrTableCell104.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell104.Weight = 0.8683592708590907D;
+            this.xrTableCell104.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.xrTableCell104.Weight = 1.0008459875631877D;
             // 
             // xrTableRow77
             // 
@@ -2172,7 +2180,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell105.StylePriority.UsePadding = false;
             this.xrTableCell105.StylePriority.UseTextAlignment = false;
             this.xrTableCell105.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell105.Weight = 1.0359263329576478D;
+            this.xrTableCell105.Weight = 1.0977694244785379D;
             // 
             // xrTableCell106
             // 
@@ -2189,7 +2197,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell106.StylePriority.UsePadding = false;
             this.xrTableCell106.StylePriority.UseTextAlignment = false;
             this.xrTableCell106.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell106.Weight = 1.8311560256979966D;
+            this.xrTableCell106.Weight = 1.6368262174730095D;
             // 
             // xrTableCell107
             // 
@@ -2205,8 +2213,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell107.StylePriority.UseFont = false;
             this.xrTableCell107.StylePriority.UsePadding = false;
             this.xrTableCell107.StylePriority.UseTextAlignment = false;
-            this.xrTableCell107.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell107.Weight = 0.8683592708590907D;
+            this.xrTableCell107.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.xrTableCell107.Weight = 1.0008459875631877D;
             // 
             // xrTableRow81
             // 
@@ -2231,7 +2239,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell116.StylePriority.UsePadding = false;
             this.xrTableCell116.StylePriority.UseTextAlignment = false;
             this.xrTableCell116.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell116.Weight = 1.0359263329576478D;
+            this.xrTableCell116.Weight = 1.0977694244785379D;
             // 
             // xrTableCell117
             // 
@@ -2248,7 +2256,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell117.StylePriority.UsePadding = false;
             this.xrTableCell117.StylePriority.UseTextAlignment = false;
             this.xrTableCell117.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell117.Weight = 1.8311560256979966D;
+            this.xrTableCell117.Weight = 1.6368262174730095D;
             // 
             // xrTableCell118
             // 
@@ -2264,8 +2272,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell118.StylePriority.UseFont = false;
             this.xrTableCell118.StylePriority.UsePadding = false;
             this.xrTableCell118.StylePriority.UseTextAlignment = false;
-            this.xrTableCell118.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell118.Weight = 0.8683592708590907D;
+            this.xrTableCell118.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.xrTableCell118.Weight = 1.0008459875631877D;
             // 
             // xrTableRow78
             // 
@@ -2290,7 +2298,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell108.StylePriority.UsePadding = false;
             this.xrTableCell108.StylePriority.UseTextAlignment = false;
             this.xrTableCell108.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell108.Weight = 1.0359263329576478D;
+            this.xrTableCell108.Weight = 1.0977694244785379D;
             // 
             // xrTableCell111
             // 
@@ -2307,7 +2315,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell111.StylePriority.UsePadding = false;
             this.xrTableCell111.StylePriority.UseTextAlignment = false;
             this.xrTableCell111.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell111.Weight = 1.8311560256979966D;
+            this.xrTableCell111.Weight = 1.6368262174730095D;
             // 
             // xrTableCell112
             // 
@@ -2323,8 +2331,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell112.StylePriority.UseFont = false;
             this.xrTableCell112.StylePriority.UsePadding = false;
             this.xrTableCell112.StylePriority.UseTextAlignment = false;
-            this.xrTableCell112.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell112.Weight = 0.8683592708590907D;
+            this.xrTableCell112.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.xrTableCell112.Weight = 1.0008459875631877D;
             // 
             // xrTableRow80
             // 
@@ -2349,7 +2357,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell113.StylePriority.UsePadding = false;
             this.xrTableCell113.StylePriority.UseTextAlignment = false;
             this.xrTableCell113.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell113.Weight = 1.0359263329576478D;
+            this.xrTableCell113.Weight = 1.0977694244785379D;
             // 
             // xrTableCell114
             // 
@@ -2366,7 +2374,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell114.StylePriority.UsePadding = false;
             this.xrTableCell114.StylePriority.UseTextAlignment = false;
             this.xrTableCell114.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell114.Weight = 1.8311560256979966D;
+            this.xrTableCell114.Weight = 1.6368262174730095D;
             // 
             // xrTableCell115
             // 
@@ -2382,8 +2390,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell115.StylePriority.UseFont = false;
             this.xrTableCell115.StylePriority.UsePadding = false;
             this.xrTableCell115.StylePriority.UseTextAlignment = false;
-            this.xrTableCell115.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell115.Weight = 0.8683592708590907D;
+            this.xrTableCell115.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.xrTableCell115.Weight = 1.0008459875631877D;
             // 
             // xrTable29
             // 
@@ -3857,11 +3865,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.detRepGenelSonuc,
             this.DetailReport2});
             this.Borders = DevExpress.XtraPrinting.BorderSide.Left;
-            this.Margins = new DevExpress.Drawing.DXMargins(40, 36, 98, 32);
+            this.Margins = new DevExpress.Drawing.DXMargins(40F, 36F, 98F, 32F);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
-            this.Version = "21.1";
+            this.Version = "23.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).EndInit();

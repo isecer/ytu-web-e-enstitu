@@ -126,6 +126,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         mmmC.LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
                         var hcb = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
                         mmmC.Content = hcb;
+                        mmmC.WebAdresi = mailBilgi.WebAdresi;
                         string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var emailSend = MailManager.SendMail(mailBilgi.EnstituKod, "Talep İşleminiz Hk.", htmlMail, talep.EMail, null);
 

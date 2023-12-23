@@ -106,14 +106,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 bbModel.Enstitü = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
                 bbModel.Kullanici = kul;
             }
-            #endregion 
-            var nowDate = DateTime.Now;
+            #endregion
+
+ 
             var q = from s in _entities.ToBasvurus.Where(p => !model.IsDegerlendirme.HasValue || p.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaKomites.Any(a2 => a2.UniqueID == model.IsDegerlendirme)))
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
                     join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, e.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
-                    join pr in _entities.Programlars on k.ProgramKod equals pr.ProgramKod
-                    join ab in _entities.AnabilimDallaris on k.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
+                    join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
+                    join ab in _entities.AnabilimDallaris on s.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
                     join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
                     let ard = _entities.ToBasvuruSavunmas.Where(p => p.ToBasvuruID == s.ToBasvuruID).OrderByDescending(ot => ot.ToBasvuruSavunmaID).FirstOrDefault()
                     where s.EnstituKod == enstituKod && s.KullaniciID == (model.IsDegerlendirme.HasValue ? s.KullaniciID : model.KullaniciID.Value)
@@ -149,6 +150,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             IsOyBirligiOrCoklugu = ard.IsOyBirligiOrCoklugu
                         },
                     };
+
 
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();

@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
 {
     public partial class RprDrYeterlikSinavDegerlendirmeFormu_FR1227 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprDrYeterlikSinavDegerlendirmeFormu_FR1227(int id)
+        public RprDrYeterlikSinavDegerlendirmeFormu_FR1227(int yeterlikBasvuruId)
         {
             InitializeComponent();
 
@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             {
                 DisplayName = "FR-1227 DOKTORA YETERLİK SINAVI DEĞERLENDİRME FORMU";
 
-                var q = (from s in db.YeterlikBasvurus.Where(p => p.YeterlikBasvuruID == id)
+                var q = (from s in db.YeterlikBasvurus.Where(p => p.YeterlikBasvuruID == yeterlikBasvuruId)
                          join bs in db.YeterlikSurecis on s.YeterlikSurecID equals bs.YeterlikSurecID
                          join ogrenci in db.Kullanicilars on s.KullaniciID equals ogrenci.KullaniciID
                          join e in db.Enstitulers on s.YeterlikSureci.EnstituKod equals e.EnstituKod
@@ -146,7 +146,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
                 {
                     tblJuris.Rows[item.inx + 1].Cells[0].Text = item.s.UnvanAdi + "\r\n" + item.s.AdSoyad;
                     tblJuris.Rows[item.inx + 1].Cells[1].Text = item.s.AnabilimDaliAdi + "\r\n" + item.s.UniversiteAdi;
-                    tblJuris.Rows[item.inx + 1].Cells[2].Text = "";
+                    tblJuris.Rows[item.inx + 1].Cells[2].Text = item.s.DegerlendirmeTarihi.ToFormatDateAndTime() + "\r\nTarihinde Elektronik Olarak Onaylandı";
                 }
 
 

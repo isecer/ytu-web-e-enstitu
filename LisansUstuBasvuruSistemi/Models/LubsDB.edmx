@@ -2462,11 +2462,11 @@
           <Property Name="IsTezDiliTr" Type="bit" Nullable="false" />
           <Property Name="IsTezDiliDegisecek" Type="bit" Nullable="false" />
           <Property Name="YeniTezDiliTr" Type="bit" />
-          <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="1024" Nullable="false" />
-          <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="1024" Nullable="false" />
+          <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="512" Nullable="false" />
+          <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="512" Nullable="false" />
           <Property Name="IsTezBasligiDegisti" Type="bit" Nullable="false" />
-          <Property Name="YeniTezBaslikTr" Type="nvarchar" MaxLength="1024" />
-          <Property Name="YeniTezBaslikEn" Type="nvarchar" MaxLength="1024" />
+          <Property Name="YeniTezBaslikTr" Type="nvarchar" MaxLength="512" />
+          <Property Name="YeniTezBaslikEn" Type="nvarchar" MaxLength="512" />
           <Property Name="TezBasligiDegisimGerekcesi" Type="nvarchar" MaxLength="512" />
           <Property Name="SinavAdi" Type="nvarchar" MaxLength="64" />
           <Property Name="SinavPuani" Type="nvarchar" MaxLength="16" />
@@ -12840,11 +12840,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IsTezDiliTr" Type="Boolean" Nullable="false" />
           <Property Name="IsTezDiliDegisecek" Type="Boolean" Nullable="false" />
           <Property Name="YeniTezDiliTr" Type="Boolean" />
-          <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
-          <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="IsTezBasligiDegisti" Type="Boolean" Nullable="false" />
-          <Property Name="YeniTezBaslikTr" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
-          <Property Name="YeniTezBaslikEn" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="YeniTezBaslikTr" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="YeniTezBaslikEn" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="TezBasligiDegisimGerekcesi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="SinavAdi" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="SinavPuani" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Text;
-using BiskaUtil;
+using System.IO;
+using System.Linq;
+using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
-   public  static class FileExtension
+    public static class FileExtension
     {
         public static List<string> FExtensions()
         {
@@ -36,6 +34,18 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             fileName = fileName.Replace(extension, "_" + nGuid).ReplaceSpecialCharacter() + extension;
             fileName = fileName.Replace("+", "_");
             return fileName;
+        }
+
+        public static long GetFileSize(this string path)
+        {
+            path = HttpContext.Current.Server.MapPath("~" + path);
+            if (!File.Exists(path)) return 0;
+            return new FileInfo(path).Length;
+        }
+        public static long GetFileSize(this List<string> paths)
+        { 
+            var filesSize = paths.Select(s => new { path = s, fileSize = s.GetFileSize() }).ToList();
+            return filesSize.Sum(s => s.fileSize);
         }
     }
 }

@@ -40,149 +40,149 @@ namespace LisansUstuBasvuruSistemi.Controllers
             switch (kodArr[0])
             {
                 case "MBB":
-                {
-                    var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.FirstOrDefault(p => p.RowID == rowId);
-                    if (mezuniyetBasvurusu != null)
                     {
-                        RprMezuniyetYayinSartiOnayiFormu rpr = new RprMezuniyetYayinSartiOnayiFormu(mezuniyetBasvurusu.MezuniyetBasvurulariID);
-                        rpr.DisplayName = "Mezuniyet Başvuru Bilgisi";
-                        rpr.PrintingSystem.ContinuousPageNumbering = true;
-                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
-                        rprX = rpr;
-                    }
+                        var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.FirstOrDefault(p => p.RowID == rowId);
+                        if (mezuniyetBasvurusu != null)
+                        {
+                            RprMezuniyetYayinSartiOnayiFormu rpr = new RprMezuniyetYayinSartiOnayiFormu(mezuniyetBasvurusu.MezuniyetBasvurulariID);
+                            rpr.DisplayName = "Mezuniyet Başvuru Bilgisi";
+                            rpr.PrintingSystem.ContinuousPageNumbering = true;
+                            rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
+                            rprX = rpr;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "MBBBC":
-                {
-                    var srTalepleriBezCiltFormu = _entities.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(p => p.RowID == rowId && p.MezuniyetBasvurulariTezTeslimFormID == tid);
-                    if (srTalepleriBezCiltFormu != null)
                     {
-                        RprMezuniyetCiltliTezTeslimFormu_FR1243 rpr = new RprMezuniyetCiltliTezTeslimFormu_FR1243(srTalepleriBezCiltFormu.MezuniyetBasvurulariTezTeslimFormID);
-                        rpr.PrintingSystem.ContinuousPageNumbering = true;
-                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
-                        rprX = rpr;
-                    }
+                        var srTalepleriBezCiltFormu = _entities.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(p => p.RowID == rowId && p.MezuniyetBasvurulariTezTeslimFormID == tid);
+                        if (srTalepleriBezCiltFormu != null)
+                        {
+                            RprMezuniyetCiltliTezTeslimFormu_FR1243 rpr = new RprMezuniyetCiltliTezTeslimFormu_FR1243(srTalepleriBezCiltFormu.MezuniyetBasvurulariTezTeslimFormID);
+                            rpr.PrintingSystem.ContinuousPageNumbering = true;
+                            rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
+                            rprX = rpr;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "MZTTF":
-                {
-                    var mb = _entities.MezuniyetBasvurularis.FirstOrDefault(p => p.TezTeslimUniqueID == rowId && p.MezuniyetBasvurulariID == tid);
-                    if (mb != null)
                     {
+                        var mb = _entities.MezuniyetBasvurularis.FirstOrDefault(p => p.TezTeslimUniqueID == rowId && p.MezuniyetBasvurulariID == tid);
+                        if (mb != null)
+                        {
 
-                        RprMezuniyetTezTeslimFormu_FR0338 rpr = new RprMezuniyetTezTeslimFormu_FR0338(mb.RowID, kodArr[3].ToInt(0) == 1);
-                        rpr.PrintingSystem.ContinuousPageNumbering = true;
-                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
-                        rprX = rpr;
+                            RprMezuniyetTezTeslimFormu_FR0338 rpr = new RprMezuniyetTezTeslimFormu_FR0338(mb.MezuniyetBasvurulariID, kodArr[3].ToInt(0) == 1);
+                            rpr.PrintingSystem.ContinuousPageNumbering = true;
+                            rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
+                            rprX = rpr;
+                        }
+
+                        break;
                     }
-
-                    break;
-                }
                 case "MZTSS":
-                {
-                    var srTalepAny = _entities.SRTalepleris.Any(p => p.UniqueID == rowId);
-                    if (srTalepAny)
                     {
+                        var srTalep = _entities.SRTalepleris.FirstOrDefault(p => p.UniqueID == rowId);
+                        if (srTalep != null)
+                        {
 
-                        RprTezSinavSonucTutanagi_FR0342_FR0377 rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(rowId);
-                        rpr.PrintingSystem.ContinuousPageNumbering = true;
-                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
-                        rprX = rpr;
+                            RprTezSinavSonucTutanagi_FR0342_FR0377 rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(srTalep.SRTalepID);
+                            rpr.PrintingSystem.ContinuousPageNumbering = true;
+                            rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
+                            rprX = rpr;
+                        }
+
+                        break;
                     }
-
-                    break;
-                }
                 case "MBTDO":
-                {
-                    var mezuniyetBasvurulariTezDosyasiAyn = _entities.MezuniyetBasvurulariTezDosyalaris.Any(p => p.RowID == rowId && p.IsOnaylandiOrDuzeltme == true);
-                    if (mezuniyetBasvurulariTezDosyasiAyn)
                     {
-                        RprMezuniyetTezKontrolFormu rpr = new RprMezuniyetTezKontrolFormu(rowId, null);
-                        rpr.PrintingSystem.ContinuousPageNumbering = true;
-                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
-                        rprX = rpr;
-                    }
+                        var mezuniyetBasvurulariTezDosyasiAyn = _entities.MezuniyetBasvurulariTezDosyalaris.Any(p => p.RowID == rowId && p.IsOnaylandiOrDuzeltme == true);
+                        if (mezuniyetBasvurulariTezDosyasiAyn)
+                        {
+                            RprMezuniyetTezKontrolFormu rpr = new RprMezuniyetTezKontrolFormu(rowId, null);
+                            rpr.PrintingSystem.ContinuousPageNumbering = true;
+                            rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
+                            rprX = rpr;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "TIDF":
-                {
-                    var tiAraRaporBasvurusu = _entities.TIBasvuruAraRapors.FirstOrDefault(p => p.UniqueID == rowId);
-                    if (tiAraRaporBasvurusu != null)
                     {
-                        var rpr = new RprTiDegerlendirmeFormu_FR0307(tiAraRaporBasvurusu.TIBasvuruAraRaporID);
-                        rpr.CreateDocument();
-                        rpr.DisplayName += ".pdf";
-                        rprX = rpr;
-                    }
+                        var tiAraRaporBasvurusu = _entities.TIBasvuruAraRapors.FirstOrDefault(p => p.UniqueID == rowId);
+                        if (tiAraRaporBasvurusu != null)
+                        {
+                            var rpr = new RprTiDegerlendirmeFormu_FR0307(tiAraRaporBasvurusu.TIBasvuruAraRaporID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rprX = rpr;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "TOSF":
-                {
-                    var toBasvuruSavunmas = _entities.ToBasvuruSavunmas.FirstOrDefault(p => p.UniqueID == rowId);
-                    if (toBasvuruSavunmas != null)
                     {
-                        var rpr = new RprToSavunmaFormu_FR0348(toBasvuruSavunmas.ToBasvuruSavunmaID);
-                        rpr.CreateDocument();
-                        rpr.DisplayName += ".pdf";
-                        rprX = rpr;
-                    }
+                        var toBasvuruSavunmas = _entities.ToBasvuruSavunmas.FirstOrDefault(p => p.UniqueID == rowId);
+                        if (toBasvuruSavunmas != null)
+                        {
+                            var rpr = new RprToSavunmaFormu_FR0348(toBasvuruSavunmas.ToBasvuruSavunmaID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rprX = rpr;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "TDOF":
-                {
-                    var tdoBasvuruDanisman = _entities.TDOBasvuruDanismen.FirstOrDefault(p => p.UniqueID == rowId);
-                    if (tdoBasvuruDanisman != null)
                     {
-                        if (tdoBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
+                        var tdoBasvuruDanisman = _entities.TDOBasvuruDanismen.FirstOrDefault(p => p.UniqueID == rowId);
+                        if (tdoBasvuruDanisman != null)
                         {
-                            var rpr = new RprTezDanismaniOneriFormu_FR0347(tdoBasvuruDanisman.TDOBasvuruDanismanID);
-                            rpr.CreateDocument();
-                            rpr.DisplayName += ".pdf";
-                            rprX = rpr;
-                        }
-                        else
-                        {
-                            var rpr = new RprTezDanismaniDegisiklikFormu_FR0308(tdoBasvuruDanisman.TDOBasvuruDanismanID);
-                            rpr.CreateDocument();
-                            rpr.DisplayName += ".pdf";
-                            rprX = rpr;
+                            if (tdoBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
+                            {
+                                var rpr = new RprTezDanismaniOneriFormu_FR0347(tdoBasvuruDanisman.TDOBasvuruDanismanID);
+                                rpr.CreateDocument();
+                                rpr.DisplayName += ".pdf";
+                                rprX = rpr;
+                            }
+                            else
+                            {
+                                var rpr = new RprTezDanismaniDegisiklikFormu_FR0308(tdoBasvuruDanisman.TDOBasvuruDanismanID);
+                                rpr.CreateDocument();
+                                rpr.DisplayName += ".pdf";
+                                rprX = rpr;
 
+                            }
                         }
+
+                        break;
                     }
-
-                    break;
-                }
                 case "TDOEF":
-                {
-                    var tdoBasvuruEsDanisman = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.UniqueID == rowId);
-                    if (tdoBasvuruEsDanisman != null)
                     {
-                        var rpr = new RprTezEsDanismaniOneriFormu_FR0320(tdoBasvuruEsDanisman.TDOBasvuruEsDanismanID);
-                        rpr.CreateDocument();
-                        rpr.DisplayName += ".pdf";
-                        rprX = rpr;
-                    }
+                        var tdoBasvuruEsDanisman = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.UniqueID == rowId);
+                        if (tdoBasvuruEsDanisman != null)
+                        {
+                            var rpr = new RprTezEsDanismaniOneriFormu_FR0320(tdoBasvuruEsDanisman.TDOBasvuruEsDanismanID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rprX = rpr;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "YETB":
-                {
-                    var yeterlikBasvuru = _entities.YeterlikBasvurus.FirstOrDefault(p => p.UniqueID == rowId);
-                    if (yeterlikBasvuru != null)
                     {
-                        var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(yeterlikBasvuru.YeterlikBasvuruID);
-                        rpr.CreateDocument();
-                        rpr.DisplayName += ".pdf";
-                        rprX = rpr;
-                    }
+                        var yeterlikBasvuru = _entities.YeterlikBasvurus.FirstOrDefault(p => p.UniqueID == rowId);
+                        if (yeterlikBasvuru != null)
+                        {
+                            var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(yeterlikBasvuru.YeterlikBasvuruID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName += ".pdf";
+                            rprX = rpr;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             return View(rprX);

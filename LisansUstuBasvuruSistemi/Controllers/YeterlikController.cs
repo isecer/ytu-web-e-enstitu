@@ -1073,6 +1073,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 JuriTipAdi = juri.JuriTipAdi,
                 AnabilimDaliAdi = juri.AnabilimDaliAdi,
                 EMail = juri.EMail,
+                LinkGonderenID = juri.LinkGonderenID,
+                IsLinkGonderildi = juri.IsLinkGonderildi,
                 SelectListYedekJuriler = new SelectList(YeterlikBus.GetCmbJuriYedekList(juri.UniqueID, true), "Value", "Caption", null)
             };
 

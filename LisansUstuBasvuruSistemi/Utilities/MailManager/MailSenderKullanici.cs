@@ -78,7 +78,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         EnstituAdi = enstitu.EnstituAd,
                         Content = tableContent,
                         LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png",
-                        UniversiteAdi = "Yıldız Tekni Üniversitesi"
+                        UniversiteAdi = "Yıldız Tekni Üniversitesi",
+                        WebAdresi = mailBilgi.WebAdresi
                     };
                     var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                     MailManager.SendMail(enstitu.EnstituKod, "Yeni Kullanıcı Hesabınız Hakkında", htmlMail, kModel.EMail, null);

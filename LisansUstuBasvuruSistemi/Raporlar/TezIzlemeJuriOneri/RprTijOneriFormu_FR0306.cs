@@ -8,7 +8,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
 {
     public partial class RprTijOneriFormu_FR0306 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprTijOneriFormu_FR0306(int id)
+        public RprTijOneriFormu_FR0306(int tijBasvuruOneriId)
         {
             InitializeComponent();
 
@@ -22,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                             join e in db.Enstitulers on mb.EnstituKod equals e.EnstituKod
                             join prg in db.Programlars on mb.ProgramKod equals prg.ProgramKod
                             join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                            where s.TijBasvuruOneriID == id
+                            where s.TijBasvuruOneriID == tijBasvuruOneriId
                             select new
                             {
                                 k.OgrenciNo,

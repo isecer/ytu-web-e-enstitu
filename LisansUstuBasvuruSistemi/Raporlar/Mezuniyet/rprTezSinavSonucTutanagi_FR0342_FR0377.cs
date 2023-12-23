@@ -10,12 +10,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
     public partial class RprTezSinavSonucTutanagi_FR0342_FR0377 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprTezSinavSonucTutanagi_FR0342_FR0377(Guid uniqueId)
+        public RprTezSinavSonucTutanagi_FR0342_FR0377(int srTalepId)
         {
             InitializeComponent();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var srTalebi = db.SRTalepleris.First(p => p.UniqueID == uniqueId);
+                var srTalebi = db.SRTalepleris.First(p => p.SRTalepID == srTalepId);
                 var mBasvuru = srTalebi.MezuniyetBasvurulari;
 
                 var joForm = mBasvuru.MezuniyetJuriOneriFormlaris.First();
