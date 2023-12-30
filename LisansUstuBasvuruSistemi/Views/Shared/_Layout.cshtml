@@ -1,5 +1,4 @@
 ﻿@using BiskaUtil;
-@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using CaptchaMvc.HtmlHelpers
@@ -258,7 +257,7 @@
                         <li class="dropdown user pull-right" style="padding-top: 0px; padding-bottom: 0px;">
                             <a style="padding-bottom: 0px;" href="javascript:void(0)" class="dropdown-toggle" data-close-others="true">
 
-                                <img id="userMainImage" style="margin-top: -12px; width: 45px; height: 45px;" src="@UserIdentity.Current.ImagePath">
+                                <img id="userMainImage" style="margin-top: -12px; width: 45px; height: 45px; object-fit: cover;" src="@UserIdentity.Current.ImagePath">
                                 <span class="xn-text elementToHide" style="margin-top: 10px;">@UserIdentity.Current.NameSurname</span>
                                 <i class="fa fa-angle-down"></i>
                             </a>
@@ -1029,6 +1028,7 @@
             });
 
         });
+
         function getFormattedDate(date) {
             var year = date.getFullYear();
             var month = (1 + date.getMonth()).toString();
@@ -1100,7 +1100,7 @@
 
         }
         function mesGdialogShow(result, _type) {
-            var isShowMsgMailDialog = $('.isShowMsgMailDialog').length > 0; 
+            var isShowMsgMailDialog = $('.isShowMsgMailDialog').length > 0;
             if (!isShowMsgMailDialog)
             var btbx = bootbox.dialog({
                 message: result,
@@ -1257,7 +1257,7 @@
             }
             function mGdialogShow(result, msID, RowID, BasvuruID) {
 
-                var isShowMsgMailDialog = $('.isShowMsgMailDialog').length > 0; 
+                var isShowMsgMailDialog = $('.isShowMsgMailDialog').length > 0;
                 if (!isShowMsgMailDialog)
 
                 var btbx2 = bootbox.dialog({
@@ -1598,7 +1598,7 @@
                         }
                     });
                 }
-                $('.tooltips').tooltip();
+
             }, 150);
             setTimeout(function () {
                 var surl = '@urlInfo.AbsolutePath';

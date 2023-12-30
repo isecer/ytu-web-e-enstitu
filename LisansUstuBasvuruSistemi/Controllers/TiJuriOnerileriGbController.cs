@@ -11,7 +11,6 @@ using DevExpress.XtraPrinting;
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
@@ -22,6 +21,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -318,7 +318,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             var unvanlar = UnvanlarBus.GetCmbJuriUnvanlar(true);
-            var universiteler = Management.CmbGetAktifUniversiteler(true);
+            var universiteler = UniversitelerBus.CmbGetAktifUniversiteler(true);
 
 
             if (!RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent()) kullaniciId = UserIdentity.Current.Id;
@@ -401,7 +401,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         IsTezDanismani = true,
                         IsYtuIciJuri = true,
-                        UniversiteID = Management.UniversiteYtuKod,
+                        UniversiteID = GlobalSistemSetting.UniversiteYtuKod,
                         UniversiteAdi = "Yıldız Teknik Üniversitesi",
                         UnvanAdi = ogrenciInfo.OgrenciInfo.DANISMAN_UNVAN1.ToJuriUnvanAdi(),
                         AdSoyad = ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper(),
@@ -744,7 +744,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             foreach (var juri in obsOgrenci.TezIzlJuriBilgileri)
                             {
-                                int? universiteId = Management.UniversiteYtuKod;
+                                int? universiteId = GlobalSistemSetting.UniversiteYtuKod;
                                 var isTezDanismani = false;
                                 var isYtuIciJuri = false;
                                 if (juri.TEZ_DANISMAN == "1") isTezDanismani = true;

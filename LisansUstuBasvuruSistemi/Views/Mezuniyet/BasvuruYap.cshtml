@@ -100,7 +100,7 @@
                                                                 var color = bsvDurum.Color;
                                                                 if (bsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
                                                                 {
-                                                                    <span class="tooltips" data-style="blue" data-original-title="@Model.MezuniyetYayinKontrolDurumAciklamasi" style="cursor:pointer;color:@color;">
+                                                                    <span title="@Model.MezuniyetYayinKontrolDurumAciklamasi" style="cursor:pointer;color:@color;">
                                                                         <i class="@classname" style="font-size:20pt;font-weight:bold;"></i> @bsvDurum.DurumAdi
                                                                     </span>
                                                                 }
@@ -116,7 +116,7 @@
                                                             {
                                                                 if (bsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
                                                                 {
-                                                                    <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@Model.MezuniyetYayinKontrolDurumAciklamasi">@bsvDurum.DurumAdi</span>
+                                                                    <span style="cursor:pointer" title="@Model.MezuniyetYayinKontrolDurumAciklamasi">@bsvDurum.DurumAdi</span>
                                                                 }
                                                                 else
                                                                 {
@@ -171,13 +171,13 @@
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (Türkçe)</label>
                                                     <div class="col-md-9 col-xs-10">
 
-                                                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="250" @(tezBaslikTrReadOnly ? "readonly" : "") value="@Model.TezBaslikTr" class="form-control" style="color:black;" />
+                                                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="250" @(tezBaslikTrReadOnly ? "readonly" : "") value="@Model.TezBaslikTr" class="form-control UpperTextTr" style="color:black;" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (İngilizce)</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="250" @(tezBaslikEnReadOnly ? "readonly" : "") value="@Model.TezBaslikEn" class="form-control" style="color:black;" />
+                                                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="250" @(tezBaslikEnReadOnly ? "readonly" : "") value="@Model.TezBaslikEn" class="form-control UpperTextEn" style="color:black;" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -248,8 +248,7 @@
                                                 {
                                                     <div class="form-group">
                                                         <label class="col-md-3 col-xs-4 control-label">
-                                                            @(Model.OgrenimTipKod.IsDoktora()? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu")
-
+                                                            @(Model.OgrenimTipKod.IsDoktora()? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu") 
                                                         </label>
                                                         <div class="col-md-9 col-xs-8">
                                                             <table>
@@ -407,7 +406,7 @@
         </div>
     </div>
 </div>
-
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script type="text/javascript">
 
     function showDetailY(id) {

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -25,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             AnketAdi = anket.AnketAdi,
                             IsAktif = true,
                             IslemTarihi = DateTime.Now,
-                            IslemYapanID = 1,
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
                             IslemYapanIP = ":",
                             AnketSorus = anket.AnketSorus.ToList().Select(s => new AnketSoru
                             {
@@ -53,5 +55,21 @@ namespace LisansUstuBasvuruSistemi.Business
                 entities.SaveChanges();
             }
         }
+        public static List<CmbIntDto> CmbGetAktifAnketler(string enstituKod, bool bosSecimVar = false, int? dahilAnketId = null)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var data = db.Ankets.Where(p => p.EnstituKod == enstituKod && (p.IsAktif || p.AnketID == dahilAnketId)).OrderBy(o => o.AnketAdi).ToList();
+                foreach (var item in data)
+                {
+                    dct.Add(new CmbIntDto { Value = item.AnketID, Caption = item.AnketAdi });
+                }
+            }
+            return dct;
+
+        }
+
     }
 }

@@ -189,6 +189,22 @@ namespace LisansUstuBasvuruSistemi.Business
 
         }
 
+        public static List<CmbStringDto> GetDiller(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbStringDto>();
+            if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var diller = db.SistemDilleris.ToList();
+                foreach (var item in diller)
+                {
+                    dct.Add(new CmbStringDto { Value = item.DilKodu, Caption = item.DilAdi });
+                }
+            }
+            return dct;
+
+        }
+
         public static List<BelgeDurumlari> GetBelgeTalepDurumList()
         {
             using (var db = new LisansustuBasvuruSistemiEntities())

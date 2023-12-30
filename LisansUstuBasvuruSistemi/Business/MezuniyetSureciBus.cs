@@ -63,6 +63,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     });
 
                 }
+
+                entities.SaveChanges();
             }
 
             return true;

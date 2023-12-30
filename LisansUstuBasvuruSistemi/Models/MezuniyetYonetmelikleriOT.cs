@@ -21,7 +21,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public bool IsGecerli { get; set; }
         public bool IsZorunlu { get; set; }
         public string GrupKodu { get; set; }
-        public Nullable<bool> IsVeOrVeya { get; set; }
     
         public virtual MezuniyetYayinTurleri MezuniyetYayinTurleri { get; set; }
         public virtual MezuniyetYonetmelikleri MezuniyetYonetmelikleri { get; set; }

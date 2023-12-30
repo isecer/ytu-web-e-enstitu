@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemData
             if (bosSecimVar) lst.Add(new CmbStringDto());
             for (int i = 1; i <= grupSayisi; i++)
             {
-                lst.Add(new CmbStringDto { Value = grupAdi + i.ToString(), Caption = grupAdi + i.ToString() });
+                lst.Add(new CmbStringDto { Value = grupAdi + i, Caption = grupAdi + i });
             }
             return lst;
         }

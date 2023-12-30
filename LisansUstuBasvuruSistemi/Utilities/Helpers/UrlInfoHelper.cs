@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
@@ -13,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         {
             var model = new UrlInfoModel
             {
-                Root = LisansUstuBasvuruSistemi.Models.Management.GetRoot()
+                Root = GlobalSistemSetting.GetRoot()
             };
             var webSite = uri.AbsoluteUri.Replace(uri.AbsolutePath, "");
 

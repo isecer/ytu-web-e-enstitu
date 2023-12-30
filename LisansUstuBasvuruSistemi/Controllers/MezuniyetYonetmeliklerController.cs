@@ -14,7 +14,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.MezuniyetYonetmelikler)]
     public class MezuniyetYonetmeliklerController : Controller
     {
@@ -56,7 +56,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IslemYapanIP
 
                     };
-             
+
             if (model.TarihKriterID.HasValue) q = q.Where(p => p.TarihKriterID == model.TarihKriterID);
 
             model.RowCount = q.Count();
@@ -122,7 +122,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsAktif = true,
                 EnstituKod = enstituKod
             };
-            var yayinturCount = 5;
             if (id > 0)
             {
                 var data = _entities.MezuniyetYonetmelikleris.First(p => p.MezuniyetYonetmelikID == id);
@@ -141,53 +140,33 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (model.TarihKriterID == TarihKriterSecimEnum.SecilenTarihAraligi) model.OgretimYiliB = data.BaslangicYilB + "/" + data.BitisYilB + "/" + data.DonemIDB;
 
 
-                model.KrMezuniyetYonetmelikOt = (from o in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif && p.IsMezuniyetBasvurusuYapabilir)
-                                                 join yt in _entities.MezuniyetYayinTurleris on true equals yt.IsAktif
-                                                 join s in _entities.MezuniyetYonetmelikleriOTs on new { o.OgrenimTipKod, MezuniyetYonetmelikID = id.Value, yt.MezuniyetYayinTurID } equals new { s.OgrenimTipKod, s.MezuniyetYonetmelikID, s.MezuniyetYayinTurID } into def1
-                                                 from defS in def1.DefaultIfEmpty()
-                                                 join ot in _entities.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
-                                                 select new KrMezuniyetYonetmelikOt
-                                                 {
-                                                     OgrenimTipKod = o.OgrenimTipKod,
-                                                     OgrenimTipAdi = ot.OgrenimTipAdi,
-                                                     MezuniyetYayinTurID = yt.MezuniyetYayinTurID,
-                                                     MezuniyetYayinTurAdi = yt.MezuniyetYayinTurAdi,
-                                                     IsGecerli = defS != null && defS.IsGecerli,
-                                                     IsZorunlu = defS != null && defS.IsZorunlu,
-                                                     GrupKodu = defS != null ? defS.GrupKodu : null,
-                                                     IsVeOrVeya = defS != null ? defS.IsVeOrVeya : null,
-
-                                                 }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList();
 
 
             }
-            else
-            {
-                model.KrMezuniyetYonetmelikOt = (from o in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif && p.IsMezuniyetBasvurusuYapabilir)
-                                                 join yt in _entities.MezuniyetYayinTurleris on true equals yt.IsAktif
-                                                 join s in _entities.MezuniyetYonetmelikleriOTs on new { o.OgrenimTipKod, MezuniyetYonetmelikID = id ?? 0, yt.MezuniyetYayinTurID } equals new { s.OgrenimTipKod, s.MezuniyetYonetmelikID, s.MezuniyetYayinTurID } into def1
-                                                 from defS in def1.DefaultIfEmpty()
-                                                 join ot in _entities.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
+            model.KrMezuniyetYonetmelikOt = (from o in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif && p.IsMezuniyetBasvurusuYapabilir)
+                                             join yt in _entities.MezuniyetYayinTurleris on true equals yt.IsAktif
+                                             join s in _entities.MezuniyetYonetmelikleriOTs on new { o.OgrenimTipKod, MezuniyetYonetmelikID = id ?? 0, yt.MezuniyetYayinTurID } equals new { s.OgrenimTipKod, s.MezuniyetYonetmelikID, s.MezuniyetYayinTurID } into def1
+                                             from defS in def1.DefaultIfEmpty()
+                                             join ot in _entities.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
 
-                                                 select new KrMezuniyetYonetmelikOt
-                                                 {
-                                                     OgrenimTipKod = o.OgrenimTipKod,
-                                                     OgrenimTipAdi = ot.OgrenimTipAdi,
-                                                     MezuniyetYayinTurID = yt.MezuniyetYayinTurID,
-                                                     MezuniyetYayinTurAdi = yt.MezuniyetYayinTurAdi,
-                                                     IsGecerli = defS != null && defS.IsGecerli,
-                                                     IsZorunlu = defS != null && defS.IsZorunlu,
-                                                     GrupKodu = defS != null ? defS.GrupKodu : null,
-                                                     IsVeOrVeya = defS != null ? defS.IsVeOrVeya : null,
+                                             select new KrMezuniyetYonetmelikOt
+                                             {
+                                                 OgrenimTipKod = o.OgrenimTipKod,
+                                                 OgrenimTipAdi = ot.OgrenimTipAdi,
+                                                 MezuniyetYayinTurID = yt.MezuniyetYayinTurID,
+                                                 MezuniyetYayinTurAdi = yt.MezuniyetYayinTurAdi,
+                                                 IsGecerli = defS != null && defS.IsGecerli,
+                                                 IsZorunlu = defS != null && defS.IsZorunlu,
+                                                 GrupKodu = defS != null ? defS.GrupKodu : "Grup1"
 
-                                                 }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList();
-            }
+                                             }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList();
+
 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? enstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", model.OgretimYili);
             ViewBag.OgretimYiliB = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", model.OgretimYiliB);
-            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(yayinturCount, "Grup", true);
-            ViewBag.VeVeya = ComboData.GecCmbVeVeya(true);
+            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(model.KrMezuniyetYonetmelikOt.Select(s=>s.MezuniyetYayinTurID).Distinct().Count());
+            ViewBag.VeVeya = ComboData.GecCmbVeVeya();
             ViewBag.TarihKriterID = new SelectList(ComboData.GetCmbTarihKriterSecim(false), "Value", "Caption", model.TarihKriterID);
 
             return View(model);
@@ -200,32 +179,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsDialog = !dlgid.IsNullOrWhiteSpace(),
                 DialogID = dlgid
             };
-            var yayinturCount = 5;
-            var qOtipKod = kModel.MezuniyetYayinTurIDs.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, Inx = inx }).ToList();
-            var qgId = kModel.MezuniyetYayinTurIDs.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, Inx = inx }).ToList();
-            var qGecerli = kModel.IsGecerlis.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, IsGecerli = s.Split('_')[2].ToIntToBooleanObj(), Inx = inx }).ToList();
-            var qZorunlu = kModel.IsZorunlus.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, IsZorunlu = s.Split('_')[2].ToIntToBooleanObj(), Inx = inx }).ToList();
-            var qGrpKodu = kModel.GrupKodus.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, GrupKodu = s.Split('_')[2].ToStrObj(), Inx = inx }).ToList();
-            var qVeVeya = kModel.IsVeOrVeyas.Select((s, inx) => new { OgrenimTipKod = s.Split('_')[0].ToInt().Value, MezuniyetYayinTurID = s.Split('_')[1].ToInt().Value, IsVeOrVeya = s.Split('_')[2].ToBooleanObj(), Inx = inx }).ToList();
-            var qDetaylar = (from s in qOtipKod
-                             join b in qgId on new { s.OgrenimTipKod, s.Inx } equals new { b.OgrenimTipKod, b.Inx }
-                             join g in qGecerli on new { b.OgrenimTipKod, b.MezuniyetYayinTurID, s.Inx } equals new { g.OgrenimTipKod, g.MezuniyetYayinTurID, g.Inx }
-                             join z in qZorunlu on new { g.OgrenimTipKod, g.MezuniyetYayinTurID, g.Inx } equals new { z.OgrenimTipKod, z.MezuniyetYayinTurID, z.Inx }
-                             join gr in qGrpKodu on new { z.OgrenimTipKod, z.MezuniyetYayinTurID, z.Inx } equals new { gr.OgrenimTipKod, gr.MezuniyetYayinTurID, gr.Inx }
-                             join v in qVeVeya on new { gr.OgrenimTipKod, gr.MezuniyetYayinTurID, gr.Inx } equals new { v.OgrenimTipKod, v.MezuniyetYayinTurID, v.Inx }
+            var ogrenimTipKods = kModel.OgrenimTipKods.Select((s, inx) => new { OgrenimTipKod = s, Inx = inx }).ToList();
+            var mezuniyetYayinTurIds = kModel.MezuniyetYayinTurIds.Select((s, inx) => new { MezuniyetYayinTurID = s, Inx = inx }).ToList();
+            var isGecerlis = kModel.IsGecerlis.Select((s, inx) => new { IsGecerli = s, Inx = inx }).ToList();
+            var isZorunlus = kModel.IsZorunlus.Select((s, inx) => new { IsZorunlu = s, Inx = inx }).ToList();
+            var grupKodus = kModel.GrupKodus.Select((s, inx) => new { GrupKodu = s, Inx = inx }).ToList();
+            var qDetaylar = (from ogrenimTipKod in ogrenimTipKods
+                             join mezuniyetYayinTurId in mezuniyetYayinTurIds on ogrenimTipKod.Inx equals mezuniyetYayinTurId.Inx
+                             join isGecerli in isGecerlis on new { ogrenimTipKod.Inx } equals new { isGecerli.Inx }
+                             join isZorunlu in isZorunlus on new { ogrenimTipKod.Inx } equals new { isZorunlu.Inx }
+                             join grupKodu in grupKodus on new { ogrenimTipKod.Inx } equals new { grupKodu.Inx }
                              select new MezuniyetYonetmelikleriOT
                              {
-                                 OgrenimTipKod = s.OgrenimTipKod,
-                                 MezuniyetYayinTurID = b.MezuniyetYayinTurID,
-                                 IsGecerli = g.IsGecerli ?? false,
-                                 IsZorunlu = z.IsZorunlu ?? false,
-                                 GrupKodu = gr.GrupKodu,
-                                 IsVeOrVeya = v.IsVeOrVeya,
+                                 OgrenimTipKod = ogrenimTipKod.OgrenimTipKod,
+                                 MezuniyetYayinTurID = mezuniyetYayinTurId.MezuniyetYayinTurID,
+                                 IsGecerli = isGecerli.IsGecerli ?? false,
+                                 IsZorunlu = isZorunlu.IsZorunlu ?? false,
+                                 GrupKodu = grupKodu.GrupKodu
                              }).ToList();
-
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Enstitü Seçiniz");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
 
@@ -233,7 +207,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
 
             if (kModel.TarihKriterID <= 0)
-            { 
+            {
                 mmMessage.Messages.Add("Tarih Kriteri Seçiniz");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
@@ -246,7 +220,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kModel.OgretimYili.IsNullOrWhiteSpace() || kModel.OgretimYiliB.IsNullOrWhiteSpace())
                     {
                         if (kModel.OgretimYili.IsNullOrWhiteSpace())
-                        { 
+                        {
                             mmMessage.Messages.Add("Öğretim Yılı Seçiniz");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
                         }
@@ -255,7 +229,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
                         }
                         if (kModel.OgretimYiliB.IsNullOrWhiteSpace())
-                        { 
+                        {
                             mmMessage.Messages.Add("Öğretim Yılı Bitişi Seçiniz");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
                         }
@@ -276,7 +250,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kModel.DonemIDB = oyilsB[2].ToInt().Value;
 
                         if (kModel.BaslangicYil >= kModel.BaslangicYilB && kModel.DonemID >= kModel.DonemIDB)
-                        { 
+                        {
                             mmMessage.Messages.Add("Öğretim Yılı Öğretim Yılı Bitişten büyük ya da eşit olamaz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
@@ -291,9 +265,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     var oyils = kModel.OgretimYili.Split('/');
-                    kModel.BaslangicYil = oyils[0].ToInt().Value;
-                    kModel.BitisYil = oyils[1].ToInt().Value;
-                    kModel.DonemID = oyils[2].ToInt().Value;
+                    kModel.BaslangicYil = oyils[0].ToInt(0);
+                    kModel.BitisYil = oyils[1].ToInt(0);
+                    kModel.DonemID = oyils[2].ToInt(0);
                 }
             }
 
@@ -305,15 +279,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     isContains = _entities.MezuniyetYonetmelikleris.Where(p => p.EnstituKod == kModel.EnstituKod && p.MezuniyetYonetmelikID != kModel.MezuniyetYonetmelikID).ToList().Any(a =>
                                                                       a.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeOncesi ?
-                                                                          (Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) >= baslangic)
+                                                                          Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) >= baslangic
                                                                             :
-                                                                          (a.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeSonrasi ?
-                                                                                (Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangic)
-                                                                               :
-                                                                                (
-                                                                                    (Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangic && Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB) >= baslangic)
-                                                                                )
-                                                                          )
+                                                                          a.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeSonrasi ?
+                                                                              Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangic
+                                                                              :
+                                                                              Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangic && Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB) >= baslangic
 
                                                                 );
                 }
@@ -321,30 +292,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var baslangicB = Convert.ToDecimal(kModel.BaslangicYilB + "," + kModel.DonemIDB);
                     isContains = _entities.MezuniyetYonetmelikleris.Where(p => p.EnstituKod == kModel.EnstituKod && p.MezuniyetYonetmelikID != kModel.MezuniyetYonetmelikID).ToList().Any(a =>
-                                                                           (a.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeOncesi ?
-                                                                               (
-                                                                                 Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) >= baslangic
-                                                                               )
-                                                                                 :
-                                                                               (a.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeSonrasi ?
-                                                                                     (Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangicB)
-                                                                                    :
-                                                                                     (
-                                                                                         (Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangic && Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB) >= baslangic)
-                                                                                         ||
-                                                                                         (Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangicB && Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB) >= baslangicB)
-                                                                                         ||
-                                                                                         (baslangic <= Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) && baslangicB >= Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID))
-                                                                                         ||
-                                                                                         (baslangic <= Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB) && baslangicB >= Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB))
-                                                                                     )
-                                                                               )
-                                                                           )
+                                                                           a.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeOncesi ?
+                                                                               Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) >= baslangic
+                                                                               :
+                                                                               a.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeSonrasi ?
+                                                                                   Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangicB
+                                                                                   :
+                                                                                   (Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangic && Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB) >= baslangic)
+                                                                                   ||
+                                                                                   (Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) <= baslangicB && Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB) >= baslangicB)
+                                                                                   ||
+                                                                                   (baslangic <= Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID) && baslangicB >= Convert.ToDecimal(a.BaslangicYil + "," + a.DonemID))
+                                                                                   ||
+                                                                                   (baslangic <= Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB) && baslangicB >= Convert.ToDecimal(a.BaslangicYilB + "," + a.DonemIDB))
                                                                 );
                 }
 
                 if (isContains)
-                { 
+                {
                     mmMessage.Messages.Add("Girmiş olduğunuz Öğretim yılı daha önceden kayıt edilmiş yönetmeliklerde geçen öğretim yılı ile çakışmaktadır!");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYili" });
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgretimYiliB" });
@@ -358,7 +323,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 foreach (var item in ogrenimTipleris)
                 {
                     if (qDetaylar.Any(p => p.OgrenimTipKod == item.OgrenimTipKod && p.IsGecerli) == false)
-                    { 
+                    {
                         mmMessage.Messages.Add("Kayıt işlemi yapabilmeniz için " + item.OgrenimTipAdi + " öğrenim tipinden en az bir yayın tipini geçerli kılmanız gerekmektedir!");
                     }
                 }
@@ -370,7 +335,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
-                bool isnewOrEdit = kModel.MezuniyetYonetmelikID <= 0;
+                var isnewOrEdit = kModel.MezuniyetYonetmelikID <= 0;
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
@@ -426,8 +391,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MezuniyetYayinTurID = item.MezuniyetYayinTurID,
                         IsGecerli = item.IsGecerli,
                         IsZorunlu = item.IsZorunlu,
-                        GrupKodu = item.GrupKodu,
-                        IsVeOrVeya = item.IsVeOrVeya
+                        GrupKodu = item.GrupKodu
                     });
 
                 }
@@ -436,43 +400,41 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 return RedirectToAction("Index");
             }
-            else
+
+
+            var qdata = (from o in _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod && p.IsAktif && p.IsMezuniyetBasvurusuYapabilir)
+                         join yt in _entities.MezuniyetYayinTurleris on true equals yt.IsAktif
+                         join ot in _entities.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
+
+                         select new KrMezuniyetYonetmelikOt
+                         {
+                             OgrenimTipKod = o.OgrenimTipKod,
+                             OgrenimTipAdi = ot.OgrenimTipAdi,
+                             MezuniyetYayinTurID = yt.MezuniyetYayinTurID,
+                             MezuniyetYayinTurAdi = yt.MezuniyetYayinTurAdi
+
+                         }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList();
+            foreach (var item in qdata)
             {
-
-                var qdata = (from o in _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod && p.IsAktif && p.IsMezuniyetBasvurusuYapabilir)
-                             join yt in _entities.MezuniyetYayinTurleris on true equals yt.IsAktif
-                             join ot in _entities.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
-
-                             select new KrMezuniyetYonetmelikOt
-                             {
-                                 OgrenimTipKod = o.OgrenimTipKod,
-                                 OgrenimTipAdi = ot.OgrenimTipAdi,
-                                 MezuniyetYayinTurID = yt.MezuniyetYayinTurID,
-                                 MezuniyetYayinTurAdi = yt.MezuniyetYayinTurAdi
-
-                             }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList();
-                foreach (var item in qdata)
+                var qdetay = qDetaylar.FirstOrDefault(p => p.OgrenimTipKod == item.OgrenimTipKod && p.MezuniyetYayinTurID == item.MezuniyetYayinTurID);
+                if (qdetay != null)
                 {
-                    var qdetay = qDetaylar.FirstOrDefault(p => p.OgrenimTipKod == item.OgrenimTipKod && p.MezuniyetYayinTurID == item.MezuniyetYayinTurID);
-                    if (qdetay != null)
-                    {
-                        item.IsGecerli = qdetay.IsGecerli;
-                        item.IsZorunlu = qdetay.IsZorunlu;
-                        item.GrupKodu = qdetay.GrupKodu;
-                        item.IsVeOrVeya = qdetay.IsVeOrVeya;
-                    }
-
+                    item.IsGecerli = qdetay.IsGecerli;
+                    item.IsZorunlu = qdetay.IsZorunlu;
+                    item.GrupKodu = qdetay.GrupKodu;
                 }
-                kModel.KrMezuniyetYonetmelikOt = qdata;
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
+
             }
+            kModel.KrMezuniyetYonetmelikOt = qdata;
+            MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
+
 
 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYili);
             ViewBag.OgretimYiliB = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYiliB);
-            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(yayinturCount, "Grup", true);
-            ViewBag.VeVeya = ComboData.GecCmbVeVeya(true);
+            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(qdata.Select(s=>s.MezuniyetYayinTurID).Distinct().Count());
+            ViewBag.VeVeya = ComboData.GecCmbVeVeya();
             ViewBag.TarihKriterID = new SelectList(ComboData.GetCmbTarihKriterSecim(false), "Value", "Caption");
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
@@ -514,15 +476,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                  MezuniyetYayinTurAdi = yt.MezuniyetYayinTurAdi,
                                                  IsGecerli = defS != null && defS.IsGecerli,
                                                  IsZorunlu = defS != null && defS.IsZorunlu,
-                                                 GrupKodu = defS != null ? defS.GrupKodu : null,
-                                                 IsVeOrVeya = defS != null ? defS.IsVeOrVeya : null,
+                                                 GrupKodu = defS != null ? defS.GrupKodu : "Grup1",
 
                                              }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList();
 
             return View(model);
         }
-
-
 
         public ActionResult GetMsSubData(int id, int tbInx, bool isDelete)
         {
@@ -558,7 +517,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var tipCount = _entities.MezuniyetBasvurularis.Count(p => p.MezuniyetSurecID == mdl.MezuniyetSurecID && p.MezuniyetYayinKontrolDurumID == item.MezuniyetYayinKontrolDurumID);
                     indexModel.ListB.Add(new mxRowModel { ID = item.MezuniyetYayinKontrolDurumID, Key = item.MezuniyetYayinKontrolDurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
-                } 
+                }
                 indexModel.Toplam = indexModel.ListB.Sum(s => s.Toplam);
                 mdl.ToplamBasvuruBilgisi = indexModel;
 

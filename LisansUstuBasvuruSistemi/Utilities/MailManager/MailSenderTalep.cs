@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
@@ -29,15 +28,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                   join tt in entities.TalepTipleris on s.TalepTipID equals tt.TalepTipID
                                   join td in entities.TalepDurumlaris on s.TalepDurumID equals td.TalepDurumID
                                   join ags in entities.TalepArGorStatuleris on s.TalepArGorStatuID equals ags.TalepArGorStatuID into defAgs
-                                  from Ags in defAgs.DefaultIfEmpty()
+                                  from ags in defAgs.DefaultIfEmpty()
                                   join ot in entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod into defO
-                                  from Ot in defO.DefaultIfEmpty()
-                                  join otl in entities.OgrenimTipleris on Ot.OgrenimTipID equals otl.OgrenimTipID into defOtl
-                                  from Otl in defOtl.DefaultIfEmpty()
+                                  from ot in defO.DefaultIfEmpty()
+                                  join otl in entities.OgrenimTipleris on ot.OgrenimTipID equals otl.OgrenimTipID into defOtl
+                                  from otl in defOtl.DefaultIfEmpty()
                                   join prl in entities.Programlars on s.ProgramKod equals prl.ProgramKod into defprl
-                                  from Prl in defprl.DefaultIfEmpty()
-                                  join abl in entities.AnabilimDallaris on new { AnabilimDaliID = (Prl != null ? Prl.AnabilimDaliID : (int?)null) } equals new { AnabilimDaliID = (int?)abl.AnabilimDaliID } into defabl
-                                  from Abl in defabl.DefaultIfEmpty()
+                                  from prl in defprl.DefaultIfEmpty()
+                                  join abl in entities.AnabilimDallaris on new { AnabilimDaliID = (prl != null ? prl.AnabilimDaliID : (int?)null) } equals new { AnabilimDaliID = (int?)abl.AnabilimDaliID } into defabl
+                                  from abl in defabl.DefaultIfEmpty()
                                   where talepGelenTalepIDs.Contains(s.TalepGelenTalepID)
                                   select new
                                   {
@@ -62,12 +61,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                       s.OgrenimTipID,
                                       s.OgrenimTipKod,
                                       s.DoktoraTezOneriTarihi,
-                                      Otl.OgrenimTipAdi,
-                                      Abl.AnabilimDaliAdi,
-                                      Prl.ProgramAdi,
+                                      otl.OgrenimTipAdi,
+                                      abl.AnabilimDaliAdi,
+                                      prl.ProgramAdi,
                                       s.IsYtuArGor,
                                       s.TalepArGorStatuID,
-                                      Ags.StatuAdi,
+                                      ags.StatuAdi,
                                       s.IsDersYukuTamamlandi,
                                       s.IsHarcBorcuVar,
                                       s.IslemTarihi,
@@ -87,22 +86,25 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         }
 
                         htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tipi", Aciklama = talep.TalepTipAdi });
-                        string talepTipAciklama = "";
-                        if (talep.TalepTipID == TalepTipiEnum.LisansustuSureUzatmaTalebi)
+                        string talepTipAciklama;
+                        switch (talep.TalepTipID)
                         {
-                            talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
-                                "Bu talep tipini seçecek öğrenciler, doktora tez önerisinden başarılı olmuş ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir. "
-                                :
-                                "Bu talep tipini seçecek öğrenciler Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşamasını tamamlamış ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir.";
+                            case TalepTipiEnum.LisansustuSureUzatmaTalebi:
+                                talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
+                                    "Bu talep tipini seçecek öğrenciler, doktora tez önerisinden başarılı olmuş ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir. "
+                                    :
+                                    "Bu talep tipini seçecek öğrenciler Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşamasını tamamlamış ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir.";
+                                break;
+                            case TalepTipiEnum.Covid19KayitDondurmaTalebi:
+                                talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
+                                    "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
+                                    :
+                                    "Bu talep tipini seçecek olan öğrencilerimizden: YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşaması tamamlanmış ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir Aksi takdirde talebiniz kabul edilmeyecektir.";
+                                break;
+                            default:
+                                talepTipAciklama = talep.TalepTipAciklama;
+                                break;
                         }
-                        else if (talep.TalepTipID == TalepTipiEnum.Covid19KayitDondurmaTalebi)
-                        {
-                            talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
-                                "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
-                                :
-                                "Bu talep tipini seçecek olan öğrencilerimizden: YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşaması tamamlanmış ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir Aksi takdirde talebiniz kabul edilmeyecektir.";
-                        }
-                        else talepTipAciklama = talep.TalepTipAciklama;
                         if (!talepTipAciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tipi Açıklaması", Aciklama = talepTipAciklama });
                         htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tarihi", Aciklama = talep.TalepTarihi.ToFormatDateAndTime() });
                         htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Durumu", Aciklama = talep.TalepDurumAdi });

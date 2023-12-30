@@ -10,9 +10,7 @@ using BiskaUtil;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
-using System.IO;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 
@@ -44,60 +42,66 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (!obsOgrenci.Hata)
                     {
                         kul = entities.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
+                        if (!kul.OgrenimTipKod.HasValue)
+                        {
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez öneri savunma sınavı oluşturulabilmesi için Öğrenci Öğrenim tipi bilgisi null olmamalı.<br/>Öğrenci Kullanıcı id: " + kul.KullaniciID, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Hata);
+                            return false;
+                        }
                         var ogrenciYeterlikBilgi =
                             obsOgrenci.OgrenciYeters.FirstOrDefault(p => p.DR_YET_GNL_SNV_DURUM == "Başarılı" && p.DR_YET_SOZ_SNV_DURUM == "Başarılı");
 
-                        if(!yeterlikSozluSinavTarihi.HasValue && ogrenciYeterlikBilgi != null && ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().HasValue)
+                        var ogrenciYetSozSnvTarih = ogrenciYeterlikBilgi?.DR_YET_SOZ_SNV_TARIH.ToDate();
+                        if (!yeterlikSozluSinavTarihi.HasValue && ogrenciYetSozSnvTarih.HasValue)
                         {
-                           yeterlikSozluSinavTarihi = ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().Value;
+                            yeterlikSozluSinavTarihi = ogrenciYetSozSnvTarih.Value;
 
-                        } 
-                        //Yeterlik sözlü sınavı tarihi bulunuyor ise  tez öneri savunmas başvurusu oluşturulabilir
-                        if (yeterlikSozluSinavTarihi.HasValue)
-                        {  
-                            var basvuru = entities.ToBasvurus.FirstOrDefault(f =>
-                                f.KullaniciID == kul.KullaniciID && f.EnstituKod == kul.EnstituKod &&
-                                (f.ProgramKod == kul.ProgramKod || f.OgrenciNo == kul.OgrenciNo));
-                            if (basvuru != null)
-                            {
-                                basvuru.ProgramKod = kul.ProgramKod;
-                                basvuru.OgrenciNo = kul.OgrenciNo;
-                                basvuru.OgrenimTipKod = kul.OgrenimTipKod.Value;
-                                basvuru.KayitOgretimYiliBaslangic = kul.KayitYilBaslangic;
-                                basvuru.KayitOgretimYiliDonemID = kul.KayitDonemID;
-                                basvuru.YeterlikSozluSinavTarihi = yeterlikSozluSinavTarihi.Value;
-                                basvuru.IslemTarihi = DateTime.Now;
-                                basvuru.IslemYapanID = UserIdentity.Current.Id;
-                                basvuru.IslemYapanIP = UserIdentity.Ip;
-                            }
-                            else
-                            {
-                                basvuru = entities.ToBasvurus.Add(new ToBasvuru
-                                {
-                                    UniqueID = Guid.NewGuid(),
-                                    EnstituKod = kul.EnstituKod,
-                                    BasvuruTarihi = DateTime.Now,
-                                    KullaniciID = kul.KullaniciID,
-                                    OgrenciNo = kul.OgrenciNo,
-                                    OgrenimTipKod = kul.OgrenimTipKod.Value,
-                                    ProgramKod = kul.ProgramKod,
-                                    KayitOgretimYiliBaslangic = kul.KayitYilBaslangic,
-                                    KayitOgretimYiliDonemID = kul.KayitDonemID,
-                                    KayitTarihi = kul.KayitTarihi,
-                                    TezDanismanID = kul.DanismanID,
-                                    YeterlikSozluSinavTarihi = yeterlikSozluSinavTarihi.Value,
-                                    IslemTarihi = DateTime.Now,
-                                    IslemYapanID = UserIdentity.Current.Id,
-                                    IslemYapanIP = UserIdentity.Ip
-                                });
-                            }
-                            entities.SaveChanges();
                         }
+                        if (!yeterlikSozluSinavTarihi.HasValue) return true;
+                        //Yeterlik sözlü sınavı tarihi bulunuyor ise  tez öneri savunmas başvurusu oluşturulabilir
+
+                        var basvuru = entities.ToBasvurus.FirstOrDefault(f =>
+                            f.KullaniciID == kul.KullaniciID && f.EnstituKod == kul.EnstituKod &&
+                            (f.ProgramKod == kul.ProgramKod || f.OgrenciNo == kul.OgrenciNo));
+                        if (basvuru != null)
+                        {
+                            basvuru.ProgramKod = kul.ProgramKod;
+                            basvuru.OgrenciNo = kul.OgrenciNo;
+                            basvuru.OgrenimTipKod = kul.OgrenimTipKod.Value;
+                            basvuru.KayitOgretimYiliBaslangic = kul.KayitYilBaslangic;
+                            basvuru.KayitOgretimYiliDonemID = kul.KayitDonemID;
+                            basvuru.YeterlikSozluSinavTarihi = yeterlikSozluSinavTarihi.Value;
+                            basvuru.IslemTarihi = DateTime.Now;
+                            basvuru.IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId;
+                            basvuru.IslemYapanIP = "::1";
+                        }
+                        else
+                        {
+                            entities.ToBasvurus.Add(new ToBasvuru
+                            {
+                                UniqueID = Guid.NewGuid(),
+                                EnstituKod = kul.EnstituKod,
+                                BasvuruTarihi = DateTime.Now,
+                                KullaniciID = kul.KullaniciID,
+                                OgrenciNo = kul.OgrenciNo,
+                                OgrenimTipKod = kul.OgrenimTipKod.Value,
+                                ProgramKod = kul.ProgramKod,
+                                KayitOgretimYiliBaslangic = kul.KayitYilBaslangic,
+                                KayitOgretimYiliDonemID = kul.KayitDonemID,
+                                KayitTarihi = kul.KayitTarihi,
+                                TezDanismanID = kul.DanismanID,
+                                YeterlikSozluSinavTarihi = yeterlikSozluSinavTarihi.Value,
+                                IslemTarihi = DateTime.Now,
+                                IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                                IslemYapanIP = "::1"
+                            });
+                        }
+                        entities.SaveChanges();
+
 
                     }
                     else
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("OBS sisteminden öğrenci bilgisi kontrolü yapılamadı. Hata:" + obsOgrenci.HataMsj, "TezOneriSavunmaBus/TezIzlemeJuriOneriSenkronizasyonMsg", LogTipiEnum.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("OBS sisteminden öğrenci bilgisi kontrolü yapılamadı. Hata:" + obsOgrenci.HataMsj, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Kritik);
                     }
                 }
 
@@ -183,7 +187,6 @@ namespace LisansUstuBasvuruSistemi.Business
                     toBasvuru.IkinciOneriBitisTarihi = ikincibitisTarihi;
                     toBasvuru.RetDuzeltmeBitisTarihi = null;
                     msg.Table = toBasvuru;
-                    //entities.SaveChanges();
                     return msg;
                 }
 
@@ -296,7 +299,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                     }
-                    else if (!isAdmin && !TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyarTi(tezOneriSavunma.ToBasvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
+                    else if (!isAdmin && !TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyarTi(tezOneriSavunma.ToBasvuru.EnstituKod, "false").ToBoolean(false) && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.Messages.Add("Başvuru süreci kapalı olduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
 

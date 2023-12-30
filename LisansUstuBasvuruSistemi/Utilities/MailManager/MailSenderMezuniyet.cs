@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.IO;
-using System.Linq;
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Threading.Tasks;
-using System.Web;
-using BiskaUtil;
-using DevExpress.Web.Internal.XmlProcessor;
-using DevExpress.XtraCharts;
-using DevExpress.XtraRichEdit.Model;
+﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -18,12 +6,109 @@ using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
-using LisansUstuBasvuruSistemi.Ws_GsisMezuniyetBilgi;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 {
     public class MailSenderMezuniyet
     {
+        public static MmMessage SendMailBasvuruYapildi(int mezuniyetBasvurulariId)
+        {
+            var mmMessage = new MmMessage();
+            try
+            {
+                using (var entities = new LisansustuBasvuruSistemiEntities())
+                {
+                    var mBasvuru =
+                        entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var enstitu = mBasvuru.MezuniyetSureci.Enstituler;
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.EnstituKod == enstitu.EnstituKod).ToList();
+
+
+                    var mModel = new List<SablonMailModel>
+                    {
+                        new SablonMailModel
+                        {
+                            JuriTipAdi = "Öğrenci",
+                            AdSoyad = mBasvuru.Ad + " " + mBasvuru.Soyad,
+                            EMails = new List<MailSendList> { new MailSendList { EMail = mBasvuru.Kullanicilar.EMail,KullaniciId = mBasvuru.KullaniciID,ToOrBcc = true } },
+                            MailSablonTipId = MailSablonTipiEnum.MezBasvuruYapildiOgrenci,
+                        }
+                    };
+
+
+                    var danisman = entities.Kullanicilars.First(p => p.KullaniciID == mBasvuru.TezDanismanID);
+                    mModel.Add(new SablonMailModel
+                    {
+                        JuriTipAdi = "Danışman",
+                        AdSoyad = danisman.Ad + " " + danisman.Soyad,
+                        EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, KullaniciId = danisman.KullaniciID, ToOrBcc = true } },
+                        MailSablonTipId = MailSablonTipiEnum.MezBasvuruYapildiDanisman,
+                    });
+
+                    foreach (var item in mModel)
+                    {
+                        item.EnstituAdi = enstitu.EnstituAd;
+                        item.WebAdresi = enstitu.WebAdresi;
+
+                        item.Sablon = sablonlar.First(p => p.MailSablonTipID == item.MailSablonTipId);
+                        item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.CustomSplit();
+                        item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
+
+                        if (item.SablonParametreleri.Any(a => a == "@EnstituAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "EnstituAdi", Value = enstitu.EnstituAd });
+                        if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = mBasvuru.OgrenciNo });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = mBasvuru.Ad + " " + mBasvuru.Soyad });
+                        if (item.SablonParametreleri.Any(a => a == "@DanismanAdSoyad"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanAdSoyad", Value = mBasvuru.TezDanismanAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@DanismanUnvanAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanUnvanAdi", Value = mBasvuru.TezDanismanUnvani });
+
+                        var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
+                        var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, null);
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
+
+                        var gm = new GonderilenMailler
+                        {
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
+                        };
+                        entities.GonderilenMaillers.Add(gm);
+                        entities.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Başvurusu maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                mmMessage.Messages.Add("Mezuniyet Başvurusu maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
+                mmMessage.MessageType = MsgTypeEnum.Error;
+                mmMessage.IsSuccess = false;
+            }
+            return mmMessage;
+        }
         public static MmMessage SendMailBasvuruDanismanOnay(int mezuniyetBasvurulariId)
         {
             var mmMessage = new MmMessage();
@@ -52,6 +137,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 SistemErisimAdresi = enstitu.SistemErisimAdresi,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = mBasvur.Kullanicilar.EMail,KullaniciId = mBasvur.KullaniciID,ToOrBcc = true } },
                                 MailSablonTipId = sablonTipId,
+                                JuriTipAdi = "Öğrenci"
                             }
                         };
 
@@ -85,26 +171,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
-                        if (snded)
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
+
+                        var kModel = new GonderilenMailler
                         {
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = contentDetailDto.Title + " (" + item.AdSoyad + ")",
-                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
-                                Gonderildi = true,
-                                GonderilenMailEkleris = item.GetGonderilenMailEkleris,
-                                GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
-                            };
-                            entities.GonderilenMaillers.Add(kModel);
-                            entities.SaveChanges();
-                        }
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailEkleris = item.GetGonderilenMailEkleris,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
+                        };
+                        entities.GonderilenMaillers.Add(kModel);
+                        entities.SaveChanges();
                     }
 
                 }
@@ -134,13 +221,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     var mModel = new List<SablonMailModel>();
 
-                    var ogrenciMailSablonId = 1;
+                    int ogrenciMailSablonId;
                     if (mBasvur.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi) ogrenciMailSablonId = MailSablonTipiEnum.MezYayinSartiSaglanamadiOgrenci;
                     else if (mBasvur.OgrenimTipKod.IsDoktora()) ogrenciMailSablonId = MailSablonTipiEnum.MezYayinSartiSaglandiOgrenciDoktora;
                     else ogrenciMailSablonId = MailSablonTipiEnum.MezYayinSartiSaglandiOgrenciYl;
                     mModel.Add(new SablonMailModel
                     {
-
+                        JuriTipAdi = "Öğrenci",
                         AdSoyad = mBasvur.Ad + " " + mBasvur.Soyad,
                         EMails = new List<MailSendList> { new MailSendList { EMail = mBasvur.Kullanicilar.EMail, KullaniciId = mBasvur.KullaniciID, ToOrBcc = true } },
                         MailSablonTipId = ogrenciMailSablonId,
@@ -151,7 +238,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         mModel.Add(
                             new SablonMailModel
                             {
-
+                                JuriTipAdi = "Danışman",
                                 MailSablonTipId = MailSablonTipiEnum.MezYayinSartiSaglandiDanisman,
                                 AdSoyad = danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, KullaniciId = danisman.KullaniciID, ToOrBcc = true } },
@@ -204,28 +291,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         }
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
-                        if (snded)
-                        {
-                            if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
 
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = contentDetailDto.Title,
-                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
-                                GonderilenMailEkleris = item.GetGonderilenMailEkleris
-                            };
-                            entities.GonderilenMaillers.Add(kModel);
-                            entities.SaveChanges();
-                        }
+                        var kModel = new GonderilenMailler
+                        {
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
+                            GonderilenMailEkleris = item.GetGonderilenMailEkleris
+                        };
+                        entities.GonderilenMaillers.Add(kModel);
+                        entities.SaveChanges();
                     }
 
 
@@ -249,9 +335,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 {
                     var juriOneriFormu = entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
                     var mBasvur = juriOneriFormu.MezuniyetBasvurulari;
-                    var danismanSablonId = 0;
-                    var asilSablonId = 0;
-                    var ogrenciSablonId = 0;
+                    int danismanSablonId;
+                    int asilSablonId;
+                    int ogrenciSablonId;
                     if (mBasvur.OgrenimTipKod.IsDoktora())
                     {
 
@@ -266,7 +352,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         ogrenciSablonId = MailSablonTipiEnum.MezEykTarihiGirildiOgrenciYl;
                     }
 
-                    var tezKonusu = "";
+                    string tezKonusu;
                     if (juriOneriFormu.IsTezBasligiDegisti == true)
                     {
                         tezKonusu = mBasvur.IsTezDiliTr == true
@@ -279,13 +365,19 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     var enstitu = mBasvur.MezuniyetSureci.Enstituler;
 
-                    var mModel = new List<SablonMailModel> {
-                            new SablonMailModel {
-
-                            AdSoyad =mBasvur.Ad + " " + mBasvur.Soyad,
-                            EMails= new List<MailSendList> { new MailSendList { EMail = mBasvur.Kullanicilar.EMail,KullaniciId =mBasvur.KullaniciID, ToOrBcc=true } },
-                            MailSablonTipId=ogrenciSablonId
-                            } };
+                    var mModel = new List<SablonMailModel>
+                    {
+                        new SablonMailModel
+                        {
+                            JuriTipAdi = "Öğrenci",
+                            AdSoyad = mBasvur.Ad + " " + mBasvur.Soyad,
+                            EMails = new List<MailSendList>
+                            {
+                                new MailSendList { EMail = mBasvur.Kullanicilar.EMail, KullaniciId = mBasvur.KullaniciID, ToOrBcc = true }
+                            },
+                            MailSablonTipId = ogrenciSablonId
+                        }
+                    };
                     var juriler = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.IsAsilOrYedek.HasValue).ToList();
                     foreach (var item in juriler.Where(p => p.IsAsilOrYedek == true))
                     {
@@ -293,7 +385,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
 
                             AdSoyad = item.AdSoyad,
-                            EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, KullaniciId = (item.JuriTipAdi == "TezDanismani" ? mBasvur.TezDanismanID : (int?)null), ToOrBcc = true } },
+                            EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, KullaniciId = (item.JuriTipAdi == "TezDanismani" ? mBasvur.TezDanismanID : null), ToOrBcc = true } },
                             MailSablonTipId = (item.JuriTipAdi == "TezDanismani" ? danismanSablonId : asilSablonId),
                             JuriTipAdi = item.JuriTipAdi,
                             UnvanAdi = item.UnvanAdi,
@@ -378,29 +470,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             }
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
-                        if (snded)
-                        {
-                            if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
 
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = contentDetailDto.Title,
-                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
-                                GonderilenMailEkleris = item.GetGonderilenMailEkleris
-                            };
-                            entities.GonderilenMaillers.Add(kModel);
-                            entities.SaveChanges();
-                        }
+                        var kModel = new GonderilenMailler
+                        {
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
+                            GonderilenMailEkleris = item.GetGonderilenMailEkleris
+                        };
+                        entities.GonderilenMaillers.Add(kModel);
+                        entities.SaveChanges();
                     }
 
 
@@ -455,7 +545,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                     new MailSendList
                                     {
                                         EMail = (eMail.IsNullOrWhiteSpace() ? item.Email : eMail),
-                                        KullaniciId = item.JuriTipAdi == "TezDanismani" ? mb.TezDanismanID : (int?)null,
+                                        KullaniciId = item.JuriTipAdi == "TezDanismani" ? mb.TezDanismanID : null,
                                         ToOrBcc = true
                                     }
                                 },
@@ -487,7 +577,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, KullaniciId = ogrenci.KullaniciID, ToOrBcc = true } },
                             MailSablonTipId = mb.OgrenimTipKod.IsDoktora() ? MailSablonTipiEnum.MezSinavSonucBilgiGonderimOgrenciDr : MailSablonTipiEnum.MezSinavSonucBilgiGonderimOgrenciYl,
-                            JuriTipAdi = "",
+                            JuriTipAdi = "Öğrenci",
                         });
                     }
 
@@ -502,7 +592,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.Sablon == null) continue;
                         if (!isLinkOrSonuc)
                         {
-                            item.Attachments.AddRange(MailReportAttachment.GetMezuniyetTezSinavSonucFormuAttachments(srTalepId, true));
+                            item.Attachments.AddRange(MailReportAttachment.GetMezuniyetTezSinavSonucFormuAttachments(srTalepId, item.JuriTipAdi == "TezDanismani"));
                         }
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
 
@@ -551,44 +641,42 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
 
-                        if (snded)
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
+                        var kModel = new GonderilenMailler
                         {
-                            if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = contentDetailDto.Title,
-                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
-                                GonderilenMailEkleris = item.GetGonderilenMailEkleris
-                            };
-                            if (isLinkOrSonuc)
-                            {
-                                var juri = juriler.FirstOrDefault(p => p.UniqueID == item.UniqueId);
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
+                            GonderilenMailEkleris = item.GetGonderilenMailEkleris
+                        };
+                        if (isLinkOrSonuc)
+                        {
+                            var juri = juriler.FirstOrDefault(p => p.UniqueID == item.UniqueId);
 
-                                juri.DegerlendirmeIslemTarihi = null;
-                                juri.DegerlendirmeIslemYapanIP = null;
-                                juri.DegerlendirmeYapanID = null;
-                                juri.MezuniyetSinavDurumID = null;
-                                juri.Aciklama = null;
-                                juri.IsLinkGonderildi = true;
-                                juri.LinkGonderimTarihi = DateTime.Now;
-                                juri.LinkGonderenID = UserIdentity.Current.Id;
-                                db.SaveChanges();
-                                LogIslemleri.LogEkle("SRTaleplerJuri", LogCrudType.Update, juri.ToJson());
-                            }
-
-                            db.GonderilenMaillers.Add(kModel);
+                            juri.DegerlendirmeIslemTarihi = null;
+                            juri.DegerlendirmeIslemYapanIP = null;
+                            juri.DegerlendirmeYapanID = null;
+                            juri.MezuniyetSinavDurumID = null;
+                            juri.Aciklama = null;
+                            juri.IsLinkGonderildi = true;
+                            juri.LinkGonderimTarihi = DateTime.Now;
+                            juri.LinkGonderenID = UserIdentity.Current.Id;
                             db.SaveChanges();
+                            LogIslemleri.LogEkle("SRTaleplerJuri", LogCrudType.Update, juri.ToJson());
                         }
+
+                        db.GonderilenMaillers.Add(kModel);
+                        db.SaveChanges();
                     }
 
                     mmMessage.IsSuccess = true;
@@ -598,8 +686,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                var message = "";
-                message = "Tez Sınavı değerlendirmesi için Jüri üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!";
+                const string message = "Tez Sınavı değerlendirmesi için Jüri üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!";
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
@@ -630,8 +717,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     var enstitu = mb.MezuniyetSureci.Enstituler;
 
                     var mModel = new List<SablonMailModel>();
-                    var juriSablonTipId = 0;
-                    var ogrenciSablonTipId = 0;
+                    int juriSablonTipId;
+                    int ogrenciSablonTipId;
                     if (isOnaylandi)
                     {
                         juriSablonTipId = mb.OgrenimTipKod.IsDoktora() ? MailSablonTipiEnum.MezSinavYerBilgisiGonderimJuriDoktora : MailSablonTipiEnum.MezSinavYerBilgisiGonderimJuriYl;
@@ -648,6 +735,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     mModel.Add(new SablonMailModel
                     {
+                        JuriTipAdi = "Öğrenci",
                         AdSoyad = mb.Ad + " " + mb.Soyad,
                         EMails = new List<MailSendList> { new MailSendList { EMail = mb.Kullanicilar.EMail, KullaniciId = mb.KullaniciID, ToOrBcc = true } },
                         MailSablonTipId = ogrenciSablonTipId,
@@ -657,7 +745,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         mModel.Add(new SablonMailModel
                         {
-
+                            JuriTipAdi = "Danışman",
                             AdSoyad = danisman.UnvanAdi + " " + danisman.AdSoyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, KullaniciId = mb.TezDanismanID, ToOrBcc = true } },
                             MailSablonTipId = juriSablonTipId,
@@ -666,7 +754,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (!mb.TezEsDanismanEMail.IsNullOrWhiteSpace())
                             mModel.Add(new SablonMailModel
                             {
-
+                                JuriTipAdi = "Eş Danışman",
                                 AdSoyad = mb.TezEsDanismanUnvani + " " + mb.TezEsDanismanAdi,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = mb.TezEsDanismanEMail, ToOrBcc = true } },
                                 MailSablonTipId = juriSablonTipId,
@@ -730,7 +818,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
                         if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "EYKTarihi", Value = mb.EYKTarihi.Value.ToFormatDate() });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "EYKTarihi", Value = mb.EYKTarihi.ToFormatDate() });
                         if (item.SablonParametreleri.Any(a => a == "@AdSoyad"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "AdSoyad", Value = item.AdSoyad });
                         if (item.SablonParametreleri.Any(a => a == "@UnvanAdi"))
@@ -783,28 +871,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
-                        if (snded)
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
+                        var kModel = new GonderilenMailler
                         {
-                            if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = contentDetailDto.Title,
-                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
-                                GonderilenMailEkleris = item.GetGonderilenMailEkleris
-                            };
-                            entities.GonderilenMaillers.Add(kModel);
-                            entities.SaveChanges();
-                        }
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
+                            GonderilenMailEkleris = item.GetGonderilenMailEkleris
+                        };
+                        entities.GonderilenMaillers.Add(kModel);
+                        entities.SaveChanges();
                     }
                     var message = "'" + talep.Kullanicilar.Ad + " " + talep.Kullanicilar.Soyad + "'  kullanıcısının yapmış olduğu salon rezervasyonu bilgisi " + juriler.Count + " adet jüriye mail olarak gönderildi!";
                     mmMessage.IsSuccess = true;
@@ -815,7 +901,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                var message = "Salon rezervasyonuna ait jürilere mail gönderilirken bir hata oluştu!";
+                var message = "Salon rezervasyonu için jürilere mail gönderilirken bir hata oluştu!";
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
@@ -918,28 +1004,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
 
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
-                        if (snded)
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
+                        var kModel = new GonderilenMailler
                         {
-                            if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = contentDetailDto.Title,
-                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
-                                GonderilenMailEkleris = item.GetGonderilenMailEkleris
-                            };
-                            entities.GonderilenMaillers.Add(kModel);
-                            entities.SaveChanges();
-                        }
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
+                            GonderilenMailEkleris = item.GetGonderilenMailEkleris
+                        };
+                        entities.GonderilenMaillers.Add(kModel);
+                        entities.SaveChanges();
                     }
                     var message = "'" + talep.Kullanicilar.Ad + " " + talep.Kullanicilar.Soyad + "'  öğrencisinin tez sınav sonucu bilgisi mail olarak gönderildi!";
                     mmMessage.IsSuccess = true;
@@ -1054,28 +1138,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/MezuniyetGelenBasvurular/Index?sMezuniyetBid=" + mezuniyetBasvuru.MezuniyetBasvurulariID + "&sTabId=4", IsLink = true });
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
-                        if (snded)
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
+                        var kModel = new GonderilenMailler
                         {
-                            if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = contentDetailDto.Title,
-                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
-                                GonderilenMailEkleris = item.GetGonderilenMailEkleris
-                            };
-                            db.GonderilenMaillers.Add(kModel);
-                            db.SaveChanges();
-                        }
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
+                            GonderilenMailEkleris = item.GetGonderilenMailEkleris
+                        };
+                        db.GonderilenMaillers.Add(kModel);
+                        db.SaveChanges();
                     }
                     mmMessage.IsSuccess = true;
                     if (sablonTipId == MailSablonTipiEnum.MezTezKontrolTezDosyasiBasarili)
@@ -1091,12 +1173,18 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             catch (Exception ex)
             {
                 var msg = "";
-                if (sablonTipId == MailSablonTipiEnum.MezTezKontrolTezDosyasiBasarili)
-                    msg = "Tez şablon dosyası kontrolü başarılı olduğu bilgisi mail olarak gönderilirken bir hata oluştu! \r\nMezuniyetBasvurulariTezDosyaID:" + mezuniyetBasvurulariTezDosyaId;
-                else if (sablonTipId == MailSablonTipiEnum.MezTezKontrolTezDosyasiOnaylanmadi)
-                    msg = "Tez şablon dosyası kontrolü onaylanmadığı bilgisii mail olarak gönderilirken bir hata oluştu! \r\nMezuniyetBasvurulariTezDosyaID:" + mezuniyetBasvurulariTezDosyaId;
-                else if (sablonTipId == MailSablonTipiEnum.MezTezKontrolTezDosyasiYuklendi)
-                    msg = "Tez şablon dosyası yüklendi bilgisi mail olarak gönderilirken bir hata oluştu! \r\nMezuniyetBasvurulariTezDosyaID:" + mezuniyetBasvurulariTezDosyaId;
+                switch (sablonTipId)
+                {
+                    case MailSablonTipiEnum.MezTezKontrolTezDosyasiBasarili:
+                        msg = "Tez şablon dosyası kontrolü başarılı olduğu bilgisi mail olarak gönderilirken bir hata oluştu! \r\nMezuniyetBasvurulariTezDosyaID:" + mezuniyetBasvurulariTezDosyaId;
+                        break;
+                    case MailSablonTipiEnum.MezTezKontrolTezDosyasiOnaylanmadi:
+                        msg = "Tez şablon dosyası kontrolü onaylanmadığı bilgisii mail olarak gönderilirken bir hata oluştu! \r\nMezuniyetBasvurulariTezDosyaID:" + mezuniyetBasvurulariTezDosyaId;
+                        break;
+                    case MailSablonTipiEnum.MezTezKontrolTezDosyasiYuklendi:
+                        msg = "Tez şablon dosyası yüklendi bilgisi mail olarak gönderilirken bir hata oluştu! \r\nMezuniyetBasvurulariTezDosyaID:" + mezuniyetBasvurulariTezDosyaId;
+                        break;
+                }
 
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(msg + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(msg + "</br> Hata:" + ex.ToExceptionMessage());
@@ -1157,7 +1245,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
                             EnstituAdi = basvuru.EnstituAd,
-                            WebAdresi = basvuru.WebAdresi
+                            WebAdresi = basvuru.WebAdresi,
+                            SistemErisimAdresi = basvuru.SistemErisimAdresi
                         };
                         if (item.Sablon == null) continue;
 
@@ -1190,8 +1279,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             MesajID = null,
                             IslemTarihi = DateTime.Now,
                             Konu = contentDetailDto.Title += " (" + basvuru.OgrenciAdSoyad + ")",
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                            IslemYapanIP = "::1",
                             Aciklama = item.Sablon.Sablon ?? "",
                             AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                             Gonderildi = true,
@@ -1214,12 +1303,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, "::");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetEykTarihineGoreSrAlinmaliOgrenciyeDanismana()
         {
-
             try
             {
                 using (var entities = new LisansustuBasvuruSistemiEntities())
@@ -1248,6 +1336,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                              enst.EnstituKod,
                              enst.EnstituAd,
                              enst.WebAdresi,
+                             enst.SistemErisimAdresi,
                              mez.KullaniciID,
                              mez.MezuniyetBasvurulariID,
                              mez.OgrenciNo,
@@ -1271,17 +1360,19 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     if (!mezuniyetBasvurulari.Any()) return;
 
                     var sablonTipIds = mezuniyetBasvurulari.Select(s => s.MailSablonTipID).Distinct().ToList();
-                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIds.Contains(p.MailSablonTipID))
-                        .ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIds.Contains(p.MailSablonTipID)).ToList();
+
+
+
                     foreach (var basvuru in mezuniyetBasvurulari)
                     {
-
 
                         var item = new SablonMailModel
                         {
                             Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
                             EnstituAdi = basvuru.EnstituAd,
                             WebAdresi = basvuru.WebAdresi,
+                            SistemErisimAdresi = basvuru.SistemErisimAdresi,
                             AdSoyad = basvuru.OgrenciAdSoyad
                         };
                         if (item.Sablon == null) continue;
@@ -1292,7 +1383,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
 
                         item.EMails.Add(new MailSendList { EMail = basvuru.DanismanEmail, KullaniciId = basvuru.TezDanismanID, ToOrBcc = true });
-                        item.EMails.Add(new MailSendList { EMail = basvuru.TezEsDanismanEMail, ToOrBcc = true });
+                        if (!basvuru.TezEsDanismanEMail.IsNullOrWhiteSpace()) item.EMails.Add(new MailSendList { EMail = basvuru.TezEsDanismanEMail, ToOrBcc = true });
                         item.EMails.Add(new MailSendList { EMail = basvuru.OgrenciEmail, KullaniciId = basvuru.KullaniciID, ToOrBcc = true });
 
 
@@ -1317,8 +1408,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             MesajID = null,
                             IslemTarihi = DateTime.Now,
                             Konu = contentDetailDto.Title += " (" + item.AdSoyad + ")",
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                            IslemYapanIP = "::1",
                             Aciklama = item.Sablon.Sablon ?? "",
                             AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                             Gonderildi = true,
@@ -1341,7 +1432,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, "::");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetEykTarihineGoreSrAlinmadiEnstituye()
@@ -1373,6 +1464,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                              enst.EnstituKod,
                              enst.EnstituAd,
                              enst.WebAdresi,
+                             enst.SistemErisimAdresi,
                              mez.MezuniyetBasvurulariID,
                              mez.OgrenciNo,
                              OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
@@ -1395,6 +1487,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
                             EnstituAdi = basvuru.EnstituAd,
                             WebAdresi = basvuru.WebAdresi,
+                            SistemErisimAdresi = basvuru.SistemErisimAdresi,
                             AdSoyad = basvuru.OgrenciAdSoyad
                         };
                         if (item.Sablon == null) continue;
@@ -1431,8 +1524,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             MesajID = null,
                             IslemTarihi = DateTime.Now,
                             Konu = contentDetailDto.Title += " (" + item.AdSoyad + ")",
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                            IslemYapanIP = "::1",
                             Aciklama = item.Sablon.Sablon ?? "",
                             AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                             Gonderildi = true,
@@ -1456,7 +1549,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, "::");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetDanismanDegerlendirmeHatirlatmaDanismana()
@@ -1496,6 +1589,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                              enst.EnstituKod,
                              enst.EnstituAd,
                              enst.WebAdresi,
+                             enst.SistemErisimAdresi,
                              mez.MezuniyetBasvurulariID,
                              mez.OgrenimTipKod,
                              mez.OgrenciNo,
@@ -1525,7 +1619,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
                             EnstituAdi = basvuru.EnstituAd,
-                            WebAdresi = basvuru.WebAdresi
+                            WebAdresi = basvuru.WebAdresi,
+                            SistemErisimAdresi = basvuru.SistemErisimAdresi
                         };
                         if (item.Sablon == null) continue;
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
@@ -1565,8 +1660,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             MesajID = null,
                             IslemTarihi = DateTime.Now,
                             Konu = contentDetailDto.Title += " (" + basvuru.DanismanAdSoyad + ")",
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                            IslemYapanIP = "::1",
                             Aciklama = item.Sablon.Sablon ?? "",
                             AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                             Gonderildi = true,
@@ -1590,7 +1685,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, "::");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetSinavSonucuGirilmediOgrenciyeDanismana()
@@ -1626,6 +1721,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                              enst.EnstituKod,
                              enst.EnstituAd,
                              enst.WebAdresi,
+                             enst.SistemErisimAdresi,
                              mez.KullaniciID,
                              mez.MezuniyetBasvurulariID,
                              mez.OgrenciNo,
@@ -1651,7 +1747,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
                             EnstituAdi = basvuru.EnstituAd,
-                            WebAdresi = basvuru.WebAdresi
+                            WebAdresi = basvuru.WebAdresi,
+                            SistemErisimAdresi = basvuru.SistemErisimAdresi
+
                         };
                         if (item.Sablon == null) continue;
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
@@ -1691,8 +1789,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             MesajID = null,
                             IslemTarihi = DateTime.Now,
                             Konu = contentDetailDto.Title += " (" + basvuru.OgrenciAdSoyad + ")",
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                            IslemYapanIP = "::1",
                             Aciklama = item.Sablon.Sablon ?? "",
                             AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                             Gonderildi = true,
@@ -1715,7 +1813,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, "::");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetTezKontrolTezDosyasiYuklenmeliOgrenciye()
@@ -1774,7 +1872,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
                             EnstituAdi = basvuru.EnstituAd,
-                            WebAdresi = basvuru.WebAdresi
+                            WebAdresi = basvuru.WebAdresi,
+                            SistemErisimAdresi = basvuru.SistemErisimAdresi
                         };
                         if (item.Sablon == null) continue;
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
@@ -1807,8 +1906,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             MesajID = null,
                             IslemTarihi = DateTime.Now,
                             Konu = contentDetailDto.Title += " (" + basvuru.OgrenciAdSoyad + ")",
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                            IslemYapanIP = "::1",
                             Aciklama = item.Sablon.Sablon ?? "",
                             AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                             Gonderildi = true,
@@ -1831,7 +1930,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, "::");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailCiltliTezTeslimYapilmaliOgrenciye()
@@ -1894,7 +1993,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
                             EnstituAdi = basvuru.EnstituAd,
-                            WebAdresi = basvuru.WebAdresi
+                            WebAdresi = basvuru.WebAdresi,
+                            SistemErisimAdresi = basvuru.SistemErisimAdresi
                         };
                         if (item.Sablon == null) continue;
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
@@ -1926,8 +2026,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             MesajID = null,
                             IslemTarihi = DateTime.Now,
                             Konu = contentDetailDto.Title += " (" + basvuru.OgrenciAdSoyad + ")",
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                            IslemYapanIP = "::1",
                             Aciklama = item.Sablon.Sablon ?? "",
                             AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                             Gonderildi = true,
@@ -1950,7 +2050,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, "::");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailCiltliTezTeslimYapilmadiEnstituye()
@@ -2009,7 +2109,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
                             EnstituAdi = basvuru.EnstituAd,
-                            WebAdresi = basvuru.WebAdresi
+                            WebAdresi = basvuru.WebAdresi,
+                            SistemErisimAdresi = basvuru.SistemErisimAdresi
                         };
                         if (item.Sablon == null) continue;
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
@@ -2045,8 +2146,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             MesajID = null,
                             IslemTarihi = DateTime.Now,
                             Konu = contentDetailDto.Title += " (" + basvuru.OgrenciAdSoyad + ")",
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
+                            IslemYapanID = GlobalSistemSetting.SystemDefaultAdminKullaniciId,
+                            IslemYapanIP = "::1",
                             Aciklama = item.Sablon.Sablon ?? "",
                             AciklamaHtml = contentDetailDto.HtmlContent ?? "",
                             Gonderildi = true,
@@ -2069,7 +2170,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, "::");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
     }

@@ -103,8 +103,8 @@
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Kayit", "SrOzelTanimlar" , new { id=item.SROzelTanimID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="getDetail('@item.SROzelTanimID',true,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            <a href="@Url.Action("Kayit", "SrOzelTanimlar" , new { id=item.SROzelTanimID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="getDetail('@item.SROzelTanimID',true,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.SROzelTanimID" style="display:none">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -27,6 +28,22 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
             var unvanList = new List<string> { "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
             dct.AddRange(unvanList.Select(item => new CmbStringDto { Value = item, Caption = item }));
+            return dct;
+
+        }
+
+        public static List<CmbIntDto> CmbUnvanlar(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var data = db.Unvanlars.OrderBy(o => o.UnvanAdi).ToList();
+                foreach (var item in data)
+                {
+                    dct.Add(new CmbIntDto { Value = item.UnvanID, Caption = item.UnvanAdi });
+                }
+            }
             return dct;
 
         }

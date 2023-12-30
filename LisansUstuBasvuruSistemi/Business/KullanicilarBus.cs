@@ -8,13 +8,13 @@ using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static StudentControl OgrenciKontrol(string tcKimlikNo = null, string donemId = null)
         {
-            var obsData = new ObsGetData();
+            var obsData = new ObsServiceData();
             if (donemId == null)
             {
                 var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
@@ -156,7 +156,61 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+        public static List<CmbIntDto> CmbAktifOgrenimDurumu(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? isHesapKayittaGozuksun = null)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var qData = db.OgrenimDurumlaris.AsQueryable();
+                if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
+                if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
+                if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
+                if (isHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
+                var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
+                foreach (var item in qData)
+                {
+                    dct.Add(new CmbIntDto { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi });
+                }
+            }
+            return dct;
 
+        }
+        public static List<CmbIntDto> CmbAktifOgrenimDurumu2(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? isHesapKayittaGozuksun = null)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var qData = db.OgrenimDurumlaris.AsQueryable();
+                if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
+                if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
+                if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
+                if (isHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
+                var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
+                foreach (var item in qData)
+                {
+                    dct.Add(new CmbIntDto { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi });
+                }
+            }
+            return dct;
+
+        }
+        public static List<CmbIntDto> CmbCinsiyetler(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var data = db.Cinsiyetlers.Where(p => p.IsAktif).OrderBy(o => o.CinsiyetAdi).ToList();
+                foreach (var item in data)
+                {
+                    dct.Add(new CmbIntDto { Value = item.CinsiyetID, Caption = item.CinsiyetAdi });
+                }
+            }
+            return dct;
+
+        }
         public static List<CheckObject<Kullanicilar>> GetProgramYetkisiOlanKullanicilar(List<Kullanicilar> kullanicilar, string programKod, string enstituKod = null)
         {
             var data = new List<CheckObject<Kullanicilar>>();

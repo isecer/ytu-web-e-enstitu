@@ -123,23 +123,21 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 doc.LoadHtml(model.HtmlContent);
 
                 // Belirli bir elementin id bilgisine göre seçim
-                HtmlNode targetElement = doc.DocumentNode.SelectSingleNode("//td[@id='mSendContent']");
+                var targetElement = doc.DocumentNode.SelectSingleNode("//td[@id='mSendContent']");
 
                 // Element bulunursa ve içine eklenecek HTML'i belirle
-                if (targetElement != null)
+                if (targetElement == null) return model;
+                var yeniHtml = "<br/><div><strong><u>İlgili Ekler:</u></strong>";
+                foreach (var itemEk in mailItem.SablonEkleri)
                 {
-                    var yeniHtml = "<br/><div><strong><u>İlgili Ekler:</u></strong>";
-                    foreach (var itemEk in mailItem.SablonEkleri)
-                    {
-                        yeniHtml += "</br><a href='" + mailItem.SistemErisimAdresi.Replace("/fbe", "").Replace("/sbe", "").Replace("/tet", "") + itemEk.EkDosyaYolu + "' target='_blank'>" + itemEk.EkAdi + "<a>";
-                    }
-                    yeniHtml += "</div></br>";
-
-                    // Yeni HTML'i ekleyerek hedef elementi güncelle
-                    var yeniDugum = doc.CreateTextNode(yeniHtml);
-                    targetElement.InnerHtml += yeniHtml;
-                    model.HtmlContent = doc.DocumentNode.OuterHtml;
+                    yeniHtml += "</br><a href='" + mailItem.SistemErisimAdresi.Replace("/fbe", "").Replace("/sbe", "").Replace("/tet", "") + itemEk.EkDosyaYolu + "' target='_blank'>" + itemEk.EkAdi + "<a>";
                 }
+                yeniHtml += "</div></br>";
+
+                // Yeni HTML'i ekleyerek hedef elementi güncelle
+                doc.CreateTextNode(yeniHtml);
+                targetElement.InnerHtml += yeniHtml;
+                model.HtmlContent = doc.DocumentNode.OuterHtml;
             }
 
             return model;

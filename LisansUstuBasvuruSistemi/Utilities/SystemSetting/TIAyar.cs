@@ -11,8 +11,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
     {
         public const string TikOneriAlimiAcik = "Tik öneri alımı açık"; 
         public const string TiAraRaporSinaviOnlineYapilabilsin = "Tez izleme ara rapor sınavı online yapılabilsin";
+        public const string TiAraRaporSinaviYuzYuzeYapilabilsin = "Tez izleme ara rapor sınavı yüz yüze yapılabilsin";
         public const string TezOneriSavunmaBasvuruAlimiAcik = "Tez öneri savunma sınavı başvuru alımı açık";
-        public const string TezOneriSavunmaSinaviOnlineYapilabilsin= "Tez öneri savunma sınavı online yapılabilsin"; 
+        public const string TezOneriSavunmaSinaviOnlineYapilabilsin= "Tez öneri savunma sınavı online yapılabilsin";
+        public const string TezOneriSavunmaSinaviYuzYuzeYapilabilsin = "Tez öneri savunma sınavı yüz yüze yapılabilsin";
         public const string TezOneriToplamBasarisizTezOneriSavunmaHak = "Toplam başarısız tez öneri savunma sınavı hakkı";
         public const string TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter = "Düzeltme alan öğrenci yeni sınavı kaç ay içinde amalı";
         public const string TezOneriIlkSavunmaHakkiAyKriter= "ilk başvuru için 1. Savunma kaç ay içinde yapılmalı";

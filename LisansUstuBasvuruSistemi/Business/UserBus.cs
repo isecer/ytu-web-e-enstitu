@@ -9,6 +9,7 @@ using System.Security;
 using System.Web;
 using System.Web.Security;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -195,7 +196,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var sifre = pwd.ComputeHash(Management.Tuz);
+                var sifre = pwd.ComputeHash(GlobalSistemSetting.Tuz);
                 var kullanici = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == kullaniciAdi || p.TcKimlikNo == kullaniciAdi || p.EMail == kullaniciAdi);
                 if (kullanici != null)
                 {

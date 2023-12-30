@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Filters
 {
-    public class IPFilterAttribute : ActionFilterAttribute
+    public class IpFilterAttribute : ActionFilterAttribute
     {
         private readonly string[] _ipAddressesToBlock;
 
-        public IPFilterAttribute(params string[] ipAddressesToBlock)
+        public IpFilterAttribute(params string[] ipAddressesToBlock)
         {
             _ipAddressesToBlock = ipAddressesToBlock;
             _ipAddressesToBlock = new List<string> { "194.180.174.109" }.ToArray();

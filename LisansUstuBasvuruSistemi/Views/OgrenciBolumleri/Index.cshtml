@@ -62,8 +62,8 @@
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Kayit", "OgrenciBolumleri", new { id = item.OgrenciBolumID })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.OgrenciBolumID')"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            <a href="@Url.Action("Kayit", "OgrenciBolumleri", new { id = item.OgrenciBolumID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.OgrenciBolumID')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
 
                                         </td>
                                     </tr>

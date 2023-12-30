@@ -80,11 +80,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (data != null)
                 {
                     model = data;
-                    enstituKod = data.AnabilimDallari.EnstituKod; 
+                    enstituKod = data.AnabilimDallari.EnstituKod;
                 }
             }
 
-            ViewBag.AnabilimDaliID = new SelectList(Management.CmbGetYetkiliAnabilimDallari(true, enstituKod), "Value", "Caption", model.AnabilimDaliID);
+            ViewBag.AnabilimDaliID = new SelectList(AnabilimDallariBus.CmbGetYetkiliAnabilimDallari(true, enstituKod), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.KullaniciID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.OgrenciBolumID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
 
@@ -92,7 +92,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var kuls = UserBus.GetRoluOlanKullanicilar(roleName, enstituKod);
             var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, model.ProgramKod);
             ViewBag.KullaniciIDs = rolls.Where(p => p.Checked == true).Select(s => s.Value.KullaniciID).ToList();
-             
+
 
             ViewBag.OldID = model.ProgramKod;
             ViewBag.EnstituKod = enstituKod;
@@ -204,7 +204,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = enstituKod;
             ViewBag.MmMessage = mmMessage;
             ViewBag.OldID = oldId;
-            ViewBag.AnabilimDaliID = new SelectList(Management.CmbGetYetkiliAnabilimDallari(true, enstituKod), "Value", "Caption", kModel.AnabilimDaliID);
+            ViewBag.AnabilimDaliID = new SelectList(AnabilimDallariBus.CmbGetYetkiliAnabilimDallari(true, enstituKod), "Value", "Caption", kModel.AnabilimDaliID);
             ViewBag.KullaniciID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.OgrenciBolumID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
 
@@ -242,7 +242,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + pAdi.ProgramAdi + "' İsimli Program Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

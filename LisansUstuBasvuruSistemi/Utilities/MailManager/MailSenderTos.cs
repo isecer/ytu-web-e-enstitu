@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
@@ -100,8 +98,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
                         item.WebAdresi = enstitu.WebAdresi;
+                        item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
 
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId);
+
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
                         item.SablonEkleri.Add(new MailSablonlariEkleri { EkAdi = ogrenci.Ad + " " + ogrenci.Soyad + " Tez Öneri Savunma Çalışma Raporu Dosyası", EkDosyaYolu = toBasvuruSavunma.CalismaRaporDosyaYolu });
 
@@ -224,9 +224,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                         };
                         entities.GonderilenMaillers.Add(kModel);
-                      
 
-                    } 
+
+                    }
                     if (snded)
                     {
                         entities.SaveChanges();
@@ -241,7 +241,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                var message = "Tez Öneri Savunma toplantısı için Komite üyelerine mail gönderilirken bir hata oluştu! \r\nSRTalepID:" + srTalepId;
+                var message = "Tez Öneri Savunma toplantısı için Komite üyelerine mail gönderilirken bir hata oluştu!";
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
@@ -260,13 +260,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     var qJurilers = toBasvuruSavunma.ToBasvuruSavunmaKomites.AsQueryable();
                     if (isLinkOrSonuc)
                     {
-                        if (tosKomiteUniqueId.HasValue) qJurilers = qJurilers.Where(p => p.UniqueID == (tosKomiteUniqueId ?? p.UniqueID));
-                        else qJurilers = qJurilers.Where(p => !p.IsTezDanismani);
+                        qJurilers = tosKomiteUniqueId.HasValue ? qJurilers.Where(p => !tosKomiteUniqueId.HasValue || p.UniqueID == tosKomiteUniqueId) : qJurilers.Where(p => !p.IsTezDanismani);
                     }
                     else
                     {
-                        if (tosKomiteUniqueId.HasValue) qJurilers = qJurilers.Where(p => p.UniqueID == tosKomiteUniqueId);
-                        else qJurilers = qJurilers.Where(p => p.IsTezDanismani);
+                        qJurilers = tosKomiteUniqueId.HasValue ? qJurilers.Where(p => p.UniqueID == tosKomiteUniqueId) : qJurilers.Where(p => p.IsTezDanismani);
                     }
                     var juriler = qJurilers.ToList();
 
@@ -312,6 +310,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
                         item.WebAdresi = enstitu.WebAdresi;
+                        item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
 
                         var juri = juriler.FirstOrDefault(p => p.UniqueID == item.UniqueId);
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId);
@@ -421,8 +420,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                var message = "";
-                message = isLinkOrSonuc ? "Tez Öneri Savunması değerlendirmesi için Komite üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!" : "Tez Öneri Savunması değerlendirme sonucu Komite üyelerine mail olarak gönderilirken bir hata oluştu!";
+                var message = isLinkOrSonuc ? "Tez Öneri Savunması değerlendirmesi için Komite üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!" : "Tez Öneri Savunması değerlendirme sonucu Komite üyelerine mail olarak gönderilirken bir hata oluştu!";
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());

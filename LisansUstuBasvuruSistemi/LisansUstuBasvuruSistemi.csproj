@@ -222,18 +222,23 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\RouteSet.cs" />
+    <Compile Include="Business\AnabilimDallariBus.cs" />
     <Compile Include="Business\AnketlerBus.cs" />
     <Compile Include="Business\BelgeTalepBus.cs" />
+    <Compile Include="Business\BirimlerBus.cs" />
     <Compile Include="Business\DonemlerBus.cs" />
     <Compile Include="Business\EnstituBus.cs" />
     <Compile Include="Business\GonderilenMaillerBus.cs" />
+    <Compile Include="Business\LisansustuBasvuruBus.cs" />
     <Compile Include="Business\MailSablonTipleriBus.cs" />
     <Compile Include="Business\MenulerBus.cs" />
     <Compile Include="Business\MesajlarBus.cs" />
     <Compile Include="Business\MezuniyetBus.cs" />
     <Compile Include="Business\MezuniyetSureciBus.cs" />
     <Compile Include="Business\OgrenimTipleriBus.cs" />
+    <Compile Include="Business\ProgramlarBus.cs" />
     <Compile Include="Business\RollerBus.cs" />
+    <Compile Include="Business\SinavTipleriBus.cs" />
     <Compile Include="Business\SistemBilgilendirmeBus.cs" />
     <Compile Include="Business\SrTalepleriBus.cs" />
     <Compile Include="Business\TaleplerBus.cs" />
@@ -242,6 +247,7 @@
     <Compile Include="Business\KullanicilarBus.cs" />
     <Compile Include="Business\TijBus.cs" />
     <Compile Include="Business\TosBus.cs" />
+    <Compile Include="Business\UniversitelerBus.cs" />
     <Compile Include="Business\UnvanlarBus.cs" />
     <Compile Include="Business\UserBus.cs" />
     <Compile Include="Business\YeterlikBus.cs" />
@@ -993,7 +999,8 @@
     <Compile Include="Utilities\Dtos\MSurecDetay.cs" />
     <Compile Include="Utilities\Dtos\MulakatBilgiModel.cs" />
     <Compile Include="Utilities\Dtos\OnlineOdemeProgramDetayModel.cs" />
-    <Compile Include="Utilities\Dtos\PersisWsDataModel.cs" />
+    <Compile Include="Utilities\SystemSetting\GlobalSistemSetting.cs" />
+    <Compile Include="WebServiceData\PersisService\PersisServiceModel.cs" />
     <Compile Include="Utilities\Dtos\RprBasvuruSonucBolumModel.cs" />
     <Compile Include="Utilities\Dtos\RprBasvuruSonucModel.cs" />
     <Compile Include="Utilities\Dtos\RwMulakatJuri.cs" />
@@ -1069,12 +1076,12 @@
     <Compile Include="Utilities\MailManager\MailSenderTos.cs" />
     <Compile Include="Utilities\MailManager\MailSenderYeterlik.cs" />
     <Compile Include="Utilities\SystemData\ComboData.cs" />
-    <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
-    <Compile Include="Utilities\Dtos\KmSinavTipleri.cs" />
+    <Compile Include="WebServiceData\ObsService\ObsServiceModel.cs" />
+    <Compile Include="Utilities\Dtos\SinavTipleriKayitDto.cs" />
     <Compile Include="Utilities\Dtos\KmSinavTipleriSPNA.cs" />
     <Compile Include="Utilities\Dtos\KmSalonlar.cs" />
     <Compile Include="Utilities\Dtos\KmMulakat.cs" />
-    <Compile Include="Utilities\Dtos\KmSRTalep.cs" />
+    <Compile Include="Utilities\Dtos\SrTalepleriKayitDto.cs" />
     <Compile Include="Utilities\Dtos\KmTDOBasvuruDanisman.cs" />
     <Compile Include="Utilities\Dtos\KmTDOBasvuru.cs" />
     <Compile Include="Utilities\Dtos\KmTiBasvuru.cs" />
@@ -1168,9 +1175,8 @@
     <Compile Include="Utilities\Helpers\DevexpressHelper.cs" />
     <Compile Include="Utilities\Logs\LogIslemleri.cs" />
     <Compile Include="Utilities\MailManager\MailManager.cs" />
-    <Compile Include="Models\Management.cs" />
     <Compile Include="Utilities\MenuAndRoles\MenuVeRoller.cs" />
-    <Compile Include="WebServiceData\ObsService\ObsGetData.cs" />
+    <Compile Include="WebServiceData\ObsService\ObsServiceData.cs" />
     <Compile Include="Utilities\SystemSetting\TdoAyar.cs" />
     <Compile Include="Utilities\SystemSetting\TiAyar.cs" />
     <Compile Include="Utilities\SystemSetting\MezuniyetAyar.cs" />
@@ -1386,6 +1392,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="WebServiceData\PersisService\PersisServiceData.cs" />
     <Compile Include="WebServiceData\YokService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -4966,6 +4973,7 @@
     <Content Include="Scripts\bootstrap-select\js\i18n\defaults-zh_TW.js" />
     <Content Include="Scripts\bootstrap-select\js\i18n\defaults-zh_TW.min.js" />
     <Content Include="Scripts\fullcalendar.js" />
+    <Content Include="Scripts\inputTextChangeUpperCase.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -5495,7 +5503,6 @@
     <Content Include="Views\Mezuniyet\TezTeslimFormu.cshtml" />
     <Content Include="Views\Ajax\GetDxReport.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\JuriOneriFormu.cshtml" />
-    <Content Include="Views\Ajax\GetChkList.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\GetTutanakRaporu.cshtml" />
     <Content Include="Views\MezuniyetSureci\GetOtBilgiM.cshtml" />
     <Content Include="Views\Ajax\BasvuruGonderilenMailler.cshtml" />

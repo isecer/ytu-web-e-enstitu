@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Logs
 {
@@ -15,11 +16,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
     }
     public static class LogIslemleri
     {
-        public static void LogEkle(string tabloAdi, string islemTipi, string tableData)
+        public static void LogEkle(string tabloAdi, string islemTipi, string tableData, bool isSystemUser = false)
         {
-            LogEkle(tabloAdi, null, islemTipi, tableData);
+            LogEkle(tabloAdi, null, islemTipi, tableData, isSystemUser);
         }
-        public static void LogEkle(string tabloAdi, string aciklama, string islemTipi, string tableData)
+        public static void LogEkle(string tabloAdi, string aciklama, string islemTipi, string tableData, bool isSystemUser = false)
         {
             try
             {
@@ -34,8 +35,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
                         Aciklama = aciklama,
                         TableData = tableData,
                         IslemTarihi = DateTime.Now,
-                        IslemYapanID = UserIdentity.Current.Id,
-                        IslemYapanIP = UserIdentity.Ip
+                        IslemYapanID = isSystemUser ? GlobalSistemSetting.SystemDefaultAdminKullaniciId : UserIdentity.Current.Id,
+                        IslemYapanIP = isSystemUser ? UserIdentity.Ip : "::1"
                     });
                     db.SaveChanges();
                 }

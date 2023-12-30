@@ -275,25 +275,25 @@
                                         {
                                             if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                                             {
-                                                <a href="javascript:void(0)" onclick="GetTdoDanismanDegisiklikFormu(@Model.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Danışman Değişikliği Formunu Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="GetTdoDanismanDegisiklikFormu(@Model.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" title="Danışman Değişikliği Formunu Düzelt"></i></a>
                                             }
                                             else if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                                             {
-                                                <a href="javascript:void(0)" onclick="GetTdoDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Tez Dili/Başlığı Değişikliği Formunu Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="GetTdoDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" title="Tez Dili/Başlığı Değişikliği Formunu Düzelt"></i></a>
                                             }
                                             else if (item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                                             {
-                                                <a href="javascript:void(0)" onclick="GetTdoDanismanDilBaslikDegisiklikFormu(@item.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Danışman/Tez Dili/Tez Başlığı Öneri Formunu Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="GetTdoDanismanDilBaslikDegisiklikFormu(@item.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" title="Danışman/Tez Dili/Tez Başlığı Öneri Formunu Düzelt"></i></a>
                                             }
                                             else
                                             {
-                                                <a href="javascript:void(0)" onclick="GetTdoYeniDanismanFormu(@item.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Danışman Öneri Formunu Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="GetTdoYeniDanismanFormu(@item.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" title="Danışman Öneri Formunu Düzelt"></i></a>
                                             }
-                                            <a href="javascript:void(0)" onclick="DetayDanismanSil('@item.TDOBasvuruID',@item.TDOBasvuruDanismanID,'@item.BasvuruTarihi.ToFormatDateAndTime()','@item.TalepTipAdi')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Danışman Öneri Formunu Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="DetayDanismanSil('@item.TDOBasvuruID',@item.TDOBasvuruDanismanID,'@item.BasvuruTarihi.ToFormatDateAndTime()','@item.TalepTipAdi')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Danışman Öneri Formunu Sil"></i></a>
                                         }
                                         @if (tdoEykyaGonderimYetkisi && Model.AktifTDOBasvuruDanismanID == item.TDOBasvuruDanismanID && item.IsObsData)
                                         {
-                                            <a href="javascript:void(0)" onclick="DetayDanismanSil('@item.TDOBasvuruID',@item.TDOBasvuruDanismanID,'@item.BasvuruTarihi.ToFormatDateAndTime()','@item.TalepTipAdi')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Danışman Öneri Formunu Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="DetayDanismanSil('@item.TDOBasvuruID',@item.TDOBasvuruDanismanID,'@item.BasvuruTarihi.ToFormatDateAndTime()','@item.TalepTipAdi')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Danışman Öneri Formunu Sil"></i></a>
                                         }
                                     </td>
                                 </tr>
@@ -824,14 +824,14 @@
                                                                         <td class="CaptionTd">:</td>
                                                                         <td class="ValueTd form-group">
                                                                             <input type="hidden" id="IsYeniTezBasligiGozuksun_@item.TDOBasvuruDanismanID" value="@item.IsYeniTezBasligiGozuksun.ToString().ToLower()" />
-                                                                            <input type="text" id="TezBaslikTr_@item.TDOBasvuruDanismanID" autocomplete="off" maxlength="512" value="@(item.IsYeniTezBasligiGozuksun ? item.YeniTezBaslikTr : item.TezBaslikTr)" class="form-control " style="color:black;" />
+                                                                            <input type="text" id="TezBaslikTr_@item.TDOBasvuruDanismanID" autocomplete="off" maxlength="512" value="@(item.IsYeniTezBasligiGozuksun ? item.YeniTezBaslikTr : item.TezBaslikTr)" class="form-control UpperTextTr" style="color:black;" />
                                                                         </td>
                                                                     </tr>
                                                                     <tr id="EYKOnayTezBaslikEnRow_@item.TDOBasvuruDanismanID" class="form-group hide">
                                                                         <td class="CaptionTd">@(item.IsYeniTezBasligiGozuksun ? "Yeni" : "") Tez Başlığı İngilizce</td>
                                                                         <td class="CaptionTd">:</td>
                                                                         <td class="ValueTd form-group">
-                                                                            <input type="text" id="TezBaslikEn_@item.TDOBasvuruDanismanID" autocomplete="off" maxlength="512" value="@(item.IsYeniTezBasligiGozuksun ? item.YeniTezBaslikEn : item.TezBaslikEn)" class="form-control " style="color:black;" />
+                                                                            <input type="text" id="TezBaslikEn_@item.TDOBasvuruDanismanID" autocomplete="off" maxlength="512" value="@(item.IsYeniTezBasligiGozuksun ? item.YeniTezBaslikEn : item.TezBaslikEn)" class="form-control UpperTextEn" style="color:black;" />
                                                                         </td>
                                                                     </tr>
                                                                 }
@@ -1186,7 +1186,7 @@
 }
 <script>
     $(function () {
-        $('.tooltips').tooltip();
+        
         jQuery('._popover').popover({ trigger: 'hover' });
         $('.tarihB').datetimepicker({
             lang: 'tr',

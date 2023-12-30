@@ -10,6 +10,7 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -22,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string ekd)
         {
             var sEkod = EnstituBus.GetSelectedEnstitu(ekd);
-            return Index(new FmMezuniyetYayinTurleri { PageSize = Management.PageSize, Expand = false });
+            return Index(new FmMezuniyetYayinTurleri { PageSize = GlobalSistemSetting.PageTableRowSize, Expand = false });
         }
         [HttpPost]
         public ActionResult Index(FmMezuniyetYayinTurleri model)

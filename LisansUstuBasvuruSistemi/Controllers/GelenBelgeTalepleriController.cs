@@ -186,10 +186,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipId);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(true, 0), "Value", "Caption", model.OgretimYili);
             ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumId);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumId);
+            ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumId);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", model.ProgramKod);
-            ViewBag.DilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", model.DilKodu);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", model.ProgramKod);
+            ViewBag.DilKodu = new SelectList(BelgeTalepBus.GetDiller(true), "Value", "Caption", model.DilKodu);
             ViewBag.BuGunkuKayitlar = new SelectList(BelgeTalepBus.GetCmbBelgeTeslimSaatler(), "Value", "Caption", model.BuGunkuKayitlar);
             return View(model);
         }

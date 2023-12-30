@@ -1,11 +1,11 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model Enstituler
 @{
     ViewBag.Title = "Home";
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
     bool isMesajGonder = (bool)ViewBag.IsMesajGonder;
     var mesajGroupId = (string)ViewBag.MesajGroupID;
     var duyurular = (List<FrDuyurularDto>)ViewBag.Duyurular;
@@ -30,87 +30,30 @@
                     <div class="panel-body">
 
 
-                        <table class="table">
-                            <tbody>
+                        <div class="tasks">
 
-                                @foreach (var item in duyurular)
-                                {
+                            @foreach (var item in duyurular)
+                            { 
+                                <div class="task-item task-info" style="cursor: auto;">
+                                    <div class="task-footer" style="color:green;font-weight:bold;">
+                                        <div class="pull-left"><span class="fa fa-clock-o"></span>  @item.Tarih.ToFormatDateAndTime()<br/>@item.Baslik</div>
+                                    </div>
+                                    <div class="task-text" style="padding-bottom: 0px; ">
+                                        @Html.Raw(item.AciklamaHtml)
+                                    </div>
+                                    <div class="task-footer">
+                                        @if (item.EkSayisi > 0)
+                                        {
+                                            foreach (var item2 in item.DuyuruEkleris.Select((s, inx) => new { inx, s }))
+                                            {
+                                                <a href="@item2.s.DosyaYolu" style="color:green;font-size:8pt;" target="_blank"> @(item2.inx + 1)) <img src="/Images/Attachment.png" style="height: 16px;"> @item2.s.DosyaEkAdi</a><br />
+                                            }
+                                        }
+                                    </div>
+                                </div>
 
-                                    <tr class="cls-@item.DuyuruID">
-                                        <td>
-
-                                            <div class="panel panel-success">
-                                                <div class="panel-heading" style="padding:1px;">
-                                                    <div class="portlet-title" style="font-size:13pt;font-weight:bold;">
-                                                        <table style="width: 100%; table-layout: fixed;">
-                                                            <tr>
-                                                                <td style="padding-left: 1px; padding-right: 1px;">
-                                                                    @item.Baslik
-                                                                </td>
-                                                                <td style="width: 170px; padding-left: 1px; padding-right: 1px;vertical-align:top;text-align:right;">
-                                                                    @item.Tarih.ToFormatDateAndTime()
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                        <ul class="panel-controls">
-                                                            @* <li><a href="javascript:void(0);" onclick="printContent('cls-@item.DuyuruID')"><span class="fa fa-print"></span></a></li>*@
-                                                        </ul>
-                                                    </div>
-
-                                                </div>
-                                                <div class="panel-body" style="padding: 1px;">
-                                                    <div class="panel panel-default form-horizontal" style="margin-bottom:0px;">
-                                                        <div class="panel-body form-group-separated">
-                                                            <div class="form-group">
-                                                                <div class="scrolkikko" style="max-height: 400px; width:100%; overflow:hidden;padding:2px;">
-                                                                    @Html.Raw(item.AciklamaHtml)
-                                                                </div>
-                                                            </div>
-                                                            @if (item.EkSayisi > 0)
-                                                            {
-                                                                <div class="form-group">
-                                                                    <label class="col-md-2 col-xs-3 control-label padding-top-0 padding-bottom-0">Ekler <img src="~/Images/Attachment.png" style="height: 16px;" /></label>
-                                                                    <div class="col-md-10  col-xs-9 padding-top-0 padding-bottom-0 " style="text-align: left;">
-                                                                        <div class="panel panel-warning" style="margin:0px;padding:0px;">
-                                                                            <div class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
-                                                                                <div class="scrolkikko" style="max-height: 100px; width:100%; overflow:hidden;">
-                                                                                    <table style="width: 100%; table-layout: fixed;">
-                                                                                        @if (item.EkSayisi > 0)
-                                                                                        {
-                                                                                            foreach (var item2 in item.DuyuruEkleris.Select((s, inx) => new { inx, s }))
-                                                                                            {
-                                                                                                <tr>
-                                                                                                    <td style="width: 25px;">@(item2.inx + 1))</td>
-                                                                                                    <td class="name"><a href="@item2.s.DosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item2.s.DosyaEkAdi</a></td>
-                                                                                                </tr>
-                                                                                            }
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            <tr>
-                                                                                                <td colspan="2">Ek Yok</td>
-                                                                                            </tr>
-                                                                                        }
-
-                                                                                    </table>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                }
-
-
-                            </tbody>
-                        </table>
+                            }
+                        </div>
                     </div>
 
                 </div>
@@ -268,6 +211,6 @@ else if (isMesajGonder)
             redirectUrl: '',
             callbackFnc: ''
         }
-        ShowDuyuru(popupSetting); 
+        ShowDuyuru(popupSetting);
     })
 </script>

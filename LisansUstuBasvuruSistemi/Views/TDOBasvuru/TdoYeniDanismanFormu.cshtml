@@ -1,14 +1,12 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using LisansUstuBasvuruSistemi.Utilities.Enums
 @model KmTdoBasvuruDanisman
 @{
     Layout = null;
-    var tezDiliTr = Model.IsYeniTezDiliTr.HasValue ? Model.IsYeniTezDiliTr == true : Model.IsTezDiliTr;
 }
 @using (Ajax.BeginForm("TdoYeniDanismanFormuPost", "TDOBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
 {
-    @Html.HiddenFor(p => p.TDOBasvuruID);
-    @Html.HiddenFor(p => p.TDOBasvuruDanismanID);
+    @Html.HiddenFor(p => p.TDOBasvuruID)
+    @Html.HiddenFor(p => p.TDOBasvuruDanismanID)
 
     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
         <table style="width:100%;">
@@ -31,14 +29,14 @@
                     <td class="CaptionTd">Tez Başlığı Türkçe</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" class="form-control " style="color:black;" />
+                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" class="form-control UpperTextTr" style="color:black;" />
                     </td>
                 </tr>
                 <tr>
                     <td class="CaptionTd">Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" class="form-control " style="color:black;" />
+                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" class="form-control UpperTextEn" style="color:black;" />
                     </td>
                 </tr>
                 <tr class="dilRow">
@@ -118,6 +116,7 @@
     </div>
 
 }
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script>
     TezDiliKontrol();
     function TezDiliKontrol()
@@ -179,7 +178,7 @@
             maximumSelectionSize: 1,
             multiple: false,
             ajax: {
-                url: '@Url.Action("GetTdoDanismans", "Ajax")',
+                url: '@Url.Action("GetTdoDanismans", "TdoBasvuru")',
                 dataType: "json",
                 data: function (term, page) {
                     return {

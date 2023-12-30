@@ -45,13 +45,13 @@
                     <div class="form-group">
                         <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (Türkçe)</label>
                         <div class="col-md-9 col-xs-10">
-                            <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="400" value="@Model.TezBaslikTr"   style="color:black;" class="form-control" />
+                            <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="400" value="@Model.TezBaslikTr"   style="color:black;" class="form-control UpperTextTr" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (İngilizce)</label>
                         <div class="col-md-9 col-xs-10">
-                            <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="400" value="@Model.TezBaslikEn" style="color:black;" class="form-control" />
+                            <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="400" value="@Model.TezBaslikEn" style="color:black;" class="form-control UpperTextEn" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -73,6 +73,7 @@
         </div>
     </div>
 }
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script>
     $(function () {
         $('.summernotex').summernote({

@@ -122,7 +122,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.OgrenimTipModel = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(enstituKod, model.MezuniyetSurecID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? enstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", model.OgretimYili);
-            ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(enstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
+            ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
 
             return View(model);
         }
@@ -389,7 +389,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
-            ViewBag.AnketID = new SelectList(Management.CmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
+            ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }
@@ -538,8 +538,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                 MezuniyetYayinTurAdi = yt.MezuniyetYayinTurAdi,
                                                                 IsGecerli = mzs.IsGecerli,
                                                                 IsZorunlu = mzs.IsZorunlu,
-                                                                GrupKodu = mzs.GrupKodu,
-                                                                IsVeOrVeya = mzs.IsVeOrVeya
+                                                                GrupKodu = mzs.GrupKodu, 
                                                             }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList()
 
                              }).ToList();
@@ -766,8 +765,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MezuniyetYayinTurID = item2.MezuniyetYayinTurID,
                         IsGecerli = item2.IsGecerli,
                         IsZorunlu = item2.IsZorunlu,
-                        GrupKodu = item2.GrupKodu,
-                        IsVeOrVeya = item2.IsVeOrVeya
+                        GrupKodu = item2.GrupKodu 
 
                     });
                 }

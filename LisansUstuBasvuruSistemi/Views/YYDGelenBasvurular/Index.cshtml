@@ -263,7 +263,7 @@
                                             {
                                                 if (item.BasvuruDurumID == BasvuruDurumuEnum.IptalEdildi)
                                                 {
-                                                    <span class="tooltips" data-style="blue" data-original-title="@item.BasvuruDurumAciklamasi" @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=cursor:pointer;color:" + item.DurumColor) : "")>
+                                                    <span class="tooltips" title="@item.BasvuruDurumAciklamasi" @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=cursor:pointer;color:" + item.DurumColor) : "")>
                                                         <i class="@item.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @item.BasvuruDurumAdi
                                                     </span>
                                                 }
@@ -279,7 +279,7 @@
                                             {
                                                 if (item.BasvuruDurumID == BasvuruDurumuEnum.IptalEdildi)
                                                 {
-                                                    <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@item.BasvuruDurumAciklamasi">@item.BasvuruDurumAdi</span>
+                                                    <span style="cursor:pointer" class="tooltips" title="@item.BasvuruDurumAciklamasi">@item.BasvuruDurumAdi</span>
                                                 }
                                                 else
                                                 {

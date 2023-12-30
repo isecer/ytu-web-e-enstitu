@@ -6,7 +6,7 @@
 @model DmYeterlikDetayDto
 @{
     Layout = null;
-    var isOnaylayanVar = Model.YeterlikBasvuruJuriUyeleris.Any(a => a.IsSecilenJuri && a.IsSonucOnaylandi.HasValue);
+    var isOnaylayanVar = Model.IsSozluSinavBasarili.HasValue && Model.YeterlikBasvuruJuriUyeleris.Any(a => a.IsSecilenJuri && a.IsSonucOnaylandi.HasValue);
     var readOnly = Model.IsGenelSonucBasarili.HasValue || isOnaylayanVar || Model.IsDegerlendirme.HasValue;
     var closeContent = Model.IsGenelSonucBasarili.HasValue && !Model.IsDegerlendirme.HasValue;
     var toplantiYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() || Model.TezDanismanID == UserIdentity.Current.Id;

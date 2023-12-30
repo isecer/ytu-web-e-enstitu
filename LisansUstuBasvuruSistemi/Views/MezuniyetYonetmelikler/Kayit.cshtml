@@ -1,14 +1,14 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
-@using LisansUstuBasvuruSistemi.Utilities.Enums 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 
 @model KmMezuniyetYonetmelik
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var ots = Model.KrMezuniyetYonetmelikOt.Select(s => new { OgrenimTipKod = s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct();
-    var gKod = (List<CmbStringDto>)ViewBag.GrupKodu;
-    var veVeya = (List<CmbBoolDto>)ViewBag.VeVeya;
+    var ogrenimTipleris = Model.KrMezuniyetYonetmelikOt.Select(s => new { OgrenimTipKod = s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct().ToList();
+    var grupKodlari = (List<CmbStringDto>)ViewBag.GrupKodu;
+    var veVeyas = (List<CmbBoolDto>)ViewBag.VeVeya;
 }
 
 <div class="row">
@@ -62,84 +62,66 @@
                                     @Html.DropDownList("OgretimYiliB", null, "", new { @class = "form-control", style = "padding:0px;" })
                                 </div>
                             </div>
-                            @foreach (var Otip in ots)
+                            @foreach (var ogrenimTipi in ogrenimTipleris)
                             {
-                                var modelOt = Model.KrMezuniyetYonetmelikOt.Where(p => p.OgrenimTipKod == Otip.OgrenimTipKod).ToList();
+                                var ogrenimTipiAyarlari = Model.KrMezuniyetYonetmelikOt.Where(p => p.OgrenimTipKod == ogrenimTipi.OgrenimTipKod).ToList();
                                 <div class="form-group">
-                                    <div class="col-md-12 col-xs-12" id="_otBilgi">
+                                    <div class="col-md-12 col-xs-12">
                                         <div class="panel panel-default" style="padding: 0px; margin: 0px;">
                                             <div class="panel-heading padding-0">
-                                                <h4 class="panel-title"><i class="fa fa-pencil"></i> @Otip.OgrenimTipAdi Öğrenim tipi için yayın kriterlerini seçiniz</h4>
+                                                <h4 class="panel-title">
+                                                    <i class="fa fa-pencil"></i> @ogrenimTipi.OgrenimTipAdi Öğrenim tipi için başvuru esnasında istenecek yayın bilgileri
+                                                    <div style="font-size:8pt;" class="SecimInfo"></div>
+                                                </h4>
                                             </div>
                                             <div class="panel-body padding-0">
 
-                                                <table class="table" style="width:100%;table-layout:fixed;">
+                                                <table class="table OgrenimTipiYonetmelikAyarlari" style="width:100%;table-layout:fixed;">
                                                     <thead>
                                                         <tr>
                                                             <th>Yayın Türü</th>
-                                                            <th width="105" title="Tercih Kotası">Geçerli</th>
-                                                            <th width="105" title="Başarı Not Ortalaması">Zorunlu</th>
-                                                            <th width="105" title="Genel Başarı Notu Formülleri">Grp.Kodu</th>
-                                                            <th width="105" title="Mülakat Durum">Ve/Veya</th>
+                                                            <th width="105" title="Geçerli seçeneği seçildiğinde öğrenci tercihine göre isterse yayın türünü ekleyebilir"><i class="glyphicon glyphicon-info-sign"></i> Geçerli</th>
+                                                            <th width="105" title="Zorunlu seçeneği seçildiğinde öğrenci zorunlu olarak yayın türünü eklemesi gerekir"><i class="glyphicon glyphicon-info-sign"></i> Zorunlu</th>
+                                                            <th width="105" title="Aynı gruba alınan yayın türlerinden herhangi birinin öğrenci tarafından eklenmesi yeterlidir. Yayın türleri farklı gruplara dağıtılırsa oluşan her grup için bir yayın bilgisinin eklenmesi zorunlu kılınmış olur."><i class="glyphicon glyphicon-info-sign"></i> Grp.Kodu</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody id="Rw_tbody">
-                                                        @foreach (var item in modelOt)
+                                                    <tbody class="tbodyCls">
+                                                        @foreach (var item in ogrenimTipiAyarlari)
                                                         {
-                                                            var gId = item.OgrenimTipKod + "_" + item.MezuniyetYayinTurID;
 
-                                                            <tr class="rw_bst">
+                                                            <tr>
                                                                 <td>
 
-                                                                    <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
-                                                                        <div class="checkbox pull-left">
-                                                                            <label>
-                                                                                @item.MezuniyetYayinTurAdi
-                                                                            </label>
-                                                                        </div>
-                                                                        <input type="text" class="hide" name="MezuniyetYayinTurIDs" value="@gId" />
+                                                                    <div class="form-group">
+                                                                        <label class="YayinTurAdi">
+                                                                            @item.MezuniyetYayinTurAdi
+                                                                        </label>
+                                                                        <input type="text" class="hide" name="MezuniyetYayinTurIDs" value="@item.MezuniyetYayinTurID" />
+                                                                        <input type="text" class="hide" name="OgrenimTipKods" value="@item.OgrenimTipKod" />
                                                                     </div>
                                                                 <td>
-                                                                    <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
-                                                                        <div class="make-switch" data-on-label="Gçrli" data-off-label="Gçrsz" data-on="info" data-off="danger">
-                                                                            <input type="checkbox" id="chkIsGecerli_@gId" class="toggle" onchange="checkKontrol(this, '@gId')" @item.IsGecerli.ToChecked() />
-                                                                        </div>
-                                                                        <input type="text" class="hide" name="IsGecerlis" id="IsGecerli_@gId" value="@(gId)_@(item.IsGecerli ? 1 : 0)" />
+                                                                    <div class="make-switch" data-on-label="Gçrli" data-off-label="Gçrsz" data-on="info" data-off="danger">
+                                                                        <input type="checkbox" class="ChkIsGecerli" class="toggle" onchange="GecerliCeckedChange(this)" @item.IsGecerli.ToChecked() />
                                                                     </div>
+                                                                    <input type="text" class="hide" name="IsGecerlis" value="@item.IsGecerli.ToString().ToLower()" />
                                                                 </td>
                                                                 <td>
-                                                                    <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
-                                                                        <div class="make-switch" data-on-label="Zorunlu" data-off-label="Z.Değil" data-on="info" data-off="danger">
-                                                                            <input type="checkbox" id="chkIsZorunlu_@gId" class="toggle" onchange="checkKontrol(this, '@gId')" @item.IsZorunlu.ToChecked() />
-                                                                        </div>
-                                                                        <input type="text" class="hide" name="IsZorunlus" id="IsZorunlu_@gId" value="@(gId)_@(item.IsZorunlu ? 1 : 0)" />
+                                                                    <div class="make-switch" data-on-label="Zorunlu" data-off-label="Z.Değil" data-on="info" data-off="danger">
+                                                                        <input type="checkbox" class="ChkIsZorunlu" class="toggle" onchange="ZorunluCeckedChange(this)" @item.IsZorunlu.ToChecked() />
                                                                     </div>
+                                                                    <input type="text" class="hide" name="IsZorunlus" value="@item.IsZorunlu.ToString().ToLower()" />
                                                                 </td>
                                                                 <td>
-                                                                    <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
-                                                                        <select name="GrupKodus" class="form-control select @(item.IsZorunlu?"":"hide") isZorunlu_@gId">
-                                                                            @foreach (var item2 in gKod)
-                                                                            {
-                                                                                bool contains = item.GrupKodu == item2.Value;
-                                                                                <option value="@(gId + "_" + item2.Value)" @(contains ? "selected=selected" : "")>@item2.Caption</option>
-                                                                            }
-                                                                        </select>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
-                                                                        <select name="IsVeOrVeyas" class="form-control select @(item.IsZorunlu?"":"hide") isZorunlu_@gId">
-                                                                            @foreach (var item2 in veVeya)
-                                                                            {
-                                                                                bool contains = item.IsVeOrVeya == item2.Value;
-                                                                                <option value="@(gId + "_" + item2.Value)" @(contains ? "selected=selected" : "")>@item2.Caption</option>
-                                                                            }
-                                                                        </select>
-                                                                    </div>
+                                                                    <select name="GrupKodus" class="GrupKodu isZorunluShow form-control @(item.IsZorunlu?"":"hide")" onchange="GetSettingInfo()">
+                                                                        @foreach (var itemKod in grupKodlari)
+                                                                        {
+                                                                            <option value="@itemKod.Value" @(item.GrupKodu == itemKod.Value ? "selected=selected" : "")>@itemKod.Caption</option>
+                                                                        }
+                                                                    </select>
                                                                 </td>
                                                             </tr>
                                                         }
-                                                    </tbody>
+                                                    </tbody> 
                                                 </table>
                                             </div>
                                         </div>
@@ -171,57 +153,151 @@
         </div>
     </form>
 </div>
-<script>
-    function checkKontrol(sndr, gId) {
-        var sndrId = $(sndr).attr("id");
-        var _ID, _ID2, _sID2 = "";
-        var cmbClass = ".isZorunlu_" + gId;
-        if (sndrId == ("chkIsGecerli_" + gId)) {
-            _ID = "IsGecerli_" + gId;
-            _ID2 = "IsZorunlu_" + gId;
-            _sID2 = "chkIsZorunlu_" + gId;
 
-            if ($(sndr).prop('checked')) {
-                $('#' + _ID).val(gId+"_1");
-                $('#' + _sID2).prop('checked', true);
-                $(sndr).prop('checked', true);
-            }
-            else {
-                $('#' + _ID).val(gId + "_0");
-                $('#' + _ID2).val(gId + "_0");
-                $('#' + _sID2).removeAttr('checked');
-                $('#' + _sID2).parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
-                $('#' + _sID2).prop('checked', false);
-                $(sndr).prop('checked', false)
-                $(cmbClass).addClass("hide");
-            }
+<script>
+
+    function GecerliCeckedChange(sndr) {
+        const tr = $(sndr).parents('tr');
+        const input = tr.find("input[name='IsGecerlis']");
+        var isChecked = $(sndr).prop('checked');
+        input.val(isChecked.toString().toLowerCase());
+        if (!isChecked) {
+            SetSwitchChecked(tr.find(".ChkIsZorunlu"), false);
+            $(sndr).parents('tr').find('.isZorunluShow').addClass('hide');
         }
-        else {
-            _ID = "IsZorunlu_" + gId;
-            _ID2 = "IsGecerli_" + gId;
-            _sID2 = "chkIsGecerli_" + gId;
-            if ($(sndr).prop('checked') == false) {
-                $('#' + _ID).val(gId + "_0");
-                $(sndr).prop('checked', false);
-                $(cmbClass).addClass("hide");
-            }
-            else {
-                $('#' + _ID).val(gId + "_1");
-                $('#' + _ID2).val(gId + "_1");
-                $(sndr).prop('checked', true);
-                $('#' + _sID2).removeAttr('checked');
-                $('#' + _sID2).parents('.switch-animate').first().removeClass('switch-off').addClass('switch-on');
-                $('#' + _sID2).prop('checked', true);
-                $(cmbClass).removeClass("hide");
-            }
-        }
+        GetSettingInfo();
     }
+    function ZorunluCeckedChange(sndr) {
+        const tr = $(sndr).parents('tr');
+        const input = tr.find("input[name='IsZorunlus']");
+        var isChecked = $(sndr).prop('checked');
+        input.val(isChecked.toString().toLowerCase());
+        if (isChecked) {
+            $(sndr).parents('tr').find('.isZorunluShow').removeClass('hide');
+            SetSwitchChecked(tr.find(".ChkIsGecerli"), true);
+        }
+        else $(sndr).parents('tr').find('.isZorunluShow').addClass('hide');
+
+        GetSettingInfo();
+    }
+
+    function SetSwitchChecked(element, isChecked) {
+        element.prop('checked', isChecked);
+        $(element).parents('.switch-animate').first().removeClass('switch-off').removeClass('switch-on');
+        $(element).parents('.switch-animate').first().addClass(isChecked ? 'switch-on':'switch-off')
+    }
+
+
+
 
     $(function () {
 
-
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        GetSettingInfo();
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
+    function GetSettingInfo() {
+        $('.OgrenimTipiYonetmelikAyarlari').each(function (inx, itmx) {
+            //  const table = itmx.querySelector('.OgrenimTipiYonetmelikAyarlari');
+            var $SecimInfo = $(itmx).parents('.panel').first().find('.SecimInfo').first(); 
+            var html = jsonToHtmlTables(itmx);
+            $SecimInfo.html(html);
+            return;
+
+        });
+    }
+    function jsonToHtmlTables(table) {
+        const jsonData = [];
+
+        // JSON verilerini topla
+        $(table).find('tbody.tbodyCls tr').each(function () {
+            const row = $(this);
+            const yayinTurAdi = row.find('.YayinTurAdi').text().trim();
+            const isGecerliChecked = row.find('.ChkIsGecerli').prop('checked');
+            const isZorunluChecked = row.find('.ChkIsZorunlu').prop('checked');
+            const grupKodu = row.find('.GrupKodu option:selected').text().replace(/^\d+_\d+_/g, '');
+
+            jsonData.push({
+                yayinTurAdi,
+                isGecerliChecked,
+                isZorunluChecked,
+                grupKodu,
+            });
+        });
+
+        // Zorunlu ve Geçerli olanları filtrele
+        const zorunluVeGecerliData = jsonData.filter(row => row.isZorunluChecked && row.isGecerliChecked);
+        // Zorunlu olmayan ama Geçerli olanları filtrele
+        const gecerliData = jsonData.filter(row => !row.isZorunluChecked && row.isGecerliChecked);
+
+        // Aynı gruptaki yayın türlerini birleştir ve grup adlarına göre sırala
+        const groupedZorunluData = groupByGrupKodu(zorunluVeGecerliData).sort((a, b) => a.grupKodu.localeCompare(b.grupKodu));
+        const sortedGecerliData = gecerliData.sort((a, b) => a.grupKodu.localeCompare(b.grupKodu));
+
+        // Listeleri oluştur
+        const zorunluVeGecerliListHtml = createList(groupedZorunluData, true);
+        const gecerliListHtml = createList(sortedGecerliData, false);
+
+        // Listelerin dolu olup olmadığını kontrol et
+        const isZorunluVeGecerliListNotEmpty = groupedZorunluData.length > 0;
+        const isGecerliListNotEmpty = sortedGecerliData.length > 0;
+
+        // Her iki listeyi alt alta olacak şekilde birleştir
+        let resultHtml = '';
+
+        if (isZorunluVeGecerliListNotEmpty || isGecerliListNotEmpty) {
+            if (isZorunluVeGecerliListNotEmpty) {
+                resultHtml += zorunluVeGecerliListHtml;
+            }
+
+            if (isGecerliListNotEmpty) {
+                resultHtml += " " + gecerliListHtml;
+            }
+        } else {
+            resultHtml = 'Herhangi bir yayın kriteri seçilmedi.';
+        }
+
+        return resultHtml;
+    }
+
+    // Yardımcı fonksiyon: JSON verilerini liste yapısına dönüştür
+
+    function createList(data, isZorunlu) {
+        const yayinTurlari = data
+            .filter(row => isZorunlu ? row.isZorunluChecked : true)
+            .map(row => row.yayinTurAdi);
+
+        if (yayinTurlari.length === 0) {
+            return isZorunlu
+                ? 'Zorunlu yayın türü bulunmamaktadır.'
+                : 'Geçerli yayın türü bulunmamaktadır.';
+        }
+
+        const birlesikYayinTurAdlari = yayinTurlari.join(isZorunlu ? ' ) ve ( ' : ', ');
+        const istekMesaji = isZorunlu ? 'zorunlu olarak eklenmesi istenecek.' : 'isteğe göre eklenebilir.';
+        const istekMesajiOn = isZorunlu ? 'Yayın bilgilerinden ' : '';
+
+        return `${istekMesajiOn}(${birlesikYayinTurAdlari}) ${istekMesaji}`;
+    }
+    // Yardımcı fonksiyon: Aynı gruptaki yayın türlerini birleştir
+    function groupByGrupKodu(data) {
+        const groupedData = {};
+        data.forEach(row => {
+            const key = `${row.grupKodu}_${row.isZorunluChecked}`;
+            if (!groupedData[key]) {
+                groupedData[key] = { ...row, yayinTurAdi: [] };
+            }
+            groupedData[key].yayinTurAdi.push(row.yayinTurAdi);
+        });
+
+        // Aynı gruptaki yayın türlerini veya ile ayırarak tek hücreye ekle
+        for (const key in groupedData) {
+            if (groupedData.hasOwnProperty(key)) {
+                groupedData[key].yayinTurAdi = groupedData[key].yayinTurAdi.join(' veya ');
+            }
+        }
+
+        return Object.values(groupedData);
+    }
 
 </script>

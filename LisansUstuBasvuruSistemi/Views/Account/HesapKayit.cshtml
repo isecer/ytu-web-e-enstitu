@@ -10,7 +10,6 @@
     var isKurumIci = (bool)ViewBag.IsKurumIci;
     var isYerli = (bool)ViewBag.IsYerli;
     var kullaniciYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
-    var resimVar = (bool)ViewBag.ResimVar;
     var kulTipAdi = (string)ViewBag.KullaniciTipAdi;
 
 }
@@ -46,7 +45,7 @@
                                             <td class="form-group">
                                                 @if (kullaniciYetki || Model.KullaniciID <= 0)
                                                 {
-                                                    @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", onChange = "pTipKontrol()" })
+                                                    @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", onChange = "KullaniciTipKontrol()" })
                                                 }
                                                 else
                                                 {
@@ -120,7 +119,7 @@
                                                         <td id="lbl_Ad" width="140">Ad</td>
                                                         <td width="10">:</td>
                                                         <td class="form-group">
-                                                            <input type="text" name="Ad" id="Ad" value="@Model.Ad" class="form-control">
+                                                            <input type="text" name="Ad" id="Ad" value="@Model.Ad" class="form-control UpperTextTr">
                                                         </td>
                                                     </tr>
                                                     <tr class="Yab Ye Ku Kd">
@@ -128,7 +127,7 @@
                                                         <td width="10">:</td>
                                                         <td class="form-group">
 
-                                                            <input type="text" name="Soyad" id="Soyad" value="@Model.Soyad" class="form-control">
+                                                            <input type="text" name="Soyad" id="Soyad" value="@Model.Soyad" class="form-control UpperTextTr">
 
                                                         </td>
                                                     </tr>
@@ -163,7 +162,7 @@
                                                         <td>
 
                                                             <div class="profile-image" style="padding: 0px; margin: 0px;">
-                                                                <img class="pImageD" style="width:120px;height:120px;" src="@Model.ResimAdi.ToKullaniciResim()" alt="@Model.Ad @Model.Soyad">
+                                                                <img class="pImageD" style="width:120px;object-fit:cover;" src="@Model.ResimAdi.ToKullaniciResim()" alt="@Model.Ad @Model.Soyad">
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -275,7 +274,7 @@
                                             <td id="lbl_Adres">Açık Adres</td>
                                             <td>:</td>
                                             <td class="form-group">
-                                                <input type="text" name="Adres" id="Adres" value="@Model.Adres" class="form-control">
+                                                <input type="text" name="Adres" id="Adres" value="@Model.Adres" class="form-control UpperTextTr">
                                             </td>
                                         </tr>
 
@@ -369,7 +368,7 @@
     }
 </div>
 
-
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script>
     $('.date-pickerx').datetimepicker({
         timepicker: false,
@@ -377,23 +376,7 @@
     });
     $.datetimepicker.setLocale('tr');
     $('#frmHesapKayit').find('input').each(function (ix, inx) {
-        $(inx).attr('autocomplete', 'off');
-        $(inx).bind('keyup', function (e) {
-            if (e.which >= 97 && e.which <= 122) {
-                var newKey = e.which - 32;
-                // I have tried setting those
-                e.keyCode = newKey;
-                e.charCode = newKey;
-
-            }
-            if (e.which != 91 && e.which != 32 && e.which != 8 && e.which != 46 && e.which != 39 && e.which != 37 && e.which != 38 && e.which != 40 && e.which != 16 && e.which != 17 && e.which != 18) {
-                if (inx.id != "EMail"  && inx.id != "IsTel"  && inx.id != "CepTel" && inx.id != "KullaniciAdi" && inx.id!="Sifre") {
-
-                    var vl = $(inx).val();
-                    $(inx).val(vl.replace("i", "İ").toUpperCase());
-                }
-            }
-        });
+        $(inx).attr('autocomplete', 'off'); 
     })
     function ogdurumKontrol(sndr) {
         if ($(sndr).val() == '@OgrenimDurumEnum.Mezun')
@@ -409,14 +392,14 @@
     $("#EvTel").mask("(9999) 999-9999");
     $("#IsTel").mask("(9999) 999-9999");
 
-    function pTipKontrol() {
+    function KullaniciTipKontrol() {
         var ptipID = $('#frmHesapKayit').find('#KullaniciTipID').val();
         if (ptipID == null || ptipID == "") {
             $('.cKayitGrup').addClass("hide");
             return;
         }
         $.ajax({
-            url: '@Url.Action("PTipKontrol", "Ajax")',
+            url: '@Url.Action("KullaniciTipKontrol", "Account")',
             data: { id: ptipID },
             success: function (result) {
                 $('.cKayitGrup').removeClass("hide");

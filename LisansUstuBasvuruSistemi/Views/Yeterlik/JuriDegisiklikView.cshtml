@@ -54,7 +54,10 @@
         <div class="task-item task-warning" style="margin-bottom: 0px; cursor: auto;">
             <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
                 Jüri E-Posta bilgisi değiştirilirse ve henüz değerlendirme yapmamışsa yeni E-Postaya değerlendirme linki gönderilecektir.
-                <br />Jüri değişikliği yapılırsa varolan jüri değerlendirmesi iptal edilecek ve yeni seçilen jüriye değerlendirme linki gönderilecektir.
+                @if (Model.JuriTipAdi != "TezDanismani")
+                {
+                    <br /><span>Jüri değişikliği yapılırsa varolan jüri değerlendirmesi iptal edilecek ve yeni seçilen jüriye değerlendirme linki gönderilecektir.</span>
+                }
             </div>
         </div>
     </div>

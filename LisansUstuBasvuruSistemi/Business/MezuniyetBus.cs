@@ -1066,7 +1066,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var kul = db.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
                 var kriterDetay = (from s in kriter.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == kul.OgrenimTipKod).ToList()
                                    join yta in yturAds on s.MezuniyetYayinTurID equals yta.MezuniyetYayinTurID
-                                   group new { s.MezuniyetYayinTurID, yta.MezuniyetYayinTurAdi, s.OgrenimTipKod, s.IsGecerli, s.IsZorunlu, s.GrupKodu, s.IsVeOrVeya } by new { IsZorunlu = s.IsZorunlu, IsGrup = s.GrupKodu.IsNullOrWhiteSpace() == false, s.GrupKodu } into g1
+                                   group new { s.MezuniyetYayinTurID, yta.MezuniyetYayinTurAdi, s.OgrenimTipKod, s.IsGecerli, s.IsZorunlu, s.GrupKodu  } by new { s.IsZorunlu, IsGrup = s.GrupKodu.IsNullOrWhiteSpace() == false, s.GrupKodu } into g1
                                    select new
                                    {
                                        g1.Key.IsGrup,

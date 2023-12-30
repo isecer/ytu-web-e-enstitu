@@ -11,6 +11,17 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class TaleplerBus
     {
+        public static int? GetAktifTalepSurecId(string enstituKod, int? talepSurecId = null)
+        {
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var nowDate = DateTime.Now;
+                var bf = db.TalepSurecleris.FirstOrDefault(p => (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.TalepSurecID == (talepSurecId ?? p.TalepSurecID));
+
+                return bf?.TalepSurecID;
+            }
+        }
+
         public static FrTalepSurec GetTalepSurec(int talepSurecId)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())

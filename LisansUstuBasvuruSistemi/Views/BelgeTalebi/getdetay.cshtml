@@ -78,7 +78,7 @@
                                                         <td style="width:30px;">
                                                             @if (!Model.ClassName.IsNullOrWhiteSpace())
                                                             {
-                                                                <span class="tooltips mColor_@Model.BelgeTalepID" data-style="blue" data-original-title="@Model.BelgeDurumAciklamasi" @(!Model.Color.IsNullOrWhiteSpace() ? tColor : "")>
+                                                                <span class="tooltips mColor_@Model.BelgeTalepID" title="@Model.BelgeDurumAciklamasi" @(!Model.Color.IsNullOrWhiteSpace() ? tColor : "")>
                                                                     <i id="bticon_@Model.BelgeTalepID" class="@vClass" style="font-size:17pt;font-weight:bold;"></i>
                                                                 </span>
                                                             }

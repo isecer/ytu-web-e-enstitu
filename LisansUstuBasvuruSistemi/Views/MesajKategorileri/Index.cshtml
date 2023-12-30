@@ -31,7 +31,7 @@
                                 <th class="sirala" field="KategoriAdi">Kategori Adı</th>
                                 <th class="sirala" field="IsAktif" width="60">Durum</th>
                                 <th width="40">
-                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
+                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" title="Yeni"><i class="fa fa-plus"></i></a>
                                 </th>
                             </tr>
                         </thead>
@@ -79,8 +79,8 @@
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Kayit", "MesajKategorileri", new { id = item.MesajKategoriID })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.MesajKategoriID')"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            <a href="@Url.Action("Kayit", "MesajKategorileri", new { id = item.MesajKategoriID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.MesajKategoriID')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
 
                                         </td>
                                     </tr>

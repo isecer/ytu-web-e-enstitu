@@ -64,7 +64,7 @@
                                 <a href="#tab-4" data-toggle="tab" onclick="TITabChangeSet(4)" aria-expanded="false">
                                     <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">2. Tik Üyesi</span>
                                 </a>
-                            </li> 
+                            </li>
                         </ul>
                         <div class="panel-body tab-content" style="padding:0px;">
                             <div class="tab-pane active" id="tab-1">
@@ -98,15 +98,15 @@
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-4 control-label">Tez Başlığı Türkçe (*)</label>
                                                 <div class="col-md-9 col-xs-8">
-                                                    <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="1024" value="@Model.TezBaslikTr" class="form-control" style="color: black;" />
+                                                    <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="1024" value="@Model.TezBaslikTr" class="form-control UpperTextTr" style="color: black;" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-4 control-label">Tez Başlığı İngilizce (*)</label>
                                                 <div class="col-md-9 col-xs-8">
-                                                    <input type="text" name="TezBaslikEn" autocomplete="off" id="TezBaslikEn" maxlength="1024" value="@Model.TezBaslikEn" class="form-control" style="color: black;" />
+                                                    <input type="text" name="TezBaslikEn" autocomplete="off" id="TezBaslikEn" maxlength="1024" value="@Model.TezBaslikEn" class="form-control UpperTextEn" style="color: black;" />
                                                 </div>
-                                            </div> 
+                                            </div>
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-4 control-label">Tez Başlığı Değişecek mi?</label>
                                                 <div class="col-md-9 col-xs-8">
@@ -118,13 +118,13 @@
                                             <div class="form-group YeniTez @(Model.IsTezBasligiDegisti ? "" : "hide")">
                                                 <label class="col-md-3 col-xs-4 control-label">Yeni Tez Başlığı Türkçe(*)</label>
                                                 <div class="col-md-9 col-xs-8">
-                                                    <input type="text" name="YeniTezBaslikTr" autocomplete="off" id="YeniTezBaslikTr" maxlength="1024" value="@Model.YeniTezBaslikTr" class="form-control" />
+                                                    <input type="text" name="YeniTezBaslikTr" autocomplete="off" id="YeniTezBaslikTr" maxlength="1024" value="@Model.YeniTezBaslikTr" class="form-control UpperTextTr" />
                                                 </div>
                                             </div>
                                             <div class="form-group YeniTez @(Model.IsTezBasligiDegisti ? "" : "hide")">
                                                 <label class="col-md-3 col-xs-4 control-label">Yeni Tez Başlığı İngilizce (*)</label>
                                                 <div class="col-md-9 col-xs-8">
-                                                    <input type="text" name="YeniTezBaslikEn" autocomplete="off" id="YeniTezBaslikEn" maxlength="1024" value="@Model.YeniTezBaslikEn" class="form-control" />
+                                                    <input type="text" name="YeniTezBaslikEn" autocomplete="off" id="YeniTezBaslikEn" maxlength="1024" value="@Model.YeniTezBaslikEn" class="form-control UpperTextEn" />
                                                 </div>
                                             </div>
                                             <div class="form-group YeniTez @(Model.IsTezBasligiDegisti ? "" : "hide")">
@@ -477,6 +477,7 @@
         </div>
     </div>
 </div>
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 @if (Model.TIBasvuruAraRaporID > 0)
 {
     <script>

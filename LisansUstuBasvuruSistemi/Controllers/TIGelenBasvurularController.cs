@@ -192,8 +192,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Response.ContentType = "application/ms-excel";
                 Response.ContentEncoding = System.Text.Encoding.UTF8;
                 Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
-                StringWriter sw = new StringWriter();
-                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                var sw = new StringWriter();
+                var htw = new HtmlTextWriter(sw);
                 gv.RenderControl(htw);
 
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_TezIzlemeAraRaporListesi_" + DateTime.Now.ToFormatDate() + ".xls");

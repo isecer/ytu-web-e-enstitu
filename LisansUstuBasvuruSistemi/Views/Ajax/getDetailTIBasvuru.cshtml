@@ -1,5 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
@@ -7,16 +6,15 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model TiBasvuruDetayDto
 @{
-
-    //Model.DegerlendirenUniqueID = new Guid("60b7a378-df50-4bb3-aa3d-0b164a795c9e");
+     
     Layout = null;
 
     var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
     var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
-    bool toplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
-    bool degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
-    bool degerlendirmeDuzeltmeYetki = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
-    bool formOlusturmaYetki = (degerlendirmeYetki || degerlendirmeDuzeltmeYetki || isDanismani || Model.KullaniciID == UserIdentity.Current.Id);
+    var toplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
+    var degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
+    var degerlendirmeDuzeltmeYetki = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
+    var formOlusturmaYetki = (degerlendirmeYetki || degerlendirmeDuzeltmeYetki || isDanismani || Model.KullaniciID == UserIdentity.Current.Id);
 
 }
 <style>
@@ -146,7 +144,7 @@
                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                 <table style="width:100%;">
                                     <tr>
-                                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book fa-lg"></i> Tez Bilgileri</td>
+                                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book fa-lg"></i> Tez & Ara Rapor Bilgileri</td>
                                     </tr>
                                     <tr>
                                         <td style="padding-left:10px;text-align:left;">
@@ -449,9 +447,9 @@
                                         <td>
                                             @if (inxRw == 1 && formOlusturmaYetki && item.TIBasvuruAraRaporDurumID < TiAraRaporDurumuEnum.DegerlendirmeSureciBaslatildi)
                                             {
-                                                <a href="javascript:void(0)" onclick="GetTIAraRaporFormu(@item.TIBasvuruID,@item.TIBasvuruAraRaporID)"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-original-title="Raporu Düzelt"></i> Düzelt</a>
+                                                <a href="javascript:void(0)" onclick="GetTIAraRaporFormu(@item.TIBasvuruID,@item.TIBasvuruAraRaporID)"><i style="font-size:11pt;" class="fa fa-edit" data-original-title="Raporu Düzelt"></i> Düzelt</a>
 
-                                                <a href="javascript:void(0)" onclick="silDetay(this,'@item.TIBasvuruID',@item.TIBasvuruAraRaporID,'@(item.AraRaporSayisi + ". Rapor")')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Raporu Sil"></i> Sil</a>
+                                                <a href="javascript:void(0)" onclick="silDetay(this,'@item.TIBasvuruID',@item.TIBasvuruAraRaporID,'@(item.AraRaporSayisi + ". Rapor")')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Raporu Sil"></i> Sil</a>
 
                                             }
                                         </td>
@@ -868,7 +866,7 @@
                                                                         <td class="CaptionTd">Toplantı Tarihi</td>
                                                                         <td class="CaptionTd">:</td>
                                                                         <td class="ValueTd">
-                                                                            @item.SRModel.Tarih.ToFormatDate() @item.SRModel.HaftaGunAdi @string.Format("{0:hh\\:mm}", item.SRModel.BasSaat)
+                                                                            @item.SRModel.Tarih.ToFormatDate() @item.SRModel.HaftaGunAdi @item.SRModel.BasSaat.ToFormatTime()
                                                                         </td>
                                                                     </tr>
                                                                     <tr>

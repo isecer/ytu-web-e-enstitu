@@ -371,8 +371,8 @@
                                         <td>
                                             @if (kYetki)
                                             {
-                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Sil"></i></a>
+                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
                                             }
                                         </td>
                                     </tr>
@@ -733,7 +733,7 @@
     }
 
     $(function () {
-        $('.tooltips').tooltip();
+        
     })
     function showSRDialog(MezuniyetBasvurulariID, SRTalepID) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);

@@ -10,14 +10,14 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
 {
     public partial class RprToSavunmaFormuDetay_FR0348 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprToSavunmaFormuDetay_FR0348(int id)
+        public RprToSavunmaFormuDetay_FR0348(int toBasvuruSavunmaId)
         {
             InitializeComponent();
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = (from s in db.ToBasvuruSavunmas
-                            where s.ToBasvuruSavunmaID == id
+                            where s.ToBasvuruSavunmaID == toBasvuruSavunmaId
                             select new
                             {
                                 s.IsYokDrBursiyeriVar,

@@ -14,23 +14,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string TarihKriterAdi { get; set; }
         public string IslemYapan { get; set; }
 
-        public List<string> MezuniyetYayinTurIDs { get; set; }
-        public List<string> IsGecerlis { get; set; }
-        public List<string> IsZorunlus { get; set; }
-        public List<string> GrupKodus { get; set; }
-        public List<string> IsVeOrVeyas { get; set; }
+        public List<int>OgrenimTipKods{ get; set; } = new List<int>();
+        public List<int> MezuniyetYayinTurIds { get; set; } = new List<int>();
+        public List<bool?> IsGecerlis { get; set; } = new List<bool?>();
+        public List<bool?> IsZorunlus { get; set; } = new List<bool?>();
+        public List<string> GrupKodus { get; set; } = new List<string>();
+        public List<bool?> IsVeOrVeyas { get; set; } = new List<bool?>();
 
 
-        public IEnumerable<KrMezuniyetYonetmelikOt> KrMezuniyetYonetmelikOt { get; set; }
-        public KmMezuniyetYonetmelik()
-        {
-            KrMezuniyetYonetmelikOt = new List<KrMezuniyetYonetmelikOt>();
-            MezuniyetYayinTurIDs = new List<string>();
-            IsGecerlis = new List<string>();
-            IsZorunlus = new List<string>();
-            GrupKodus = new List<string>();
-            IsVeOrVeyas = new List<string>();
-        }
+        public IEnumerable<KrMezuniyetYonetmelikOt> KrMezuniyetYonetmelikOt { get; set; } = new List<KrMezuniyetYonetmelikOt>();
     }
     public class KrMezuniyetYonetmelikOt : MezuniyetYonetmelikleriOT
     {

@@ -15,7 +15,6 @@ using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -46,7 +45,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.UserName = userName;
             ViewBag.Password = password;
-            string hata = null;
+            string hata;
             try
             {
                 if (userName.IsNullOrWhiteSpace())
@@ -149,7 +148,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult OnlineUserCnt()
         {
             var users = OnlineUsersHelper.GetUsers;
-            return users.Count().ToJsonResult();
+            return users.Length.ToJsonResult();
         }
 
         [Authorize(Roles = RoleNames.KullanicilarOnlineKullanicilar)]
@@ -230,7 +229,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 DialogID = dlgId,
                 ReturnUrlTimeOut = 4000
             };
-            if (psKod.IsNullOrWhiteSpace() == true)
+            if (psKod.IsNullOrWhiteSpace())
             {
                 messageModel.MessageType = MsgTypeEnum.Error;
                 messageModel.Title = "Şifre değiştirme işlemi başarısız!";
@@ -255,7 +254,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         messageModel.Messages.Add("Varolan şifrenizi giriniz.");
                         messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EskiSifre" });
                     }
-                    else if (kul.Sifre != eskiSifre.ComputeHash(Management.Tuz))
+                    else if (kul.Sifre != eskiSifre.ComputeHash(GlobalSistemSetting.Tuz))
                     {
                         messageModel.Messages.Add("Varolan şifrenizi yanlış girdiniz.");
                         messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EskiSifre" });
@@ -295,7 +294,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (messageModel.Messages.Count == 0)
                 {
-                    kul.Sifre = yeniSifreTekrar.ComputeHash(Management.Tuz);
+                    kul.Sifre = yeniSifreTekrar.ComputeHash(GlobalSistemSetting.Tuz);
                     kul.ParolaSifirlamGecerlilikTarihi = DateTime.Now;
                     _entities.SaveChanges();
                     messageModel.MessageType = MsgTypeEnum.Success;
@@ -376,22 +375,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model = data;
 
                 }
+
                 model.Sifre = "";
-            }
-            else
-            {
-                if (id > 0) id = null;
-            }
+            } 
+            
             ViewBag.EnstituKod = RoleNames.KullanicilarKayit.InRoleCurrent() ? new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod)
                 : new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, (!kayitYetki)), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.UnvanID = new SelectList(Management.CmbUnvanlar(true), "Value", "Caption", model.UnvanID);
-            ViewBag.BirimID = new SelectList(Management.CmbBirimler(true), "Value", "Caption", model.BirimID);
-            ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
+            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true), "Value", "Caption", model.UnvanID);
+            ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", model.BirimID);
+            ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.EnstituKod, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
-            ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
+            ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
 
             var kulTipi = _entities.KullaniciTipleris.FirstOrDefault(p => p.KullaniciTipID == model.KullaniciTipID);
 
@@ -475,7 +472,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
                 }
-                else if (ValueTypeControlExtension.IsNumber(kModel.TcKimlikNo) == false)
+                else if (kModel.TcKimlikNo.IsNumber() == false)
                 {
                     messageModel.Messages.Add("T.C. Kimlik Numarası Sadece Sayıdan Oluşmalıdır.");
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
@@ -769,11 +766,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (kModel.KullaniciTipID == KullaniciTipiEnum.IdariPersonel || kModel.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
                 {
-                    if (kModel.IsActiveDirectoryUser)
-                    {
-                        kModel.KullaniciAdi = kModel.EMail.Split('@')[0].Trim();
-                    }
-                    else kModel.KullaniciAdi = kModel.EMail;
+                    kModel.KullaniciAdi = kModel.IsActiveDirectoryUser ? kModel.EMail.Split('@')[0].Trim() : kModel.EMail;
                 }
                 kModel.Sifre = Guid.NewGuid().ToString().Substring(0, 6);
                 var sended = KullanicilarBus.SendMailYeniHesap(kModel, kModel.Sifre);
@@ -830,7 +823,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.BoxedOrFullWidth = true;
                     kModel.ThemeName = "/Content/css/theme-forest.css";
                     kModel.BackgroundImage = "wall_2";
-                    kModel.Sifre = kModel.Sifre.ComputeHash(Management.Tuz);
+                    kModel.Sifre = kModel.Sifre.ComputeHash(GlobalSistemSetting.Tuz);
                     kModel = _entities.Kullanicilars.Add(kModel);
                     _entities.SaveChanges();
 
@@ -886,7 +879,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         kullanici.KullaniciAdi = kModel.KullaniciAdi;
                         if (!kModel.Sifre.IsNullOrWhiteSpace())
-                            kullanici.Sifre = kModel.Sifre.ComputeHash(Management.Tuz);
+                            kullanici.Sifre = kModel.Sifre.ComputeHash(GlobalSistemSetting.Tuz);
                         kullanici.SifresiniDegistirsin = kModel.SifresiniDegistirsin;
                         kullanici.Aciklama = kModel.Aciklama;
                         kullanici.IsActiveDirectoryUser = kModel.IsActiveDirectoryUser;
@@ -1029,7 +1022,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return new { YeniResimYolu = yeniResimYolu }.ToJsonResult();
         }
 
+        public ActionResult KullaniciTipKontrol(int? id)
+        {
+            if (!id.HasValue) return null;
 
+            var pt = _entities.KullaniciTipleris.Where(p => p.KullaniciTipID == id).Select(s => new
+            {
+                s.KullaniciTipID,
+                s.KullaniciTipAdi,
+                s.IsAktif,
+                s.KurumIci,
+                s.Yerli
+            }).First();
+            return pt.ToJsonResult();
+        }
         protected override void Dispose(bool disposing)
         {
             _entities.Dispose();

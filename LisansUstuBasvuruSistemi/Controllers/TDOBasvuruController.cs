@@ -328,7 +328,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult GetProgramlar(int tdAnabilimDaliId)
         {
-            var bolm = Management.CmbGetAktifProgramlar(true, tdAnabilimDaliId);
+            var bolm = ProgramlarBus.CmbGetAktifProgramlar(true, tdAnabilimDaliId);
             return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult GetSinavTip(int tdoBasvuruId, int sinavTipId)
@@ -336,7 +336,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == sinavTipId);
 
             var notlar = new List<CmbDoubleDto>();
-            if (sinav.OzelNot) notlar = Management.CmbGetSinavTipOzelNot(sinavTipId, true);
+            if (sinav.OzelNot) notlar = SinavTipleriBus.CmbGetSinavTipOzelNot(sinavTipId, true);
             return new { sinav.OzelNot, Notlar = notlar }.ToJsonResult();
         }
         public ActionResult GetTdoYeniDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tdoDanismanTalepTipId)
@@ -429,14 +429,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
                 model.SListTDoDanismanTalepTip = new SelectList(TdoBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
-                model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTdAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTdProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListSinav = new SelectList(SinavTipleriBus.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
+                model.SListTdAnabilimDali = new SelectList(AnabilimDallariBus.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTdProgram = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
 
                 if (model.SinavTipID.HasValue)
                 {
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
-                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
+                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(SinavTipleriBus.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
 
 
                 }
@@ -770,14 +770,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.TDAdSoyad = danisman.Ad + " " + danisman.Soyad;
                 }
 
-                model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTdAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTdProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListSinav = new SelectList(SinavTipleriBus.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
+                model.SListTdAnabilimDali = new SelectList(AnabilimDallariBus.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTdProgram = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
 
                 if (model.SinavTipID.HasValue)
                 {
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
-                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
+                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(SinavTipleriBus.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
 
                 }
                 mMessage.MessageType = MsgTypeEnum.Information;
@@ -1042,13 +1042,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 model.SListTDoDanismanTalepTip = new SelectList(TdoBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
-                model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTdAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTdProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListSinav = new SelectList(SinavTipleriBus.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
+                model.SListTdAnabilimDali = new SelectList(AnabilimDallariBus.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTdProgram = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
                 if (model.SinavTipID.HasValue)
                 {
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
-                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
+                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(SinavTipleriBus.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
                 }
                 mMessage.MessageType = MsgTypeEnum.Information;
                 mMessage.IsSuccess = true;
@@ -1338,14 +1338,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 model.SListTDoDanismanTalepTip = new SelectList(TdoBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
-                model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTdAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTdProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListSinav = new SelectList(SinavTipleriBus.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
+                model.SListTdAnabilimDali = new SelectList(AnabilimDallariBus.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTdProgram = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
 
                 if (model.SinavTipID.HasValue)
                 {
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
-                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
+                    if (sinav.OzelNot) model.SListSinavNot = new SelectList(SinavTipleriBus.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
 
                 }
                 mMessage.MessageType = MsgTypeEnum.Information;
@@ -2370,6 +2370,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
 
+
+        public ActionResult GetTdoDanismans(string term)
+        {
+            var danismanUnvanIDs = new List<int>() { 17, 42, 73, 5, 66 }; //Doç.Dr Prof.Dr, Dr. Öğr. Üye ,arş gör dr, öğr gör dr,
+            var danismanlar = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && danismanUnvanIDs.Contains(p.UnvanID ?? 0) && (p.Ad + " " + p.Soyad).StartsWith(term)).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).Take(25).Select(s => new
+            {
+                id = s.KullaniciID,
+                AdSoyad = s.Ad + " " + s.Soyad,
+                text = s.Ad + " " + s.Soyad,
+                s.Birimler.BirimAdi,
+                s.Unvanlar.UnvanAdi
+
+            }).ToList();
+
+            return danismanlar.ToJsonResult();
+        }
         public ActionResult DetaySil(int id, int tdoBasvuruDanismanId)
         {
             var mmMessage = new MmMessage

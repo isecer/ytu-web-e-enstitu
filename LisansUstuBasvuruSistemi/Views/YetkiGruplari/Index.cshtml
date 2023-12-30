@@ -65,8 +65,8 @@
                                             <i class="fa fa-user-o"></i> @item.TetYetkiliSayisi
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Kayit", "YetkiGruplari", new { id = item.YetkiGrupID })"><i class="fa fa-edit fa-lg tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.YetkiGrupID)"><i class="fa fa-trash-o fa-lg tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            <a href="@Url.Action("Kayit", "YetkiGruplari", new { id = item.YetkiGrupID })"><i class="fa fa-edit fa-lg tooltips" title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.YetkiGrupID)"><i class="fa fa-trash-o fa-lg tooltips" title="Sil"></i></a>
 
                                         </td>
                                     </tr>

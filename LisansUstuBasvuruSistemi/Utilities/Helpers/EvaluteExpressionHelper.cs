@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
@@ -27,8 +25,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         // Evaluate the expression.
         public static double EvaluateExpression(this string expression)
         {
-            int best_pos = 0;
-            int parens = 0;
+            var bestPos = 0;
+            var parens = 0;
 
             // Remove all spaces.
             string expr = expression.Replace(" ", "");
@@ -101,7 +99,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                                 if (best_prec >= Precedence.Power)
                                 {
                                     best_prec = Precedence.Power;
-                                    best_pos = pos;
+                                    bestPos = pos;
                                 }
                                 break;
 
@@ -110,7 +108,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                                 if (best_prec >= Precedence.Times)
                                 {
                                     best_prec = Precedence.Times;
-                                    best_pos = pos;
+                                    bestPos = pos;
                                 }
                                 break;
 
@@ -118,7 +116,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                                 if (best_prec >= Precedence.Modulus)
                                 {
                                     best_prec = Precedence.Modulus;
-                                    best_pos = pos;
+                                    bestPos = pos;
                                 }
                                 break;
 
@@ -130,7 +128,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                                     best_prec >= Precedence.Plus)
                                 {
                                     best_prec = Precedence.Plus;
-                                    best_pos = pos;
+                                    bestPos = pos;
                                 }
                                 break;
                         } // End switch (ch)
@@ -152,9 +150,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             // Hopefully we have the operator.
             if (best_prec < Precedence.None)
             {
-                string lexpr = expr.Substring(0, best_pos);
-                string rexpr = expr.Substring(best_pos + 1);
-                switch (expr.Substring(best_pos, 1))
+                string lexpr = expr.Substring(0, bestPos);
+                string rexpr = expr.Substring(bestPos + 1);
+                switch (expr.Substring(bestPos, 1))
                 {
                     case "^":
                         return Math.Pow(
@@ -238,8 +236,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                     }
                 }
             }
-            Primatives = new Dictionary<string, string>();
-            Primatives.Add("Pi", "3.14159265");
+            Primatives = new Dictionary<string, string> { { "Pi", "3.14159265" } };
             // See if it's a primitive.
             if (Primatives.ContainsKey(expr))
             {

@@ -6,14 +6,14 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model Kullanicilar
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var IsKurumIci = (bool)ViewBag.IsKurumIci;
-    var IsYerli = (bool)ViewBag.IsYerli;
-    var ResimVar = (bool)ViewBag.ResimVar;
-    var ErisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
-    var ProgramYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
-    var EnstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
+    var isKurumIci = (bool)ViewBag.IsKurumIci;
+    var isYerli = (bool)ViewBag.IsYerli;
+    var resimVar = (bool)ViewBag.ResimVar;
+    var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+    var programYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
+    var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
 }
 <div class="row">
     <form method="post" id="kulSbmtFrm" class="form-horizontal" role="form" enctype="multipart/form-data">
@@ -26,17 +26,17 @@
                     <ul class="panel-controls">
                         @if (Model.KullaniciID > 0)
                         {
-                            if (ErisimYetki)
+                            if (erisimYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Yetkilendirme", new { id = Model.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Erişim Yetkileri</span></li>
 
                             }
-                            if (ProgramYetki)
+                            if (programYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("KullaniciProgramYetkileri", new { id = Model.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Program Yetkileri</span></li>
 
                             }
-                            if (EnstituYetki)
+                            if (enstituYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("YetkilendirmeEnstitu", new { id = Model.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Enstitü Yetkileri</span></li>
                             }
@@ -51,19 +51,19 @@
                             @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onChange = "getprgData(this)" })
                         </div>
                     </div>
-                    @if (ErisimYetki)
+                    @if (erisimYetki)
                     {
                         <div class="form-group">
                             <label class="col-md-2 col-xs-2 control-label">Yetki Grubu</label>
                             <div class="col-md-10 col-xs-10">
-                                @Html.DropDownList("YetkiGrupID",  null, "", new { @class = "form-control" })
+                                @Html.DropDownList("YetkiGrupID", null, "", new { @class = "form-control" })
                             </div>
                         </div>
                     }
                     <div class="form-group">
                         <label class="col-md-2 col-xs-2 control-label">Kullanıcı Tipi</label>
                         <div class="col-md-10 col-xs-10">
-                            @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", onChange = "pTipKontrol()" })
+                            @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", onChange = "KullaniciTipKontrol()" })
                         </div>
                     </div>
                     <div class="form-group">
@@ -74,8 +74,8 @@
                                     <div class="form-group Yab Ye Ku Kd">
 
                                         <div id="pImageD" class="form-group">
-                                            <h4><span class="fa fa-mail-forward"></span>@(ResimVar ? "Profil Resmi" : "Resim Yükleyiniz")</h4>
-                                            @if (ResimVar)
+                                            <h4><span class="fa fa-mail-forward"></span>@(resimVar ? "Profil Resmi" : "Resim Yükleyiniz")</h4>
+                                            @if (resimVar)
                                             {
                                                 <div class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">
                                                     <div class="panel panel-default" style="padding:0px;margin:0px;">
@@ -101,13 +101,13 @@
                                     <div class="form-group Yab Ye Ku Kd">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Ad</label>
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                            <input type="text" name="Ad" id="Ad" value="@Model.Ad" class="form-control">
+                                            <input type="text" name="Ad" id="Ad" value="@Model.Ad" class="form-control UpperTextTr">
                                         </div>
                                     </div>
                                     <div class="form-group Yab Ye Ku Kd">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Soyad</label>
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                            <input type="text" name="Soyad" id="Soyad" value="@Model.Soyad" class="form-control">
+                                            <input type="text" name="Soyad" id="Soyad" value="@Model.Soyad" class="form-control UpperTextTr">
                                         </div>
                                     </div>
                                     <div class="form-group Ye Ku Kd Yab">
@@ -115,13 +115,13 @@
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                             <input type="text" name="TcKimlikNo" id="TcKimlikNo" maxlength="11" value="@Model.TcKimlikNo" class="form-control">
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div class="form-group Yab Ye Ku Kd">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Cinsiyet</label>
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                             @Html.DropDownList("CinsiyetID", null, new { @class = "form-control" })
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
 
                             </div>
@@ -173,32 +173,32 @@
                         <label class="col-md-2 col-xs-2 control-label">İletişim Bilgileri</label>
                         <div class="col-md-10 col-xs-10">
                             <div class="panel panel-default form-horizontal">
-                                <div class="panel-body form-group-separated"> 
+                                <div class="panel-body form-group-separated">
                                     <div class="form-group Yab Yer Ku Kd ">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Cep Tel</label>
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                             <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel" placeholder="(0XXX) XXX-XXXX" class="form-control">
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div class="form-group Yab Yer Ku Kd ">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">EMail</label>
                                         <div class="col-md-10 col-xs-8 padding-top-0 padding-bottom-0">
                                             <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="form-group Yab Yer Kd @(!IsKurumIci || !IsYerli ? "" : "hide")">
+                                    <div class="form-group Yab Yer Kd @(!isKurumIci || !isYerli ? "" : "hide")">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Adres</label>
                                         <div class="col-md-10 col-xs-8 padding-top-0 padding-bottom-0">
-                                            <input type="text" name="Adres" id="Adres" value="@Model.Adres" class="form-control">
+                                            <input type="text" name="Adres" id="Adres" value="@Model.Adres" class="form-control UpperTextTr">
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
 
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group Ku Yer @(!IsKurumIci ? "hide" : "")">
+                    <div class="form-group Ku Yer @(!isKurumIci ? "hide" : "")">
                         <label class="col-md-2 col-xs-2 control-label">Personel Bilgileri</label>
                         <div class="col-md-10 col-xs-10">
                             <div class="panel panel-default form-horizontal">
@@ -251,7 +251,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group Yer Ku @(!IsKurumIci ? "hide" : "")">
+                                    <div class="form-group Yer Ku @(!isKurumIci ? "hide" : "")">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Kurum Şifresi İle Giriş</label>
                                         <div class="col-md-10 col-xs-8 padding-top-0 padding-bottom-0">
                                             <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
@@ -259,7 +259,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     @if (Model.KullaniciID > 0)
                                     {
                                         <div class="form-group">
@@ -291,7 +291,7 @@
                     <div class="panel-footer">
                         <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i>Geri Dön</a>
                         <button class="btn btn-primary pull-right"><i class="fa fa-save"></i>Kaydet</button>
-                        @if (ErisimYetki)
+                        @if (erisimYetki)
                         {
                             <input type="hidden" id="YetkilendirmeyeGit" name="YetkilendirmeyeGit" value="false" />
                             <a href="javascript:void(0);" class="btn btn-default pull-right" onclick="$('#YetkilendirmeyeGit').val('true'); $('#kulSbmtFrm').submit();"><i class="fa fa-save"></i>Kaydet ve Yetkilendirmeye Git</a>
@@ -306,25 +306,11 @@
 </div>
 
 <script type="text/javascript" src="/Content/js/plugins/fileinput/fileinput.min.js"></script>
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 
 <script>
     $('#kulSbmtFrm').find('input').each(function (ix, inx) {
         $(inx).attr('autocomplete', 'off');
-        $(inx).bind('keyup', function (e) {
-            if (e.which >= 97 && e.which <= 122) {
-                var newKey = e.which - 32;
-                // I have tried setting those
-                e.keyCode = newKey;
-                e.charCode = newKey;
-
-            }
-            if (e.which != 91 && e.which != 32 && e.which != 8 && e.which != 46 && e.which != 39 && e.which != 37 && e.which != 38 && e.which != 40 && e.which != 16 && e.which != 17 && e.which != 18) {
-                if (inx.id != "EMail" && inx.id != "Sifre" && inx.id != "IsTel" && inx.id != "EvTel" && inx.id != "CepTel" && inx.id != "KullaniciAdi") {
-                    var vl = $(inx).val();
-                    $(inx).val(vl.replace("i", "İ").toUpperCase());
-                }
-            }
-        });
     })
     $("#ProfilResmi").fileinput({
         showUpload: false,
@@ -336,11 +322,11 @@
     $("#EvTel").mask("(9999) 999-9999");
     $("#IsTel").mask("(9999) 999-9999");
 
-    function pTipKontrol() {
+    function KullaniciTipKontrol() {
         var ptipID = $('#KullaniciTipID').val();
         if (ptipID == null || ptipID == "") return;
         $.ajax({
-            url: '@Url.Action("PTipKontrol", "Ajax")',
+            url: '@Url.Action("KullaniciTipKontrol", "Account")',
             data: { id: ptipID },
             success: function (result) {
                 if (result.KurumIci) {
@@ -478,8 +464,8 @@
             $('#OgrenimTipKod').empty();
         }
     }
-    $(function () { 
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 

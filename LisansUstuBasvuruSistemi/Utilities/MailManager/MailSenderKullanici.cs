@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -19,12 +19,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var entities = new LisansustuBasvuruSistemiEntities())
                 {
 
                     var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
                     var mRowModel = new List<MailTableRowDto>();
-                    var enstitu = db.Enstitulers.First(p => p.EnstituKod == kModel.EnstituKod);
+                    var enstitu = entities.Enstitulers.First(p => p.EnstituKod == kModel.EnstituKod);
 
 
                     var erisimAdresi = mailBilgi.SistemErisimAdresi;
@@ -38,13 +38,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     if (kModel.BirimID.HasValue)
                     {
-                        var birim = db.Birimlers.First(p => p.BirimID == kModel.BirimID);
+                        var birim = entities.Birimlers.First(p => p.BirimID == kModel.BirimID);
                         mRowModel.Add(new MailTableRowDto { Baslik = "Birim", Aciklama = birim.BirimAdi });
                     }
 
                     if (kModel.UnvanID.HasValue)
                     {
-                        var unvan = db.Unvanlars.First(p => p.UnvanID == kModel.UnvanID);
+                        var unvan = entities.Unvanlars.First(p => p.UnvanID == kModel.UnvanID);
                         mRowModel.Add(new MailTableRowDto { Baslik = "Unvan", Aciklama = unvan.UnvanAdi });
                     }
 
@@ -72,6 +72,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.",
                         Detaylar = mRowModel
                     };
+
                     var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
                     var mmmC = new MailMainContentDto
                     {
@@ -86,6 +87,75 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
                     return mmMessage;
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                var message = "Mail gönderme hatası, Hesap oluşturulamadı!  Hata" + " : " + ex.ToExceptionMessage();
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                mmMessage.Messages.Add(message);
+                mmMessage.MessageType = MsgTypeEnum.Error;
+
+            }
+
+            return mmMessage;
+        }
+        public static MmMessage SendMailSifreSifirla(int kullaniciId)
+        {
+            var mmMessage = new MmMessage();
+            try
+            {
+                using (var entities = new LisansustuBasvuruSistemiEntities())
+                {
+                    var kul = entities.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
+                    var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kul.EnstituKod);
+                    var mRowModel = new List<MailTableRowDto>();
+                    var gecerlilikTarihi = DateTime.Now.AddHours(2);
+                    var guid = Guid.NewGuid().ToString().Substring(0, 20);
+                    mRowModel.Add(new MailTableRowDto { Baslik = "Şifre Sıfırlama Linki", Aciklama = "<a target='_blank' href='" + mailBilgi.SistemErisimAdresi + "/Account/ParolaSifirla?psKod=" + guid + "'>Şifrenizi sıfırlamak için tıklayınız</a>" });
+                    mRowModel.Add(new MailTableRowDto { Baslik = "Link Geçerlilik Tarihi", Aciklama = "Yukarıdaki link '" + gecerlilikTarihi.ToFormatDateAndTime() + "' tarihine kadar geçerlidir." });
+
+                    var sistemErisimAdresi = mailBilgi.SistemErisimAdresi;
+                    var wurlAddr = sistemErisimAdresi.Split('/').ToList();
+                    if (sistemErisimAdresi.Contains("//"))
+                        sistemErisimAdresi = wurlAddr[0] + "//" + wurlAddr.Skip(2).Take(1).First();
+                    else
+                        sistemErisimAdresi = "http://" + wurlAddr.First();
+
+                    var mmmC = new MailMainContentDto
+                    {
+                        EnstituAdi = entities.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod).EnstituAd,
+                        UniversiteAdi = "Yıldız Teknik Üniversitesi",
+                        WebAdresi = mailBilgi.WebAdresi,
+                        Content = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent",
+                                    new MailTableContentDto
+                                    {
+                                        AciklamaBasligi = "Şifre Sıfırlama İşlemi",
+                                        AciklamaDetayi = "Şifrenizi sıfırlamak için aşağıda bulunan linke tıklayınız ve açılan sayfa da yeni şifrenizi tanımlayınız.",
+                                        Detaylar = mRowModel
+                                    }),
+                        LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png"
+
+                    };
+                    var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+                    var eMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true, KullaniciId = kul.KullaniciID } };
+                    var rtVal = MailManager.SendMailRetVal(kul.EnstituKod, "Şifre Sıfırlama İşlemi", htmlMail, eMailList, null);
+                    if (rtVal == null)
+                    {
+                        mmMessage.IsSuccess = true;
+                        mmMessage.Title = "Şifre sıfırlama linki '" + kul.EMail + "' adresine gönderilmiştir!";
+                        kul.ParolaSifirlamaKodu = guid;
+                        kul.ParolaSifirlamGecerlilikTarihi = gecerlilikTarihi;
+                        entities.SaveChanges();
+                    }
+                    else
+                    {
+                        mmMessage.IsSuccess = false;
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Şifre sıfırlama! Hata: " + rtVal.ToExceptionMessage(), rtVal.ToExceptionStackTrace(), LogTipiEnum.Hata, kul.KullaniciID, UserIdentity.Ip);
+                        mmMessage.Title = "Şifre sıfırlama linki '" + kul.EMail + "' adresine gönderilemedi!";
+                    }
 
                 }
             }

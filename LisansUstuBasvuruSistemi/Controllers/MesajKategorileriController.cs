@@ -80,8 +80,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model = data;
                 }
             }
-            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod); 
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }

@@ -37,7 +37,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 Kullanici = kullanici
             };
-            var talepSurecId = Management.GetAktifTalepSurecId(enstituKod);
+            var talepSurecId = TaleplerBus.GetAktifTalepSurecId(enstituKod);
             bbModel.SistemBasvuruyaAcik = talepSurecId.HasValue;
             bbModel.EnstituYetki = UserIdentity.Current.SeciliEnstituKodu.Contains(enstituKod) || UserIdentity.Current.SeciliEnstituKodu == enstituKod;
             bbModel.Enstitü = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
@@ -210,7 +210,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                talep.TalepSurecID = Management.GetAktifTalepSurecId(enstituKod) ?? 0;
+                talep.TalepSurecID = TaleplerBus.GetAktifTalepSurecId(enstituKod) ?? 0;
                 var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
                 talep.KullaniciID = kul.KullaniciID;
                 talep.AdSoyad = kul.Ad + " " + kul.Soyad;
@@ -247,7 +247,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (kModel.TalepGelenTalepID <= 0)
             {
-                kModel.TalepSurecID = Management.GetAktifTalepSurecId(enstituKod) ?? 0;
+                kModel.TalepSurecID = TaleplerBus.GetAktifTalepSurecId(enstituKod) ?? 0;
 
                 if (kModel.TalepSurecID <= 0)
                 {
@@ -786,7 +786,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (duzenleYetki == false)
             {
-                if (Management.GetAktifTalepSurecId(talep.TalepSurecleri.EnstituKod, talep.TalepSurecID).HasValue)
+                if (TaleplerBus.GetAktifTalepSurecId(talep.TalepSurecleri.EnstituKod, talep.TalepSurecID).HasValue)
                 {
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;

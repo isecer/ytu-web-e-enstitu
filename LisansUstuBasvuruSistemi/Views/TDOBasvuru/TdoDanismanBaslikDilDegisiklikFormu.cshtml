@@ -20,14 +20,14 @@
                     <td class="CaptionTd" width="150">Tez Başlığı Türkçe</td>
                     <td class="CaptionTd" width="10">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" @(Model.TezBaslikTr.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control " style="color:black;" />
+                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" @(Model.TezBaslikTr.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control UpperTextTr" style="color:black;" />
                     </td>
                 </tr>
                 <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
                     <td class="CaptionTd">Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" @(Model.TezBaslikEn.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control " style="color:black;" />
+                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" @(Model.TezBaslikEn.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control UpperTextEn" style="color:black;" />
                     </td>
                 </tr>
                 <tr>
@@ -55,14 +55,14 @@
                     <td class="CaptionTd">Yeni Tez Başlığı Türkçe</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control " style="color:black;" />
+                        <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control UpperTextTr" style="color:black;" />
                     </td>
                 </tr>
                 <tr>
                     <td class="CaptionTd">Yeni Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control " style="color:black;" />
+                        <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control UpperTextEn" style="color:black;" />
                     </td>
                 </tr>
                 <tr class="dilRow">
@@ -142,6 +142,7 @@
     </div>
 
 }
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script>
     TezDiliKontrol();
     function TezDiliKontrol()
@@ -211,7 +212,7 @@
             maximumSelectionSize: 1,
             multiple: false,
             ajax: {
-                url: '@Url.Action("GetTdoDanismans", "Ajax")',
+                url: '@Url.Action("GetTdoDanismans", "TdoBasvuru")',
                 dataType: "json",
                 data: function (term, page) {
                     return {

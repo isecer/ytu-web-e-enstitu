@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
-@using LisansUstuBasvuruSistemi.Utilities.Enums 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @model IEnumerable<FrMezuniyetYonetmelikler>
 @{
     Layout = null;
@@ -17,7 +17,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th width="75"></th>          
+                            <th width="75"></th>
                             <th>Tarih Kriteri</th>
                             <th>Öğretim Yılı</th>
                             <th>Öğretim Yılı B</th>
@@ -36,14 +36,14 @@
                                                 <td style="width: 30px;">@rowIndex</td>
                                                 <td>
                                                     <ul class="panel-controls">
-                                                        <li id="iShow-Yontm-@item.MezuniyetYonetmelikID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MezuniyetYonetmelikID,'Yontm-')">
+                                                        <li id="iShow-Yontm-@item.MezuniyetYonetmelikID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MezuniyetYonetmelikID,'Yontm-')">
                                                             <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                         </li>
                                                     </ul>
                                                 </td>
                                             </tr>
                                         </table>
-                                    </td>                       
+                                    </td>
                                     <td>@item.TarihKriterAdi</td>
                                     <td>@item.BaslangicYil / @item.BitisYil @item.DonemAdi</td>
                                     <td>@(item.TarihKriterID == TarihKriterSecimEnum.SecilenTarihAraligi ? (item.BaslangicYilB + " / " + item.BitisYilB + " " + item.DonemAdiB) : "")</td>
@@ -54,12 +54,12 @@
                                 <tr class="cls-Yontm-@item.MezuniyetYonetmelikID delrw_@item.MezuniyetYonetmelikID" style="display:none;">
                                     <td id="cls-Yontm-@item.MezuniyetYonetmelikID" colspan="4">
                                         <div class="panel panel-info" style="margin:0px;">
-                                            
+
                                             <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
                                                 <div class="panel-body" style="margin: 0px; padding: 0px;">
                                                     <div class="col-md-12" style="text-align: left; ">
                                                         <table class="table" style="font-size:9pt;margin:0px;">
-                                                          
+
                                                             <tr>
                                                                 <td style="text-align:right;" width="230">Tarih Kriteri</td>
                                                                 <td width="10">:</td>
@@ -103,7 +103,6 @@
                                                                                                         <th width="105">Geçerli</th>
                                                                                                         <th width="105">Zorunlu</th>
                                                                                                         <th width="105">Grp.Kodu</th>
-                                                                                                        <th width="105">Ve/Veya</th>
                                                                                                     </tr>
                                                                                                 </thead>
                                                                                                 <tbody id="Rw_tbody">
@@ -121,9 +120,6 @@
                                                                                                             </td>
                                                                                                             <td>
                                                                                                                 @item2.GrupKodu
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                @(item2.IsVeOrVeya.HasValue ? (item2.IsVeOrVeya.Value ? "Ve" : "Veya") : "")
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                     }

@@ -239,8 +239,8 @@
                                                                 <td>Kriter @RowIndex</td>
                                                                 <td style="text-align:center;">@item.SinavTipleriOT_SNA_PR.Count</td>
                                                                 <td>
-                                                                    <a href="javascript:void(0);" onclick="STProgramaOzelNotKriteriEkle('@Url.Action("StProgramaOzelNotKriterEkle", "SinavTipleri", new { id = item.SinavTipleriOT_SNAID, SinavTipID = Model.SinavTipID })')"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                                    <a href="javascript:void(0);" onclick="STPKSil('@item.SinavTipleriOT_SNAID',@Model.SinavTipID)"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                                                    <a href="javascript:void(0);" onclick="STProgramaOzelNotKriteriEkle('@Url.Action("StProgramaOzelNotKriterEkle", "SinavTipleri", new { id = item.SinavTipleriOT_SNAID, SinavTipID = Model.SinavTipID })')"><i class="fa fa-edit" title="Düzelt"></i></a>
+                                                                    <a href="javascript:void(0);" onclick="STPKSil('@item.SinavTipleriOT_SNAID',@Model.SinavTipID)"><i class="fa fa-trash-o" title="Sil"></i></a>
                                                                 </td>
                                                             </tr>
                                                             <tr class="cls-@item.SinavTipleriOT_SNAID" style="display:none">

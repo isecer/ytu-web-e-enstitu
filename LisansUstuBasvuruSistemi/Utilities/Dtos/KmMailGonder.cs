@@ -17,20 +17,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
     }
     public class KmMailGonder : GonderilenMailler
-    {
-        public int? BasvuruSurecID { get; set; }
-        public bool IsBasvuruSonuc { get; set; }
+    {  
         public string Alici { get; set; }
+        public string BccAlici { get; set; }
         public bool IsTopluMail { get; set; }
-        public string SecilenTopluAlicilar { get; set; }
-        public string BasvuruRowID { get; set; }
-        public bool IsBolumOrOgrenci { get; set; }
-        public bool IsToOrBCC { get; set; }
-        public List<int> MulakatSonucTipIDs { get; set; }
-        public List<int?> KayitDurumIDs { get; set; }
-        public List<string> ProgramKods { get; set; }
-        public List<int> OgrenimTipKods { get; set; }
-
+        public string SecilenTopluAlicilar { get; set; }  
+        
         public List<string> SecilenAlicilars { get; set; }
         public List<CmbStringDto> EMails { get; set; }
 
@@ -38,14 +30,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         {
             Aciklama = "";
             AciklamaHtml = "";
-            SecilenTopluAlicilar = "";
-            IsBolumOrOgrenci = false;
-            ProgramKods = new List<string>();
-            OgrenimTipKods = new List<int>();
-            SecilenAlicilars = new List<string>();
-            KayitDurumIDs = new List<int?>();
-            EMails = new List<CmbStringDto>();
-            MulakatSonucTipIDs = new List<int>();
+            SecilenTopluAlicilar = ""; 
+            SecilenAlicilars = new List<string>(); 
+            EMails = new List<CmbStringDto>(); 
         }
     }
 }

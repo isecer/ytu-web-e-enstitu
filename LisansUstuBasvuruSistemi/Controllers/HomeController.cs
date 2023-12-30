@@ -1,19 +1,14 @@
 ﻿using BiskaUtil;
+using HtmlAgilityPack;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Web.Mvc;
-using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.MailManager;
-using DevExpress.XtraPrinting.Native;
-using HtmlAgilityPack;
-using System.Text.RegularExpressions;
+using System;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -22,97 +17,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
 
-        public static string RemovePageBreak(string htmlContent)
-        {
-            var doc = new HtmlDocument();
-            doc.LoadHtml(htmlContent);
-
-            // Page break div elementini bul
-            var pageBreakDiv = doc.DocumentNode.SelectSingleNode("//div[@style='page-break-after: always']/span[@style='display: none;']");
-
-            // Element bulunursa kaldır
-            if (pageBreakDiv != null)
-            {
-                pageBreakDiv.ParentNode.Remove();
-            }
-
-            return doc.DocumentNode.OuterHtml;
-        }
-        public static string RemoveTableWithParam(string htmlContent, string paramValue)
-        {
-            var doc = new HtmlDocument();
-            doc.LoadHtml(htmlContent);
-
-            // Belirli bir parametre değerini içeren tabloyu bul
-            var tableNode = doc.DocumentNode.SelectSingleNode($"//table//td[contains(text(), '{paramValue}')]/ancestor::table");
-
-            // Tablo bulunursa kaldır
-            if (tableNode != null)
-            {
-                tableNode.Remove();
-            }
-
-            return doc.DocumentNode.OuterHtml;
-        }
-        public static string RemoveParagraphsWithParams(string htmlContent)
-        {
-
-
-            // Extension method'u kullanarak belirli parametre değerlerine sahip paragrafları kaldır
-            var paramValues = new string[] { "@EnstituAdi,", "@WebAdresi" };
-            var doc = new HtmlDocument();
-            doc.LoadHtml(htmlContent);
-
-            // Belirli parametre değerlerini içeren paragrafları bul
-            foreach (var paramValue in paramValues)
-            {
-                var paragraphs = doc.DocumentNode.SelectNodes($"//p[@style='text-align: right;'][contains(text(), '{paramValue}')]");
-
-                // Paragraflar bulunursa kaldır
-                if (paragraphs != null)
-                {
-                    foreach (var paragraphNode in paragraphs)
-                    {
-                        paragraphNode.Remove();
-                    }
-                }
-            }
-            paramValues = new string[] { "@EnstituAdi", "@WebAdresi" };
-            foreach (var paramValue in paramValues)
-            {
-                var paragraphs = doc.DocumentNode.SelectNodes($"//p[@style='text-align: right;'][contains(text(), '{paramValue}')]");
-
-                // Paragraflar bulunursa kaldır
-                if (paragraphs != null)
-                {
-                    foreach (var paragraphNode in paragraphs)
-                    {
-                        paragraphNode.Remove();
-                    }
-                }
-            }
-            return doc.DocumentNode.OuterHtml;
-        }
+       
 
         
         public ActionResult Index(string ekd, string mesajGroupId, int? basvuruId, string rowId, bool isMesajGonder = false)
         {
 
             var enstitu = _entities.Enstitulers.First(p => p.EnstituKisaAd.Contains(ekd));
-
-            //var mailSablons = _entities.MailSablonlaris.Where(p => p.MailSablonTipID >1).ToList();
-            //foreach (var itemSablon in mailSablons)
-            //{
-
-
-            //    string guncellenmisHtml = RemovePageBreak(itemSablon.SablonHtml);
-            //    guncellenmisHtml = RemoveTableWithParam(guncellenmisHtml, "@EnstituAdi");
-            //    guncellenmisHtml = RemoveParagraphsWithParams(guncellenmisHtml);
-            //    itemSablon.SablonHtml = guncellenmisHtml;
-
-
-            //}
-            //_entities.SaveChanges();
+ 
             #region duyurular 
             var q = from s in _entities.Duyurulars
                     join e in _entities.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }

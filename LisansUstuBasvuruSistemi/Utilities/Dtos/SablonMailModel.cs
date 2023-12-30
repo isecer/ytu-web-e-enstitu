@@ -34,13 +34,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         {
             get
             {
-                var ekler = Attachments.Select(s => new GonderilenMailEkleri { EkAdi = s.Name }).ToList();
-                foreach (var itemEk in SablonEkleri)
-                {
-                    var ek = ekler.FirstOrDefault(f => f.EkAdi == itemEk.EkAdi);
-                    if (ek != null) ek.EkDosyaYolu = itemEk.EkDosyaYolu;
-                }
-                return ekler;
+                var attahcMentEkler = Attachments.Select(s => new GonderilenMailEkleri { EkAdi = s.Name }).ToList();
+                var sablonEkiDosyalari = SablonEkleri.Select(s => new GonderilenMailEkleri { EkAdi = s.EkAdi,EkDosyaYolu = s.EkDosyaYolu}).ToList();
+                attahcMentEkler.AddRange(sablonEkiDosyalari);
+                return attahcMentEkler;
             }
         }
         public List<GonderilenMailKullanicilar> GetGonderilenMailKullanicilaris

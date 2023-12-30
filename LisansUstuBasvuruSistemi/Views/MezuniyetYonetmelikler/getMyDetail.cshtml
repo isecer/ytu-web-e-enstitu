@@ -1,11 +1,10 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmMezuniyetYonetmelik
 @{
     Layout = null;
-    var ots = Model.KrMezuniyetYonetmelikOt.Where(p => p.IsGecerli).Select(s => new { OgrenimTipKod = s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct();
+    var ogrenimTipleris = Model.KrMezuniyetYonetmelikOt.Where(p => p.IsGecerli).Select(s => new { s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct();
 
 }
 
@@ -49,14 +48,14 @@
 
                     <tr>
                         <td colspan="3">                                
-                                @foreach (var Otip in ots)
+                                @foreach (var otip in ogrenimTipleris)
                                 {
-                                    var modelOt = Model.KrMezuniyetYonetmelikOt.Where(p => p.OgrenimTipKod == Otip.OgrenimTipKod).ToList();
+                                    var modelOt = Model.KrMezuniyetYonetmelikOt.Where(p => p.OgrenimTipKod == otip.OgrenimTipKod).ToList();
                                     <div class="form-group">
                                         <div class="col-md-12 col-xs-12" id="_otBilgi">
                                             <div class="panel panel-default" style="padding: 0px; margin: 0px;">
                                                 <div class="panel-heading padding-0">
-                                                    <h4 class="panel-title"><i class="fa fa-pencil"></i> @Otip.OgrenimTipAdi Öğrenim tipi için belirlenen kriterler</h4>
+                                                    <h4 class="panel-title"><i class="fa fa-pencil"></i> @otip.OgrenimTipAdi Öğrenim tipi için belirlenen kriterler</h4>
                                                 </div>
                                                 <div class="panel-body padding-0">
 
@@ -66,15 +65,12 @@
                                                                 <th>Yayın Türü</th>
                                                                 <th width="105">Geçerli</th>
                                                                 <th width="105">Zorunlu</th>
-                                                                <th width="105">Grp.Kodu</th>
-                                                                <th width="105">Ve/Veya</th>
+                                                                <th width="105">Grp.Kodu</th> 
                                                             </tr>
                                                         </thead>
                                                         <tbody id="Rw_tbody">
                                                             @foreach (var item in modelOt)
-                                                            {
-                                                                var gID = item.OgrenimTipKod + "_" + item.MezuniyetYayinTurID;
-
+                                                            { 
                                                                 <tr class="rw_bst">
                                                                     <td>
                                                                         @item.MezuniyetYayinTurAdi
@@ -86,10 +82,7 @@
                                                                     </td>
                                                                     <td>
                                                                         @item.GrupKodu
-                                                                    </td>
-                                                                    <td>
-                                                                        @(item.IsVeOrVeya.HasValue ? (item.IsVeOrVeya.Value ? "Ve" : "Veya") : "")
-                                                                    </td>
+                                                                    </td> 
                                                                 </tr>
                                                             }
                                                         </tbody>

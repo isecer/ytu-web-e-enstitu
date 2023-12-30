@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Ws_ObsService;
 
-namespace LisansUstuBasvuruSistemi.Models.ObsService
+namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 {
-    public class ObsGetData
-    {
-
-
+    public class ObsServiceData
+    { 
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
         public StudentControl GetObsStudentControl(string tcKimlikNo, string donemId)

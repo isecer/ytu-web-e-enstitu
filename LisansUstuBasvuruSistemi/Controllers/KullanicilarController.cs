@@ -143,14 +143,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.BirimID = new SelectList(Management.GetBirimler().ToOrderedList("BirimID", "UstBirimID", "BirimAdi"), "BirimID", "BirimAdi", model.BirimID);
+            ViewBag.BirimID = new SelectList(BirimlerBus.GetBirimlerTreeList(), "BirimID", "BirimAdi", model.BirimID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.IsAdmin = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsAdmin);
-            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(false), "Value", "Caption", model.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(false), "Value", "Caption", model.ProgramKod);
+            ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
-            ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
+            ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
+            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
             ViewBag.SelectedPrograms = programKod;
             ViewBag.IndexModel = indexModel;
             return View(model);
@@ -188,14 +188,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.ResimVar = resimVar;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.UnvanID = new SelectList(Management.CmbUnvanlar(true), "Value", "Caption", model.UnvanID);
-            ViewBag.BirimID = new SelectList(Management.CmbBirimler(true), "Value", "Caption", model.BirimID);
-            ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
+            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true), "Value", "Caption", model.UnvanID);
+            ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", model.BirimID);
+            ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
 
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
-            ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
+            ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
             ViewBag.IsKurumIci = isKurumIci;
             ViewBag.IsYerli = isYerli;
             return View(model);
@@ -563,10 +563,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (yeniKullanici)
                 {
                     var sfr = kModel.Sifre;
-                    kModel.UserKey=Guid.NewGuid();
+                    kModel.UserKey = Guid.NewGuid();
                     kModel.YetkiGrupID = erisimYetki ? kModel.YetkiGrupID : 1;
                     kModel.OlusturmaTarihi = DateTime.Now;
-                    kModel.Sifre = kModel.Sifre.ComputeHash(Management.Tuz);
+                    kModel.Sifre = kModel.Sifre.ComputeHash(GlobalSistemSetting.Tuz);
                     kModel.IsAktif = true;
                     kModel.FixedHeader = false;
                     kModel.FixedSidebar = false;
@@ -641,7 +641,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     data.KullaniciAdi = kModel.KullaniciAdi;
                     if (!kModel.Sifre.IsNullOrWhiteSpace())
-                        data.Sifre = kModel.Sifre.ComputeHash(Management.Tuz);
+                        data.Sifre = kModel.Sifre.ComputeHash(GlobalSistemSetting.Tuz);
                     data.SifresiniDegistirsin = kModel.SifresiniDegistirsin;
                     data.Aciklama = kModel.Aciklama;
                     data.IsActiveDirectoryUser = kModel.IsActiveDirectoryUser;
@@ -655,7 +655,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (data.ResimAdi.IsNullOrWhiteSpace() == false)
                         {
-                            var eskiResimLazim = Management.ResimBilgisiLazimOlanKayitVarMi(data.KullaniciID);
+                            var eskiResimLazim = LisansustuBasvuruBus.ResimBilgisiLazimOlanKayitVarMi(data.KullaniciID);
                             if (eskiResimLazim == false)
                             {
                                 var rsmYol = SistemAyar.KullaniciResimYolu;
@@ -673,28 +673,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
 
-                if (yetkilendirmeyeGit) return RedirectToAction("Yetkilendirme", new { id = kModel.KullaniciID });
-                else return RedirectToAction("Index");
+                return yetkilendirmeyeGit ? RedirectToAction("Yetkilendirme", new { id = kModel.KullaniciID }) : RedirectToAction("Index");
 
             }
             else
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
-            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.ResimVar = kModel.ResimAdi.IsNullOrWhiteSpace() == false;
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod); 
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", kModel.KullaniciTipID);
-            ViewBag.UnvanID = new SelectList(Management.CmbUnvanlar(true), "Value", "Caption", kModel.UnvanID);
-            ViewBag.BirimID = new SelectList(Management.CmbBirimler(true), "Value", "Caption", kModel.BirimID);
+            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true), "Value", "Caption", kModel.UnvanID);
+            ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", kModel.BirimID);
+            ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", kModel.CinsiyetID);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod, true), "Value", "Caption", kModel.OgrenimTipKod);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(kModel.EnstituKod, true, true), "Value", "Caption", kModel.ProgramKod);
+            ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
+            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", kModel.YetkiGrupID);
+            
+            ViewBag.ResimVar = kModel.ResimAdi.IsNullOrWhiteSpace() == false;
             ViewBag.MmMessage = mmMessage;
             ViewBag.IsKurumIci = isKurumIci;
             ViewBag.IsYerli = isYerli;
-            ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler(true), "Value", "Caption", kModel.CinsiyetID);
-            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod, true), "Value", "Caption", kModel.OgrenimTipKod);
-            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(kModel.EnstituKod, true, true), "Value", "Caption", kModel.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
-            ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", kModel.YetkiGrupID);
-
             return View(kModel);
         }
 
@@ -722,7 +721,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 dct.Add(new CmbIntDto { Value = item.SiraNo.Value, Caption = item.MenuAdi });
             }
             ViewBag.cats = dct;
-            ViewBag.YetkiGrupID = new SelectList(Management.CmbYetkiGruplari(), "Value", "Caption", kullanici.YetkiGrupID);
+            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", kullanici.YetkiGrupID);
             return View();
         }
         [HttpPost, ActionName("Yetkilendirme")]
@@ -847,7 +846,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Ad + " " + kayit.Soyad + "' Kullanıcısı  Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

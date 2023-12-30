@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-            var talepSurecId = Management.GetAktifTalepSurecId(enstituKod);
+            var talepSurecId = TaleplerBus.GetAktifTalepSurecId(enstituKod);
             return Index(new FmTalep() { PageSize = 15, TalepSurecID = talepSurecId, Expand = talepSurecId.HasValue }, ekd);
         }
         [HttpPost]

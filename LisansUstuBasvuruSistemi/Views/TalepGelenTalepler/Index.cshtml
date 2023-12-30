@@ -286,8 +286,8 @@
 
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("TalepYap", "TalepYap", new { TalepGelenTalepID = item.TalepGelenTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.TalepGelenTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.TalepGelenTalepID')"><i style="font-size:11pt; color:@item.Color" class="glyphicon glyphicon-trash tooltips mColor_@item.TalepGelenTalepID" data-style="blue" data-original-title="Sil"></i></a>
+                                            <a href="@Url.Action("TalepYap", "TalepYap", new { TalepGelenTalepID = item.TalepGelenTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.TalepGelenTalepID" title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.TalepGelenTalepID')"><i style="font-size:11pt; color:@item.Color" class="glyphicon glyphicon-trash tooltips mColor_@item.TalepGelenTalepID" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.TalepGelenTalepID delrw_@item.TalepGelenTalepID" style="display:none">
@@ -493,7 +493,7 @@
                                                                                             <td style="width: 30px;">
                                                                                                 @if (!item.ClassName.IsNullOrWhiteSpace())
                                                                                                 {
-                                                                                                    <span class="tooltips mColor_@item.TalepGelenTalepID" data-style="blue" data-original-title="@item.TalepDurumAciklamasi" style="color: @item.Color">
+                                                                                                    <span class="tooltips mColor_@item.TalepGelenTalepID" title="@item.TalepDurumAciklamasi" style="color: @item.Color">
                                                                                                         <i id="bticon_@item.TalepGelenTalepID" class="@item.ClassName" style="font-size: 17pt; font-weight: bold;"></i>
                                                                                                     </span>
                                                                                                 }

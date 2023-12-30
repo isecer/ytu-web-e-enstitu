@@ -2,8 +2,9 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @{
-    var root = LisansUstuBasvuruSistemi.Models.Management.GetRoot();
+    var root = GlobalSistemSetting.GetRoot();
 }
 <head>
     <meta charset="utf-8" />
@@ -253,7 +254,7 @@
                     }
                 });
             }
-            $('.tooltips').tooltip();
+            
         }, 150);
     </script>
 </body>

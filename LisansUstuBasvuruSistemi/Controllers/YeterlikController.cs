@@ -14,6 +14,7 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -367,8 +368,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 UnvanAdi = danisman.Unvanlar.UnvanAdi.Replace(" ", ""),
             });
             model.SelectListUndan = new SelectList(UnvanlarBus.GetCmbJuriUnvanlar(true), "Value", "Caption", null);
-            model.SelectListUniversite = new SelectList(Management.CmbGetAktifUniversiteler(true, true), "Value", "Caption", null);
-            model.SelectListAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallariStr(basvuru.YeterlikSureci.EnstituKod, true), "Value", "Caption", null);
+            model.SelectListUniversite = new SelectList(UniversitelerBus.CmbGetAktifUniversiteler(true, true), "Value", "Caption", null);
+            model.SelectListAnabilimDali = new SelectList(AnabilimDallariBus.CmbGetAktifAnabilimDallariStr(basvuru.YeterlikSureci.EnstituKod, true), "Value", "Caption", null);
 
             var view = ViewRenderHelper.RenderPartialView("Yeterlik", "YeterlikJuriFormu", model);
             return new { success = true, view }.ToJsonResult();
@@ -739,13 +740,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 var birOncekiBasvuru = _entities.YeterlikBasvurus.Where(p =>
                                         p.IsEnstituOnaylandi == true &&
+                                        p.IsGenelSonucBasarili == false &&
+                                        p.IsYaziliSinavBasarili == true &&
                                         p.KullaniciID == yeterlikBasvuru.KullaniciID &&
                                         p.ProgramKod == yeterlikBasvuru.ProgramKod &&
                                         p.OgrenciNo == yeterlikBasvuru.OgrenciNo &&
-                                        p.YeterlikBasvuruID < yeterlikBasvuru.YeterlikBasvuruID)
+                                        p.YeterlikBasvuruID < yeterlikBasvuru.YeterlikBasvuruID
+                                        )
+
+
+
                                     .OrderByDescending(o => o.YeterlikBasvuruID).FirstOrDefault();
 
-                                if (birOncekiBasvuru != null && birOncekiBasvuru.IsGenelSonucBasarili == false && birOncekiBasvuru.IsYaziliSinavBasarili == true)
+                                if (birOncekiBasvuru != null)
                                 {
                                     yeterlikBasvuru.YaziliSinaviNotu = birOncekiBasvuru.YaziliSinaviNotu;
                                     yeterlikBasvuru.YaziliSinavTarihi = birOncekiBasvuru.YaziliSinavTarihi;
@@ -753,6 +760,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     yeterlikBasvuru.IsYaziliSinavBasarili = birOncekiBasvuru.IsYaziliSinavBasarili;
                                     yeterlikBasvuru.IsYaziliSinavinaKatildi = birOncekiBasvuru.IsYaziliSinavinaKatildi;
                                     _entities.SaveChanges();
+                                    LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, yeterlikBasvuru.ToJson(), true);
                                 }
 
                             }
@@ -1353,7 +1361,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult GetJuriData(string term)
         {
-            var data = Management.GetWsPersisOe(term);
+            var data = PersisServiceData.GetWsPersisOe(term);
             var kul2 = data.Table.Where(p => UnvanlarBus.JuriUnvanList.Contains(p.AKADEMIKUNVAN.ToJuriUnvanAdi())).Select(s => new
             {
                 id = s.ADSOYAD,

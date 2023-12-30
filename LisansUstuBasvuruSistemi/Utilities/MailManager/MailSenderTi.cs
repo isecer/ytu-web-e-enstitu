@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Mail;
-using System.Web;
-using BiskaUtil;
-using HtmlAgilityPack;
+﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -13,6 +6,9 @@ using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 {
@@ -62,7 +58,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         });
                         mModel.Add(new SablonMailModel
                         {
-                            JuriTipAdi = "Öğrenci " + ogrenci.Ad + " " + ogrenci.Soyad,
+                            JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = tiAraRapor.TIBasvuru.Kullanicilar.EMail, KullaniciId = ogrenci.KullaniciID, ToOrBcc = true } },
                             MailSablonTipId = MailSablonTipiEnum.TiAraRaporBaslatildiOgrenci
@@ -74,7 +70,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         mModel.Add(new SablonMailModel
                         {
 
-                            JuriTipAdi = "Öğrenci " + ogrenci.Ad + " " + ogrenci.Soyad,
+                            JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = tiAraRapor.TIBasvuru.Kullanicilar.EMail, KullaniciId = ogrenci.KullaniciID, ToOrBcc = true } },
                             MailSablonTipId = MailSablonTipiEnum.TiToplantiBilgiOgrenci
@@ -95,8 +91,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
-                    var abdL = tiAraRapor.TIBasvuru.Programlar.AnabilimDallari;
-                    var prgL = tiAraRapor.TIBasvuru.Programlar;
+                    var anabilimDali = tiAraRapor.TIBasvuru.Programlar.AnabilimDallari;
+                    var program = tiAraRapor.TIBasvuru.Programlar;
                     var oncekiMailTarihi = isAraRaporOrToplanti ? tiAraRapor.RSBaslatildiMailGonderimTarihi : tiAraRapor.ToplantiBilgiGonderimTarihi;
 
                     var snded = false;
@@ -129,9 +125,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = tiAraRapor.TIBasvuru.OgrenciNo });
                         if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = abdL.AnabilimDaliAdi });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = anabilimDali.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = prgL.ProgramAdi });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = program.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "TezBaslikTr", Value = tiAraRapor.TezBaslikTr });
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikEn"))
@@ -310,6 +306,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
                         item.WebAdresi = enstitu.WebAdresi;
+                        item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
 
                         var juri = juriler.FirstOrDefault(p => p.UniqueID == item.UniqueId);
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId);

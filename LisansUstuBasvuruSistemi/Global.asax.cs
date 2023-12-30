@@ -30,7 +30,7 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
-            
+
             //RollerBus.UpdateRoles();
             //MenulerBus.UpdateMenus();
 
@@ -39,7 +39,7 @@ namespace LisansUstuBasvuruSistemi
             MenulerBus.Menulers = MenulerBus.GetAllMenu();
 
 
-            new MailTaskRunner().Start();
+            MailTaskRunner.Start();
 
             ScriptPermissionManager.GlobalInstance = new ScriptPermissionManager(ExecutionMode.Unrestricted);
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Disabled;
@@ -51,7 +51,7 @@ namespace LisansUstuBasvuruSistemi
                     | SecurityProtocolType.Tls12
                     | SecurityProtocolType.Ssl3;
 
- 
+
             var captchaManager = (DefaultCaptchaManager)CaptchaUtils.CaptchaManager;
             captchaManager.CharactersFactory = () => "my characters";
             captchaManager.PlainCaptchaPairFactory = length =>
@@ -108,10 +108,10 @@ namespace LisansUstuBasvuruSistemi
         protected void Application_Error(object sender, EventArgs e)
         {
 
-            Exception exception = Server.GetLastError();
+            var exception = Server.GetLastError();
             //  Management.SistemBilgisiKaydet("Application_Error: " + exception.ToExceptionMessage(), exception.ToExceptionStackTrace(), BilgiTipi.Hata);
 
-            RouteData routeData = new RouteData();
+            var routeData = new RouteData();
 
             if (exception == null)
             {
@@ -216,7 +216,7 @@ namespace LisansUstuBasvuruSistemi
         //}
         void SystemInformation_OnEvent(SystemInformation info)
         {
-            Management.AddMessage(info);
+            SistemBilgilendirmeBus.SistemBilgisiKaydet(info.Message, info.StackTrace, (byte)info.InfoType);
         }
 
         private static void Membership_OnRequireUserIdentity(string userName, ref UserIdentity userIdentity)

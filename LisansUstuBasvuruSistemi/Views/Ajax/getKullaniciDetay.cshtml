@@ -171,7 +171,7 @@
                                         <td>
 
                                             <div class="profile-image" style="padding: 0px; margin: 0px;">
-                                                <img class="pImageD" style="width:120px;height:120px;" src="@Model.ResimAdi" alt="@Model.Ad @Model.Soyad">
+                                                <img class="pImageD" style="width:120px;" src="@Model.ResimAdi" alt="@Model.Ad @Model.Soyad">
                                             </div>
                                         </td>
                                     </tr>
@@ -512,6 +512,7 @@
                 var btbxxFSx = bootbox.dialog({
                     message: resultPG,
                     title: "<i class='fa fa-user fa-lg'></i> Profil Resmi Yükleme İşlemi",
+                    size: "small",
                     buttons: {
                         success: {
                             label: "Resmi Yükle",
@@ -569,7 +570,7 @@
                         }
                     }
                 });
-
+                $(btbxxFSx).find('.modal-dialog').first().addClass('modal-sm');
             },
             error: function (err) {
                 PanelRefresh(_panelM, true);

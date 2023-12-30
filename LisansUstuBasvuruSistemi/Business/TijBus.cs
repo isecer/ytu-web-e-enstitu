@@ -266,7 +266,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         var juriDbDtoList = new List<TijBasvuruOneriJuriler>();
                         foreach (var juri in juriler)
                         {
-                            int? universiteId = Management.UniversiteYtuKod;
+                            int? universiteId = GlobalSistemSetting.UniversiteYtuKod;
                             var isTezDanismani = false;
                             var isYtuIciJuri = false;
                             if (juri.TEZ_DANISMAN == "1") isTezDanismani = true;
@@ -427,7 +427,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 };
                                 foreach (var juri in juriler)
                                 {
-                                    int? universiteId = Management.UniversiteYtuKod;
+                                    int? universiteId = GlobalSistemSetting.UniversiteYtuKod;
                                     var isTezDanismani = false;
                                     var isYtuIciJuri = false;
                                     if (juri.TEZ_DANISMAN == "1") isTezDanismani = true;

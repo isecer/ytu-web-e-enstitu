@@ -13,6 +13,7 @@ using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -30,7 +31,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 PageSize = 10,
                 Expand = false,
-                BasvuruSurecID = Management.GetAktifBasvuruSurecId(EnstituBus.GetSelectedEnstitu(ekd), BasvuruSurecTipiEnum.LisansustuBasvuru)
+                BasvuruSurecID = LisansustuBasvuruBus.GetAktifBasvuruSurecId(EnstituBus.GetSelectedEnstitu(ekd), BasvuruSurecTipiEnum.LisansustuBasvuru)
             };
 
             model.Expand = model.BasvuruSurecID.HasValue;
@@ -91,7 +92,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.LMezuniyetNotu100LukSistem,
                         MulakatSonucTipIDs = s.MulakatSonuclaris.Select(s2 => s2.MulakatSonucTipID),
                         KayitliTercihVar = s.BasvurularTercihleris.Any(a => s.BasvuruID == a.BasvuruID && s.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı && s.MulakatSonuclaris.Any(a2 => a2.KayitDurumID.HasValue && a2.KayitDurumlari.IsKayitOldu)),
-                        IsNotDuzelt = (s.BasvuruSurec.AGNOGirisBaslangicTarihi.HasValue && s.LUniversiteID == Management.UniversiteYtuKod && (s.BasvuruSurec.AGNOGirisBaslangicTarihi.Value <= nowDate && s.BasvuruSurec.AGNOGirisBitisTarihi.Value >= nowDate && s.BasvurularTercihleris.Any(a => a.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))),
+                        IsNotDuzelt = (s.BasvuruSurec.AGNOGirisBaslangicTarihi.HasValue && s.LUniversiteID == GlobalSistemSetting.UniversiteYtuKod && (s.BasvuruSurec.AGNOGirisBaslangicTarihi.Value <= nowDate && s.BasvuruSurec.AGNOGirisBitisTarihi.Value >= nowDate && s.BasvurularTercihleris.Any(a => a.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))),
                     };
             var q2 = q;
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
@@ -122,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             indexModel.Toplam = model.RowCount;
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
             var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s =>
                 new FrBasvurularDto
                 {
@@ -203,17 +204,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             ViewBag.IndexModel = indexModel;
-            ViewBag.BasvuruSurecID = new SelectList(Management.GetbasvuruSurecleri(enstituKod, BasvuruSurecTipiEnum.LisansustuBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
+            ViewBag.BasvuruSurecID = new SelectList(LisansustuBasvuruBus.GetbasvuruSurecleri(enstituKod, BasvuruSurecTipiEnum.LisansustuBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.BasvuruDurumID = new SelectList(Management.CmbBasvuruDurumListe(true, true), "Value", "Caption", model.BasvuruDurumID);
-            ViewBag.MulakatSonucTipID = new SelectList(Management.CmbMulakatSonucTip(true), "Value", "Caption", model.MulakatSonucTipID);
-            ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, false), "Value", "Caption", model.ProgramKod);
-            ViewBag.LOgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu2(true, isBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
-            ViewBag.SinavTipKod = new SelectList(Management.CmbGetBsAktifSinavlar(enstituKod, new List<int> { SinavTipGrupEnum.DilSinavlari, SinavTipGrupEnum.Tomer, SinavTipGrupEnum.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
+            ViewBag.BasvuruDurumID = new SelectList(LisansustuBasvuruBus.CmbBasvuruDurumListe(true, true), "Value", "Caption", model.BasvuruDurumID);
+            ViewBag.MulakatSonucTipID = new SelectList(LisansustuBasvuruBus.CmbMulakatSonucTip(true), "Value", "Caption", model.MulakatSonucTipID);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(enstituKod, false), "Value", "Caption", model.ProgramKod);
+            ViewBag.LOgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu2(true, isBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
+            ViewBag.SinavTipKod = new SelectList(SinavTipleriBus.CmbGetBsAktifSinavlar(enstituKod, new List<int> { SinavTipGrupEnum.DilSinavlari, SinavTipGrupEnum.Tomer, SinavTipGrupEnum.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleriOgrenciler(true), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.CinsiyetID = new SelectList(Management.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
-            ViewBag.IsTaahhutVar = new SelectList(Management.CmbSinavBelgeTaahhut(true), "Value", "Caption", model.IsTaahhutVar);
-            ViewBag.UyrukKod = new SelectList(Management.CmbUyruk(true), "Value", "Caption", model.UyrukKod);
+            ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
+            ViewBag.IsTaahhutVar = new SelectList(LisansustuBasvuruBus.CmbSinavBelgeTaahhut(true), "Value", "Caption", model.IsTaahhutVar);
+            ViewBag.UyrukKod = new SelectList(LisansustuBasvuruBus.CmbUyruk(true), "Value", "Caption", model.UyrukKod);
             if (isFiltered)
             {
                 ViewBag.kIds = q.Select(s => s.KullaniciID).ToList();
@@ -222,6 +223,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.SelectedPrograms = programKod;
             return View(model);
         }
-         
+
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
@@ -48,6 +47,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
                         item.WebAdresi = enstitu.WebAdresi;
+                        item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
+                        
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId);
                         if (item.Sablon == null) continue;
 
@@ -158,19 +159,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 MailSablonTipId = MailSablonTipiEnum.TijOneriFormuEykdaOnaylandiOgrenciye
                             });
                             var jurler = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki && p.IsAsil == true && !p.IsTezDanismani).OrderBy(o => o.RowNum).ToList();
-                            foreach (var item in jurler)
+                            mModel.AddRange(jurler.Select(item => new SablonMailModel
                             {
-
-                                mModel.Add(new SablonMailModel
-                                {
-                                    JuriTipAdi = "Jüri Üyesi",
-                                    UnvanAdi = item.UnvanAdi,
-                                    AdSoyad = item.AdSoyad,
-                                    EMails = new List<MailSendList>
-                                        { new MailSendList { EMail = item.EMail, ToOrBcc = true } },
-                                    MailSablonTipId = MailSablonTipiEnum.TijOneriFormuEykdaOnaylandiJuriUyelerine
-                                });
-                            }
+                                JuriTipAdi = "Jüri Üyesi",
+                                UnvanAdi = item.UnvanAdi,
+                                AdSoyad = item.AdSoyad,
+                                EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, ToOrBcc = true } },
+                                MailSablonTipId = MailSablonTipiEnum.TijOneriFormuEykdaOnaylandiJuriUyelerine
+                            }));
                         }
                         mModel.Add(
                             new SablonMailModel
@@ -180,7 +176,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 AdSoyad = danisman.Unvanlar.UnvanAdi + " " + danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList>
                                     { new MailSendList { EMail = danisman.EMail,KullaniciId =danisman.KullaniciID, ToOrBcc = true } },
-                                MailSablonTipId = onaylandi == true
+                                MailSablonTipId = onaylandi
                                     ? MailSablonTipiEnum.TijOneriFormuEykdaOnaylandiDanismana
                                     : MailSablonTipiEnum.TijOneriFormuEykdaOnaylanmadiEdildiDanismana
                             });
@@ -209,6 +205,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
                         item.WebAdresi = enstitu.WebAdresi;
+                        item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
 
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId);
                         if (item.Sablon == null) continue;
@@ -349,6 +346,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
                         item.WebAdresi = enstitu.WebAdresi;
+                        item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
 
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId);
                         if (item.Sablon == null) continue;

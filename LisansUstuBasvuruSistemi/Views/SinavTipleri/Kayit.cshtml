@@ -3,7 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model KmSinavTipleri
+@model SinavTipleriKayitDto
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -113,7 +113,7 @@
                                                                     @item.SinavNotDeger
                                                                 </td>
                                                                 <td>
-                                                                    <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Kaldır"></i></a>
+                                                                    <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o" title="Kaldır"></i></a>
                                                                 </td>
                                                             </tr>
                                                         }
@@ -170,7 +170,7 @@
                                                                 </td>
 
                                                                 <td>
-                                                                    <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Kaldır"></i></a>
+                                                                    <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o" title="Kaldır"></i></a>
                                                                 </td>
                                                             </tr>
                                                         }
@@ -414,11 +414,11 @@
 
             var _rw = "<tr>" +
                 "<td><input type='text' class='hide' name='SinavTarihleriID' value='' /><input type='text' class='hide' name='SinavTarihi' value='" + _SinavTarihi + "' />" + _SinavTarihi + "</td>" +
-                "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
+                "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o' title='Kaldır'></i></a></td>" +
                 "</tr>";
             $('#_TarihTbody').append(_rw);
             $('#_SinavTarihi').val("");
-            $('.tooltips').tooltip();
+            
         }
     }
     function notEkle() {
@@ -443,12 +443,12 @@
                 var _rw = "<tr>" +
                              "<td><input type='text' class='hide' name='SinavNotlariID' value='' /><input type='text' class='hide' name='SinavNotAdi' value='" + NotharfAdi + "' />" + NotharfAdi + "</td>" +
                              "<td><input type='text' class='hide' name='SinavNotDeger' value='" + NotharfDegeri + "' />" + NotharfDegeri + "</td>" +
-                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
+                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o' title='Kaldır'></i></a></td>" +
                         "</tr>";
                 $('#_NotTbody').append(_rw);
                 $('#_SinavNotAdi').val("");
                 $('#_SinavNotDeger').val("");
-                $('.tooltips').tooltip();
+                
             }
         }
         else if (_tip == '@OzelNotTipEnum.SeciliNotAraliklari') {
@@ -474,13 +474,13 @@
                              "<td><input type='text' class='hide' name='SubSinavAralikID' value='' /><input type='text' class='hide' name='SubSinavAralikAdi' value='" + sbSinavAralikAdi + "' />" + sbSinavAralikAdi + "</td>" +
                              "<td><input type='text' class='hide' name='SubSinavMin' value='" + _min + "' />" + _min + "</td>" +
                              "<td><input type='text' class='hide' name='SubSinavMax' value='" + _max + "' />" + _max + "</td>" +
-                                    "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
+                                    "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o' title='Kaldır'></i></a></td>" +
                         "</tr>";
                 $('#_NotSubAralikTbody').append(_rw);
                 $('#_SubSinavAralikAdi').val("");
                 $('#_SubSinavMin').val("");
                 $('#_SubSinavMax').val("");
-                $('.tooltips').tooltip();
+                
 
             }
 

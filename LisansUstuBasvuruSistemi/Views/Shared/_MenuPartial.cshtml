@@ -1,10 +1,11 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @{
     Layout = null;
 
-    var root = Management.GetRoot();
+    var root = GlobalSistemSetting.GetRoot();
     root = root.EndsWith("/") ? root : root + "/";
 
     var apath = Request.Url.AbsolutePath.IndexOf("?", StringComparison.Ordinal) > -1 ? Request.Url.AbsolutePath.Substring(0, Request.Url.AbsolutePath.IndexOf("?", StringComparison.Ordinal)) : Request.Url.AbsolutePath;

@@ -172,8 +172,8 @@
                                         <td>
                                             @if (item.IsDanismanOnay != true)
                                             {
-                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
                                             }
                                         </td>
                                     </tr>
@@ -309,7 +309,7 @@
 
 
     $(function () {
-        $('.tooltips').tooltip();
+        
     });
 
     function showSRDialog(MezuniyetBasvurulariID, SRTalepID) {
@@ -326,6 +326,9 @@
                             label: 'Kaydet',
                             className: "btn-success MezSrTalep_" + SRTalepID,
                             callback: function (event) {
+
+
+
                                 $('.MezSrTalep_' + SRTalepID).addClass('disabled');
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                 PanelRefresh(pnlx, false);

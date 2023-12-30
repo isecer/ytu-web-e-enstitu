@@ -276,6 +276,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model = MezuniyetBus.GetMezuniyetBasvuruBilgi(mezuniyetBasvurulariId.Value);
                     model.EnstituKod = enstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(ekd) : enstituKod;
                     model.ResimAdi = kul.ResimAdi;
+                    if (model.IsTezDiliTr != studentInfo.IsTezDiliTr)
+                    {
+                        model.IsTezDiliTr = studentInfo.IsTezDiliTr;
+                        mmMessage.Messages.Add("Tez dili bilgisi değiştiği gözükmektedir. Bu değişikliğin yansıması için başvurunuzu tekrar kaydedin.");
+                    } 
                 }
                 else
                 {
@@ -314,6 +319,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
                 return RedirectToAction("Index", new { KullaniciID = model.KullaniciID });
+            }
+
+            if (mmMessage.Messages.Any())
+            { 
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
             if (model.MezuniyetBasvurulariID > 0)
             {
@@ -734,77 +744,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.SaveChanges();
                 if (sendMail)
                 {
-                    var enstitu = mBasvuru.MezuniyetSureci.Enstituler;
-                    var sablonlar = _entities.MailSablonlaris.Where(p => p.EnstituKod == enstitu.EnstituKod).ToList();
-
-
-                    var mModel = new List<SablonMailModel>
-                    {
-                        new SablonMailModel
-                        {
-
-                            AdSoyad = mBasvuru.Ad + " " + mBasvuru.Soyad,
-                            EMails = new List<MailSendList> { new MailSendList { EMail = mBasvuru.Kullanicilar.EMail,KullaniciId = mBasvuru.KullaniciID,ToOrBcc = true } },
-                            MailSablonTipId = MailSablonTipiEnum.MezBasvuruYapildiOgrenci,
-                        }
-                    };
-
-
-                    var danisman = _entities.Kullanicilars.First(p => p.KullaniciID == kul.DanismanID);
-                    mModel.Add(new SablonMailModel
-                    {
-
-                        AdSoyad = danisman.Ad + " " + danisman.Soyad,
-                        EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, KullaniciId = danisman.KullaniciID, ToOrBcc = true } },
-                        MailSablonTipId = MailSablonTipiEnum.MezBasvuruYapildiDanisman,
-                    });
-
-                    foreach (var item in mModel)
-                    { 
-                        item.EnstituAdi = enstitu.EnstituAd;
-                        item.WebAdresi = enstitu.WebAdresi;
-
-                        item.Sablon = sablonlar.First(p => p.MailSablonTipID == item.MailSablonTipId);
-                        item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.CustomSplit();
-                        item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
-                        
-                        if (item.SablonParametreleri.Any(a => a == "@EnstituAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "EnstituAdi", Value = enstitu.EnstituAd });
-                        if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
-                        if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = mBasvuru.OgrenciNo });
-                        if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = mBasvuru.Ad + " " + mBasvuru.Soyad });
-                        if (item.SablonParametreleri.Any(a => a == "@DanismanAdSoyad"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanAdSoyad", Value = mBasvuru.TezDanismanAdi });
-                        if (item.SablonParametreleri.Any(a => a == "@DanismanUnvanAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanUnvanAdi", Value = mBasvuru.TezDanismanUnvani });
-
-                        var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
-                        var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, null);
-                        if (snded)
-                        {
-                            var gm = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = item.Sablon.SablonAdi + " (" + item.AdSoyad + ")",
-                                IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Aciklama = item.Sablon.Sablon ?? "",
-                                AciklamaHtml = contentDetailDto.HtmlContent ?? "",
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
-                            };
-                            _entities.GonderilenMaillers.Add(gm);
-                            _entities.SaveChanges();
-                        }
-                    }
-
-
+                    MailSenderMezuniyet.SendMailBasvuruYapildi(mBasvuru.MezuniyetBasvurulariID); 
                 }
                 if (kModel.KullaniciID != UserIdentity.Current.Id) return RedirectToAction("Index", "MezuniyetGelenBasvurular");
                 return RedirectToAction("Index", kModel.KullaniciID);
@@ -1123,7 +1063,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!yetkiliKullanici && !srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.KullaniciID == UserIdentity.Current.Id);
             else if (srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             var mezuniyetBasvuru = mezuniyetBasvurularis.First();
-            var model = new KmSrTalep
+            var model = new SrTalepleriKayitDto
             {
                 IsSalonSecilsin = mezuniyetBasvuru.OgrenimTipKod.IsDoktora() && mezuniyetBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlariEnum.FenBilimleri
             };
@@ -1154,7 +1094,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult RezervasyonAlPost(KmSrTalep kModel)
+        public ActionResult RezervasyonAlPost(SrTalepleriKayitDto kModel)
         {
 
             var mmMessage = new MmMessage
@@ -1241,7 +1181,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mmMessage.Messages.Add("Sınav tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
-                        if (!kModel.BasSaat.HasValue || !kModel.BitSaat.HasValue)//bitiş saati mi baz alınsın başlangıç saati mi ?
+                        if (kModel.BasSaat==TimeSpan.MinValue || kModel.BitSaat==TimeSpan.MinValue) 
                         {
                             mmMessage.Messages.Add("Lütfen belirtilen güne ait uygun saat seçiniz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
@@ -1283,9 +1223,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (mmMessage.Messages.Count == 0 && kModel.IsSalonSecilsin)
                 {
-                    if (kModel.SRSalonID != null && kModel.BasSaat != null && kModel.BitSaat != null)
+                    if (kModel.SRSalonID != null)
                     {
-                        var srKayitKontrolMessage = SrTalepleriBus.SrKayitKontrol(kModel.SRSalonID.Value, kModel.Tarih, kModel.BasSaat.Value, kModel.BitSaat.Value, kModel.SRTalepID, mezuniyetBasvurusu.EYKTarihi);
+                        var srKayitKontrolMessage = SrTalepleriBus.SrKayitKontrol(kModel.SRSalonID.Value, kModel.Tarih, kModel.BasSaat, kModel.BitSaat, kModel.SRTalepID, mezuniyetBasvurusu.EYKTarihi);
                         mmMessage.Messages.AddRange(srKayitKontrolMessage.Messages);
                     }
                 }
@@ -1299,8 +1239,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kModel.IslemYapanID = UserIdentity.Current.Id;
                         kModel.IslemYapanIP = UserIdentity.Ip;
                         kModel.HaftaGunID = (int)kModel.Tarih.DayOfWeek;
-                        kModel.BasSaat = kModel.IsSalonSecilsin ? kModel.BasSaat.Value : kModel.Tarih.TimeOfDay;
-                        kModel.BitSaat = kModel.IsSalonSecilsin ? kModel.BitSaat.Value : kModel.BasSaat.Value.Add(new TimeSpan(2, 0, 0));
+                        kModel.BasSaat = kModel.IsSalonSecilsin ? kModel.BasSaat : kModel.Tarih.TimeOfDay;
+                        kModel.BitSaat = kModel.IsSalonSecilsin ? kModel.BitSaat : kModel.BasSaat.Add(new TimeSpan(2, 0, 0));
                         kModel.Tarih = kModel.Tarih.Date;
 
 
@@ -1353,8 +1293,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 SalonAdi = kModel.SalonAdi,
                                 Tarih = kModel.Tarih,
                                 HaftaGunID = kModel.HaftaGunID,
-                                BasSaat = kModel.BasSaat.Value,
-                                BitSaat = kModel.BitSaat.Value,
+                                BasSaat = kModel.BasSaat,
+                                BitSaat = kModel.BitSaat,
                                 DanismanAdi = kModel.DanismanAdi,
                                 EsDanismanAdi = kModel.EsDanismanAdi,
                                 TezOzeti = kModel.TezOzeti,
@@ -1378,8 +1318,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             srTalebi.SRSalonID = kModel.SRSalonID;
                             srTalebi.Tarih = kModel.Tarih;
                             srTalebi.HaftaGunID = kModel.HaftaGunID;
-                            srTalebi.BasSaat = kModel.BasSaat.Value;
-                            srTalebi.BitSaat = kModel.BitSaat.Value;
+                            srTalebi.BasSaat = kModel.BasSaat;
+                            srTalebi.BitSaat = kModel.BitSaat;
                             srTalebi.DanismanAdi = kModel.DanismanAdi;
                             srTalebi.EsDanismanAdi = kModel.EsDanismanAdi;
                             srTalebi.TezOzeti = kModel.TezOzeti;

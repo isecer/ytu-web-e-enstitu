@@ -1,5 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
@@ -211,8 +210,8 @@
                                         <td>
                                             @if (kyetki)
                                             {
-                                                <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { TIBasvuruID = item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.TIBasvuruID','@item.AdSoyad')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                                <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit" title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.TIBasvuruID','@item.AdSoyad')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
                                             }
                                         </td>
 

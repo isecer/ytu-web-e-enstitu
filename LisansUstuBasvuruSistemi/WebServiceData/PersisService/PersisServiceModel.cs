@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
-namespace LisansUstuBasvuruSistemi.Utilities.Dtos
+namespace LisansUstuBasvuruSistemi.WebServiceData.PersisService
 {
-    public class PersisWsDataModel
+    public class PersisServiceModel
     {
         public List<Table> Table { get; set; }
     }

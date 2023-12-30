@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model KmYeterlikJuriModel
 @{
     Layout = null;
@@ -50,7 +51,7 @@
                                                     <td class="CaptionTd" width="150">Ad Soyadı</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd form-group">
-                                                        <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
+                                                        <input type="hidden" name="UniversiteIDs" value="@GlobalSistemSetting.UniversiteYtuKod" />
                                                         <input type="hidden" name="JuriTipAdis" value="TezDanismani" />
                                                         <input type="hidden" name="IsAsilOrYedeks" value="true" />
                                                         <input type="hidden" name="TabIds" value="1" />
@@ -105,7 +106,7 @@
                                                     <td class="CaptionTd" width="150">Ad Soyadı</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd form-group">
-                                                        <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
+                                                        <input type="hidden" name="UniversiteIDs" value="@GlobalSistemSetting.UniversiteYtuKod" />
                                                         <input type="hidden" name="JuriTipAdis" value="YtuIciJuri1" />
                                                         <input type="hidden" name="IsAsilOrYedeks" value="true" />
                                                         <input type="hidden" name="TabIds" value="1" />
@@ -170,7 +171,7 @@
                                                     <td class="CaptionTd" width="150">Ad Soyadı</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd form-group">
-                                                        <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
+                                                        <input type="hidden" name="UniversiteIDs" value="@GlobalSistemSetting.UniversiteYtuKod" />
                                                         <input type="hidden" name="JuriTipAdis" value="YtuIciJuri2" />
                                                         <input type="hidden" name="IsAsilOrYedeks" value="true" />
                                                         <input type="hidden" name="TabIds" value="1" />
@@ -234,7 +235,7 @@
                                                     <td class="CaptionTd" width="150">Ad Soyadı</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd form-group">
-                                                        <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
+                                                        <input type="hidden" name="UniversiteIDs" value="@GlobalSistemSetting.UniversiteYtuKod" />
                                                         <input type="hidden" name="JuriTipAdis" value="YtuIciJuri3" />
                                                         <input type="hidden" name="TabIds" value="1" />
                                                         <input type="hidden" name="IsAsilOrYedeks" value="false" />

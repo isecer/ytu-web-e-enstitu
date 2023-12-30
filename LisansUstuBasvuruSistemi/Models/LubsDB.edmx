@@ -1497,8 +1497,7 @@
           <Property Name="MezuniyetYayinTurID" Type="int" Nullable="false" />
           <Property Name="IsGecerli" Type="bit" Nullable="false" />
           <Property Name="IsZorunlu" Type="bit" Nullable="false" />
-          <Property Name="GrupKodu" Type="nvarchar" MaxLength="10" />
-          <Property Name="IsVeOrVeya" Type="bit" />
+          <Property Name="GrupKodu" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="MezuniyetYayinBelgeTurleri">
           <Key>
@@ -1616,8 +1615,7 @@
           <Property Name="MezuniyetYayinTurID" Type="int" Nullable="false" />
           <Property Name="IsGecerli" Type="bit" Nullable="false" />
           <Property Name="IsZorunlu" Type="bit" Nullable="false" />
-          <Property Name="GrupKodu" Type="nvarchar" MaxLength="10" />
-          <Property Name="IsVeOrVeya" Type="bit" />
+          <Property Name="GrupKodu" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="Mulakat">
           <Key>
@@ -11680,8 +11678,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="MezuniyetYayinTurID" Type="Int32" Nullable="false" />
           <Property Name="IsGecerli" Type="Boolean" Nullable="false" />
           <Property Name="IsZorunlu" Type="Boolean" Nullable="false" />
-          <Property Name="GrupKodu" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="IsVeOrVeya" Type="Boolean" />
+          <Property Name="GrupKodu" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MezuniyetSureciYonetmelikleri" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetSureciYonetmelikleri" FromRole="MezuniyetSureciYonetmelikleriOT" ToRole="MezuniyetSureciYonetmelikleri" />
           <NavigationProperty Name="MezuniyetYayinTurleri" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetYayinTurleri" FromRole="MezuniyetSureciYonetmelikleriOT" ToRole="MezuniyetYayinTurleri" />
         </EntityType>
@@ -11822,8 +11819,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="MezuniyetYayinTurID" Type="Int32" Nullable="false" />
           <Property Name="IsGecerli" Type="Boolean" Nullable="false" />
           <Property Name="IsZorunlu" Type="Boolean" Nullable="false" />
-          <Property Name="GrupKodu" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="IsVeOrVeya" Type="Boolean" />
+          <Property Name="GrupKodu" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MezuniyetYayinTurleri" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetYonetmelikleriOT_MezuniyetYayinTurleri" FromRole="MezuniyetYonetmelikleriOT" ToRole="MezuniyetYayinTurleri" />
           <NavigationProperty Name="MezuniyetYonetmelikleri" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetYonetmelikleriOT_MezuniyetYonetmelikleri" FromRole="MezuniyetYonetmelikleriOT" ToRole="MezuniyetYonetmelikleri" />
         </EntityType>
@@ -18867,7 +18863,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySetMapping Name="MezuniyetSureciYonetmelikleriOTs">
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleriOT">
               <MappingFragment StoreEntitySet="MezuniyetSureciYonetmelikleriOT">
-                <ScalarProperty Name="IsVeOrVeya" ColumnName="IsVeOrVeya" />
                 <ScalarProperty Name="GrupKodu" ColumnName="GrupKodu" />
                 <ScalarProperty Name="IsZorunlu" ColumnName="IsZorunlu" />
                 <ScalarProperty Name="IsGecerli" ColumnName="IsGecerli" />
@@ -18995,7 +18990,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySetMapping Name="MezuniyetYonetmelikleriOTs">
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetYonetmelikleriOT">
               <MappingFragment StoreEntitySet="MezuniyetYonetmelikleriOT">
-                <ScalarProperty Name="IsVeOrVeya" ColumnName="IsVeOrVeya" />
                 <ScalarProperty Name="GrupKodu" ColumnName="GrupKodu" />
                 <ScalarProperty Name="IsZorunlu" ColumnName="IsZorunlu" />
                 <ScalarProperty Name="IsGecerli" ColumnName="IsGecerli" />

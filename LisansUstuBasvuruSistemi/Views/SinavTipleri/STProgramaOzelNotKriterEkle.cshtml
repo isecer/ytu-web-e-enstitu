@@ -368,12 +368,12 @@
                 var _rw = "<tr>" +
                              "<td><input type='text' class='hide' name='SinavNotlariID' value='' /><input type='text' class='hide' name='SinavNotAdi' value='" + NotharfAdi + "' />" + NotharfAdi + "</td>" +
                              "<td><input type='text' class='hide' name='SinavNotDeger' value='" + NotharfDegeri + "' />" + NotharfDegeri + "</td>" +
-                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
+                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o' title='Kaldır'></i></a></td>" +
                         "</tr>";
                 $('#_NotTbody').append(_rw);
                 $('#_SinavNotAdi').val("");
                 $('#_SinavNotDeger').val("");
-                $('.tooltips').tooltip();
+                
             }
         }
         else if (_tip == '@OzelNotTip.SeciliNotAraliklari') {
@@ -403,14 +403,14 @@
                              "<td><input type='text' class='hide' name='SubSinavMax' value='" + _max + "' />" + _max + "</td>" +
                              "<td style='text-align:center;'><input type='checkbox' value='true' name='SubNotDonusum' class='hide' " + (_notDonusum ? " checked=checked" : "") + " /><span class='label label-" + (_notDonusum ? "success" : "danger") + "'>" + (_notDonusum ? "Evet" : "Hayır") + "</span></td>" +
                              "<td><input type='text' class='hide' name='SubNotDonusumFormulu' value='" + _formul + "' />" + (_notDonusum ? ("<img src='@Url.Content("~/Images/formul.jpg")' style='width:20px;height:20px;cursor:pointer' title=" + _formul + "/>") : "") + "</td>" +
-                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
+                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o' title='Kaldır'></i></a></td>" +
                         "</tr>";
                 $('#_NotSubAralikTbody').append(_rw);
                 $('#_SubSinavAralikAdi').val("");
                 $('#_SubSinavMin').val("");
                 $('#_SubSinavMax').val("");
                 $('#_SubNotDonusumFormulu').val("");
-                $('.tooltips').tooltip();
+                
 
             }
 

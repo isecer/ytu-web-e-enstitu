@@ -69,7 +69,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.SinavTipGrupID = new SelectList(Management.CmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
+            ViewBag.SinavTipGrupID = new SelectList(SinavTipleriBus.CmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -77,13 +77,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage();
             ViewBag.MmMessage = mmMessage;
-            var model = new KmSinavTipleri
+            var model = new SinavTipleriKayitDto
             {
                 EnstituKod = EnstituBus.GetSelectedEnstitu(ekd)
             };
             if (id.HasValue)
             {
-                var data = _entities.SinavTipleris.Where(p => p.SinavTipID == id).Select(s => new KmSinavTipleri
+                var data = _entities.SinavTipleris.Where(p => p.SinavTipID == id).Select(s => new SinavTipleriKayitDto
                 {
                     SinavTipID = s.SinavTipID,
                     EnstituKod = s.EnstituKod,
@@ -138,16 +138,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.SinavDilleris = _entities.SinavDilleris.ToList();
             ViewBag.Programlars = _entities.Programlars.Where(p => p.AnabilimDallari.EnstituKod == model.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.SinavTipGrupID = new SelectList(Management.CmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
-            ViewBag.OzelNotTipID = new SelectList(Management.CmbGetOzelNotTipleri(true), "Value", "Caption", model.OzelNotTipID);
-            ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
+            ViewBag.SinavTipGrupID = new SelectList(SinavTipleriBus.CmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
+            ViewBag.OzelNotTipID = new SelectList(SinavTipleriBus.CmbGetOzelNotTipleri(true), "Value", "Caption", model.OzelNotTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.EnstituKod), "Value", "Caption");
             return View(model);
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Kayit(KmSinavTipleri kModel)
+        public ActionResult Kayit(SinavTipleriKayitDto kModel)
         {
 
             var mmMessage = new MmMessage();
@@ -156,7 +155,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             //Sınav Tarihi Bilgileri
-            var qSinavTarihleriId = kModel.SinavTarihleriID.Select((s, inx) => new { s, inx }).ToList();
+            var qSinavTarihleriId = kModel.SinavTarihleriId.Select((s, inx) => new { s, inx }).ToList();
             var qSinavTarihi = kModel.SinavTarihi.Select((s, inx) => new { s, inx }).ToList();
             var qSinavTarihleri = (from stID in qSinavTarihleriId
                                    join stTar in qSinavTarihi on stID.inx equals stTar.inx
@@ -167,7 +166,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                        SinavTarihi = stTar.s
                                    }).ToList();
             //Sınav Puanı Bilgileri
-            var qSinavNotlariId = kModel.SinavNotlariID.Select((s, inx) => new { s, inx }).ToList();
+            var qSinavNotlariId = kModel.SinavNotlariId.Select((s, inx) => new { s, inx }).ToList();
             var qSinavNotAdi = kModel.SinavNotAdi.Select((s, inx) => new { s, inx }).ToList();
             var qSinavNotDeger = kModel.SinavNotDeger.Select((s, inx) => new { s, inx }).ToList();
             var qSinavNotlari = (from snId in qSinavNotlariId
@@ -181,7 +180,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      SinavNotDeger = snNot.s
                                  }).ToList();
 
-            var qSubSinavAralikId = kModel.SubSinavAralikID.Select((s, inx) => new { s, inx }).ToList();
+            var qSubSinavAralikId = kModel.SubSinavAralikId.Select((s, inx) => new { s, inx }).ToList();
             var qSubSinavAralikAdi = kModel.SubSinavAralikAdi.Select((s, inx) => new { s, inx }).ToList();
             var qSubSinavMin = kModel.SubSinavMin.Select((s, inx) => new { s, inx }).ToList();
             var qSubSinavMax = kModel.SubSinavMax.Select((s, inx) => new { s, inx }).ToList();
@@ -199,13 +198,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                    }).ToList();
 
             //Sinav ogrenimTip Not Araliklari
-            var qNaOgrenimTipKod = kModel.NAOgrenimTipKod.Select((s, inx) => new { s, inx }).ToList();
-            var qNaIngilizce = kModel.NAIngilizce.Select((s, inx) => new { s, inx }).ToList();
-            var qNaIsIstensin = kModel.NAIsIstensin.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
-            var qNaIsGecerli = kModel.NAIsGecerli.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
-            var qNaMin = kModel.NAMin.Select((s, inx) => new { s, inx }).ToList();
-            var qNaMax = kModel.NAMax.Select((s, inx) => new { s, inx }).ToList();
-            var qIpProgramKod = kModel.IPProgramKod.Select(s => new { ID = s.Split('_')[0], ProgramKod = s.Split('_')[1] }).ToList();
+            var qNaOgrenimTipKod = kModel.NaOgrenimTipKod.Select((s, inx) => new { s, inx }).ToList();
+            var qNaIngilizce = kModel.NaIngilizce.Select((s, inx) => new { s, inx }).ToList();
+            var qNaIsIstensin = kModel.NaIsIstensin.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
+            var qNaIsGecerli = kModel.NaIsGecerli.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
+            var qNaMin = kModel.NaMin.Select((s, inx) => new { s, inx }).ToList();
+            var qNaMax = kModel.NaMax.Select((s, inx) => new { s, inx }).ToList();
+            var qIpProgramKod = kModel.IpProgramKod.Select(s => new { ID = s.Split('_')[0], ProgramKod = s.Split('_')[1] }).ToList();
 
             var qNaOgrenimTipKodNotAralik = (from ot in qNaOgrenimTipKod
                                              join ing in qNaIngilizce on ot.inx equals ing.inx
@@ -466,9 +465,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.SinavDilleris = _entities.SinavDilleris.ToList();
             ViewBag.Programlars = _entities.Programlars.Where(p => p.AnabilimDallari.EnstituKod == kModel.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.SinavTipGrupID = new SelectList(Management.CmbGetSinavTipGruplari(true), "Value", "Caption", kModel.SinavTipGrupID);
-            ViewBag.OzelNotTipID = new SelectList(Management.CmbGetOzelNotTipleri(true), "Value", "Caption", kModel.OzelNotTipID);
-            ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
+            ViewBag.SinavTipGrupID = new SelectList(SinavTipleriBus.CmbGetSinavTipGruplari(true), "Value", "Caption", kModel.SinavTipGrupID);
+            ViewBag.OzelNotTipID = new SelectList(SinavTipleriBus.CmbGetOzelNotTipleri(true), "Value", "Caption", kModel.OzelNotTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod), "Value", "Caption");
             #endregion
@@ -932,7 +930,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + pAdi.SinavAdi + "' İsimli Sınav tipine ait programa özel not kriteri Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
                 }
             }
             else

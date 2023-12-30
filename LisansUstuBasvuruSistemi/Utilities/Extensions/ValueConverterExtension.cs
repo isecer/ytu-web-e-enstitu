@@ -129,6 +129,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
             return (int?)null;
         }
+        public static int ToIntObj(this object obj, int defaultValue = 0)
+        {
+
+            return ToIntObj(obj) ?? defaultValue;
+        }
         public static Guid? ToGuidObj(this object obj)
         {
             if (obj == null)

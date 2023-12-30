@@ -6,7 +6,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
@@ -108,7 +107,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             #endregion
 
- 
+
             var q = from s in _entities.ToBasvurus.Where(p => !model.IsDegerlendirme.HasValue || p.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaKomites.Any(a2 => a2.UniqueID == model.IsDegerlendirme)))
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
@@ -710,7 +709,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var toplantiYetki = RoleNames.TosToplantiTalebiYap.InRoleCurrent();
             var toBasvuruSavunma = _entities.ToBasvuruSavunmas.First(p => p.UniqueID == tosUniqueId);
-            var model = new KmSrTalep();
+            var model = new SrTalepleriKayitDto();
             if (!toplantiYetki && toBasvuruSavunma.ToBasvuru.TezDanismanID != UserIdentity.Current.Id) model.YetkisizErisim = true;
             else
             {
@@ -741,8 +740,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.IslemTarihi = srTalep.IslemTarihi;
                     model.IslemYapanID = srTalep.IslemYapanID;
                     model.IslemYapanIP = srTalep.IslemYapanIP;
-                    model.Aciklama = srTalep.Aciklama;
-                    //model.SRTaleplerJuris = data.SRTaleplerJuris.ToList();
+                    model.Aciklama = srTalep.Aciklama; 
                 }
                 else
                 {
@@ -750,9 +748,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.EnstituKod = toBasvuruSavunma.ToBasvuru.EnstituKod;
                     model.SRTalepTipID = 4;
                     model.TalepYapanID = toBasvuruSavunma.ToBasvuru.KullaniciID;
-                    model.Tarih = DateTime.Now.Date;
-                    //model.SRTaleplerJuris = TITalep.TIBasvuruAraRaporKomites.Select(s => new SRTaleplerJuri { JuriAdi = s.UnvanAdi + " " + s.AdSoyad, Telefon = "", Email = s.EMail }).ToList();  
-
+                    model.Tarih = DateTime.Now.Date;  
                 }
 
                 model.UniqueID = toBasvuruSavunma.UniqueID;
@@ -762,7 +758,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
         [HttpPost]
-        public ActionResult RezervasyonAlPost(KmSrTalep kModel, bool isSendMail = true)
+        public ActionResult RezervasyonAlPost(SrTalepleriKayitDto kModel, bool isSendMail = true)
         {
             var mmMessage = new MmMessage
             {
@@ -794,6 +790,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             kModel.SRTalepID = srTalep?.SRTalepID ?? 0;
+            if (!kModel.IsOnline.HasValue)
+            {
+
+                mmMessage.Messages.Add("Toplantı Şekli seçiniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });
+            }
+            else
+            {
+                if (kModel.IsOnline == true && !TiAyar.TezOneriSavunmaSinaviOnlineYapilabilsin
+                        .GetAyarTi(toBasvuruSavunma.ToBasvuru.EnstituKod).ToBoolean(false))
+                {
+                    mmMessage.Messages.Add("Tez Öneri Savunma Sınavı Online olarak yapılamaz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });
+                }
+                else if (kModel.IsOnline == false && !TiAyar.TezOneriSavunmaSinaviYuzYuzeYapilabilsin
+                             .GetAyarTi(toBasvuruSavunma.ToBasvuru.EnstituKod).ToBoolean(false))
+                {
+                    mmMessage.Messages.Add("Tez Öneri Savunma Sınavı Yüz Yüze olarak yapılamaz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });
+                }
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "IsOnline" });
+            }
 
 
             if (mmMessage.Messages.Count == 0)
@@ -804,6 +822,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Tarih Seçiniz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                 }
+                else if (kModel.BasSaat == TimeSpan.MinValue)
+                {
+                    mmMessage.Messages.Add("Saat Seçiniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
+                }
                 else if (!toDegerlendirmeDuzeltme && kModel.Tarih < DateTime.Now)
                 {
                     mmMessage.Messages.Add("Toplantı tarihi bilgisi günümüz tarihten küçük olamaz.");
@@ -811,7 +834,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (kModel.SalonAdi.IsNullOrWhiteSpace())
                 {
-                    mmMessage.Messages.Add(kModel.IsOnline ? "Toplantı katılım linkini giriniz." : "Toplantı yeri bilgisini giriniz.");
+                    mmMessage.Messages.Add(kModel.IsOnline == true ? "Toplantı katılım linkini giriniz." : "Toplantı yeri bilgisini giriniz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SalonAdi" });
                 }
                 else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "SalonAdi" });
@@ -836,10 +859,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         kModel.Tarih = tarih.Date;
                         kModel.HaftaGunID = (int)tarih.DayOfWeek;
-                        kModel.BasSaat = kModel.IsSalonSecilsin ? kModel.BasSaat.Value : tarih.TimeOfDay;
-                        kModel.BitSaat = kModel.IsSalonSecilsin ? kModel.BitSaat.Value : kModel.BasSaat.Value.Add(new TimeSpan(2, 0, 0));
-                        if (kModel.BitSaat.Value.Days > 0)
-                            kModel.BitSaat = kModel.BitSaat.Value.Subtract(TimeSpan.FromDays(kModel.BitSaat.Value.Days));
+                        kModel.BasSaat = kModel.IsSalonSecilsin ? kModel.BasSaat : tarih.TimeOfDay;
+                        kModel.BitSaat = kModel.IsSalonSecilsin ? kModel.BitSaat : kModel.BasSaat.Add(new TimeSpan(2, 0, 0)); 
                         kModel.SRDurumID = SrTalepDurumEnum.Onaylandı;
                         kModel.SRDurumAciklamasi = kModel.SRDurumAciklamasi;
                         kModel.IslemTarihi = kModel.IslemTarihi;
@@ -873,7 +894,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 UniqueID = Guid.NewGuid(),
                                 ToBasvuruSavunmaID = toBasvuruSavunma.ToBasvuruSavunmaID,
-                                IsOnline = kModel.IsOnline,
+                                IsOnline = kModel.IsOnline ?? false,
                                 EnstituKod = kModel.EnstituKod,
                                 MezuniyetBasvurulariID = kModel.MezuniyetBasvurulariID,
                                 SRTalepTipID = kModel.SRTalepTipID,
@@ -882,8 +903,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 SalonAdi = kModel.SalonAdi,
                                 Tarih = kModel.Tarih,
                                 HaftaGunID = kModel.HaftaGunID,
-                                BasSaat = kModel.BasSaat.Value,
-                                BitSaat = kModel.BitSaat.Value,
+                                BasSaat = kModel.BasSaat,
+                                BitSaat = kModel.BitSaat,
                                 Aciklama = kModel.Aciklama,
                                 SRDurumID = kModel.SRDurumID,
                                 IslemTarihi = kModel.IslemTarihi,
@@ -898,14 +919,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             srTalep.ToBasvuruSavunmaID = toBasvuruSavunma.ToBasvuruSavunmaID;
                             srTalep.SRTalepTipID = kModel.SRTalepTipID;
-                            srTalep.IsOnline = kModel.IsOnline;
+                            srTalep.IsOnline = kModel.IsOnline ?? false;
                             srTalep.SalonAdi = kModel.SalonAdi;
                             srTalep.TalepYapanID = kModel.TalepYapanID;
                             srTalep.SRSalonID = null;
                             srTalep.Tarih = kModel.Tarih;
                             srTalep.HaftaGunID = kModel.HaftaGunID;
-                            srTalep.BasSaat = kModel.BasSaat.Value;
-                            srTalep.BitSaat = kModel.BitSaat.Value;
+                            srTalep.BasSaat = kModel.BasSaat;   
+                            srTalep.BitSaat = kModel.BitSaat;
                             srTalep.DanismanAdi = kModel.DanismanAdi;
                             srTalep.EsDanismanAdi = kModel.EsDanismanAdi;
                             srTalep.SRDurumID = kModel.SRDurumID;
@@ -1097,8 +1118,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (!mMessage.Messages.Any())
                     {
-                        bool sendMailLink = isTezDanismani && toBasvuruSavunmaDurumId.HasValue && !komite.ToBasvuruSavunma.ToBasvuruSavunmaKomites.Any(a => a.IsLinkGonderildi.HasValue);
-                        bool isDegisiklikVar = komite.ToBasvuruSavunmaDurumID != toBasvuruSavunmaDurumId || komite.Aciklama != aciklama;
+                        var sendMailLink = isTezDanismani && toBasvuruSavunmaDurumId.HasValue && !komite.ToBasvuruSavunma.ToBasvuruSavunmaKomites.Any(a => a.IsLinkGonderildi.HasValue);
+                        var isDegisiklikVar = komite.ToBasvuruSavunmaDurumID != toBasvuruSavunmaDurumId || komite.Aciklama != aciklama;
                         if (isTezDanismani && !isDegisiklikVar && komite.ToBasvuruSavunma.IsYokDrBursiyeriVar) isDegisiklikVar = komite.IsCalismaRaporuAltAlanUygun != isCalismaRaporuAltAlanUygun;
                         komite.IsCalismaRaporuAltAlanUygun = isCalismaRaporuAltAlanUygun;
                         komite.ToBasvuruSavunmaDurumID = toBasvuruSavunmaDurumId;
@@ -1194,10 +1215,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             toBasvuruSavunma.IsOyBirligiOrCoklugu = null;
                             toBasvuruSavunma.ToBasvuruSavunmaDurumID = null;
-                        }
+                        } 
+                        _entities.SaveChanges();
                         LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", LogCrudType.Update, komite.ToJson());
                         LogIslemleri.LogEkle("ToBasvuruSavunma", LogCrudType.Update, toBasvuruSavunma.ToJson());
-                        _entities.SaveChanges();
                     }
                 }
             }
@@ -1285,10 +1306,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     toBasvuru.RetDuzeltmeBitisTarihi = retDuzeltmeBitisTarihi;
                     toBasvuru.IlkOneriBitisTarihi = null;
                     toBasvuru.IkinciOneriBitisTarihi = null;
-                    LogIslemleri.LogEkle("ToBasvuru", LogCrudType.Update, toBasvuru.ToJson());
                     _entities.SaveChanges();
                     mMessage.Messages.Add("Tez Önerisi savunması ret/düzeltme bitiş tarihi bilgileri güncellendi.");
                     mMessage.IsSuccess = true;
+                    LogIslemleri.LogEkle("ToBasvuru", LogCrudType.Update, toBasvuru.ToJson());
                 }
             }
 
