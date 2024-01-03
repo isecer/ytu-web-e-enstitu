@@ -27,6 +27,10 @@ namespace LisansUstuBasvuruSistemi.Business
             if (sadeceYetkiliOlduguEnstituler && UserIdentity.Current.IsAdmin == false) enst = enst.Where(p => UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
             return enst.Where(p => p.IsAktif).OrderBy(o => o.EnstituAd).ToArray();
         }
+        public static Enstituler GetEnstitu(string ekd)
+        {
+            return Enstitulers.First(p => p.EnstituKod == ekd);
+        }
 
         public static bool IsContainsEnstitu(string ekod)
         {

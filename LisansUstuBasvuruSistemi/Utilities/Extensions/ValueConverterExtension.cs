@@ -123,13 +123,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDouble(obj);
             return (double?)null;
-        }
+        } 
         public static int? ToIntObj(this object obj)
         {
             if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
             return (int?)null;
         }
-        public static int ToIntObj(this object obj, int defaultValue = 0)
+        public static int ToIntObj(this object obj, int defaultValue)
         {
 
             return ToIntObj(obj) ?? defaultValue;

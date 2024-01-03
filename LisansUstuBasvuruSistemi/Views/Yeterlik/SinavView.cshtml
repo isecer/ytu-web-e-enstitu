@@ -73,7 +73,7 @@
                                         <td class="CaptionTd" width="150">Sınav Sonuç Onayı</td>
                                         <td class="CaptionTd" width="10">:</td>
                                         <td class="ValueTd">
-                                            @if (editdata)
+                                            @if (!itemJr.IsSonucOnaylandi.HasValue)
                                             {
                                                 <select id="IsSonucOnaylandi_@itemJr.UniqueID">
                                                     <option></option>
@@ -82,6 +82,7 @@
                                             }
                                             else
                                             {
+                                                editdata = false;
                                                 @itemJr.ToJuriOnayDurumView()
                                             }
                                         </td>

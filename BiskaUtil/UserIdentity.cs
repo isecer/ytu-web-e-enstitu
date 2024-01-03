@@ -23,17 +23,15 @@ namespace BiskaUtil
         private Dictionary<string, object> _informations = new Dictionary<string, object>();
         public int Id { get; set; }
         public Guid UserKey { get; set; }
-        public int PersonelId { get; set; }
+        public int KullaniciTipId { get; set; } 
         public string NameSurname { get; set; }
         public string Description { get; set; }
+      
+        public string ImagePath { get; set; }  
         public bool IsActiveDirectoryUser { get; set; }
         public bool? IsActiveDirectoryImpersonateWorking { get; set; }
-        public string ImagePath { get; set; }
-        public string Domain { get; set; }
-        public string Password { get; set; }
         public string SeciliEnstituKodu { get; set; }
         public List<string> EnstituKods { get; set; }
-        public int KullaniciTipId { get; set; }
         public Dictionary<string, object> Informations
         {
             get => _informations;

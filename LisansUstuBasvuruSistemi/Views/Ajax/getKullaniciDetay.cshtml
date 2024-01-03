@@ -72,7 +72,7 @@
             <div class="panel panel-default" style="padding: 0px; margin: 0px;">
                 <table id="tblKul" style="width:100%;">
                     <tr>
-                        <td style="vertical-align:top;padding:0px;">
+                        <td style="vertical-align:middle;padding:0px;">
 
                             <table class="table" style="width:100%;margin:0px;padding:0px;">
                                 <tr>
@@ -97,7 +97,8 @@
                                     <td>Kullanıcı Adı</td>
                                     <td>:</td>
                                     <td>
-                                        @Model.KullaniciAdi  @if (kHesabaGecme)
+                                        @Model.KullaniciAdi  
+                                        @if (kHesabaGecme)
                                         {
                                             <a href="@Url.Action("SetLogin","Kullanicilar", new { Model.UserKey })" target="_blank"><i class="fa fa-arrow-circle-o-left"></i> Hesaba Geç</a>
                                         }

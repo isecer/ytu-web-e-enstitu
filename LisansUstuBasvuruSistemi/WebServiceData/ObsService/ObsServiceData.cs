@@ -10,7 +10,7 @@ using LisansUstuBasvuruSistemi.Ws_ObsService;
 namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 {
     public class ObsServiceData
-    { 
+    {
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
         public StudentControl GetObsStudentControl(string tcKimlikNo, string donemId)
@@ -77,13 +77,13 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                             if (ogrenciDersler[0].Sucess)
                             {
                                 var ogrenciDers = ogrenciDersler[0].ogrencidersnot[0];
-                                model.AktifDonemDers.ToplamKredi = ogrenciDers.SON_KREDI.ToIntObj().Value;
-                                model.AktifDonemDers.ToplamAkts = ogrenciDers.TOP_AKTS.ToDecimalObj().ToIntObj().Value;
-                                model.AktifDonemDers.Agno = ogrenciDers.TOP_AKTS.ToDoubleObj().Value;
+                                model.AktifDonemDers.ToplamKredi = ogrenciDers.SON_KREDI.ToIntObj(0);
+                                model.AktifDonemDers.ToplamAkts = ogrenciDers.TOP_AKTS.ToDecimalObj().ToIntObj(0);
+                                model.AktifDonemDers.Agno = ogrenciDers.TOP_AKTS.ToDoubleObj() ?? 0;
                                 model.AktifDonemDers.EtikDersNotu = ogrenciDers.B_ETIK_DERS_NOTU;
                                 model.AktifDonemDers.SeminerDersNotu = ogrenciDers.SEMINER_DERS_NOTU;
-                                model.AktifDonemDers.ZorunluDersSayisi = ogrenciDers.ZORUN_DERS_SAYISI.ToIntObj().Value;
-                                model.AktifDonemDers.AbdDersSayisi = ogrenciDers.ANABILIMDALI_DERS_SAYISI.ToIntObj().Value;
+                                model.AktifDonemDers.ZorunluDersSayisi = ogrenciDers.ZORUN_DERS_SAYISI.ToIntObj() ?? 0;
+                                model.AktifDonemDers.AbdDersSayisi = ogrenciDers.ANABILIMDALI_DERS_SAYISI.ToIntObj() ?? 0;
                                 var dersler = ogrenciDers.AKTIF_DNM_DERS.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
 
                                 if (dersler.Any())
@@ -147,7 +147,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
             {
                 model.Hata = true;
                 model.HataMsj = "OBS sisteminden kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz!";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.HataMsj + "\r\nHata:" + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.HataMsj + "\r\nHata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
             }
 
             if (model.OgrenciInfo == null) model.OgrenciInfo = new Ogrenci();
@@ -180,7 +180,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                         if (ogrenciDers.Any() && ogrenciDers[0].Sucess)
                         {
                             model.OgrenciDersNot = ogrenciDers[0].ogrencidersnot[0];
-                        } 
+                        }
                         var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
                         if (ogrenciTez.Any() && ogrenciTez[0].Sucess)
                         {

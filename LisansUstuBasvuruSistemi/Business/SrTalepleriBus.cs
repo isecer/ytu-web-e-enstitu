@@ -2,7 +2,6 @@
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +22,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 var secilenTarihRezervasyonlar = db.SRTalepleris.Where(p => p.SRSalonID == srSalonId && p.Tarih == nTarih && (p.SRDurumID == SrTalepDurumEnum.Onaylandı || p.SRDurumID == SrTalepDurumEnum.TalepEdildi)).ToList();
                 var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
                 var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
-                var talepTip = db.SRTalepTipleris.First(p => p.SRTalepTipID == srTalepTipId);
                 model.Tarih = nTarih;
                 var salonSaatleri = db.SRSaatlers.Where(p => p.SRSalonID == srSalonId && p.HaftaGunID == haftaGunu.HaftaGunID).Select(s => new SRSalonSaatler
                 {
@@ -175,7 +173,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 if (resmiTatilDegisen != null || resmiTatilSabit != null)
                 {
-                    ;
                     mmMessage.Messages.Add("Resmi tatillerde rezervasyon alınamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                 }

@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Web;
-using System.Web.Security;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
@@ -231,6 +230,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
 
         }
+
         public static UserRoleDto GetUserRoles(string userName = null)
         {
             var identityName = userName ?? HttpContext.Current.User.Identity.Name;

@@ -18,16 +18,17 @@ namespace LisansUstuBasvuruSistemi.Models
         public int MezuniyetSurecID { get; set; }
         public int OgrenimTipID { get; set; }
         public int OgrenimTipKod { get; set; }
-        public string MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari { get; set; }
-        public string MBasvuruEtikNotKriteri { get; set; }
-        public string MBasvuruSeminerNotKriteri { get; set; }
-        public int MBasvuruToplamKrediKriteri { get; set; }
-        public double MBasvuruAGNOKriteri { get; set; }
-        public int MBasvuruAKTSKriteri { get; set; }
-        public int MBSRTalebiKacGunSonraAlabilir { get; set; }
-        public int MBSinavUzatmaOgrenciTaahhutMaxGun { get; set; }
-        public int MBSinavUzatmaSinavAlmaSuresiMaxGun { get; set; }
-        public int MBTezTeslimSuresiGun { get; set; }
+        public int AktifDonemMaxKriteri { get; set; }
+        public string AktifDonemDersKodKriteri { get; set; }
+        public string AktifDonemEtikNotKriteri { get; set; }
+        public string AktifDonemSeminerNotKriteri { get; set; }
+        public int AktifDonemToplamKrediKriteri { get; set; }
+        public double AktifDonemAgnoKriteri { get; set; }
+        public int AktifDonemAktsKriteri { get; set; }
+        public int SinavKacGunSonraAlabilir { get; set; }
+        public int SinavUzatmaOgrenciTaahhutMaxGun { get; set; }
+        public int SinavUzatmaSinavAlmaSuresiMaxGun { get; set; }
+        public int TezTeslimSuresiGun { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

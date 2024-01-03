@@ -83,12 +83,13 @@
                             <thead>
                                 <tr>
                                     <th>Öğrenim Tipleri</th>
-                                    <th width="120" title="Son Dönem Kayıt Yaptırması Gereken Ders Kodları">K.Y.D.K</th>
+                                    <th width="70" title="Öğrencinin mezuniyet başvurusu yapabilmesi için en fazla kaçıncı dönemde olması gerekir.">Dönem K.</th>
+                                    <th width="100" title="Son Dönem Kayıt Yaptırması Gereken Ders Kodları">K.Y.D.K</th>
                                     <th width="70" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak">Etik Kriter</th>
                                     <th width="70" title="Seminer dersi notu belirlenen nottan düşük ise başvuru yapamayacak">Smnr Kriter</th>
                                     <th width="70" title="Tüm Dönem Toplam Kredi Kriteri">Min Kredi</th>
                                     <th width="70" title="Genel AGNO Kriteri">Min AGNO</th>
-                                    <th width="70" title="Genel AKTS Kriteri">Min AKTS</th>   
+                                    <th width="70" title="Genel AKTS Kriteri">Min AKTS</th>
                                     <th width="40" title="EYK tarihinden sonra sınav talebi en erken kaç gün sonra yapılabilir (Gün)">S.R.G</th>
                                     <th width="50" title="Tez sınavı uzatma sonrası en geç kaç gün içinde öğrenci tez teslimi yapmalı (Gün)">U.S.T.T</th>
                                     <th width="50" title="Tez sınavı uzatma sonrası en geç kaç gün içinde sınav alınmalı (Gün)">U.S.S.R</th>
@@ -99,25 +100,26 @@
                                 @foreach (var item in Model.MezuniyetSureciOgrenimTipKriterleris)
                                 {
 
-                                <tr class="rw_bst">
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" name="MezuniyetSureciOgrenimTipKriterID" value="@item.MezuniyetSureciOgrenimTipKriterID" class="hide">
-                                            <input type="text" name="OgrenimTipID" value="@item.OgrenimTipID" class="hide" />
-                                            <input type="text" name="OgrenimTipKod" value="@item.OgrenimTipKod" class="hide" />
-                                            @item.OgrenimTipleri.OgrenimTipAdi
-                                        </div>
-                                    <td> @item.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari</td>
-                                    <td> @item.MBasvuruEtikNotKriteri</td>
-                                    <td> @item.MBasvuruSeminerNotKriteri</td>
-                                    <td> @item.MBasvuruToplamKrediKriteri</td>
-                                    <td> @item.MBasvuruAGNOKriteri </td>
-                                    <td> @item.MBasvuruAKTSKriteri</td>
-                                    <td> @item.MBSRTalebiKacGunSonraAlabilir</td>
-                                    <td> @item.MBSinavUzatmaOgrenciTaahhutMaxGun</td>
-                                    <td> @item.MBSinavUzatmaSinavAlmaSuresiMaxGun</td>
-                                    <td> @item.MBTezTeslimSuresiGun</td>
-                                </tr>
+                                    <tr class="rw_bst">
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" name="MezuniyetSureciOgrenimTipKriterID" value="@item.MezuniyetSureciOgrenimTipKriterID" class="hide">
+                                                <input type="text" name="OgrenimTipID" value="@item.OgrenimTipID" class="hide" />
+                                                <input type="text" name="OgrenimTipKod" value="@item.OgrenimTipKod" class="hide" />
+                                                @item.OgrenimTipleri.OgrenimTipAdi
+                                            </div>
+                                        <td> @(item.AktifDonemMaxKriteri+". Dönem")</td>
+                                        <td> @item.AktifDonemDersKodKriteri</td>
+                                        <td> @item.AktifDonemEtikNotKriteri</td>
+                                        <td> @item.AktifDonemSeminerNotKriteri</td>
+                                        <td> @item.AktifDonemToplamKrediKriteri</td>
+                                        <td> @item.AktifDonemAgnoKriteri </td>
+                                        <td> @item.AktifDonemAktsKriteri</td>
+                                        <td> @item.SinavKacGunSonraAlabilir</td>
+                                        <td> @item.SinavUzatmaOgrenciTaahhutMaxGun</td>
+                                        <td> @item.SinavUzatmaSinavAlmaSuresiMaxGun</td>
+                                        <td> @item.TezTeslimSuresiGun</td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>

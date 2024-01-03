@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -16,8 +14,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var dct = new List<CmbStringDto>();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                bool isYerli = true;
-                if (kullaniciTipId > 0) isYerli = db.KullaniciTipleris.First(p => p.KullaniciTipID == kullaniciTipId).Yerli;
+               
                 var q = from p in db.Programlars
                         join k in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == basvuruSurecId) on new { p.ProgramKod, OgrenimTipKod = ogrenimTipKod } equals new { k.ProgramKod, k.OgrenimTipKod }
                         where p.AnabilimDaliID == anabilimDaliId
@@ -44,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
         }
 
-        public static List<CmbStringDto> CmbGetAktifProgramlar(bool bosSecimVar = false, int? anabilimDaliId = 0)
+        public static List<CmbStringDto> CmbGetAktifProgramlar(bool bosSecimVar , int? anabilimDaliId)
         {
 
             var dct = new List<CmbStringDto>();

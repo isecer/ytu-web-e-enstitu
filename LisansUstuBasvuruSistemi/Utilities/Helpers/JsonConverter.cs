@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,7 +85,23 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 return sb2.ToString();
                 #endregion
             }
-
+            if (objectType == typeof(IEnumerable))
+            {
+                #region enumarable
+                var sb4 = new StringBuilder();
+                sb4.Append("[");
+                var pgdata = (IEnumerable)obje;
+                var ok = false;
+                foreach (var pgd in pgdata)
+                {
+                    if (ok) { sb4.AppendLine(","); }
+                    sb4.AppendLine(_tojson(pgd, propertyFields));
+                    ok = true;
+                }
+                sb4.Append("]");
+                return sb4.ToString();
+                #endregion
+            }
             if (objectType == typeof(IQueryable))
             {
                 #region querable
@@ -107,6 +124,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 var valStr = obje.ToString().Replace("\\", "\\\\").Replace("\"", @"\""");
                 return valStr;
             }
+
+            var aaa = typeof(IEnumerable);
+            var aaa2 = typeof(IList);
             if (objectType ==  typeof(IEnumerable))
             {
                 #region enumarable
@@ -124,6 +144,25 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 return sb4.ToString();
                 #endregion
             }
+
+            if (obje is System.Collections.IList)
+            {
+                #region enumarable
+                var sb4 = new StringBuilder();
+                sb4.Append("[");
+                var pgdata = (IEnumerable)obje;
+                var ok = false;
+                foreach (var pgd in pgdata)
+                {
+                    if (ok) { sb4.AppendLine(","); }
+                    sb4.AppendLine(pgd.ToJson());
+                    ok = true;
+                }
+                sb4.Append("]");
+                return sb4.ToString();
+                #endregion
+            }
+
             if (objectType.IsValueType)
             {
                 return QualifierRequired(obje.GetType()) ? obje.ToString().Replace("\\", "\\\\").Replace("\"", @"\""") : obje.ToString().Replace(",", ".");
@@ -135,12 +174,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public static string ToJson(this object @object)
         {
             var retwal = _tojson(@object, null);
-            return retwal;
+            return FormatJson(retwal);
         }
         public static string ToJson(this object @object, params string[] propertyFields)
         {
             var retwal = _tojson(@object, propertyFields);
-            return retwal;
+            return FormatJson(retwal);
         }
         private static bool QualifierRequired(Type type)
         {
@@ -160,6 +199,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 else result += @string[i].ToString();
             }
             return result;
+        }
+        static string FormatJson(string json)
+        {
+            return json;
+            // JSON'u biçimlendirilmiş bir şekilde geri döndürme. şimdilik kullanılmıyor
+            return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json), Formatting.Indented);
         }
     }
 }

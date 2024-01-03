@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Xml;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
-using DevExpress.Data.WcfLinq.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -789,7 +785,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (yeterlikBasvuru.IsSozluSinavOnline.HasValue)
+                if (yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any(a =>
+                        a.IsSecilenJuri && (a.IsSonucOnaylandi.HasValue || a.SozluNotu.HasValue)))
+                {
+                    mmMessage.Messages.Add("Değerlendirme işlemi yapan jüriler bulunduğundan sınav bilgisi üzerinde herhangi bir işlem yapamazsınız.");
+                }
+                else if (yeterlikBasvuru.IsSozluSinavOnline.HasValue)
                 {
                     mmMessage.Messages.Add("Sözlü sınavı bilgisi oluşturulduktan sonra yazılı sonavı düzenlenemez");
                 }
@@ -817,8 +818,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (!mmMessage.Messages.Any())
                 {
-                    bool isSonucKaldirildi = yeterlikBasvuru.IsYaziliSinavinaKatildi.HasValue &&
-                                             !kModel.IsYaziliSinavinaKatildi.HasValue;
+                    var isSonucKaldirildi = yeterlikBasvuru.IsYaziliSinavinaKatildi.HasValue &&
+                                            !kModel.IsYaziliSinavinaKatildi.HasValue;
                     bool sendMail;
 
 
@@ -897,24 +898,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (kModel.IsSozluSinavOnline.HasValue)
+
+                if (yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any(a =>
+                        a.IsSecilenJuri && (a.IsSonucOnaylandi.HasValue || a.SozluNotu.HasValue)))
                 {
-                    if (!kModel.SozluSinavTarihi.HasValue)
-                    {
-                        mmMessage.Messages.Add("Sınav Tarihi Giriniz.");
-                    }
-                    if (kModel.SozluSinavYeri.IsNullOrWhiteSpace())
-                    {
-                        mmMessage.Messages.Add("Sınav Yeri Giriniz.");
-                    }
+                    mmMessage.Messages.Add("Değerlendirme işlemi yapan jüriler bulunduğundan sınav bilgisi üzerinde herhangi bir işlem yapamazsınız.");
                 }
                 else
                 {
-                    kModel.SozluSinavTarihi = null;
-                    kModel.SozluSinavYeri = null;
-                    kModel.IsSozluSinavinaKatildi = null;
+                    if (kModel.IsSozluSinavOnline.HasValue)
+                    {
+                        if (!kModel.SozluSinavTarihi.HasValue)
+                        {
+                            mmMessage.Messages.Add("Sınav Tarihi Giriniz.");
+                        }
+                        if (kModel.SozluSinavYeri.IsNullOrWhiteSpace())
+                        {
+                            mmMessage.Messages.Add("Sınav Yeri Giriniz.");
+                        }
+                    }
+                    else
+                    {
+                        kModel.SozluSinavTarihi = null;
+                        kModel.SozluSinavYeri = null;
+                        kModel.IsSozluSinavinaKatildi = null;
+                    }
                 }
-
                 if (!mmMessage.Messages.Any())
                 {
                     if (kModel.IsSozluSinavOnline == true && !yeterlikBasvuru.YeterlikSureci.IsSinavOnlineYapilabilir)
@@ -924,10 +933,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (!mmMessage.Messages.Any())
                 {
-                    bool sendMail = yeterlikBasvuru.SozluSinavTarihi != kModel.SozluSinavTarihi ||
-                                    yeterlikBasvuru.SozluSinavYeri != kModel.SozluSinavYeri ||
-                                    yeterlikBasvuru.IsSozluSinavinaKatildi != kModel.IsSozluSinavinaKatildi;
+                    var sendMail = yeterlikBasvuru.SozluSinavTarihi != kModel.SozluSinavTarihi ||
+                                   yeterlikBasvuru.SozluSinavYeri != kModel.SozluSinavYeri ||
+                                   yeterlikBasvuru.IsSozluSinavinaKatildi != kModel.IsSozluSinavinaKatildi;
 
+
+                    if (yeterlikBasvuru.IsSozluSinavOnline != kModel.IsSozluSinavOnline && !kModel.IsSozluSinavOnline.HasValue)
+                    {
+                        foreach (var juriUyesi in yeterlikBasvuru.YeterlikBasvuruJuriUyeleris)
+                        {
+                            juriUyesi.UniqueID = Guid.NewGuid();
+                            juriUyesi.IsLinkGonderildi = null;
+                            juriUyesi.DegerlendirmeTarihi = null;
+                            juriUyesi.SozluNotu = null;
+                            juriUyesi.IslemYapanID = UserIdentity.Current.Id;
+                            juriUyesi.IslemTarihi = DateTime.Now;
+                            juriUyesi.IslemYapanIP = UserIdentity.Ip;
+                        }
+                        LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", LogCrudType.Update, yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.ToList().ToJson());
+                    }
                     yeterlikBasvuru.IsSozluSinavOnline = kModel.IsSozluSinavOnline;
                     yeterlikBasvuru.SozluSinavTarihi = kModel.SozluSinavTarihi;
                     yeterlikBasvuru.SozluSinavYeri = kModel.SozluSinavYeri;
@@ -966,22 +990,38 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var duzeltmeyetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRole();
             var isSozluNotuIstensin = basvuru.IsYaziliSinavBasarili == true && basvuru.IsSozluSinavinaKatildi == true;
 
-            if (isSozluNotuIstensin)
+
+            if (!basvuru.IsYaziliSinavinaKatildi.HasValue)
             {
-                if (sozluNotu.HasValue)
-                {
-                    if (sozluNotu < 0 || sozluNotu > 100) mmMessage.Messages.Add("Sözlü notuna 0 ile 100 arasında bir değer giriniz.");
-                }
-                else if (!duzeltmeyetki) mmMessage.Messages.Add("Sözlü notuna giriniz.");
+                mmMessage.Messages.Add("Yazılı sınavı katılım bilgileri danışman tarafından henüz sisteme işlenmediği için Değerlendirme işlemi yapamazsınız.");
             }
             else
-            {
-                if (!duzeltmeyetki && !isSonucOnaylandi.HasValue)
+            { 
+                if (!basvuru.IsSozluSinavOnline.HasValue)
                 {
-                    mmMessage.Messages.Add("Sınav sonucu onayını seçiniz.");
+                    mmMessage.Messages.Add("Sözlü sınavı katılım bilgileri danışman tarafından henüz sisteme işlenmediği için Değerlendirme işlemi yapamazsınız.");
                 }
             }
 
+            if (!mmMessage.Messages.Any())
+            {
+                if (isSozluNotuIstensin)
+                {
+                    if (sozluNotu.HasValue)
+                    {
+                        if (sozluNotu < 0 || sozluNotu > 100)
+                            mmMessage.Messages.Add("Sözlü notuna 0 ile 100 arasında bir değer giriniz.");
+                    }
+                    else if (!duzeltmeyetki) mmMessage.Messages.Add("Sözlü notuna giriniz.");
+                }
+                else
+                {
+                    if (!duzeltmeyetki && !isSonucOnaylandi.HasValue)
+                    {
+                        mmMessage.Messages.Add("Sınav sonucu onayını seçiniz.");
+                    }
+                }
+            }
 
             if (!mmMessage.Messages.Any())
             {
@@ -1053,7 +1093,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 mmMessage.IsSuccess = true;
-                var msg = "";
+                string msg;
                 if (juri.IsSonucOnaylandi.HasValue) msg = isSozluNotuIstensin ? "Sözlü not girişi yapıldı." : "Sınav sonucu onaylandı.";
                 else msg = isSozluNotuIstensin ? "Sözlü notu kaldırıldı." : "Sınav sonucu onayı kaldırıldı.";
 

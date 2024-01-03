@@ -997,7 +997,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             if (talep.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma)
                             {
-                                var uzatmaTarihi = talep.Tarih.AddDays(mbOtipKriter.MBSinavUzatmaSinavAlmaSuresiMaxGun).ToFormatDate();
+                                var uzatmaTarihi = talep.Tarih.AddDays(mbOtipKriter.SinavUzatmaSinavAlmaSuresiMaxGun).ToFormatDate();
                                 item.MailParameterDtos.Add(new MailParameterDto { Key = "UzatmaTarihi", Value = uzatmaTarihi });
                             }
                         }
@@ -1328,8 +1328,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                mez.MezuniyetJuriOneriFormlaris.Any() &&
                                !mez.SRTalepleris.Any() &&
                                otoMail.MezuniyetSureciOtoMailGonderilenlers.All(a => a.MezuniyetBasvurulariID != mez.MezuniyetBasvurulariID) &&
-                               DbFunctions.DiffDays(nowDate, DbFunctions.AddDays(mez.EYKTarihi, ogrenimTipKriter.MBTezTeslimSuresiGun)) >= 0 &&
-                               DbFunctions.DiffDays(nowDate, DbFunctions.AddDays(mez.EYKTarihi, ogrenimTipKriter.MBTezTeslimSuresiGun)) <= otoMail.Sure
+                               DbFunctions.DiffDays(nowDate, DbFunctions.AddDays(mez.EYKTarihi, ogrenimTipKriter.TezTeslimSuresiGun)) >= 0 &&
+                               DbFunctions.DiffDays(nowDate, DbFunctions.AddDays(mez.EYKTarihi, ogrenimTipKriter.TezTeslimSuresiGun)) <= otoMail.Sure
 
                          select new
                          {
@@ -1349,11 +1349,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                              mez.TezEsDanismanEMail,
                              mez.EYKTarihi,
                              mez.MezuniyetSinavDurumID,
-                             ogrenimTipKriter.MBSinavUzatmaSinavAlmaSuresiMaxGun,
-                             ogrenimTipKriter.MBTezTeslimSuresiGun,
+                             ogrenimTipKriter.SinavUzatmaSinavAlmaSuresiMaxGun,
+                             ogrenimTipKriter.TezTeslimSuresiGun,
                              otoMail.MailSablonTipID,
                              otoMail.MezuniyetSureciOtoMailID,
-                             SonTar = DbFunctions.AddDays(mez.EYKTarihi, ogrenimTipKriter.MBTezTeslimSuresiGun),
+                             SonTar = DbFunctions.AddDays(mez.EYKTarihi, ogrenimTipKriter.TezTeslimSuresiGun),
                              otoMail.Sure
 
                          }).ToList();
@@ -1457,7 +1457,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                mez.MezuniyetJuriOneriFormlaris.Any() &&
                                !mez.SRTalepleris.Any() &&
                                otoMail.MezuniyetSureciOtoMailGonderilenlers.All(a => a.MezuniyetBasvurulariID != mez.MezuniyetBasvurulariID) &&
-                               DbFunctions.DiffDays(DbFunctions.AddDays(mez.EYKTarihi, ogrenimTipKriter.MBTezTeslimSuresiGun), nowDate) >= otoMail.Sure
+                               DbFunctions.DiffDays(DbFunctions.AddDays(mez.EYKTarihi, ogrenimTipKriter.TezTeslimSuresiGun), nowDate) >= otoMail.Sure
 
                          select new
                          {
@@ -1959,8 +1959,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                mez.EYKTarihi.HasValue &&
                                mez.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true) &&
                                otoMail.MezuniyetSureciOtoMailGonderilenlers.All(a => a.MezuniyetBasvurulariID != mez.MezuniyetBasvurulariID) &&
-                               DbFunctions.DiffDays(nowDate, (mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.MBTezTeslimSuresiGun))) >= 0 &&
-                               DbFunctions.DiffDays(nowDate, (mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.MBTezTeslimSuresiGun))) <= otoMail.Sure
+                               DbFunctions.DiffDays(nowDate, (mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.TezTeslimSuresiGun))) >= 0 &&
+                               DbFunctions.DiffDays(nowDate, (mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.TezTeslimSuresiGun))) <= otoMail.Sure
 
 
                          select new
@@ -1980,7 +1980,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                              SinavSaati = sonRezervasyon.BasSaat,
                              otoMail.MailSablonTipID,
                              otoMail.MezuniyetSureciOtoMailID,
-                             TezTeslimSonTarih = (mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.MBTezTeslimSuresiGun))
+                             TezTeslimSonTarih = (mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.TezTeslimSuresiGun))
                          }).ToList();
                     if (!mezuniyetBasvurulari.Any()) return;
                     var sablonTipIds = mezuniyetBasvurulari.Select(s => s.MailSablonTipID).Distinct().ToList();
@@ -2078,7 +2078,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                !mez.IsMezunOldu.HasValue &&
                                mez.EYKTarihi.HasValue &&
                                otoMail.MezuniyetSureciOtoMailGonderilenlers.All(a => a.MezuniyetBasvurulariID != mez.MezuniyetBasvurulariID) &&
-                               DbFunctions.DiffDays((mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.MBTezTeslimSuresiGun)), nowDate) >= otoMail.Sure
+                               DbFunctions.DiffDays((mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.TezTeslimSuresiGun)), nowDate) >= otoMail.Sure
 
 
                          select new
@@ -2098,7 +2098,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                              SinavSaati = sonRezervasyon.BasSaat,
                              otoMail.MailSablonTipID,
                              otoMail.MezuniyetSureciOtoMailID,
-                             TezTeslimSonTarih = (mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.MBTezTeslimSuresiGun))
+                             TezTeslimSonTarih = (mez.TezTeslimSonTarih ?? DbFunctions.AddDays(sonRezervasyon.Tarih, ogrenimTipKriter.TezTeslimSuresiGun))
                          }).ToList();
                     if (!mezuniyetBasvurulari.Any()) return;
                     var sablonTipIds = mezuniyetBasvurulari.Select(s => s.MailSablonTipID).Distinct().ToList();

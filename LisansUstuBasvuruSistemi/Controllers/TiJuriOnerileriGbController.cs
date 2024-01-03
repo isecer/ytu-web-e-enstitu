@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition.Primitives;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -11,8 +11,6 @@ using DevExpress.XtraPrinting;
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
-using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
@@ -36,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Index(new FmTijBasvuru() { SelectedBasvuruUniqueId = selectedBasvuruUniqueId, PageSize = 50 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmTijBasvuru model, string ekd)
+        public ActionResult Index(FmTijBasvuru model, string ekd, bool export = false)
         {
             model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             model.KullaniciID = model.KullaniciID ?? UserIdentity.Current.Id;
@@ -55,8 +53,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ogrenci.UserKey,
                         AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                         s.OgrenciNo,
+                        ogrenci.EMail,
+                        ogrenci.CepTel,
                         ogrenci.ResimAdi,
                         s.Programlar.ProgramAdi,
+                        s.Programlar.AnabilimDallari.AnabilimDaliAdi,
                         TezDanismanAdi = danisman.Ad + " " + danisman.Soyad,
                         TezDanismanIds = s.TijBasvuruOneris.Select(sd => sd.TezDanismanID).ToList(),
                         JuriAdis = s.TijBasvuruOneris.SelectMany(s2 => s2.TijBasvuruOneriJurilers.Select(sm => sm.AdSoyad)).ToList(),
@@ -64,9 +65,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             TijBasvuruOneriID = s2.TijBasvuruOneriID,
                             TijFormTipID = s2.TijFormTipID,
-                            //TijFormTipAdi = s2.TijFormTipleri.TikFormTipAdi,
+                            TijFormTipAdi = s2.TijFormTipleri.TikFormTipAdi,
                             TijDegisiklikTipID = s2.TijDegisiklikTipID,
-                            // TijDegisiklikTipAdi = s2.TijDegisiklikTipleri.TijDegisiklikTipAdi,
+                            TijDegisiklikTipAdi = s2.TijDegisiklikTipleri.TijDegisiklikTipAdi,
+                            DegisiklikAciklamasi = s2.DegisiklikAciklamasi,
                             //TijBasvuruOneriJurilers=s2.TijBasvuruOneriJurilers.ToList(),
                             IsObsData = s2.IsObsData,
                             BasvuruTarihi = s2.BasvuruTarihi,
@@ -75,8 +77,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             DonemAdi = s2.DonemBaslangicYil + "/" + (s2.DonemBaslangicYil + 1) + " " + s2.Donemler.DonemAdi,
                             TezDanismanID = s2.TezDanismanID,
                             IsDilTaahhutuOnaylandi = s2.IsDilTaahhutuOnaylandi,
+                            TezBaslikTr = s2.TezBaslikTr,
+                            TezBaslikEn = s2.TezBaslikEn,
+                            IsTezDiliTr = s2.IsTezDiliTr,
                             DanismanOnayladi = s2.DanismanOnayladi,
                             EYKYaGonderildi = s2.EYKYaGonderildi,
+                            EYKTarihi = s2.EYKTarihi,
                             EYKDaOnaylandi = s2.EYKDaOnaylandi,
 
                         }).OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault(),
@@ -139,7 +145,69 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.AktifDurumID == TijBasvuruDurumEnum.EykDaOnaylandi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKDaOnaylandi == true);
                 else if (model.AktifDurumID == TijBasvuruDurumEnum.EykDaOnaylanmadi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKDaOnaylandi == false);
             }
+            #region export
+            if (export && model.RowCount > 0)
+            {
+                var gv = new GridView();
+                var data = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData).Select(s => new
+                {
+                    s.OgrenciNo,
+                    s.AdSoyad, 
+                    s.AnabilimDaliAdi,
+                    s.ProgramAdi,
+                    s.SonBasvuru.BasvuruTarihi,
+                    s.SonBasvuru.DonemAdi,
+                    s.SonBasvuru.TijFormTipAdi,
+                    s.SonBasvuru.TijDegisiklikTipAdi,
+                    s.SonBasvuru.DegisiklikAciklamasi,
+                    s.SonBasvuru.TezDanismanID,
+                    TezDili=s.SonBasvuru.IsTezDiliTr?"Türkçe":"İngilizce",
+                    s.SonBasvuru.TezBaslikTr,
+                    s.SonBasvuru.TezBaslikEn,
+                    DanismanOnayladi = s.SonBasvuru.DanismanOnayladi.HasValue ? (s.SonBasvuru.DanismanOnayladi == true ? "Onayladı" : "Onaylamadı") : "İşlem Bekleniyor",
+                    EYKYaGonderildi = s.SonBasvuru.EYKYaGonderildi.HasValue ? (s.SonBasvuru.EYKYaGonderildi == true ? "Eyk'ya Gönderildi" : "Eyk'ya Gönderilmedi") : "İşlem Bekleniyor",
+                    s.SonBasvuru.EYKTarihi,
+                    EYKDaOnaylandi = s.SonBasvuru.EYKDaOnaylandi.HasValue ? (s.SonBasvuru.EYKDaOnaylandi == true ? "Onaylandı" : "Onaylanmadı") : "İşlem Bekleniyor",
+                }).ToList();
+                var danismanIds = data.Select(s => s.TezDanismanID).ToList();
+                var danismans = _entities.Kullanicilars.Where(p => danismanIds.Contains(p.KullaniciID))
+                    .Select(s => new { s.KullaniciID, Danisman = s.Unvanlar.UnvanAdi + " " + s.Ad + " " + s.Soyad }).ToList();
 
+                var exportData = (from s in data
+                                  join d in danismans on s.TezDanismanID equals d.KullaniciID
+                                  select new
+                                  {
+                                      s.DonemAdi,
+                                      s.BasvuruTarihi,
+                                      FormTipAdi = s.TijFormTipAdi,
+                                      DegisiklikTipAdi = s.TijDegisiklikTipAdi,
+                                      s.DegisiklikAciklamasi,
+                                      s.OgrenciNo,
+                                      OgrenciAdSoyad=s.AdSoyad,  
+                                      s.AnabilimDaliAdi,
+                                      s.ProgramAdi,
+                                      s.TezDili,
+                                      s.TezBaslikTr,
+                                      s.TezBaslikEn,
+                                      d.Danisman,
+                                      s.DanismanOnayladi,
+                                      s.EYKYaGonderildi,
+                                      s.EYKTarihi,
+                                      s.EYKDaOnaylandi,
+                                  }).ToList();
+
+                gv.DataSource = exportData;
+                gv.DataBind();
+                Response.ContentType = "application/ms-excel";
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
+                var sw = new StringWriter();
+                var htw = new HtmlTextWriter(sw);
+                gv.RenderControl(htw);
+
+                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_TezIzlemeJuriOneriListesi_" + DateTime.Now.ToFormatDate() + ".xls");
+            }
+            #endregion
 
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();

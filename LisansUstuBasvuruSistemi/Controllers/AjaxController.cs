@@ -89,10 +89,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        public ActionResult LoginControl(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl, string dlgId)
+        public ActionResult LoginControl(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl, string ekd)
         {
-
-            var mmMessage = new LoginAjaxDto
+            var loginAjaxDto = new LoginAjaxDto
             {
                 ReturnUrl = returnUrl,
                 UserName = userName,
@@ -101,7 +100,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             rememberMe = rememberMe ?? false;
 
             Kullanicilar loginUser = null;
-            string hata = null;
+            string hata = null; 
             try
             {
                 if (userName.IsNullOrWhiteSpace())
@@ -144,28 +143,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             else
                             {
-                                mmMessage.IsSuccess = false;
+                                loginAjaxDto.IsSuccess = false;
                                 msg = "Uygulama şifresiyle Enstitü Bilgi Sistemine giriş yapılamadı! <a href='https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32' target='_blank' style='color:white;'>Detaylı bilgi almak için tıklayınız. https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32</a>";
                             }
                         }
                         if (loginUser != null && !loginUser.IsAktif)
                         {
                             hata = "Kullanıcı Hesabı Pasif Durumda!";
-                            mmMessage.IsSuccess = false;
+                            loginAjaxDto.IsSuccess = false;
                         }
                         else if (loginUser == null)
                         {
                             hata = "Kullanıcı Adı veya Şifre Hatalı. " + msg;
-                            mmMessage.IsSuccess = false;
+                            loginAjaxDto.IsSuccess = false;
                         }
                         else
                         {
-                            mmMessage.IsSuccess = true;
+                            loginAjaxDto.IsSuccess = true;
                         }
                     }
                     else
                     {
-                        mmMessage.IsSuccess = false;
+                        loginAjaxDto.IsSuccess = false;
                         hata = "Kullanıcı sistemde bulunamadı.";
                     }
                 }
@@ -173,18 +172,31 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             catch (Exception ex)
             {
-                mmMessage.IsSuccess = false;
+                loginAjaxDto.IsSuccess = false;
                 hata = "Sisteme Giriş Yapılırken Bir Hata Oluştu! Hata: " + ex.ToExceptionMessage();
             }
-            mmMessage.Message = hata;
-            if (mmMessage.IsSuccess == false)
+
+            loginAjaxDto.Message = hata;
+            if (loginAjaxDto.IsSuccess == false)
             {
                 var newCaptcha = ViewRenderHelper.RenderPartialView("Ajax", "GetCaptcha", new UrlInfoModel());
-                mmMessage.NewSrc = newCaptcha;
+                loginAjaxDto.NewSrc = newCaptcha;
 
             }
             else if (loginUser != null)
             {
+                var userEnstitu = EnstituBus.GetEnstitu(loginUser.EnstituKod);
+                var currentEnstitu = EnstituBus.GetEnstitu(EnstituBus.GetSelectedEnstitu(ekd));
+
+                if (userEnstitu.EnstituKod != currentEnstitu.EnstituKod && !returnUrl.IsNullOrWhiteSpace() && !returnUrl.Contains("?"))
+                {
+                    loginAjaxDto.CurrentEnstituAdi = currentEnstitu.EnstituAd;
+                    loginAjaxDto.KayitliEnstituAdi = userEnstitu.EnstituAd;
+                    loginAjaxDto.ReturnUrlChanged = returnUrl.ToLower().Replace("/" + currentEnstitu.EnstituKisaAd.ToLower() + "/",
+                        "/" + userEnstitu.EnstituKisaAd.ToLower() + "/");
+                }
+
+
                 if (loginUser.YtuOgrencisi && loginUser.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci)
                 {
                     var tdoBasvuruId = _entities.TDOBasvurus
@@ -199,7 +211,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, string.Empty, rememberMe ?? false);
                 UserBus.SetLastLogon();
             }
-            return mmMessage.ToJsonResult();
+
+            return loginAjaxDto.ToJsonResult();
         }
         public ActionResult SignOut(string returnUrl)
         {
@@ -1235,7 +1248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mmMessage.ToJsonResult();
         }
 
-       
+
         public ActionResult GetOts(string enstituKod, bool bosSecimVar = true, int? haricOgreniTipKod = null)
         {
             var cmbmld = OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, bosSecimVar, true, haricOgreniTipKod);
@@ -1448,7 +1461,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 foreach (var item in data)
                 {
 
-                    mMessage.Messages.Add(item.inx + " Numaralı sorunu için lütfen açıklama giriniz.");
+                    mMessage.Messages.Add(item.inx + " Numaralı soru için lütfen açıklama giriniz.");
                     mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AnketSoruSecenekID_" + item.AnketSoruID });
                     hatalilar.Add(item.AnketSoruID);
                 }
@@ -1468,7 +1481,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         if (dctVal.Take(item.SecenekCount).Any(p => !p.Value.IsNullOrWhiteSpace()) && dctVal.Take(item.SecenekCount).Any(p => p.Value.IsNullOrWhiteSpace()))
                         {
-                            mMessage.Messages.Add(item.inx + " Numaralı sorunu için lütfen açıklama giriniz.");
+                            mMessage.Messages.Add(item.inx + " Numaralı soru içindeki tüm başlıkları cevaplayınız.");
                             mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "AnketSoruSecenekID_" + item.AnketSoruID });
                             hatalilar.Add(item.AnketSoruID);
                         }
@@ -2205,7 +2218,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var view = ViewRenderHelper.RenderPartialView("Ajax", "ObsOgrenciSorgula", model);
             return view.ToJsonResult();
         }
-         
+
         [Authorize]
         public ActionResult GetYtuOgretimEleman(string term)
         {
@@ -2257,7 +2270,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return univeriteler.ToJsonResult();
         }
-        [Authorize] 
+        [Authorize]
         public ActionResult GetDxReport(int? raporTipi, bool isPdfStream = false)
         {
             XtraReport rprX = null;
@@ -3074,7 +3087,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return new FileStreamResult(memoryStream, "application/pdf");
         }
 
-         
+
         protected override void Dispose(bool disposing)
         {
             _entities.Dispose();

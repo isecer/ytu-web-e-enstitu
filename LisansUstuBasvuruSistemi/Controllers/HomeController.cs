@@ -1,14 +1,14 @@
 ﻿using BiskaUtil;
-using HtmlAgilityPack;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
+using Newtonsoft.Json.Linq;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -17,14 +17,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
 
-       
+ 
 
-        
         public ActionResult Index(string ekd, string mesajGroupId, int? basvuruId, string rowId, bool isMesajGonder = false)
-        {
+        { 
+           
 
             var enstitu = _entities.Enstitulers.First(p => p.EnstituKisaAd.Contains(ekd));
- 
+
             #region duyurular 
             var q = from s in _entities.Duyurulars
                     join e in _entities.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }

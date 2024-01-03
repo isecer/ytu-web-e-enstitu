@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -24,8 +22,8 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             for (int i = (DateTime.Now.Year + addY); i >= 2012; i--)
             {
-                lst.Add(new CmbStringDto { Value = i.ToString() + "/" + (i + 1).ToString() + "/2", Caption = i.ToString() + "/" + (i + 1).ToString() + " " + donems.First(p => p.Value == 2).Caption });
-                lst.Add(new CmbStringDto { Value = i.ToString() + "/" + (i + 1).ToString() + "/1", Caption = i.ToString() + "/" + (i + 1).ToString() + " " + donems.First(p => p.Value == 1).Caption });
+                lst.Add(new CmbStringDto { Value = i + "/" + (i + 1) + "/2", Caption = i + "/" + (i + 1) + " " + donems.First(p => p.Value == 2).Caption });
+                lst.Add(new CmbStringDto { Value = i + "/" + (i + 1) + "/1", Caption = i + "/" + (i + 1) + " " + donems.First(p => p.Value == 1).Caption });
             }
             return lst;
         }

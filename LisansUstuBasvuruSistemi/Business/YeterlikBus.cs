@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
@@ -12,10 +9,8 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -34,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Business
             "AA"
         };
 
-       
+
         public static bool IsHarfNotuBuyukEsit(string notKriteri, string ogrenciNotu)
         {
             var notKriteriIndex = NotDegerleri.IndexOf(notKriteri);
@@ -113,7 +108,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (!UserIdentity.Current.EnstituKods.Contains(basvuru.YeterlikSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
                     {
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
-                        var message = "Bu enstitüye ait Yeterlik başvurusu silmeye yetkili değilsiniz!\r\n Yeterlik Başvuru ID: " + basvuru.YeterlikBasvuruID + " \r\n Yeterlik Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
+                        var message = "Bu enstitüye ait Yeterlik başvurusu silmeye yetkili değilsiniz!\r\n Yeterlik Başvuru ID: " + basvuru.YeterlikBasvuruID + " \r\n Yeterlik Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi;
                         SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Yeterlik Başvuru Sil", LogTipiEnum.Kritik);
                     }
                     else if (!GetYeterlikAktifSurecId(basvuru.YeterlikSureci.EnstituKod, basvuru.YeterlikSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
@@ -124,7 +119,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     else if (kayitYetki == false && basvuru.KullaniciID != UserIdentity.Current.Id)
                     {
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Yeterlik başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Yeterlik Başvuru ID:" + basvuru.YeterlikBasvuruID + " \r\n Yeterlik Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogTipiEnum.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Yeterlik başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Yeterlik Başvuru ID:" + basvuru.YeterlikBasvuruID + " \r\n Yeterlik Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi, "Başvuru Sil", LogTipiEnum.Saldırı);
                     }
                     else if (basvuru.IsEnstituOnaylandi.HasValue)
                     {
@@ -154,7 +149,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.YeterlikSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
                         {
                             errorMessage.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
-                            var message = "Bu enstitüye ait Yeterlik başvurusu güncellemeye yetkili değilsiniz!\r\n Yeterlik Başvuru ID: " + basvuru.YeterlikBasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
+                            var message = "Bu enstitüye ait Yeterlik başvurusu güncellemeye yetkili değilsiniz!\r\n Yeterlik Başvuru ID: " + basvuru.YeterlikBasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi;
                             SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogTipiEnum.Saldırı);
                         }
                         else if (!GetYeterlikAktifSurecId(enstituKod, basvuru.YeterlikSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
@@ -213,29 +208,31 @@ namespace LisansUstuBasvuruSistemi.Business
                             }
                             else if (!db.YeterlikSureciKriterMuafOgrencilers.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.KullaniciID == kul.KullaniciID))
                             {
+                                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+                                var controlMessage = new List<string>();
                                 var basvuruKriterleri = db.YeterlikSurecOgrenimTipleris.FirstOrDefault(p => p.YeterlikSurecID == yeterlikSurecId.Value && p.OgrenimTipKod == kul.OgrenimTipKod);
                                 if (basvuruKriterleri == null)
                                 {
                                     errorMessage.Add("Okuduğunuz öğrenim seviyesi yeterlik başvuru yapmak için uygun değildir.");
                                 }
-
-                                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
-                                var controlMessage = new List<string>();
-                                if (basvuruKriterleri.YsMaxBasvuruDonemNo.HasValue && basvuruKriterleri.YsMaxBasvuruDonemNo < ogrenciBilgi.OkuduguDonemNo)
+                                else
                                 {
-                                    controlMessage.Add("Aktif okuduğunuz dönem " + basvuruKriterleri.YsMaxBasvuruDonemNo + ".dönem veya daha altı olması gerekmektedir.");
-                                }
-                                if (!basvuruKriterleri.YsBasEtikNotKriteri.IsNullOrWhiteSpace() && !IsHarfNotuBuyukEsit(basvuruKriterleri.YsBasEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
-                                {
-                                    controlMessage.Add("Etik dersi için ders notu " + basvuruKriterleri.YsBasEtikNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
-                                }
-                                if (!basvuruKriterleri.YsBasSeminerNotKriteri.IsNullOrWhiteSpace() && !IsHarfNotuBuyukEsit(basvuruKriterleri.YsBasSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
-                                {
-                                    controlMessage.Add("Seminer dersi için ders notu " + basvuruKriterleri.YsBasSeminerNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
-                                }
-                                if (basvuruKriterleri.YsBasToplamKrediKriteri.HasValue && basvuruKriterleri.YsBasToplamKrediKriteri > ogrenciBilgi.AktifDonemDers.ToplamKredi)
-                                {
-                                    controlMessage.Add("Toplam Kredi sayınız " + basvuruKriterleri.YsBasToplamKrediKriteri + " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " + ogrenciBilgi.AktifDonemDers.ToplamKredi);
+                                    if (basvuruKriterleri.YsMaxBasvuruDonemNo.HasValue && basvuruKriterleri.YsMaxBasvuruDonemNo < ogrenciBilgi.OkuduguDonemNo)
+                                    {
+                                        controlMessage.Add("Aktif okuduğunuz dönem " + basvuruKriterleri.YsMaxBasvuruDonemNo + ".dönem veya daha altı olması gerekmektedir.");
+                                    }
+                                    if (!basvuruKriterleri.YsBasEtikNotKriteri.IsNullOrWhiteSpace() && !IsHarfNotuBuyukEsit(basvuruKriterleri.YsBasEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
+                                    {
+                                        controlMessage.Add("Etik dersi için ders notu " + basvuruKriterleri.YsBasEtikNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
+                                    }
+                                    if (!basvuruKriterleri.YsBasSeminerNotKriteri.IsNullOrWhiteSpace() && !IsHarfNotuBuyukEsit(basvuruKriterleri.YsBasSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
+                                    {
+                                        controlMessage.Add("Seminer dersi için ders notu " + basvuruKriterleri.YsBasSeminerNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
+                                    }
+                                    if (basvuruKriterleri.YsBasToplamKrediKriteri.HasValue && basvuruKriterleri.YsBasToplamKrediKriteri > ogrenciBilgi.AktifDonemDers.ToplamKredi)
+                                    {
+                                        controlMessage.Add("Toplam Kredi sayınız " + basvuruKriterleri.YsBasToplamKrediKriteri + " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " + ogrenciBilgi.AktifDonemDers.ToplamKredi);
+                                    }
                                 }
                                 if (controlMessage.Count > 0)
                                 {
@@ -357,7 +354,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             return lst;
         }
-       
+
         public static MmMessage SendMailBasvuruOnayi(Guid basvuruUniqueId)
         {
             return MailSenderYeterlik.SendMailBasvuruOnayi(basvuruUniqueId);

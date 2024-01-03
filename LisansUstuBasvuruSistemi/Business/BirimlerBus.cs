@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -30,10 +28,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = db.Birimlers.OrderBy(o => o.BirimAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.BirimID, Caption = item.BirimAdi });
-                }
+                dct.AddRange(data.Select(item => new CmbIntDto { Value = item.BirimID, Caption = item.BirimAdi }));
             }
             return dct;
 

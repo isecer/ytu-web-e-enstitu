@@ -109,7 +109,7 @@
                                             <td colspan="6" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;@Model.DurumColor;margin:0px;">
                                                     @{
-                                                        int rowIndex = Model.MezuniyetSrModel.SalonRezervasyonlari.Count;
+                                                        var rowIndex = Model.MezuniyetSrModel.SalonRezervasyonlari.Count;
                                                         foreach (var item in Model.MezuniyetSrModel.SalonRezervasyonlari)
                                                         {
                                                             var juriOnayiOlmayacak = item.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi && !(item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi);
@@ -117,6 +117,7 @@
                                                             var isJuriDegerlendirmeBasladi = item.SRTaleplerJuris.Any(a => a.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi);
                                                             var isEnstituSonucuGirdi = item.MezuniyetSinavDurumID > MezuniyetSinavDurumEnum.SonucGirilmedi;
                                                             var isSrTalebiDuzeltilebilir = item.SRDurumID == SrTalepDurumEnum.TalepEdildi && item.IsSonSrTalebi && !isEnstituSonucuGirdi && (!isJuriDegerlendirmeVar || !isJuriDegerlendirmeBasladi);
+                                                            var isOncedenUzatmaVar = Model.MezuniyetSrModel.SalonRezervasyonlari.Any(a => a.SRTalepID < item.SRTalepID && a.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma);
                                                             <tr>
                                                                 <td width="55">
                                                                     <table>
@@ -226,7 +227,7 @@
                                                                                                     <table>
                                                                                                         <tr>
                                                                                                             <td id="SrSinavTarihLblContent_@item.SRTalepID">
-                                                                                                                @item.Tarih.ToFormatDate() @item.HaftaGunAdi  @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                                                                                                @item.Tarih.ToFormatDate() @item.HaftaGunAdi @item.BasSaat.ToFormatTime() - @item.BitSaat.ToFormatTime()
 
                                                                                                             </td>
                                                                                                             <td id="SrSinavTarihiContent_@item.SRTalepID" class="hide">
@@ -629,10 +630,13 @@
                                                                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                                                                         <td class="ValueTd">
                                                                                                                                             <select style="width:100%;" class="form-control" onchange="if($(this).val()!='1'){ $('.RwJAck_@itemJuri.SRTalepJuriID').removeClass('hide'); }else{$('.RwJAck_@itemJuri.SRTalepJuriID').addClass('hide');$('#IsTezSanayiVeIsBirligiKapsamindaGerceklesti_@itemJuri.UniqueID').val('');}" id="MezuniyetSinavDurumID_@itemJuri.UniqueID">
-                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == 1).ToSelected()) value="1"></option>
-                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == 2).ToSelected()) value="2">Başarılı</option>
-                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == 3).ToSelected()) value="3">Uzatma</option>
-                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == 4).ToSelected()) value="4">Başarısız</option>
+                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.SonucGirilmedi).ToSelected()) value="@MezuniyetSinavDurumEnum.SonucGirilmedi"></option>
+                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili).ToSelected()) value="@MezuniyetSinavDurumEnum.Basarili">Başarılı</option>
+                                                                                                                                                @if (!isOncedenUzatmaVar)
+                                                                                                                                                {
+                                                                                                                                                    <option @((itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma).ToSelected()) value="@MezuniyetSinavDurumEnum.Uzatma">Uzatma</option>
+                                                                                                                                                }
+                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarisiz).ToSelected()) value="@MezuniyetSinavDurumEnum.Basarisiz">Başarısız</option>
                                                                                                                                             </select>
                                                                                                                                         </td>
                                                                                                                                     </tr>
@@ -667,20 +671,20 @@
                                                                                                                                         <td class="CaptionTd" width="300">Tez Sınavı Değerlendirme Sonucu</td>
                                                                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                                                                         <td class="ValueTd">
-                                                                                                                                            @if (itemJuri.MezuniyetSinavDurumID == 1)
+                                                                                                                                            @if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.SonucGirilmedi)
                                                                                                                                             {
                                                                                                                                                 <span>Sonuç Girilmedi</span>
                                                                                                                                             }
-                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == 2)
+                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili)
                                                                                                                                             {
                                                                                                                                                 <span>Başarılı</span>
 
                                                                                                                                             }
-                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == 3)
+                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma)
                                                                                                                                             {
                                                                                                                                                 <span>Uzatma</span>
                                                                                                                                             }
-                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == 4)
+                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarisiz)
                                                                                                                                             {
                                                                                                                                                 <span>Başarısız</span>
                                                                                                                                             }

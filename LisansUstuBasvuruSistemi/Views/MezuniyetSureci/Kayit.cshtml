@@ -4,8 +4,7 @@
 @model KmMezuniyetSureci
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    var kmMzOtoMail = (List<MezuniyetOtoMailDto>)ViewBag.kmMzOtoMail;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
     var isYonetmelikKopyala = (bool?)ViewBag.IsYonetmelikKopyala;
 }
 

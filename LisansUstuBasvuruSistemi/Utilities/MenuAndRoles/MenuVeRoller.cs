@@ -148,6 +148,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string TdoDanismanOnayYetkisi = "TDO Danisman Onay Yetkisi";
         [Role(GorunurAdi = "TDO EYK'ya Gönderim Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
         public const string TdoeyKyaGonderimYetkisi = "TDO EYK'ya Gönderim Yetkisi";
+        [Role(GorunurAdi = "TDO EYK'ya Hazırlandı Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
+        public const string TdoeyKyaHazirlandiYetkisi = "TDO EYK'ya Hazırlandı Yetkisi";
         [Role(GorunurAdi = "TDO EYK'da Onay Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
         public const string TdoeyKdaOnayYetkisi = "TDO EYK'da Onay Yetkisi";
         [Menu(BagliMenuID = 82300, MenuAdi = "TDO Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "TDOAyarlar/Index", SiraNo = 7)]

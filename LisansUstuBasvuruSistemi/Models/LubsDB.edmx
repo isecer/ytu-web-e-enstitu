@@ -1401,16 +1401,17 @@
           <Property Name="MezuniyetSurecID" Type="int" Nullable="false" />
           <Property Name="OgrenimTipID" Type="int" Nullable="false" />
           <Property Name="OgrenimTipKod" Type="int" Nullable="false" />
-          <Property Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="MBasvuruEtikNotKriteri" Type="nvarchar" MaxLength="64" Nullable="false" />
-          <Property Name="MBasvuruSeminerNotKriteri" Type="nvarchar" MaxLength="64" Nullable="false" />
-          <Property Name="MBasvuruToplamKrediKriteri" Type="int" Nullable="false" />
-          <Property Name="MBasvuruAGNOKriteri" Type="float" Nullable="false" />
-          <Property Name="MBasvuruAKTSKriteri" Type="int" Nullable="false" />
-          <Property Name="MBSRTalebiKacGunSonraAlabilir" Type="int" Nullable="false" />
-          <Property Name="MBSinavUzatmaOgrenciTaahhutMaxGun" Type="int" Nullable="false" />
-          <Property Name="MBSinavUzatmaSinavAlmaSuresiMaxGun" Type="int" Nullable="false" />
-          <Property Name="MBTezTeslimSuresiGun" Type="int" Nullable="false" />
+          <Property Name="AktifDonemMaxKriteri" Type="int" Nullable="false" />
+          <Property Name="AktifDonemDersKodKriteri" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="AktifDonemEtikNotKriteri" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="AktifDonemSeminerNotKriteri" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="AktifDonemToplamKrediKriteri" Type="int" Nullable="false" />
+          <Property Name="AktifDonemAgnoKriteri" Type="float" Nullable="false" />
+          <Property Name="AktifDonemAktsKriteri" Type="int" Nullable="false" />
+          <Property Name="SinavKacGunSonraAlabilir" Type="int" Nullable="false" />
+          <Property Name="SinavUzatmaOgrenciTaahhutMaxGun" Type="int" Nullable="false" />
+          <Property Name="SinavUzatmaSinavAlmaSuresiMaxGun" Type="int" Nullable="false" />
+          <Property Name="TezTeslimSuresiGun" Type="int" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
@@ -11575,16 +11576,17 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="MezuniyetSurecID" Type="Int32" Nullable="false" />
           <Property Name="OgrenimTipID" Type="Int32" Nullable="false" />
           <Property Name="OgrenimTipKod" Type="Int32" Nullable="false" />
-          <Property Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="MBasvuruEtikNotKriteri" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
-          <Property Name="MBasvuruSeminerNotKriteri" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
-          <Property Name="MBasvuruToplamKrediKriteri" Type="Int32" Nullable="false" />
-          <Property Name="MBasvuruAGNOKriteri" Type="Double" Nullable="false" />
-          <Property Name="MBasvuruAKTSKriteri" Type="Int32" Nullable="false" />
-          <Property Name="MBSRTalebiKacGunSonraAlabilir" Type="Int32" Nullable="false" />
-          <Property Name="MBSinavUzatmaOgrenciTaahhutMaxGun" Type="Int32" Nullable="false" />
-          <Property Name="MBSinavUzatmaSinavAlmaSuresiMaxGun" Type="Int32" Nullable="false" />
-          <Property Name="MBTezTeslimSuresiGun" Type="Int32" Nullable="false" />
+          <Property Name="AktifDonemMaxKriteri" Type="Int32" Nullable="false" />
+          <Property Name="AktifDonemDersKodKriteri" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="AktifDonemEtikNotKriteri" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="AktifDonemSeminerNotKriteri" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="AktifDonemToplamKrediKriteri" Type="Int32" Nullable="false" />
+          <Property Name="AktifDonemAgnoKriteri" Type="Double" Nullable="false" />
+          <Property Name="AktifDonemAktsKriteri" Type="Int32" Nullable="false" />
+          <Property Name="SinavKacGunSonraAlabilir" Type="Int32" Nullable="false" />
+          <Property Name="SinavUzatmaOgrenciTaahhutMaxGun" Type="Int32" Nullable="false" />
+          <Property Name="SinavUzatmaSinavAlmaSuresiMaxGun" Type="Int32" Nullable="false" />
+          <Property Name="TezTeslimSuresiGun" Type="Int32" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
@@ -18767,16 +18769,17 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="MBTezTeslimSuresiGun" ColumnName="MBTezTeslimSuresiGun" />
-                <ScalarProperty Name="MBSinavUzatmaSinavAlmaSuresiMaxGun" ColumnName="MBSinavUzatmaSinavAlmaSuresiMaxGun" />
-                <ScalarProperty Name="MBSinavUzatmaOgrenciTaahhutMaxGun" ColumnName="MBSinavUzatmaOgrenciTaahhutMaxGun" />
-                <ScalarProperty Name="MBSRTalebiKacGunSonraAlabilir" ColumnName="MBSRTalebiKacGunSonraAlabilir" />
-                <ScalarProperty Name="MBasvuruAKTSKriteri" ColumnName="MBasvuruAKTSKriteri" />
-                <ScalarProperty Name="MBasvuruAGNOKriteri" ColumnName="MBasvuruAGNOKriteri" />
-                <ScalarProperty Name="MBasvuruToplamKrediKriteri" ColumnName="MBasvuruToplamKrediKriteri" />
-                <ScalarProperty Name="MBasvuruSeminerNotKriteri" ColumnName="MBasvuruSeminerNotKriteri" />
-                <ScalarProperty Name="MBasvuruEtikNotKriteri" ColumnName="MBasvuruEtikNotKriteri" />
-                <ScalarProperty Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" ColumnName="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" />
+                <ScalarProperty Name="TezTeslimSuresiGun" ColumnName="TezTeslimSuresiGun" />
+                <ScalarProperty Name="SinavUzatmaSinavAlmaSuresiMaxGun" ColumnName="SinavUzatmaSinavAlmaSuresiMaxGun" />
+                <ScalarProperty Name="SinavUzatmaOgrenciTaahhutMaxGun" ColumnName="SinavUzatmaOgrenciTaahhutMaxGun" />
+                <ScalarProperty Name="SinavKacGunSonraAlabilir" ColumnName="SinavKacGunSonraAlabilir" />
+                <ScalarProperty Name="AktifDonemAktsKriteri" ColumnName="AktifDonemAktsKriteri" />
+                <ScalarProperty Name="AktifDonemAgnoKriteri" ColumnName="AktifDonemAgnoKriteri" />
+                <ScalarProperty Name="AktifDonemToplamKrediKriteri" ColumnName="AktifDonemToplamKrediKriteri" />
+                <ScalarProperty Name="AktifDonemSeminerNotKriteri" ColumnName="AktifDonemSeminerNotKriteri" />
+                <ScalarProperty Name="AktifDonemEtikNotKriteri" ColumnName="AktifDonemEtikNotKriteri" />
+                <ScalarProperty Name="AktifDonemDersKodKriteri" ColumnName="AktifDonemDersKodKriteri" />
+                <ScalarProperty Name="AktifDonemMaxKriteri" ColumnName="AktifDonemMaxKriteri" />
                 <ScalarProperty Name="OgrenimTipKod" ColumnName="OgrenimTipKod" />
                 <ScalarProperty Name="OgrenimTipID" ColumnName="OgrenimTipID" />
                 <ScalarProperty Name="MezuniyetSurecID" ColumnName="MezuniyetSurecID" />

@@ -287,7 +287,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         mModel.Add(new SablonMailModel
                         {
 
-                            JuriTipAdi = "Öğrenci " + kul.Ad + " " + kul.Soyad,
+                            JuriTipAdi = "Öğrenci ",
                             AdSoyad = kul.Ad + " " + kul.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = kul.EMail, KullaniciId = kul.KullaniciID, ToOrBcc = true } },
                             MailSablonTipId = MailSablonTipiEnum.TosDegerlendirmeSonucGonderimOgrenci,

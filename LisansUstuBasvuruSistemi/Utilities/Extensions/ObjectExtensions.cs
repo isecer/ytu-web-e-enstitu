@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,7 +11,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ObjectExtensions
     {
-        public static string GetCurrentMethodPath(bool isLineBreakPath=false)
+        public static string GetCurrentMethodPath(bool isLineBreakPath = false)
         {
             var stackTrace = new StackTrace();
             var frame = stackTrace.GetFrame(1);
@@ -19,6 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             var fullName = declaringType != null ? declaringType.FullName + "." + method.Name : "UnknownClass";
             if (isLineBreakPath) fullName += "\r\n";
             return fullName;
-        }
+        } 
+
     }
-}
+}  

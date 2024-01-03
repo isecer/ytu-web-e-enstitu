@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
@@ -97,7 +95,6 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var programKods = filterM.Select(s => s.ValueS2).ToList();
                 int inxBosR = 0;
-                var otIDs = filterM.Select(s => s.Value).ToList();
 
                 foreach (var item in data)
                 {

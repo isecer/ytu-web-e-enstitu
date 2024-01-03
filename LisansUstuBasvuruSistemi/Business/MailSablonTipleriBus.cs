@@ -1,5 +1,4 @@
-﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+﻿using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System.Collections.Generic;
 using System.Linq;

@@ -19,21 +19,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize]
     public class BelgeTalebiController : Controller
     {
-        private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string ekd)
         {
             return Index(new FmBelgeTalepleriDto() { PageSize = 10 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmBelgeTalepleriDto model, string EKD)
+        public ActionResult Index(FmBelgeTalepleriDto model, string ekd)
         {
-            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
 
             var bbModel = new IndexPageInfoDto
             {
                 Kullanici = kullanici,
-                SistemBasvuruyaAcik = BelgeTalepAyar.BelgeTalebiAcikmi.GetAyarBt(enstituKod, "0").ToBoolean().Value,
+                SistemBasvuruyaAcik = BelgeTalepAyar.BelgeTalebiAcikmi.GetAyarBt(enstituKod, "0").ToBoolean(false),
                 DonemAdi = DonemlerBus.CmbGetAkademikBulundugumuzTarih(DateTime.Now).Caption,
                 EnstituYetki = UserIdentity.Current.SeciliEnstituKodu.Contains(enstituKod) || UserIdentity.Current.SeciliEnstituKodu == enstituKod,
                 Enstitü = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod),

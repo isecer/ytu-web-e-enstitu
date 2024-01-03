@@ -204,8 +204,6 @@ namespace LisansUstuBasvuruSistemi.Business
                     var eslestirildi = ObsDanismanBasvuruBilgiEslestir(model.KullaniciID, model.TDOBasvuruID);
                     if (eslestirildi.Item1)
                     {
-
-                        basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                         goto tekrarYukle;
                     }
 
@@ -566,7 +564,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
-                        var message = "Bu enstitüye ait tez danışman başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
+                        var message = "Bu enstitüye ait tez danışman başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi;
                         SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", LogTipiEnum.Kritik);
                     }
                     else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
@@ -579,7 +577,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
                     } 
                 }
             }
@@ -606,7 +604,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
-        public static List<CmbIntDto> CmbTdoDanismanTalepTip(bool isDegisiklikTalebi, bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbTdoDanismanTalepTip(bool isDegisiklikTalebi, bool bosSecimVar)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });

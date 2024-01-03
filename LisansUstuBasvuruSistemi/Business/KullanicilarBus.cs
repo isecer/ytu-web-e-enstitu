@@ -64,7 +64,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                             }
 
-                            kul.DanismanID = danismanId; 
+                            kul.DanismanID = danismanId;
                             kayitBilgi.AktifDanismanID = danismanId;
                         }
 
@@ -77,7 +77,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         kul.OgrenciNo = null;
                         kul.KayitDonemID = null;
                         kul.KayitYilBaslangic = null;
-                        kul.KayitTarihi = null; 
+                        kul.KayitTarihi = null;
                     }
                     db.SaveChanges();
                 }
@@ -109,7 +109,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 return ogrenciList.ToJsonResult();
             }
         }
-        public static List<CmbIntDto> GetCmbKullaniciTipleri(bool bosSecimVar = false, bool isHesapOlusturFiltre = false)
+        public static List<CmbIntDto> GetCmbKullaniciTipleri(bool bosSecimVar, bool isHesapOlusturFiltre)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -168,10 +168,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
                 if (isHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
                 var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
-                foreach (var item in qData)
-                {
-                    dct.Add(new CmbIntDto { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi });
-                }
+                dct.AddRange(data.Select(item => new CmbIntDto { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi }));
             }
             return dct;
 
@@ -188,10 +185,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
                 if (isHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
                 var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
-                foreach (var item in qData)
-                {
-                    dct.Add(new CmbIntDto { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi });
-                }
+                dct.AddRange(data.Select(item => new CmbIntDto { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi }));
             }
             return dct;
 
@@ -203,18 +197,13 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = db.Cinsiyetlers.Where(p => p.IsAktif).OrderBy(o => o.CinsiyetAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.CinsiyetID, Caption = item.CinsiyetAdi });
-                }
+                dct.AddRange(data.Select(item => new CmbIntDto { Value = item.CinsiyetID, Caption = item.CinsiyetAdi }));
             }
             return dct;
 
         }
         public static List<CheckObject<Kullanicilar>> GetProgramYetkisiOlanKullanicilar(List<Kullanicilar> kullanicilar, string programKod, string enstituKod = null)
         {
-            var data = new List<CheckObject<Kullanicilar>>();
-
             var qData = kullanicilar.Where(p => p.EnstituKod == (enstituKod ?? p.EnstituKod))
                 .Select(s => new CheckObject<Kullanicilar>
                 {
@@ -227,11 +216,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<KulaniciProgramYetkiModel> GetKullaniciProgramlari(int kullaniciId, string enstituKod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LisansustuBasvuruSistemiEntities())
             {
-                var kull = (from s in db.Programlars
-                            join b in db.AnabilimDallaris on s.AnabilimDaliID equals b.AnabilimDaliID
-                            join e in db.Enstitulers on b.EnstituKod equals e.EnstituKod
+                var kull = (from s in entities.Programlars
+                            join b in entities.AnabilimDallaris on s.AnabilimDaliID equals b.AnabilimDaliID
+                            join e in entities.Enstitulers on b.EnstituKod equals e.EnstituKod 
                             select new KulaniciProgramYetkiModel
                             {
                                 EnstituKod = e.EnstituKod,
@@ -241,7 +230,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 AnabilimDaliKod = b.AnabilimDaliKod,
                                 ProgramKod = s.ProgramKod,
                                 ProgramAdi = s.ProgramAdi,
-                                YetkiVar = db.KullaniciProgramlaris.Any(a => a.KullaniciID == kullaniciId && a.ProgramKod == s.ProgramKod)
+                                YetkiVar = entities.KullaniciProgramlaris.Any(a => a.KullaniciID == kullaniciId && a.ProgramKod == s.ProgramKod)
                             });
 
                 if (enstituKod.IsNullOrWhiteSpace() == false) kull = kull.Where(p => p.EnstituKod == enstituKod);
@@ -261,7 +250,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var boyutlandirma = SistemAyar.KullaniciResimKaydiBoyutlandirma.GetAyar().ToBoolean(false);
                 var kaliteOpt = SistemAyar.KullaniciResimKaydiKaliteOpt.GetAyar().ToBoolean(true);
                 var resimAdi = resim.FileName.ToFileNameAddGuid();
-                var resimYolu = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/" + folderName), resimAdi);
+                var resimYolu = Path.Combine(HttpContext.Current.Server.MapPath("~/" + folderName), resimAdi);
 
 
                 if (boyutlandirma)
@@ -301,8 +290,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         else if (resim.ContentLength >= 600000 && resim.ContentLength < 800000) quality = 50;
                         else if (resim.ContentLength >= 800000 && resim.ContentLength < 1000000) quality = 40;
                         else if (resim.ContentLength >= 1000000) quality = 30;
-                        System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
-                        var path2 = resimYolu + Guid.NewGuid().ToString().Substring(0, 4).ToString() + ".jpg";
+                        var myEncoder = Encoder.Quality;
+                        var path2 = resimYolu + Guid.NewGuid().ToString().Substring(0, 4) + ".jpg";
                         var myEncoderParameters = new EncoderParameters(1);
                         var myEncoderParameter = new EncoderParameter(myEncoder, quality);
                         myEncoderParameters.Param[0] = myEncoderParameter;
@@ -334,7 +323,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         int orientationValue = img1.GetPropertyItem(prop.Id).Value[0];
                         RotateFlipType rotateFlipType = GetOrientationToFlipType(orientationValue);
                         img1.RotateFlip(rotateFlipType);
-                        var path2 = resimYolu + Guid.NewGuid().ToString().Substring(0, 4).ToString() + ".jpg";
+                        var path2 = resimYolu + Guid.NewGuid().ToString().Substring(0, 4) + ".jpg";
                         img1.Save(path2);
                         img1.Dispose();
                         if (File.Exists(resimYolu))

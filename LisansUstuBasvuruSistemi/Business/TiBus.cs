@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -221,7 +218,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             }
                             else
                             {
-                                var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod, "");
+                                var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod);
 
                                 var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
 
@@ -393,7 +390,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<CmbStringDto> CmbTiDonemListeBasvuru(string enstituKod, bool bosSecimVar = false)
         {
-            var cmbDonems = CmbTiDonemListe(enstituKod, false);
+            var cmbDonems = CmbTiDonemListe(enstituKod);
             if (!cmbDonems.Any())
             {
                 var donem = DateTime.Now.ToAraRaporDonemBilgi();

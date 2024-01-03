@@ -39,10 +39,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl)
+        public ActionResult Login(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl,string ekd)
         {
 
-
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             ViewBag.UserName = userName;
             ViewBag.Password = password;
             string hata;
@@ -118,16 +118,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, string.Empty, isRememberMe);
                             UserBus.SetLastLogon();
 
+                      
                             if (returnUrl.IsNullOrWhiteSpace()) return RedirectToAction("Index", "Home");
                             return Redirect(returnUrl);
 
 
                         }
-                        else
-                        {
-                            if (loginUser != null && !loginUser.IsAktif) hata = "Kullanıcı Hesabı Pasif Durumda!";
-                            else hata = "Kullanıcı Adı veya Şifre Hatalı. " + msg;
-                        }
+
+                        if (loginUser != null && !loginUser.IsAktif) hata = "Kullanıcı Hesabı Pasif Durumda!";
+                        else hata = "Kullanıcı Adı veya Şifre Hatalı. " + msg;
                     }
                     else
                     {
