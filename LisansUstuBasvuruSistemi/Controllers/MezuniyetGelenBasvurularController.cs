@@ -400,7 +400,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Index Bilgisi Güncellenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
@@ -840,7 +840,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Tez dosyası kontrolü durum bilgisi kayıt edilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
                 }
             }
             mmMessage.Title = "Tez Kontrol Durumu Kayıt İşlemi";
@@ -1621,7 +1621,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, "MezuniyetGelenBasvurular/JuriOneriFormuPost", LogTipiEnum.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, "MezuniyetGelenBasvurular/JuriOneriFormuPost", BilgiTipiEnum.Hata);
                         }
 
 
@@ -1713,7 +1713,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        public ActionResult JuriOneriFormuOnayDurumKayit(int id, int mezuniyetJuriOneriFormId, bool eykDaOnayOrEykYaGonderim, bool? onaylandi, string eykDaOnaylanmadiDurumAciklamasi)
+        public ActionResult JuriOneriFormuOnayDurumKayit(int mezuniyetBasvurulariId, int mezuniyetJuriOneriFormId, bool eykDaOnayOrEykYaGonderim, bool? onaylandi, string durumAciklamasi)
         {
             var mmMessage = new MmMessage
             {
@@ -1722,7 +1722,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageType = MsgTypeEnum.Warning
             };
 
-            var mb = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
+            var mb = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
             var juriOneriFormu = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
 
 
@@ -1750,7 +1750,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mmMessage.Messages.Add("EYK Ya gönderilmeyen jüri öneri formu üzerinde EYK Onayı işlemi yapılamaz!");
                     }
-                    else if (onaylandi == false && eykDaOnaylanmadiDurumAciklamasi.IsNullOrWhiteSpace())
+                    else if (onaylandi == false && durumAciklamasi.IsNullOrWhiteSpace())
                     {
                         mmMessage.Messages.Add("EYK'da onaylanmama sebebini giriniz!");
                     }
@@ -1818,7 +1818,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (mb.EYKTarihi == null && onaylandi == true) mb.EYKTarihi = DateTime.Now.Date;
                         juriOneriFormu.EYKDaOnaylandiOnayTarihi = DateTime.Now;
                         juriOneriFormu.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
-                        juriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi = onaylandi == false ? eykDaOnaylanmadiDurumAciklamasi : "";
+                        juriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi = onaylandi == false ? durumAciklamasi : "";
                         _entities.SaveChanges();
                         var sendMail = onaylandi == true && mb.EYKTarihi.HasValue;
                         if (sendMail)
@@ -1829,6 +1829,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else
                     {
                         juriOneriFormu.EYKYaGonderildi = onaylandi;
+                        juriOneriFormu.EYKYaGonderimDurumAciklamasi = onaylandi == false ? durumAciklamasi : "";
                         juriOneriFormu.EYKYaGonderildiIslemTarihi = DateTime.Now;
                         juriOneriFormu.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
                         _entities.SaveChanges();
@@ -1965,7 +1966,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
 
             }

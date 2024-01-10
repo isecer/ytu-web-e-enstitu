@@ -149,6 +149,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         VarolanDanismanOnayladi = ard != null ? ard.VarolanDanismanOnayladi : null,
 
                         DanismanOnayladi = ard != null ? ard.DanismanOnayladi : null,
+                        EYKYaHazirlandi = ard != null ? ard.EYKYaHazirlandi : null,
                         EYKYaGonderildi = ard != null ? ard.EYKYaGonderildi : null,
                         EYKDaOnaylandi = ard != null ? ard.EYKDaOnaylandi : null,
                         EsDanismanOnerisiVar = ardEs != null,
@@ -1661,7 +1662,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.Messages.Add("Onaylanmak istenen başvuru bulunamadı. Başvurunun öğrenci tarafından silinme/vazgeçilme ihtimaline karşı ekranı yenileyip tekrar deneyiniz.");
                 return mMessage.ToJsonResult();
             }
-            if (!RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() && (!formYetki || tdoBasvuruDanis.TezDanismanID != UserIdentity.Current.Id))
+            if (!RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent() && (!formYetki || tdoBasvuruDanis.TezDanismanID != UserIdentity.Current.Id))
             {
                 mMessage.Messages.Add("Danışman onayı yetkiniz bulunmamaktadır.");
             }
@@ -1807,7 +1808,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
             var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
-            if (!RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() && (!formYetki || tdoBasvuruDanis.VarolanTezDanismanID != UserIdentity.Current.Id))
+            if (!RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent() && (!formYetki || tdoBasvuruDanis.VarolanTezDanismanID != UserIdentity.Current.Id))
             {
                 mMessage.Messages.Add("Danışman onayı yetkiniz bulunmamaktadır.");
             }
@@ -1863,7 +1864,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Danışmanı Öneri Formu EYK'ya Gönderim İşlemi"
             };
             var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
-            if (!RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent())
+            if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
             {
                 mMessage.Messages.Add("EYK'ya gönderme yetkiniz bulunmamaktadır.");
             }
@@ -1919,6 +1920,64 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
 
+        public ActionResult TdoEykYaHazirlaPost(int tdoBasvuruDanismanId, bool? eykYaHazirlandi)
+        {
+            var mMessage = new MmMessage
+            {
+                MessageType = MsgTypeEnum.Success,
+                Title = "Tez Danışmanı Öneri Formu EYK'ya Hazırlama İşlemi"
+            };
+            var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
+            if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
+            {
+                mMessage.Messages.Add("EYK'ya hazırlama yetkiniz bulunmamaktadır.");
+            }
+            else if (tdoBasvuruDanis.EYKYaGonderildi != true)
+            {
+                mMessage.Messages.Add("Enstitü tarafından Eyk'ya gönderim işlemi yapılmayan Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
+            }
+            else if (tdoBasvuruDanis.EYKDaOnaylandi.HasValue)
+            {
+                mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
+            }
+
+            if (!mMessage.Messages.Any())
+            {
+                if (tdoBasvuruDanis.EYKYaGonderildi.HasValue || eykYaHazirlandi != false)
+                {
+                    // eykya gönderimi onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
+                    var ogrenciObsBilgi =
+                        KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBasvuruDanis.TDOBasvuru.KullaniciID);
+
+                    if (!ogrenciObsBilgi.KayitVar)
+                    {
+                        mMessage.Messages.Add(
+                            "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                    }
+                    else if (tdoBasvuruDanis.TDOBasvuru.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
+                    {
+                        mMessage.Messages.Add(
+                            "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir.");
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
+
+                tdoBasvuruDanis.EYKYaHazirlandi = eykYaHazirlandi;
+                tdoBasvuruDanis.EYKYaHazirlandiIslemTarihi = DateTime.Now;
+                tdoBasvuruDanis.EYKYaHazirlandiIslemYapanID = UserIdentity.Current.Id;
+                tdoBasvuruDanis.IslemTarihi = DateTime.Now;
+                tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
+                tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;
+                _entities.SaveChanges();
+                LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
+                mMessage.IsSuccess = true;
+            }
+
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mMessage.ToJsonResult();
+        }
         public ActionResult TdoEykDaOnayPost(int tdoBasvuruDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi, bool isBaslikGuncellensin, bool isYeniTezBasligiGozuksun, string tezBaslikTr, string tezBaslikEn)
         {
             var mMessage = new MmMessage
@@ -1928,7 +1987,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
             var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
-            if (!RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent())
+            if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
             {
                 mMessage.Messages.Add("EYK'da onay yetkiniz bulunmamaktadır.");
             }
@@ -2038,7 +2097,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var view = "";
             var model = new TDOBasvuruEsDanisman() { TDOBasvuruDanismanID = tdoBasvuruDanismanId, IsDegisiklikTalebi = isDegisiklikTalebi };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-            var yYetki = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() || RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
+            var yYetki = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent() || RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent();
             var tdoBasvuruDanismanData = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
             if (tdoBasvuruEsDanismanId.HasValue) model = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
             if (!formYetki || (!yYetki && tdoBasvuruDanismanData.TezDanismanID != UserIdentity.Current.Id))
@@ -2103,7 +2162,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Eş Danışmanı Öneri Formu Oluşturma İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-            var yYetki = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() || RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
+            var yYetki = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent() || RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent();
             var tdoBasvuruDanismanData = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
             if (!formYetki || (!yYetki && tdoBasvuruDanismanData.TezDanismanID != UserIdentity.Current.Id))
             {
@@ -2276,7 +2335,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var tdoBasvuruEsDanis =
                 _entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
-            if (!RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent())
+            if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
             {
                 mMessage.Messages.Add("EYK'ya gönderme yetkiniz bulunmamaktadır.");
             }
@@ -2315,7 +2374,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Eş Danışmanı Öneri Formu EYK'Da Onay İşlemi"
             };
             var tdoBasvuruEsDanis = _entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
-            if (!RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent())
+            if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
             {
                 mMessage.Messages.Add("EYK'ya gönderme yetkiniz bulunmamaktadır.");
             }
@@ -2393,7 +2452,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Danışman/Dil/Başlık öneri başvurusu silme işlemi"
             };
             var tdoDanismanOnayYetkisi = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-            var tdoeyKyaGonderimYetkisi = RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
+            var tdoeyKyaGonderimYetkisi = RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent();
             var qKayit = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuruID == id && p.TDOBasvuruDanismanID == tdoBasvuruDanismanId).AsQueryable();
             if (!tdoDanismanOnayYetkisi && !tdoeyKyaGonderimYetkisi) qKayit = qKayit.Where(p => p.TDOBasvuru.KullaniciID == UserIdentity.Current.Id);
             else if (tdoDanismanOnayYetkisi && !tdoeyKyaGonderimYetkisi) qKayit = qKayit.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
@@ -2423,7 +2482,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoBasvuruDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Danışman Öneri Formu sistemden silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
@@ -2437,8 +2496,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 Title = "Tez Eş Danışman öneri başvurusu silme işlemi"
             };
-            var tdoeyKdaOnayYetkisi = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
-            var tdoeyKyaGonderimYetkisi = RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
+            var tdoeyKdaOnayYetkisi = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
+            var tdoeyKyaGonderimYetkisi = RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent();
             var tdoEsDanisman = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.UniqueID == uniqueId);
 
 
@@ -2468,7 +2527,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
@@ -2524,7 +2583,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
 
             }

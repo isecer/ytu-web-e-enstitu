@@ -120,6 +120,7 @@ namespace BiskaUtil
                     var attr = (RoleAttribute)oAttr;
                     var oVal = field.GetValue(null);
                     if (oVal == null) continue;
+                   
                     var key = string.IsNullOrWhiteSpace(attr.RolAdi) ? oVal.ToString() : attr.RolAdi;
                     attr.RolAdi = key;
                     var rolKey = field.DeclaringType?.FullName + "." + field.Name;

@@ -102,7 +102,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
 
 
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Başvurusu maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Başvurusu maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add("Mezuniyet Başvurusu maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
@@ -200,7 +200,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
 
 
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Danışman onay sonuç maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Danışman onay sonuç maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add("Mezuniyet Danışman onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
@@ -319,7 +319,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet başvuru durumu değişikliği mail gönderme işlemi yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet başvuru durumu değişikliği mail gönderme işlemi yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add("Mezuniyet başvuru durumu değişikliği mail gönderme işlemi yapılırken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
@@ -501,7 +501,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
 
 
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Jüri öneri formu onay sonuç maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Jüri öneri formu onay sonuç maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add("Mezuniyet Jüri öneri formu onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
@@ -687,7 +687,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             catch (Exception ex)
             {
                 const string message = "Tez Sınavı değerlendirmesi için Jüri üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
@@ -902,7 +902,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             catch (Exception ex)
             {
                 var message = "Salon rezervasyonu için jürilere mail gönderilirken bir hata oluştu!";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
@@ -1035,7 +1035,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             catch (Exception ex)
             {
                 var message = "Tez sınav sonucu bilgisi mail olarak gönderilirken bir hata oluştu!";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
@@ -1186,7 +1186,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         break;
                 }
 
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(msg + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(msg + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add(msg + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
@@ -1303,7 +1303,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetEykTarihineGoreSrAlinmaliOgrenciyeDanismana()
@@ -1432,7 +1432,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetEykTarihineGoreSrAlinmadiEnstituye()
@@ -1549,7 +1549,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetDanismanDegerlendirmeHatirlatmaDanismana()
@@ -1685,7 +1685,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetSinavSonucuGirilmediOgrenciyeDanismana()
@@ -1813,7 +1813,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailMezuniyetTezKontrolTezDosyasiYuklenmeliOgrenciye()
@@ -1930,7 +1930,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailCiltliTezTeslimYapilmaliOgrenciye()
@@ -2050,7 +2050,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
         public static async Task SendMailCiltliTezTeslimYapilmadiEnstituye()
@@ -2170,7 +2170,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet bilgilendirme maili gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, GlobalSistemSetting.SystemDefaultAdminKullaniciId, "::1");
             }
         }
     }

@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         kul = entities.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
                         if (!kul.OgrenimTipKod.HasValue)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez öneri savunma sınavı oluşturulabilmesi için Öğrenci Öğrenim tipi bilgisi null olmamalı.<br/>Öğrenci Kullanıcı id: " + kul.KullaniciID, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez öneri savunma sınavı oluşturulabilmesi için Öğrenci Öğrenim tipi bilgisi null olmamalı.<br/>Öğrenci Kullanıcı id: " + kul.KullaniciID, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Hata);
                             return false;
                         }
                         var ogrenciYeterlikBilgi =
@@ -101,7 +101,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("OBS sisteminden öğrenci bilgisi kontrolü yapılamadı. Hata:" + obsOgrenci.HataMsj, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("OBS sisteminden öğrenci bilgisi kontrolü yapılamadı. Hata:" + obsOgrenci.HataMsj, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Kritik);
                     }
                 }
 

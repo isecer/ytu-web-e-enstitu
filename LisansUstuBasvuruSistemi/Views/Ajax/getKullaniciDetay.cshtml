@@ -3,21 +3,23 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model Kullanicilar
 @{
     /**/
 
     Layout = null;
-    bool resimVar = (bool)ViewBag.ResimVar;
-    bool kYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
-    bool kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent();
-    bool islemYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
-    bool eYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
-    bool pYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
+    var resimVar = (bool)ViewBag.ResimVar;
+    var kYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
+    var kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent();
+    var islemYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+    var eYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
+    var pYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
     var enstitu = (Enstituler)ViewBag.Enstitu;
-    var rollerE = (IEnumerable<CheckObject<Enstituler>>)ViewBag.KEnstituler;
-    var roller = (IEnumerable<CheckObject<Roller>>)ViewBag.KRoller;
+    var rollerE = (List<CheckObject<Enstituler>>)ViewBag.KEnstituler;
+    var roller = (List<CheckObject<Roller>>)ViewBag.KRoller;
     var cats = (List<CmbIntDto>)ViewBag.cats;
     var user = (Kullanicilar)ViewBag.Kullanici;
     var rollerP = (List<KulaniciProgramYetkiModel>)ViewBag.KProgramlar;
@@ -26,6 +28,12 @@
     var secilenTumRoollerCount = roller.Count(a => a.Checked == true);
     var eYetkiCount = (int)ViewBag.EkRollerCount;
     var danisman = (Kullanicilar)ViewBag.Danisman;
+
+    var danismanOgrencileriGosterilsin = false;
+    if (Model.YetkiGrupID == 6 || (Model.KullaniciTipID==KullaniciTipiEnum.AkademikPersonel && Model.YetkiGrupID==5))
+    {
+        danismanOgrencileriGosterilsin = (SistemAyar.DanismanProfilindeOgrencileriniGorsun.GetAyar().ToBoolean(false) && Model.KullaniciID == UserIdentity.Current.Id) || kYetki;
+    }
 }
 <div class="col-md-12" style="padding:6px;">
     <div class="panel panel-info">
@@ -66,6 +74,7 @@
                     </li>
                 }
 
+
             </ul>
         </div>
         <div class="panel-body padding-0">
@@ -97,7 +106,7 @@
                                     <td>Kullanıcı Adı</td>
                                     <td>:</td>
                                     <td>
-                                        @Model.KullaniciAdi  
+                                        @Model.KullaniciAdi
                                         @if (kHesabaGecme)
                                         {
                                             <a href="@Url.Action("SetLogin","Kullanicilar", new { Model.UserKey })" target="_blank"><i class="fa fa-arrow-circle-o-left"></i> Hesaba Geç</a>
@@ -335,6 +344,47 @@
             </div>
         </div>
     }
+    @if (danismanOgrencileriGosterilsin)
+    {
+        var ogrenciler = (List<Kullanicilar>)ViewBag.Ogrenciler;
+
+        <div class="panel panel-info panel-toggled">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-users fa-lg"></i> Danışmanlığındaki Öğrenciler (@ogrenciler.Count Öğrenci)</h3>
+                <ul class="panel-controls">
+                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+            <div class="panel-body padding-0" style="max-height: 270px; overflow: auto;">
+                <table class="table" style="width: 100%;">
+                    @if (ogrenciler.Any())
+                    {
+                        var rowIndex = 0;
+                        foreach (var ogrenci in ogrenciler)
+                        {
+                            rowIndex++;
+                            <tr>
+                                <td width="30">@rowIndex </td>
+                                <td width="40">
+                                    <img class="img-circle img-thumbnail" style="height: 40px; width: 40px;" @(kYetki ? "onclick=DetayGor('" + ogrenci.UserKey + "','#kulPnl')" : "") src="@ogrenci.ResimAdi.ToKullaniciResim()" alt="">
+                                </td>
+                                <td>
+                                    @ogrenci.Ad @ogrenci.Soyad [@ogrenci.OgrenciNo]
+                                    <br />@ogrenci.Programlar.ProgramAdi
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" style="text-align: center;">Öğrenci Yok</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
     @if (kYetki)
     {
         <div class="panel panel-info panel-toggled">
@@ -440,7 +490,7 @@
                             </div>
                             <div class="panel-body padding-0" style="max-height: 75px; overflow: auto;">
                                 <table class="table" style="table-layout:fixed;width:100%;">
-                                    @foreach (var item in roles.Select((s, inx) => new { s = s, inx = inx }))
+                                    @foreach (var item in roles.Select((s, inx) => new { s, inx }))
                                     {
                                         <tr>
                                             <td width="30">@(item.inx + 1))</td>

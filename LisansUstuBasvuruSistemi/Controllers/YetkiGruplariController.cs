@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
-        { 
+        {
             return Index(new FmYetkiGruplari());
         }
         [HttpPost]
@@ -118,10 +118,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 var eskiROl = _entities.YetkiGrupRolleris.Where(p => p.YetkiGrupID == model.YetkiGrupID).ToList();
                 _entities.YetkiGrupRolleris.RemoveRange(eskiROl);
-                foreach (var item in rolId)
-                {
-                    _entities.YetkiGrupRolleris.Add(new YetkiGrupRolleri { YetkiGrupID = model.YetkiGrupID, RolID = item });
-                }
+
+                var yetkiGrupRolleris = _entities.Rollers.Where(p => rolId.Contains(p.RolID)).ToList().Select(s => new YetkiGrupRolleri
+                    { YetkiGrupID = model.YetkiGrupID, RolID = s.RolID }).ToList();
+                _entities.YetkiGrupRolleris.AddRange(yetkiGrupRolleris); 
                 _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -159,7 +159,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.YetkiGrupAdi + "' Yetki Grubu Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else

@@ -35,8 +35,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DonemAdi { get; set; }
         public string DanismanAdi { get; set; }
         public string TijFormTipAdi{ get; set; }
-        public string TijDegisiklikTipAdi { get; set; }
-        public SelectList SelectEykYaGonderildi { get; set; }
-        public SelectList SelectEykDaOnaylandi { get; set; }
+        public string TijDegisiklikTipAdi { get; set; } 
     }
 }

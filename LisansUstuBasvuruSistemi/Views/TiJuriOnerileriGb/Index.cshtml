@@ -1,5 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
@@ -60,8 +59,10 @@
                                                                                 var _Bastar = $('#BasTar').val();
                                                                                 var _Bittar = $('#BitTar').val();
                                                                                 var _isDegisiklik = $('#isDegisiklik').val();
-                                                                                var _ExportWordOrExcel = $('#exportWordOrExcel').val(); 
-                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TiJuriOnerileriGb")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar  + '&ExportWordOrExcel=' + _ExportWordOrExcel+"&isDegisiklik="+_isDegisiklik;
+                                                                                var _ExportWordOrExcel = $('#exportWordOrExcel').val();
+                                                                                var _EnstituOnayDurumId = $('#EnstituOnayDurumId').val(); 
+                                                                                
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TiJuriOnerileriGb")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&ExportWordOrExcel=' + _ExportWordOrExcel + "&isDegisiklik=" + _isDegisiklik + "&enstituOnayDurumId=" + _EnstituOnayDurumId;
 
                                                                             }
                                                                             else {

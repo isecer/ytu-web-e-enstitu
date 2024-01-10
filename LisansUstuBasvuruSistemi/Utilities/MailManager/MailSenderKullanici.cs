@@ -94,7 +94,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
 
                 var message = "Mail gönderme hatası, Hesap oluşturulamadı!  Hata" + " : " + ex.ToExceptionMessage();
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add(message);
                 mmMessage.MessageType = MsgTypeEnum.Error;
 
@@ -153,7 +153,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     else
                     {
                         mmMessage.IsSuccess = false;
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Şifre sıfırlama! Hata: " + rtVal.ToExceptionMessage(), rtVal.ToExceptionStackTrace(), LogTipiEnum.Hata, kul.KullaniciID, UserIdentity.Ip);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Şifre sıfırlama! Hata: " + rtVal.ToExceptionMessage(), rtVal.ToExceptionStackTrace(), BilgiTipiEnum.Hata, kul.KullaniciID, UserIdentity.Ip);
                         mmMessage.Title = "Şifre sıfırlama linki '" + kul.EMail + "' adresine gönderilemedi!";
                     }
 
@@ -163,7 +163,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
 
                 var message = "Mail gönderme hatası, Hesap oluşturulamadı!  Hata" + " : " + ex.ToExceptionMessage();
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add(message);
                 mmMessage.MessageType = MsgTypeEnum.Error;
 

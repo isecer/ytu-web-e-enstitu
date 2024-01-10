@@ -1,20 +1,18 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTdoBasvuruDto
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    var danismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
 
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
 
     var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
     var silmeYetki = RoleNames.TdoGelenBasvuruSil.InRoleCurrent();
-    var eykOnayYetki = kayitYetki || RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
+    var eykOnayYetki = kayitYetki || RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
 
 }
 
@@ -32,69 +30,104 @@
                     <ul class="panel-controls">
                         @if (eykOnayYetki)
                         {
-                            if (Model.RowCount > 0 && !Model.AktifDonemID.IsNullOrWhiteSpace())
-                            {
-                                <li>
-                                    <a href="javascript:void(0);" onclick="EYKYaGonderimOnay()" title="Kontrol Aşamasında Olan Başvuruları Onayla"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
-                                    <div id="BbOnayContent" class="hide">
-                                        <table class="table" style="width:100%;table-layout:fixed;">
-                                            <tbody>
-                                                <tr>
-                                                    <td width="120">Gönderilecek Açıklama</td>
-                                                    <td>
-                                                        <textarea style="max-width:462px; min-height:100px; width:100%;" id="OAciklama"> </textarea>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>Kontrol aşamasında olan '16' adet başvuruyu onaylamak istiyor musunuz?</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <script>
-                                        function EYKYaGonderimOnay() {
-                                            var DonemAdi = '@Model.TdoBasvuruDtos.First().AktifDonemAdi';
-                                            var btbx = bootbox.dialog({
-                                                message: DonemAdi + " döneminde <b>EYK'ya gönderilmeyen</b> Danışman öneri formlarını <b>EYK'ya gönderimini</b> onaylamak istiyor musunuz?",
-                                                title: "Toplu EYK'ya gönderme işlemi",
-                                                buttons: {
-                                                    success: {
-                                                        label: "Onayla",
-                                                        className: "btn-info",
-                                                        callback: function () {
-                                                            var _panel = $(btbx).find('.modal-content');
-                                                            PanelRefresh(_panel, false);
-                                                            toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'ya Gönderim İşlemi Başlatıldı");
-                                                            $.ajax({
-                                                                url: '@Url.Action("EYKGonderimOnay","TDOGelenBasvurular")',
-                                                                cache: false,
-                                                                data: { 'AktifDonemID': '@Model.AktifDonemID' },
-                                                                success: function (result) {
-                                                                    PanelRefresh(_panel, true);
-                                                                    toastr["info"](result.Count + " adet başvuru eyk'ya gönderildi olarak kayıt edildi.", "Toplu Onaylama İşlemi Tamamlandı");
-                                                                    $(btbx).find('.close').first().click();
-                                                                },
-                                                                error: function (err) {
-                                                                    PanelRefresh(_panel, true);
-                                                                    alert(err.responseText);
-                                                                }
-                                                            });
-                                                            return false;
-                                                        }
-                                                    },
-                                                    danger: {
-                                                        label: "Vazgeç",
-                                                        className: "btn-primary",
-                                                        callback: function () {
-                                                        }
+                            <li>
+                                <a href="javascript:void(0);"class="topluOnay" onclick="EYKYaGonderimOnay()" title="Danışman onayından geçen başvuruları Eyk'ya Gönderildi olarak güncelle'"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+                                <a href="javascript:void(0);"class="topluOnay" onclick="EYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+
+                                <script>
+                                    function EYKYaGonderimOnay() {
+                                        var selectElement = document.getElementById("AktifDonemID");
+                                        var selectedOption = selectElement.options[selectElement.selectedIndex];
+                                        var DonemAdi = selectedOption.text; 
+                                        if (!DonemAdi) {
+                                            alert("Başvuru Dönemi seçiniz.")
+                                            return;
+                                        }
+                                        var btbx = bootbox.dialog({
+                                            message: DonemAdi + " döneminde <b>EYK'ya gönderilmeyen</b> Danışman öneri formlarını <b>EYK'ya gönderimini</b> onaylamak istiyor musunuz?",
+                                            title: "Toplu EYK'ya gönderme işlemi",
+                                            buttons: {
+                                                success: {
+                                                    label: "Onayla",
+                                                    className: "btn-info",
+                                                    callback: function () {
+                                                        var _panel = $(btbx).find('.modal-content');
+                                                        PanelRefresh(_panel, false);
+                                                        toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'ya Gönderim İşlemi Başlatıldı");
+                                                        $.ajax({
+                                                            url: '@Url.Action("EYKGonderimOnay","TdoGelenBasvurular")',
+                                                            cache: false,
+                                                            data: { 'AktifDonemID': selectElement.value },
+                                                            success: function (result) {
+                                                                PanelRefresh(_panel, true);
+                                                                toastr["info"](result.Count + " adet başvuru eyk'ya gönderildi olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
+                                                                $(btbx).find('.close').first().click();
+                                                            },
+                                                            error: function (err) {
+                                                                PanelRefresh(_panel, true);
+                                                                alert(err.responseText);
+                                                            }
+                                                        });
+                                                        return false;
+                                                    }
+                                                },
+                                                danger: {
+                                                    label: "Vazgeç",
+                                                    className: "btn-primary",
+                                                    callback: function () {
                                                     }
                                                 }
-                                            });
+                                            }
+                                        });
+                                    }
+                                    function EYKDaOnay() {
+                                        var selectElement = document.getElementById("AktifDonemID");
+                                        var selectedOption = selectElement.options[selectElement.selectedIndex];
+                                        var DonemAdi = selectedOption.text;
+                                        if (!DonemAdi) {
+                                            alert("Başvuru Dönemi seçiniz.")
+                                            return;
                                         }
-                                    </script>
-                                </li>
-                            }
+                                        var btbx = bootbox.dialog({
+                                            message: DonemAdi + " döneminde <b>EYK'da onay işlemi bekleyen</b> Danışman öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?",
+                                            title: "Toplu EYK'da onaylama işlemi",
+                                            buttons: {
+                                                success: {
+                                                    label: "Onayla",
+                                                    className: "btn-info",
+                                                    callback: function () {
+                                                        var _panel = $(btbx).find('.modal-content');
+                                                        PanelRefresh(_panel, false);
+                                                        toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı");
+                                                        $.ajax({
+                                                            url: '@Url.Action("EYKDaOnay","TdoGelenBasvurular")',
+                                                            cache: false,
+                                                            data: { 'AktifDonemID': selectElement.value },
+                                                            success: function (result) {
+                                                                PanelRefresh(_panel, true);
+                                                                toastr["info"](result.Count + " adet başvuru eyk'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
+                                                                $(btbx).find('.close').first().click();
+                                                            },
+                                                            error: function (err) {
+                                                                PanelRefresh(_panel, true);
+                                                                alert(err.responseText);
+                                                            }
+                                                        });
+                                                        return false;
+                                                    }
+                                                },
+                                                danger: {
+                                                    label: "Vazgeç",
+                                                    className: "btn-primary",
+                                                    callback: function () {
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                </script>
+                            </li>
+
                             <li>
                                 <a href="javascript:void(0);" onclick="showDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
                                 <script>
@@ -115,7 +148,7 @@
                                                         success: {
                                                             label: 'Çıktı Al',
                                                             className: "btn btn-info",
-                                                            callback: function (event) { 
+                                                            callback: function (event) {
                                                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                                                 PanelRefresh(pnlx, false);
                                                                 $('#TutanakRprForm').ajaxForm({
@@ -129,13 +162,13 @@
                                                                             //var _Sayi = $('#Sayi').val();
                                                                             var tutanakTipId = $('#tutanakTipId').val();
                                                                             var isDegisiklikOrYeniOneri = $('#isDegisiklikOrYeniOneri').val();
-                                                                            var isEykdaOnayOrGonderim = $('#isEykdaOnayOrGonderim').val();
+                                                                            var EnstituOnayDurumId = $('#EnstituOnayDurumId').val();
                                                                             window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + bastar + '&BitTar=' + bittar
                                                                                 //+ '&RaporTarihi=' + _RaporTarihi
                                                                                 //+ '&Sayi=' + _Sayi
                                                                                 + '&tutanakTipId=' + tutanakTipId
                                                                                 + '&isDegisiklikOrYeniOneri=' + isDegisiklikOrYeniOneri
-                                                                                + '&isEykdaOnayOrGonderim=' + isEykdaOnayOrGonderim;
+                                                                                + '&EnstituOnayDurumId=' + EnstituOnayDurumId;
 
                                                                             toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
                                                                         }
@@ -196,7 +229,7 @@
                                 <li>
                                     <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
                                 </li>
-                            } 
+                            }
                         }
                     </ul>
                 </div>
@@ -210,7 +243,7 @@
                                         <tr>
                                             <td width="160">Başvuru Dönemi</td>
                                             <td>
-                                                @Html.DropDownList("AktifDonemID", null, new { @class = "form-control" })
+                                                @Html.DropDownList("AktifDonemID", null, new { @class = "form-control",onchange= "DonemChange()" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -349,7 +382,7 @@
                                         <td>
                                             @if (!item.AktifTDOBasvuruDanismanID.HasValue && ((kayitYetki || silmeYetki) || item.KullaniciID == UserIdentity.Current.Id))
                                             {
-                                                <a href="@Url.Action("BasvuruYap", "TDOBasvuru", new { TDOBasvuruID = item.TDOBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit" title="Düzelt"></i></a>
+                                                <a href="@Url.Action("BasvuruYap", "TDOBasvuru", new { item.TDOBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit" title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.TDOBasvuruID','@item.AdSoyad')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
                                             }
                                         </td>
@@ -389,10 +422,17 @@
     },200)
     </script>
 }
+
 <script type="text/javascript">
     $(function () {
         Resized(window.innerWidth);
+        DonemChange();
     })
+    function DonemChange() {
+        var selectElement = document.getElementById("AktifDonemID");
+        if (selectElement.value) $('.topluOnay').removeClass('hide'); 
+        else $('.topluOnay').addClass('hide');
+    }
     function Resized(screenwidth) {
         if (screenwidth <= 800) {
             $('.clsHide').addClass('hide');

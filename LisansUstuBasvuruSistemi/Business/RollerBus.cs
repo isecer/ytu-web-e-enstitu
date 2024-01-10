@@ -1,6 +1,9 @@
 ﻿using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -32,6 +35,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     if (dbrole == null)
                     {
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Eklenen Rol: " + attr.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
                         db.Rollers.Add(new Roller
                         {
                             RolID = attr.RolID,
@@ -66,14 +70,21 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
 
                 var yetkiGrupRolleris = db.YetkiGrupRolleris.Where(p => silinenRolIds.Contains(p.RolID)).ToList();
+                foreach (var ygItem in yetkiGrupRolleris)
+                {
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Silinen Yetki Grubu Rolu: " + ygItem.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+                }
                 db.YetkiGrupRolleris.RemoveRange(yetkiGrupRolleris);
                 foreach (var rol in silinenRoller)
-                { 
+                {
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Silinen Rol: " + rol.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+
                     db.Rollers.Remove(rol);
 
                 }
 
                 db.SaveChanges();
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("UpdateRoles", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
             }
         }
     }

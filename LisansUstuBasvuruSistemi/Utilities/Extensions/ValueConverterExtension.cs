@@ -8,7 +8,6 @@ using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
-using Newtonsoft.Json;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
@@ -117,17 +116,17 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             bool dgr;
             if (obj != null && bool.TryParse(obj.ToString(), out dgr)) return Convert.ToBoolean(obj);
-            return (bool?)null;
+            return null;
         }
         public static double? ToDoubleObj(this object obj)
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDouble(obj);
-            return (double?)null;
+            return null;
         } 
         public static int? ToIntObj(this object obj)
         {
-            if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
-            return (int?)null;
+            if (obj != null && (obj.IsNumber())) return Convert.ToInt32(Convert.ToDouble(obj));
+            return null;
         }
         public static int ToIntObj(this object obj, int defaultValue)
         {
@@ -184,7 +183,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static string ToFormatTime(this TimeSpan? time)
         {
             time = time ?? TimeSpan.MinValue;
-            return time.ToFormatTime();
+            return time.Value.ToFormatTime();
         }
         public static string ToFormatTime(this TimeSpan time)
         {
@@ -261,7 +260,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static DateTime? ToDate(this string @string)
         {
             DateTime? result = null;
-            DateTime tarih = DateTime.Today;
+            DateTime tarih;
             if (string.IsNullOrWhiteSpace(@string) == false && DateTime.TryParse(@string, out tarih))
             {
                 //result=tarih.Date;
@@ -316,6 +315,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static string ToKullaniciResim(this string resimAdi)
         {
             var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
+            rsm = "https://lisansustu.yildiz.edu.tr" + rsm;
             return rsm;
         }
 
@@ -343,44 +343,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             if (filePath.IsNullOrWhiteSpace()) return false;
             var ext = filePath.Split('.').Last().ToLower();
-            var exts = new string[] { "jpg", "jpeg", "gif", "png", "bmp", "tiff" };
+            var exts = new[] { "jpg", "jpeg", "gif", "png", "bmp", "tiff" };
             return exts.Contains(ext);
         }
         public static bool IsPdfFile(this string filePath)
         {
             if (filePath.IsNullOrWhiteSpace()) return false;
             var ext = filePath.Split('.').Last().ToLower();
-            var exts = new string[] { "pdf" };
+            var exts = new[] { "pdf" };
             return exts.Contains(ext);
         }
         public static bool IsDocFile(this string filePath)
         {
             if (filePath.IsNullOrWhiteSpace()) return false;
             var ext = filePath.Split('.').Last().ToLower();
-            var exts = new string[] { "doc" };
+            var exts = new[] { "doc", "docx" };
             return exts.Contains(ext);
-        }
-        public static bool IsDocXFile(this string filePath)
+        } 
+        public static bool IsExcelFile(this string filePath)
         {
             if (filePath.IsNullOrWhiteSpace()) return false;
             var ext = filePath.Split('.').Last().ToLower();
-            var exts = new string[] { "docx" };
+            var exts = new[] { "xls", "xlsx" };
             return exts.Contains(ext);
-        }
-        public static bool IsXlsFile(this string filePath)
-        {
-            if (filePath.IsNullOrWhiteSpace()) return false;
-            var ext = filePath.Split('.').Last().ToLower();
-            var exts = new string[] { "xls" };
-            return exts.Contains(ext);
-        }
-        public static bool IsXlsXFile(this string filePath)
-        {
-            if (filePath.IsNullOrWhiteSpace()) return false;
-            var ext = filePath.Split('.').Last().ToLower();
-            var exts = new string[] { "xlsx" };
-            return exts.Contains(ext);
-        }
+        } 
         public static MvcHtmlString ToChecked(this bool? attrChecked)
         {
             return new MvcHtmlString(attrChecked.HasValue && attrChecked.Value ? "checked='checked'" : "");
@@ -391,7 +377,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
         public static double? ToDouble(this string @string)
         {
-            double dbl = 0;
+            double dbl;
             if (double.TryParse(@string, out dbl))
                 return dbl;
             return null;
@@ -406,26 +392,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
         public static double ToDouble(this string @string, double defaultValue)
         {
-            double dbl = 0;
+            double dbl;
             if (double.TryParse(@string, out dbl))
                 return dbl;
             return defaultValue;
         }
-        public static MvcHtmlString ToEvetHayir(this bool Bool)
+        public static MvcHtmlString ToEvetHayir(this bool value)
         {
-            return new MvcHtmlString((Bool ? "Evet" : "Hayır"));
+            return new MvcHtmlString((value ? "Evet" : "Hayır"));
         }
-        public static MvcHtmlString ToEvetHayir(this bool? Bool)
+        public static MvcHtmlString ToEvetHayir(this bool? value)
         {
-            return new MvcHtmlString(Bool == null ? "" : (Bool.Value ? "Evet" : "Hayır"));
+            return new MvcHtmlString(value == null ? "" : (value.Value ? "Evet" : "Hayır"));
         }
-        public static MvcHtmlString ToAktifPasif(this bool @bool)
+        public static MvcHtmlString ToAktifPasif(this bool value)
         {
-            return new MvcHtmlString(@bool ? "Aktif" : "Pasif");
+            return new MvcHtmlString(value ? "Aktif" : "Pasif");
         }
-        public static MvcHtmlString ToAktifPasif(this bool? @bool)
+        public static MvcHtmlString ToAktifPasif(this bool? value)
         {
-            return new MvcHtmlString(@bool == null ? "" : (@bool.Value ? "Aktif" : "Pasif"));
+            return new MvcHtmlString(value == null ? "" : (value.Value ? "Aktif" : "Pasif"));
         }
         public static string ComputeHash(this string sifre, string tuz = null)
         {
@@ -439,41 +425,40 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             string hesaplananOzetSifre = Convert.ToBase64String(ozetBytes);
             return hesaplananOzetSifre;
         }
-        public static string _ToOrderedListPadChar = string.Concat(((char)160).ToString(), ((char)160).ToString(), ((char)160).ToString());
-        //public static string _ToOrderedListPadChar = "---";
-        public static T[] ToOrderedList<T>(this IEnumerable<T> ObjectList, string RootPropertyField, string ParentPropertyField, string TextPropertyField)
+
+        private static readonly string ToOrderedListPadChar = string.Concat(((char)160).ToString(), ((char)160).ToString(), ((char)160).ToString()); 
+        public static T[] ToOrderedList<T>(this IEnumerable<T> objectList, string rootPropertyField, string parentPropertyField, string textPropertyField)
         {
             //string padStr = ((char)160).ToString();
             //padStr = padStr + padStr + padStr;
-            string padStr = _ToOrderedListPadChar;
-            return ObjectList.ToOrderedList(RootPropertyField, ParentPropertyField, TextPropertyField, padStr);
+            string padStr = ToOrderedListPadChar;
+            return objectList.ToOrderedList(rootPropertyField, parentPropertyField, textPropertyField, padStr);
         }
-        public static T[] ToOrderedList<T>(this IEnumerable<T> ObjectList, string RootPropertyField, string ParentPropertyField, string TextPropertyField, string PadString)
+        public static T[] ToOrderedList<T>(this IEnumerable<T> objectList, string rootPropertyField, string parentPropertyField, string textPropertyField, string padString)
         {
-            List<T> resultList = new List<T>();
-            if (ObjectList == null) return resultList.ToArray();
-            //var LstObject = (object[])ObjectList;            
-            var LstObject = ObjectList;
-            if (LstObject.Count() == 0) return resultList.ToArray();
-            var Lst = LstObject.AsQueryable();
+            var resultList = new List<T>();
+            if (objectList == null || !objectList.Any()) return resultList.ToArray();
+            //var LstObject = (object[])ObjectList;             
+            var queryObjectList = objectList.AsQueryable();
 
-            var type = Lst.First().GetType();
-            IEnumerable<string> ids = new string[] { };
+            var type = queryObjectList.First().GetType();
+
+            IEnumerable<string> ids;
             try
             {
-                ids = Lst.Select(s => type.GetProperty(RootPropertyField).GetValue(s, null).ToString()).ToArray();
+                ids = queryObjectList.Select(s => type.GetProperty(rootPropertyField).GetValue(s, null).ToString()).ToArray();
             }
             catch
             {
                 return resultList.ToArray();
             }
-            List<T> roots = new List<T>();
-            foreach (var l in Lst)
+            var roots = new List<T>();
+            foreach (var l in queryObjectList)
             {
-                if (type.GetProperty(ParentPropertyField).GetValue(l, null) == null) roots.Add(l);
+                if (type.GetProperty(parentPropertyField).GetValue(l, null) == null) roots.Add(l);
                 else
                 {
-                    var bid = type.GetProperty(ParentPropertyField).GetValue(l, null).ToString();
+                    var bid = type.GetProperty(parentPropertyField).GetValue(l, null).ToString();
                     if (ids.Contains(bid) == false) roots.Add(l);
                 }
             }
@@ -485,23 +470,23 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                    (parent) =>
                    {
                        deep++;
-                       object parentid = type.GetProperty(RootPropertyField).GetValue(parent, null);
-                       var details = Lst.Where(p =>
-                           type.GetProperty(ParentPropertyField).GetValue(p, null) != null && //it is root
-                           type.GetProperty(ParentPropertyField).GetValue(p, null).ToString() == parentid.ToString())
+                       object parentid = type.GetProperty(rootPropertyField).GetValue(parent, null);
+                       var details = queryObjectList.Where(p =>
+                           type.GetProperty(parentPropertyField).GetValue(p, null) != null && //it is root
+                           type.GetProperty(parentPropertyField).GetValue(p, null).ToString() == parentid.ToString())
                            .AsEnumerable();
                        foreach (var m in details)
                        {
-                           if (string.IsNullOrEmpty(TextPropertyField) == false)
+                           if (string.IsNullOrEmpty(textPropertyField) == false)
                            {
-                               var val = type.GetProperty(TextPropertyField).GetValue(m, null);
+                               var val = type.GetProperty(textPropertyField).GetValue(m, null);
                                if (val != null)
                                {
                                    var str = val.ToString();
-                                   if (str.StartsWith(PadString) == false)
+                                   if (str.StartsWith(padString) == false)
                                        for (int i = 0; i < deep; i++)
-                                           str = PadString + str;
-                                   type.GetProperty(TextPropertyField).SetValue(m, str, null);
+                                           str = padString + str;
+                                   type.GetProperty(textPropertyField).SetValue(m, str, null);
                                }
                            }
                            resultList.Add(m);
@@ -521,25 +506,25 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 
         }
 
-        public static T[] ToOrderedList<T>(this T[] ObjectList, string RootPropertyField, string ParentPropertyField, string TextPropertyField, string PadString, string SetHasChildField)
+        public static T[] ToOrderedList<T>(this T[] objectList, string rootPropertyField, string parentPropertyField, string textPropertyField, string padString, string setHasChildField)
         {
             List<T> resultList = new List<T>();
-            if (ObjectList == null) return resultList.ToArray();
+            if (objectList == null) return resultList.ToArray();
             //var LstObject = (object[])ObjectList;            
-            var LstObject = ObjectList;
+            var LstObject = objectList;
             if (LstObject.Length == 0) return resultList.ToArray();
             var Lst = LstObject.AsQueryable();
 
             var type = Lst.First().GetType();
-            var ids = Lst.Select(s => s.GetType().GetProperty(RootPropertyField).GetValue(s, null).ToString()).ToArray();
+            var ids = Lst.Select(s => s.GetType().GetProperty(rootPropertyField).GetValue(s, null).ToString()).ToArray();
 
             List<T> roots = new List<T>();
             foreach (var l in Lst)
             {
-                if (type.GetProperty(ParentPropertyField).GetValue(l, null) == null) roots.Add(l);
+                if (type.GetProperty(parentPropertyField).GetValue(l, null) == null) roots.Add(l);
                 else
                 {
-                    var bid = type.GetProperty(ParentPropertyField).GetValue(l, null).ToString();
+                    var bid = type.GetProperty(parentPropertyField).GetValue(l, null).ToString();
                     if (ids.Contains(bid) == false) roots.Add(l);
                 }
             }
@@ -551,23 +536,23 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                    (parent) =>
                    {
                        deep++;
-                       object parentid = type.GetProperty(RootPropertyField).GetValue(parent, null);
+                       object parentid = type.GetProperty(rootPropertyField).GetValue(parent, null);
                        var details = Lst.Where(p =>
-                           type.GetProperty(ParentPropertyField).GetValue(p, null) != null && //it is root
-                           type.GetProperty(ParentPropertyField).GetValue(p, null).ToString() == parentid.ToString()).ToArray();
-                       if (!string.IsNullOrEmpty(SetHasChildField))
+                           type.GetProperty(parentPropertyField).GetValue(p, null) != null && //it is root
+                           type.GetProperty(parentPropertyField).GetValue(p, null).ToString() == parentid.ToString()).ToArray();
+                       if (!string.IsNullOrEmpty(setHasChildField))
                        {
-                           type.GetProperty(SetHasChildField).SetValue(parent, details.Length > 0, null);
+                           type.GetProperty(setHasChildField).SetValue(parent, details.Length > 0, null);
                        }
                        foreach (var m in details)
                        {
-                           var val = type.GetProperty(TextPropertyField).GetValue(m, null);
+                           var val = type.GetProperty(textPropertyField).GetValue(m, null);
                            if (val != null)
                            {
                                var str = val.ToString();
                                for (int i = 0; i < deep; i++)
-                                   str = PadString + str;
-                               type.GetProperty(TextPropertyField).SetValue(m, str, null);
+                                   str = padString + str;
+                               type.GetProperty(textPropertyField).SetValue(m, str, null);
                            }
                            resultList.Add(m);
                            fxDetail(m);

@@ -54,6 +54,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AktifDonemAdi { get; set; }
         public bool? DanismanOnayladi { get; set; }
         public bool? EYKYaGonderildi { get; set; }
+        public bool? EYKYaHazirlandi { get; set; }
         public DateTime? EYKYaGonderildiIslemTarihi { get; set; }
         public DateTime? EYKYaGonderildiIslemTarihiES { get; set; }
         public bool? EYKDaOnaylandi { get; set; }

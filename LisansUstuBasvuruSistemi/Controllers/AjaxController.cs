@@ -100,7 +100,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             rememberMe = rememberMe ?? false;
 
             Kullanicilar loginUser = null;
-            string hata = null; 
+            string hata = null;
             try
             {
                 if (userName.IsNullOrWhiteSpace())
@@ -340,7 +340,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 Value = s,
                 Checked = userEnstRoles.Any(p => p.EnstituKod == s.EnstituKod)
-            });
+            }).ToList();
             ViewBag.KEnstituler = dataEnst;
             #endregion
             #region yetkiler
@@ -352,7 +352,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 Value = s,
                 Checked = userRoles.TumRoller.Any(a => a.RolID == s.RolID)
-            });
+            }).ToList();
             ViewBag.KRoller = dataR;
             var kategr = roles.Select(s => s.Kategori).Distinct().ToArray();
             var menuK = _entities.Menulers.Where(a => a.BagliMenuID == 0 && kategr.Contains(a.MenuAdi)).ToList();
@@ -369,6 +369,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ViewBag.Donem = _entities.Donemlers.FirstOrDefault(p => p.DonemID == data.KayitDonemID.Value);
 
             }
+            if (data.YetkiGrupID == 6 || (data.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && data.YetkiGrupID == 5))
+            {
+                //Tez danışmanı yetkisi veya Akademik personel ve Mülakat Not Giriş yetkisi
+                var ogrenciler = _entities.Kullanicilars.Where(p => p.DanismanID == data.KullaniciID && p.YtuOgrencisi).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).ToList();
+                ViewBag.Ogrenciler = ogrenciler;
+            }
+
             ViewBag.Enstitu = _entities.Enstitulers.First(p => p.EnstituKod == data.EnstituKod);
 
             ViewBag.YtuOgrenimB = _entities.OgrenimTipleris.FirstOrDefault(p => p.EnstituKod == kullanici.EnstituKod && p.OgrenimTipKod == kullanici.OgrenimTipKod);
@@ -1237,7 +1244,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                         {
                             mmMessage.IsSuccess = false;
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Şifre sıfırlama! Hata: " + rtVal.ToExceptionMessage(), rtVal.ToExceptionStackTrace(), LogTipiEnum.Hata, kul.KullaniciID, UserIdentity.Ip);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Şifre sıfırlama! Hata: " + rtVal.ToExceptionMessage(), rtVal.ToExceptionStackTrace(), BilgiTipiEnum.Hata, kul.KullaniciID, UserIdentity.Ip);
                             mmMessage.Title = "Şifre sıfırlama linki '" + kul.EMail + "' adresine gönderilemedi!";
                         }
                     }
@@ -1862,7 +1869,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var fExtension = Path.GetExtension(ekTamYol);
                         attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.FExtension.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
                     }
-                    else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.FExtension + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Hata);
+                    else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.FExtension + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Hata);
                 }
                 var gidecekler = gonderilenMailKullanicilari.Select(s => s.Email).ToList();
                 var dct = new Dictionary<int, List<MailSendList>>();
@@ -1891,7 +1898,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.Messages.Add("Mail gönderilirken bir hata oluştu! <br/>Hata:" + msgerr);
                         mmMessage.IsSuccess = false;
                         mmMessage.MessageType = MsgTypeEnum.Error;
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(excpt.ToExceptionMessage(), excpt.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(excpt.ToExceptionMessage(), excpt.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
 
                         try
                         {
@@ -1904,7 +1911,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         catch (Exception ex)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                         }
                     }
                 }
@@ -2193,7 +2200,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         catch (Exception e)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gonderilirken bir hata oluştu. hata:" + e.ToExceptionMessage(), e.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gonderilirken bir hata oluştu. hata:" + e.ToExceptionMessage(), e.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
                         }
                     }
                 }
@@ -2211,9 +2218,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var obsGetData = new ObsServiceData();
             var model = new ObsOgrenciSorgulaModel();
-            var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
-            var donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
-            if (!tc.IsNullOrWhiteSpace()) model = obsGetData.GetOgrenciBilgi(tc, donemId);
+
+            if (!tc.IsNullOrWhiteSpace()) model = obsGetData.GetOgrenciBilgi(tc, "");
             model.Tc = tc;
             var view = ViewRenderHelper.RenderPartialView("Ajax", "ObsOgrenciSorgula", model);
             return view.ToJsonResult();
@@ -2223,7 +2229,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetYtuOgretimEleman(string term)
         {
             var data = PersisServiceData.GetWsPersisOe(term);
-            var ytuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == 67);
+            var ytuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == StaticDefinitions.UniversiteYtuKod);
             var kul2 = data.Table.Select(s => new
             {
                 id = s.ADSOYAD,
@@ -2261,7 +2267,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult GetUniversiteler(string term)
         {
-            var univeriteler = _entities.Universitelers.Where(p => p.Ad.Contains(term)).OrderBy(o => o.Ad).Take(50).Select(s => new
+            var univeriteler = _entities.Universitelers.Where(p => p.UniversiteID != StaticDefinitions.UniversiteYtuKod && p.Ad.Contains(term)).OrderBy(o => o.Ad).Take(50).Select(s => new
             {
                 id = s.UniversiteID,
                 text = s.Ad
@@ -2276,7 +2282,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             XtraReport rprX = null;
             if (raporTipi.HasValue == false)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Rapor almak için rapor tipinin gönderilmesi gerekmektedir!", ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Rapor almak için rapor tipinin gönderilmesi gerekmektedir!", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Hata);
             }
             else
             {
@@ -3086,7 +3092,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             Response.AddHeader("Content-Disposition", "inline;filename=\"" + rprX.DisplayName + ".pdf\"");
             return new FileStreamResult(memoryStream, "application/pdf");
         }
-
 
         protected override void Dispose(bool disposing)
         {

@@ -1,5 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
@@ -9,8 +8,9 @@
 @{
     Layout = null;
     var isKullaniciGormeYetki = RoleNames.Kullanicilar.InRoleCurrent();
-    var tdoEykyaGonderimYetkisi = RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
-    var tdoEykdaOnayYetkisi = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
+    var tdoEykyaGonderimYetkisi = RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent();
+    var tdoEykYaHazirlandiYetkisi = RoleNames.TdoEykyaHazirlandiYetkisi.InRoleCurrent();
+    var tdoEykdaOnayYetkisi = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
     var tdoFormOlusturmaYetkisi = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
     var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
 
@@ -168,68 +168,14 @@
                                     </td>
                                     <td>@item.TalepTipAdi</td>
                                     <td>
-                                        @if (!item.EYKYaGonderildi.HasValue)
+                                        @if (item.IsObsData)
                                         {
-                                            var danismanDegisiklik = item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
-                                            if (danismanDegisiklik && !item.DanismanOnayladi.HasValue && !item.VarolanDanismanOnayladi.HasValue)
-                                            {
-                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Onayı Bekleniyor.</span>
-                                            }
-                                            else if (danismanDegisiklik && !item.DanismanOnayladi.HasValue && item.VarolanDanismanOnayladi == true)
-                                            {
-                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Onayladı.</span>
-                                            }
-                                            else if (danismanDegisiklik && !item.DanismanOnayladi.HasValue && item.VarolanDanismanOnayladi == false)
-                                            {
-                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Onaylamadı.</span>
-
-                                            }
-                                            else if (!item.DanismanOnayladi.HasValue)
-                                            {
-                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "")Danışman Onayı Bekleniyor.</span>
-                                            }
-                                            else if (item.DanismanOnayladi == true)
-                                            {
-                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "") Danışman Onayladı.</span>
-                                            }
-                                            else
-                                            {
-                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || item.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "") Danışman Onaylamadı.</span>
-
-                                            }
-                                        }
-                                        else if (item.EYKYaGonderildi.HasValue && !item.EYKDaOnaylandi.HasValue)
-                                        {
-                                            if (!item.EYKYaGonderildi.HasValue)
-                                            {
-                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderim Onayı Bekleniyor.</span>
-                                            }
-                                            else if (item.EYKYaGonderildi == true)
-                                            {
-                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı.</span>
-                                            }
-                                            else
-                                            {
-                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı.</span>
-
-                                            }
+                                            @("OBS'de doğrulandı")
                                         }
                                         else
                                         {
-                                            if (!item.EYKDaOnaylandi.HasValue)
-                                            {
-                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'da onay işlemi Bekleniyor.</span>
-                                            }
-                                            else if (item.EYKDaOnaylandi == true)
-                                            {
-                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı.</span>
-                                            }
-                                            else
-                                            {
-                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı.</span>
-
-                                            }
-                                        }
+                                            @item.ToBasvuruDurumView()
+                                        } 
                                     </td>
                                     <td>
                                         @if (item.EsDanismanBilgi == null)
@@ -415,7 +361,7 @@
                                                                                 </select>
                                                                             </td>
                                                                             <td>
-                                                                                <label class="btn btn-primary btn-sm" onclick="DVarolanOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                                <label class="btn btn-primary btn-sm" onclick="DVarolanOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -582,7 +528,7 @@
                                                                             </select>
                                                                         </td>
                                                                         <td>
-                                                                            <label class="btn btn-primary btn-sm" onclick="DOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                            <label class="btn btn-primary btn-sm" onclick="DOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                         </td>
                                                                     </tr>
                                                                 </table>
@@ -714,9 +660,9 @@
                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                                     <table style="width:100%;">
                                                         <tr>
-                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> EYK Onay Durumu</td>
+                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
                                                         </tr>
-                                                        @if (tdoEykyaGonderimYetkisi && !item.IsObsData && !item.EYKDaOnaylandi.HasValue)
+                                                        @if (tdoEykyaGonderimYetkisi && !item.IsObsData && !item.EYKYaHazirlandi.HasValue)
                                                         {
                                                             <tr>
                                                                 <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
@@ -732,7 +678,7 @@
                                                                                 </select>
                                                                             </td>
                                                                             <td>
-                                                                                <label class="btn btn-primary btn-sm" onclick="EYKyaGonder(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                                <label class="btn btn-primary btn-sm" onclick="EYKyaGonder(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -788,12 +734,67 @@
                                                                 </tr>
                                                             }
                                                         }
-
                                                         @if (item.EYKYaGonderildi == true)
+                                                        {
+                                                            if (tdoEykYaHazirlandiYetkisi && !item.EYKDaOnaylandi.HasValue && !item.IsObsData && item.TDOBasvuruDanismanID == Model.AktifTDOBasvuruDanismanID)
+                                                            {
+                                                                <tr>
+                                                                    <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
+                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                    <td class="ValueTd">
+                                                                        <table>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <select class="form-control" id="EYKyaHazirlandi_@item.TDOBasvuruDanismanID">
+                                                                                        <option @(!item.EYKYaHazirlandi.HasValue ? "selected" : "")></option>
+                                                                                        <option value="true" @(item.EYKYaHazirlandi == true ? "selected" : "")>EYK'ya Hazırlandı @(item.EYKYaHazirlandiIslemTarihi.HasValue ? "(" + item.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKyaHazirla(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr>
+                                                                    <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
+                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                    <td class="ValueTd">
+                                                                        @if (!item.EYKYaHazirlandi.HasValue)
+                                                                        {
+
+                                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlanma İşlemi Bekleniyor.</span>
+                                                                        }
+                                                                        else if (item.EYKYaHazirlandi == true)
+                                                                        {
+                                                                            if (item.IsObsData)
+                                                                            {
+                                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlandı. (OBS'de doğrulandı)</span>
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlandı. (@item.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime())</span>
+                                                                            }
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+
+
+
+                                                            }
+                                                        }
+
+                                                        @if (item.EYKYaHazirlandi == true)
                                                         {
                                                             if (tdoEykdaOnayYetkisi && !item.IsObsData && item.TDOBasvuruDanismanID == Model.AktifTDOBasvuruDanismanID)
                                                             {
-                                                                <tr id="EYKdaOnayOnayRow_@item.TDOBasvuruDanismanID" class="@(item.EYKYaGonderildi == true ? "" : "hide")">
+                                                                <tr id="EYKdaOnayOnayRow_@item.TDOBasvuruDanismanID" class="@(item.EYKYaHazirlandi == true ? "" : "hide")">
                                                                     <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
                                                                     <td class="CaptionTd" width="10">:</td>
                                                                     <td class="ValueTd">
@@ -811,7 +812,7 @@
 
                                                                                 </td>
                                                                                 <td>
-                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKdaOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKdaOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                 </td>
                                                                             </tr>
                                                                         </table>
@@ -1078,7 +1079,7 @@
 
                                                                                                                                 </td>
                                                                                                                                 <td>
-                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKdaOnayES(@itemE.TDOBasvuruEsDanismanID,@item.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKdaOnayES(@itemE.TDOBasvuruEsDanismanID,@item.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                                                                 </td>
                                                                                                                             </tr>
                                                                                                                         </table>
@@ -1186,7 +1187,7 @@
 }
 <script>
     $(function () {
-        
+
         jQuery('._popover').popover({ trigger: 'hover' });
         $('.tarihB').datetimepicker({
             lang: 'tr',
@@ -1378,7 +1379,34 @@
             }
         });
     }
+    function EYKyaHazirla(id, id2) {
+        var _panel = $('#bsvrDet_' + id2);
+        PanelRefresh(_panel, false);
+        var EykYaHazirlandi = $('#EYKyaHazirlandi_' + id).val();
+        var model = {
+            TDOBasvuruDanismanID: id,
+            EykYaHazirlandi
+        };
+        $.ajax({
+            url: '@Url.Action("TdoEykYaHazirlaPost", "TDOBasvuru")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: model,
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                GetDetail(id2);
+                if (result.Messages.length > 0) getMsg(result);
 
+            },
+            error: function (err) {
+
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
     function EYKdaOnay(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);

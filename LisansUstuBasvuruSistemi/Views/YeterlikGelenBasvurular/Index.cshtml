@@ -37,20 +37,7 @@
 
                                 <li>
                                     <a href="javascript:void(0);" onclick="IslemGormeyenlerOnay()" title="Kontrol Aşamasında Olan Başvuruları Onayla"><i class="fa fa-thumbs-o-up fa-lg"></i></a>
-                                    <div id="BbOnayContent" class="hide">
-                                        <table class="table" style="width:100%;table-layout:fixed;">
-                                            <tr>
-                                                <td width="120">Gönderilecek Açıklama</td>
-                                                <td>
-                                                    <textarea style="max-width:462px; min-height:100px; width:100%;" id="OAciklama"> </textarea>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                        </table>
-                                    </div>
+                                  
                                     <script>
                                     function IslemGormeyenlerOnay() {
                                         var kontrolEdilmeyenTalepIds = @Json.Encode(kontrolEdilmeyenBasvuruIds);

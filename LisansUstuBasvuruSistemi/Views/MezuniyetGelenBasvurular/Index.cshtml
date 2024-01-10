@@ -989,24 +989,42 @@
             }
         });
     }
-    function JoFormDurumKayit(sndr, MezuniyetBasvurulariID, JoFormID, EYKDaOnayOrEYKYaGonderim) {
-        var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
+    function EYKYaOnayChange(id) {
+        var val = $('#EYKYaGonderildi_' + id).val();
+        if (val == 'false') {
+            $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
+        }
+        else {
+            $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
+        }
+    }
+    function EYKOnayChange(id) {
+        var val = $('#EYKDaOnaylandi_' + id).val();
+        if (val == 'false') {
+            $('#EYKOnayAciklamaRow_' + id).removeClass('hide');
+        }
+        else {
+            $('#EYKOnayAciklamaRow_' + id).addClass('hide');
+        }
+    }
+    function JoFormDurumKayit(mezuniyetBasvurulariID, mezuniyetJuriOneriFormID, eykDaOnayOrEykYaGonderim) {
+        var _panel = $('#bsvrDet_' + mezuniyetBasvurulariID);
         PanelRefresh(_panel, false);
-        var $sndr = EYKDaOnayOrEYKYaGonderim ? $('#EYKDaOnaylandi_' + JoFormID) : $(sndr);
-        var SenderVal = $sndr.val().toLowerCase();
-        EYKDaOnaylanmadiDurumAciklamasi = EYKDaOnayOrEYKYaGonderim == true && SenderVal == "false" ? $('#EYKDaOnaylanmadiDurumAciklamasi_' + JoFormID).val() : "";
+        var $sndr = eykDaOnayOrEykYaGonderim ? $('#EYKDaOnaylandi_' + mezuniyetJuriOneriFormID) : $('#EYKYaGonderildi_' + mezuniyetJuriOneriFormID);
+        var onaylandi = $sndr.val().toLowerCase();
+        var durumAciklamasi = eykDaOnayOrEykYaGonderim ? $('#EYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormID).val() : $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormID).val(); 
         $.ajax({
             url: '@Url.Action("JuriOneriFormuOnayDurumKayit", "MezuniyetGelenBasvurular")',
             data: {
-                'id': MezuniyetBasvurulariID,
-                'MezuniyetJuriOneriFormID': JoFormID,
-                'EYKDaOnayOrEYKYaGonderim': EYKDaOnayOrEYKYaGonderim,
-                'Onaylandi': SenderVal,
-                'EYKDaOnaylanmadiDurumAciklamasi': EYKDaOnaylanmadiDurumAciklamasi
+                 mezuniyetBasvurulariID,
+                 mezuniyetJuriOneriFormID,
+                 eykDaOnayOrEykYaGonderim,
+                 onaylandi,
+                 durumAciklamasi
             },
             success: function (result) {
                 PanelRefresh(_panel, true);
-                getDetailx(MezuniyetBasvurulariID);
+                getDetailx(mezuniyetBasvurulariID);
                 showMmMessage(result.Messages, 'Tamam');
 
             },
@@ -1017,13 +1035,13 @@
             }
         });
     }
-    function GetJuriOneriFormu(MezuniyetBasvurulariID) {
-        var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
+    function GetJuriOneriFormu(mezuniyetBasvurulariID) {
+        var _panel = $('#bsvrDet_' + mezuniyetBasvurulariID);
         PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetJuriOneriFormu", "MezuniyetGelenBasvurular")',
             data: {
-                'MezuniyetBasvurulariID': MezuniyetBasvurulariID,
+                  mezuniyetBasvurulariID
             },
             success: function (result) {
                 PanelRefresh(_panel, true);

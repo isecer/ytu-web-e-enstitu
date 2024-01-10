@@ -82,6 +82,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             IsTezDiliTr = s2.IsTezDiliTr,
                             DanismanOnayladi = s2.DanismanOnayladi,
                             EYKYaGonderildi = s2.EYKYaGonderildi,
+                            EYKYaHazirlandi = s2.EYKYaHazirlandi,
                             EYKTarihi = s2.EYKTarihi,
                             EYKDaOnaylandi = s2.EYKDaOnaylandi,
 
@@ -139,9 +140,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.AktifDurumID == TijBasvuruDurumEnum.DanismanTarafindanOnaylandi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.DanismanOnayladi == true && !p.SonBasvuru.EYKYaGonderildi.HasValue);
                 else if (model.AktifDurumID == TijBasvuruDurumEnum.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.DanismanOnayladi == false && !p.SonBasvuru.EYKYaGonderildi.HasValue);
                 else if (model.AktifDurumID == TijBasvuruDurumEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.DanismanOnayladi == true && !p.SonBasvuru.EYKYaGonderildi.HasValue);
-                else if (model.AktifDurumID == TijBasvuruDurumEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKYaGonderildi == true && !p.SonBasvuru.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TijBasvuruDurumEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKYaGonderildi == false && !p.SonBasvuru.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TijBasvuruDurumEnum.EykDaOnayBekleniyor) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKYaGonderildi == true && !p.SonBasvuru.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TijBasvuruDurumEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKYaGonderildi == true && !p.SonBasvuru.EYKYaHazirlandi.HasValue);
+                else if (model.AktifDurumID == TijBasvuruDurumEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKYaGonderildi == false && !p.SonBasvuru.EYKYaHazirlandi.HasValue);
+                else if (model.AktifDurumID == TijBasvuruDurumEnum.EykYaHazirlandi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKYaHazirlandi == true && !p.SonBasvuru.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TijBasvuruDurumEnum.EykDaOnayBekleniyor) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKYaHazirlandi == true && !p.SonBasvuru.EYKDaOnaylandi.HasValue);
                 else if (model.AktifDurumID == TijBasvuruDurumEnum.EykDaOnaylandi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKDaOnaylandi == true);
                 else if (model.AktifDurumID == TijBasvuruDurumEnum.EykDaOnaylanmadi) q = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData && p.SonBasvuru.EYKDaOnaylandi == false);
             }
@@ -152,7 +154,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var data = q.Where(p => p.SonBasvuru != null && !p.SonBasvuru.IsObsData).Select(s => new
                 {
                     s.OgrenciNo,
-                    s.AdSoyad, 
+                    s.AdSoyad,
                     s.AnabilimDaliAdi,
                     s.ProgramAdi,
                     s.SonBasvuru.BasvuruTarihi,
@@ -161,11 +163,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     s.SonBasvuru.TijDegisiklikTipAdi,
                     s.SonBasvuru.DegisiklikAciklamasi,
                     s.SonBasvuru.TezDanismanID,
-                    TezDili=s.SonBasvuru.IsTezDiliTr?"Türkçe":"İngilizce",
+                    TezDili = s.SonBasvuru.IsTezDiliTr ? "Türkçe" : "İngilizce",
                     s.SonBasvuru.TezBaslikTr,
                     s.SonBasvuru.TezBaslikEn,
                     DanismanOnayladi = s.SonBasvuru.DanismanOnayladi.HasValue ? (s.SonBasvuru.DanismanOnayladi == true ? "Onayladı" : "Onaylamadı") : "İşlem Bekleniyor",
                     EYKYaGonderildi = s.SonBasvuru.EYKYaGonderildi.HasValue ? (s.SonBasvuru.EYKYaGonderildi == true ? "Eyk'ya Gönderildi" : "Eyk'ya Gönderilmedi") : "İşlem Bekleniyor",
+                    EykYaHazirlandi = s.SonBasvuru.EYKYaHazirlandi.HasValue ? (s.SonBasvuru.EYKYaHazirlandi == true ? "Eyk'ya Hazırlandı" : "-") : "İşlem Bekleniyor",
                     s.SonBasvuru.EYKTarihi,
                     EYKDaOnaylandi = s.SonBasvuru.EYKDaOnaylandi.HasValue ? (s.SonBasvuru.EYKDaOnaylandi == true ? "Onaylandı" : "Onaylanmadı") : "İşlem Bekleniyor",
                 }).ToList();
@@ -183,7 +186,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                       DegisiklikTipAdi = s.TijDegisiklikTipAdi,
                                       s.DegisiklikAciklamasi,
                                       s.OgrenciNo,
-                                      OgrenciAdSoyad=s.AdSoyad,  
+                                      OgrenciAdSoyad = s.AdSoyad,
                                       s.AnabilimDaliAdi,
                                       s.ProgramAdi,
                                       s.TezDili,
@@ -1028,9 +1031,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("İşlem yapılmak istenen jüri öneri formu EYK'ya gönderildi seçeneği ile kayıt edilmediğinden Asil/Yedek jüri adayı seçimi yapamazsınız!");
                 }
-                else if (tijBasvuruOneri.EYKDaOnaylandi == true)
+                else if (tijBasvuruOneri.EYKYaHazirlandi == true)
                 {
-                    mmMessage.Messages.Add("İşlem yapılmak istenen jüri öneri formu EYK'da onaylandı seçeneği ile kayıt edildiğinden Asil/Yedek jüri adayı seçimi yapamazsınız!");
+                    mmMessage.Messages.Add("İşlem yapılmak istenen jüri öneri formu EYK'ya hazırlandı seçeneği ile kayıt edildiğinden Asil/Yedek jüri adayı seçimi yapamazsınız!");
                 }
                 if (mmMessage.Messages.Count == 0 && isAsil.HasValue)
                 {
@@ -1072,22 +1075,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }.ToJsonResult();
         }
 
-        public ActionResult JuriOneriFormuOnayDurumKayit(Guid tijBasvuruOneriUniqueId, bool eykDaOnayOrEykYaGonderim, bool? onaylandi, string aciklama, DateTime? onayTarihi)
+        public ActionResult JuriOneriFormuOnayDurumKayit(Guid tijBasvuruOneriUniqueId, int onayTipId, bool? onaylandi, string aciklama, DateTime? onayTarihi)
         {
             var mmMessage = new MmMessage
             {
                 IsSuccess = false,
-                Title = "Jüri öneri formu " + (eykDaOnayOrEykYaGonderim ? "EYK'da onay" : "EYK'ya gönderim") + " işlemi",
+                Title = "Jüri öneri formu " + (onayTipId == 3 ? "EYK'da onay" : (onayTipId == 2 ? "EYK'ya Hazırlık" : "EYK'ya gönderim")) + " işlemi",
                 MessageType = MsgTypeEnum.Warning
             };
 
             var tijBasvuruOneri = _entities.TijBasvuruOneris.FirstOrDefault(p => p.UniqueID == tijBasvuruOneriUniqueId);
 
-            if (!eykDaOnayOrEykYaGonderim && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent())
+            if (onayTipId == 3 && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent())
             {
                 mmMessage.Messages.Add("Jüri öneri formunda onay yetkisine sahip değilsiniz!");
             }
-            else if (eykDaOnayOrEykYaGonderim && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent())
+            else if (onayTipId == 1 && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent())
             {
                 mmMessage.Messages.Add("Jüri öneri formunda EYK'da onay yetkisine sahip değilsiniz!");
             }
@@ -1097,11 +1100,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (eykDaOnayOrEykYaGonderim)
+                //  eykDaOnayOrEykYaGonderim
+                if (onayTipId == 3)
                 {
-                    if (tijBasvuruOneri.EYKYaGonderildi != true)
+                    if (tijBasvuruOneri.EYKYaHazirlandi != true)
                     {
-                        mmMessage.Messages.Add("EYK Ya gönderilmeyen jüri öneri formu üzerinde EYK Onayı işlemi yapılamaz!");
+                        mmMessage.Messages.Add("EYK Ya hazırlanmayan jüri öneri formu üzerinde EYK Onayı işlemi yapılamaz!");
                     }
                     else if (onaylandi == true && !onayTarihi.HasValue)
                     {
@@ -1116,12 +1120,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.Messages.Add("Yeni bir jüri önerisi başvurusu varken önceki jüri önerisi eyk onay durumu değiştirilemez!");
                     }
                 }
-                else
+                else if (onayTipId == 1)
                 {
-
-                    if (tijBasvuruOneri.EYKDaOnaylandi.HasValue)
+                    if (tijBasvuruOneri.EYKYaHazirlandi.HasValue)
                     {
-                        mmMessage.Messages.Add("EYK onay işlemi yapılan bir form da ön onay işlemi gerçekleştirilemez!");
+                        mmMessage.Messages.Add("EYK ya hazırlama işlemi yapılan bir form da Eyk'ya gönderim işlemi gerçekleştirilemez!");
                     }
                     else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
                     {
@@ -1129,7 +1132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
 
-                if (mmMessage.Messages.Count == 0 && eykDaOnayOrEykYaGonderim && onaylandi == true)
+                if (mmMessage.Messages.Count == 0 && onayTipId == 2 && onaylandi == true)
                 {
                     var asilKriterCount = tijBasvuruOneri.TijFormTipID == TijFormTipiEnum.YeniForm ? 3 : (tijBasvuruOneri.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik ? 2 : 1);
                     var asilCount = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki).Count(p => p.IsAsil == true);
@@ -1143,9 +1146,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!mmMessage.Messages.Any())
                 {
 
-                    var isEykdaOnaylandiOrGonderildiDurum = eykDaOnayOrEykYaGonderim
-                        ? tijBasvuruOneri.EYKDaOnaylandi
-                        : tijBasvuruOneri.EYKYaGonderildi;
+                    var isEykdaOnaylandiOrGonderildiDurum = onayTipId == 1 ? tijBasvuruOneri.EYKYaGonderildi : (onayTipId == 2
+                        ? tijBasvuruOneri.EYKYaHazirlandi
+                        : tijBasvuruOneri.EYKDaOnaylandi);
 
                     // eyk yada eykya gönderimi onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
                     if (isEykdaOnaylandiOrGonderildiDurum.HasValue || onaylandi != false)
@@ -1169,7 +1172,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (mmMessage.Messages.Count == 0)
                 {
                     var isDegisiklikVar = false;
-                    if (eykDaOnayOrEykYaGonderim)
+                    if (onayTipId == 1)
+                    {
+                        tijBasvuruOneri.TijBasvuru.IsYeniBasvuruYapilabilir = onaylandi == false;
+
+                        isDegisiklikVar = tijBasvuruOneri.EYKYaGonderildi != onaylandi || aciklama != tijBasvuruOneri.EYKYaGonderimDurumAciklamasi;
+                        tijBasvuruOneri.EYKYaGonderimDurumAciklamasi = onaylandi == false ? aciklama : "";
+                        tijBasvuruOneri.EYKYaGonderildi = onaylandi;
+                        tijBasvuruOneri.EYKYaGonderildiIslemTarihi = DateTime.Now;
+                        tijBasvuruOneri.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
+                        mmMessage.Messages.Add("Form EYK ya " + (onaylandi.HasValue ? (onaylandi.Value ? "'Gönderildi'" : "'Gönderilmedi'") : "Gönderilmesi bekleniyor") + " şeklinde güncellendi...");
+                    }
+                    else if (onayTipId == 2)
+                    {
+
+                        tijBasvuruOneri.EYKYaHazirlandi = onaylandi;
+                        tijBasvuruOneri.EYKYaHazirlandiIslemTarihi = DateTime.Now;
+                        tijBasvuruOneri.EYKYaHazirlandiIslemYapanID = UserIdentity.Current.Id;
+                        mmMessage.Messages.Add("Form EYK ya " + (onaylandi.HasValue ? (onaylandi.Value ? "'Hazırlandı'" : "'Hazırlanmadı'") : " Hazırlanması bekleniyor") + " şeklinde güncellendi...");
+                    }
+                    else if (onayTipId == 3)
                     {
                         tijBasvuruOneri.TijBasvuru.IsYeniBasvuruYapilabilir = onaylandi.HasValue;
                         isDegisiklikVar = tijBasvuruOneri.EYKDaOnaylandi != onaylandi || aciklama != tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi || tijBasvuruOneri.EYKTarihi != onayTarihi;
@@ -1179,28 +1201,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         tijBasvuruOneri.EYKDaOnaylandiIslemTarihi = DateTime.Now;
                         tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi = onaylandi == false ? aciklama : "";
 
+                        mmMessage.Messages.Add("Form EYK da " + (onaylandi.HasValue ? (onaylandi.Value ? "'Onaylandı'" : "'Onaylanmadı'") : "İşlem bekliyor") + " şeklinde güncellendi...");
 
-                    }
-                    else
-                    {
-                        tijBasvuruOneri.TijBasvuru.IsYeniBasvuruYapilabilir = onaylandi == false;
 
-                        isDegisiklikVar = tijBasvuruOneri.EYKYaGonderildi != onaylandi || aciklama != tijBasvuruOneri.EYKYaGonderimDurumAciklamasi;
-                        tijBasvuruOneri.EYKYaGonderimDurumAciklamasi = onaylandi == false ? aciklama : "";
-                        tijBasvuruOneri.EYKYaGonderildi = onaylandi;
-                        tijBasvuruOneri.EYKYaGonderildiIslemTarihi = DateTime.Now;
-                        tijBasvuruOneri.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
                     }
                     _entities.SaveChanges();
                     mmMessage.MessageType = MsgTypeEnum.Success;
                     mmMessage.IsSuccess = true;
-                    mmMessage.Messages.Add("Form " + (onaylandi.HasValue ? (onaylandi.Value ? "'Onaylandı'" : "'Onaylanmadı'") : "İşlem bekliyor") + " şeklinde güncellendi...");
 
                     LogIslemleri.LogEkle("TiJuriOnerileriGb", LogCrudType.Update, tijBasvuruOneri.ToJson());
 
                     if (onaylandi.HasValue && isDegisiklikVar)
                     {
-                        var result = TijBus.SendMailEykOnay(tijBasvuruOneriUniqueId, eykDaOnayOrEykYaGonderim,
+                        var eykDaOnayOrGonderim = onayTipId == 3;
+                        var result = TijBus.SendMailEykOnay(tijBasvuruOneriUniqueId, eykDaOnayOrGonderim,
                                 onaylandi.Value);
                     }
 
@@ -1262,7 +1276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             return mMessage.ToJsonResult();
         }
-        public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, bool exportWordOrExcel, bool isDegisiklik, string ekd)
+        public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, bool exportWordOrExcel, bool isDegisiklik, int enstituOnayDurumId, string ekd)
         {
 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
@@ -1281,9 +1295,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                             : tijBasvuru.TijBasvuruOneris.Where(p => (p.IsObsData || p.EYKDaOnaylandi == true) && p.TijBasvuruOneriID != tijBasvuruOneri.TijBasvuruOneriID).OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault()
 
                          where tijBasvuru.EnstituKod == enstituKod &&
-                               tijBasvuruOneri.EYKDaOnaylandi == true &&
-                               tijBasvuruOneri.EYKTarihi >= baslangicTarihi &&
-                               tijBasvuruOneri.EYKTarihi <= bitisTarihi &&
+                               enstituOnayDurumId == 1 ? (
+                                                        tijBasvuruOneri.EYKYaGonderildi == true &&
+                                                        tijBasvuruOneri.EYKYaGonderildiIslemTarihi >= baslangicTarihi &&
+                                                        tijBasvuruOneri.EYKYaGonderildiIslemTarihi <= bitisTarihi)
+                                                    : (enstituOnayDurumId == 2 ? (
+                                                                                tijBasvuruOneri.EYKYaHazirlandi == true &&
+                                                                                tijBasvuruOneri.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&
+                                                                                tijBasvuruOneri.EYKYaHazirlandiIslemTarihi <= bitisTarihi)
+                                                                            :
+                                                                               (tijBasvuruOneri.EYKDaOnaylandi == true &&
+                                                                                    tijBasvuruOneri.EYKTarihi >= baslangicTarihi &&
+                                                                                    tijBasvuruOneri.EYKTarihi <= bitisTarihi)
+                                                                                ) &&
                                tijBasvuruOneri.TijFormTipleri.IsDegisiklik == isDegisiklik
                          select new
                          {
@@ -1454,7 +1478,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli tez izleme jüri önerisi silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
 
             }

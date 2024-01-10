@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -13,6 +15,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.ApplicationTasks
 
         public static void Start()
         {
+            SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.Start()", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
             _timer = new Timer(ExecuteTask, null, TimeSpan.Zero, TimeSpan.FromHours(1));
         }
 

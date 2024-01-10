@@ -24,6 +24,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             return Index(new FmDuyurularDto() { PageSize = 15 }, ekd);
         }
+       
         [HttpPost]
         public ActionResult Index(FmDuyurularDto model, string ekd)
         {
@@ -288,7 +289,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Baslik + "' Başlıklı Duyuru! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else

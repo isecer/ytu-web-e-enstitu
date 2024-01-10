@@ -30,6 +30,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string AyarOsymWsKullaniciAdi = "ÖSYM Web Servisi Kullanıcı Adı";
         public const string AyarOsymWsKullaniciSifre = "ÖSYM Web Servisi Kullanıcı Şifre";
 
+
+        public const string DanismanProfilindeOgrencileriniGorsun = "Danışmanlar Profillerinde Öğrencilerini Görsün";
+
+
         public const string AyarYokwsKullaniciAdi = "YÖK Web Servisi Kullanıcı Adı";
         public const string AyarYokwsKullaniciSifre = "YÖK Web Servisi Kullanıcı Şifre";
 

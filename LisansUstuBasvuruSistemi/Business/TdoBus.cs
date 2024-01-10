@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -51,7 +52,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var isYoneticiYetki = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
+                var isYoneticiYetki = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
                 var isDanismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
 
                 var basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
@@ -68,7 +69,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.OgrenciAdi = ogrenci.Ad + " " + ogrenci.Soyad;
                 model.ResimAdi = ogrenci.ResimAdi;
                 var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
-                var showAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent() || RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
+                var showAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent() || RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
 
                 model.EnstituKod = basvuru.EnstituKod;
                 model.TDOBasvuruDanisman = basvuru.TDOBasvuruDanisman;
@@ -120,6 +121,11 @@ namespace LisansUstuBasvuruSistemi.Business
                                                     EYKYaGonderildiIslemTarihi = s.EYKYaGonderildiIslemTarihi,
                                                     EYKYaGonderildiIslemYapanID = s.EYKYaGonderildiIslemYapanID,
                                                     EYKYaGonderimDurumAciklamasi = s.EYKYaGonderimDurumAciklamasi,
+
+
+                                                    EYKYaHazirlandi = s.EYKYaHazirlandi,
+                                                    EYKYaHazirlandiIslemTarihi = s.EYKYaHazirlandiIslemTarihi,
+                                                    EYKYaHazirlandiIslemYapanID = s.EYKYaHazirlandiIslemYapanID,
 
                                                     EYKDaOnaylandi = s.EYKDaOnaylandi,
                                                     EYKDaOnaylandiIslemYapanID = s.EYKDaOnaylandiIslemYapanID,
@@ -482,7 +488,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                       
+
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
                         {
                             msg.IsSuccess = false;
@@ -498,7 +504,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu işlem için yetkili değilsiniz.");
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
                         }
 
                     }
@@ -509,7 +515,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
@@ -565,7 +571,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         var message = "Bu enstitüye ait tez danışman başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi;
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", LogTipiEnum.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", BilgiTipiEnum.Kritik);
                     }
                     else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
@@ -577,8 +583,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
-                    } 
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
+                    }
                 }
             }
             return msg;
@@ -637,6 +643,8 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 4, Caption = "EYK'ya Gönderimi Bekleniyor" });
             dct.Add(new CmbIntDto { Value = 5, Caption = "EYK'ya Gönderimi Onaylandı" });
             dct.Add(new CmbIntDto { Value = 6, Caption = "EYK'ya Gönderimi Onaylanmadı" });
+            dct.Add(new CmbIntDto { Value = 10, Caption = "EYK'ya Hazırlanma Bekleniyor" });
+            dct.Add(new CmbIntDto { Value = 11, Caption = "EYK'ya Hazırlandı" });
             dct.Add(new CmbIntDto { Value = 7, Caption = "EYK'da Onay Bekliyor" });
             dct.Add(new CmbIntDto { Value = 8, Caption = "EYK'Da Onaylandı" });
             dct.Add(new CmbIntDto { Value = 9, Caption = "EYK'Da Onaylanmadı" });
@@ -695,12 +703,57 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
 
+
         public static IHtmlString ToBasvuruDurumView(this FrTdoBasvuruDto model)
         {
             var pagerString = model.ToRenderPartialViewHtml("TDOBasvuru", "BasvuruDurumView");
             return pagerString;
         }
+        public static IHtmlString ToBasvuruDurumView(this TdoBasvuruDanismanDto model)
+        {
 
+            var modelData = new List<TdoBasvuruDurumSortDto>
+            {
+                model.EYKDaOnaylandi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.EYKDaOnaylandi.Value, DurumAciklama = model.EYKDaOnaylandi.Value ? "EYK'da Onaylandı." : "EYK'da Onaylanmadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "EYK'da Onay işlemi bekleniyor." },
+                model.EYKYaHazirlandi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.EYKYaHazirlandi.Value, DurumAciklama = model.EYKYaHazirlandi.Value ? "EYK'ya Hazırlandı." : "EYK'ya Hazırlanmadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "EYK'ya Hazırlanma işlemi bekleniyor." },
+                model.EYKYaGonderildi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.EYKYaGonderildi.Value, DurumAciklama = model.EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı." : "EYK'ya Gönderimi Onaylanmadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "EYK'ya Gönderim Onayı Bekleniyor." }
+            };
+
+
+            var danismanDegisiklik = model.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || model.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
+
+            if (danismanDegisiklik)
+            {
+                modelData.Add(model.DanismanOnayladi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.DanismanOnayladi.Value, DurumAciklama = model.DanismanOnayladi.Value ? "Yeni Danışman Onayladı." : "Yeni Danışman Onaylamadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "Yeni Danışman Onayı Bekleniyor." });
+
+                modelData.Add(model.VarolanDanismanOnayladi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.VarolanDanismanOnayladi.Value, DurumAciklama = model.VarolanDanismanOnayladi.Value ? "Varolan Danışman Onayladı." : "Varolan Danışman Onaylamadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "Varolan Danışman Onayı Bekleniyor." });
+
+            }
+            else
+            {
+
+                modelData.Add(model.DanismanOnayladi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.DanismanOnayladi.Value, DurumAciklama = model.DanismanOnayladi.Value ? "Danışman Onayladı." : "Danışman Onaylamadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "Danışman Onayı Bekleniyor." });
+
+            }
+             
+            var activeDurum = modelData.Any(a => a.IsOnayOrRed.HasValue) ? modelData.First(p => p.IsOnayOrRed.HasValue) : modelData.Last();
+            var htmlString = $"<span style=\"color:{activeDurum.DurumColor};\" aria-hidden=\"true\">" +
+                             $"<i class=\"{activeDurum.DurumClass}\" style=\"font-size:12pt;\" aria-hidden=\"true\"></i> {activeDurum.DurumAciklama}</span>";
+            return new MvcHtmlString(htmlString);
+
+        }
 
     }
 }

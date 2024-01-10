@@ -727,8 +727,7 @@ else
             }
           }).on('change', function (e) {
               var inpInd = $(this).prop("id");
-              $('#' + inpInd).val(e.added == undefined ? "" : e.added.text);
-              console.log(inpInd+":"+$('#' + inpInd).val());
+              $('#' + inpInd).val(e.added == undefined ? "" : e.added.text); 
               //var mID = Inpid.replace("AdSoyad", "");
               //$('#' + mID + 'AdSoyadVal').val(e.added == undefined ? "" : e.added.AdSoyad);
               //$('#' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);

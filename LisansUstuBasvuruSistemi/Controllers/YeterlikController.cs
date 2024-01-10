@@ -996,8 +996,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Yazılı sınavı katılım bilgileri danışman tarafından henüz sisteme işlenmediği için Değerlendirme işlemi yapamazsınız.");
             }
             else
-            { 
-                if (!basvuru.IsSozluSinavOnline.HasValue)
+            {  
+
+                if (basvuru.IsYaziliSinavBasarili != false && !basvuru.IsSozluSinavOnline.HasValue)
                 {
                     mmMessage.Messages.Add("Sözlü sınavı katılım bilgileri danışman tarafından henüz sisteme işlenmediği için Değerlendirme işlemi yapamazsınız.");
                 }
@@ -1390,7 +1391,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(adSoyad + " Öğrencisine ait Yeterlik başvurusu silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Yeterlik/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Yeterlik/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
 
             }

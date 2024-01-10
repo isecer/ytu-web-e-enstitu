@@ -9,8 +9,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     public static class StaticDefinitions
     {
         public static string Tuz = "@BİSKAmcumu";
-        public static int UniversiteYtuKod { get; } = 67;
-        public static int PageSize = 15;
+        public static  int UniversiteYtuKod { get; } = 67;
+        public static  int PageSize = 15;
        
         public static List<int> GetOgrenimTurKods()
         {

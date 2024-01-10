@@ -197,14 +197,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         catch (Exception ex)
                         {
                             qeklenen.HataMesaji = ex.ToExceptionMessage();
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, uid, uIp);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, uid, uIp);
                         }
                         dbb.SaveChanges();
                     }
                 }
                 catch (Exception ex)
                 {
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, uid, uIp);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, uid, uIp);
                 }
             }).Start();
 
@@ -275,7 +275,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     attachments.Add(new Attachment(new MemoryStream(File.ReadAllBytes(ekTamYol)),
                         itemEk.EkAdi.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
                 }
-                else SistemBilgilendirmeBus.SistemBilgisiKaydet("Dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemEk.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Uyarı, null, "::");
+                else SistemBilgilendirmeBus.SistemBilgisiKaydet("Dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemEk.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Uyarı, null, "::");
 
             }
             return attachments;

@@ -125,6 +125,7 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 4, Caption = "EYK'ya Gönderimi Bekleniyor" });
             dct.Add(new CmbIntDto { Value = 5, Caption = "EYK'ya Gönderimi Onaylandı" });
             dct.Add(new CmbIntDto { Value = 6, Caption = "EYK'ya Gönderimi Onaylanmadı" });
+            dct.Add(new CmbIntDto { Value = 10, Caption = "EYK'Ya Hazırlandı" });
             dct.Add(new CmbIntDto { Value = 7, Caption = "EYK'da Onay Bekliyor" });
             dct.Add(new CmbIntDto { Value = 8, Caption = "EYK'Da Onaylandı" });
             dct.Add(new CmbIntDto { Value = 9, Caption = "EYK'Da Onaylanmadı" });
@@ -350,7 +351,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     else
                     {
                         msg.Add("OBS sisteminden öğrenci bilgisi kontrolü yapılamadı. Enstitü ile iletişime geçiniz! Hata: " + obsOgrenci.HataMsj);
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("OBS sisteminden öğrenci bilgisi kontrolü yapılamadı. Hata:" + obsOgrenci.HataMsj, "TezIzlemeJuriOneriBus/TezIzlemeJuriOneriSenkronizasyonMsg", LogTipiEnum.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("OBS sisteminden öğrenci bilgisi kontrolü yapılamadı. Hata:" + obsOgrenci.HataMsj, "TezIzlemeJuriOneriBus/TezIzlemeJuriOneriSenkronizasyonMsg", BilgiTipiEnum.Kritik);
                     }
                 }
 
@@ -530,13 +531,14 @@ namespace LisansUstuBasvuruSistemi.Business
                     EYKYaGonderildiIslemYapanID = s.EYKYaGonderildiIslemYapanID,
                     EYKYaGonderildiIslemTarihi = s.EYKYaGonderildiIslemTarihi,
                     EYKYaGonderimDurumAciklamasi = s.EYKYaGonderimDurumAciklamasi,
+                    EYKYaHazirlandi = s.EYKYaHazirlandi,
+                    EYKYaHazirlandiIslemTarihi = s.EYKYaHazirlandiIslemTarihi,
+                    EYKYaHazirlandiIslemYapanID = s.EYKYaHazirlandiIslemYapanID,
                     EYKDaOnaylandi = s.EYKDaOnaylandi,
                     EYKDaOnaylandiIslemYapanID = s.EYKDaOnaylandiIslemYapanID,
                     EYKDaOnaylandiIslemTarihi = s.EYKDaOnaylandiIslemTarihi,
                     EYKTarihi = s.EYKTarihi,
                     EYKDaOnaylanmadiDurumAciklamasi = s.EYKDaOnaylanmadiDurumAciklamasi,
-                    SelectEykYaGonderildi = new SelectList(ComboData.GetCmbEykGonderimDurumData(true, s.EYKYaGonderildi == true ? s.EYKYaGonderildiIslemTarihi : null), "Value", "Caption", s.EYKYaGonderildi),
-                    SelectEykDaOnaylandi = new SelectList(ComboData.GetCmbEykOnayDurumData(true), "Value", "Caption", s.EYKDaOnaylandi),
                     TijBasvuruOneriJurilers = s.TijBasvuruOneriJurilers.OrderBy(o => o.IsYeniOrOnceki ? 1 : 2)
                                                                        .ThenBy(t => t.IsTezDanismani ? 1 : 2)
                                                                        .ThenBy(o => o.IsYtuIciJuri ? 1 : 2)

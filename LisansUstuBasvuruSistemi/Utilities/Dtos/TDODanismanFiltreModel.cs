@@ -20,4 +20,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? Es_EYKYaGonderildi { get; set; }
         public bool? Es_EYKDaOnaylandi { get; set; }
     }
+    public class TdoBasvuruDurumSortDto
+    {
+        public bool? IsOnayOrRed { get; set; }
+        public string DurumAciklama { get; set; }
+        public string DurumClass => IsOnayOrRed.HasValue ? (IsOnayOrRed.Value ? "fa fa-thumbs-o-up" : "fa fa-thumbs-o-down") : "fa fa-clock-o";
+        public string DurumColor => IsOnayOrRed.HasValue ? (IsOnayOrRed.Value ? "green" : "maroon") : "";
+
+    }
 }

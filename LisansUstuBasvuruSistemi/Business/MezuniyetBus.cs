@@ -268,16 +268,12 @@ namespace LisansUstuBasvuruSistemi.Business
                         a.IsGecerli));
                 if (!isMezuniyetYonetmelikOgrenimTipUygun)
                 {
-                    var otsAdi = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+                    var ogrenimTipAdi = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
                         .OgrenimTipAdi;
-                    mMessage.Messages.Add(otsAdi +
+                    mMessage.Messages.Add(ogrenimTipAdi +
                                           " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar.");
                     return mMessage;
                 }
-
-
-
-
                 var isOgrenciSureckriterlerindenMuaf = entities.MezuniyetSureciKriterMuafOgrencilers.Any(a =>
                     a.MezuniyetSurecID == mezuniyetSurecId.Value &&
                     a.KullaniciID == kul.KullaniciID);
@@ -306,55 +302,36 @@ namespace LisansUstuBasvuruSistemi.Business
                         .AktifDonemDersKodKriteri.Split(',')
                         .Where(p => !p.IsNullOrWhiteSpace()).ToList();
 
-                    if (basvuruSonDonemSecilecekDersKodlari.Any() &&
-                       ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p =>
-                           basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) !=
-                       basvuruSonDonemSecilecekDersKodlari.Count)
+                    if (basvuruSonDonemSecilecekDersKodlari.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) != basvuruSonDonemSecilecekDersKodlari.Count)
                     {
-                        subMessages.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) +
-                                        " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
+                        subMessages.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) + " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
                     }
 
-                    if (basvuruKriterleri.AktifDonemToplamKrediKriteri >
-                        ogrenciBilgi.AktifDonemDers.ToplamKredi)
+                    if (basvuruKriterleri.AktifDonemToplamKrediKriteri > ogrenciBilgi.AktifDonemDers.ToplamKredi)
                     {
-                        subMessages.Add("Toplam Kredi sayınız " +
-                                        basvuruKriterleri.AktifDonemToplamKrediKriteri +
-                                        " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " +
-                                        ogrenciBilgi.AktifDonemDers.ToplamKredi);
+                        subMessages.Add("Toplam Kredi sayınız " + basvuruKriterleri.AktifDonemToplamKrediKriteri + " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " + ogrenciBilgi.AktifDonemDers.ToplamKredi);
 
                     }
 
-                    if (!basvuruKriterleri.AktifDonemEtikNotKriteri.IsNullOrWhiteSpace() &&
-                        !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemEtikNotKriteri,
-                            ogrenciBilgi.AktifDonemDers.EtikDersNotu))
+                    if (!basvuruKriterleri.AktifDonemEtikNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
                     {
-                        subMessages.Add("Etik dersi için ders notunuzun " + basvuruKriterleri.AktifDonemEtikNotKriteri +
-                                        " veya daha üstü bir not olması gerekmektedir.");
+                        subMessages.Add("Etik dersi için ders notunuzun " + basvuruKriterleri.AktifDonemEtikNotKriteri + " veya daha üstü bir not olması gerekmektedir.");
                     }
 
-                    if (!basvuruKriterleri.AktifDonemSeminerNotKriteri.IsNullOrWhiteSpace() &&
-                        !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemSeminerNotKriteri,
-                            ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
+                    if (!basvuruKriterleri.AktifDonemSeminerNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
                     {
-                        subMessages.Add("Seminer dersi için ders notunuzun " + basvuruKriterleri.AktifDonemSeminerNotKriteri +
-                                        " veya daha üstü bir not olması gerekmektedir.");
+                        subMessages.Add("Seminer dersi için ders notunuzun " + basvuruKriterleri.AktifDonemSeminerNotKriteri + " veya daha üstü bir not olması gerekmektedir.");
                     }
 
                     if (basvuruKriterleri.AktifDonemAgnoKriteri > ogrenciBilgi.AktifDonemDers.Agno)
                     {
-                        subMessages.Add("Ortalamanız " + basvuruKriterleri.AktifDonemAgnoKriteri +
-                                        " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " +
-                                        ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
+                        subMessages.Add("Ortalamanız " + basvuruKriterleri.AktifDonemAgnoKriteri + " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " + ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
 
                     }
 
-                    if (basvuruKriterleri.AktifDonemAktsKriteri >
-                        ogrenciBilgi.AktifDonemDers.ToplamAkts)
+                    if (basvuruKriterleri.AktifDonemAktsKriteri > ogrenciBilgi.AktifDonemDers.ToplamAkts)
                     {
-                        subMessages.Add("Akts toplamınız " + basvuruKriterleri.AktifDonemAktsKriteri +
-                                        " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " +
-                                        ogrenciBilgi.AktifDonemDers.ToplamAkts);
+                        subMessages.Add("Akts toplamınız " + basvuruKriterleri.AktifDonemAktsKriteri + " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " + ogrenciBilgi.AktifDonemDers.ToplamAkts);
 
                     }
 
@@ -470,7 +447,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                   MezuniyetYayinBelgeTurZorunlu = s.BelgeZorunlu,
                                   MezuniyetYayinKaynakLinkTurID = s.KaynakMezuniyetYayinLinkTurID,
                                   MezuniyetYayinKaynakLinkTurAdi = klkD != null ? klkD.LinkTurAdi : "",
-                                  MezuniyetYayinKaynakLinkIsUrl = klkD != null ? klkD.IsUrl : false,
+                                  MezuniyetYayinKaynakLinkIsUrl = klkD != null && klkD.IsUrl,
                                   MezuniyetYayinKaynakLinkTurZorunlu = s.KaynakLinkiZorunlu,
                                   MezuniyetYayinMetinTurID = s.MezuniyetYayinMetinTurID,
                                   MezuniyetYayinMetinTurAdi = ymD != null ? ymD.MetinTurAdi : "",
@@ -479,7 +456,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                   MezuniyetYayinMetinZorunlu = s.MetinZorunlu,
                                   MezuniyetYayinLinkTurID = s.YayinMezuniyetYayinLinkTurID,
                                   MezuniyetYayinLinkTurAdi = klD != null ? klD.LinkTurAdi : "",
-                                  MezuniyetYayinLinkIsUrl = klD != null ? klD.IsUrl : false,
+                                  MezuniyetYayinLinkIsUrl = klD != null && klD.IsUrl,
                                   MezuniyetYayinLinkiZorunlu = s.YayinLinkiZorunlu,
                                   MezuniyetYayinKaynakLinki = qs.MezuniyetYayinKaynakLinki,
                                   MezuniyetYayinLinki = qs.MezuniyetYayinLinki,
@@ -589,9 +566,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.UyrukKod = basvuru.UyrukKod;
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == bsurec.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
-                var progLng = basvuru.Programlar;
-                model.AnabilimdaliAdi = progLng.AnabilimDallari.AnabilimDaliAdi;
-                model.ProgramAdi = progLng.ProgramAdi;
+                model.AnabilimdaliAdi = basvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
+                model.ProgramAdi = basvuru.Programlar.ProgramAdi;
                 model.OgrenimDurumID = basvuru.OgrenimDurumID;
                 model.OgrenimTipKod = basvuru.OgrenimTipKod;
                 model.ProgramKod = basvuru.ProgramKod;
@@ -627,7 +603,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
                 model.MezuniyetYayinKontrolDurumID = basvuru.MezuniyetYayinKontrolDurumID;
                 model.MezuniyetYayinKontrolDurumAciklamasi = basvuru.MezuniyetYayinKontrolDurumAciklamasi;
-
                 model.IslemTarihi = basvuru.IslemTarihi;
                 model.IslemYapanID = basvuru.IslemYapanID;
                 model.IslemYapanIP = basvuru.IslemYapanIP;
@@ -643,82 +618,82 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 model.EykYaGonderildi = model.MezuniyetJuriOneriFormlaris.Select(s => s.EYKYaGonderildi).FirstOrDefault();
                 model.EykDaOnaylandi = model.MezuniyetJuriOneriFormlaris.Select(s => s.EYKDaOnaylandi).FirstOrDefault();
-                var yayins = (from qs in db.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId)
-                              join s in db.MezuniyetSureciYayinTurleris on new { qs.MezuniyetBasvurulari.MezuniyetSurecID, qs.MezuniyetYayinTurID } equals new { s.MezuniyetSurecID, s.MezuniyetYayinTurID }
-                              join sd in db.MezuniyetYayinTurleris on new { s.MezuniyetYayinTurID } equals new { sd.MezuniyetYayinTurID }
-                              join yb in db.MezuniyetYayinBelgeTurleris on new { s.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)yb.MezuniyetYayinBelgeTurID } into defyb
-                              from ybD in defyb.DefaultIfEmpty()
-                              join klk in db.MezuniyetYayinLinkTurleris on new { s.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)klk.MezuniyetYayinLinkTurID } into defklk
-                              from klkD in defklk.DefaultIfEmpty()
-                              join ym in db.MezuniyetYayinMetinTurleris on new { s.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)ym.MezuniyetYayinMetinTurID } into defym
-                              from ymD in defym.DefaultIfEmpty()
-                              join kl in db.MezuniyetYayinLinkTurleris on new { s.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)kl.MezuniyetYayinLinkTurID } into defkl
-                              from klD in defkl.DefaultIfEmpty()
-                              join inx in db.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
-                              from inxD in definx.DefaultIfEmpty()
+                var yayins = (from mezuniyetBasvurulariYayin in db.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId)
+                              join mezuniyetSureciYayinTur in db.MezuniyetSureciYayinTurleris on new { mezuniyetBasvurulariYayin.MezuniyetBasvurulari.MezuniyetSurecID, mezuniyetBasvurulariYayin.MezuniyetYayinTurID } equals new { mezuniyetSureciYayinTur.MezuniyetSurecID, mezuniyetSureciYayinTur.MezuniyetYayinTurID }
+                              join mezuniyetYayinTur in db.MezuniyetYayinTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinTurID } equals new { mezuniyetYayinTur.MezuniyetYayinTurID }
+                              join mezuniyetYayinBelgeTur in db.MezuniyetYayinBelgeTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)mezuniyetYayinBelgeTur.MezuniyetYayinBelgeTurID } into defMezuniyetYayinBelgeTur
+                              from mezuniyetYayinBelgeTurDefItem in defMezuniyetYayinBelgeTur.DefaultIfEmpty()
+                              join mezuniyetYayinLinkTur in db.MezuniyetYayinLinkTurleris on new { mezuniyetSureciYayinTur.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)mezuniyetYayinLinkTur.MezuniyetYayinLinkTurID } into defMezuniyetYayinLinkTur
+                              from mezuniyetYayinLinkTurDefItem in defMezuniyetYayinLinkTur.DefaultIfEmpty()
+                              join mezuniyetYayinMetinTur in db.MezuniyetYayinMetinTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)mezuniyetYayinMetinTur.MezuniyetYayinMetinTurID } into defMezuniyetYayinMetinTur
+                              from mezuniyetYayinMetinTurDefItem in defMezuniyetYayinMetinTur.DefaultIfEmpty()
+                              join mezuniyetYayinLinkTurKaynak in db.MezuniyetYayinLinkTurleris on new { mezuniyetSureciYayinTur.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)mezuniyetYayinLinkTurKaynak.MezuniyetYayinLinkTurID } into defMezuniyetYayinLinkTurKaynak
+                              from mezuniyetYayinLinkTurKaynakrDefItem in defMezuniyetYayinLinkTurKaynak.DefaultIfEmpty()
+                              join mezuniyetYayinIndexTur in db.MezuniyetYayinIndexTurleris on new { mezuniyetBasvurulariYayin.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)mezuniyetYayinIndexTur.MezuniyetYayinIndexTurID } into defMezuniyetYayinIndexTur
+                              from mezuniyetYayinIndexTurDefItem in defMezuniyetYayinIndexTur.DefaultIfEmpty()
                               select new MezuniyetBasvurulariYayinDto
                               {
-                                  MezuniyetYayinTurID = qs.MezuniyetYayinTurID,
+                                  MezuniyetYayinTurID = mezuniyetBasvurulariYayin.MezuniyetYayinTurID,
                                   ShowDetayYayinID = showDetayYayinId,
-                                  MezuniyetBasvurulariYayinID = qs.MezuniyetBasvurulariYayinID,
-                                  MezuniyetBasvurulariID = qs.MezuniyetBasvurulariID,
-                                  DanismanIsmiVar = qs.DanismanIsmiVar,
-                                  TezIcerikUyumuVar = qs.TezIcerikUyumuVar,
-                                  Onaylandi = qs.Onaylandi,
-                                  RetAciklamasi = qs.RetAciklamasi,
-                                  YayinBasligi = qs.YayinBasligi,
-                                  Yayinlanmis = qs.Yayinlanmis,
-                                  MezuniyetYayinTarih = qs.MezuniyetYayinTarih,
-                                  MezuniyetYayinTarihZorunlu = s.TarihIstensin,
-                                  MezuniyetYayinTurAdi = sd.MezuniyetYayinTurAdi,
-                                  MezuniyetYayinBelgeTurID = s.MezuniyetYayinBelgeTurID,
-                                  MezuniyetYayinBelgeTurAdi = ybD != null ? ybD.BelgeTurAdi : "",
-                                  MezuniyetYayinBelgeAdi = ybD != null ? qs.MezuniyetYayinBelgeAdi : "",
-                                  MezuniyetYayinBelgeDosyaYolu = ybD != null ? qs.MezuniyetYayinBelgeDosyaYolu : "",
-                                  MezuniyetYayinBelgeTurZorunlu = s.BelgeZorunlu,
-                                  MezuniyetYayinKaynakLinkTurID = s.KaynakMezuniyetYayinLinkTurID,
-                                  MezuniyetYayinKaynakLinkTurAdi = klkD != null ? klkD.LinkTurAdi : "",
-                                  MezuniyetYayinKaynakLinkIsUrl = klkD != null && klkD.IsUrl,
-                                  MezuniyetYayinKaynakLinkTurZorunlu = s.KaynakLinkiZorunlu,
-                                  MezuniyetYayinMetinTurID = s.MezuniyetYayinMetinTurID,
-                                  MezuniyetYayinMetinTurAdi = ymD != null ? ymD.MetinTurAdi : "",
-                                  MezuniyetYayinMetniBelgeAdi = ymD != null ? qs.MezuniyetYayinMetniBelgeAdi : "",
-                                  MezuniyetYayinMetniBelgeYolu = qs.MezuniyetYayinMetniBelgeYolu,
-                                  MezuniyetYayinMetinZorunlu = s.MetinZorunlu,
-                                  MezuniyetYayinLinkTurID = s.YayinMezuniyetYayinLinkTurID,
-                                  MezuniyetYayinLinkTurAdi = klD != null ? klD.LinkTurAdi : "",
-                                  MezuniyetYayinLinkIsUrl = klD != null && klD.IsUrl,
-                                  MezuniyetYayinLinkiZorunlu = s.YayinLinkiZorunlu,
-                                  MezuniyetYayinKaynakLinki = qs.MezuniyetYayinKaynakLinki,
-                                  MezuniyetYayinLinki = qs.MezuniyetYayinLinki,
-                                  MezuniyetYayinIndexTurZorunlu = s.YayinIndexTurIstensin,
-                                  MezuniyetYayinIndexTurAdi = inxD != null ? inxD.IndexTurAdi : "",
-                                  MezuniyetYayinIndexTurID = qs.MezuniyetYayinIndexTurID,
+                                  MezuniyetBasvurulariYayinID = mezuniyetBasvurulariYayin.MezuniyetBasvurulariYayinID,
+                                  MezuniyetBasvurulariID = mezuniyetBasvurulariYayin.MezuniyetBasvurulariID,
+                                  DanismanIsmiVar = mezuniyetBasvurulariYayin.DanismanIsmiVar,
+                                  TezIcerikUyumuVar = mezuniyetBasvurulariYayin.TezIcerikUyumuVar,
+                                  Onaylandi = mezuniyetBasvurulariYayin.Onaylandi,
+                                  RetAciklamasi = mezuniyetBasvurulariYayin.RetAciklamasi,
+                                  YayinBasligi = mezuniyetBasvurulariYayin.YayinBasligi,
+                                  Yayinlanmis = mezuniyetBasvurulariYayin.Yayinlanmis,
+                                  MezuniyetYayinTarih = mezuniyetBasvurulariYayin.MezuniyetYayinTarih,
+                                  MezuniyetYayinTarihZorunlu = mezuniyetSureciYayinTur.TarihIstensin,
+                                  MezuniyetYayinTurAdi = mezuniyetYayinTur.MezuniyetYayinTurAdi,
+                                  MezuniyetYayinBelgeTurID = mezuniyetSureciYayinTur.MezuniyetYayinBelgeTurID,
+                                  MezuniyetYayinBelgeTurAdi = mezuniyetYayinBelgeTurDefItem != null ? mezuniyetYayinBelgeTurDefItem.BelgeTurAdi : "",
+                                  MezuniyetYayinBelgeAdi = mezuniyetYayinBelgeTurDefItem != null ? mezuniyetBasvurulariYayin.MezuniyetYayinBelgeAdi : "",
+                                  MezuniyetYayinBelgeDosyaYolu = mezuniyetYayinBelgeTurDefItem != null ? mezuniyetBasvurulariYayin.MezuniyetYayinBelgeDosyaYolu : "",
+                                  MezuniyetYayinBelgeTurZorunlu = mezuniyetSureciYayinTur.BelgeZorunlu,
+                                  MezuniyetYayinKaynakLinkTurID = mezuniyetSureciYayinTur.KaynakMezuniyetYayinLinkTurID,
+                                  MezuniyetYayinKaynakLinkTurAdi = mezuniyetYayinLinkTurDefItem != null ? mezuniyetYayinLinkTurDefItem.LinkTurAdi : "",
+                                  MezuniyetYayinKaynakLinkIsUrl = mezuniyetYayinLinkTurDefItem != null && mezuniyetYayinLinkTurDefItem.IsUrl,
+                                  MezuniyetYayinKaynakLinkTurZorunlu = mezuniyetSureciYayinTur.KaynakLinkiZorunlu,
+                                  MezuniyetYayinMetinTurID = mezuniyetSureciYayinTur.MezuniyetYayinMetinTurID,
+                                  MezuniyetYayinMetinTurAdi = mezuniyetYayinMetinTurDefItem != null ? mezuniyetYayinMetinTurDefItem.MetinTurAdi : "",
+                                  MezuniyetYayinMetniBelgeAdi = mezuniyetYayinMetinTurDefItem != null ? mezuniyetBasvurulariYayin.MezuniyetYayinMetniBelgeAdi : "",
+                                  MezuniyetYayinMetniBelgeYolu = mezuniyetBasvurulariYayin.MezuniyetYayinMetniBelgeYolu,
+                                  MezuniyetYayinMetinZorunlu = mezuniyetSureciYayinTur.MetinZorunlu,
+                                  MezuniyetYayinLinkTurID = mezuniyetSureciYayinTur.YayinMezuniyetYayinLinkTurID,
+                                  MezuniyetYayinLinkTurAdi = mezuniyetYayinLinkTurKaynakrDefItem != null ? mezuniyetYayinLinkTurKaynakrDefItem.LinkTurAdi : "",
+                                  MezuniyetYayinLinkIsUrl = mezuniyetYayinLinkTurKaynakrDefItem != null && mezuniyetYayinLinkTurKaynakrDefItem.IsUrl,
+                                  MezuniyetYayinLinkiZorunlu = mezuniyetSureciYayinTur.YayinLinkiZorunlu,
+                                  MezuniyetYayinKaynakLinki = mezuniyetBasvurulariYayin.MezuniyetYayinKaynakLinki,
+                                  MezuniyetYayinLinki = mezuniyetBasvurulariYayin.MezuniyetYayinLinki,
+                                  MezuniyetYayinIndexTurZorunlu = mezuniyetSureciYayinTur.YayinIndexTurIstensin,
+                                  MezuniyetYayinIndexTurAdi = mezuniyetYayinIndexTurDefItem != null ? mezuniyetYayinIndexTurDefItem.IndexTurAdi : "",
+                                  MezuniyetYayinIndexTurID = mezuniyetBasvurulariYayin.MezuniyetYayinIndexTurID,
                                   YayinIndexTurleri = db.MezuniyetYayinIndexTurleris.ToList(),
-                                  MezuniyetKabulEdilmisMakaleZorunlu = s.YayinKabulEdilmisMakaleIstensin,
-                                  MezuniyetYayinKabulEdilmisMakaleAdi = qs.MezuniyetYayinKabulEdilmisMakaleAdi,
-                                  MezuniyetYayinKabulEdilmisMakaleDosyaYolu = qs.MezuniyetYayinKabulEdilmisMakaleDosyaYolu,
-                                  YayinDeatKurulusIstensin = s.YayinDeatKurulusIstensin,
-                                  ProjeDeatKurulus = qs.ProjeDeatKurulus,
-                                  YayinDergiAdiIstensin = s.YayinDergiAdiIstensin,
-                                  DergiAdi = qs.DergiAdi,
-                                  YayinMevcutDurumIstensin = s.YayinMevcutDurumIstensin,
-                                  IsProjeTamamlandiOrDevamEdiyor = qs.IsProjeTamamlandiOrDevamEdiyor,
-                                  YayinProjeEkibiIstensin = s.YayinProjeEkibiIstensin,
-                                  ProjeEkibi = qs.ProjeEkibi,
-                                  YayinProjeTurIstensin = s.YayinProjeTurIstensin,
-                                  MezuniyetYayinProjeTurID = qs.MezuniyetYayinProjeTurID,
-                                  ProjeTurAdi = qs.MezuniyetYayinProjeTurID.HasValue ? qs.MezuniyetYayinProjeTurleri.ProjeTurAdi : "",
-                                  YayinYazarlarIstensin = s.YayinYazarlarIstensin,
-                                  YazarAdi = qs.YazarAdi,
-                                  YayinYilCiltSayiIstensin = s.YayinYilCiltSayiIstensin,
-                                  YilCiltSayiSS = qs.YilCiltSayiSS,
-                                  IsTarihAraligiIstensin = s.IsTarihAraligiIstensin,
-                                  TarihAraligi = qs.TarihAraligi,
-                                  YayinYerBilgisiIstensin = s.YayinYerBilgisiIstensin,
-                                  YerBilgisi = qs.YerBilgisi,
-                                  YayinEtkinlikAdiIstensin = s.YayinEtkinlikAdiIstensin,
-                                  EtkinlikAdi = qs.EtkinlikAdi
+                                  MezuniyetKabulEdilmisMakaleZorunlu = mezuniyetSureciYayinTur.YayinKabulEdilmisMakaleIstensin,
+                                  MezuniyetYayinKabulEdilmisMakaleAdi = mezuniyetBasvurulariYayin.MezuniyetYayinKabulEdilmisMakaleAdi,
+                                  MezuniyetYayinKabulEdilmisMakaleDosyaYolu = mezuniyetBasvurulariYayin.MezuniyetYayinKabulEdilmisMakaleDosyaYolu,
+                                  YayinDeatKurulusIstensin = mezuniyetSureciYayinTur.YayinDeatKurulusIstensin,
+                                  ProjeDeatKurulus = mezuniyetBasvurulariYayin.ProjeDeatKurulus,
+                                  YayinDergiAdiIstensin = mezuniyetSureciYayinTur.YayinDergiAdiIstensin,
+                                  DergiAdi = mezuniyetBasvurulariYayin.DergiAdi,
+                                  YayinMevcutDurumIstensin = mezuniyetSureciYayinTur.YayinMevcutDurumIstensin,
+                                  IsProjeTamamlandiOrDevamEdiyor = mezuniyetBasvurulariYayin.IsProjeTamamlandiOrDevamEdiyor,
+                                  YayinProjeEkibiIstensin = mezuniyetSureciYayinTur.YayinProjeEkibiIstensin,
+                                  ProjeEkibi = mezuniyetBasvurulariYayin.ProjeEkibi,
+                                  YayinProjeTurIstensin = mezuniyetSureciYayinTur.YayinProjeTurIstensin,
+                                  MezuniyetYayinProjeTurID = mezuniyetBasvurulariYayin.MezuniyetYayinProjeTurID,
+                                  ProjeTurAdi = mezuniyetBasvurulariYayin.MezuniyetYayinProjeTurID.HasValue ? mezuniyetBasvurulariYayin.MezuniyetYayinProjeTurleri.ProjeTurAdi : "",
+                                  YayinYazarlarIstensin = mezuniyetSureciYayinTur.YayinYazarlarIstensin,
+                                  YazarAdi = mezuniyetBasvurulariYayin.YazarAdi,
+                                  YayinYilCiltSayiIstensin = mezuniyetSureciYayinTur.YayinYilCiltSayiIstensin,
+                                  YilCiltSayiSS = mezuniyetBasvurulariYayin.YilCiltSayiSS,
+                                  IsTarihAraligiIstensin = mezuniyetSureciYayinTur.IsTarihAraligiIstensin,
+                                  TarihAraligi = mezuniyetBasvurulariYayin.TarihAraligi,
+                                  YayinYerBilgisiIstensin = mezuniyetSureciYayinTur.YayinYerBilgisiIstensin,
+                                  YerBilgisi = mezuniyetBasvurulariYayin.YerBilgisi,
+                                  YayinEtkinlikAdiIstensin = mezuniyetSureciYayinTur.YayinEtkinlikAdiIstensin,
+                                  EtkinlikAdi = mezuniyetBasvurulariYayin.EtkinlikAdi
 
 
                               });
@@ -881,6 +856,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
                     }
                 }
+
+ 
 
                 var bdurum = basvuru.MezuniyetYayinKontrolDurumlari;
                 model.MezuniyetYayinKontrolDurumAdi = bdurum.MezuniyetYayinKontrolDurumAdi;

@@ -22,5 +22,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return fname;
 
         }
+       public static string RemoveNonAlphanumeric(this string input)
+        {
+            // Yalnızca harfler ve sayıları koru
+            const string pattern = "[^a-zA-Z0-9]";
+            var cleanedText = Regex.Replace(input, pattern, "");
+
+            return cleanedText;
+        }
     }
 }

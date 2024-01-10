@@ -1029,7 +1029,7 @@
     <Compile Include="Utilities\Enums\HttpDurumKodEnum.cs" />
     <Compile Include="Utilities\Enums\KayitDurumuEnum.cs" />
     <Compile Include="Utilities\Enums\KullaniciTipiEnum.cs" />
-    <Compile Include="Utilities\Enums\LogTipiEnum.cs" />
+    <Compile Include="Utilities\Enums\BilgiTipiEnum.cs" />
     <Compile Include="Utilities\Enums\MailSablonTipiEnum.cs" />
     <Compile Include="Utilities\Enums\MezuniyetSinavDurumEnum.cs" />
     <Compile Include="Utilities\Enums\MezuniyetYayinKontrolDurumuEnum.cs" />

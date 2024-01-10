@@ -8,12 +8,10 @@ using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -31,8 +29,10 @@ namespace LisansUstuBasvuruSistemi
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
 
-            //RollerBus.UpdateRoles();
-            //MenulerBus.UpdateMenus();
+
+            SistemBilgilendirmeBus.SistemBilgisiKaydet("Application_Start()", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+            RollerBus.UpdateRoles();
+            MenulerBus.UpdateMenus();
 
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();

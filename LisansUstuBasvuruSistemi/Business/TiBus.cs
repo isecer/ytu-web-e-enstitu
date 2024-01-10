@@ -168,14 +168,14 @@ namespace LisansUstuBasvuruSistemi.Business
                     else
                     {
                         var basvuruAcikmi =
-                            TiAyar.BasvurusuAcikmi.GetAyarTi(tiBasvuru.EnstituKod, "false").ToBoolean() ?? false;
+                            TiAyar.TiBasvurusuAcikmi.GetAyarTi(tiBasvuru.EnstituKod, "false").ToBoolean() ?? false;
 
                         if (!UserIdentity.Current.EnstituKods.Contains(tiBasvuru.EnstituKod) && kayitYetki && tiBasvuru.KullaniciID != UserIdentity.Current.Id)
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitü için Yetkili Değilsiniz.");
                             var message = $"Bu enstitüye ait Tez İzleme başvurusu güncellemeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: {tiBasvuru.TIBasvuruID} \r\n Başvuru sahibi: {tiBasvuru.Kullanicilar.Ad + " " + tiBasvuru.Kullanicilar.Soyad} \r\n Başvuru Tarihi: " + tiBasvuru.BasvuruTarihi;
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
                         }
                         else if (!basvuruAcikmi && UserIdentity.Current.IsAdmin == false)
                         {
@@ -187,13 +187,13 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + tiBasvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + tiBasvuru.Kullanicilar.KullaniciAdi, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + tiBasvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + tiBasvuru.Kullanicilar.KullaniciAdi, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
                         }
                     }
                 }
                 else
                 {
-                    msg.IsSuccess = TiAyar.BasvurusuAcikmi.GetAyarTi(enstituKod, "false").ToBoolean() ?? false;
+                    msg.IsSuccess = TiAyar.TiBasvurusuAcikmi.GetAyarTi(enstituKod, "false").ToBoolean() ?? false;
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && UserIdentity.Current.IsAdmin == false)
                     {
@@ -218,7 +218,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             }
                             else
                             {
-                                var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod);
+                                var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod);
 
                                 var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
 
@@ -277,7 +277,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                     }
-                    else if (!TiAyar.BasvurusuAcikmi.GetAyarTi(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
+                    else if (!TiAyar.TiBasvurusuAcikmi.GetAyarTi(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
@@ -287,7 +287,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Tez İzleme Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Tez İzleme Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
                     }
                     //else if (KayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi)
                     //{

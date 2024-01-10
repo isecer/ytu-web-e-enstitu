@@ -40,9 +40,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl,string ekd)
-        {
-
-            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+        { 
             ViewBag.UserName = userName;
             ViewBag.Password = password;
             string hata;
@@ -110,7 +108,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             catch (Exception ex)
                             {
-                                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogTipiEnum.Hata);
+                                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, BilgiTipiEnum.Hata);
                                 // ignored
                             }
 

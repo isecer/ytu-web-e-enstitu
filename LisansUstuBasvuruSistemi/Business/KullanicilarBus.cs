@@ -25,17 +25,18 @@ namespace LisansUstuBasvuruSistemi.Business
             //Doç.Dr Prof.Dr, Dr. Öğr. Üye
             return new List<int> { 17, 42, 73 };
         }
-        public static StudentControl OgrenciKontrol(string tcKimlikNo = null, string donemId = null)
+        public static StudentControl OgrenciKontrol(string tcOrOgrenciNo = null, string donemId = null)
         {
             var obsData = new ObsServiceData();
-            if (donemId == null)
-            {
-                var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
-                donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
-            }
+            //if (donemId == null)
+            //{
+            //    var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
+            //    donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
+            //}
 
-            return obsData.GetObsStudentControl(tcKimlikNo, donemId);
+            return obsData.GetObsStudentControl(tcOrOgrenciNo, donemId);
         }
+     
         public static StudentControl OgrenciBilgisiGuncelleObs(int kullaniciId)
         {
             var kayitBilgi = new StudentControl();
@@ -267,7 +268,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     catch (Exception ex)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogTipiEnum.OnemsizHata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), BilgiTipiEnum.OnemsizHata);
                     }
                 }
                 else
@@ -306,7 +307,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     catch (Exception errQuality)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), LogTipiEnum.OnemsizHata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), BilgiTipiEnum.OnemsizHata);
                     }
                     #endregion
                 }
@@ -335,13 +336,13 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (rotasYonDegisimLog)
                         {
 
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu, ObjectExtensions.GetCurrentMethodPath(), LogTipiEnum.Bilgi);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), BilgiTipiEnum.OnemsizHata);
                 }
                 #endregion
 
@@ -350,7 +351,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Hata, null, UserIdentity.Ip);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, null, UserIdentity.Ip);
                 return null;
             }
         }

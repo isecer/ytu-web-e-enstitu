@@ -333,7 +333,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (belge.KullaniciID != kul.KullaniciID && belge.IslemYapanID != kul.KullaniciID)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Farklı bir kullanıcıya ait belge talebi güncellenmek isteniyor! \r\n BelgeTalepID:" + belge.BelgeTalepID + " \r\n Ad Soyad" + belge.AdiSoyadi, "BelgeTalebi/TalepYap", LogTipiEnum.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Farklı bir kullanıcıya ait belge talebi güncellenmek isteniyor! \r\n BelgeTalepID:" + belge.BelgeTalepID + " \r\n Ad Soyad" + belge.AdiSoyadi, "BelgeTalebi/TalepYap", BilgiTipiEnum.Saldırı);
                             mmMessage.Messages.Add("Size ait olmayan bir belgeyi düzenlemeye hakkınız yoktur!");
 
                         }
@@ -1146,7 +1146,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Belge Talebi Silinemedi.");
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, BilgiTipiEnum.OnemsizHata);
                 }
             }
             return mmMessage.ToJsonResult();

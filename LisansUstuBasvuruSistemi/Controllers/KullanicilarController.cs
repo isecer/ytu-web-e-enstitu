@@ -558,7 +558,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.KayitYilBaslangic = null;
                     kModel.KayitDonemID = null;
                 }
-
+                else
+                {
+                    kModel.OgrenciNo = kModel.OgrenciNo.RemoveNonAlphanumeric();
+                }
+                kModel.TcKimlikNo = kModel.TcKimlikNo.RemoveNonAlphanumeric();
                 var yeniKullanici = kModel.KullaniciID <= 0;
                 if (yeniKullanici)
                 {
@@ -846,7 +850,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Ad + " " + kayit.Soyad + "' Kullanıcısı  Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), LogTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else

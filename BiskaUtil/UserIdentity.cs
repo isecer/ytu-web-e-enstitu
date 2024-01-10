@@ -23,7 +23,8 @@ namespace BiskaUtil
         private Dictionary<string, object> _informations = new Dictionary<string, object>();
         public int Id { get; set; }
         public Guid UserKey { get; set; }
-        public int KullaniciTipId { get; set; } 
+        public int KullaniciTipId { get; set; }
+        public int YetkiGrupId { get; set; }
         public string NameSurname { get; set; }
         public string Description { get; set; }
       
@@ -221,7 +222,7 @@ namespace BiskaUtil
         {
             get
             {
-                if (HttpContext.Current.User.Identity is UserIdentity)
+                if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity is UserIdentity)
                     return (UserIdentity)HttpContext.Current.User.Identity;
                 if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated)
                     return Membership.GetUserIdentity(HttpContext.Current.User.Identity.Name);

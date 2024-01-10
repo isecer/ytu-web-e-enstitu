@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -90,6 +92,7 @@ namespace LisansUstuBasvuruSistemi.Business
                  
 
                 db.SaveChanges();
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("UpdateMenus", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
             }
         }
     }

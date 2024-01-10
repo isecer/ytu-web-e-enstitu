@@ -214,14 +214,18 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static Menuler[] GetUserMenus()
         {
-            string userName = HttpContext.Current.User.Identity.Name;
+            var userName = HttpContext.Current.User.Identity.Name;
 
             if (userName.IsNullOrWhiteSpace()) return new Menuler[] { };
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var menus = new List<Menuler>();
                 var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == userName);
-                if (kull == null) FormsAuthenticationUtil.SignOut();
+                if (kull == null)
+                {
+                    FormsAuthenticationUtil.SignOut();
+                    return new Menuler[] { };
+                }
                 var kullRoll = kull.Rollers.SelectMany(s => s.Menulers).Distinct().OrderBy(o => o.SiraNo).ToList();
                 var ygRoll = kull.YetkiGruplari.YetkiGrupRolleris.SelectMany(s => s.Roller.Menulers).Distinct().OrderBy(o => o.SiraNo).ToList();
                 menus.AddRange(kullRoll);
@@ -354,7 +358,7 @@ namespace LisansUstuBasvuruSistemi.Business
         public static UserIdentity GetUserIdentity(string userName)
         {
 
-            var kull = UserBus.GetUser(userName);
+            var kull = GetUser(userName);
             if (kull == null)
             {
                 FormsAuthenticationUtil.SignOut();
@@ -368,6 +372,7 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 NameSurname = kull.Ad + " " + kull.Soyad,
                 Id = kull.KullaniciID,
+                YetkiGrupId = kull.YetkiGrupID,
                 UserKey = kull.UserKey,
                 Description = kull.EMail,
                 IsAdmin = kull.IsAdmin,

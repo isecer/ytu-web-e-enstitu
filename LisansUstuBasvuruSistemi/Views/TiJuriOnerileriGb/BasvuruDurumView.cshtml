@@ -49,13 +49,13 @@
         durumDetay = "Jüri önerisi danışman tarafından reddedildi.";
         aciklamaDetay = Model.DanismanOnaylanmamaAciklamasi;
     }
-    else if (Model.EYKYaGonderildi == true && !Model.EYKDaOnaylandi.HasValue)
+    else if (Model.EYKYaGonderildi == true && !Model.EYKYaHazirlandi.HasValue)
     {
         tabAdi = "EYK'ya Gönderimi Onaylandı";
         tabIconClass = "fa fa-thumbs-o-up fa-lg";
         durumColor = "green";
         durumDetayIconClass = "fa fa-comments-o";
-        durumDetay = "Süreç Devamı İçin Eyk'da onay işlemi bekleniyor.";
+        durumDetay = "Süreç Devamı İçin Eyk'ya hazırlanma işlemi bekleniyor.";
     }
     else if (Model.EYKYaGonderildi == false)
     {
@@ -66,6 +66,15 @@
         durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç enstitü tarafından reddedildi.";
         aciklamaDetay = Model.EYKYaGonderimDurumAciklamasi;
+    }
+    else if (Model.EYKYaHazirlandi == true && !Model.EYKDaOnaylandi.HasValue)
+    {
+
+        tabAdi = "EYK'ya Hazırlandı";
+        tabIconClass = "fa fa-thumbs-o-up fa-lg";
+        durumColor = "green";
+        durumDetayIconClass = "fa fa-comments-o";
+        durumDetay = "Süreç Devamı İçin Eyk'da onay işlemi bekleniyor."; 
     }
     else if (Model.EYKDaOnaylandi == true)
     {

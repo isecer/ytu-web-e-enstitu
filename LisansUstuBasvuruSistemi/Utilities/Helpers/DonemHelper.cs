@@ -25,7 +25,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 model.DonemID = 1;
                 model.DonemAdi = "Güz";
                 model.DonemAdiEn = "Fall";
-
             }
 
             return model;

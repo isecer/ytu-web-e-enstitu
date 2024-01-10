@@ -212,7 +212,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Belge Talebi Silinemedi.");
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogTipiEnum.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, BilgiTipiEnum.OnemsizHata);
             }
             return mmMessage.ToJsonResult();
         }

@@ -13,22 +13,22 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
     {
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
-        public StudentControl GetObsStudentControl(string tcKimlikNo, string donemId)
+        public StudentControl GetObsStudentControl(string tcOrOgrenciNo, string donemId)
         {
             var model = new StudentControl();
             try
             {
-                if (tcKimlikNo.IsNullOrWhiteSpace()) throw new Exception("Tc Kimlik No boş geliyor!");
-                if (donemId.IsNullOrWhiteSpace()) throw new Exception("Dönem Bilgisi No boş geliyor!");
+                if (tcOrOgrenciNo.IsNullOrWhiteSpace()) throw new Exception("tcOrOgrenciNo boş geliyor!");
+                tcOrOgrenciNo = tcOrOgrenciNo.RemoveNonAlphanumeric(); 
                 using (var service =
                        new proliz_ytu_enstitu_minerSoapClient())
                 {
 
-                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
+                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcOrOgrenciNo);
 
                     if (!ogrencis.Any() || !ogrencis[0].Sucess)
                     {
-                        ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, tcKimlikNo, null);
+                        ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, tcOrOgrenciNo, null);
                     }
 
                     if (ogrencis.Any() && ogrencis[0].Sucess)
@@ -147,7 +147,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
             {
                 model.Hata = true;
                 model.HataMsj = "OBS sisteminden kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz!";
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.HataMsj + "\r\nHata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogTipiEnum.Kritik);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.HataMsj + "\r\nHata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
             }
 
             if (model.OgrenciInfo == null) model.OgrenciInfo = new Ogrenci();
