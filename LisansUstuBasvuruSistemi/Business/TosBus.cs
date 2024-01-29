@@ -487,8 +487,48 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             return MailSenderTos.SendMailTosDegerlendirmeLink(toBasvuruSavunmaId, tosKomiteUniqueId, isLinkOrSonuc);
         }
+        public static List<CmbStringDto> CmbTiDonemListe(string enstituKod, bool bosSecimVar = false)
+        {
 
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var donems = db.ToBasvuruSavunmas.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
+                    .Distinct().OrderByDescending(o => o.DonemBaslangicYil).ThenByDescending(t => t.DonemID).Select(s => new CmbStringDto
+                    {
+                        Value = s.DonemBaslangicYil + "" + s.DonemID,
+                        Caption = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + s.DonemAdi
 
+                    }).ToList();
+                if (bosSecimVar) donems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
+                return donems;
+            }
+        }
+        public static List<CmbStringDto> CmbTosDonemListeBasvuru(string enstituKod, bool bosSecimVar = false)
+        {
+            var cmbDonems = CmbTiDonemListe(enstituKod);
+            if (!cmbDonems.Any())
+            {
+                var donem = DateTime.Now.ToAkademikDonemBilgi();
+                cmbDonems.Add(new CmbStringDto()
+                {
+                    Value = donem.BaslangicYil + "" + donem.DonemId,
+                    Caption = donem.BaslangicYil + "/" + (donem.BaslangicYil + 1) + " " + donem.DonemAdi
+                });
+                if (bosSecimVar) cmbDonems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
+            }
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var donems = db.ToBasvuruSavunmas.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
+                    .Distinct().OrderByDescending(o => o.DonemBaslangicYil).ThenByDescending(t => t.DonemID).Select(s => new CmbStringDto
+                    {
+                        Value = s.DonemBaslangicYil + "" + s.DonemID,
+                        Caption = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + s.DonemAdi
+
+                    }).ToList();
+                if (bosSecimVar) donems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
+                return donems;
+            }
+        }
         public static List<CmbIntDto> CmbTosNumarasi(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();

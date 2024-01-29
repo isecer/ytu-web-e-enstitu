@@ -18,7 +18,7 @@ using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
 
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class TiBasvuruController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
@@ -381,7 +381,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                var donemBilgi = (tiBasvuruAraRapor?.RaporTarihi ?? DateTime.Now).ToAraRaporDonemBilgi();
+                var donemBilgi = (tiBasvuruAraRapor?.RaporTarihi ?? DateTime.Now).ToTiAraRaporDonemBilgi();
 
                 var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
 
@@ -398,7 +398,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mMessage.Messages.Add("Tez izleme raporunu başlatabilmeniz için " + donemBilgi.DonemAdiLong + " döneminde " + sondonemKayitolmasiGerekenDersKodlari + " kodlu derslere kayıt olmanız gerekmektedir.");
                     }
-                    else if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != tiBasvuruAraRaporId && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemID))
+                    else if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != tiBasvuruAraRaporId && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemId))
                     {
                         mMessage.Messages.Add(donemBilgi.DonemAdiLong + " döneminde zaten bir tez izleme raporu başvurunuz bulunmakta!");
                     }
@@ -602,7 +602,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.SelectedTabId = 1;
                         var donemSelectedValue = (tiBasvuruAraRapor != null
                             ? (tiBasvuruAraRapor.DonemBaslangicYil + "" + tiBasvuruAraRapor.DonemID)
-                            : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemID));
+                            : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemId));
                         model.SListDonemSecim =
                             new SelectList(TiBus.CmbTiDonemListeBasvuru(tiBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
                         model.SListUnvanAdi = new SelectList(cmbUnvanList);
@@ -671,11 +671,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 isYeniJo = tiBasvuruAraRapor == null;
                 bool isDegisiklikVar = false;
-                var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToAraRaporDonemBilgi();
+                var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToTiAraRaporDonemBilgi();
                 var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo) : new StudentControl();
                 var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "").Split(',').Where(p => p.Trim() != "").ToList() : new List<string>();
 
-                if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemID))
+                if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemId))
                 {
                     mMessage.Messages.Add(donemBilgi.DonemAdiLong + " döneminde zaten bir tez izleme raporu başvurunuz bulunmakta!");
                 }
@@ -1016,7 +1016,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             }
 
-                            tiBasvuruAraRapor.DonemID = donemId ?? donemBilgi.DonemID;
+                            tiBasvuruAraRapor.DonemID = donemId ?? donemBilgi.DonemId;
                             tiBasvuruAraRapor.AraRaporSayisi = kModel.AraRaporSayisi;
                             tiBasvuruAraRapor.TIBasvuruID = kModel.TIBasvuruID;
                             tiBasvuruAraRapor.IsTezDiliTr = kModel.IsTezDiliTr;
@@ -1061,7 +1061,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 tiBasvuruAraRapor.TICalismaRaporDosyaYolu = dosyaYolu;
                             }
                             tiBasvuruAraRapor.DonemBaslangicYil = (baslangicYil ?? donemBilgi.BaslangicYil);
-                            tiBasvuruAraRapor.DonemID = (donemId ?? donemBilgi.DonemID);
+                            tiBasvuruAraRapor.DonemID = (donemId ?? donemBilgi.DonemId);
                             if (isYeniJo)
                             {
                                 var td = _entities.Kullanicilars.First(p => p.KullaniciID == kul.DanismanID);
@@ -1261,9 +1261,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Toplantı tarihi bilgisi günümüz tarihten küçük olamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                 }
-                else if (!adminYetki && tiAraRapor.RaporTarihi.ToAraRaporDonemBilgi().BitisTarihi.Date < kModel.Tarih.Date)
+                else if (!adminYetki && tiAraRapor.RaporTarihi.ToTiAraRaporDonemBilgi().BitisTarihi.Date < kModel.Tarih.Date)
                 {
-                    var donemSonuTarihi = tiAraRapor.RaporTarihi.ToAraRaporDonemBilgi().BitisTarihi;
+                    var donemSonuTarihi = tiAraRapor.RaporTarihi.ToTiAraRaporDonemBilgi().BitisTarihi;
                     mmMessage.Messages.Add("Toplantı tarihi ara rapor dönem sonu tarihi olan " + donemSonuTarihi.ToLongDateString() + " tarihten büyük olamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                 }

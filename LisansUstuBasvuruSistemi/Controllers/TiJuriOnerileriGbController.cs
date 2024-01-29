@@ -884,7 +884,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                 _entities.TijBasvuruOneris.Remove(tijBasvuruOneri);
                             }
-                            var donemBilgi = (tijBasvuruOneri.TijBasvuruOneriID > 0 ? tijBasvuru.BasvuruTarihi : DateTime.Now).ToAraRaporDonemBilgi();
+                            var donemBilgi = (tijBasvuruOneri.TijBasvuruOneriID > 0 ? tijBasvuru.BasvuruTarihi : DateTime.Now).ToAkademikDonemBilgi();
 
                             tijBasvuru.TijBasvuruOneris.Add(new TijBasvuruOneri
                             {
@@ -898,7 +898,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 DanismanOnayladi = danismanId.HasValue ? true : (bool?)null,
                                 BasvuruTarihi = tijBasvuruOneri?.TijBasvuruOneriID > 0 ? tijBasvuruOneri.BasvuruTarihi : DateTime.Now,
                                 DonemBaslangicYil = donemBilgi.BaslangicYil,
-                                DonemID = donemBilgi.DonemID,
+                                DonemID = donemBilgi.DonemId,
                                 DegisiklikAciklamasi = kModel.TijFormTipID != TijFormTipiEnum.YeniForm ? kModel.DegisiklikAciklamasi : null,
                                 SozluSinavBasariTarihi = ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().Value,
                                 IsTezDiliTr = obsOgrenci.IsTezDiliTr,
@@ -1027,13 +1027,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 var tijBasvuruOneri = juri.TijBasvuruOneri;
-                if (tijBasvuruOneri.EYKYaGonderildi == false)
+                if (tijBasvuruOneri.EYKYaHazirlandi == false)
                 {
-                    mmMessage.Messages.Add("İşlem yapılmak istenen jüri öneri formu EYK'ya gönderildi seçeneği ile kayıt edilmediğinden Asil/Yedek jüri adayı seçimi yapamazsınız!");
+                    mmMessage.Messages.Add("İşlem yapılmak istenen jüri öneri formu EYK'ya hazırlandı seçeneği ile kayıt edilmediğinden Asil/Yedek jüri adayı seçimi yapamazsınız!");
                 }
-                else if (tijBasvuruOneri.EYKYaHazirlandi == true)
+                else if (tijBasvuruOneri.EYKDaOnaylandi == true)
                 {
-                    mmMessage.Messages.Add("İşlem yapılmak istenen jüri öneri formu EYK'ya hazırlandı seçeneği ile kayıt edildiğinden Asil/Yedek jüri adayı seçimi yapamazsınız!");
+                    mmMessage.Messages.Add("İşlem yapılmak istenen jüri öneri formu EYK'da onaylandı seçeneği ile kayıt edildiğinden Asil/Yedek jüri adayı seçimi yapamazsınız!");
                 }
                 if (mmMessage.Messages.Count == 0 && isAsil.HasValue)
                 {
@@ -1086,11 +1086,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var tijBasvuruOneri = _entities.TijBasvuruOneris.FirstOrDefault(p => p.UniqueID == tijBasvuruOneriUniqueId);
 
-            if (onayTipId == 3 && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent())
+            if (onayTipId == 1 && !RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent())
             {
-                mmMessage.Messages.Add("Jüri öneri formunda onay yetkisine sahip değilsiniz!");
+                mmMessage.Messages.Add("Jüri öneri formunda EYK'ya gönderme yetkisine sahip değilsiniz!");
             }
-            else if (onayTipId == 1 && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent())
+            else if (onayTipId == 3 && !RoleNames.TiJuriOnerileriEykyaHazirlandiYetkisi.InRoleCurrent())
+            {
+                mmMessage.Messages.Add("Jüri öneri formunda EYK'ya hazırlık yetkisine sahip değilsiniz!");
+            }
+            else if (onayTipId == 3 && !RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent())
             {
                 mmMessage.Messages.Add("Jüri öneri formunda EYK'da onay yetkisine sahip değilsiniz!");
             }
@@ -1132,7 +1136,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
 
-                if (mmMessage.Messages.Count == 0 && onayTipId == 2 && onaylandi == true)
+                if (mmMessage.Messages.Count == 0 && onayTipId == 3 && onaylandi == true)
                 {
                     var asilKriterCount = tijBasvuruOneri.TijFormTipID == TijFormTipiEnum.YeniForm ? 3 : (tijBasvuruOneri.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik ? 2 : 1);
                     var asilCount = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki).Count(p => p.IsAsil == true);

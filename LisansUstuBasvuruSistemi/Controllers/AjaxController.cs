@@ -369,9 +369,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ViewBag.Donem = _entities.Donemlers.FirstOrDefault(p => p.DonemID == data.KayitDonemID.Value);
 
             }
-            if (data.YetkiGrupID == 6 || (data.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && data.YetkiGrupID == 5))
-            {
-                //Tez danışmanı yetkisi veya Akademik personel ve Mülakat Not Giriş yetkisi
+            if (data.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
+            { 
                 var ogrenciler = _entities.Kullanicilars.Where(p => p.DanismanID == data.KullaniciID && p.YtuOgrencisi).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).ToList();
                 ViewBag.Ogrenciler = ogrenciler;
             }
@@ -2679,9 +2678,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             itemD.EnstituAdi = itemD.EnstituAdi.ToUpper();
                             itemD.SurecTarihi = bsurec.BaslangicTarihi.ToFormatDateAndTime() + " / " + bsurec.BitisTarihi.ToFormatDateAndTime();
-                            var toplmMdl = new List<FmMsonucOranModel>();
-                            toplmMdl.Add(itemD.AIToplamModel);
-                            toplmMdl.Add(itemD.ADToplamModel);
+                            var toplmMdl = new List<FmMsonucOranModel>
+                            {
+                                itemD.AIToplamModel,
+                                itemD.ADToplamModel
+                            };
                             foreach (var item in toplmMdl)
                             {
                                 item.ToplamYuzde = item.Toplam * 100.0 / itemD.ToplamTercihSayisi;

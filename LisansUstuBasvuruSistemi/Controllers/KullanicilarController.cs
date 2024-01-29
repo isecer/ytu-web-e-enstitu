@@ -290,6 +290,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
 
             }
+            else if (kModel.TcKimlikNo.ToIsValidateTckn())
+            {
+                mmMessage.Messages.Add("T.C. Kimlik Numarasını hatalı girmediğinizden emin olunuz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
+            }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TcKimlikNo" });
 
             if (!kModel.CinsiyetID.HasValue)

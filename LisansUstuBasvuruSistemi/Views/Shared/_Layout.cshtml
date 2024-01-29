@@ -9,15 +9,15 @@
 @{
     var urlInfo = Request.Url.ToUrlInfo();
 
-    bool fixedHeader = UserIdentity.Current.Informations.Any(p => p.Key == "FixedHeader") ? UserIdentity.Current.Informations["FixedHeader"].ToBooleanObj().Value : false;
-    bool fixedSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "FixedSidebar") ? UserIdentity.Current.Informations["FixedSidebar"].ToBooleanObj().Value : false;
-    bool scrollSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "ScrollSidebar") ? UserIdentity.Current.Informations["ScrollSidebar"].ToBooleanObj().Value : false;
-    bool rightSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "RightSidebar") ? UserIdentity.Current.Informations["RightSidebar"].ToBooleanObj().Value : false;
-    bool customNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "CustomNavigation") ? UserIdentity.Current.Informations["CustomNavigation"].ToBooleanObj().Value : true;
-    bool toggledNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "ToggledNavigation") ? UserIdentity.Current.Informations["ToggledNavigation"].ToBooleanObj().Value : false;
-    bool boxedOrFullWidth = UserIdentity.Current.Informations.Any(p => p.Key == "BoxedOrFullWidth") ? UserIdentity.Current.Informations["BoxedOrFullWidth"].ToBooleanObj().Value : true;
-    string themeName = UserIdentity.Current.Informations.Any(p => p.Key == "ThemeName") ? UserIdentity.Current.Informations["ThemeName"].ToString() : "/Content/css/theme-forest.css";
-    string backgroundImage = UserIdentity.Current.Informations.Any(p => p.Key == "BackgroundImage") ? UserIdentity.Current.Informations["BackgroundImage"].ToString() : "wall_2";
+    var fixedHeader = UserIdentity.Current.Informations.Any(p => p.Key == "FixedHeader") && UserIdentity.Current.Informations["FixedHeader"].ToBooleanObj().Value;
+    var fixedSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "FixedSidebar") && UserIdentity.Current.Informations["FixedSidebar"].ToBooleanObj().Value;
+    var scrollSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "ScrollSidebar") && UserIdentity.Current.Informations["ScrollSidebar"].ToBooleanObj().Value;
+    var rightSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "RightSidebar") && UserIdentity.Current.Informations["RightSidebar"].ToBooleanObj().Value;
+    var customNavigation = UserIdentity.Current.Informations.All(p => p.Key != "CustomNavigation") || UserIdentity.Current.Informations["CustomNavigation"].ToBooleanObj().Value;
+    var toggledNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "ToggledNavigation") && UserIdentity.Current.Informations["ToggledNavigation"].ToBooleanObj().Value;
+    var boxedOrFullWidth = UserIdentity.Current.Informations.All(p => p.Key != "BoxedOrFullWidth") || UserIdentity.Current.Informations["BoxedOrFullWidth"].ToBooleanObj().Value;
+    var themeName = UserIdentity.Current.Informations.Any(p => p.Key == "ThemeName") ? UserIdentity.Current.Informations["ThemeName"].ToString() : "/Content/css/theme-forest.css";
+    var backgroundImage = UserIdentity.Current.Informations.Any(p => p.Key == "BackgroundImage") ? UserIdentity.Current.Informations["BackgroundImage"].ToString() : "wall_2";
     if (boxedOrFullWidth)
     {
         fixedHeader = false;
@@ -27,7 +27,7 @@
     var enstituler = EnstituBus.GetEnstituler();
     var selectedEnstitu = enstituler.First(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd));
     var isEnstituYetkisiVar = UserIdentity.Current.IsAuthenticated && UserIdentity.Current.EnstituKods.Contains(selectedEnstitu.EnstituKod);
-    var lImage = "/Content/assets/images/ytu_logo_tr.gif";
+    const string lImage = "/Content/assets/images/ytu_logo_tr.gif";
 }
 
 <!DOCTYPE html>

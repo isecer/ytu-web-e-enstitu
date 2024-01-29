@@ -529,7 +529,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             kModel.SinavAdi = sinavTipi.SinavAdi;
                             var sinavPuani = kModel.SinavPuani.ToDouble(0);
                             var sinavTipKriter = sinavTipi.SinavTipleriOTNotAraliklaris.FirstOrDefault(p =>
-                                p.OgrenimTipKod == tdoBas.OgrenimTipKod && p.Ingilizce == tdoBas.Programlar.Ingilizce);
+                               p.OgrenimTipKod == tdoBas.OgrenimTipKod && p.Ingilizce == tdoBas.Programlar.Ingilizce);
                             if (sinavTipKriter != null)
                             {
                                 var sinavPuaniUygun =
@@ -617,9 +617,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 kModel.BasvuruTarihi = DateTime.Now;
-                var donemBilgi = kModel.BasvuruTarihi.ToAraRaporDonemBilgi();
+                var donemBilgi = kModel.BasvuruTarihi.ToAkademikDonemBilgi();
                 kModel.DonemBaslangicYil = donemBilgi.BaslangicYil;
-                kModel.DonemID = donemBilgi.DonemID;
+                kModel.DonemID = donemBilgi.DonemId;
                 var danisman = _entities.Kullanicilars.First(f => f.KullaniciID == kModel.TezDanismanID);
                 kModel.TDAnabilimDaliID = kModel.TDAnabilimDaliID;
                 var program = _entities.Programlars.First(p => p.ProgramKod == kModel.TDProgramKod);
@@ -883,7 +883,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var danisman = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.TezDanismanID);
 
                 kModel.BasvuruTarihi = DateTime.Now;
-                var donemBilgi = kModel.BasvuruTarihi.ToAraRaporDonemBilgi();
+                var donemBilgi = kModel.BasvuruTarihi.ToAkademikDonemBilgi();
                 var formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                 while (_entities.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
                 {
@@ -907,7 +907,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.SinavYili = oncekiBasvuru.SinavYili;
                 kModel.SinavPuani = oncekiBasvuru.SinavPuani;
                 kModel.DonemBaslangicYil = donemBilgi.BaslangicYil;
-                kModel.DonemID = donemBilgi.DonemID;
+                kModel.DonemID = donemBilgi.DonemId;
                 kModel.TDAdSoyad = danisman.Ad + " " + danisman.Soyad;
                 kModel.TDUnvanAdi = danisman.Unvanlar.UnvanAdi;
                 kModel.IslemTarihi = DateTime.Now;
@@ -1207,9 +1207,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 kModel.BasvuruTarihi = DateTime.Now;
-                var donemBilgi = kModel.BasvuruTarihi.ToAraRaporDonemBilgi();
+                var donemBilgi = kModel.BasvuruTarihi.ToAkademikDonemBilgi();
                 kModel.DonemBaslangicYil = donemBilgi.BaslangicYil;
-                kModel.DonemID = donemBilgi.DonemID;
+                kModel.DonemID = donemBilgi.DonemId;
                 kModel.TDAdSoyad = danisman.Ad + " " + danisman.Soyad;
                 kModel.TDUnvanAdi = danisman.Unvanlar.UnvanAdi;
                 kModel.IslemTarihi = DateTime.Now;
@@ -1569,9 +1569,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 kModel.BasvuruTarihi = DateTime.Now;
-                var donemBilgi = kModel.BasvuruTarihi.ToAraRaporDonemBilgi();
+                var donemBilgi = kModel.BasvuruTarihi.ToAkademikDonemBilgi();
                 kModel.DonemBaslangicYil = donemBilgi.BaslangicYil;
-                kModel.DonemID = donemBilgi.DonemID;
+                kModel.DonemID = donemBilgi.DonemId;
                 kModel.TDAdSoyad = danisman.Ad + " " + danisman.Soyad;
                 kModel.TDUnvanAdi = danisman.Unvanlar.UnvanAdi;
                 kModel.IslemTarihi = DateTime.Now;

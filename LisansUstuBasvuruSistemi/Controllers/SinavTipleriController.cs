@@ -113,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 foreach (var itemOt in ogrenimTipleris)
                 {
-                    var kayit = model.SinavTipleriOTNotAraliklaris.FirstOrDefault(p => p.OgrenimTipKod == itemOt.OgrenimTipKod && p.Ingilizce == itemD);
+                    var kayit = model.SinavTipleriOTNotAraliklaris.FirstOrDefault(p =>  p.OgrenimTipKod == itemOt.OgrenimTipKod && p.Ingilizce == itemD);
                     sinavTipleriOtNotAraliklaris.Add(
                          new SinavTipleriOTNotAraliklari
                          {

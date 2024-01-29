@@ -393,10 +393,10 @@ namespace LisansUstuBasvuruSistemi.Business
             var cmbDonems = CmbTiDonemListe(enstituKod);
             if (!cmbDonems.Any())
             {
-                var donem = DateTime.Now.ToAraRaporDonemBilgi();
+                var donem = DateTime.Now.ToTiAraRaporDonemBilgi();
                 cmbDonems.Add(new CmbStringDto()
                 {
-                    Value = donem.BaslangicYil + "" + donem.DonemID,
+                    Value = donem.BaslangicYil + "" + donem.DonemId,
                     Caption = donem.BaslangicYil + "/" + (donem.BaslangicYil + 1) + " " + donem.DonemAdi
                 });
                 if (bosSecimVar) cmbDonems.Insert(0, new CmbStringDto { Value = null, Caption = "" });

@@ -13,7 +13,7 @@
     Layout = null;
     var resimVar = (bool)ViewBag.ResimVar;
     var kYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
-    var kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent();
+    var kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent() && UserIdentity.Current.Id!=Model.KullaniciID;
     var islemYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
     var eYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
     var pYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
@@ -30,7 +30,7 @@
     var danisman = (Kullanicilar)ViewBag.Danisman;
 
     var danismanOgrencileriGosterilsin = false;
-    if (Model.YetkiGrupID == 6 || (Model.KullaniciTipID==KullaniciTipiEnum.AkademikPersonel && Model.YetkiGrupID==5))
+    if (Model.KullaniciTipID==KullaniciTipiEnum.AkademikPersonel)
     {
         danismanOgrencileriGosterilsin = (SistemAyar.DanismanProfilindeOgrencileriniGorsun.GetAyar().ToBoolean(false) && Model.KullaniciID == UserIdentity.Current.Id) || kYetki;
     }

@@ -410,7 +410,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                         IslemYapanID = kullaniciId
                                     };
                                 var uniqueId = Guid.NewGuid();
-                                var donemBiligi = DateTime.Now.ToAraRaporDonemBilgi();
+                                var donemBiligi = DateTime.Now.ToAkademikDonemBilgi();
                                 var tijOneri = new TijBasvuruOneri
                                 {
                                     UniqueID = uniqueId,
@@ -420,7 +420,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                     TezDanismanID = kul.DanismanID,
                                     BasvuruTarihi = DateTime.Now,
                                     DonemBaslangicYil = donemBiligi.BaslangicYil,
-                                    DonemID = donemBiligi.DonemID,
+                                    DonemID = donemBiligi.DonemId,
                                     SozluSinavBasariTarihi = ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().Value,
                                     IsTezDiliTr = obsOgrenci.IsTezDiliTr,
                                     TezBaslikTr = obsOgrenci.OgrenciTez.TEZ_BASLIK,

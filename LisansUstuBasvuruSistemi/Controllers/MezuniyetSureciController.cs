@@ -102,8 +102,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsAktif = true
             };
 
-            var eoY = DateTime.Now.ToEgitimOgretimYilBilgi();
-            model.OgretimYili = eoY.BaslangicYili + "/" + eoY.BitisYili + "/" + eoY.Donem; 
+            var eoY = DateTime.Now.ToAkademikDonemBilgi();
+            model.OgretimYili = eoY.BaslangicYil + "/" + eoY.BitisYil + "/" + eoY.DonemId; 
             if (id > 0)
             {
                 var data = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == id);
@@ -222,9 +222,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.OgretimYili.IsNullOrWhiteSpace() == false)
             {
                 var oy = kModel.OgretimYili.Split('/').ToList();
-                eOyilBilgi.BaslangicYili = oy[0].ToInt().Value;
-                eOyilBilgi.BitisYili = oy[1].ToInt().Value;
-                eOyilBilgi.Donem = oy[2].ToInt().Value;
+                eOyilBilgi.BaslangicYil = oy[0].ToInt().Value; 
+                eOyilBilgi.DonemId = oy[2].ToInt().Value;
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
             }
             else
@@ -295,9 +294,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
-                kModel.BaslangicYil = eOyilBilgi.BaslangicYili;
-                kModel.BitisYil = eOyilBilgi.BitisYili;
-                kModel.DonemID = eOyilBilgi.Donem;
+                kModel.BaslangicYil = eOyilBilgi.BaslangicYil;
+                kModel.BitisYil = eOyilBilgi.BitisYil;
+                kModel.DonemID = eOyilBilgi.DonemId;
 
                 if (kModel.MezuniyetSurecID <= 0)
                 {

@@ -16,6 +16,35 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (!isSuccess) isSuccess = !email.IsASCII();
             return isSuccess;
         }
+        public static bool ToIsValidateTckn(this string tcKimlikNo)
+        {
+            if (tcKimlikNo.Length != 11)
+                return false;
+
+            // TC Kimlik No'nun ilk hanesi 0 olamaz.
+            if (tcKimlikNo[0] == '0')
+                return false;
+
+            // TC Kimlik No'nun ilk 10 hanesi sayı olmalıdır.
+            for (int i = 0; i < 10; i++)
+            {
+                if (!char.IsDigit(tcKimlikNo[i]))
+                    return false;
+            }
+
+            // TC Kimlik No'nun 11. hanesi, TC Kimlik No'nun 1. ile 10. hanelerinin toplamının 10'a bölümünden kalan olmalıdır.
+            int sum = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                sum += int.Parse(tcKimlikNo[i].ToString());
+            }
+
+            int digit11 = sum % 10;
+            if (digit11 != int.Parse(tcKimlikNo[10].ToString()))
+                return false;
+
+            return true;
+        }
         //public static bool IsNullOrEmpty(this string str) => string.IsNullOrEmpty(str);
 
         //public static bool IsNullOrWhiteSpace(this string str) => string.IsNullOrWhiteSpace(str);

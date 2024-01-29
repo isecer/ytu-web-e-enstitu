@@ -34,11 +34,11 @@ namespace LisansUstuBasvuruSistemi.Business
             var trh = tarih?.TodateToShortDate() ?? DateTime.Now.TodateToShortDate();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var eoy = trh.ToEgitimOgretimYilBilgi();
-                var sDonem = db.Donemlers.First(p => p.DonemID == eoy.Donem);
+                var eoy = trh.ToAkademikDonemBilgi();
+                var sDonem = db.Donemlers.First(p => p.DonemID == eoy.DonemId);
                 eoy.DonemAdi = sDonem.DonemAdi;
-                mdl.Value = eoy.BaslangicYili + "/" + eoy.BitisYili + "/" + eoy.Donem;
-                mdl.Caption = eoy.BaslangicYili + " / " + eoy.BitisYili + " " + eoy.DonemAdi;
+                mdl.Value = eoy.BaslangicYil + "/" + eoy.BitisYil + "/" + eoy.DonemId;
+                mdl.Caption = eoy.BaslangicYil + " / " + eoy.BitisYil + " " + eoy.DonemAdi;
 
             }
             return mdl;

@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static class DonemHelper
     {
-        public static EgitimOgretimDonemDetayDto ToAraRaporDonemBilgi(this DateTime date)
+        public static EgitimOgretimDonemDetayDto ToTiAraRaporDonemBilgi(this DateTime date)
         {
             var model = new EgitimOgretimDonemDetayDto();
             if (date.Month <= 6)
             {
                 model.BaslangicYil = date.Year - 1;
-                model.DonemID = 2;
-                model.DonemAdi = "Bahar";
-                model.DonemAdiEn = "Spring";
+                model.DonemId = 2;
+                model.DonemAdi = "Bahar"; 
                 model.BaslangicTarihi = new DateTime(date.Year, 1, 1);
                 model.BitisTarihi = new DateTime(date.Year, 7, 1).AddDays(-1);
             }
@@ -22,39 +23,31 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 model.BaslangicYil = date.Year;
                 model.BaslangicTarihi = new DateTime(date.Year, 7, 1);
                 model.BitisTarihi = new DateTime(date.Year + 1, 1, 1).AddDays(-1);
-                model.DonemID = 1;
-                model.DonemAdi = "Güz";
-                model.DonemAdiEn = "Fall";
+                model.DonemId = 1;
+                model.DonemAdi = "Güz"; 
             }
 
             return model;
         }
-        public static EgitimOgretimDonemDto ToEgitimOgretimYilBilgi(this DateTime datetime)
-        {
 
-            var mdl = new EgitimOgretimDonemDto();
-            var nowYear = datetime.Year;
-            if (datetime.Month >= 2 && datetime.Month <= 8)
+        public static EgitimOgretimDonemDto ToAkademikDonemBilgi(this DateTime date)
+        { 
+            var returnModel = new EgitimOgretimDonemDto(); 
+            if (returnModel.BaharDonemiAylar.Contains(date.Month))
             {
-                mdl.Donem = 2;
+                returnModel.BaslangicYil = date.Year - 1;
+                returnModel.DonemId = AkademikDonemEnum.BaharYariyili;
+                returnModel.DonemAdi = "Bahar";
             }
             else
             {
-                mdl.BaslangicYili = datetime.Year;
-                mdl.BitisYili = datetime.Year + 1;
-                mdl.Donem = 1;
+                returnModel.BaslangicYil = date.Year;
+                returnModel.DonemId = AkademikDonemEnum.GuzYariyili;
+                returnModel.DonemAdi = "Güz";
             }
-            if (datetime.Month <= 8)
-            {
-                mdl.BaslangicYili = nowYear - 1;
-                mdl.BitisYili = nowYear;
-            }
-            else
-            {
-                mdl.BaslangicYili = nowYear;
-                mdl.BitisYili = nowYear + 1;
-            }
-            return mdl;
+            return returnModel;
         }
+
+     
     }
 }

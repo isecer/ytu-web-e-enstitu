@@ -11,6 +11,7 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -30,8 +31,16 @@ namespace LisansUstuBasvuruSistemi.Business
         };
 
 
-        public static bool IsHarfNotuBuyukEsit(string notKriteri, string ogrenciNotu)
+        public static string ToLastNot(this string not)
         {
+            if (not.ToStrObj().Split(',').Length > 1)
+            {
+                not = not.ToStrObj().Split(',').Last();
+            } 
+            return not;
+        }
+        public static bool IsHarfNotuBuyukEsit(string notKriteri, string ogrenciNotu)
+        { 
             var notKriteriIndex = NotDegerleri.IndexOf(notKriteri);
             var ogrenciNotuIndex = NotDegerleri.IndexOf(ogrenciNotu);
             var success = notKriteriIndex <= ogrenciNotuIndex;

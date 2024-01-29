@@ -114,11 +114,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach (var item2 in Model.SinavTipleriOtNotAraliklariList)
+                                                    @foreach (var item2 in Model.SinavTipleriOTNotAraliklaris)
                                                     {
                                                         <tr>
                                                             <td>
-                                                                @item2.OgrenimTipAdi
+                                                                @item2.EnstituKod
                                                             </td>
                                                             <td>
                                                                 @(item2.Ingilizce ? "En" : "Tr")
@@ -142,42 +142,7 @@
                                                                     <span>@item2.Max</span>
                                                                 }
                                                             </td>
-                                                        </tr>
-                                                        if (item2.IstenmeyenProgramlar.Count > 0)
-                                                        {
-                                                            <tr>
-                                                                <td colspan="6">
-                                                                    <table style="width:100%;table-layout:fixed;">
-                                                                        <tr>
-                                                                            <td style="width:40px;"></td>
-                                                                            <td>* @Model.SinavAdi sınavı @item2.OgrenimTipAdi @(item2.Ingilizce ? "İngilizce" : "Türkçe") eğitim dilini kapsayan aşağıdaki program başvurularında gözükmeyecek</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="width:40px;"></td>
-                                                                            <td>
-                                                                                <table style="width:100%;table-layout:fixed;" class="table">
-                                                                                    @foreach (var itemIP in item2.IstenmeyenProgramlar)
-                                                                                    {
-                                                                                        <tr>
-                                                                                            <td style="width:40px;">
-                                                                                                @itemIP.Value
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                @itemIP.Caption
-                                                                                            </td>
-
-                                                                                        </tr>
-                                                                                    }
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-
-
-                                                                    </table>
-                                                                </td>
-
-                                                            </tr>
-                                                        }
+                                                        </tr> 
                                                     }
                                                 </tbody>
                                             </table>

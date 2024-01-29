@@ -481,6 +481,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
 
                 }
+                else if (kModel.TcKimlikNo.ToIsValidateTckn())
+                {
+                    messageModel.Messages.Add("T.C. Kimlik Numarasını hatalı girmediğinizden emin olunuz.");
+                    messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
+                }
                 else messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TcKimlikNo" });
 
                 if (!kModel.CinsiyetID.HasValue)

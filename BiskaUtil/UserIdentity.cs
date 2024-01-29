@@ -19,8 +19,6 @@ namespace BiskaUtil
         private string _userName;
         public string Name => _userName;
 
-        private List<string> _roles = new List<string>();
-        private Dictionary<string, object> _informations = new Dictionary<string, object>();
         public int Id { get; set; }
         public Guid UserKey { get; set; }
         public int KullaniciTipId { get; set; }
@@ -33,12 +31,14 @@ namespace BiskaUtil
         public bool? IsActiveDirectoryImpersonateWorking { get; set; }
         public string SeciliEnstituKodu { get; set; }
         public List<string> EnstituKods { get; set; }
+        private Dictionary<string, object> _informations = new Dictionary<string, object>();
         public Dictionary<string, object> Informations
         {
             get => _informations;
             set => _informations = value;
         }
 
+        private List<string> _roles = new List<string>();
         public List<string> Roles
         {
             get => _roles;

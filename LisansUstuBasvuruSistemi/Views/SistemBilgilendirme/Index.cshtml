@@ -76,6 +76,7 @@
                                         </td>
 
                                         <td>
+
                                             @if (item.data.Message.Contains("zararlı"))
 
                                             {
@@ -92,7 +93,7 @@
 
                                             @if (item.data.KullaniciAdi.IsNullOrWhiteSpace() == false)
                                             {
-                                                <span>@item.data.KullaniciAdi <br/>@item.data.AdSoyad</span>
+                                                <span>@item.data.KullaniciAdi <br />@item.data.AdSoyad</span>
                                             }
                                             else
                                             {
@@ -127,17 +128,8 @@
                                                                         <div class="col-md-10 ">
                                                                             <div class="panel panel-@(bilgiTip.BilgiTipCls=="default"?"primary":bilgiTip.BilgiTipCls)" style="margin:0px;padding:0px;">
                                                                                 <div class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
-                                                                                    <div  style="max-height: 400px; min-height: 100px; width: 100%; overflow-x: auto; word-break: break-word;">
-                                                                                        @if (item.data.Message.Contains("zararlı"))
-                                                                                        {
-                                                                                            <textarea readonly="readonly" style="width:100%;">@item.data.Message</textarea>
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            <span>@Html.Raw(item.data.Message.Replace("\r\n", "<br/>"))</span>
-
-                                                                                        }
-
+                                                                                    <div style="max-height: 400px; min-height: 100px; width: 100%; overflow-x: auto; word-break: break-word;"> 
+                                                                                        <textarea readonly="readonly" style="width:100%;">@item.data.Message</textarea> 
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -148,7 +140,7 @@
                                                                         <div class="col-md-10">
                                                                             <div class="panel panel-@(bilgiTip.BilgiTipCls=="default"?"primary":bilgiTip.BilgiTipCls)" style="margin:0px;padding:0px;">
                                                                                 <div class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
-                                                                                    <div  style="max-height: 400px; min-height: 100px; width: 100%; overflow-x:auto; word-break: break-word;">
+                                                                                    <div style="max-height: 400px; min-height: 100px; width: 100%; overflow-x:auto; word-break: break-word;">
                                                                                         @Html.Raw(item.data.StackTrace.Replace("\r\n", "<br/>").Replace("  ", ""))
                                                                                     </div>
                                                                                 </div>

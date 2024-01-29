@@ -213,7 +213,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                var donemBilgi = (toBasvuruSavunma?.SavunmaBasvuruTarihi ?? DateTime.Now).ToAraRaporDonemBilgi();
+                var donemBilgi = (toBasvuruSavunma?.SavunmaBasvuruTarihi ?? DateTime.Now).ToAkademikDonemBilgi();
 
                 var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
 
@@ -223,7 +223,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    if (toBasvuru.ToBasvuruSavunmas.Any(p => p.UniqueID != tosUniqueId && !p.ToBasvuruSavunmaDurumID.HasValue && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemID))
+                    if (toBasvuru.ToBasvuruSavunmas.Any(p => p.UniqueID != tosUniqueId && !p.ToBasvuruSavunmaDurumID.HasValue && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemId))
                     {
                         mMessage.Messages.Add(donemBilgi.DonemAdiLong + " döneminde zaten bir tez öneri savunma başvurunuz bulunmakta!");
                     }
@@ -383,8 +383,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             var donemSelectedValue = (tosUniqueId.HasValue
                                 ? (toBasvuruSavunma.DonemBaslangicYil + "" + toBasvuruSavunma.DonemID)
-                                : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemID));
-                            model.SListDonemSecim = new SelectList(TiBus.CmbTiDonemListeBasvuru(toBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
+                                : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemId));
+                            model.SListDonemSecim = new SelectList(TosBus.CmbTosDonemListeBasvuru(toBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
 
                             mMessage.MessageType = MsgTypeEnum.Information;
                             mMessage.IsSuccess = true;
@@ -487,7 +487,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 var isYeniKayit = toBasvuruSavunma == null;
                 bool isDegisiklikVar = false;
-                var donemBilgi = (isYeniKayit ? DateTime.Now : toBasvuruSavunma.SavunmaBasvuruTarihi).ToAraRaporDonemBilgi();
+                var donemBilgi = (isYeniKayit ? DateTime.Now : toBasvuruSavunma.SavunmaBasvuruTarihi).ToAkademikDonemBilgi();
 
                 if (mMessage.Messages.Count == 0)
                 {
@@ -598,7 +598,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             _entities.ToBasvuruSavunmaKomites.RemoveRange(toBasvuruSavunma.ToBasvuruSavunmaKomites);
                             toBasvuruSavunma.ToBasvuruSavunmaKomites = tiks;
-                            toBasvuruSavunma.DonemID = donemId ?? donemBilgi.DonemID;
+                            toBasvuruSavunma.DonemID = donemId ?? donemBilgi.DonemId;
                             toBasvuruSavunma.ToBasvuruID = kModel.ToBasvuruID;
                             toBasvuruSavunma.IsTezDiliTr = kModel.IsTezDiliTr;
                             toBasvuruSavunma.IsYokDrBursiyeriVar = kModel.IsYokDrBursiyeriVar.Value;
@@ -631,7 +631,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 toBasvuruSavunma.CalismaRaporDosyaYolu = dosyaYolu;
                             }
                             toBasvuruSavunma.DonemBaslangicYil = (baslangicYil ?? donemBilgi.BaslangicYil);
-                            toBasvuruSavunma.DonemID = (donemId ?? donemBilgi.DonemID);
+                            toBasvuruSavunma.DonemID = (donemId ?? donemBilgi.DonemId);
                             if (isYeniKayit)
                             {
                                 var td = _entities.Kullanicilars.First(p => p.KullaniciID == kul.DanismanID);

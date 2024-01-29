@@ -264,7 +264,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                    DonemlikKotaVar = s.DonemlikKota.HasValue,
                                    DonemlikKota = s.DonemlikKota,
                                    UcretsizMiktar = s.UcretsizMiktar,
-                                   DonemdeAlinabilecekToplamMiktar = s.DonemlikKota.HasValue ? s.DonemlikKota.Value : 0,
+                                   DonemdeAlinabilecekToplamMiktar = s.DonemlikKota ?? 0,
                                    BelgeAciklamasi = s.BelgeAciklamasi,
                                    BelgeAdi = s.BelgeAdi,
                                    Edit = true// !db.BelgeTalepleris.Any(pt => pt.OgrenciNo == s.OgrenciNo && pt.BelgeTipID == s.BelgeTipID && pt.IslemTarihi > s.IslemTarihi)
@@ -311,7 +311,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                bsay = GetBelgeSayisi(10);
+                bsay = GetBelgeSayisi();
             }
             return bsay.Select(s => new { Key = s.Value, Value = s.Caption }).ToList().ToJsonResult();
         }
@@ -347,12 +347,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (kod.IsNullOrWhiteSpace() == false)
                 {
-                    var ID = kod.Split('_')[0].ToInt(0);
+                    var belgeTalepId = kod.Split('_')[0].ToInt(0);
                     var kd = kod.Split('_')[1].ToString();
-                    var belgeT = _entities.BelgeTalepleris.FirstOrDefault(p => p.BelgeTalepID == ID && p.ErisimKodu == kd);
+                    var belgeT = _entities.BelgeTalepleris.FirstOrDefault(p => p.BelgeTalepID == belgeTalepId && p.ErisimKodu == kd);
                     if (belgeT == null)
                     {
-                        string msg = "Aranılan belge bilgisi sistemde bulunamadı!";
+                        const string msg = "Aranılan belge bilgisi sistemde bulunamadı!";
                         mmMessage.Messages.Add(msg);
                     }
                     else
@@ -554,15 +554,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.EnstituKod = enstituKod;
             if (mmMessage.Messages.Count == 0)
             {
-                string msg = "";
+                string msg;
                 var yeniKayit = kModel.BelgeTalepID <= 0;
-                var eoYil = DateTime.Now.ToEgitimOgretimYilBilgi();
-                var donem = _entities.Donemlers.First(p => p.DonemID == eoYil.Donem);
+                var eoYil = DateTime.Now.ToAkademikDonemBilgi();
+                var donem = _entities.Donemlers.First(p => p.DonemID == eoYil.DonemId);
 
 
-                kModel.OgretimYiliBaslangic = eoYil.BaslangicYili;
-                kModel.OgretimYiliBitis = eoYil.BitisYili;
-                kModel.DonemID = eoYil.Donem;
+                kModel.OgretimYiliBaslangic = eoYil.BaslangicYil;
+                kModel.OgretimYiliBitis = eoYil.BitisYil;
+                kModel.DonemID = eoYil.DonemId;
                 int ID = 0;
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanIp = UserIdentity.Ip;
@@ -750,9 +750,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var ilkBtAnketId = _entities.Ankets.Where(p => p.AnketAdi == ilkBtAnketAdi).Select(s => s.AnketID).FirstOrDefault();
                     var ilkBelgeTalebiVar = _entities.BelgeTalepleris.Any(a => a.OgrenciNo == kul.OgrenciNo && kul.ProgramKod == a.ProgramKod) || ilkBtAnketAdi.IsNullOrWhiteSpace();
                     var kullaniciDonem4 = Convert.ToDouble((kul.KayitYilBaslangic.Value + 2) + "." + kul.KayitDonemID.Value);
-                    var suankiDonem = DateTime.Now.ToEgitimOgretimYilBilgi();
+                    var suankiDonem = DateTime.Now.ToAkademikDonemBilgi();
 
-                    var aktifDonem = Convert.ToDouble((suankiDonem.BaslangicYili) + "." + suankiDonem.Donem);
+                    var aktifDonem = Convert.ToDouble((suankiDonem.BaslangicYil) + "." + suankiDonem.DonemId);
                     var anketAdi = "";
                     if (kullaniciDonem4 <= aktifDonem)
                     {
@@ -925,10 +925,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                var eoYil = DateTime.Now.ToEgitimOgretimYilBilgi();
-                kModel.OgretimYiliBaslangic = eoYil.BaslangicYili;
-                kModel.OgretimYiliBitis = eoYil.BitisYili;
-                kModel.DonemID = eoYil.Donem;
+                var eoYil = DateTime.Now.ToAkademikDonemBilgi();
+                kModel.OgretimYiliBaslangic = eoYil.BaslangicYil;
+                kModel.OgretimYiliBitis = eoYil.BitisYil;
+                kModel.DonemID = eoYil.DonemId;
                 kModel.OgrenimDurumID = ogrenimDurumId;
                 kModel.BelgeTipID = belgeTipId;
                 kModel.OgrenciNo = numara;

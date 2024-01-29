@@ -41,10 +41,10 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                             if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
                             {
                                 model.KayitTarihi = ogrenci.KAYIT_TARIHI.ToDate().Value;
-                                var donem = model.KayitTarihi.Value.ToAraRaporDonemBilgi();
+                                var donem = model.KayitTarihi.Value.ToAkademikDonemBilgi();
                                 model.BaslangicYil = donem.BaslangicYil;
                                 model.BitisYil = donem.BitisYil;
-                                model.DonemID = donem.DonemID;
+                                model.DonemID = donem.DonemId;
 
                             }
 

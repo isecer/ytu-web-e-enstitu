@@ -420,7 +420,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanisman.EYKDaOnaylandi,
                     tdoBasvuruDanisman.EYKDaOnaylandiOnayTarihi,
                     tdoBasvuruDanisman.IslemTarihi
-                }; 
+                };
             if (enstituOnayDurumId == 1)
             {
                 qds = qds.Where(p => p.EYKYaGonderildi == true && !p.EYKYaHazirlandi.HasValue && p.EYKYaGonderildiIslemTarihi >= baslangicTarihi && p.EYKYaGonderildiIslemTarihi <= bitisTarihi)
@@ -495,7 +495,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     TezDili = item.IsTezDiliTr ? "Türkçe" : "İngilizce",
                     TezBaslikTr = item.TezBaslikTr.ToUpper(),
                     TezBaslikEn = item.TezBaslikEn.Replace("i", "ı").ToUpper(),
-                    YeniTezDili = item.TezDili,
+                    YeniTezDili = item.IsYeniTezDiliTr.HasValue ? (item.IsYeniTezDiliTr.Value ? "Türkçe" : "İngilizce") : "",
                     YeniTezBaslikTr = (item.YeniTezBaslikTr ?? "").ToUpper(),
                     YeniTezBaslikEn = (item.YeniTezBaslikEn ?? "").Replace("i", "ı").ToUpper()
                 };

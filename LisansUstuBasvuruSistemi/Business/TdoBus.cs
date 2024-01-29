@@ -413,9 +413,9 @@ namespace LisansUstuBasvuruSistemi.Business
                             IsObsData = true,
                             BasvuruTarihi = DateTime.Now
                         };
-                        var donemBilgi = kModel.BasvuruTarihi.ToAraRaporDonemBilgi();
+                        var donemBilgi = kModel.BasvuruTarihi.ToAkademikDonemBilgi();
                         kModel.DonemBaslangicYil = donemBilgi.BaslangicYil;
-                        kModel.DonemID = donemBilgi.DonemID;
+                        kModel.DonemID = donemBilgi.DonemId;
                         var formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                         while (db.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
                         {

@@ -12,7 +12,7 @@
     Layout = null;
     bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-    var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true); 
+    var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true);
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
     var tab2IsVisible = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.MezuniyetJuriOneriFormlaris.Any());
@@ -100,26 +100,23 @@
                                         <td>:</td>
                                         <td>@Model.KayitDonemi , @Model.KayitTarihi.ToFormatDate()</td>
                                     </tr>
-                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
-                                    {
-                                        <tr>
-                                            <td>Danışman</td>
-                                            <td>:</td>
-                                            <td>
-                                                <table style="width:100%;table-layout:fixed;">
-                                                    <tr>
-                                                        <td>
-                                                            @if (Model.TezDanismanID.HasValue)
-                                                            {
-                                                                <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
-                                                            }
+                                    <tr>
+                                        <td>Danışman</td>
+                                        <td>:</td>
+                                        <td>
+                                            <table style="width:100%;table-layout:fixed;">
+                                                <tr>
+                                                    <td>
+                                                        @if (Model.TezDanismanID.HasValue)
+                                                        {
+                                                            <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
+                                                        }
 
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    }
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
                                     @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                                     {
                                         <tr class="@(Model.EYKTarihi.HasValue ? "success" : "danger")">
@@ -227,7 +224,7 @@
     <script>
 
     $(function () {
-        
+
         jQuery('._popover').popover({ trigger: 'hover' });
 
         $('.openFl').click(function (itmx) {

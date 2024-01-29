@@ -20,6 +20,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class KullanicilarBus
     {
+       
         public static List<int> GetDanismanUnvanIds()
         {
             //Doç.Dr Prof.Dr, Dr. Öğr. Üye

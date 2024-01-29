@@ -89,7 +89,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 {
                     dgYabanciDilBilgi.Visible = true;
                     this.cellOgrenciYabanciDilBilgi.Text = q.SinavAdi + " / " + q.SinavYili;
-                    this.cellOgrenciYabanciDilPuan.Text = (q.SinavPuani ?? "").ToString();
+                    this.cellOgrenciYabanciDilPuan.Text = (q.SinavPuani ?? "");
                 }
 
 
