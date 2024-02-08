@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
         public static bool ToIsValidateTckn(this string tcKimlikNo)
         {
+          
             if (tcKimlikNo.Length != 11)
                 return false;
 

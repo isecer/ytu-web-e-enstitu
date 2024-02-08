@@ -565,23 +565,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         }
 
-        [Authorize(Roles = RoleNames.TdoEykyaGonderimYetkisi)]
-        public ActionResult EYKGonderimOnay(string aktifDonemId)
-        {
-            var qDanismans = (from s in _entities.TDOBasvurus
-                              join ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID
-                              where ard.DanismanOnayladi == true && !ard.EYKYaGonderildi.HasValue && (ard.DonemBaslangicYil + "" + ard.DonemID) == aktifDonemId
-                              select s.TDOBasvuruDanisman
-                         ).ToList();
-            foreach (var item in qDanismans)
-            {
-                item.EYKYaGonderildi = true;
-                item.EYKYaGonderildiIslemTarihi = DateTime.Now;
-                item.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
-            }
-            _entities.SaveChanges();
-            return new { qDanismans.Count }.ToJsonResult();
-        }
+      
         [Authorize(Roles = RoleNames.TdoEykdaOnayYetkisi)]
         public ActionResult EYKDaOnay(string aktifDonemId)
         {
@@ -597,7 +581,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
             }
             _entities.SaveChanges();
+            foreach (var item in qDanismans)
+            {
+                TdoBus.SendMailTdoEykOnay(item.TDOBasvuruDanismanID, true);
+            }
             return new { qDanismans.Count }.ToJsonResult();
         }
+
+
     }
 }

@@ -158,7 +158,9 @@ namespace LisansUstuBasvuruSistemi.Business
                     //Önce Kayıt yetkisi varsa ona göre kontrol et
                     if (kayitYetki)
                     {
-                        if (UserIdentity.Current.IsAdmin == false && !IsSurecAktif(basvuru.MezuniyetSurecID))
+                        if (UserIdentity.Current.IsAdmin == false
+                            //&& !IsSurecAktif(basvuru.MezuniyetSurecID)
+                            )
                         {
                             mMessage.Messages.Add(
                                 "Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
@@ -188,12 +190,12 @@ namespace LisansUstuBasvuruSistemi.Business
                         return mMessage;
                     }
 
-                    if (!IsSurecAktif(basvuru.MezuniyetSurecID))
-                    {
-                        mMessage.Messages.Add(
-                            "Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
-                        return mMessage;
-                    }
+                    //if (!IsSurecAktif(basvuru.MezuniyetSurecID))
+                    //{
+                    //    mMessage.Messages.Add(
+                    //        "Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
+                    //    return mMessage;
+                    //}
 
                     mMessage.IsSuccess = true;
                     return mMessage;
@@ -307,13 +309,13 @@ namespace LisansUstuBasvuruSistemi.Business
                         subMessages.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) + " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
                     }
 
-                    if (basvuruKriterleri.AktifDonemToplamKrediKriteri > ogrenciBilgi.AktifDonemDers.ToplamKredi)
+                    if (ogrenciBilgi.AktifDonemDers.ToplamKredi < basvuruKriterleri.AktifDonemToplamKrediKriteri)
                     {
                         subMessages.Add("Toplam Kredi sayınız " + basvuruKriterleri.AktifDonemToplamKrediKriteri + " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " + ogrenciBilgi.AktifDonemDers.ToplamKredi);
 
                     }
 
-                   
+
 
                     if (!basvuruKriterleri.AktifDonemEtikNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu.ToLastNot()))
                     {
@@ -325,13 +327,13 @@ namespace LisansUstuBasvuruSistemi.Business
                         subMessages.Add("Seminer dersi için ders notunuzun " + basvuruKriterleri.AktifDonemSeminerNotKriteri + " veya daha üstü bir not olması gerekmektedir.");
                     }
 
-                    if (basvuruKriterleri.AktifDonemAgnoKriteri > ogrenciBilgi.AktifDonemDers.Agno)
+                    if (ogrenciBilgi.AktifDonemDers.Agno < basvuruKriterleri.AktifDonemAgnoKriteri)
                     {
                         subMessages.Add("Ortalamanız " + basvuruKriterleri.AktifDonemAgnoKriteri + " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " + ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
 
                     }
 
-                    if (basvuruKriterleri.AktifDonemAktsKriteri > ogrenciBilgi.AktifDonemDers.ToplamAkts)
+                    if (ogrenciBilgi.AktifDonemDers.ToplamAkts < basvuruKriterleri.AktifDonemAktsKriteri)
                     {
                         subMessages.Add("Akts toplamınız " + basvuruKriterleri.AktifDonemAktsKriteri + " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " + ogrenciBilgi.AktifDonemDers.ToplamAkts);
 
@@ -859,7 +861,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                 }
 
- 
+
 
                 var bdurum = basvuru.MezuniyetYayinKontrolDurumlari;
                 model.MezuniyetYayinKontrolDurumAdi = bdurum.MezuniyetYayinKontrolDurumAdi;

@@ -2276,6 +2276,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return univeriteler.ToJsonResult();
         }
         [Authorize]
+        public ActionResult GetUniversitelerYtuDahil(string term)
+        {
+            var univeriteler = _entities.Universitelers.Where(p =>  p.Ad.Contains(term)).OrderBy(o => o.Ad).Take(50).Select(s => new
+            {
+                id = s.UniversiteID,
+                text = s.Ad
+
+            }).ToList();
+
+            return univeriteler.ToJsonResult();
+        }
+        [Authorize]
         public ActionResult GetDxReport(int? raporTipi, bool isPdfStream = false)
         {
             XtraReport rprX = null;

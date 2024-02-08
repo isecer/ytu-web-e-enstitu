@@ -216,8 +216,8 @@
                                                         Üniversitesi (*)
                                                     </label>
                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        <input type="text" class="form-control universites" maxlength="128" name="UniversiteAdi" id="TikUyesi1UniversiteAdi" value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.UniversiteAdi : "")" style="width: 100%;" />
-                                                        @if (tikUyesi1Bilgi != null)
+                                                        <input type="text" class="form-control yUniversites" maxlength="128" name="UniversiteAdi" id="TikUyesi1UniversiteAdi"value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.UniversiteAdi : "")" style="width: 100%;" />
+                                                        @if (tikUyesi1Bilgi != null && !tikUyesi1Bilgi.UniversiteAdi.IsNullOrWhiteSpace())
                                                         {
                                                             <script>
                                                                 setTimeout(function () {
@@ -289,8 +289,8 @@
                                                         Üniversitesi (*)
                                                     </label>
                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                        <input type="text" class="form-control universites" name="UniversiteAdi" id="TikUyesi2UniversiteAdi" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.UniversiteAdi : "")" style="width: 100%;" />
-                                                        @if (tikUyesi2Bilgi != null)
+                                                        <input type="text" class="form-control yUniversites" name="UniversiteAdi" id="TikUyesi2UniversiteAdi" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.UniversiteAdi : "")" style="width: 100%;" />
+                                                        @if (tikUyesi2Bilgi != null && !tikUyesi2Bilgi.UniversiteAdi.IsNullOrWhiteSpace())
                                                         {
                                                             <script>
                                                                 setTimeout(function () {
@@ -698,10 +698,45 @@ else
             $('#' + mID + 'EMail').val(e.added == undefined ? "" : e.added.EMail);
             $('#' + mID + 'AnabilimdaliProgramAdi').val(e.added == undefined ? "" : e.added.BolumAdi);
             $('#' + mID + 'UniversiteAdi').val(e.added == undefined ? "" : 'Yıldız Teknik Üniversitesi');
-            if (e.added == undefined)  $('#' + mID + 'UzmanlikAlani').val("");
+            if (e.added == undefined) $('#' + mID + 'UzmanlikAlani').val("");
 
         });
-          $('.universites').select2({
+        $('.yUniversites').select2({
+            tags: false,
+            tokenSeparators: [",", " "],
+            minimumInputLength: 2,
+            maximumSelectionSize: 1,
+            multiple: false,
+            ajax: {
+                url: '@Url.Action("GetUniversitelerYtuDahil", "Ajax")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        'term': term
+                    }
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var cont2 = result.text;
+                return cont2;
+            }
+        }).on('change', function (e) {
+            var inpInd = $(this).prop("id");
+            $('#' + inpInd).val(e.added == undefined ? "" : e.added.text);
+            //var mID = Inpid.replace("AdSoyad", "");
+            //$('#' + mID + 'AdSoyadVal').val(e.added == undefined ? "" : e.added.AdSoyad);
+            //$('#' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);
+            //$('#' + mID + 'EMail').val(e.added == undefined ? "" : e.added.EMail);
+            //$('#' + mID + 'AnabilimdaliProgramAdi').val(e.added == undefined ? "" : e.added.BolumAdi);
+            //$('#' + mID + 'UniversiteAdi').val(e.added == undefined ? "" : 'Yıldız Teknik Üniversitesi');
+
+        });
+        $('.universites').select2({
             tags: false,
             tokenSeparators: [",", " "],
             minimumInputLength: 2,
@@ -725,17 +760,17 @@ else
                 var cont2 = result.text;
                 return cont2;
             }
-          }).on('change', function (e) {
-              var inpInd = $(this).prop("id");
-              $('#' + inpInd).val(e.added == undefined ? "" : e.added.text); 
-              //var mID = Inpid.replace("AdSoyad", "");
-              //$('#' + mID + 'AdSoyadVal').val(e.added == undefined ? "" : e.added.AdSoyad);
-              //$('#' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);
-              //$('#' + mID + 'EMail').val(e.added == undefined ? "" : e.added.EMail);
-              //$('#' + mID + 'AnabilimdaliProgramAdi').val(e.added == undefined ? "" : e.added.BolumAdi);
-              //$('#' + mID + 'UniversiteAdi').val(e.added == undefined ? "" : 'Yıldız Teknik Üniversitesi');
+        }).on('change', function (e) {
+            var inpInd = $(this).prop("id");
+            $('#' + inpInd).val(e.added == undefined ? "" : e.added.text);
+            //var mID = Inpid.replace("AdSoyad", "");
+            //$('#' + mID + 'AdSoyadVal').val(e.added == undefined ? "" : e.added.AdSoyad);
+            //$('#' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);
+            //$('#' + mID + 'EMail').val(e.added == undefined ? "" : e.added.EMail);
+            //$('#' + mID + 'AnabilimdaliProgramAdi').val(e.added == undefined ? "" : e.added.BolumAdi);
+            //$('#' + mID + 'UniversiteAdi').val(e.added == undefined ? "" : 'Yıldız Teknik Üniversitesi');
 
-          });
+        });
     });
     function ShowNote() {
         var noteContent = $('#JOMsgContent').html();

@@ -4,6 +4,7 @@ using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using System.Drawing;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 {
@@ -63,7 +64,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                              s.SinavAdi,
                              s.SinavYili,
                              s.SinavPuani,
-                             s.DanismanOnayTarihi
+                             s.DanismanOnayTarihi,
+                             s.VarolanDanismanOnayTarihi
 
                          }).First();
 
@@ -78,6 +80,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 cellOgrenciAnabilimDaliAdi.Text = q.AnabilimDaliAdi;
                 cellOgrenciProgramAdi.Text = q.ProgramAdi;
                 cellOgrenciOgrenimSeviyesi.Text = q.OgrenimTipAdi;
+                cellImzaOgrenciTarih.Text = q.BasvuruTarihi.ToFormatDate();
+                cellImzaOgrenciOnay.Text = "Elektronik olarak onaylanmıştır.";
 
                 cellOgrenciKayitDonemi.Text = q.OgrenciKayitDonemi;
                 cellTezDili.Text = q.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
@@ -113,14 +117,22 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 
                     cellImzaMevcutDanismanAdSoyad.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
                     cellImzaOnerilenDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
+
+                    cellImzaMevcutDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDate();
+                    cellImzaMevcutDanismanOnay.Text = "Elektronik olarak onaylanmıştır.";
+                    cellImzaOnerilenDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDate();
+                    cellImzaOnerilenDanismanOnay.Text = "Elektronik olarak onaylanmıştır.";
+
+                   
                 }
                 else
                 {
                     CellMevcutDanismanAd.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
                     cellMevcutDanismanAnabilimDali.Text = q.TDAnabilimDaliAdi;
-                    cellMevcutDanismanProgram.Text = q.TDProgramAdi;
-
+                    cellMevcutDanismanProgram.Text = q.TDProgramAdi; 
                     cellImzaMevcutDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
+                    cellImzaMevcutDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDate();
+                    cellImzaMevcutDanismanOnay.Text = "Elektronik olarak onaylanmıştır.";
                 }
                 chkTezBasligiDegisecekEvet.Checked = q.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi || q.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
                 chkTezBasligiDegisecekHayir.Checked = !chkTezBasligiDegisecekEvet.Checked;

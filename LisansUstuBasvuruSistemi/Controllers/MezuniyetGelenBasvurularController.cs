@@ -400,7 +400,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Index Bilgisi Güncellenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
@@ -840,7 +840,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Tez dosyası kontrolü durum bilgisi kayıt edilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
                 }
             }
             mmMessage.Title = "Tez Kontrol Durumu Kayıt İşlemi";
@@ -1153,11 +1153,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mb = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
             var cmbUnvanList = UnvanlarBus.GetCmbJuriUnvanlar(true);
+            var ogrenciInfo = KullanicilarBus.OgrenciKontrol(mb.OgrenciNo);
 
             var model = new MezuniyetJuriOneriFormuKayitDto
             {
                 MezuniyetBasvurulariID = mezuniyetBasvurulariId,
-                IsTezDiliTr = mb.IsTezDiliTr == true,
+                IsTezDiliTr = ogrenciInfo.IsTezDiliTr,
                 TezBaslikTr = mb.TezBaslikTr,
                 TezBaslikEn = mb.TezBaslikEn,
                 Danisman = _entities.Kullanicilars.First(p => p.KullaniciID == mb.TezDanismanID),
@@ -1170,9 +1171,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageType = MsgTypeEnum.Success,
                 IsSuccess = true
             };
-            string view = "";
+            var view = "";
             var mbjo = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-            var ogrenciInfo = KullanicilarBus.OgrenciKontrol(mb.OgrenciNo);
 
             if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent())
             {
@@ -1537,7 +1537,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (mMessage.Messages.Count == 0 && saveData)
                     {
                         mbjo = isYeniJo ? new MezuniyetJuriOneriFormlari() : mbjo;
-                        var unilers = _entities.Universitelers.ToList();
                         //doktora öğrenim tipindeki başvurular için tik üyesi haricindeki bilgiler alınsın
                         var kData = qData.Where(p => p.JuriTipAdi != (mb.OgrenimTipKod.IsDoktora() ? "TikUyesi" : "")).ToList();
                         foreach (var item in kData)
@@ -1555,7 +1554,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     rw.AnabilimdaliProgramAdi = item.AnabilimdaliProgramAdi;
                                     rw.UzmanlikAlani = item.UzmanlikAlani;
 
-                                    bool isAsil = new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2" }.Contains(item.JuriTipAdi);
+                                    var isAsil = new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2" }.Contains(item.JuriTipAdi);
                                     if ((rw.AdSoyad != item.AdSoyad && rw.EMail != item.EMail) || isAsil) rw.IsAsilOrYedek = isAsil ? true : (bool?)null;
                                 }
                                 else _entities.MezuniyetJuriOneriFormuJurileris.Remove(rw);
@@ -1586,18 +1585,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             mbjo.UniqueID = uniqueId;
                         }
-                        mbjo.MezuniyetBasvurulariID = kModel.MezuniyetBasvurulariID;
-
+                        mbjo.MezuniyetBasvurulariID = kModel.MezuniyetBasvurulariID; 
+                        if (mb.IsTezDiliTr.HasValue && mb.IsTezDiliTr != kModel.IsTezDiliTr)
+                        {
+                            // tez dili değişti ve mezuniuyet başvurusundaki tez dilinden farklı ise mezuniyet başvurusundaki başlıkları kontrol et ve tez dilini güncelle
+                         
+                            mb.TezBaslikTr = mb.TezBaslikTr.IsNullOrWhiteSpace() ? mb.TezBaslikEn : mb.TezBaslikTr;
+                            mb.TezBaslikEn = mb.TezBaslikEn.IsNullOrWhiteSpace() ? mb.TezBaslikTr : mb.TezBaslikEn;
+                            mb.IsTezDiliTr = kModel.IsTezDiliTr;
+                        }
                         mbjo.IsTezBasligiDegisti = kModel.IsTezBasligiDegisti;
                         mbjo.YeniTezBaslikTr = kModel.IsTezBasligiDegisti == true ? kModel.YeniTezBaslikTr : null;
                         mbjo.YeniTezBaslikEn = kModel.IsTezBasligiDegisti == true ? kModel.YeniTezBaslikEn : null;
 
 
-                        if (RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent())
-                        {
-
-                        }
-                        else
+                        if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent())
                         {
                             mbjo.EYKYaGonderildi = null;
                             mbjo.EYKYaGonderildiIslemTarihi = null;
@@ -1621,7 +1623,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, "MezuniyetGelenBasvurular/JuriOneriFormuPost", BilgiTipiEnum.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Hata);
                         }
 
 
@@ -1966,12 +1968,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
 
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
 
@@ -1981,7 +1983,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             return View();
         }
-        public ActionResult GetTutanakRaporuKontrolu(int raporTipId, List<int> ogrenimTipKods, DateTime? BasTar, DateTime? BitTar, DateTime? RaporTarihi)
+        public ActionResult GetTutanakRaporuKontrolu(int raporTipId, List<int> ogrenimTipKods, DateTime? basTar, DateTime? bitTar, DateTime? raporTarihi)
         {
             var mMessage = new MmMessage
             {
@@ -1996,23 +1998,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimTipKods" });
             }
             else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "OgrenimTipKods" });
-            if (!BasTar.HasValue)
+            if (!basTar.HasValue)
             {
                 mMessage.IsSuccess = false;
                 mMessage.Messages.Add("Başlangıç tarihini giriniz.");
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BasTar" });
             }
             else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "BasTar" });
-            if (!BasTar.HasValue)
+            if (!basTar.HasValue)
             {
                 mMessage.IsSuccess = false;
                 mMessage.Messages.Add("Bitiş tarihini giriniz.");
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "BitTar" });
             }
             else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "BitTar" });
-            if (BasTar.HasValue && BitTar.HasValue)
+            if (basTar.HasValue && bitTar.HasValue)
             {
-                if (BasTar > BitTar)
+                if (basTar > bitTar)
                 {
                     mMessage.IsSuccess = false;
                     mMessage.Messages.Add("Başlangıç tarihi bitiş tarihinden büyük olamaz.");
@@ -2025,7 +2027,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "BitTar" });
                 }
             }
-            if (raporTipId == RaporTipiEnum.MezuniyetTutanakRaporu && !RaporTarihi.HasValue && ogrenimTipKods != null && ogrenimTipKods.Any(a => a.IsDoktora()))
+            if (raporTipId == RaporTipiEnum.MezuniyetTutanakRaporu && !raporTarihi.HasValue && ogrenimTipKods != null && ogrenimTipKods.Any(a => a.IsDoktora()))
             {
                 mMessage.IsSuccess = false;
                 mMessage.Messages.Add("Rapor tarihini giriniz.");
@@ -2048,8 +2050,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetTutanakRaporuExport(int raporTipId, int ogrenimTipKods, string basTar, string bitTar, string raporTarihi, bool exportWordOrExcel, string ekd)
         {
 
-            var html = "";
-            string raporAdi = "";
+            string html;
+            string raporAdi;
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var baslangicTarihi = basTar.ToDate().Value;
             var bitisTarihi = bitTar.ToDate().Value;
@@ -2169,7 +2171,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var prgl = itemO.Programlar;
                         var abdl = itemO.Programlar.AnabilimDallari;
                         var sinav = itemO.SRTalepleris.First(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
-                        var danismanBilgi = "";
+                        string danismanBilgi;
                         var joForm = itemO.MezuniyetJuriOneriFormlaris.FirstOrDefault();
                         if (joForm != null)
                         {

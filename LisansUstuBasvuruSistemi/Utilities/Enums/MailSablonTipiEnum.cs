@@ -122,12 +122,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int TdoEsDanismanOnerisiEykDaReddedildiOgrenciDanisman = 132;
         public const int TdoEsDanismanOnerisiEykDaOnaylandiEsDanisman = 133;
 
-        public const int TdoEsDanismanDegisikligiYapildiOgrenci = 134;
-        public const int TdoEsDanismanDegisikligiYapildiDanisman = 135;
-        public const int TdoEsDanismanDegisikligiEykDaOnaylandiOgrenci = 136;
-        public const int TdoEsDanismanDegisikligiEykDaOnaylandiDanisman = 137;
+        public const int TdoEsDanismanDegisikligiYapildiDanisman = 134;
+        public const int TdoEsDanismanDegisikligiYapildiOgrenci = 135;
+        public const int TdoEsDanismanDegisikligiEykDaOnaylandiEsDanisman = 136;
+        public const int TdoEsDanismanDegisikligiEykDaOnaylandiOgrenci = 137;
+        public const int TdoEsDanismanDegisikligiEykDaOnaylandiDanisman = -1;
         public const int TdoEsDanismanDegisikligiEykDaRetEdildiOgrenciDanisman = 138;
-        public const int TdoEsDanismanDegisikligiEykDaOnaylandiEsDanisman = 139;
 
         public const int YeterlikBasvuruOnaylandiOgrenciye = 250;
         public const int YeterlikBasvuruOnaylandiDanismana = 251;

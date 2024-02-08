@@ -1063,9 +1063,9 @@
                                     $('#FrmJuriOneriFormu').ajaxForm({
                                         success: function (result) {
                                             if (result.mMessage.IsSuccess) {
+                                                getDetailx(mezuniyetBasvurulariID);
                                                 var _clsBtn = $('.bootbox-close-button').first();
                                                 $(_clsBtn).click();
-                                                getDetailx(MezuniyetBasvurulariID);
                                             }
                                             else {
                                                 $('#PostDetayTabAdi').val(result.SelectedDetayTabAdi);

@@ -12,7 +12,7 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class TosGelenBasvurularController : Controller
     {
         // GET: TosBasvuru
@@ -71,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AktifDonemAdi = ard == null ? "----" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
                         AktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
                         DurumID = ard == null ? null : ard.ToBasvuruSavunmaDurumID,
-                        IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
+                        IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : null,
                         OnayYapmayanJuriEmails =  ard.ToBasvuruSavunmaKomites.Where(p => isDegerlendirmeSurecinde && p.IsLinkGonderildi == true && !p.ToBasvuruSavunmaDurumID.HasValue).Select(ss => ss.EMail).ToList(),
                         DurumModel = new TosDurumDto
                         {
@@ -151,6 +151,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-
+      
     }
 }

@@ -290,7 +290,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
 
             }
-            else if (kModel.TcKimlikNo.ToIsValidateTckn())
+            else if (!kModel.TcKimlikNo.ToIsValidateTckn())
             {
                 mmMessage.Messages.Add("T.C. Kimlik Numarasını hatalı girmediğinizden emin olunuz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
@@ -527,7 +527,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (mmMessage.Messages.Count == 0 && isKurumIci)
             {
-                if (kModel.IsActiveDirectoryUser && kModel.EMail.Contains("@yildiz.edu.tr") == false)
+                var emailHosts = new List<string> { "@std.yildiz.edu.tr", "@yildiz.edu.tr" };
+                if (kModel.IsActiveDirectoryUser && (emailHosts.Any(a => kModel.EMail.Contains(a)) == false))
                 {
                     mmMessage.Messages.Add("Active Directory Girişi Yapmasını İstediğiniz Kullanıcının yildiz.edu.tr e mailini tanımlamanız gerekir!");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsActiveDirectoryUser" });
@@ -689,7 +690,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
-            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod); 
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", kModel.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true), "Value", "Caption", kModel.UnvanID);
             ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", kModel.BirimID);
@@ -698,7 +699,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(kModel.EnstituKod, true, true), "Value", "Caption", kModel.ProgramKod);
             ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", kModel.YetkiGrupID);
-            
+
             ViewBag.ResimVar = kModel.ResimAdi.IsNullOrWhiteSpace() == false;
             ViewBag.MmMessage = mmMessage;
             ViewBag.IsKurumIci = isKurumIci;

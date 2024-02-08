@@ -5,7 +5,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTdoBasvuruDto
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
@@ -31,55 +31,9 @@
                         @if (eykOnayYetki)
                         {
                             <li>
-                                <a href="javascript:void(0);"class="topluOnay" onclick="EYKYaGonderimOnay()" title="Danışman onayından geçen başvuruları Eyk'ya Gönderildi olarak güncelle'"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
-                                <a href="javascript:void(0);"class="topluOnay" onclick="EYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
-
+                                <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
                                 <script>
-                                    function EYKYaGonderimOnay() {
-                                        var selectElement = document.getElementById("AktifDonemID");
-                                        var selectedOption = selectElement.options[selectElement.selectedIndex];
-                                        var DonemAdi = selectedOption.text; 
-                                        if (!DonemAdi) {
-                                            alert("Başvuru Dönemi seçiniz.")
-                                            return;
-                                        }
-                                        var btbx = bootbox.dialog({
-                                            message: DonemAdi + " döneminde <b>EYK'ya gönderilmeyen</b> Danışman öneri formlarını <b>EYK'ya gönderimini</b> onaylamak istiyor musunuz?",
-                                            title: "Toplu EYK'ya gönderme işlemi",
-                                            buttons: {
-                                                success: {
-                                                    label: "Onayla",
-                                                    className: "btn-info",
-                                                    callback: function () {
-                                                        var _panel = $(btbx).find('.modal-content');
-                                                        PanelRefresh(_panel, false);
-                                                        toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'ya Gönderim İşlemi Başlatıldı");
-                                                        $.ajax({
-                                                            url: '@Url.Action("EYKGonderimOnay","TdoGelenBasvurular")',
-                                                            cache: false,
-                                                            data: { 'AktifDonemID': selectElement.value },
-                                                            success: function (result) {
-                                                                PanelRefresh(_panel, true);
-                                                                toastr["info"](result.Count + " adet başvuru eyk'ya gönderildi olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
-                                                                $(btbx).find('.close').first().click();
-                                                            },
-                                                            error: function (err) {
-                                                                PanelRefresh(_panel, true);
-                                                                alert(err.responseText);
-                                                            }
-                                                        });
-                                                        return false;
-                                                    }
-                                                },
-                                                danger: {
-                                                    label: "Vazgeç",
-                                                    className: "btn-primary",
-                                                    callback: function () {
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
+
                                     function EYKDaOnay() {
                                         var selectElement = document.getElementById("AktifDonemID");
                                         var selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -89,7 +43,7 @@
                                             return;
                                         }
                                         var btbx = bootbox.dialog({
-                                            message: DonemAdi + " döneminde <b>EYK'da onay işlemi bekleyen</b> Danışman öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?",
+                                            message: DonemAdi + " döneminde <b>EYK'ya hazırlanmış olup EYK'da onay işlemi bekleyen</b> Danışman öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
                                             title: "Toplu EYK'da onaylama işlemi",
                                             buttons: {
                                                 success: {
@@ -243,7 +197,7 @@
                                         <tr>
                                             <td width="160">Başvuru Dönemi</td>
                                             <td>
-                                                @Html.DropDownList("AktifDonemID", null, new { @class = "form-control",onchange= "DonemChange()" })
+                                                @Html.DropDownList("AktifDonemID", null, new { @class = "form-control", onchange = "DonemChange()" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -430,7 +384,7 @@
     })
     function DonemChange() {
         var selectElement = document.getElementById("AktifDonemID");
-        if (selectElement.value) $('.topluOnay').removeClass('hide'); 
+        if (selectElement.value) $('.topluOnay').removeClass('hide');
         else $('.topluOnay').addClass('hide');
     }
     function Resized(screenwidth) {
