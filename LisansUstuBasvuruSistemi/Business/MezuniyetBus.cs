@@ -1177,13 +1177,12 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var sonMezuniyetSurecId = db.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod && p.MezuniyetSurecID != mezuniyetSurecId)
                     .OrderByDescending(t => t.MezuniyetSurecID).Select(s => s.MezuniyetSurecID).FirstOrDefault();
+
                 var sonMezuniyetOgrenimTipleri = db.MezuniyetSurecis
                     .Where(p => p.MezuniyetSurecID == sonMezuniyetSurecId).SelectMany(s => s.MezuniyetSureciOgrenimTipKriterleris).ToList();
 
                 var mezuniyetOgrenimTipleri = db.MezuniyetSureciOgrenimTipKriterleris
                     .Where(p => p.MezuniyetSurecID == mezuniyetSurecId).ToList();
-
-
 
                 model.OgrenimTipKriterList = (from ogrenimTipi in ogrenimTipleri
                                               join surecOgrenimTip in mezuniyetOgrenimTipleri on ogrenimTipi.OgrenimTipID equals surecOgrenimTip
@@ -1230,6 +1229,41 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     item.SlistEtikNots = new SelectList(YeterlikBus.NotDegerleri, item.AktifDonemEtikNotKriteri);
                     item.SlistSeminerNots = new SelectList(YeterlikBus.NotDegerleri, item.AktifDonemSeminerNotKriteri);
+                }
+
+                if (mezuniyetSurecId <= 0 && sonMezuniyetSurecId <= 0)
+                {
+                    //seçili enstitüye ait hiç mezuniyet süreci yoksa fbe ye bak ve süreç varsa ilk süreçteki bilgilere göre tekrar metodu çalıştır.
+                    var digerMezuniyetSureci = db.MezuniyetSurecis.OrderByDescending(o => o.EnstituKod == EnstituKodlariEnum.FenBilimleri ? 2 : 1)
+                         .ThenByDescending(t => t.MezuniyetSurecID).FirstOrDefault();
+                    if (digerMezuniyetSureci != null)
+                    {
+                        //ana süreç öğrenim tiplerinin tamamı diğer süreç öğrenim tipinde varsa diğer sürecin öğrenim tipine göre verileri getir
+
+                        var enstituSurecKriterleri = GetMezuniyetOgrenimTipKriterleri(
+                            digerMezuniyetSureci.EnstituKod,
+                            digerMezuniyetSureci.MezuniyetSurecID);
+                        foreach (var ogrenimTip in model.OgrenimTipKriterList)
+                        {
+                            var secilenOgrenimTipi = enstituSurecKriterleri.OgrenimTipKriterList.FirstOrDefault(p => p.OgrenimTipKod == ogrenimTip.OgrenimTipKod);
+                            if (secilenOgrenimTipi != null)
+                            {
+                                ogrenimTip.AktifDonemMaxKriteri = secilenOgrenimTipi.AktifDonemMaxKriteri;
+                                ogrenimTip.AktifDonemDersKodKriteri = secilenOgrenimTipi.AktifDonemDersKodKriteri;
+                                ogrenimTip.AktifDonemEtikNotKriteri = secilenOgrenimTipi.AktifDonemEtikNotKriteri;
+                                ogrenimTip.AktifDonemSeminerNotKriteri = secilenOgrenimTipi.AktifDonemSeminerNotKriteri;
+                                ogrenimTip.AktifDonemToplamKrediKriteri = secilenOgrenimTipi.AktifDonemToplamKrediKriteri;
+                                ogrenimTip.AktifDonemAgnoKriteri = secilenOgrenimTipi.AktifDonemAgnoKriteri;
+                                ogrenimTip.AktifDonemAktsKriteri = secilenOgrenimTipi.AktifDonemAktsKriteri;
+                                ogrenimTip.SinavKacGunSonraAlabilir = secilenOgrenimTipi.SinavKacGunSonraAlabilir;
+                                ogrenimTip.SinavUzatmaOgrenciTaahhutMaxGun = secilenOgrenimTipi.SinavUzatmaOgrenciTaahhutMaxGun;
+                                ogrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun = secilenOgrenimTipi.SinavUzatmaSinavAlmaSuresiMaxGun;
+                                ogrenimTip.TezTeslimSuresiGun = secilenOgrenimTipi.TezTeslimSuresiGun;
+                            }
+                        }
+
+                    }
+
                 }
             }
             return model;

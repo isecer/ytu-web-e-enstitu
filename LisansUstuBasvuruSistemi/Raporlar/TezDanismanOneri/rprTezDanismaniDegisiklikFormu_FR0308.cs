@@ -3,7 +3,6 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using System.Drawing;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
@@ -17,8 +16,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 DisplayName = "FR-0308 TEZ DANIŞMANI KONU DİL DEĞİŞİKLİK FORMU";
-
-                var basvuru = db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
 
 
                 var q = (from s in db.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId)
@@ -118,9 +115,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                     cellImzaMevcutDanismanAdSoyad.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
                     cellImzaOnerilenDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
 
-                    cellImzaMevcutDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDate();
+                    cellImzaMevcutDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDateAndTime();
                     cellImzaMevcutDanismanOnay.Text = "Elektronik olarak onaylanmıştır.";
-                    cellImzaOnerilenDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDate();
+                    cellImzaOnerilenDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDateAndTime();
                     cellImzaOnerilenDanismanOnay.Text = "Elektronik olarak onaylanmıştır.";
 
                    
@@ -131,7 +128,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                     cellMevcutDanismanAnabilimDali.Text = q.TDAnabilimDaliAdi;
                     cellMevcutDanismanProgram.Text = q.TDProgramAdi; 
                     cellImzaMevcutDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
-                    cellImzaMevcutDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDate();
+                    cellImzaMevcutDanismanTarih.Text = q.DanismanOnayTarihi.ToFormatDateAndTime();
                     cellImzaMevcutDanismanOnay.Text = "Elektronik olarak onaylanmıştır.";
                 }
                 chkTezBasligiDegisecekEvet.Checked = q.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi || q.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
