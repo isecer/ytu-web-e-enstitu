@@ -1787,10 +1787,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;
                 _entities.SaveChanges();
+                LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
-                    LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
                     TdoBus.SendMailTdoDanismanOnay(kModel.TDOBasvuruDanismanID, kModel.DanismanOnayladi == true);
                 }
             }
