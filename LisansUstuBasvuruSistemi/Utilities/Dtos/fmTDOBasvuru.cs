@@ -9,6 +9,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class FmTdoBasvuruDto : PagerModel
     {
+        public List<int> SelectedTdoBasvuruDanismanIds { get; set; } = new List<int>();
         public int? TDOBasvuruID { get; set; }
         public int? KullaniciID { get; set; }
         public string Kod { get; set; }

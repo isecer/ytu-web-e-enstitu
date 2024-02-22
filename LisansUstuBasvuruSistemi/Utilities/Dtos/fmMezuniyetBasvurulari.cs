@@ -9,6 +9,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class FmMezuniyetBasvurulari : PagerModel
     {
+        public List<int> SelectedMezuniyetBasvurulariIds { get; set; }=new List<int>();
         public int? SMezuniyetBID { get; set; }
         public int? STabID { get; set; }
         public bool IsSinavDegerlendirme { get; set; }

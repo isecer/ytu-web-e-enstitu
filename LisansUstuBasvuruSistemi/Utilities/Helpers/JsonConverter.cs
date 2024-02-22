@@ -123,10 +123,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             {
                 var valStr = obje.ToString().Replace("\\", "\\\\").Replace("\"", @"\""");
                 return valStr;
-            }
-
-            var aaa = typeof(IEnumerable);
-            var aaa2 = typeof(IList);
+            } 
             if (objectType ==  typeof(IEnumerable))
             {
                 #region enumarable
@@ -145,7 +142,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 #endregion
             }
 
-            if (obje is System.Collections.IList)
+            if (obje is IList)
             {
                 #region enumarable
                 var sb4 = new StringBuilder();

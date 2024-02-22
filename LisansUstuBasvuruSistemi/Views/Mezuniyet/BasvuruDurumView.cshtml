@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -132,7 +132,21 @@
                 }
                 else
                 {
-                    if (item.MezuniyetJuriOneriFormu.EYKYaGonderildi.HasValue)
+                    if (item.MezuniyetJuriOneriFormu.EYKYaHazirlandi.HasValue)
+                    {
+
+                        durumAdi = "EYK'Ya Hazırlandı";
+                        durumAciklama = "İşlem Tarihi: " + item.MezuniyetJuriOneriFormu.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime();
+                        durumIconClass = "fa fa-thumbs-o-up";
+                        durumColor = "green";
+                        durumDetay = "Enstitü Tarafından Jüri Öneri Formu içim EYK'Da Onay İşlemi Sonucu Girişi Bekleniyor.";
+                        durumDetayIconClass = "fa fa-clock-o";
+                        aciklamaDetay = "Jüri Öneri Formu EYK'Ya Hazırlandı. Mezuniyet işleminin devamı için Enstitünün EYK'Da Onay işlemini sisteme girmesi gerekmektedir.";
+
+
+
+                    }
+                    else if (item.MezuniyetJuriOneriFormu.EYKYaGonderildi.HasValue)
                     {
                         if (item.MezuniyetJuriOneriFormu.EYKYaGonderildi.Value)
                         {
@@ -141,9 +155,9 @@
                             durumAciklama = "İşlem Tarihi: " + item.MezuniyetJuriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime();
                             durumIconClass = "fa fa-thumbs-o-up";
                             durumColor = "green";
-                            durumDetay = "Enstitü Tarafından Jüri Öneri Formu EYK'Da Onay İşlemi Sonucu Bekleniyor.";
+                            durumDetay = "Enstitü Tarafından Jüri Öneri Formu için EYK'Ya Hazırlanma İşlemi Sonucu Girişi Bekleniyor.";
                             durumDetayIconClass = "fa fa-clock-o";
-                            aciklamaDetay = "Jüri Öneri Formu EYK'Ya gönderimi onaylandı. Mezuniyet işleminin devamı için Enstitünün EYK'Da Onay işlemini sisteme girmesi gerekmektedir.";
+                            aciklamaDetay = "Jüri Öneri Formu EYK'Ya gönderimi onaylandı. Mezuniyet işleminin devamı için Enstitünün EYK'Ya Hazırlanma işlemini gerçekleştirmesi gerekmektedir.";
 
                         }
                         else

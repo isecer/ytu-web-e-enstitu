@@ -1691,13 +1691,17 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            dct.Add(new CmbIntDto { Value = 0, Caption = "Form oluşturulmadı" });
-            dct.Add(new CmbIntDto { Value = 1, Caption = "Form oluşturuldu" });
-            dct.Add(new CmbIntDto { Value = 2, Caption = "Eyk'Ya Gonderimi Onaylandi" });
-            dct.Add(new CmbIntDto { Value = 3, Caption = "Eyk'Ya Gonderimi Onaylanmadi" });
-            dct.Add(new CmbIntDto { Value = 4, Caption = "Eyk'Da Onaylandı" });
-            dct.Add(new CmbIntDto { Value = 5, Caption = "Eyk'Da Onaylanmadı" });
 
+            dct.Add(new CmbIntDto { Value = 1, Caption = "Form oluşturulmadı" });
+            dct.Add(new CmbIntDto { Value = 2, Caption = "Form oluşturuldu" });
+            // dct.Add(new CmbIntDto { Value = 3, Caption = "EYK'ya Gönderimi Bekleniyor" });
+            dct.Add(new CmbIntDto { Value = 4, Caption = "EYK'ya Gönderimi Onaylandı" });
+            dct.Add(new CmbIntDto { Value = 5, Caption = "EYK'ya Gönderimi Onaylanmadı" });
+            // dct.Add(new CmbIntDto { Value = 6, Caption = "EYK'ya Hazırlanma Bekleniyor" });
+            dct.Add(new CmbIntDto { Value = 7, Caption = "EYK'ya Hazırlandı" });
+            // dct.Add(new CmbIntDto { Value = 8, Caption = "EYK'da Onay Bekliyor" });
+            dct.Add(new CmbIntDto { Value = 9, Caption = "EYK'Da Onaylandı" });
+            dct.Add(new CmbIntDto { Value = 10, Caption = "EYK'Da Onaylanmadı" });
             return dct;
 
         }

@@ -187,11 +187,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     s.OgrenciNo,
                     s.EMail,
                     s.CepTel,
-                    DanismanAdSoyad = s.TDOBasvuruDanisman != null ? (s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad) : "Danışman Yok",
+                    s.TDOBasvuruDanisman?.BasvuruTarihi,
+                    DanismanUnvanAdi = s.TDOBasvuruDanisman != null ? (s.TDOBasvuruDanisman.TDUnvanAdi) : "Danışman Yok",
+                    DanismanAdSoyad = s.TDOBasvuruDanisman != null ? (s.TDOBasvuruDanisman.TDAdSoyad) : "Danışman Yok",
                     DanismanOnayladi = s.TDOBasvuruDanisman != null ? (s.DanismanOnayladi.HasValue ? (s.DanismanOnayladi.Value ? "Danışman Onayladı" : "Danışman Onaylamadı") : "Danışman Onayı Bekleniyor") : "Danışman Yok",
                     EYKYaGonderildi = s.TDOBasvuruDanisman != null ? (s.EYKYaGonderildi.HasValue ? (s.EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Danışman Yok",
+                    EykYaGonderilmeTarihi = s.TDOBasvuruDanisman?.EYKYaGonderildiIslemTarihi,
                     EYKYaHazirlandi = s.TDOBasvuruDanisman != null ? (s.EYKYaHazirlandi.HasValue ? (s.EYKYaHazirlandi.Value ? "EYK'ya Hazırlandı" : "EYK'ya Hazrılanmadı") : "EYK'ya Hazırlanması Bekleniyor") : "Danışman Yok",
+                    EykYaHazirlanmaTarihi = s.TDOBasvuruDanisman?.EYKYaHazirlandiIslemTarihi,
                     EYKDaOnaylandi = s.TDOBasvuruDanisman != null ? (s.EYKYaGonderildi.HasValue ? (s.EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Danışman Yok",
+                    EykDaOnaylanmaTarihi = s.TDOBasvuruDanisman?.EYKDaOnaylandiOnayTarihi,
                     EsDanismanAdSoyad = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanismen.Any(s2 => s2.TDOBasvuruEsDanismen.Any()) ? (s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad) : "Danışman Yok",
                     EsDanismanOnayladi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.DanismanOnayladi.HasValue ? (s.DanismanOnayladi.Value ? "Danışman Onayladı" : "Danışman Onaylamadı") : "Danışman Onayı Bekleniyor") : "Danışman Yok",
                     EsDanismanEYKYaGonderildi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Eş Danışman Yok",
@@ -210,7 +215,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             #endregion
 
-
+            if (model.AktifDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi)
+            {
+                model.SelectedTdoBasvuruDanismanIds = q.Where(p => p.AktifTDOBasvuruDanismanID.HasValue).Select(s => s.AktifTDOBasvuruDanismanID.Value).ToList();
+            }
             model.RowCount = q.Count();
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
             else if (model.AktifDurumID == 5 || model.DurumID == 5)
@@ -565,15 +573,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         }
 
-      
+
         [Authorize(Roles = RoleNames.TdoEykdaOnayYetkisi)]
-        public ActionResult EYKDaOnay(string aktifDonemId)
+        public ActionResult EYKDaOnay(List<int> selectedTdoBasvuruDanismanIds)
         {
-            var qDanismans = (from s in _entities.TDOBasvurus
-                              join ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID
-                              where ard.DanismanOnayladi == true && ard.EYKYaHazirlandi == true && !ard.EYKDaOnaylandi.HasValue && (ard.DonemBaslangicYil + "" + ard.DonemID) == aktifDonemId
-                              select s.TDOBasvuruDanisman
-                ).ToList();
+            selectedTdoBasvuruDanismanIds = selectedTdoBasvuruDanismanIds ?? new List<int>();
+            var qDanismans = _entities.TDOBasvuruDanismen.Where(p =>
+                    selectedTdoBasvuruDanismanIds.Contains(p.TDOBasvuruDanismanID) &&
+                    p.DanismanOnayladi == true && p.EYKYaHazirlandi == true && !p.EYKDaOnaylandi.HasValue)
+                .ToList();
             foreach (var item in qDanismans)
             {
                 item.EYKDaOnaylandi = true;

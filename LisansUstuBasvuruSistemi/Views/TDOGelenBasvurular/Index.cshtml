@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTdoBasvuruDto
@@ -28,41 +29,38 @@
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
                     </h3>
                     <ul class="panel-controls">
-                        @if (eykOnayYetki)
+                        @if (eykOnayYetki && Model.AktifDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi && Model.SelectedTdoBasvuruDanismanIds.Any())
                         {
                             <li>
                                 <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
                                 <script>
 
                                     function EYKDaOnay() {
-                                        var selectElement = document.getElementById("AktifDonemID");
-                                        var selectedOption = selectElement.options[selectElement.selectedIndex];
-                                        var DonemAdi = selectedOption.text;
-                                        if (!DonemAdi) {
-                                            alert("Başvuru Dönemi seçiniz.")
-                                            return;
-                                        }
                                         var btbx = bootbox.dialog({
-                                            message: DonemAdi + " döneminde <b>EYK'ya hazırlanmış olup EYK'da onay işlemi bekleyen</b> Danışman öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
+                                            message: "Listelenen @Model.SelectedTdoBasvuruDanismanIds.Count() adet EYK'ya hazırlanmış olup EYK'da onay işlemi bekleyen</b> Danışman öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
                                             title: "Toplu EYK'da onaylama işlemi",
                                             buttons: {
                                                 success: {
                                                     label: "Onayla",
-                                                    className: "btn-info",
+                                                    className: "btn-info btnBbOnaylama",
                                                     callback: function () {
+                                                        $('.btnBbOnaylama').html('Onaylanıyor...');
                                                         var _panel = $(btbx).find('.modal-content');
                                                         PanelRefresh(_panel, false);
                                                         toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı");
+                                                        var selectedTdoBasvuruDanismanIds = eval('@Html.Raw(Json.Encode(Model.SelectedTdoBasvuruDanismanIds))');
                                                         $.ajax({
                                                             url: '@Url.Action("EYKDaOnay","TdoGelenBasvurular")',
                                                             cache: false,
-                                                            data: { 'AktifDonemID': selectElement.value },
+                                                            type: 'POST',
+                                                            data: { selectedTdoBasvuruDanismanIds },
                                                             success: function (result) {
                                                                 PanelRefresh(_panel, true);
                                                                 toastr["info"](result.Count + " adet başvuru eyk'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
                                                                 $(btbx).find('.close').first().click();
                                                             },
                                                             error: function (err) {
+                                                                $('.btnBbOnaylama').html('Onayla');
                                                                 PanelRefresh(_panel, true);
                                                                 alert(err.responseText);
                                                             }
@@ -197,7 +195,7 @@
                                         <tr>
                                             <td width="160">Başvuru Dönemi</td>
                                             <td>
-                                                @Html.DropDownList("AktifDonemID", null, new { @class = "form-control", onchange = "DonemChange()" })
+                                                @Html.DropDownList("AktifDonemID", null, new { @class = "form-control" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -379,14 +377,8 @@
 
 <script type="text/javascript">
     $(function () {
-        Resized(window.innerWidth);
-        DonemChange();
-    })
-    function DonemChange() {
-        var selectElement = document.getElementById("AktifDonemID");
-        if (selectElement.value) $('.topluOnay').removeClass('hide');
-        else $('.topluOnay').addClass('hide');
-    }
+        Resized(window.innerWidth); 
+    }) 
     function Resized(screenwidth) {
         if (screenwidth <= 800) {
             $('.clsHide').addClass('hide');

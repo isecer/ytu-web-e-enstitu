@@ -1,6 +1,5 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Raporlar;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
@@ -20,7 +19,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize]
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class MezuniyetGelenBasvurularController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
@@ -174,25 +173,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsTezDiliTr.HasValue) q = q.Where(p => p.IsTezDiliTr == model.IsTezDiliTr);
             if (model.JuriOneriFormuDurumuID.HasValue)
             {
-                if (model.JuriOneriFormuDurumuID == 0)
-                    q = q.Where(p => p.MezuniyetJuriOneriFormu == null);
-                else if (model.JuriOneriFormuDurumuID == 1)
-                    q = q.Where(p =>
-                        p.MezuniyetJuriOneriFormu != null && !p.MezuniyetJuriOneriFormu.EYKDaOnaylandi.HasValue &&
-                        !p.MezuniyetJuriOneriFormu.EYKYaGonderildi.HasValue);
-                else if (model.JuriOneriFormuDurumuID == 2)
-                    q = q.Where(p =>
-                        p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaGonderildi == true &&
-                        !p.MezuniyetJuriOneriFormu.EYKDaOnaylandi.HasValue);
-                else if (model.JuriOneriFormuDurumuID == 3)
-                    q = q.Where(p =>
-                        p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaGonderildi == false);
-                else if (model.JuriOneriFormuDurumuID == 4)
-                    q = q.Where(p =>
-                        p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKDaOnaylandi == true);
-                else if (model.JuriOneriFormuDurumuID == 5)
-                    q = q.Where(p =>
-                        p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKDaOnaylandi == false);
+                if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.FormOlusturulmadi) q = q.Where(p => p.MezuniyetJuriOneriFormu == null);
+                else if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.FormOlusturuldu) q = q.Where(p => p.MezuniyetJuriOneriFormu != null && !p.MezuniyetJuriOneriFormu.EYKYaGonderildi.HasValue);
+                else if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaGonderildi == true && !p.MezuniyetJuriOneriFormu.EYKYaHazirlandi.HasValue);
+                else if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaGonderildi == false);
+                else if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaHazirlandi) q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaHazirlandi == true && !p.MezuniyetJuriOneriFormu.EYKDaOnaylandi.HasValue);
+                else if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKDaOnaylandi == true && !p.SRDurumID.HasValue);
+                else if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKDaOnaylandi == false);
+
+
             }
 
             if (model.SRDurumID.HasValue)
@@ -236,7 +225,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo.Contains(model.AdSoyad) || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad));
             }
             if (model.UyrukKod.HasValue) q = q.Where(p => p.UyrukKod == model.UyrukKod);
-            var isFiltered = q != q2;
+            var isFiltered = !Equals(q, q2);
 
             model.RowCount = q.Count();
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
@@ -244,6 +233,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 q = model.JuriOneriFormuDurumuID == 2 ? q.OrderBy(o => o.MezuniyetJuriOneriFormu.EYKYaGonderildiIslemTarihi) : q.OrderByDescending(o => o.BasvuruTarihi);
             }
+
+            if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaHazirlandi) model.SelectedMezuniyetBasvurulariIds = q.Select(s => s.MezuniyetBasvurulariID).ToList();
             var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             model.Data = qdata;
             #region export
@@ -310,7 +301,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.MezuniyetSurecID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecleri(enstituKod, true), "Value", "Caption", model.MezuniyetSurecID);
             ViewBag.MezuniyetSureci = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecGroup(enstituKod, true), "Value", "Caption", model.MezuniyetSureci);
-            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
             ViewBag.JuriOneriFormuDurumuID = new SelectList(MezuniyetBus.GetCmbJuriOneriFormuDurumu(true), "Value", "Caption", model.JuriOneriFormuDurumuID);
             ViewBag.KayitDonemi = new SelectList(MezuniyetBus.GetCmbMezuniyetKayitDonemleri(enstituKod, model.MezuniyetSurecID, true), "Value", "Caption", model.KayitDonemi);
@@ -403,7 +394,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
@@ -707,7 +698,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else tezTeslimSonTarih = null;
             }
-            var strView = "";
+
             if (mmMessage.Messages.Count == 0)
             {
                 bool sendMailSinav = srTalep.MezuniyetSinavDurumID != mezuniyetSinavDurumId && srTalep.MezuniyetSinavDurumID.HasValue;
@@ -723,7 +714,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.SaveChanges();
                 LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, srTalep.MezuniyetBasvurulari.ToJson());
 
-                var drm = _entities.MezuniyetSinavDurumlaris.First(p => p.MezuniyetSinavDurumID == mezuniyetSinavDurumId);
                 mmMessage.IsSuccess = true;
 
 
@@ -735,7 +725,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             mmMessage.Title = "Sınav durumu kayıt işlemi";
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            strView = mmMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage) : "";
+            var strView = mmMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage) : "";
 
             return new
             {
@@ -1585,11 +1575,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             mbjo.UniqueID = uniqueId;
                         }
-                        mbjo.MezuniyetBasvurulariID = kModel.MezuniyetBasvurulariID; 
+                        mbjo.MezuniyetBasvurulariID = kModel.MezuniyetBasvurulariID;
                         if (mb.IsTezDiliTr.HasValue && mb.IsTezDiliTr != kModel.IsTezDiliTr)
                         {
                             // tez dili değişti ve mezuniuyet başvurusundaki tez dilinden farklı ise mezuniyet başvurusundaki başlıkları kontrol et ve tez dilini güncelle
-                         
+
                             mb.TezBaslikTr = mb.TezBaslikTr.IsNullOrWhiteSpace() ? mb.TezBaslikEn : mb.TezBaslikTr;
                             mb.TezBaslikEn = mb.TezBaslikEn.IsNullOrWhiteSpace() ? mb.TezBaslikTr : mb.TezBaslikEn;
                             mb.IsTezDiliTr = kModel.IsTezDiliTr;
@@ -1713,6 +1703,257 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Messages = strView
             }.ToJsonResult();
         }
+
+
+
+        public ActionResult EykYaGonderimPost(int mezuniyetJuriOneriFormId, bool? eykYaGonderildi, string eykYaGonderimDurumAciklamasi)
+        {
+            var mMessage = new MmMessage
+            {
+                MessageType = MsgTypeEnum.Success,
+                Title = "Jüri Öneri Formu EYK'ya Gönderim İşlemi"
+            };
+            var juriOneriFormu = _entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
+
+
+
+            if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent())
+            {
+                mMessage.Messages.Add("EYK'ya gönderme yetkiniz bulunmamaktadır.");
+            }
+            else if (juriOneriFormu.MezuniyetBasvurulari.EYKTarihi.HasValue && juriOneriFormu.MezuniyetBasvurulari.SRTalepleris.Any(a => a.SRDurumID == SrTalepDurumEnum.Onaylandı))
+            {
+                mMessage.Messages.Add("Mezuniyet başvurusuna ait Salon rezervasyonu alındığı için jüri öneri formu EYK'ya gönderim işlemi yapılamaz.");
+            }
+            else if (juriOneriFormu.EYKDaOnaylandi.HasValue)
+            {
+                mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan jüri öneri formu üzerinden EYK'ya gönderim işlemi yapılamaz.");
+            }
+            else if (juriOneriFormu.EYKYaHazirlandi.HasValue)
+            {
+                mMessage.Messages.Add("Enstitü tarafından EYK'ya hazırlanan jüri öneri formu üzerinden EYK'ya gönderim işlemi yapılamaz.");
+            }
+            else if (eykYaGonderildi == false && eykYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("EYK'ya gönderilmeme sebebi açıklaması giriniz.");
+            }
+
+
+            if (!mMessage.Messages.Any())
+            {
+
+
+                if (juriOneriFormu.EYKYaGonderildi.HasValue || eykYaGonderildi != false)
+                {
+                   
+                   var ogrenciObsBilgi =
+                       KullanicilarBus.OgrenciBilgisiGuncelleObs(juriOneriFormu.MezuniyetBasvurulari.KullaniciID);
+
+                    if (!ogrenciObsBilgi.KayitVar)
+                    {
+                        mMessage.Messages.Add(
+                            "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                    }
+                    else if (juriOneriFormu.MezuniyetBasvurulari.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
+                    {
+                        mMessage.Messages.Add(
+                            "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir.");
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
+
+                juriOneriFormu.EYKYaGonderildi = eykYaGonderildi;
+                juriOneriFormu.EYKYaGonderildiIslemTarihi = DateTime.Now;
+                juriOneriFormu.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
+                juriOneriFormu.EYKYaGonderimDurumAciklamasi =
+                    juriOneriFormu.EYKYaGonderildi == false ? eykYaGonderimDurumAciklamasi : "";
+                juriOneriFormu.IslemTarihi = DateTime.Now;
+                juriOneriFormu.IslemYapanID = UserIdentity.Current.Id;
+                juriOneriFormu.IslemYapanIP = UserIdentity.Ip;
+                _entities.SaveChanges();
+                LogIslemleri.LogEkle("MezuniyetJuriOneriFormlari", LogCrudType.Update, juriOneriFormu.ToJson());
+                mMessage.IsSuccess = true;
+            }
+
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mMessage.ToJsonResult();
+        }
+
+        public ActionResult EykYaHazirlaPost(int mezuniyetJuriOneriFormId, bool? eykYaHazirlandi)
+        {
+            var mMessage = new MmMessage
+            {
+                MessageType = MsgTypeEnum.Success,
+                Title = "Jüri Öneri Formu EYK'ya Hazırlama İşlemi"
+            };
+            var juriOneriFormu = _entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
+            if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
+            {
+                mMessage.Messages.Add("EYK'ya hazırlama yetkiniz bulunmamaktadır.");
+            }
+            else if (juriOneriFormu.EYKYaGonderildi != true)
+            {
+                mMessage.Messages.Add("Enstitü tarafından Eyk'ya gönderim işlemi yapılmayan Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
+            }
+            else if (juriOneriFormu.EYKDaOnaylandi.HasValue)
+            {
+                mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
+            }
+
+            if (!mMessage.Messages.Any())
+            {
+                if (eykYaHazirlandi == true)
+                {
+                    var ogrenciObsBilgi =
+                        KullanicilarBus.OgrenciBilgisiGuncelleObs(juriOneriFormu.MezuniyetBasvurulari.KullaniciID);
+
+                    if (!ogrenciObsBilgi.KayitVar)
+                    {
+                        mMessage.Messages.Add(
+                            "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                    }
+                    else if (juriOneriFormu.MezuniyetBasvurulari.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
+                    {
+                        mMessage.Messages.Add(
+                            "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir.");
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any() && eykYaHazirlandi == true)
+            {
+                string msg = "";
+                var asilCount = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Count(p => p.IsAsilOrYedek == true);
+                var yedekCount = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Count(p => p.IsAsilOrYedek == false);
+                var countSizeAsil = juriOneriFormu.MezuniyetBasvurulari.OgrenimTipKod.IsDoktora() ? 5 : 3;
+                if (asilCount != countSizeAsil)
+                    msg += ("<br />* Jüri adayı önerisinden " + countSizeAsil + " Asil aday belirlemeniz gerekmektedi.");
+                if (yedekCount != 2)
+                    msg += ("<br />* Jüri adayı önerisinde 2 Yedek aday belirlemeniz gerekmektedi.");
+                if (msg != "")
+                {
+                    mMessage.Messages.Add("Jüri öneri formunda EYK'ya onaylandı işlemini yapabilmeniz için: " + msg);
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
+
+                juriOneriFormu.EYKYaHazirlandi = eykYaHazirlandi;
+                juriOneriFormu.EYKYaHazirlandiIslemTarihi = DateTime.Now;
+                juriOneriFormu.EYKYaHazirlandiIslemYapanID = UserIdentity.Current.Id;
+                juriOneriFormu.IslemTarihi = DateTime.Now;
+                juriOneriFormu.IslemYapanID = UserIdentity.Current.Id;
+                juriOneriFormu.IslemYapanIP = UserIdentity.Ip;
+                _entities.SaveChanges();
+                LogIslemleri.LogEkle("MezuniyetJuriOneriFormlari", LogCrudType.Update, juriOneriFormu.ToJson());
+                mMessage.IsSuccess = true;
+            }
+
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mMessage.ToJsonResult();
+        }
+        public ActionResult EykDaOnayPost(int mezuniyetJuriOneriFormId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
+        {
+            var mMessage = new MmMessage
+            {
+                MessageType = MsgTypeEnum.Success,
+                Title = "Jüri Öneri Formu EYK'Da Onay İşlemi"
+            };
+            var juriOneriFormu = _entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
+            if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
+            {
+                mMessage.Messages.Add("EYK'da onay yetkiniz bulunmamaktadır.");
+            }
+            else if (juriOneriFormu.EYKYaGonderildi != true)
+            {
+                mMessage.Messages.Add("Enstitü tarafından EYK'ya gönderildi işlemi yapılmayan Danışman öneri formu üzerinden EYK onay işlemi yapılamaz.");
+            }
+            else if (juriOneriFormu.MezuniyetBasvurulari.EYKTarihi.HasValue && juriOneriFormu.MezuniyetBasvurulari.SRTalepleris.Any(a => a.SRDurumID == SrTalepDurumEnum.Onaylandı))
+            {
+                mMessage.Messages.Add("Mezuniyet başvurusuna ait Salon rezervasyonu alındığı için jüri öneri formu EYK'ya gönderim işlemi yapılamaz.");
+            }
+            else if (eykDaOnaylandi == false)
+            {
+                if (eykDaOnaylanmadiDurumAciklamasi.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Onaylanmama durumu için açıklama giriniz.");
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "EYKDaOnaylanmadiDurumAciklamasi_" + mezuniyetJuriOneriFormId });
+
+                }
+            }
+            else if (eykDaOnaylandi == true)
+            {
+                if (!eykDaOnaylandiOnayTarihi.HasValue)
+                {
+                    mMessage.Messages.Add("EYK'Da onaylanma tarihini giriniz.");
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Error, PropertyName = "EYKDaOnaylandiOnayTarihi_" + mezuniyetJuriOneriFormId });
+
+                }
+            }
+            if (!mMessage.Messages.Any() && eykDaOnaylandi == true)
+            {
+                string msg = "";
+                var asilCount = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Count(p => p.IsAsilOrYedek == true);
+                var yedekCount = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Count(p => p.IsAsilOrYedek == false);
+                var countSizeAsil = juriOneriFormu.MezuniyetBasvurulari.OgrenimTipKod.IsDoktora() ? 5 : 3;
+                if (asilCount != countSizeAsil)
+                    msg += ("<br />* Jüri adayı önerisinden " + countSizeAsil + " Asil aday belirlemeniz gerekmektedi.");
+                if (yedekCount != 2)
+                    msg += ("<br />* Jüri adayı önerisinde 2 Yedek aday belirlemeniz gerekmektedi.");
+                if (msg != "")
+                {
+                    mMessage.Messages.Add("Jüri öneri formunda EYK'ya onaylandı işlemini yapabilmeniz için: " + msg);
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
+                if (eykDaOnaylandi != false)
+                {
+                    var ogrenciObsBilgi =
+                        KullanicilarBus.OgrenciBilgisiGuncelleObs(juriOneriFormu.MezuniyetBasvurulari.KullaniciID);
+
+                    if (!ogrenciObsBilgi.KayitVar)
+                    {
+                        mMessage.Messages.Add(
+                            "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                    }
+                    else if (juriOneriFormu.MezuniyetBasvurulari.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
+                    {
+                        mMessage.Messages.Add(
+                            "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir.");
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
+
+                var sendMail = eykDaOnaylandi.HasValue && eykDaOnaylandi != juriOneriFormu.EYKDaOnaylandi;
+                juriOneriFormu.EYKDaOnaylandi = eykDaOnaylandi;
+                juriOneriFormu.EYKDaOnaylandiOnayTarihi = DateTime.Now;
+                if (eykDaOnaylandi == true)
+                {
+                    juriOneriFormu.MezuniyetBasvurulari.EYKTarihi = eykDaOnaylandiOnayTarihi.Value.Date;
+                }
+                juriOneriFormu.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
+                if (eykDaOnaylandi == false) juriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
+
+                juriOneriFormu.IslemTarihi = DateTime.Now;
+                juriOneriFormu.IslemYapanID = UserIdentity.Current.Id;
+                juriOneriFormu.IslemYapanIP = UserIdentity.Ip;
+                _entities.SaveChanges();
+                mMessage.IsSuccess = true;
+                LogIslemleri.LogEkle("MezuniyetJuriOneriFormlari", LogCrudType.Update, juriOneriFormu.ToJson());
+                if (sendMail)
+                {
+                    MezuniyetBus.SendMailJuriOneriFormuOnay(mezuniyetJuriOneriFormId);
+                }
+            }
+
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mMessage.ToJsonResult();
+        }
+
 
 
         public ActionResult JuriOneriFormuOnayDurumKayit(int mezuniyetBasvurulariId, int mezuniyetJuriOneriFormId, bool eykDaOnayOrEykYaGonderim, bool? onaylandi, string durumAciklamasi)
@@ -1977,7 +2218,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay)]
+        [HttpPost]
+        public ActionResult EYKDaOnay(List<int> mezuniyetBasvurulariIds)
+        {
+            mezuniyetBasvurulariIds = mezuniyetBasvurulariIds ?? new List<int>();
+            var eykDaOnaylanacakBasvurular = _entities.MezuniyetJuriOneriFormlaris.Where(p =>
+                mezuniyetBasvurulariIds.Contains(p.MezuniyetBasvurulariID)
+                && p.EYKYaHazirlandi == true && !p.EYKDaOnaylandi.HasValue
+            ).ToList();
+            foreach (var item in eykDaOnaylanacakBasvurular)
+            {
+                item.EYKDaOnaylandi = true;
+                item.EYKDaOnaylandiOnayTarihi = DateTime.Now;
+                item.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
+            }
+            _entities.SaveChanges();
+            foreach (var item in eykDaOnaylanacakBasvurular)
+            {
+                LogIslemleri.LogEkle("MezuniyetJuriOneriFormlari", LogCrudType.Update, item.ToJson());
+                MezuniyetBus.SendMailJuriOneriFormuOnay(item.MezuniyetJuriOneriFormID);
+            }
+            return new { eykDaOnaylanacakBasvurular.Count }.ToJsonResult();
+        }
 
         public ActionResult GetTutanakRaporu()
         {
@@ -2047,7 +2310,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         }
-        public ActionResult GetTutanakRaporuExport(int raporTipId, int ogrenimTipKods, string basTar, string bitTar, string raporTarihi, bool exportWordOrExcel, string ekd)
+        public ActionResult GetTutanakRaporuExport(int raporTipId, int ogrenimTipKods, int? enstituOnayDurumId, string basTar, string bitTar, string raporTarihi, bool exportWordOrExcel, string ekd)
         {
 
             string html;
@@ -2061,14 +2324,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (raporTipId == RaporTipiEnum.MezuniyetTezJuriTutanakRaporu)
             {
-                var data = _entities.MezuniyetBasvurularis.Where(p =>
-                        p.MezuniyetSureci.EnstituKod == enstituKod &&
-                        p.MezuniyetJuriOneriFormlaris.Any(a => a.EYKDaOnaylandi == true) &&
-                        p.EYKTarihi >= baslangicTarihi &&
-                        p.EYKTarihi <= bitisTarihi)
-                    .OrderByDescending(o => o.OgrenimTipKod).ThenBy(t => t.EYKTarihi).ToList()
-                    .Where(p => p.OgrenimTipKod.IsDoktora() == isDoktora).ToList();
+                var qds = _entities.MezuniyetBasvurularis.Where(p => p.MezuniyetSureci.EnstituKod == enstituKod);
 
+                if (enstituOnayDurumId == 1)
+                {
+                    qds = qds.Where(p => p.MezuniyetJuriOneriFormlaris.Any(a => a.EYKYaGonderildi == true && !a.EYKYaHazirlandi.HasValue && a.EYKYaGonderildiIslemTarihi >= baslangicTarihi && a.EYKYaGonderildiIslemTarihi <= bitisTarihi));
+
+                }
+                else if (enstituOnayDurumId == 2)
+                {
+                    qds = qds.Where(p => p.MezuniyetJuriOneriFormlaris.Any(a => a.EYKYaHazirlandi == true && !a.EYKDaOnaylandi.HasValue && a.EYKYaHazirlandiIslemTarihi >= baslangicTarihi && a.EYKYaHazirlandiIslemTarihi <= bitisTarihi));
+
+                }
+                else if (enstituOnayDurumId == 3)
+                {
+                    qds = qds.Where(p => p.MezuniyetJuriOneriFormlaris.Any(a => a.EYKDaOnaylandi == true) && p.EYKTarihi >= baslangicTarihi && p.EYKTarihi <= bitisTarihi);
+
+
+                }
+                var data = qds.OrderByDescending(o => o.OgrenimTipKod).ThenBy(t => t.EYKTarihi).ToList()
+                    .Where(p => p.OgrenimTipKod.IsDoktora() == isDoktora).ToList();
 
                 var model = new List<RprTutanakModel>();
                 var rModel = new RprTutanakModel
@@ -2141,7 +2416,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 RprMezuniyetTezJuriTutanak rpr = new RprMezuniyetTezJuriTutanak(rModel.IsDoktoraOrYL);
                 rpr.DataSource = model.Count > 0 ? model[0] : new RprTutanakModel();
                 rpr.CreateDocument();
-                raporAdi = (ogrenimTipKods.IsDoktora() ? "Doktra" : "Yüksek Lisans") + " Tez Sınav Jürileri Atama Önerileri";
+                raporAdi = $"{(enstituOnayDurumId == 2 ? "EykYa HAZIRLANAN" : (enstituOnayDurumId == 3 ? "EYKda ONAYLANAN" : "EYKya GÖNDERİLEN"))} {(ogrenimTipKods.IsDoktora() ? "Doktra" : "Yüksek Lisans")} Tez Sınav Jürileri Atama Önerileri";
 
                 using (MemoryStream ms = new MemoryStream())
                 {
@@ -2228,7 +2503,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         var sinav = itemO.SRTalepleris.First(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
                         var tezSonBilgi = sinav.MezuniyetBasvurulari.MezuniyetBasvurulariTezTeslimFormlaris.First();
-                        var danismanBilgi = "";
+                        string danismanBilgi;
                         var joForm = itemO.MezuniyetJuriOneriFormlaris.FirstOrDefault();
                         if (joForm != null)
                         {

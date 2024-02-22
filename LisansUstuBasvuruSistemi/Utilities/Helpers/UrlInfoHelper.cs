@@ -17,11 +17,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             };
             var webSite = uri.AbsoluteUri.Replace(uri.AbsolutePath, "");
 
-            webSite = webSite.IndexOf("?") > -1 ? webSite.Substring(0, webSite.IndexOf("?")) : webSite;
+            webSite = webSite.IndexOf("?", StringComparison.Ordinal) > -1 ? webSite.Substring(0, webSite.IndexOf("?", StringComparison.Ordinal)) : webSite;
             webSite = webSite.EndsWith("/") ? webSite : webSite + "/";
-            var apath = uri.AbsolutePath.IndexOf("?") > -1 ? uri.AbsolutePath.Substring(0, uri.AbsolutePath.IndexOf("?")) : uri.AbsolutePath;
+            var apath = uri.AbsolutePath.IndexOf("?", StringComparison.Ordinal) > -1 ? uri.AbsolutePath.Substring(0, uri.AbsolutePath.IndexOf("?", StringComparison.Ordinal)) : uri.AbsolutePath;
             var spl = apath.Split('/').Where(p => p != "").Select((item, inx) => new { item, inx }).ToList();
-            string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (EnstituBus.IsContainsEnstitu(spl.First().item) ? spl.First().item : "FBE")).ToLower();
+            var selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (EnstituBus.IsContainsEnstitu(spl.First().item) ? spl.First().item : "FBE")).ToLower();
 
             model.Query = uri.Query;
             model.EnstituKisaAd = selectedEnstKisAd;
@@ -46,7 +46,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 apath = model.Root + enst + "home/index";
             }
             model.LastPath = laspath;
-            apath = apath.IndexOf("I") > -1 ? apath.Replace("I", "i").ToLower() : apath.ToLower();
+            apath = apath.IndexOf("I", StringComparison.Ordinal) > -1 ? apath.Replace("I", "i").ToLower() : apath.ToLower();
             model.AbsolutePath = apath;
 
             return model;

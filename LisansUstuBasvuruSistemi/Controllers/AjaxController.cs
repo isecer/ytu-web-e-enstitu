@@ -2228,7 +2228,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetYtuOgretimEleman(string term)
         {
             var data = PersisServiceData.GetWsPersisOe(term);
-            var ytuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == StaticDefinitions.UniversiteYtuKod);
+            var ytuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == GlobalSistemSetting.UniversiteYtuKod);
             var kul2 = data.Table.Select(s => new
             {
                 id = s.ADSOYAD,
@@ -2266,7 +2266,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult GetUniversiteler(string term)
         {
-            var univeriteler = _entities.Universitelers.Where(p => p.UniversiteID != StaticDefinitions.UniversiteYtuKod && p.Ad.Contains(term)).OrderBy(o => o.Ad).Take(50).Select(s => new
+            var univeriteler = _entities.Universitelers.Where(p => p.UniversiteID != GlobalSistemSetting.UniversiteYtuKod && p.Ad.Contains(term)).OrderBy(o => o.Ad).Take(50).Select(s => new
             {
                 id = s.UniversiteID,
                 text = s.Ad

@@ -16,7 +16,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize]
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class TdoBasvuruController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
@@ -470,7 +470,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
-            var ogrenciObsBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
+           
+            KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
 
 
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
@@ -1876,7 +1877,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan Danışman öneri formu üzerinden EYK'ya gönderim işlemi yapılamaz.");
             }
-            else if (tdoBasvuruDanis.EYKDaOnaylandi == false && eykYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+            else if (eykYaGonderildi == false && eykYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
             {
                 mMessage.Messages.Add("EYK'ya gönderilmeme sebebi açıklaması giriniz.");
             }
@@ -1984,8 +1985,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı Öneri Formu EYK'Da Onay İşlemi"
-            };
-            var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
+            }; 
             var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
             if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
             {
@@ -2124,7 +2124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
-                if (isDegisiklikTalebi == true)
+                if (isDegisiklikTalebi)
                 {
                     var lastEsDanisman = tdoBasvuruDanismanData.TDOBasvuru.TDOBasvuruDanismen.Where(p => p.TDOBasvuruEsDanismen.Any()).OrderByDescending(o => o.TDOBasvuruDanismanID).Select(s => s.TDOBasvuruEsDanismen.OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault()).FirstOrDefault();
                     if (lastEsDanisman != null)
@@ -2432,7 +2432,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult GetTdoDanismans(string term)
         {
-            var danismanUnvanIDs = new List<int>() { 17, 42, 73, 5, 66 }; //Doç.Dr Prof.Dr, Dr. Öğr. Üye ,arş gör dr, öğr gör dr,
+            //17-Doç.42-Dr Prof.Dr, 73-Dr. Öğr. Üye ,5-arş gör dr, 66-öğr gör dr,
+            var danismanUnvanIDs = new List<int>() { 17, 42, 73 }; 
             var danismanlar = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && danismanUnvanIDs.Contains(p.UnvanID ?? 0) && (p.Ad + " " + p.Soyad).StartsWith(term)).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).Take(25).Select(s => new
             {
                 id = s.KullaniciID,

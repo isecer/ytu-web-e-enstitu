@@ -13,7 +13,7 @@
     Layout = null;
     var resimVar = (bool)ViewBag.ResimVar;
     var kYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
-    var kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent() && UserIdentity.Current.Id!=Model.KullaniciID;
+    var kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent() && UserIdentity.Current.Id != Model.KullaniciID;
     var islemYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
     var eYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
     var pYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
@@ -28,9 +28,9 @@
     var secilenTumRoollerCount = roller.Count(a => a.Checked == true);
     var eYetkiCount = (int)ViewBag.EkRollerCount;
     var danisman = (Kullanicilar)ViewBag.Danisman;
-
+    var mailGondermeYetki = RoleNames.MailGonder.InRole();
     var danismanOgrencileriGosterilsin = false;
-    if (Model.KullaniciTipID==KullaniciTipiEnum.AkademikPersonel)
+    if (Model.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
     {
         danismanOgrencileriGosterilsin = (SistemAyar.DanismanProfilindeOgrencileriniGorsun.GetAyar().ToBoolean(false) && Model.KullaniciID == UserIdentity.Current.Id) || kYetki;
     }
@@ -47,11 +47,15 @@
                     <li>
                         <span class="label label-info label-form" onclick="OgrenciSorgula('@user.TcKimlikNo');" style="cursor:pointer;" title="Obs sistemindeki öğrenci bilgilerini gör"><i class="fa fa-search fa-lg"></i></span>
                     </li>
-                    <li>
-                        <span class="label label-info label-form" onclick="mGonder('@user.KullaniciID');" style="cursor:pointer;" title="Mail Gönder"><i class="fa fa-envelope fa-lg"></i></span>
-                    </li>
+
                     <li style="padding-right:5px;">
                         <span class="label label-info label-form" onclick="window.open('@Url.Action("Kayit", "Kullanicilar", new { id = Model.KullaniciID })', target = '_blank');" style="cursor:pointer;" title="Kullanıcı Düzenle"><i class="fa fa-edit fa-lg"></i></span>
+                    </li>
+                }
+                @if (mailGondermeYetki)
+                {
+                    <li>
+                        <span class="label label-info label-form" onclick="mGonder('@user.KullaniciID');" style="cursor:pointer;" title="Mail Gönder"><i class="fa fa-envelope fa-lg"></i></span>
                     </li>
                 }
                 @if (eYetki)

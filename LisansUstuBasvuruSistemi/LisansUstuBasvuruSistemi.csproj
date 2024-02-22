@@ -999,6 +999,7 @@
     <Compile Include="Utilities\Dtos\MSurecDetay.cs" />
     <Compile Include="Utilities\Dtos\MulakatBilgiModel.cs" />
     <Compile Include="Utilities\Dtos\OnlineOdemeProgramDetayModel.cs" />
+    <Compile Include="Utilities\Enums\MezuniyetJofDurumuEnum.cs" />
     <Compile Include="Utilities\SystemSetting\GlobalSistemSetting.cs" />
     <Compile Include="WebServiceData\PersisService\PersisServiceModel.cs" />
     <Compile Include="Utilities\Dtos\RprBasvuruSonucBolumModel.cs" />

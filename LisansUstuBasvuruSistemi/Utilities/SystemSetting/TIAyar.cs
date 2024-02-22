@@ -51,6 +51,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
                 return qq != null ? qq.AyarDegeri : varsayilanDeger;
             }
         }
+
+
     }
 
 

@@ -1,5 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
@@ -10,7 +9,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
     var eykYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() || RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent();
-
+    var eykOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent();
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
     var hideFilterRow = !kYetki && Model.Data.Select(s => s.TezDanismanID).FirstOrDefault() == UserIdentity.Current.Id ? "hide" : "";
@@ -29,6 +28,58 @@
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
                     </h3>
                     <ul class="panel-controls">
+                        @if (eykOnayYetki && Model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaHazirlandi && Model.SelectedMezuniyetBasvurulariIds.Any())
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class="topluOnay" onclick="TopluEYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+                                <script>
+
+                                    function TopluEYKDaOnay() {
+                                        var btbx = bootbox.dialog({
+                                            message: "Listelenen @Model.SelectedMezuniyetBasvurulariIds.Count() adet EYK'ya hazırlanmış ve EYK'da onay işlemi bekleyen</b> Tez Jüri Öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
+                                            title: "Toplu EYK'da onaylama işlemi",
+                                            buttons: {
+                                                success: {
+                                                    label: "Onayla",
+                                                    className: "btn-info btnBbOnaylama",
+                                                    callback: function () {
+                                                        $('.btnBbOnaylama').html('Onaylanıyor...');
+                                                        var _panel = $(btbx).find('.modal-content');
+                                                        PanelRefresh(_panel, false);
+                                                        toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı"); 
+                                                        var mezuniyetBasvurulariIds = eval('@Html.Raw(Json.Encode(Model.SelectedMezuniyetBasvurulariIds))'); 
+                                                        $.ajax({
+                                                            url: '@Url.Action("EYKDaOnay", "MezuniyetGelenBasvurular")',
+                                                            cache: false,
+                                                            type: 'POST',
+                                                            data: { mezuniyetBasvurulariIds },
+                                                            success: function (result) {
+                                                                PanelRefresh(_panel, true);
+                                                                toastr["info"](result.Count + " adet başvuru eyk'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
+                                                                $(btbx).find('.close').first().click();
+                                                            },
+                                                            error: function (err) {
+                                                                PanelRefresh(_panel, true);
+                                                                alert(err.responseText);
+                                                            }
+                                                        }); 
+                                                        return false;
+                                                    }
+                                                },
+                                                danger: {
+                                                    label: "Vazgeç",
+                                                    className: "btn-primary",
+                                                    callback: function () {
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                </script>
+                            </li>
+
+                        }
                         @if (eykYetki)
                         {
                             <li>
@@ -70,8 +121,8 @@
                                                                                 var _Bittar = $('#BitTar').val();
                                                                                 var _RaporTarihi = $('#BitTar').val();
                                                                                 var _ExportWordOrExcel = $('#ExportWordOrExcel').val().toLowerCase();
-
-                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "MezuniyetGelenbasvurular")?RaporTipID=' + _RtipID + '&OgrenimTipKods=' + otips + '&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&ExportWordOrExcel=' + _ExportWordOrExcel;
+                                                                                var enstituOnayDurumId = $('#EnstituOnayDurumId').val();
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "MezuniyetGelenbasvurular")?RaporTipID=' + _RtipID + '&OgrenimTipKods=' + otips + '&enstituOnayDurumId=' + enstituOnayDurumId + '&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&ExportWordOrExcel=' + _ExportWordOrExcel;
 
                                                                             }
                                                                             else {
@@ -123,13 +174,14 @@
                             if (filteredOgrenciIds.Any())
                             {
                                 <li>
-                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
                                 </li>
                             }
+
                             if (filteredDanismanIds.Any())
                             {
                                 <li>
-                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
                                 </li>
                             }
 
@@ -371,7 +423,7 @@
                                         <td>
                                             @if (kYetki)
                                             {
-                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
+                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
                                             }
                                         </td>
@@ -733,7 +785,7 @@
     }
 
     $(function () {
-        
+
     })
     function showSRDialog(MezuniyetBasvurulariID, SRTalepID) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
@@ -1002,17 +1054,122 @@
         var val = $('#EYKDaOnaylandi_' + id).val();
         if (val == 'false') {
             $('#EYKOnayAciklamaRow_' + id).removeClass('hide');
+            $('#EYKOnayEykTarihTd_' + id).addClass('hide');
         }
-        else {
+        else if (val == 'true') {
             $('#EYKOnayAciklamaRow_' + id).addClass('hide');
+            var eykTarih = $('#EYKDaOnaylandiOnayTarihi_' + id).val();
+            if (eykTarih == "") {
+                var today = new Date();
+                var formattedDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                $('#EYKDaOnaylandiOnayTarihi_' + id).val(formattedDate);
+            }
+            $('#EYKOnayEykTarihTd_' + id).removeClass('hide');
         }
+        else if (val == '') {
+            $('#EYKOnayAciklamaRow_' + id).addClass('hide');
+            $('#EYKOnayEykTarihTd_' + id).addClass('hide');
+        }
+
     }
+    function EYKyaGonder(mezuniyetJuriOneriFormId, mezuniyetBasvurulariId) {
+        var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
+        PanelRefresh(_panel, false);
+        var eykYaGonderildi = $('#EYKYaGonderildi_' + mezuniyetJuriOneriFormId).val();
+        var eykYaGonderimDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormId).val();
+        var model = {
+            mezuniyetJuriOneriFormId,
+            eykYaGonderildi,
+            eykYaGonderimDurumAciklamasi
+
+        };
+        $.ajax({
+            url: '@Url.Action("EykYaGonderimPost", "MezuniyetGelenBasvurular")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: model,
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                getDetailx(mezuniyetBasvurulariId);
+                if (result.Messages.length > 0) getMsg(result);
+
+            },
+            error: function (err) {
+
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+    function EYKyaHazirla(mezuniyetJuriOneriFormId, mezuniyetBasvurulariId) {
+        var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
+        PanelRefresh(_panel, false);
+        var eykYaHazirlandi = $('#EYKyaHazirlandi_' + mezuniyetJuriOneriFormId).val();
+        var model = {
+            mezuniyetJuriOneriFormId,
+            eykYaHazirlandi
+        };
+        $.ajax({
+            url: '@Url.Action("EykYaHazirlaPost", "MezuniyetGelenBasvurular")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: model,
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                getDetailx(mezuniyetBasvurulariId);
+                if (result.Messages.length > 0) getMsg(result);
+
+            },
+            error: function (err) {
+
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+    function EYKdaOnay(mezuniyetJuriOneriFormId, mezuniyetBasvurulariId) {
+        var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
+        PanelRefresh(_panel, false);
+        var eykDaOnaylandi = $('#EYKDaOnaylandi_' + mezuniyetJuriOneriFormId).val();
+        var eykDaOnaylandiOnayTarihi = $('#EYKDaOnaylandiOnayTarihi_' + mezuniyetJuriOneriFormId).val();
+        var eykDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormId).val();
+        var model = {
+            mezuniyetJuriOneriFormId,
+            eykDaOnaylandi,
+            eykDaOnaylandiOnayTarihi,
+            eykDaOnaylanmadiDurumAciklamasi
+        }
+        $.ajax({
+            url: '@Url.Action("EykDaOnayPost", "MezuniyetGelenBasvurular")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: model,
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                if (result.Messages.length > 0) getMsg(result);
+                else getDetailx(mezuniyetBasvurulariId);
+
+            },
+            error: function (err) {
+
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+
     function JoFormDurumKayit(mezuniyetBasvurulariID, mezuniyetJuriOneriFormID, eykDaOnayOrEykYaGonderim) {
         var _panel = $('#bsvrDet_' + mezuniyetBasvurulariID);
         PanelRefresh(_panel, false);
         var $sndr = eykDaOnayOrEykYaGonderim ? $('#EYKDaOnaylandi_' + mezuniyetJuriOneriFormID) : $('#EYKYaGonderildi_' + mezuniyetJuriOneriFormID);
         var onaylandi = $sndr.val().toLowerCase();
-        var durumAciklamasi = eykDaOnayOrEykYaGonderim ? $('#EYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormID).val() : $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormID).val(); 
+        var durumAciklamasi = eykDaOnayOrEykYaGonderim ? $('#EYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormID).val() : $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormID).val();
         $.ajax({
             url: '@Url.Action("JuriOneriFormuOnayDurumKayit", "MezuniyetGelenBasvurular")',
             data: {
@@ -1279,13 +1436,13 @@
                                 callback: function (event) {
                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                     PanelRefresh(pnlx, false);
-                                    var eMail = $('#EMail_' + UniqueID).val(); 
+                                    var eMail = $('#EMail_' + UniqueID).val();
                                     $.ajax({
                                         url: '@Url.Action("SinavJuriyeMailGonder", "Mezuniyet")',
                                         data: {
                                             SRTalepID,
-                                            UniqueID, 
-                                            eMail 
+                                            UniqueID,
+                                            eMail
                                         },
                                         success: function (result) {
                                             PanelRefresh(pnlx, true);

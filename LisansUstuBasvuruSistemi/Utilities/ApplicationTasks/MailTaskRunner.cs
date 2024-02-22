@@ -41,13 +41,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.ApplicationTasks
 
         public static void Stop()
         {
-            // Timer'ı durdurun
+            // Timer'ı durdur
             _timer?.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
         public static void Restart()
         {
-            // Timer'ı durdurun ve tekrar başlatın
+            // Timer'ı durdur ve tekrar başlatın
             _timer?.Change(TimeSpan.Zero, TimeSpan.FromHours(1));
         }
 

@@ -18,11 +18,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 
         public static bool IsNumberX(this object value)
         {
-            double Deger;
-            var durum = double.TryParse(value.ToStrObj(), out Deger);
+            double deger;
+            var durum = double.TryParse(value.ToStrObj(), out deger);
             return durum;
         }
-        public static bool IsASCII(this string value)
+        public static bool IsAscii(this string value)
         {
             return Encoding.UTF8.GetByteCount(value) == value.Length;
         }

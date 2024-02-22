@@ -51,9 +51,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
         public static string CreateRandomValue(int length, bool charactersB, bool charactersS, bool isNumbers, bool specialCharacters)
         {
-            var characters_b = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var characters_s = "abcdefghijklmnopqrstuvwxyz";
-            var numbers = "0123456789";
+            const string characters_b = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string characters_s = "abcdefghijklmnopqrstuvwxyz";
+            const string numbers = "0123456789";
             const string special_characters = "-_*+/";
             var allowedChars = String.Empty;
 
