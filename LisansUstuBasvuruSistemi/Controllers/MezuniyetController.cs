@@ -1060,8 +1060,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var yetkiliKullanici = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
             var srYetkiliKullanici = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
             var mezuniyetBasvurularis = _entities.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
-            if (!yetkiliKullanici && !srYetkiliKullanici) mezuniyetBasvurularis = mezuniyetBasvurularis.Where(p => p.KullaniciID == UserIdentity.Current.Id);
-            else if (srYetkiliKullanici) mezuniyetBasvurularis = mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
+            //if (!yetkiliKullanici && !srYetkiliKullanici) mezuniyetBasvurularis = mezuniyetBasvurularis.Where(p => p.KullaniciID == UserIdentity.Current.Id);
+            //else if (srYetkiliKullanici) mezuniyetBasvurularis = mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             var mezuniyetBasvuru = mezuniyetBasvurularis.First();
             var model = new SrTalepleriKayitDto
             {

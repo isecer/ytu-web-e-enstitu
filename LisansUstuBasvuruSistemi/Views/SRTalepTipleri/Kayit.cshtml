@@ -1,14 +1,14 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model LisansUstuBasvuruSistemi.Models.SRTalepTipleri
+@model  Entities.Entities.SRTalepTipleri
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
 <div class="row">
     <form method="post" class="form-horizontal" role="form">
-        <input type="text" style="display: none;" id="SRTalepTipID" name="SRTalepTipID" value="@Model.SRTalepTipID"/>
+        <input type="text" style="display: none;" id="SRTalepTipID" name="SRTalepTipID" value="@Model.SRTalepTipID" />
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
@@ -27,18 +27,18 @@
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Talep Tip Adı</label>
                                 <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="TalepTipAdi" id="TalepTipAdi" value="@Model.TalepTipAdi" class="form-control"/>
+                                    <input type="text" name="TalepTipAdi" id="TalepTipAdi" value="@Model.TalepTipAdi" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Tez Sınavı</label>
                                 <div class="col-md-9 col-xs-8">
                                     <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="IsTezSinavi" onchange="TzChange(this);" class="toggle" @Model.IsTezSinavi.ToChecked()/>
+                                        <input type="checkbox" value="true" name="IsTezSinavi" onchange="TzChange(this);" class="toggle" @Model.IsTezSinavi.ToChecked() />
                                     </div>
                                 </div>
-                            </div> 
-                             
+                            </div>
+
 
                             @if (Model.SRTalepTipID > 0)
                             {
@@ -46,7 +46,7 @@
                                     <label class="col-md-3 col-xs-4 control-label">Durum</label>
                                     <div class="col-md-9 col-xs-8">
                                         <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
-                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked()/>
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +70,7 @@
         }
         else {
             $('.isTezSinavi').addClass('hide');
-        } 
+        }
     }
     $(function () {
         var model = '@Html.Raw(Json.Encode(mmMessage))';

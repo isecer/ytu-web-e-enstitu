@@ -11,7 +11,6 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -66,7 +65,11 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
 
-                var yeterlikSurecOgrenimTipleri = entities.YeterlikSurecOgrenimTipleris.Where(p => p.YeterlikSureci.EnstituKod == enstituKod && p.YeterlikSurecID == (yeterlikSurecId ?? p.YeterlikSurecID)).ToList();
+                var sonYeterlikSurecId = entities.YeterlikSurecis
+                    .Where(p => p.EnstituKod == enstituKod &&
+                                p.YeterlikSurecID == (yeterlikSurecId ?? p.YeterlikSurecID))
+                    .OrderByDescending(o => o.BitisTarihi).FirstOrDefault()?.YeterlikSurecID;
+                var yeterlikSurecOgrenimTipleri = entities.YeterlikSurecOgrenimTipleris.Where(p => p.YeterlikSureci.EnstituKod == enstituKod && p.YeterlikSurecID == (yeterlikSurecId ?? sonYeterlikSurecId)).ToList();
                 var ogrenimTipleri = entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsMezuniyetBasvurusuYapabilir && p.IsAktif).ToList();
                 var ogrenimtipData = (from o in ogrenimTipleri.Where(p => p.OgrenimTipKod.IsDoktora())
                                       join yo in yeterlikSurecOgrenimTipleri on o.OgrenimTipID equals yo.OgrenimTipID into defYod
@@ -173,7 +176,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
                         else if (basvuru.IsEnstituOnaylandi.HasValue)
                         {
-                            errorMessage.Add("Başvuru enstitü tarafından işlem gördüğü düzenlenemez!");
+                            errorMessage.Add("Başvuru enstitü tarafından işlem gördüğü için düzenlenemez!");
                         }
 
                     }

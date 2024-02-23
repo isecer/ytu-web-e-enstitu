@@ -1,4 +1,4 @@
-﻿@model LisansUstuBasvuruSistemi.Models.MezuniyetSureci
+﻿@model  Entities.Entities.MezuniyetSureci
 @{
     Layout = null;
     var ogrenciData = Model.MezuniyetSureciKriterMuafOgrencilers.OrderBy(o => o.Kullanicilar.Ad + " " + o.Kullanicilar.Soyad).ToList();

@@ -12,10 +12,10 @@
     <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
         @using (Ajax.BeginForm("TijOneriFormuPost", "TiJuriOnerileriGb", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTijOneriFormu" }))
         {
-            @Html.HiddenFor(p => p.TijBasvuruID);
-            @Html.HiddenFor(p => p.KullaniciId);
-            @Html.HiddenFor(p => p.TijBasvuruOneriID);
-            @Html.HiddenFor(p => p.IsTezDiliTr);
+            @Html.HiddenFor(p => p.TijBasvuruID)
+            @Html.HiddenFor(p => p.KullaniciId)
+            @Html.HiddenFor(p => p.TijBasvuruOneriID)
+            @Html.HiddenFor(p => p.IsTezDiliTr)
             <input type="hidden" name="RowNum" value="0" />
             <input type="hidden" name="IsTezDanismani" value="true" />
             <input type="hidden" name="IsYtuIciJuri" value="true" />
