@@ -83,7 +83,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             bbModel.KayitDonemi = kul.KayitYilBaslangic + "/" + (kul.KayitYilBaslangic + 1);
                         }
                         if (kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + kul.KayitTarihi.ToFormatDate();
-                        model.AktifOgrenimIcinBasvuruVar = _entities.TDOBasvurus.Any(a => a.KullaniciID == kul.KullaniciID && a.OgrenimTipKod == kul.OgrenimTipKod && a.ProgramKod == kul.ProgramKod);
+                        model.AktifOgrenimIcinBasvuruVar = _entities.TDOBasvurus.Any(a => a.KullaniciID == kul.KullaniciID && a.OgrenimTipKod == kul.OgrenimTipKod && a.ProgramKod == kul.ProgramKod && a.OgrenciNo == kul.OgrenciNo);
                     }
                     else
                     {
@@ -318,10 +318,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 return RedirectToAction("Index", new { data.TDOBasvuruID });
             }
-            else
-            {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
-            }
+
+            MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
 
             ViewBag._MmMessage = mmMessage;
             return View(kModel);
@@ -471,7 +469,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
-           
+
             KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
 
 
@@ -1986,7 +1984,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageType = MsgTypeEnum.Success,
                 Title = "Tez Danışmanı Öneri Formu EYK'Da Onay İşlemi"
-            }; 
+            };
             var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
             if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
             {
@@ -2434,7 +2432,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetTdoDanismans(string term)
         {
             //17-Doç.42-Dr Prof.Dr, 73-Dr. Öğr. Üye ,5-arş gör dr, 66-öğr gör dr,
-            var danismanUnvanIDs = new List<int>() { 17, 42, 73 }; 
+            var danismanUnvanIDs = new List<int>() { 17, 42, 73 };
             var danismanlar = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && danismanUnvanIDs.Contains(p.UnvanID ?? 0) && (p.Ad + " " + p.Soyad).StartsWith(term)).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).Take(25).Select(s => new
             {
                 id = s.KullaniciID,

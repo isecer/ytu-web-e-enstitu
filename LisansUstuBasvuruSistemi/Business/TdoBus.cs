@@ -60,9 +60,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var ogrenci = basvuru.Kullanicilar;
                 if (ogrenci.YtuOgrencisi && basvuru.ProgramKod == ogrenci.ProgramKod && basvuru.OgrenimTipKod == ogrenci.OgrenimTipKod && basvuru.OgrenciNo != ogrenci.OgrenciNo)
-                {
-                    basvuru.OgrenciNo = ogrenci.OgrenciNo;
-                    entities.SaveChanges();
+                { 
                     basvuru = entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                 }
 
@@ -527,8 +525,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && (kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))
                         {
-                            var aktifDevamEdenBasvuruVar = entities.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
-                            if (aktifDevamEdenBasvuruVar)// toplam başvuru kontrol
+                            var aktifDevamEdenBasvuruVar = entities.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);
+                            if (aktifDevamEdenBasvuruVar) 
                             {
                                 msg.IsSuccess = false;
                                 msg.Messages.Add("Aktif olarak devam eden bir Tez danışmanı öneri süreciniz bulunuyor. Yeni başvuru yapamazsınız.Tez danışmanı önerisi oluşturmak için aşağıda bulunan başvuru detayınızdan 'Yeni tez danışmanı önerisi' butonuna tıklayınız.");
