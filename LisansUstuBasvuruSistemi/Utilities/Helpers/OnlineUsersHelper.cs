@@ -25,8 +25,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     }
     public static class OnlineUsersHelper
     {
-        private static readonly List<OnlineUser> Users = null;
-        public static int OnlineUserCount = 0;
+        private static readonly List<OnlineUser> Users;
+        public static int OnlineUserCount;
         private static readonly object LockObject = new object();
         static OnlineUsersHelper(){
             Users = new List<OnlineUser>();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var entities = new LisansustuBasvuruSistemiEntities())
+               using (var entities = new LubsDbEntities())
                 {
 
                     var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
@@ -73,7 +73,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         Detaylar = mRowModel
                     };
 
-                    var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
+                    var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", mtc);
                     var mmmC = new MailMainContentDto
                     {
                         EnstituAdi = enstitu.EnstituAd,
@@ -82,7 +82,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         UniversiteAdi = "Yıldız Tekni Üniversitesi",
                         WebAdresi = mailBilgi.WebAdresi
                     };
-                    var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+                    var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
                     MailManager.SendMail(enstitu.EnstituKod, "Yeni Kullanıcı Hesabınız Hakkında", htmlMail, kModel.EMail, null);
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
@@ -107,7 +107,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var entities = new LisansustuBasvuruSistemiEntities())
+               using (var entities = new LubsDbEntities())
                 {
                     var kul = entities.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
                     var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kul.EnstituKod);
@@ -129,7 +129,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         EnstituAdi = entities.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod).EnstituAd,
                         UniversiteAdi = "Yıldız Teknik Üniversitesi",
                         WebAdresi = mailBilgi.WebAdresi,
-                        Content = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent",
+                        Content = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent",
                                     new MailTableContentDto
                                     {
                                         AciklamaBasligi = "Şifre Sıfırlama İşlemi",
@@ -139,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png"
 
                     };
-                    var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+                    var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
                     var eMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true, KullaniciId = kul.KullaniciID } };
                     var rtVal = MailManager.SendMailRetVal(kul.EnstituKod, "Şifre Sıfırlama İşlemi", htmlMail, eMailList, null);
                     if (rtVal == null)

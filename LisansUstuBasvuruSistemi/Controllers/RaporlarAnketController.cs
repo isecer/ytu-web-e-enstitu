@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using System;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;

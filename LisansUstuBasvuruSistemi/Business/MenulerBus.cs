@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
@@ -13,9 +13,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static Menuler[] GetAllMenu()
         {
             if (Menulers != null) return Menulers;
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                Menulers = db.Menulers.OrderBy(o => o.SiraNo).ToArray();
+                Menulers = entities.Menulers.OrderBy(o => o.SiraNo).ToArray();
             }
             return Menulers;
         }
@@ -23,9 +23,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static void UpdateMenus()
         {
             var menuAttrs = Membership.Menus();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var dbMenus = db.Menulers.ToArray();
+                var dbMenus = entities.Menulers.ToArray();
                 foreach (var attr in menuAttrs)
                 {
                     var dbmenu = dbMenus.FirstOrDefault(p => p.MenuID == attr.MenuID);
@@ -45,17 +45,17 @@ namespace LisansUstuBasvuruSistemi.Business
                             AuthenticationControl = attr.AuthenticationControl,
                             SiraNo = attr.SiraNo
                         };
-                        db.Menulers.Add(yeniMenu);
+                        entities.Menulers.Add(yeniMenu);
                         if (attr.BagliRoller != null && attr.BagliRoller.Length > 0)
                         {
-                            var dbRoller = db.Rollers.Where(p => attr.BagliRoller.Contains(p.RolAdi)).ToArray();
+                            var dbRoller = entities.Rollers.Where(p => attr.BagliRoller.Contains(p.RolAdi)).ToArray();
                             foreach (var dbRole in dbRoller)
                             {
                                 yeniMenu.Rollers.Add(dbRole);
                             }
 
                         }
-                        db.SaveChanges();
+                        entities.SaveChanges();
                     }
                     else
                     {
@@ -71,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         dbmenu.SiraNo = attr.SiraNo;
                         if (attr.BagliRoller != null && attr.BagliRoller.Length > 0)
                         {
-                            var dbRoller = db.Rollers.Where(p => attr.BagliRoller.Contains(p.RolAdi)).ToArray(); 
+                            var dbRoller = entities.Rollers.Where(p => attr.BagliRoller.Contains(p.RolAdi)).ToArray();
                             var yeni = dbRoller.Where(p => dbmenu.Rollers.All(a => a.RolID != p.RolID)).ToList();
                             foreach (var yeniRol in yeni)
                             {
@@ -85,13 +85,13 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 foreach (var menu in silinenMenuler)
                 {
-                    db.Menulers.Remove(menu);
+                    entities.Menulers.Remove(menu);
 
                 }
 
-                 
 
-                db.SaveChanges();
+
+                entities.SaveChanges();
                 SistemBilgilendirmeBus.SistemBilgisiKaydet("UpdateMenus", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
             }
         }

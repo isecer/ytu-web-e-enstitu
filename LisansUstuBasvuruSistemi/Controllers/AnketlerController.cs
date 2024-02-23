@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class AnketlerController : Controller
     {
         // GET: Anketler
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string EKD)
         {
             var sEkod = EnstituBus.GetSelectedEnstitu(EKD);
@@ -28,9 +28,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(FmAnketlerDto model)
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from a in db.Ankets
-                    join enst in db.Enstitulers on new { a.EnstituKod } equals new { enst.EnstituKod }
-                    join k in db.Kullanicilars on a.IslemYapanID equals k.KullaniciID
+            var q = from a in _entities.Ankets
+                    join enst in _entities.Enstitulers on new { a.EnstituKod } equals new { enst.EnstituKod }
+                    join k in _entities.Kullanicilars on a.IslemYapanID equals k.KullaniciID
                     where EnstKods.Contains(a.EnstituKod)
                     select new FrAnketlerDto
                     {
@@ -47,7 +47,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AnketAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.AnketAdi.Contains(model.AnketAdi));
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             model.RowCount = q.Count();
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnketAdi); 
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnketAdi);
             model.FrAnketlers = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
@@ -64,7 +64,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = new Anket();
             if (id.HasValue)
             {
-                var data = db.Ankets.Where(p => p.AnketID == id).FirstOrDefault();
+                var data = _entities.Ankets.Where(p => p.AnketID == id).FirstOrDefault();
                 if (data != null)
                 {
                     model = data;
@@ -97,11 +97,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.IslemYapanIP = UserIdentity.Ip;
                 if (kModel.AnketID <= 0)
                 {
-                    var anket = db.Ankets.Add(kModel);
+                    var anket = _entities.Ankets.Add(kModel);
                 }
                 else
                 {
-                    var anket = db.Ankets.Where(p => p.AnketID == kModel.AnketID).First();
+                    var anket = _entities.Ankets.Where(p => p.AnketID == kModel.AnketID).First();
                     anket.EnstituKod = kModel.EnstituKod;
                     anket.AnketAdi = kModel.AnketAdi;
                     anket.IslemYapanID = UserIdentity.Current.Id;
@@ -110,7 +110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     anket.IsAktif = kModel.IsAktif;
 
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
@@ -123,8 +123,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult GetDetail(int AnketID)
         {
-            var qModel = (from s in db.Ankets.Where(p => p.AnketID == AnketID)
-                          join sa in db.AnketSorus on s.AnketID equals sa.AnketID
+            var qModel = (from s in _entities.Ankets.Where(p => p.AnketID == AnketID)
+                          join sa in _entities.AnketSorus on s.AnketID equals sa.AnketID
                           select new FrAnketDetayDto
                           {
                               AnketSoruID = sa.AnketSoruID,
@@ -155,8 +155,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult GetDetail2(int anketSoruId)
         {
-            var qModel = (from s in db.AnketSorus.Where(p => p.AnketSoruID == anketSoruId)
-                          join sa in db.AnketSoruSeceneks on s.AnketSoruID equals sa.AnketSoruID
+            var qModel = (from s in _entities.AnketSorus.Where(p => p.AnketSoruID == anketSoruId)
+                          join sa in _entities.AnketSoruSeceneks on s.AnketSoruID equals sa.AnketSoruID
                           select new FrAnketSecenekDetayDto
                           {
                               AnketSoruSecenekID = sa.AnketSoruSecenekID,
@@ -175,12 +175,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult GetSoruEkle(int AnketID, int? AnketSoruID)
         {
-            var model = new AnketSoru(); 
+            var model = new AnketSoru();
             model.AnketID = AnketID;
-            var Anket = db.Ankets.Where(p => p.AnketID == AnketID).First();
+            var Anket = _entities.Ankets.Where(p => p.AnketID == AnketID).First();
             if (AnketSoruID.HasValue)
             {
-                var data = db.AnketSorus.Where(p => p.AnketSoruID == AnketSoruID).FirstOrDefault();
+                var data = _entities.AnketSorus.Where(p => p.AnketSoruID == AnketSoruID).FirstOrDefault();
                 if (data != null)
                 {
                     model = data;
@@ -229,19 +229,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kModel.AnketSoruID <= 0)
                     {
-                        var anketS = db.AnketSorus.Add(kModel);
-                        mMessage.SiraNo = db.AnketSorus.Where(p => p.AnketID == kModel.AnketID).Count() + 2;
+                        var anketS = _entities.AnketSorus.Add(kModel);
+                        mMessage.SiraNo = _entities.AnketSorus.Where(p => p.AnketID == kModel.AnketID).Count() + 2;
                     }
                     else
                     {
-                        var anketS = db.AnketSorus.Where(p => p.AnketSoruID == kModel.AnketSoruID).First();
+                        var anketS = _entities.AnketSorus.Where(p => p.AnketSoruID == kModel.AnketSoruID).First();
                         anketS.SiraNo = kModel.SiraNo;
                         anketS.SoruAdi = kModel.SoruAdi;
                         anketS.IsTabloVeriGirisi = kModel.IsTabloVeriGirisi;
                         anketS.IsTabloVeriMaxSatir = kModel.IsTabloVeriGirisi ? kModel.IsTabloVeriMaxSatir : null;
 
                     }
-                    db.SaveChanges();
+                    _entities.SaveChanges();
 
                     mMessage.Title = "Anket sorusu kaydetme işlemi başarılı";
                     mMessage.MessageType = MsgTypeEnum.Success;
@@ -263,14 +263,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.IsYaziOrSayi = true;
             if (AnketSoruSecenekID.HasValue)
             {
-                var data = db.AnketSoruSeceneks.Where(p => p.AnketSoruSecenekID == AnketSoruSecenekID).FirstOrDefault();
+                var data = _entities.AnketSoruSeceneks.Where(p => p.AnketSoruSecenekID == AnketSoruSecenekID).FirstOrDefault();
                 if (data != null)
                 {
                     model = data;
                 }
             }
             else model.SiraNo = model.AnketSoru.AnketSoruSeceneks.Count + 1;
-             
+
             var page = ViewRenderHelper.RenderPartialView("Anketler", "SoruSecenekEkle", model);
             return Json(new { page = page }, "application/json", JsonRequestBehavior.AllowGet);
         }
@@ -294,7 +294,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SecenekAdi" });
 
 
-            
+
             if (mMessage.Messages.Count == 0)
             {
                 try
@@ -302,19 +302,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kModel.AnketSoruSecenekID <= 0)
                     {
-                        db.AnketSoruSeceneks.Add(kModel);
-                        mMessage.SiraNo = db.AnketSoruSeceneks.Where(p => p.AnketSoruID == kModel.AnketSoruID).Count() + 2;
+                        _entities.AnketSoruSeceneks.Add(kModel);
+                        mMessage.SiraNo = _entities.AnketSoruSeceneks.Where(p => p.AnketSoruID == kModel.AnketSoruID).Count() + 2;
                     }
                     else
                     {
-                        var anketSs = db.AnketSoruSeceneks.Where(p => p.AnketSoruSecenekID == kModel.AnketSoruSecenekID).First();
+                        var anketSs = _entities.AnketSoruSeceneks.Where(p => p.AnketSoruSecenekID == kModel.AnketSoruSecenekID).First();
                         anketSs.SiraNo = kModel.SiraNo;
                         anketSs.SecenekAdi = kModel.SecenekAdi;
                         anketSs.IsEkAciklamaGir = kModel.IsEkAciklamaGir;
                         anketSs.IsYaziOrSayi = kModel.IsYaziOrSayi;
-                        
+
                     }
-                    db.SaveChanges();
+                    _entities.SaveChanges();
 
                     mMessage.Title = "Anket sorusu şıkkı kaydetme işlemi başarılı";
                     mMessage.MessageType = MsgTypeEnum.Success;
@@ -330,22 +330,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult Sil(int id)
         {
-            var kayit = db.Ankets.Where(p => p.AnketID == id).FirstOrDefault();
+            var kayit = _entities.Ankets.Where(p => p.AnketID == id).FirstOrDefault();
             string message = "";
             bool success = true;
             if (kayit != null)
-            { 
+            {
                 try
-                { 
+                {
                     message = "'" + kayit.AnketAdi + "' İsimli Anket Silindi!";
-                    db.Ankets.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.Ankets.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + kayit.AnketAdi + "' İsimli Anket Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else
@@ -357,22 +357,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult SilSoru(int id)
         {
-            var kayit = db.AnketSorus.Where(p => p.AnketSoruID == id).FirstOrDefault();
+            var kayit = _entities.AnketSorus.Where(p => p.AnketSoruID == id).FirstOrDefault();
             string message = "";
             bool success = true;
             if (kayit != null)
-            { 
+            {
                 try
-                { 
+                {
                     message = "'" + kayit.SoruAdi + "' İsimli Anket Sorusu Silindi!";
-                    db.AnketSorus.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.AnketSorus.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + kayit.SoruAdi + "' İsimli Anket Sorusu Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else
@@ -384,17 +384,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult SilSoruSecenek(int id)
         {
-            var kayit = db.AnketSoruSeceneks.Where(p => p.AnketSoruSecenekID == id).FirstOrDefault();
+            var kayit = _entities.AnketSoruSeceneks.Where(p => p.AnketSoruSecenekID == id).FirstOrDefault();
             string message = "";
             bool success = true;
             if (kayit != null)
-            { 
+            {
                 try
                 {
-                    
+
                     message = "'" + kayit.SecenekAdi + "' İsimli Anket Sorusu Şıkkı Silindi!";
-                    db.AnketSoruSeceneks.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.AnketSoruSeceneks.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {

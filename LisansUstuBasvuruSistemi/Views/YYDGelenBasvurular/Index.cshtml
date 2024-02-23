@@ -1,7 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
@@ -16,7 +14,7 @@
 }
 
 <div class="row">
-    @using (Html.BeginForm("Index", "YYDGelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
+    @using (Html.BeginForm("Index", "YydGelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
     {
         <div class="col-md-12">
             @Html.Hidden("export", false)
@@ -222,16 +220,16 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; 
+                                int rowIndex = Model.StartRowIndex; 
                                 foreach (var item in Model.Data)
                                 {
                                     item.YLUniversiteID = 1;
-                                    RowIndex++; 
+                                    rowIndex++; 
                                     <tr style="color:@item.DurumColor;" id="cls-@item.BasvuruID">
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.BasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.BasvuruID')">

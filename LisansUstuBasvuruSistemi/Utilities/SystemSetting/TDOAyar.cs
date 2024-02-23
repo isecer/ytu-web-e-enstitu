@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,26 +16,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 
         public static void SetAyarTdo(string ayarAdi, string ayarDegeri, string enstituKod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var ayar = db.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
+                var ayar = entities.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
                 if (ayar != null)
                 {
                     ayar.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.TDOAyarlars.Add(new TDOAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
+                    entities.TDOAyarlars.Add(new TDOAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
-                db.SaveChanges();
-            } 
+                entities.SaveChanges();
+            }
         }
         public static string GetAyarTdo(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var ayar = db.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                var ayar = entities.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
                 return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
         }

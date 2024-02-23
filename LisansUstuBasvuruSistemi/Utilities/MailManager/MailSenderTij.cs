@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -17,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var entities = new LisansustuBasvuruSistemiEntities())
+               using (var entities = new LubsDbEntities())
                 {
 
                     #region sendMail
@@ -135,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var entities = new LisansustuBasvuruSistemiEntities())
+               using (var entities = new LubsDbEntities())
                 {
 
                     #region sendMail 
@@ -319,7 +319,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var entities = new LisansustuBasvuruSistemiEntities())
+               using (var entities = new LubsDbEntities())
                 {
 
                     #region sendMail 

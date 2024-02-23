@@ -1288,7 +1288,7 @@
 
         };
         $.ajax({
-            url: '@Url.Action("TDODanismanOnayPost", "TDOBasvuru")',
+            url: '@Url.Action("TDODanismanOnayPost", "TdoBasvuru")',
             type: 'POST',
             enctype: "multipart/form-data",
             cache: false,
@@ -1326,7 +1326,7 @@
 
         };
         $.ajax({
-            url: '@Url.Action("TDOVarolanDanismanOnayPost", "TDOBasvuru")',
+            url: '@Url.Action("TDOVarolanDanismanOnayPost", "TdoBasvuru")',
             type: 'POST',
             enctype: "multipart/form-data",
             cache: false,
@@ -1360,7 +1360,7 @@
 
         };
         $.ajax({
-            url: '@Url.Action("TdoEykYaGonderimPost", "TDOBasvuru")',
+            url: '@Url.Action("TdoEykYaGonderimPost", "TdoBasvuru")',
             type: 'POST',
             enctype: "multipart/form-data",
             cache: false,
@@ -1382,18 +1382,17 @@
     function EYKyaHazirla(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
-        var EykYaHazirlandi = $('#EYKyaHazirlandi_' + id).val();
-        var model = {
-            TDOBasvuruDanismanID: id,
-            EykYaHazirlandi
-        };
+        var EykYaHazirlandi = $('#EYKyaHazirlandi_' + id).val(); 
         $.ajax({
-            url: '@Url.Action("TdoEykYaHazirlaPost", "TDOBasvuru")',
+            url: '@Url.Action("TdoEykYaHazirlaPost", "TdoBasvuru")',
             type: 'POST',
             enctype: "multipart/form-data",
             cache: false,
             dataType: "json",
-            data: model,
+            data: {
+                TDOBasvuruDanismanID: id,
+                EykYaHazirlandi
+            },
             success: function (result) {
                 PanelRefresh(_panel, true);
                 GetDetail(id2);
@@ -1434,7 +1433,7 @@
             tezBaslikEn
         }
         $.ajax({
-            url: '@Url.Action("TdoEykDaOnayPost", "TDOBasvuru")',
+            url: '@Url.Action("TdoEykDaOnayPost", "TdoBasvuru")',
             type: 'POST',
             enctype: "multipart/form-data",
             cache: false,
@@ -1479,7 +1478,7 @@
 
          };
         $.ajax({
-            url: '@Url.Action("TdoEykYaGonderimPostEs", "TDOBasvuru")',
+            url: '@Url.Action("TdoEykYaGonderimPostEs", "TdoBasvuru")',
             type: 'POST',
             enctype: "multipart/form-data",
             cache: false,
@@ -1517,7 +1516,7 @@
                 $('.swal2-cancel').first().text("Siliniyor...");
                 return new Promise(function (resolve) {
                     $.ajax({
-                        url: '@Url.Action("DetaySil", "TDOBasvuru")',
+                        url: '@Url.Action("DetaySil", "TdoBasvuru")',
                         data: { id: id, TDOBasvuruDanismanID: TDOBasvuruDanismanID },
                         success: function (result) {
                             swal.fire({
@@ -1553,7 +1552,7 @@
                 $('.swal2-cancel').first().text("Siliniyor...");
                 return new Promise(function (resolve) {
                     $.ajax({
-                        url: '@Url.Action("DetaySilEs", "TDOBasvuru")',
+                        url: '@Url.Action("DetaySilEs", "TdoBasvuru")',
                         data: { id: id, uniqueID: uniqueID },
                         success: function (result) {
                             swal.fire({
@@ -1586,7 +1585,7 @@
 
         };
         $.ajax({
-            url: '@Url.Action("TdoEykDaOnayPostEs", "TDOBasvuru")',
+            url: '@Url.Action("TdoEykDaOnayPostEs", "TdoBasvuru")',
             type: 'POST',
             enctype: "multipart/form-data",
             cache: false,
@@ -1611,7 +1610,7 @@
          var _panel = $('#bsvrDet_' + TDOBasvuruID);
          PanelRefresh(_panel, false);
          $.ajax({
-             url: '@Url.Action("GetTdoDanismanDegisiklikFormu", "TDOBasvuru")',
+             url: '@Url.Action("GetTdoDanismanDegisiklikFormu", "TdoBasvuru")',
              data: {
                  TDOBasvuruID,
                  TDOBasvuruDanismanID
@@ -1681,7 +1680,7 @@
          var _panel = $('#bsvrDet_' + TDOBasvuruID);
          PanelRefresh(_panel, false);
          $.ajax({
-             url: '@Url.Action("GetTdoDilBaslikDegisiklikFormu", "TDOBasvuru")',
+             url: '@Url.Action("GetTdoDilBaslikDegisiklikFormu", "TdoBasvuru")',
              data: {
                  TDOBasvuruID,
                  TDOBasvuruDanismanID
@@ -1751,7 +1750,7 @@
          var _panel = $('#bsvrDet_' + TDOBasvuruID);
          PanelRefresh(_panel, false);
          $.ajax({
-             url: '@Url.Action("GetTdoDanismanBaslikDilDegisiklikFormu", "TDOBasvuru")',
+             url: '@Url.Action("GetTdoDanismanBaslikDilDegisiklikFormu", "TdoBasvuru")',
              data: {
                  TDOBasvuruID,
                  TDOBasvuruDanismanID
@@ -1821,7 +1820,7 @@
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
             PanelRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("GetTdoYeniDanismanFormu", "TDOBasvuru")',
+                url: '@Url.Action("GetTdoYeniDanismanFormu", "TdoBasvuru")',
                 data: {
                     'TDOBasvuruID': TDOBasvuruID,
                     'TDOBasvuruDanismanID': TDOBasvuruDanismanID
@@ -1896,7 +1895,7 @@
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
             PanelRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("GetTDOEsDanismanFormu", "TDOBasvuru")',
+                url: '@Url.Action("GetTDOEsDanismanFormu", "TdoBasvuru")',
                 data: {
                     'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
                     'TDOBasvuruEsDanismanID': TDOBasvuruEsDanismanID,

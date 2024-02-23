@@ -1,11 +1,10 @@
-﻿@using LisansUstuBasvuruSistemi.Models
+﻿@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmSalonlar
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
-    var STT = (List<SRTalepTipleri>)ViewBag.TT;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var stt = (List<SRTalepTipleri>)ViewBag.TT;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -17,11 +16,11 @@
             <!-- START SIMPLE DATATABLE -->
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;Salonlar</h3>
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Salonlar</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
-                        <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>
-                        <li><span class="label label-danger label-form">P:@IndexModel.Pasif</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
+                        <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
+                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -79,7 +78,7 @@
                                         
                                         <td id="tdMad_@item.SRSalonID">
                                             @item.SalonAdi <br />
-                                            <span style="color:maroon;" title="Salon Talep Tipleri">STT: @string.Join(",", STT.Where(p => item.SrSalonTalepTipleris.Any(a => a.SRTalepTipID == p.SRTalepTipID)).Select(s => s.TalepTipAdi))</span>
+                                            <span style="color:maroon;" title="Salon Talep Tipleri">STT: @string.Join(",", stt.Where(p => item.SrSalonTalepTipleris.Any(a => a.SRTalepTipID == p.SRTalepTipID)).Select(s => s.TalepTipAdi))</span>
                                         </td>
                                         <td id="tdIa_@item.SRSalonID" style="text-align:center;">
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
@@ -96,7 +95,7 @@
                                             <div class="panel panel-success">
                                                 <div class="panel-heading  padding-0">
                                                     <div class="portlet-title">
-                                                        <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Detay</h3>
+                                                        <h3 class="panel-title"><i class="fa fa-file-text"></i> Detay</h3>
                                                     </div>
                                                 </div>
                                                 <div class="panel-body" style="padding: 0px;">
@@ -110,7 +109,7 @@
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-2 control-label">Talep Tipleri</label>
-                                                                        <div class="col-md-9 col-xs-10">@string.Join(",", STT.Where(p => item.SrSalonTalepTipleris.Any(a => a.SRTalepTipID == p.SRTalepTipID)).Select(s => s.TalepTipAdi))</div>
+                                                                        <div class="col-md-9 col-xs-10">@string.Join(",", stt.Where(p => item.SrSalonTalepTipleris.Any(a => a.SRTalepTipID == p.SRTalepTipID)).Select(s => s.TalepTipAdi))</div>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-2 control-label">Salon Adı</label>

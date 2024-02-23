@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
@@ -13,20 +13,20 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.BasvuruSurecs.Where(p => p.EnstituKod == enstituKod && p.BasvuruSurecTipID == basvuruSurecTipId)
-                    join d in db.Donemlers on s.DonemID equals d.DonemID
-                    orderby s.BaslangicTarihi descending
-                    select new
-                    {
-                        s.BasvuruSurecID,
-                        s.BaslangicYil,
-                        s.BitisYil,
-                        d.DonemAdi,
-                        s.BaslangicTarihi,
-                        s.BitisTarihi
-                    }).ToList();
+                var data = (from s in entities.BasvuruSurecs.Where(p => p.EnstituKod == enstituKod && p.BasvuruSurecTipID == basvuruSurecTipId)
+                            join d in entities.Donemlers on s.DonemID equals d.DonemID
+                            orderby s.BaslangicTarihi descending
+                            select new
+                            {
+                                s.BasvuruSurecID,
+                                s.BaslangicYil,
+                                s.BitisYil,
+                                d.DonemAdi,
+                                s.BaslangicTarihi,
+                                s.BitisTarihi
+                            }).ToList();
                 foreach (var item in data)
                 {
                     lst.Add(new CmbIntDto { Value = item.BasvuruSurecID, Caption = (item.BaslangicYil + "/" + item.BitisYil + " " + item.DonemAdi + " (" + item.BaslangicTarihi.ToFormatDate() + " - " + item.BitisTarihi.ToFormatDate() + ")") });
@@ -39,9 +39,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.BasvuruDurumlaris.Where(p => (isTumu || p.BasvuranGorsun)).OrderBy(o => o.BasvuruDurumID).ToList();
+                var data = entities.BasvuruDurumlaris.Where(p => (isTumu || p.BasvuranGorsun)).OrderBy(o => o.BasvuruDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.BasvuruDurumID, Caption = item.BasvuruDurumAdi });
@@ -56,9 +56,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MulakatSonucTipleris.Where(p => p.MulakatSonucTipID > 0).OrderBy(o => o.MulakatSonucTipID).ToList();
+                var data = entities.MulakatSonucTipleris.Where(p => p.MulakatSonucTipID > 0).OrderBy(o => o.MulakatSonucTipID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MulakatSonucTipID, Caption = item.MulakatSonucTipAdi });
@@ -92,9 +92,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             dct.Add(new CmbIntDto { Value = null, Caption = "İşlem Görmeyenler" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.KayitDurumlaris.ToList();
+                var data = entities.KayitDurumlaris.ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.KayitDurumID, Caption = item.KayitDurumAdi });
@@ -119,9 +119,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.OgrenciBolumleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif).OrderBy(o => o.BolumAdi).ToList();
+                var data = entities.OgrenciBolumleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif).OrderBy(o => o.BolumAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.OgrenciBolumID, Caption = item.BolumAdi });
@@ -135,9 +135,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.NotSistemleris.Where(p => p.IsAktif).OrderBy(o => o.NotSistemID).ToList();
+                var data = entities.NotSistemleris.Where(p => p.IsAktif).OrderBy(o => o.NotSistemID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.NotSistemID, Caption = item.NotSistemAdi });
@@ -149,11 +149,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static int? GetAktifBasvuruSurecId(string enstituKod, int basvuruSurecTipId, int? basvuruSurecId = null, bool? isMulakatDurum = null)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
                 var nowDate = DateTime.Now;
-                var bf = db.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == basvuruSurecTipId && (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.BasvuruSurecID == (basvuruSurecId ?? p.BasvuruSurecID));
+                var bf = entities.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == basvuruSurecTipId && (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.BasvuruSurecID == (basvuruSurecId ?? p.BasvuruSurecID));
                 if (isMulakatDurum.HasValue) bf = bf.Where(p => p.SonucGirisBaslangicTarihi.HasValue == isMulakatDurum.Value);
                 var qBf = bf.FirstOrDefault();
                 return qBf?.BasvuruSurecID;
@@ -162,9 +162,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static bool ResimBilgisiLazimOlanKayitVarMi(int kullaniciId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                return db.Basvurulars.Any(p => p.KullaniciID == kullaniciId) || db.MezuniyetBasvurularis.Any(a => a.KullaniciID == kullaniciId);
+                return entities.Basvurulars.Any(p => p.KullaniciID == kullaniciId) || entities.MezuniyetBasvurularis.Any(a => a.KullaniciID == kullaniciId);
             }
 
         }
@@ -173,9 +173,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Uyruklars.OrderBy(o => o.UyrukKod == 3009 ? 0 : 1).ThenBy(t => t.Ad).ToList();
+                var data = entities.Uyruklars.OrderBy(o => o.UyrukKod == 3009 ? 0 : 1).ThenBy(t => t.Ad).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.UyrukKod, Caption = !string.IsNullOrEmpty(item.KisaAd) ? item.Ad + " (" + item.KisaAd + ")" : item.Ad });
@@ -188,9 +188,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static NotSistemleri GetNotSistemi(int notSistemId)
         {
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                return db.NotSistemleris.Where(p => p.NotSistemID == notSistemId).OrderBy(o => o.NotSistemID).FirstOrDefault();
+                return entities.NotSistemleris.Where(p => p.NotSistemID == notSistemId).OrderBy(o => o.NotSistemID).FirstOrDefault();
 
             }
 
@@ -200,18 +200,18 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var otS = from bs in db.BasvuruSurecs.Where(p => p.BasvuruSurecID == basvuruSurecId)
-                    join s in db.BasvuruSurecOgrenimTipleris.Where(p => p.IsAktif) on bs.BasvuruSurecID equals s.BasvuruSurecID
-                    join ot in db.OgrenimTipleris on new { bs.EnstituKod, s.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                    select new
-                    {
-                        Kod = s.OgrenimTipKod,
-                        Ad = ot.OgrenimTipAdi
+                var otS = from bs in entities.BasvuruSurecs.Where(p => p.BasvuruSurecID == basvuruSurecId)
+                          join s in entities.BasvuruSurecOgrenimTipleris.Where(p => p.IsAktif) on bs.BasvuruSurecID equals s.BasvuruSurecID
+                          join ot in entities.OgrenimTipleris on new { bs.EnstituKod, s.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
+                          select new
+                          {
+                              Kod = s.OgrenimTipKod,
+                              Ad = ot.OgrenimTipAdi
 
-                    };
+                          };
 
                 var qdata = otS.ToList();
                 foreach (var item in qdata)

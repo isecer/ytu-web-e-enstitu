@@ -11,7 +11,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
         public static string ToDeviceType(this string ua)
         {
-            string ret = "";
+            string ret;
             // Check if user agent is a smart TV - http://goo.gl/FocDk
             if (Regex.IsMatch(ua, @"GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML", RegexOptions.IgnoreCase))
             {

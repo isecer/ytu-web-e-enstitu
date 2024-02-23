@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class YeterlikController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         [AllowAnonymous]
         public ActionResult Index(string ekd, bool? isKomiteOrJuri = null, Guid? isDegerlendirme = null)
         {
@@ -609,7 +609,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
 
@@ -668,7 +668,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
         [AllowAnonymous]
@@ -767,7 +767,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
 
@@ -1232,7 +1232,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
         public ActionResult GetKomiteDegisiklik(Guid uniqueId)
@@ -1310,7 +1310,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
 
@@ -1368,7 +1368,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
         public ActionResult Sil(Guid uniqueId)

@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class TiBasvuruController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string ekd, int? tiBasvuruId, int? kullaniciId, Guid? isDegerlendirme = null)
         {
             if (!UserIdentity.Current.IsAuthenticated && isDegerlendirme == null) return RedirectToActionPermanent("Login", "Account");
@@ -324,7 +324,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 }
-                LogIslemleri.LogEkle("TIBasvuru", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, data.ToJson());
+                LogIslemleri.LogEkle("TiBasvuru", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, data.ToJson());
 
                 return RedirectToAction("Index", new { data.TIBasvuruID });
             }
@@ -611,14 +611,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         mMessage.MessageType = MsgTypeEnum.Information;
                         mMessage.IsSuccess = true;
-                        view = ViewRenderHelper.RenderPartialView("TIBasvuru", "TIAraRaporFormu", model);
+                        view = ViewRenderHelper.RenderPartialView("TiBasvuru", "TiAraRaporFormu", model);
                     }
                 }
             }
 
 
             if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
 
             return new
             {
@@ -1604,7 +1604,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return Json(new { mMessage.IsSuccess, Messages = strView, IsRefresh = isRefresh }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -1651,7 +1651,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         _entities.TIBasvurus.Remove(kayit);
                     }
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("TIBasvuru", LogCrudType.Delete, kayit.ToJson());
+                    LogIslemleri.LogEkle("TiBasvuru", LogCrudType.Delete, kayit.ToJson());
 
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;
@@ -1667,7 +1667,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -1715,7 +1715,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -1793,7 +1793,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-            var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
+            var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage) : "";
             return new { mMessage.IsSuccess, messageView = strView }.ToJsonResult();
         }
 

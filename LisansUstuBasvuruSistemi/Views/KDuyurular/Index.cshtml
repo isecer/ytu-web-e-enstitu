@@ -1,5 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model FmDuyurularDto
 @{
@@ -42,16 +41,16 @@
                             </tr>
                             @if (Model.RowCount > 0)
                             {
-                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.DuyurularDtos)
                                 {
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    rowIndex++;
+                                    var trCls = rowIndex % 2 == 1 ? "" : "even";
                                     <tr class="@trCls">
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width:30px;">@RowIndex</td>
+                                                    <td style="width:30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.DuyuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.DuyuruID)">

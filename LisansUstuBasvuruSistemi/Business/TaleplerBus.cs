@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System;
 using System.Collections.Generic;
@@ -12,10 +12,10 @@ namespace LisansUstuBasvuruSistemi.Business
     {
         public static int? GetAktifTalepSurecId(string enstituKod, int? talepSurecId = null)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var nowDate = DateTime.Now;
-                var bf = db.TalepSurecleris.FirstOrDefault(p => (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.TalepSurecID == (talepSurecId ?? p.TalepSurecID));
+                var bf = entities.TalepSurecleris.FirstOrDefault(p => (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.TalepSurecID == (talepSurecId ?? p.TalepSurecID));
 
                 return bf?.TalepSurecID;
             }
@@ -23,11 +23,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static FrTalepSurec GetTalepSurec(int talepSurecId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var nowDate = DateTime.Now;
-                var xD = (from s in db.TalepSurecleris.Where(p => p.TalepSurecID == talepSurecId)
-                          join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                var xD = (from s in entities.TalepSurecleris.Where(p => p.TalepSurecID == talepSurecId)
+                          join k in entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                           select new FrTalepSurec
                           {
                               TalepSurecID = s.TalepSurecID,
@@ -49,13 +49,13 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var surec = db.TalepSurecleris.FirstOrDefault(p => p.TalepSurecID == talepSurecId);
+                var surec = entities.TalepSurecleris.FirstOrDefault(p => p.TalepSurecID == talepSurecId);
                 if (surec != null)
                 {
                     var talepTipIDs = surec.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
-                    var data = db.TalepTipleris.Where(p => (p.TalepTipID == talepTipId || talepTipIDs.Contains(p.TalepTipID))).OrderBy(o => o.TalepTipID).ToList();
+                    var data = entities.TalepTipleris.Where(p => (p.TalepTipID == talepTipId || talepTipIDs.Contains(p.TalepTipID))).OrderBy(o => o.TalepTipID).ToList();
                     foreach (var item in data)
                     {
                         dct.Add(new CmbIntDto { Value = item.TalepTipID, Caption = item.TalepTipAdi });
@@ -69,9 +69,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.TalepArGorStatuleris.OrderBy(o => o.TalepArGorStatuID).ToList();
+                var data = entities.TalepArGorStatuleris.OrderBy(o => o.TalepArGorStatuID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.TalepArGorStatuID, Caption = item.StatuAdi });
@@ -84,9 +84,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.TalepDurumlaris.OrderBy(o => o.TalepDurumID).ToList();
+                var data = entities.TalepDurumlaris.OrderBy(o => o.TalepDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.TalepDurumID, Caption = item.TalepDurumAdi });
@@ -104,9 +104,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.TalepTipleris.OrderBy(o => o.TalepTipID).ToList();
+                var data = entities.TalepTipleris.OrderBy(o => o.TalepTipID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.TalepTipID, Caption = item.TalepTipAdi });
@@ -119,9 +119,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.TalepSurecleris.Where(p => p.EnstituKod == enstituKod)
+                var data = (from s in entities.TalepSurecleris.Where(p => p.EnstituKod == enstituKod)
                             orderby s.BaslangicTarihi descending
                             select new
                             {
@@ -139,9 +139,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<TalepDurumlari> GetTalepDurumList()
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.TalepDurumlaris.OrderBy(o => o.TalepDurumID).ToList();
+                var data = entities.TalepDurumlaris.OrderBy(o => o.TalepDurumID).ToList();
                 return data;
 
             }

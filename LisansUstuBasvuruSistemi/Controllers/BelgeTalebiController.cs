@@ -1,6 +1,6 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize]
     public class BelgeTalebiController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string ekd)
         {
             return Index(new FmBelgeTalepleriDto() { PageSize = 10 }, ekd);
@@ -267,7 +267,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                    DonemdeAlinabilecekToplamMiktar = s.DonemlikKota ?? 0,
                                    BelgeAciklamasi = s.BelgeAciklamasi,
                                    BelgeAdi = s.BelgeAdi,
-                                   Edit = true// !db.BelgeTalepleris.Any(pt => pt.OgrenciNo == s.OgrenciNo && pt.BelgeTipID == s.BelgeTipID && pt.IslemTarihi > s.IslemTarihi)
+                                   Edit = true// !_entities.BelgeTalepleris.Any(pt => pt.OgrenciNo == s.OgrenciNo && pt.BelgeTipID == s.BelgeTipID && pt.IslemTarihi > s.IslemTarihi)
 
                                }).FirstOrDefault();
             var bel = _entities.BelgeTalepleris.First(p => p.BelgeTalepID == id);
@@ -806,7 +806,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             });
                         }
 
-                        anketGiris = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", model);
+                        anketGiris = ViewRenderHelper.RenderPartialView("Ajax", "GetAnket", model);
                     }
                 }
                 #endregion
@@ -834,7 +834,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             var contentB = GetContent(belgeTalepId, belgeTipId, enstituKod, ogrenciNo, miktar, ogrenimDurumId);
-            var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentB);
+            var HCB = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", contentB);
             return new { Deger = HCB }.ToJsonResult();
 
         }
@@ -905,10 +905,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
                 sistemErisimAdresi = "http://" + wurlAddr.First();
             mmmC.LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-            var hcb = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
+            var hcb = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", contentBilgi);
             mmmC.Content = hcb;
             mmmC.WebAdresi = enstitu.WebAdresi;
-            string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+            string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
             MailManager.SendMail(mailBilgi.EnstituKod, konu, htmlMail, kModel.Email, null);
         }
 

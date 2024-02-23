@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
@@ -12,13 +12,13 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         public RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325(int srTalepId)
         {
             InitializeComponent();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var srTalep = db.SRTalepleris.First(p => p.SRTalepID == srTalepId);
+                var srTalep = entities.SRTalepleris.First(p => p.SRTalepID == srTalepId);
                 var mBasvuru = srTalep.MezuniyetBasvurulari;
 
-               
+
 
                 xrCellEOYil.Text = xrCellEOYil.Text + mBasvuru.MezuniyetSureci.BaslangicYil.ToString() + "-" + mBasvuru.MezuniyetSureci.BitisYil.ToString();
                 xrChkYariyilGuz.Checked = mBasvuru.MezuniyetSureci.DonemID == AkademikDonemEnum.GuzYariyili;
@@ -37,9 +37,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     xrCellTezEsDanismaniUnvaniAdSoyadi.Text = mBasvuru.TezEsDanismanUnvani + "  " + mBasvuru.TezEsDanismanAdi;
                 }
                 else { xrCellTezEsDanismaniUnvaniAdSoyadi.Text = ""; }
- 
 
-                cellTezDili.Text = mBasvuru.IsTezDiliTr == true ? "Türkçe": "İngilizce";
+
+                cellTezDili.Text = mBasvuru.IsTezDiliTr == true ? "Türkçe" : "İngilizce";
                 var tezBasligiTr = "";
                 var tezBasligiEn = "";
 
@@ -62,7 +62,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                                           "</td></tr></tbody></table>";
 
                 xrCellDanismanBilgi.Text = danismanBilgi.UnvanAdi + " " + danismanBilgi.AdSoyad;
-                if (mBasvuru.OgrenimTipKod.IsDoktora()) 
+                if (mBasvuru.OgrenimTipKod.IsDoktora())
                 {
                     lblOgrenimTipAdi.Text = "DOKTORA";
                     xrCellUye1Baslik.Text = "Tik Üyesi";

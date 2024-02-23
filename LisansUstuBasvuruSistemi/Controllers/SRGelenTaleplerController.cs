@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -17,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.SrGelenTalepler)]
     public class SrGelenTaleplerController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string ekd)
         {
             return Index(new FmTalepler { }, ekd);
@@ -295,7 +295,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             var messageView = "";
-            if (mmMessage.Messages.Any()) messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            if (mmMessage.Messages.Any()) messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
 
             return new
             {

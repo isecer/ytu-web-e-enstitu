@@ -5,7 +5,7 @@
     Layout = null;
     var tezDiliTr = Model.IsYeniTezDiliTr.HasValue ? Model.IsYeniTezDiliTr == false : Model.IsTezDiliTr == false;
 }
-@using (Ajax.BeginForm("TdoDilBaslikDegisiklikFormuPost", "TDOBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
+@using (Ajax.BeginForm("TdoDilBaslikDegisiklikFormuPost", "TdoBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
 {
     @Html.HiddenFor(p => p.TDOBasvuruID);
     @Html.HiddenFor(p => p.TDOBasvuruDanismanID);
@@ -118,7 +118,7 @@
         var sndrVal = $(sndr).val();
         if (sndrVal != null && sndrVal != "" && sndrVal != "-1") {
             $.ajax({
-                url: '@Url.Action("GetSinavTip", "TDOBasvuru")',
+                url: '@Url.Action("GetSinavTip", "TdoBasvuru")',
                 data: { 'TDOBasvuruID': @Model.TDOBasvuruID, 'SinavTipID': sndrVal },
                 success: function (result) {
                      if (result.OzelNot == true) {

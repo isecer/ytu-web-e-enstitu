@@ -1,6 +1,6 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var entities = new LisansustuBasvuruSistemiEntities())
+               using (var entities = new LubsDbEntities())
                 {
 
                     var tiAraRapor = new TIBasvuruAraRapor();
@@ -259,9 +259,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var  entities = new LubsDbEntities())
                 {
-                    var tiAraRapor = db.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
+                    var tiAraRapor = entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
                     var juriler = tiAraRapor.TIBasvuruAraRaporKomites.Where(p => (isLinkOrSonuc ? p.JuriTipAdi != "TezDanismani" : p.JuriTipAdi == "TezDanismani") && p.UniqueID == (uniqueId ?? p.UniqueID)).ToList();
 
                     var mModel = new List<SablonMailModel>();
@@ -301,7 +301,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }));
 
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipId).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
@@ -388,7 +388,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
                             GonderilenMailEkleris = item.GetGonderilenMailEkleris
                         };
-                        db.GonderilenMaillers.Add(kModel);
+                        entities.GonderilenMaillers.Add(kModel);
                         if (isLinkOrSonuc)
                         {
                             juri.DegerlendirmeIslemTarihi = null;
@@ -403,7 +403,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             juri.LinkGonderenID = UserIdentity.Current.Id;
 
                         }
-                        db.SaveChanges();
+                        entities.SaveChanges();
                         if (isLinkOrSonuc) LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", LogCrudType.Update, juri.ToJson());
                     }
 

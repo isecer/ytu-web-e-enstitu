@@ -13,7 +13,35 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ValueConverterExtension
     {
+        public static string ToLowerTurkish(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
 
+            // Türkçe karakterlerin küçük harfe dönüştürüldüğü alfabe
+            string[] turkishCharacters = { "İ", "I", "Ç", "Ş", "Ğ", "Ü", "Ö", "ı", "ç", "ş", "ğ", "ü", "ö" };
+            string[] plainCharacters = { "i", "i", "c", "s", "g", "u", "o", "i", "c", "s", "g", "u", "o" };
+
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in str)
+            {
+                int index = Array.IndexOf(turkishCharacters, c.ToString());
+                if (index >= 0)
+                {
+                    sb.Append(plainCharacters[index]);
+                }
+                else if (char.IsLetter(c))
+                {
+                    sb.Append(char.ToLower(c));
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString();
+        }
         public static string ToStrObj(this object obj)
         {
             return obj != null ? Convert.ToString(obj) : null;
@@ -106,11 +134,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                     case 0:
                         return false;
                     default:
-                        return (bool?)null;
+                        return null;
                 }
             }
 
-            return (bool?)null;
+            return null;
         }
         public static bool? ToBooleanObj(this object obj)
         {

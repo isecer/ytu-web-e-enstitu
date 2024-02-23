@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
@@ -12,11 +12,11 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<CmbStringDto> CmbGetAktifProgramlarX(int anabilimDaliId, int ogrenimTipKod, int basvuruSurecId, int kullaniciTipId, bool sadeceKotasiOlanlar = true)
         {
             var dct = new List<CmbStringDto>();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-               
-                var q = from p in db.Programlars
-                        join k in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == basvuruSurecId) on new { p.ProgramKod, OgrenimTipKod = ogrenimTipKod } equals new { k.ProgramKod, k.OgrenimTipKod }
+
+                var q = from p in entities.Programlars
+                        join k in entities.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == basvuruSurecId) on new { p.ProgramKod, OgrenimTipKod = ogrenimTipKod } equals new { k.ProgramKod, k.OgrenimTipKod }
                         where p.AnabilimDaliID == anabilimDaliId
                         group new { p.ProgramKod, p.ProgramAdi, k.AlanIciKota, k.AlanDisiKota, k.OrtakKota, k.OrtakKotaSayisi } by new { p.ProgramKod, p.ProgramAdi } into g1
                         orderby g1.Key.ProgramAdi
@@ -41,14 +41,14 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
         }
 
-        public static List<CmbStringDto> CmbGetAktifProgramlar(bool bosSecimVar , int? anabilimDaliId)
+        public static List<CmbStringDto> CmbGetAktifProgramlar(bool bosSecimVar, int? anabilimDaliId)
         {
 
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Programlars.Where(p => p.AnabilimDaliID == anabilimDaliId && p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
+                var data = entities.Programlars.Where(p => p.AnabilimDaliID == anabilimDaliId && p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption = item.ProgramAdi });
@@ -60,9 +60,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Programlars.Where(p => p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
+                var data = entities.Programlars.Where(p => p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption = item.ProgramAdi });
@@ -74,9 +74,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Programlars.Where(p => p.AnabilimDallari.IsAktif && p.IsAktif && p.AnabilimDallari.EnstituKod == enstituKod).OrderBy(o => o.ProgramAdi).ToList();
+                var data = entities.Programlars.Where(p => p.AnabilimDallari.IsAktif && p.IsAktif && p.AnabilimDallari.EnstituKod == enstituKod).OrderBy(o => o.ProgramAdi).ToList();
                 foreach (var item in data)
                 {
                     if (isAbdShow)
@@ -96,14 +96,14 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             List<CmbStringDto> dct;
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var basvuruSureci = db.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
+                var basvuruSureci = entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
                 var kullaniciProgramKods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, basvuruSureci.EnstituKod);
 
                 if (isBSonucOrMulakat)
                 {
-                    dct = (from vw in db.vW_ProgramBasvuruSonucSayisal.Where(p => p.BasvuruSurecID == basvuruSurecId && ogrenimTipKods.Contains(p.OgrenimTipKod))
+                    dct = (from vw in entities.vW_ProgramBasvuruSonucSayisal.Where(p => p.BasvuruSurecID == basvuruSurecId && ogrenimTipKods.Contains(p.OgrenimTipKod))
                            where
                                  (isBolumOrOgrenci || (vw.AIAsilCount > 0 || vw.ADAsilCount > 0))
                                  && kullaniciProgramKods.Contains(vw.ProgramKod)
@@ -126,9 +126,9 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     if (isBolumOrOgrenci)
                     {
-                        dct = (from s in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == basvuruSurecId && ogrenimTipKods.Contains(p.OgrenimTipKod))
-                               join pl in db.Programlars on s.ProgramKod equals pl.ProgramKod
-                               join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == basvuruSureci.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
+                        dct = (from s in entities.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == basvuruSurecId && ogrenimTipKods.Contains(p.OgrenimTipKod))
+                               join pl in entities.Programlars on s.ProgramKod equals pl.ProgramKod
+                               join ot in entities.OgrenimTipleris.Where(p => p.EnstituKod == basvuruSureci.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
                                where kullaniciProgramKods.Contains(s.ProgramKod)
                                select new CmbStringDto
                                {
@@ -140,9 +140,9 @@ namespace LisansUstuBasvuruSistemi.Business
                     else
                     {
                         var bDurums = new List<int> { BasvuruDurumuEnum.Onaylandı, BasvuruDurumuEnum.Gonderildi };
-                        dct = (from s in db.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruSurecID == basvuruSurecId && bDurums.Contains(p.Basvurular.BasvuruDurumID) && ogrenimTipKods.Contains(p.OgrenimTipKod))
-                               join pl in db.Programlars on s.ProgramKod equals pl.ProgramKod
-                               join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == basvuruSureci.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
+                        dct = (from s in entities.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruSurecID == basvuruSurecId && bDurums.Contains(p.Basvurular.BasvuruDurumID) && ogrenimTipKods.Contains(p.OgrenimTipKod))
+                               join pl in entities.Programlars on s.ProgramKod equals pl.ProgramKod
+                               join ot in entities.OgrenimTipleris.Where(p => p.EnstituKod == basvuruSureci.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
                                where kullaniciProgramKods.Contains(s.ProgramKod)
                                select new CmbStringDto
                                {

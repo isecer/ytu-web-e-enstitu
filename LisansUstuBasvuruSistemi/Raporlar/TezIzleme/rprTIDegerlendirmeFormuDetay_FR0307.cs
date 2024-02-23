@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
@@ -11,9 +11,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
-                var data = (from s in db.TIBasvuruAraRapors
+                var data = (from s in entities.TIBasvuruAraRapors
                             where s.TIBasvuruAraRaporID == tiBasvuruAraRaporId
                             select new
                             {

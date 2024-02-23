@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class TosBasvuruController : Controller
     {
         // GET: TosBasvuru
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string ekd, Guid? uniqueId, int? kullaniciId, Guid? isDegerlendirme = null)
         {
             if (!UserIdentity.Current.IsAuthenticated && isDegerlendirme == null) return RedirectToActionPermanent("Login", "Account");
@@ -397,7 +397,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
 
             return new
             {
@@ -1223,7 +1223,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return Json(new { mMessage.IsSuccess, messageView, IsRefresh = isRefresh }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -1270,7 +1270,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
 
 
             return Json(new { mMessage.IsSuccess, messageView }, "application/json", JsonRequestBehavior.AllowGet);
@@ -1315,7 +1315,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
 
 
             return Json(new { mMessage.IsSuccess, messageView }, "application/json", JsonRequestBehavior.AllowGet);
@@ -1355,7 +1355,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, messageView, removedAllData }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -1426,7 +1426,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-            var messageView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
+            var messageView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage) : "";
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
         }
         [Authorize]
@@ -1461,7 +1461,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return Json(new { mMessage.IsSuccess, messageView }, "application/json", JsonRequestBehavior.AllowGet);
 
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -21,11 +21,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var  entities = new LubsDbEntities())
                 {
-                    var basvuru = db.YeterlikBasvurus.First(p => p.UniqueID == basvuruUniqueId);
+                    var basvuru = entities.YeterlikBasvurus.First(p => p.UniqueID == basvuruUniqueId);
                     var ogrenci = basvuru.Kullanicilar;
-                    var danisman = db.Kullanicilars.First(f => f.KullaniciID == basvuru.TezDanismanID);
+                    var danisman = entities.Kullanicilars.First(f => f.KullaniciID == basvuru.TezDanismanID);
                     var surec = basvuru.YeterlikSureci;
                     var enstitu = basvuru.YeterlikSureci.Enstituler;
                     var anabilimDali = basvuru.Programlar.AnabilimDallari;
@@ -55,7 +55,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         });
                     }
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipId).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
@@ -114,8 +114,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailEkleris = item.GetGonderilenMailEkleris,
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                             };
-                            db.GonderilenMaillers.Add(kModel);
-                            db.SaveChanges();
+                            entities.GonderilenMaillers.Add(kModel);
+                            entities.SaveChanges();
                         }
                     }
 
@@ -138,11 +138,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var  entities = new LubsDbEntities())
                 {
-                    var basvuru = db.YeterlikBasvurus.First(p => p.UniqueID == yeterlikBasvuruUniqueId);
+                    var basvuru = entities.YeterlikBasvurus.First(p => p.UniqueID == yeterlikBasvuruUniqueId);
                     var ogrenci = basvuru.Kullanicilar;
-                    var danisman = db.Kullanicilars.Find(basvuru.TezDanismanID);
+                    var danisman = entities.Kullanicilars.Find(basvuru.TezDanismanID);
                     var surec = basvuru.YeterlikSureci;
                     var enstitu = basvuru.YeterlikSureci.Enstituler;
                     var anabilimDali = basvuru.Programlar.AnabilimDallari;
@@ -166,7 +166,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         });
                     }
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipId).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
@@ -232,7 +232,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailEkleris = item.GetGonderilenMailEkleris,
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                             };
-                            db.GonderilenMaillers.Add(kModel);
+                            entities.GonderilenMaillers.Add(kModel);
                             komite.DegerlendirmeIslemTarihi = null;
                             komite.DegerlendirmeIslemYapanIP = null;
                             komite.DegerlendirmeYapanID = null;
@@ -240,7 +240,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             komite.IsLinkGonderildi = true;
                             komite.LinkGonderimTarihi = DateTime.Now;
                             komite.LinkGonderenID = UserIdentity.Current.Id;
-                            db.SaveChanges();
+                            entities.SaveChanges();
                             LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", LogCrudType.Update, komite.ToJson());
                         }
                     }
@@ -265,11 +265,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var  entities = new LubsDbEntities())
                 {
-                    var basvuru = db.YeterlikBasvurus.First(p => p.UniqueID == yeterlikBasvuruUniqueId);
+                    var basvuru = entities.YeterlikBasvurus.First(p => p.UniqueID == yeterlikBasvuruUniqueId);
                     var ogrenci = basvuru.Kullanicilar;
-                    var danisman = db.Kullanicilars.First(f=>f.KullaniciID==basvuru.TezDanismanID);
+                    var danisman = entities.Kullanicilars.First(f=>f.KullaniciID==basvuru.TezDanismanID);
                     var surec = basvuru.YeterlikSureci;
                     var enstitu = basvuru.YeterlikSureci.Enstituler;
                     var anabilimDali = basvuru.Programlar.AnabilimDallari;
@@ -286,7 +286,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         });
                     }
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipId).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
@@ -343,8 +343,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                             };
 
-                            db.GonderilenMaillers.Add(kModel);
-                            db.SaveChanges();
+                            entities.GonderilenMaillers.Add(kModel);
+                            entities.SaveChanges();
                         }
                     }
 
@@ -369,11 +369,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var  entities = new LubsDbEntities())
                 {
-                    var basvuru = db.YeterlikBasvurus.First(p => p.UniqueID == basvuruUniqueId);
+                    var basvuru = entities.YeterlikBasvurus.First(p => p.UniqueID == basvuruUniqueId);
                     var ogrenci = basvuru.Kullanicilar;
-                    var danisman = db.Kullanicilars.First(f => f.KullaniciID == basvuru.TezDanismanID);
+                    var danisman = entities.Kullanicilars.First(f => f.KullaniciID == basvuru.TezDanismanID);
                     var surec = basvuru.YeterlikSureci;
                     var enstitu = basvuru.YeterlikSureci.Enstituler;
                     var anabilimDali = basvuru.Programlar.AnabilimDallari;
@@ -487,7 +487,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
 
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipId).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
@@ -589,8 +589,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             GonderilenMailEkleris = item.GetGonderilenMailEkleris,
                             GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                         };
-                        db.GonderilenMaillers.Add(kModel);
-                        db.SaveChanges();
+                        entities.GonderilenMaillers.Add(kModel);
+                        entities.SaveChanges();
                     }
 
                     mmMessage.IsSuccess = true;
@@ -611,11 +611,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var  entities = new LubsDbEntities())
                 {
-                    var basvuru = db.YeterlikBasvurus.First(p => p.UniqueID == basvuruUniqueId);
+                    var basvuru = entities.YeterlikBasvurus.First(p => p.UniqueID == basvuruUniqueId);
                     var ogrenci = basvuru.Kullanicilar;
-                    var danisman = db.Kullanicilars.Find(basvuru.TezDanismanID);
+                    var danisman = entities.Kullanicilars.Find(basvuru.TezDanismanID);
                     var surec = basvuru.YeterlikSureci;
                     var enstitu = basvuru.YeterlikSureci.Enstituler;
                     var anabilimDali = basvuru.Programlar.AnabilimDallari;
@@ -672,7 +672,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         });
                     }
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipId).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
 
@@ -770,7 +770,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailEkleris = item.GetGonderilenMailEkleris,
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                             };
-                            db.GonderilenMaillers.Add(kModel);
+                            entities.GonderilenMaillers.Add(kModel);
 
                             juri.IsSonucOnaylandi = null;
                             juri.SozluNotu = null;
@@ -780,7 +780,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             juri.IsLinkGonderildi = true;
                             basvuru.GenelBasariNotu = null;
                             basvuru.IsGenelSonucBasarili = null;
-                            db.SaveChanges();
+                            entities.SaveChanges();
                         }
                     }
 

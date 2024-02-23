@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -13,17 +13,17 @@ namespace LisansUstuBasvuruSistemi.Business
         public static SRSalonSaatlerModel GetSalonBosSaatler(int srSalonId, int srTalepTipId, DateTime tarih, int? srTalepId = null, int? srOzelTanimId = null, DateTime? minTarih = null)
         {
             var model = new SRSalonSaatlerModel();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var nTarih = tarih.Date;
                 var dofW = Convert.ToInt32(nTarih.DayOfWeek.ToString("d"));
-                var haftaGunu = db.HaftaGunleris.First(p => p.HaftaGunID == dofW);
-                var salon = db.SRSalonlars.First(p => p.SRSalonID == srSalonId);
-                var secilenTarihRezervasyonlar = db.SRTalepleris.Where(p => p.SRSalonID == srSalonId && p.Tarih == nTarih && (p.SRDurumID == SrTalepDurumEnum.Onaylandı || p.SRDurumID == SrTalepDurumEnum.TalepEdildi)).ToList();
-                var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
-                var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
+                var haftaGunu = entities.HaftaGunleris.First(p => p.HaftaGunID == dofW);
+                var salon = entities.SRSalonlars.First(p => p.SRSalonID == srSalonId);
+                var secilenTarihRezervasyonlar = entities.SRTalepleris.Where(p => p.SRSalonID == srSalonId && p.Tarih == nTarih && (p.SRDurumID == SrTalepDurumEnum.Onaylandı || p.SRDurumID == SrTalepDurumEnum.TalepEdildi)).ToList();
+                var resmiTatilDegisen = entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
+                var resmiTatilSabit = entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
                 model.Tarih = nTarih;
-                var salonSaatleri = db.SRSaatlers.Where(p => p.SRSalonID == srSalonId && p.HaftaGunID == haftaGunu.HaftaGunID).Select(s => new SRSalonSaatler
+                var salonSaatleri = entities.SRSaatlers.Where(p => p.SRSalonID == srSalonId && p.HaftaGunID == haftaGunu.HaftaGunID).Select(s => new SRSalonSaatler
                 {
                     SRSaatID = s.SRSaatID,
                     SRSalonID = s.SRSalonID,
@@ -91,7 +91,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (qGTalepEslesen != null)
                     {
 
-                        var rezTip = db.SRTalepTipleris.First(p => p.SRTalepTipID == qGTalepEslesen.SRTalepTipID);
+                        var rezTip = entities.SRTalepTipleris.First(p => p.SRTalepTipID == qGTalepEslesen.SRTalepTipID);
                         item.SalonDurumID = qGTalepEslesen.SRDurumID == SrTalepDurumEnum.Onaylandı ? SrSalonDurumEnum.Dolu : SrSalonDurumEnum.OnTalep;
                         item.Disabled = true;
                         item.Aciklama = qGTalepEslesen.SRDurumID == SrTalepDurumEnum.Onaylandı ? rezTip.TalepTipAdi + ", " + qGTalepEslesen.Kullanicilar.Ad + " " + qGTalepEslesen.Kullanicilar.Soyad : "Onay bekliyor";
@@ -119,7 +119,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
 
                 var qData = (from s in salonSaatleri
-                             join d in db.SRSalonDurumlaris on s.SalonDurumID equals d.SRSalonDurumID
+                             join d in entities.SRSalonDurumlaris on s.SalonDurumID equals d.SRSalonDurumID
                              select new SRSalonSaatler
                              {
                                  SRSaatID = s.SRSaatID,
@@ -143,21 +143,21 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MmMessage SrKayitKontrol(int srSalonId, DateTime rezervasyonTarihi, TimeSpan baslangicSaati, TimeSpan bitisSaati, int? srTalepId = null, DateTime? minRezervasyonTarihi = null)
         {
             var mmMessage = new MmMessage();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
-                var salon = db.SRSalonlars.First(p => p.SRSalonID == srSalonId);
+                var salon = entities.SRSalonlars.First(p => p.SRSalonID == srSalonId);
 
-                var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= rezervasyonTarihi.Date && p.BitTarih >= rezervasyonTarihi.Date);
-                var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == rezervasyonTarihi.Date.Month && p.Gun == rezervasyonTarihi.Date.Day);
+                var resmiTatilDegisen = entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= rezervasyonTarihi.Date && p.BitTarih >= rezervasyonTarihi.Date);
+                var resmiTatilSabit = entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == rezervasyonTarihi.Date.Month && p.Gun == rezervasyonTarihi.Date.Day);
 
 
                 minRezervasyonTarihi = minRezervasyonTarihi ?? DateTime.Now;
 
                 var kTarih = rezervasyonTarihi.Date.Add(baslangicSaati);
 
-                var qTalepEslesen = db.SRTalepleris.Where(a => a.SRTalepID != (srTalepId ?? 0) &&
+                var qTalepEslesen = entities.SRTalepleris.Where(a => a.SRTalepID != (srTalepId ?? 0) &&
                                                                                              a.SRSalonID == srSalonId &&
                                                                                              a.Tarih == rezervasyonTarihi.Date &&
                                                                                                 (
@@ -196,9 +196,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.SROzelTanimTipleris.OrderBy(o => o.SROzelTanimTipID).ToList();
+                var data = entities.SROzelTanimTipleris.OrderBy(o => o.SROzelTanimTipID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.SROzelTanimTipID, Caption = item.SROzelTanimTipAdi });
@@ -211,9 +211,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qdata = db.SRTalepTipleris.Where(p => p.IsTezSinavi == false).OrderBy(o => o.SRTalepTipID).AsQueryable();
+                var qdata = entities.SRTalepTipleris.Where(p => p.IsTezSinavi == false).OrderBy(o => o.SRTalepTipID).AsQueryable();
                 var data = qdata.ToList();
                 foreach (var item in data)
                 {
@@ -226,9 +226,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<SRDurumlari> GetSrDurumList()
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.SRDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.SRDurumID).ToList();
+                var data = entities.SRDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.SRDurumID).ToList();
                 return data;
 
             }
@@ -238,9 +238,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.SRDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.SRDurumID).ToList();
+                var data = entities.SRDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.SRDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.SRDurumID, Caption = item.DurumAdi });
@@ -254,9 +254,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qdata = db.SRSalonlars.Where(p => p.IsAktif && p.EnstituKod == enstituKod);
+                var qdata = entities.SRSalonlars.Where(p => p.IsAktif && p.EnstituKod == enstituKod);
 
                 if (isAktif.HasValue) qdata = qdata.Where(p => p.IsAktif == isAktif.Value);
                 var data = qdata.OrderBy(o => o.SalonAdi).ToList();
@@ -273,9 +273,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qdata = db.SRSalonlars.Where(p => p.IsAktif && p.EnstituKod == enstituKod && p.SRSalonTalepTipleris.Any(a => a.SRTalepTipID == srTalepTipId));
+                var qdata = entities.SRSalonlars.Where(p => p.IsAktif && p.EnstituKod == enstituKod && p.SRSalonTalepTipleris.Any(a => a.SRTalepTipID == srTalepTipId));
 
                 if (isAktif.HasValue) qdata = qdata.Where(p => p.IsAktif == isAktif.Value);
                 var data = qdata.OrderBy(o => o.SalonAdi).ToList();
@@ -292,9 +292,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Aylars.OrderBy(o => o.AyID).ToList();
+                var data = entities.Aylars.OrderBy(o => o.AyID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.AyID, Caption = item.AyAdi });
@@ -308,9 +308,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qdata = db.HaftaGunleris.AsQueryable();
+                var qdata = entities.HaftaGunleris.AsQueryable();
                 if (isHaftaSonu.HasValue) qdata = qdata.Where(p => p.IsHaftaSonu == isHaftaSonu);
                 var data = qdata.OrderByDescending(o => o.HaftaGunID > 0).ThenBy(o => o.HaftaGunID).ToList();
                 foreach (var item in data)
@@ -325,9 +325,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.SRTalepTipleris.OrderBy(o => o.SRTalepTipID).ToList();
+                var data = entities.SRTalepTipleris.OrderBy(o => o.SRTalepTipID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.SRTalepTipID, Caption = item.TalepTipAdi });
@@ -336,7 +336,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
         }
 
-         
+
 
     }
 }

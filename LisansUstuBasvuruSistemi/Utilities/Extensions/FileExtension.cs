@@ -14,11 +14,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
         public static string GetFileName(this string path)
         {
-            return System.IO.Path.GetFileName(path);
+            return Path.GetFileName(path);
         }
         public static string GetFileExtension(this string path)
         {
-            return System.IO.Path.GetExtension(path);
+            return Path.GetExtension(path);
         }
         public static string ToSetNameFileExtension(this string fName, string extension)
         {

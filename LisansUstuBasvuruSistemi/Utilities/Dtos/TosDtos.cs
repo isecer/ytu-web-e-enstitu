@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {

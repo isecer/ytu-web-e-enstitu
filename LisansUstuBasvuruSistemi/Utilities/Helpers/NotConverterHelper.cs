@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -52,18 +52,18 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public static double ToGenelBasariNotu(this double mezuniyetNotu100LukSistem, bool mulakatSurecineGirecek, BasvuruSurecOgrenimTipleri basurecOt, bool isAlesYerineDosyaNotuIstensin, double? alesNotu, double? girisSinavNotu = null)
         {
 
-            var formul = "";
+            string formul;
 
-            string retVal = "";
-            string reGexF = "";
-            string AlesKey = isAlesYerineDosyaNotuIstensin ? "Dosya" : "Ales";
+            string retVal;
+            string reGexF;
+            var alesKey = isAlesYerineDosyaNotuIstensin ? "Dosya" : "Ales";
             if (basurecOt.OgrenimTipKod == OgrenimTipi.TezsizYuksekLisans)
             {
                 if (alesNotu.HasValue)
                 {
                     // MezuniyetNotu100LukSistem + AlesNotu
                     formul = isAlesYerineDosyaNotuIstensin ? basurecOt.GBNFormuluD : basurecOt.GBNFormulu;
-                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, alesNotu.ToString());
+                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(alesKey, alesNotu.ToString());
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
                 else
@@ -81,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 {
                     // MezuniyetNotu100LukSistem + GirisSinavNotu + AGNO 
                     formul = isAlesYerineDosyaNotuIstensin ? basurecOt.GBNFormuluD : basurecOt.GBNFormulu;
-                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, alesNotu.ToString()).Replace("Mülakat", girisSinavNotu.Value.ToString());
+                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(alesKey, alesNotu.ToString()).Replace("Mülakat", girisSinavNotu.Value.ToString());
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
                 else if (girisSinavNotu.HasValue)
@@ -96,7 +96,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 {
                     // MezuniyetNotu100LukSistem + GirisSinavNotu 
                     formul = isAlesYerineDosyaNotuIstensin ? basurecOt.GBNFormuluDMulakatsiz : basurecOt.GBNFormuluMulakatsiz;
-                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, alesNotu.Value.ToString());
+                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(alesKey, alesNotu.Value.ToString());
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
                 else

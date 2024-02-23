@@ -1,18 +1,17 @@
-﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+﻿using System.Linq;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
-using System.Linq;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.LUB
 {
-    public partial class rprBasvuruSonucPuanList : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprBasvuruSonucPuanList : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprBasvuruSonucPuanList(int id)
+        public RprBasvuruSonucPuanList(int id)
         {
             InitializeComponent();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == id).First();
+                var bsurec = entities.BasvuruSurecs.First(p => p.BasvuruSurecID == id);
                 string surec = bsurec.BaslangicYil + " / " + bsurec.BitisYil + " " + bsurec.Donemler.DonemAdi;
                 if (bsurec.BasvuruSurecTipID == BasvuruSurecTipiEnum.LisansustuBasvuru) surec += "Lisansüstü Başvuruları Değerlendirme Listesi";
                 else if (bsurec.BasvuruSurecTipID == BasvuruSurecTipiEnum.YatayGecisBasvuru) surec += " Lisansüstü Yatay Geçiş Başvuruları Değerlendirme Listesi";
@@ -29,8 +28,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 tCel_YaziliNotu.Text = "Yazılı Notu";
                 tCel_SozluNotu.Text = "Sözlü Notu";
                 tCel_GirisSinavNotu.Text = "Giriş Sınav Notu";
-                tCel_BasariNotu.Text ="Başarı Notu";
-                tCel_TercihNo.Text ="Tercih No";
+                tCel_BasariNotu.Text = "Başarı Notu";
+                tCel_TercihNo.Text = "Tercih No";
                 tCel_Durum.Text = "Durum";
                 gFtr_ProgramKontenjani.Text = "Program Kota";
             }

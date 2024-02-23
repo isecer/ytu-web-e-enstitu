@@ -4,7 +4,7 @@ using CaptchaMvc.Interface;
 using CaptchaMvc.Models;
 using DevExpress.XtraReports.Security;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -323,13 +323,13 @@ namespace LisansUstuBasvuruSistemi
             var oUser = OnlineUsersHelper.GetById(uniqueId);
             if (oUser?.KullaniciId != null)
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var entities = new LubsDbEntities())
                 {
-                    var kul = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == oUser.KullaniciId);
+                    var kul = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == oUser.KullaniciId);
                     if (kul != null)
                     {
                         kul.LastLogonDate = DateTime.Now;
-                        db.SaveChanges();
+                        entities.SaveChanges();
                     }
                 }
             }

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -13,16 +13,14 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-
-
-                var data = (from s in db.TijBasvuruOneris
-                            join mb in db.TijBasvurus on s.TijBasvuruID equals mb.TijBasvuruID
-                            join k in db.Kullanicilars on mb.KullaniciID equals k.KullaniciID
-                            join e in db.Enstitulers on mb.EnstituKod equals e.EnstituKod
-                            join prg in db.Programlars on mb.ProgramKod equals prg.ProgramKod
-                            join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
+                var data = (from s in entities.TijBasvuruOneris
+                            join mb in entities.TijBasvurus on s.TijBasvuruID equals mb.TijBasvuruID
+                            join k in entities.Kullanicilars on mb.KullaniciID equals k.KullaniciID
+                            join e in entities.Enstitulers on mb.EnstituKod equals e.EnstituKod
+                            join prg in entities.Programlars on mb.ProgramKod equals prg.ProgramKod
+                            join abd in entities.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
                             where s.TijBasvuruOneriID == tijBasvuruOneriId
                             select new
                             {
@@ -63,13 +61,13 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 rwTaahhut.Visible = !data.IsTezDiliTr;
 
 
-                var oncekibasvuru = db.TijBasvuruOneris.Where(p => p.TijBasvuruOneriID != tijBasvuruOneriId &&
-                    p.TijBasvuru.KullaniciID == data.KullaniciID &&
-                    (p.IsObsData || p.EYKDaOnaylandi == true)).OrderByDescending(o => o.TijBasvuruOneriID).First();
+                var oncekibasvuru = entities.TijBasvuruOneris.Where(p => p.TijBasvuruOneriID != tijBasvuruOneriId &&
+                                                                         p.TijBasvuru.KullaniciID == data.KullaniciID &&
+                                                                         (p.IsObsData || p.EYKDaOnaylandi == true)).OrderByDescending(o => o.TijBasvuruOneriID).First();
                 var oncekiJuriler = data.Juriler.Where(p => !p.IsYeniOrOnceki).ToList();
 
 
-                var oncekiTd = db.Kullanicilars.First(f => f.KullaniciID == oncekibasvuru.TezDanismanID);
+                var oncekiTd = entities.Kullanicilars.First(f => f.KullaniciID == oncekibasvuru.TezDanismanID);
                 var varolanTikler = oncekiJuriler.Where(f => !f.IsTezDanismani).ToList();
 
                 cellMevcutUyeTdUnvanAdSoyad.Text = oncekiTd.Unvanlar.UnvanAdi + " " + oncekiTd.Ad + " " + oncekiTd.Soyad;
@@ -102,7 +100,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 var yeniJuriler = data.Juriler.Where(p => p.IsYeniOrOnceki).ToList();
                 if (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciDegisiklik ||
                     data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik)
-                { 
+                {
                     var ytuIci1 = yeniJuriler.FirstOrDefault(f => f.IsYtuIciJuri && f.RowNum == 1);
                     if (ytuIci1 != null)
                     {
@@ -130,11 +128,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                         cellYtuIciJuri3AnabilimDali.Text = ytuIci3.AnabilimdaliAdi;
                     }
 
-                } 
+                }
 
                 if (data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuDisiDegisiklik ||
                     data.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik)
-                { 
+                {
                     var ytuDisi1 = data.Juriler.FirstOrDefault(f => !f.IsYtuIciJuri && f.RowNum == 4);
                     if (ytuDisi1 != null)
                     {
@@ -163,7 +161,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                         cellYtuDisiJuri3Universite.Text = ytuDisi3.UniversiteAdi;
                         cellYtuDisiJuri3AnabilimDali.Text = ytuDisi3.AnabilimdaliAdi;
                     }
-                } 
+                }
 
 
 

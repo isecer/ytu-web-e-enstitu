@@ -1,6 +1,6 @@
 ﻿using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
     public partial class RprMezuniyetTezJuriOneriFormu_FR0300_FR0339 : DevExpress.XtraReports.UI.XtraReport
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public RprMezuniyetTezJuriOneriFormu_FR0300_FR0339(int mezuniyetBasvurulariId)
         {
             InitializeComponent();

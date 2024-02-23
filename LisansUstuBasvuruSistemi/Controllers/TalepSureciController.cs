@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class TalepSureciController : Controller
     {
         // GET: FRDonemIslemleri
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index()
         {
             return Index(new FmTalepSurec() { PageSize = 15 });
@@ -248,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = true;
             }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

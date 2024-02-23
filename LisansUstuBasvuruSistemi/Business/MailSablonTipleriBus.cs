@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +13,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MailSablonlaris.Where(p => p.EnstituKod == enstituKodu && p.IsAktif && p.MailSablonTipleri.SistemMaili == (sistemMailFiltre ?? p.MailSablonTipleri.SistemMaili)).OrderBy(o => o.SablonAdi).ToList();
+                var data = entities.MailSablonlaris.Where(p => p.EnstituKod == enstituKodu && p.IsAktif && p.MailSablonTipleri.SistemMaili == (sistemMailFiltre ?? p.MailSablonTipleri.SistemMaili)).OrderBy(o => o.SablonAdi).ToList();
                 dct.AddRange(data.Select(item => new CmbIntDto { Value = item.MailSablonlariID, Caption = item.SablonAdi }));
             }
 
@@ -27,17 +27,17 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MailSablonTipleris.Where(p => isOlusturulmayanlar == true ? !p.MailSablonlaris.Any() : p.SistemMaili == (sistemMaili ?? p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
+                var data = entities.MailSablonTipleris.Where(p => isOlusturulmayanlar == true ? !p.MailSablonlaris.Any() : p.SistemMaili == (sistemMaili ?? p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MailSablonTipID, Caption = item.SablonTipAdi });
                 }
-            } 
+            }
             return dct;
 
-        } 
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
@@ -11,17 +11,17 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
 
 
-                var data = (from s in db.TIBasvuruAraRapors
-                            join sr in db.SRTalepleris on s.TIBasvuruAraRaporID equals sr.TIBasvuruAraRaporID
-                            join mb in db.TIBasvurus on s.TIBasvuruID equals mb.TIBasvuruID
-                            join k in db.Kullanicilars on mb.KullaniciID equals k.KullaniciID
-                            join e in db.Enstitulers on mb.EnstituKod equals e.EnstituKod 
-                            join prg in db.Programlars  on mb.ProgramKod equals prg.ProgramKod
-                            join abd in db.AnabilimDallaris  on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
+                var data = (from s in entities.TIBasvuruAraRapors
+                            join sr in entities.SRTalepleris on s.TIBasvuruAraRaporID equals sr.TIBasvuruAraRaporID
+                            join mb in entities.TIBasvurus on s.TIBasvuruID equals mb.TIBasvuruID
+                            join k in entities.Kullanicilars on mb.KullaniciID equals k.KullaniciID
+                            join e in entities.Enstitulers on mb.EnstituKod equals e.EnstituKod 
+                            join prg in entities.Programlars  on mb.ProgramKod equals prg.ProgramKod
+                            join abd in entities.AnabilimDallaris  on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
                             where s.TIBasvuruAraRaporID == tiBasvuruAraRaporId
                             select new
                             {

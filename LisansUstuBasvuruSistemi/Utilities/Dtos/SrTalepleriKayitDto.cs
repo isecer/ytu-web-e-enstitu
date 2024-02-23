@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using System;
 using System.Collections.Generic;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos

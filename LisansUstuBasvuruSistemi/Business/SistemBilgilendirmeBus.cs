@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using System;
 
@@ -9,11 +9,11 @@ namespace LisansUstuBasvuruSistemi.Business
     {
         public static void SistemBilgisiKaydet(Exception ex, byte bilgiTipi)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
-                db.SistemBilgilendirmes.Add(new SistemBilgilendirme
+                entities.SistemBilgilendirmes.Add(new SistemBilgilendirme
                 {
                     BilgiTipi = bilgiTipi,
                     Message = ex.ToExceptionMessage(),
@@ -22,17 +22,17 @@ namespace LisansUstuBasvuruSistemi.Business
                     IslemTarihi = DateTime.Now,
                     StackTrace = ex.ToExceptionStackTrace()
                 });
-                db.SaveChanges();
+                entities.SaveChanges();
             }
         }
 
         public static void SistemBilgisiKaydet(Exception ex, string message, byte bilgiTipi)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
-                db.SistemBilgilendirmes.Add(new SistemBilgilendirme
+                entities.SistemBilgilendirmes.Add(new SistemBilgilendirme
                 {
                     BilgiTipi = bilgiTipi,
                     Message = message,
@@ -41,17 +41,17 @@ namespace LisansUstuBasvuruSistemi.Business
                     IslemTarihi = DateTime.Now,
                     StackTrace = ex.ToExceptionStackTrace()
                 });
-                db.SaveChanges();
+                entities.SaveChanges();
             }
         }
 
         public static void SistemBilgisiKaydet(string mesaj, string stakTrace, byte bilgiTipi)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
-                db.SistemBilgilendirmes.Add(new SistemBilgilendirme
+                entities.SistemBilgilendirmes.Add(new SistemBilgilendirme
                 {
                     Message = mesaj,
                     BilgiTipi = bilgiTipi,
@@ -60,15 +60,15 @@ namespace LisansUstuBasvuruSistemi.Business
                     IslemTarihi = DateTime.Now,
                     StackTrace = stakTrace
                 });
-                db.SaveChanges();
+                entities.SaveChanges();
             }
         }
 
         public static void SistemBilgisiKaydet(string mesaj, string stakTrace, byte bilgiTipi, int? kullaniciId, string kullaniciIp)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                db.SistemBilgilendirmes.Add(new SistemBilgilendirme
+                entities.SistemBilgilendirmes.Add(new SistemBilgilendirme
                 {
                     Message = mesaj,
                     BilgiTipi = bilgiTipi,
@@ -77,7 +77,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     IslemTarihi = DateTime.Now,
                     StackTrace = stakTrace
                 });
-                db.SaveChanges();
+                entities.SaveChanges();
             }
         }
     }

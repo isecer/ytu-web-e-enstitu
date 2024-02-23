@@ -1,6 +1,6 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -19,9 +19,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var entities = new LubsDbEntities())
                 {
-                    var tdoBasvuruDanisman = db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
+                    var tdoBasvuruDanisman = entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
                     var tdoDanismanTalepTipId = tdoBasvuruDanisman.TDODanismanTalepTipID;
                     var tdoBasvuru = tdoBasvuruDanisman.TDOBasvuru;
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
                     {
-                        var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var danisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Danışman",
@@ -47,8 +47,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     else if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                     {
-                        var varolanDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.VarolanTezDanismanID);
-                        var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var varolanDanisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.VarolanTezDanismanID);
+                        var yeniDanisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Varolan Danışman",
@@ -73,8 +73,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                     {
-                        var varolanDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.VarolanTezDanismanID);
-                        var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var varolanDanisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.VarolanTezDanismanID);
+                        var yeniDanisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Varolan Danışman",
@@ -99,7 +99,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                     {
-                        var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var danisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Danışman",
@@ -121,11 +121,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipId).ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var prgL = tdoBasvuru.Programlar;
-                    var ogrS = db.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
+                    var ogrS = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
 
                     bool isSended = false;
                     foreach (var item in mModel)
@@ -216,10 +216,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
                                 GonderilenMailEkleris = item.GetGonderilenMailEkleris
                             };
-                            db.GonderilenMaillers.Add(kModel);
+                            entities.GonderilenMaillers.Add(kModel);
                         }
                     }
-                    if (isSended) db.SaveChanges();
+                    if (isSended) entities.SaveChanges();
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
 
@@ -240,9 +240,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var entities = new LubsDbEntities())
                 {
-                    var tdoBasvuruDanisman = db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
+                    var tdoBasvuruDanisman = entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
                     var tdoDanismanTalepTipId = tdoBasvuruDanisman.TDODanismanTalepTipID;
                     var tdoBasvuru = tdoBasvuruDanisman.TDOBasvuru;
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
@@ -259,7 +259,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         if (isOnayOrRed)
                         {
-                            var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                            var danisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                             mModel.Add(new SablonMailModel
                             {
                                 JuriTipAdi = "Danışman",
@@ -280,7 +280,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     else if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                     {
-                        var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var yeniDanisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
 
                         mModel.Add(new SablonMailModel
                         {
@@ -303,7 +303,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                     {
-                        var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var yeniDanisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Yeni Danışman",
@@ -323,7 +323,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                     {
-                        var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var danisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Danışman",
@@ -346,11 +346,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipId).ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var prgL = tdoBasvuru.Programlar;
-                    var ogrS = db.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
+                    var ogrS = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
 
                     var snded = false;
 
@@ -439,7 +439,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
                         if (snded)
-                        { 
+                        {
                             if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
                             if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
                             var kModel = new GonderilenMailler
@@ -457,12 +457,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
                                 GonderilenMailEkleris = item.GetGonderilenMailEkleris
                             };
-                            db.GonderilenMaillers.Add(kModel);
+                            entities.GonderilenMaillers.Add(kModel);
 
                         }
                     }
 
-                    if (snded) db.SaveChanges();
+                    if (snded) entities.SaveChanges();
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
 
@@ -483,9 +483,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var entities = new LubsDbEntities())
                 {
-                    var tdoBasvuruDanisman = db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
+                    var tdoBasvuruDanisman = entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
                     var tdoDanismanTalepTipId = tdoBasvuruDanisman.TDODanismanTalepTipID;
                     var tdoBasvuru = tdoBasvuruDanisman.TDOBasvuru;
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
@@ -493,7 +493,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniOnerisi)
                     {
 
-                        var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var danisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Danışman",
@@ -512,7 +512,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     else if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi)
                     {
-                        var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var yeniDanisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
 
                         mModel.Add(new SablonMailModel
                         {
@@ -531,7 +531,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi)
                     {
-                        var yeniDanisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var yeniDanisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
 
                         mModel.Add(new SablonMailModel
                         {
@@ -550,7 +550,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi)
                     {
-                        var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                        var danisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Danışman",
@@ -569,9 +569,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipId).ToList();
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     var prgL = tdoBasvuru.Programlar;
-                    var ogrS = db.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
+                    var ogrS = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
 
                     bool isSended = false;
 
@@ -670,10 +670,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
                                 GonderilenMailEkleris = item.GetGonderilenMailEkleris
                             };
-                            db.GonderilenMaillers.Add(kModel);
+                            entities.GonderilenMaillers.Add(kModel);
                         }
                     }
-                    if (isSended) db.SaveChanges();
+                    if (isSended) entities.SaveChanges();
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
 
@@ -694,12 +694,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var entities = new LubsDbEntities())
                 {
-                    var esDanisman = db.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
+                    var esDanisman = entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
                     var tdoBasvuruDanisman = esDanisman.TDOBasvuruDanisman;
                     var tdoBasvuru = tdoBasvuruDanisman.TDOBasvuru;
-                    var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                    var danisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
                     var mModel = new List<SablonMailModel>();
 
@@ -748,11 +748,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipId).ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var prgL = tdoBasvuru.Programlar;
-                    var ogrS = db.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
+                    var ogrS = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
 
                     bool isSended = false;
                     foreach (var item in mModel)
@@ -838,10 +838,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailEkleris = item.GetGonderilenMailEkleris,
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                             };
-                            db.GonderilenMaillers.Add(kModel);
+                            entities.GonderilenMaillers.Add(kModel);
                         }
                     }
-                    if (isSended) db.SaveChanges();
+                    if (isSended) entities.SaveChanges();
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
 
@@ -862,12 +862,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var entities = new LubsDbEntities())
                 {
-                    var esDanisman = db.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tDoBasvuruEsDanismanId);
+                    var esDanisman = entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tDoBasvuruEsDanismanId);
                     var tdoBasvuruDanisman = esDanisman.TDOBasvuruDanisman;
                     var tdoBasvuru = tdoBasvuruDanisman.TDOBasvuru;
-                    var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
+                    var danisman = entities.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
                     var mModel = new List<SablonMailModel>();
 
@@ -949,11 +949,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     var enstitu = tdoBasvuruDanisman.TDOBasvuru.Enstituler;
                     var sablonTipIDs = mModel.Select(s => s.MailSablonTipId).ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
 
 
                     var prgL = tdoBasvuru.Programlar;
-                    var ogrS = db.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
+                    var ogrS = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == tdoBasvuru.OgrenimTipKod && p.EnstituKod == enstitu.EnstituKod);
 
                     bool isSended = false;
                     foreach (var item in mModel)
@@ -1047,10 +1047,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailEkleris = item.GetGonderilenMailEkleris,
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                             };
-                            db.GonderilenMaillers.Add(kModel);
+                            entities.GonderilenMaillers.Add(kModel);
                         }
                     }
-                    if (isSended) db.SaveChanges();
+                    if (isSended) entities.SaveChanges();
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -13,18 +13,18 @@ namespace LisansUstuBasvuruSistemi.Business
     {
         public static BelgeTipDetay GetBelgeTipDetay(int belgeTipId, int ogrenimDurumId, string enstituKod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var btip = db.BelgeTipDetays.First(p => p.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == belgeTipId) && p.OgrenimDurumID == ogrenimDurumId && p.EnstituKod == enstituKod);
+                var btip = entities.BelgeTipDetays.First(p => p.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == belgeTipId) && p.OgrenimDurumID == ogrenimDurumId && p.EnstituKod == enstituKod);
                 return btip;
             }
         }
 
         public static List<CmbStringDto> GetCmbBelgeTeslimSaatler()
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var saatler = db.BelgeTipDetaySaatlers.OrderBy(o => o.TalepBaslangicSaat).Select(s => new { s.TeslimBaslangicSaat, s.TeslimBitisSaat }).Distinct().ToList();
+                var saatler = entities.BelgeTipDetaySaatlers.OrderBy(o => o.TalepBaslangicSaat).Select(s => new { s.TeslimBaslangicSaat, s.TeslimBitisSaat }).Distinct().ToList();
                 var lst = new List<CmbStringDto>
                 {
                     new CmbStringDto { Caption = "" },
@@ -44,13 +44,13 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var rtatilDurum = BelgeTalepAyar.BelgeTalebiResmiTatilDurum.GetAyarBt(enstituKod, "0").ToBoolean() ?? false;
             TimeSpan talepZamani = new TimeSpan(islemTarihi.Hour, islemTarihi.Minute, islemTarihi.Second);
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var dofW =  islemTarihi.DayOfWeek.ToString("d").ToInt();
+                var dofW = islemTarihi.DayOfWeek.ToString("d").ToInt();
                 var bastarih = islemTarihi.TodateToShortDate();
                 var tarih = islemTarihi.TodateToShortDate();
                 tekrarKontrol:
-                var btSaat = db.BelgeTipDetaySaatlers.Include("BelgeTipDetay").First(p => p.BelgeTipDetay.OgrenimDurumID == ogrenimDurumId && p.HaftaGunID == dofW && p.BelgeTipDetay.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == belgeTipId) && p.TalepBaslangicSaat <= talepZamani && p.TalepBitisSaat >= talepZamani);
+                var btSaat = entities.BelgeTipDetaySaatlers.Include("BelgeTipDetay").First(p => p.BelgeTipDetay.OgrenimDurumID == ogrenimDurumId && p.HaftaGunID == dofW && p.BelgeTipDetay.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == belgeTipId) && p.TalepBaslangicSaat <= talepZamani && p.TalepBitisSaat >= talepZamani);
                 tarih = tarih.AddDays(btSaat.EklenecekGun);
 
                 if (rtatilDurum)
@@ -76,13 +76,13 @@ namespace LisansUstuBasvuruSistemi.Business
                 Value = true,
                 Caption = nTarih
             };
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var success = false;
                 while (success == false)
                 {
                     success = true;
-                    var resmiTatilDegisen = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= mdl.Caption && p.BitTarih >= mdl.Caption);
+                    var resmiTatilDegisen = entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilDegisen && p.BasTarih.Value <= mdl.Caption && p.BitTarih >= mdl.Caption);
                     if (resmiTatilDegisen != null)
                     {
                         success = false;
@@ -91,7 +91,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                        var resmiTatilSabit = db.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == mdl.Caption.Value.Month && p.Gun == mdl.Caption.Value.Day);
+                        var resmiTatilSabit = entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SrOzelTanimTipiEnum.ResmiTatilSabit && p.Ay.Value == mdl.Caption.Value.Month && p.Gun == mdl.Caption.Value.Day);
                         if (resmiTatilSabit != null)
                         {
                             success = false;
@@ -108,9 +108,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var html = "";
             var mdl = new CmbIntDto();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var belge = db.BelgeTalepleris.First(p => p.BelgeTalepID == belgeTalepId);
+                var belge = entities.BelgeTalepleris.First(p => p.BelgeTalepID == belgeTalepId);
                 if (belge.BelgeDurumID == BelgeTalepDurumEnum.TalepEdildi || belge.BelgeDurumID == BelgeTalepDurumEnum.Hazirlaniyor || belge.BelgeDurumID == BelgeTalepDurumEnum.Hazirlandi)
                 {
                     var verilecekTarih = belge.TalepTarihi.AddDays(belge.EklenecekGun).TodateToShortDate();
@@ -159,9 +159,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.BelgeTipleris.Where(p => (!ogrenimDurumId.HasValue || p.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == p.BelgeTipID && a.BelgeTipDetay.OgrenimDurumID == ogrenimDurumId.Value && a.BelgeTipDetay.EnstituKod == enstituKod && a.BelgeTipDetay.IsAktif)) && p.IsAktif).OrderBy(o => o.BelgeTipID).ToList();
+                var data = entities.BelgeTipleris.Where(p => (!ogrenimDurumId.HasValue || p.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == p.BelgeTipID && a.BelgeTipDetay.OgrenimDurumID == ogrenimDurumId.Value && a.BelgeTipDetay.EnstituKod == enstituKod && a.BelgeTipDetay.IsAktif)) && p.IsAktif).OrderBy(o => o.BelgeTipID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.BelgeTipID, Caption = item.BelgeTipAdi });
@@ -175,9 +175,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.BelgeDurumlaris.Where(p => p.BelgeDurumID == (yeniKayit ? BelgeTalepDurumEnum.TalepEdildi : p.BelgeDurumID) && p.IsAktif && (yonetici || p.TalepEdenGorsun == true)).OrderBy(o => o.BelgeDurumID).ToList();
+                var data = entities.BelgeDurumlaris.Where(p => p.BelgeDurumID == (yeniKayit ? BelgeTalepDurumEnum.TalepEdildi : p.BelgeDurumID) && p.IsAktif && (yonetici || p.TalepEdenGorsun == true)).OrderBy(o => o.BelgeDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.BelgeDurumID, Caption = item.DurumAdi });
@@ -191,9 +191,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var diller = db.SistemDilleris.ToList();
+                var diller = entities.SistemDilleris.ToList();
                 foreach (var item in diller)
                 {
                     dct.Add(new CmbStringDto { Value = item.DilKodu, Caption = item.DilAdi });
@@ -205,9 +205,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<BelgeDurumlari> GetBelgeTalepDurumList()
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.BelgeDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.BelgeDurumID).ToList();
+                var data = entities.BelgeDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.BelgeDurumID).ToList();
                 return data;
 
             }
@@ -218,9 +218,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.BelgeDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.BelgeDurumID).ToList();
+                var data = entities.BelgeDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.BelgeDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.BelgeDurumID, Caption = item.DurumAdi });

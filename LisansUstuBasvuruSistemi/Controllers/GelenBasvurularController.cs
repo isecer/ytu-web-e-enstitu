@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -22,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class GelenBasvurularController : Controller
     {
 
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
 
         [Authorize(Roles = RoleNames.GelenBasvurular)]
         public ActionResult Index(string ekd, int? belgeDetailBasvuruId = null)

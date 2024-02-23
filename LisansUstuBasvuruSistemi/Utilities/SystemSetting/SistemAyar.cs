@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models; 
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
@@ -46,27 +46,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string OtomatikMailBilgilendirmeServisiniCalistir = "Otomatik Mail Bilgilendirme Servisini Çalıştır";
         public static void SetAyar(string ayarAdi, string ayarDegeri)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qq = db.Ayarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi);
+                var qq = entities.Ayarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi);
                 if (qq != null)
                 {
                     qq.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.Ayarlars.Add(new Ayarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
+                    entities.Ayarlars.Add(new Ayarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
-                db.SaveChanges();
+                entities.SaveChanges();
             }
 
         }
         public static string GetAyar(this string ayarAdi, string varsayilanDeger = "")
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qq = db.Ayarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi);
+                var qq = entities.Ayarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi);
                 if (qq != null)
                 {
                     return qq.AyarDegeri;

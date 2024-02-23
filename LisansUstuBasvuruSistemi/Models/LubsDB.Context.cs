@@ -13,10 +13,10 @@ namespace LisansUstuBasvuruSistemi.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class LisansustuBasvuruSistemiEntities : DbContext
+    public partial class LubsDbEntities : DbContext
     {
-        public LisansustuBasvuruSistemiEntities()
-            : base("name=LisansustuBasvuruSistemiEntities")
+        public LubsDbEntities()
+            : base("name=LubsDbEntities")
         {
         }
     

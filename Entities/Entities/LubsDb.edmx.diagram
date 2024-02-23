@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3d3f865a364a4319a8ffae5f3f523605" Name="Diagram1">
+        <EntityTypeShape EntityType="LubsDbModel.AlanTipleri" Width="1.5" PointX="19.5" PointY="174" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.AlesTipleri" Width="1.5" PointX="11.25" PointY="167.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.AnabilimDaliYeterlikKomiteUyeleri" Width="1.5" PointX="16.5" PointY="185.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.AnabilimDallari" Width="1.5" PointX="11.25" PointY="173.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Anket" Width="1.5" PointX="13.5" PointY="200.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.AnketCevaplari" Width="1.5" PointX="14.25" PointY="190.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.AnketSoru" Width="1.5" PointX="15.75" PointY="177.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.AnketSoruSecenek" Width="1.5" PointX="18" PointY="178" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Ayarlar" Width="1.5" PointX="11.25" PointY="181.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Aylar" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruAgnoAlimTipleri" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruBelgeTipleri" Width="1.5" PointX="11.25" PointY="186" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruBelgeTipleriYuklemeSekli" Width="1.5" PointX="13.5" PointY="186.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruDurumlari" Width="1.5" PointX="11.25" PointY="190.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Basvurular" Width="1.5" PointX="45" PointY="184.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvurularSinavBilgi" Width="1.5" PointX="47.25" PointY="195.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvurularTercihleri" Width="1.5" PointX="21.75" PointY="190.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvurularTercihleriKayitOdemeleri" Width="1.5" PointX="24" PointY="180.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvurularYuklenenBelgeler" Width="1.5" PointX="50.25" PointY="190.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurec" Width="1.5" PointX="30.75" PointY="178.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecBelgeTipleri" Width="1.5" PointX="33" PointY="182" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecBelgeTipleriYuklemeSekli" Width="1.5" PointX="44.25" PointY="180.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecKontrolTipleri" Width="1.5" PointX="28.5" PointY="164.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecKotalar" Width="1.5" PointX="24.75" PointY="190.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecMulakatSinavTurleri" Width="1.5" PointX="36" PointY="180.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOgrenimTipleri" Width="1.5" PointX="42" PointY="178.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOtoMail" Width="1.5" PointX="33" PointY="177.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOTOrtBasvr" Width="1.5" PointX="33" PointY="215.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="21.75" PointY="209.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavNotlari" Width="1.5" PointX="43.25" PointY="209.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTarihleri" Width="1.5" PointX="43.25" PointY="212" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleri" Width="1.5" PointX="41" PointY="206" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriDil" Width="1.5" PointX="46.25" PointY="213.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriDonem" Width="1.5" PointX="49.25" PointY="209" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA" Width="1.5" PointX="33" PointY="190" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA_OT" Width="1.5" PointX="35.25" PointY="175.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA_PR" Width="1.5" PointX="21.75" PointY="187.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklari" Width="1.5" PointX="44" PointY="201.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="21.75" PointY="196.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTiplerSubSinavAralik" Width="1.5" PointX="43.25" PointY="217.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecTipleri" Width="1.5" PointX="28.5" PointY="161.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeDurumlari" Width="1.5" PointX="11.25" PointY="194.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTalepAyarlar" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTalepleri" Width="1.5" PointX="6" PointY="188.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetay" Width="1.5" PointX="3" PointY="191" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetayBelgeler" Width="1.5" PointX="13.5" PointY="197" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetaySaatler" Width="1.5" PointX="5.25" PointY="184.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTipleri" Width="1.5" PointX="11.25" PointY="198.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Birimler" Width="1.5" PointX="11.25" PointY="201.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.BolumEslestir" Width="1.5" PointX="21.75" PointY="205.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Cinsiyetler" Width="1.5" PointX="6.75" PointY="181.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Donemler" Width="1.5" PointX="3.75" PointY="178" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.DuyuruEkleri" Width="1.5" PointX="18.75" PointY="211.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Duyurular" Width="1.5" PointX="16.5" PointY="201.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.DuyuruPopuplar" Width="1.5" PointX="21.75" PointY="213.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.DuyuruPopupTipleri" Width="1.5" PointX="19.5" PointY="228.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Enstituler" Width="1.5" PointX="11.25" PointY="210.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailEkleri" Width="1.5" PointX="52.5" PointY="199.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailKullanicilar" Width="1.5" PointX="52.5" PointY="192.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailler" Width="1.5" PointX="50.25" PointY="197.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.HaftaGunleri" Width="1.5" PointX="3" PointY="185.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Kampusler" Width="1.5" PointX="30.75" PointY="164.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.KayitDurumlari" Width="1.5" PointX="33.75" PointY="172.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.KullaniciEnstituYetkileri" Width="1.5" PointX="16.5" PointY="197" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Kullanicilar" Width="1.5" PointX="9" PointY="180.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.KullaniciProgramlari" Width="1.5" PointX="24.75" PointY="196.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.KullaniciTipleri" Width="1.5" PointX="6.75" PointY="177.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Log" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MailSablonlari" Width="1.5" PointX="19.5" PointY="201.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MailSablonlariEkleri" Width="1.5" PointX="21.75" PointY="202.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MailSablonTipleri" Width="1.5" PointX="17.25" PointY="229.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MedeniHaller" Width="1.5" PointX="42.75" PointY="166.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Menuler" Width="1.5" PointX="12" PointY="162.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MesajEkleri" Width="1.5" PointX="35" PointY="210.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MesajKategorileri" Width="1.5" PointX="19.5" PointY="196.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Mesajlar" Width="1.5" PointX="32.75" PointY="208.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetAyarlar" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulari" Width="1.5" PointX="27.75" PointY="186.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezDosyalari" Width="1.5" PointX="30" PointY="172.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezTeslimFormlari" Width="1.5" PointX="30" PointY="167.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="36" PointY="191.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetJuriOneriFormlari" Width="1.5" PointX="30" PointY="218.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetJuriOneriFormuJurileri" Width="1.5" PointX="32.25" PointY="219.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSinavDurumlari" Width="1.5" PointX="35.75" PointY="234.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureci" Width="1.5" PointX="24.75" PointY="212.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciKriterMuafOgrenciler" Width="1.5" PointX="44" PointY="205.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOgrenimTipKriterleri" Width="1.5" PointX="37" PointY="216.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOtoMail" Width="1.5" PointX="27" PointY="224.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOtoMailGonderilenler" Width="1.5" PointX="29.25" PointY="225" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYayinTurleri" Width="1.5" PointX="6.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYonetmelikleri" Width="1.5" PointX="13.5" PointY="223.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYonetmelikleriOT" Width="1.5" PointX="15.75" PointY="224.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinBelgeTurleri" Width="1.5" PointX="33.75" PointY="165.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinIndexTurleri" Width="1.5" PointX="33.75" PointY="162.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinKontrolDurumlari" Width="1.5" PointX="25.5" PointY="175.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinLinkTurleri" Width="1.5" PointX="33.75" PointY="225.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinMetinTurleri" Width="1.5" PointX="33.75" PointY="229.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinProjeTurleri" Width="1.5" PointX="33.75" PointY="232" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinTurleri" Width="1.5" PointX="19.25" PointY="182.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYonetmelikleri" Width="1.5" PointX="13.5" PointY="205" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYonetmelikleriOT" Width="1.5" PointX="24.5" PointY="199.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Mulakat" Width="1.5" PointX="24.75" PointY="185.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatDetay" Width="1.5" PointX="33" PointY="185.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatJuri" Width="1.5" PointX="27" PointY="179.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatSinavTurleri" Width="1.5" PointX="30.75" PointY="160.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatSonuclari" Width="1.5" PointX="36" PointY="183.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatSonucTipleri" Width="1.5" PointX="33.75" PointY="169.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.NotSistemleri" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.OgrenciBolumleri" Width="1.5" PointX="11.25" PointY="229.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.OgrenimDurumlari" Width="1.5" PointX="0.75" PointY="191.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.OgrenimTipleri" Width="1.5" PointX="19.5" PointY="191.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.OzelNotTipleri" Width="1.5" PointX="14.25" PointY="229" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.OzelTarihTipleri" Width="1.5" PointX="38.75" PointY="225.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Programlar" Width="1.5" PointX="16.5" PointY="189.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Roller" Width="1.5" PointX="14.25" PointY="182.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Sehirler" Width="1.5" PointX="11.25" PointY="237" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ServiceLog" Width="1.5" PointX="8.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ServiceRole" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ServiceUser" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ServiceUserRole" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SikcaSorulanSorular" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavDilleri" Width="1.5" PointX="45" PointY="176.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavNotlari" Width="1.5" PointX="18.75" PointY="214.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipGruplari" Width="1.5" PointX="14.25" PointY="210.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleri" Width="1.5" PointX="16.5" PointY="206.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA" Width="1.5" PointX="18.75" PointY="218" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA_OT" Width="1.5" PointX="21" PointY="217.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA_PR" Width="1.5" PointX="24" PointY="204.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOTNotAraliklari" Width="1.5" PointX="23.75" PointY="218.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="21.75" PointY="184.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTiplerSubSinavAralik" Width="1.5" PointX="18.75" PointY="221.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SistemBilgilendirme" Width="1.5" PointX="11.25" PointY="240.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SistemDilleri" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SRDurumlari" Width="1.5" PointX="35.75" PointY="238.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SROzelTanimlar" Width="1.5" PointX="38" PointY="241.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SROzelTanimTipleri" Width="1.5" PointX="35.75" PointY="246.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SRSaatler" Width="1.5" PointX="27.75" PointY="215.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SRSalonDurumlari" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SRSalonlar" Width="1.5" PointX="19.5" PointY="206.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SRSalonTalepTipleri" Width="1.5" PointX="30.75" PointY="215.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SRTalepleri" Width="1.5" PointX="38" PointY="202.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SRTaleplerJuri" Width="1.5" PointX="34.5" PointY="218.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.SRTalepTipleri" Width="1.5" PointX="35.75" PointY="242" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.sysdiagram" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepArGorStatuleri" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepDurumlari" Width="1.5" PointX="13.5" PointY="219.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepGelenTalepBelgeleri" Width="1.5" PointX="18" PointY="225.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepGelenTalepler" Width="1.5" PointX="15.75" PointY="214.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepSureciTalepTipleri" Width="1.5" PointX="15.75" PointY="252.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepSurecleri" Width="1.5" PointX="13.5" PointY="251.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepTipleri" Width="1.5" PointX="13.5" PointY="232.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TDOAyarlar" Width="1.5" PointX="10.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuru" Width="1.5" PointX="26.75" PointY="200.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuruDanisman" Width="1.5" PointX="39" PointY="176.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuruEsDanisman" Width="1.5" PointX="41.25" PointY="170.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TDODanismanTalepTipleri" Width="1.5" PointX="36.75" PointY="173" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TIAyarlar" Width="1.5" PointX="2.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TIBasvuru" Width="1.5" PointX="26.75" PointY="206.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRapor" Width="1.5" PointX="42" PointY="186.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRaporDurumlari" Width="1.5" PointX="39.75" PointY="167.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRaporKomite" Width="1.5" PointX="47.25" PointY="187.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TijBasvuru" Width="1.5" PointX="29.75" PointY="201.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TijBasvuruOneri" Width="1.5" PointX="41" PointY="196.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TijBasvuruOneriJuriler" Width="1.5" PointX="46.25" PointY="201.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TijDegisiklikTipleri" Width="1.5" PointX="38.75" PointY="198.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.TijFormTipleri" Width="1.5" PointX="38.75" PointY="221.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ToBasvuru" Width="1.5" PointX="29.75" PointY="208.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunma" Width="1.5" PointX="35" PointY="201.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunmaDurumlari" Width="1.5" PointX="32.75" PointY="235.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunmaKomite" Width="1.5" PointX="46.25" PointY="206.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Universiteler" Width="1.5" PointX="44" PointY="222.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Unvanlar" Width="1.5" PointX="6.75" PointY="199.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.Uyruklar" Width="1.5" PointX="6.75" PointY="202.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.WsSinavCekimTipleri" Width="1.5" PointX="38.75" PointY="227.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.WsSinavCekipTipDetay" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuru" Width="1.5" PointX="30.75" PointY="191.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuruJuriUyeleri" Width="1.5" PointX="33" PointY="193.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuruKomiteler" Width="1.5" PointX="39" PointY="191.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikSureci" Width="1.5" PointX="13.5" PointY="213.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikSureciKriterMuafOgrenciler" Width="1.5" PointX="27.75" PointY="182.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikSurecOgrenimTipleri" Width="1.5" PointX="32.75" PointY="202.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.YetkiGruplari" Width="1.5" PointX="6.75" PointY="205.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.YetkiGrupRolleri" Width="1.5" PointX="16.5" PointY="182.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.ZamanTipleri" Width="1.5" PointX="30.75" PointY="157.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LubsDbModel.vW_ProgramBasvuruSonucSayisal" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularTercihleri_AlanTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatSonuclari_AlanTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AlesTipleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnabilimdaliYeterlikKomiteUyeleri_AnabilimDallari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnabilimdaliYeterlikKomiteUyeleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnabilimDallari_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Programlar_AnabilimDallari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuruDanisman_AnabilimDallari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Anket_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Anket_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_Anket" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketSoru_Anket" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurec_Anket" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureci_Anket" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_AnketSoru" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_AnketSoruSecenek" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_Basvurular" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_BelgeTalepleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_MezuniyetBasvurulari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketSoruSecenek_AnketSoru" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Ayarlar_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruBelgeTipleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruBelgeTipleriYuklemeSekli_BasvuruBelgeTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularYuklenenBelgeler_BasvuruBelgeTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecBelgeTipleri_BasvuruBelgeTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecBelgeTipleriYuklemeSekli_BasvuruBelgeTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruDurumlari_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Basvurular_BasvuruDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Basvurular_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Basvurular_Cinsiyetler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Basvurular_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Basvurular_KullaniciTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Basvurular_MedeniHaller" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularSinavBilgi_Basvurular" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularTercihleri_Basvurular" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularYuklenenBelgeler_Basvurular" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_GonderilenMailler_Basvurular" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatSonuclari_Basvurular" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularSinavBilgi_SinavDilleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularSinavBilgi_SinavTipGruplari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularSinavBilgi_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularTercihleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularTercihleri_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularTercihleriKayitOdemeleri_BasvurularTercihleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatSonuclari_BasvurularTercihleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvurularTercihleriKayitOdemeleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurec_BasvuruSurecKontrolTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurec_BasvuruSurecTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurec_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurec_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurec_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecBelgeTipleri_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecKotalar_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecMulakatSinavTurleri_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecOgrenimTipleri_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecOtoMail_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecOTOrtBasvr_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleri_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklari_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Mulakat_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatSonuclari_BasvuruSurec" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecBelgeTipleriYuklemeSekli_BasvuruSurecBelgeTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecKotalar_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecMulakatSinavTurleri_MulakatSinavTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecOgrenimTipleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecOtoMail_ZamanTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_OgrenciBolumleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavNotlari_BasvuruSurecSinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTarihleri_BasvuruSurecSinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleri_OzelNotTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleri_OzelTarihTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleri_SinavTipGruplari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleri_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleri_WsSinavCekimTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriDil_BasvuruSurecSinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriDonem_BasvuruSurecSinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTiplerSubSinavAralik_BasvuruSurecSinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriDil_SinavDilleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriDonem_SinavDilleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_OT_BasvuruSurecSinavTipleriOT_SNA" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_PR_BasvuruSurecSinavTipleriOT_SNA" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklari_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_BasvuruSurecSinavTipleriOTNotAraliklari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeDurumlari_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTalepleri_BelgeDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTalepleri_BelgeTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTalepleri_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTalepleri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTalepleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTalepleri_OgrenimDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTalepleri_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTipDetay_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTipDetay_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTipDetay_OgrenimDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTipDetayBelgeler_BelgeTipDetay" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTipDetaySaatler_BelgeTipDetay" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTipDetayBelgeler_BelgeTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTipDetaySaatler_HaftaGunleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BelgeTipleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Birimler_Birimler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Birimler_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Birimler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BolumEslestir_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BolumEslestir_OgrenciBolumleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_BolumEslestir_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Cinsiyetler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureci_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYonetmelikleri_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYonetmelikleri_Donemler1" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuru_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuruDanisman_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuru_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuruAraRapor_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuru_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuruOneri_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuru_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuruSavunma_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuru_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikSureci_Donemler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_DuyuruEkleri_Duyurular" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Duyurular_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Duyurular_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_DuyuruPopuplar_Duyurular" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_DuyuruPopuplar_DuyuruPopupTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Enstituler_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_GonderilenMailler_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_KullaniciEnstituYetkileri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MailSablonlari_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MesajKategorileri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Mesajlar_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureci_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciYonetmelikleri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYonetmelikleri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_OgrenimTipleri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleriOTNotAraliklari_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRSalonlar_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TalepSurecleri_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuru_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuru_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuru_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuru_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikSureci_Enstituler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_GonderilenMailEkleri_GonderilenMailler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_GonderilenMailKullanicilar_GonderilenMailler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_GonderilenMailKullanicilar_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_GonderilenMailler_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_GonderilenMailler_Mesajlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRSaatler_HaftaGunleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_HaftaGunleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatDetay_Kampusler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatSonuclari_KayitDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_KullaniciEnstituYetkileri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_KullanicilarDanisman" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_KullaniciTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_OgrenimDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Sehirler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Sehirler1" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Sehirler2" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Unvanlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Uyruklar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_YetkiGruplari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_KullaniciProgramlari_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MailSablonlari_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MesajKategorileri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Mesajlar_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureci_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciKriterMuafOgrenciler_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYayinTurleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYonetmelikleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Mulakat_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_OgrenciBolumleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_OgrenimTipleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Programlar_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Sehirler_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SistemBilgilendirme_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRSalonlar_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TalepGelenTalepler_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuru_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuruDanisman_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuru_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuruAraRapor_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuru_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuruOneri_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuru_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuruSavunma_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuru_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuruKomiteler_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikSureciKriterMuafOgrenciler_Kullanicilar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_KullaniciProgramlari_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_KullaniciTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MailSablonlari_MailSablonTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MailSablonlariEkleri_MailSablonlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MesajEkleri_Mesajlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Mesajlar_MesajKategorileri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Mesajlar_Mesajlar1" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_MezuniyetSureci" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_MezuniyetYayinKontrolDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_OgrenimDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinBelgeTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinIndexTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinLinkTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinMetinTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinProjeTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetJuriOneriFormuJurileri_MezuniyetJuriOneriFormlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_MezuniyetSinavDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTaleplerJuri_MezuniyetSinavDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciKriterMuafOgrenciler_MezuniyetSureci" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciOgrenimTipKriterleri_MezuniyetSureci" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSurecOtoMail_MezuniyetSureci" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciOgrenimTipKriterleri_OgrenimTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciOtoMailGonderilenler_MezuniyetSureciOtoMail" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetSureciYonetmelikleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetYayinTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYayinTurleri_MezuniyetYayinLinkTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYayinTurleri_MezuniyetYayinLinkTurleri1" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYayinTurleri_MezuniyetYayinMetinTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYonetmelikleriOT_MezuniyetYayinTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetYonetmelikleriOT_MezuniyetYonetmelikleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_Mulakat_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatDetay_Mulakat" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatJuri_Mulakat" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatSonuclari_Mulakat" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatDetay_MulakatSinavTurleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_MulakatSonuclari_MulakatSonucTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_OgrenciBolumleri_OgrenciBolumleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuru_OgrenimTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuru_OgrenimTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikSureciOgrenimTipKriterleri_OgrenimTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleri_OzelNotTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleriOT_SNA_PR_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuru_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuruDanisman_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuru_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuru_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuru_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuru_Programlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YetkiGrupRolleri_Roller" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ServiceUserRole_ServiceRole" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ServiceUserRoles_ServiceUser" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavNotlari_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleri_SinavTipGruplari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleriOT_SNA_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleriOTNotAraliklari_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTiplerSubSinavAralik_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuruDanisman_SinavTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleriOT_SNA_OT_SinavTipleriOT_SNA" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleriOT_SNA_PR_SinavTipleriOT_SNA" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_SinavTipleriOTNotAraliklari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_SRDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SROzelTanimlar_SROzelTanimTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SROzelTanimlar_SRTalepTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRSaatler_SRSalonlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRSalonTalepTipleri_SRSalonlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_SRSalonlar" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRSalonTalepTipleri_SRTalepTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_SRTalepTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_TIBasvuruAraRapor" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_ToBasvuruSavunma" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTaleplerJuri_SRTalepleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TalepGelenTalepler_TalepDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TalepGelenTalepBelgeleri_TalepGelenTalepler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TalepGelenTalepler_TalepSurecleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TalepGelenTalepler_TalepTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TalepSureciTalepTipleri_TalepSurecleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TalepSureciTalepTipleri_TalepTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuru_TDOBasvuruDanisman" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuruDanisman_TDOBasvuru" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuruDanisman_TDODanismanTalepTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TDOBasvuruEsDanisman_TDOBasvuruDanisman" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuru_TIBasvuruAraRapor" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuruAraRapor_TIBasvuru" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuruAraRapor_TIBasvuruAraRaporDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuruAraRaporKomite_TIBasvuruAraRapor" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TIBasvuruAraRaporKomite_Universiteler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuruOneri_TijBasvuru" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuruOneri_TijDegisiklikTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuruOneri_TijFormTipleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuruOneriJuriler_TijBasvuruOneri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_TijBasvuruOneriJuriler_Universiteler" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuruSavunma_ToBasvuru" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuruSavunma_ToBasvuruSavunmaDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuruSavunma_ToBasvuruSavunmaDurumlari1" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuruSavunmaKomite_ToBasvuruSavunma" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_ToBasvuruSavunmaKomite_ToBasvuruSavunmaDurumlari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuru_YeterlikSureci" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuruJuriUyeleri_YeterlikBasvuru" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuruKomiteler_YeterlikBasvuru" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikSureciKriterMuafOgrenciler_YeterlikSureci" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YeterlikSureciOgrenimTipKriterleri_YeterlikSureci" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.FK_YetkiGrupRolleri_YetkiGruplari" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.KullaniciRolleri" ManuallyRouted="false" />
+        <AssociationConnector Association="LubsDbModel.MenuRollleri" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

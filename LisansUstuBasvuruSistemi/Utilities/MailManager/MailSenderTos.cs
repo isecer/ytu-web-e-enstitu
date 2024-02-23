@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var entities = new LisansustuBasvuruSistemiEntities())
+               using (var entities = new LubsDbEntities())
                 {
 
                     var toBasvuruSavunma = new ToBasvuruSavunma();
@@ -254,9 +254,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var  entities = new LubsDbEntities())
                 {
-                    var toBasvuruSavunma = db.ToBasvuruSavunmas.First(p => p.UniqueID == toBasvuruSavunmaId);
+                    var toBasvuruSavunma = entities.ToBasvuruSavunmas.First(p => p.UniqueID == toBasvuruSavunmaId);
                     var qJurilers = toBasvuruSavunma.ToBasvuruSavunmaKomites.AsQueryable();
                     if (isLinkOrSonuc)
                     {
@@ -304,7 +304,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         JuriTipAdi = item.IsTezDanismani ? "Tez Danışmanı" : "Komite Üyesi",
                     }));
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipId).Distinct().ToList();
-                    var sablonlar = db.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     var donemAdi = (toBasvuruSavunma.DonemBaslangicYil + " - " + (toBasvuruSavunma.DonemBaslangicYil + 1) + " " + toBasvuruSavunma.Donemler.DonemAdi);
                     foreach (var item in mModel)
                     {
@@ -408,8 +408,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                         }
 
-                        db.GonderilenMaillers.Add(kModel);
-                        db.SaveChanges();
+                        entities.GonderilenMaillers.Add(kModel);
+                        entities.SaveChanges();
                         if (isLinkOrSonuc) LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", LogCrudType.Update, juri.ToJson());
                     }
 

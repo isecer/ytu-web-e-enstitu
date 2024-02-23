@@ -10,7 +10,7 @@ using BiskaUtil;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class TiJuriOnerileriGbController : Controller
     {
         // GET: TikOneriGb
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(Guid? selectedBasvuruUniqueId, string ekd)
         {
             return Index(new FmTijBasvuru() { SelectedBasvuruUniqueId = selectedBasvuruUniqueId, PageSize = 50 }, ekd);
@@ -535,7 +535,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 view = ViewRenderHelper.RenderPartialView("TiJuriOnerileriGb", "TijOneriFormu", model);
             }
             else { mMessage.IsSuccess = false; mMessage.MessageType = MsgTypeEnum.Warning; }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
 
             return new
             {
@@ -1067,7 +1067,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 mmMessage.IsSuccess = true;
             }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new
             {
                 mmMessage.IsSuccess,
@@ -1224,7 +1224,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new
             {
                 mmMessage.IsSuccess,
@@ -1486,7 +1486,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView, removedAllData }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

@@ -186,7 +186,7 @@
                                                 @item.TIAraRaporRaporDurumAdi <br />@ValueConverterExtension.ToTiDegerlendirmeSonucu(item.IsOyBirligiOrCoklugu, item.IsBasariliOrBasarisiz)
                                             </td>
                                             <td>
-                                                <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit" title="Düzelt"></i></a>
+                                                <a href="@Url.Action("BasvuruYap", "TiBasvuru", new { item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit" title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.TIBasvuruID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
                                             </td>
                                         </tr>

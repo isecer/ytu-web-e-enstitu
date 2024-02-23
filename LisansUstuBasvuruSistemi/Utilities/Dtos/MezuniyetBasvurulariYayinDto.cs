@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
@@ -53,8 +53,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public MezuniyetBasvurulariYayinDto()
         {
             guID = Guid.NewGuid().ToString().Substring(0, 8);
-            YayinIndexTurleri = new List<Models.MezuniyetYayinIndexTurleri>();
-            MezuniyetYayinProjeTurleris = new List<Models.MezuniyetYayinProjeTurleri>();
+            YayinIndexTurleri = new List<MezuniyetYayinIndexTurleri>();
+            MezuniyetYayinProjeTurleris = new List<MezuniyetYayinProjeTurleri>();
         }
 
     }

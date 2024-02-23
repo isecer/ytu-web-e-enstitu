@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.SinavTipleri)]
     public class SinavTipleriController : Controller
     {
-        private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string ekd)
         {
             return Index(new FmSinavTipleri { PageSize = 15 }, ekd);
@@ -113,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 foreach (var itemOt in ogrenimTipleris)
                 {
-                    var kayit = model.SinavTipleriOTNotAraliklaris.FirstOrDefault(p =>  p.OgrenimTipKod == itemOt.OgrenimTipKod && p.Ingilizce == itemD);
+                    var kayit = model.SinavTipleriOTNotAraliklaris.FirstOrDefault(p => p.OgrenimTipKod == itemOt.OgrenimTipKod && p.Ingilizce == itemD);
                     sinavTipleriOtNotAraliklaris.Add(
                          new SinavTipleriOTNotAraliklari
                          {
@@ -828,7 +828,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 foreach (var item in kModel.IPProgramKod)
                 {
-                    _entities.SinavTipleriOT_SNA_PR.Add(new Models.SinavTipleriOT_SNA_PR { SinavTipleriOT_SNAID = kModel.SinavTipleriOT_SNAID, ProgramKod = item });
+                    _entities.SinavTipleriOT_SNA_PR.Add(new SinavTipleriOT_SNA_PR { SinavTipleriOT_SNAID = kModel.SinavTipleriOT_SNAID, ProgramKod = item });
                 }
 
                 if (stip.SinavTipGrupID == SinavTipGrupEnum.DilSinavlari || stip.SinavTipGrupID == SinavTipGrupEnum.Ales_Gree)

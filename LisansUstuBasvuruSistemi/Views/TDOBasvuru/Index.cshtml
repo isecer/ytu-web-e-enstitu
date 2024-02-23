@@ -1,5 +1,4 @@
 ﻿@using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions 
@@ -151,7 +150,7 @@
                                         <td>
                                             @if (!item.AktifTDOBasvuruDanismanID.HasValue)
                                             {
-                                                <a href="@Url.Action("BasvuruYap", "TDOBasvuru", new { TDOBasvuruID = item.TDOBasvuruID })"><i style="font-size: 11pt; color: @item.DurumColor;" class="fa fa-edit " title="Düzelt"></i></a>
+                                                <a href="@Url.Action("BasvuruYap", "TdoBasvuru", new { TDOBasvuruID = item.TDOBasvuruID })"><i style="font-size: 11pt; color: @item.DurumColor;" class="fa fa-edit " title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="BasvuruSil(this,@item.TDOBasvuruID,'@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt; color: @item.DurumColor;" class="glyphicon glyphicon-trash " title="Sil"></i></a>
                                             }
                                         </td>
@@ -278,7 +277,7 @@
                     className: "btn-danger",
                     callback: function () {
                         $.ajax({
-                            url: '@Url.Action("Sil", "TDOBasvuru")',
+                            url: '@Url.Action("Sil", "TdoBasvuru")',
                             data: { id: id },
                             success: function (result) {
                                 if (result.IsSuccess) {

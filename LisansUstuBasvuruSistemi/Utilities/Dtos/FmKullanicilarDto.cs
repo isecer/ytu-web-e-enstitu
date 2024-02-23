@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models; 
+using Entities.Entities; 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class FmKullanicilarDto : PagerModel

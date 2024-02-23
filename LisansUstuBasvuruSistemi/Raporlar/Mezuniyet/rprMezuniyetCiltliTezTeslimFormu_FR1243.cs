@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -12,18 +12,18 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
 
 
-                var data = (from s in db.MezuniyetBasvurulariTezTeslimFormlaris 
-                            join mb in db.MezuniyetBasvurularis on s.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
-                            join ms in db.MezuniyetSurecis on mb.MezuniyetSurecID equals ms.MezuniyetSurecID
-                            join dnm in db.Donemlers on mb.KayitOgretimYiliDonemID equals dnm.DonemID
-                            join enst in db.Enstitulers on ms.EnstituKod equals enst.EnstituKod
-                            join osl in db.OgrenimTipleris on new { mb.OgrenimTipKod, enst.EnstituKod } equals new { osl.OgrenimTipKod, osl.EnstituKod }
-                            join prg in db.Programlars on mb.ProgramKod equals prg.ProgramKod
-                            join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
+                var data = (from s in entities.MezuniyetBasvurulariTezTeslimFormlaris 
+                            join mb in entities.MezuniyetBasvurularis on s.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
+                            join ms in entities.MezuniyetSurecis on mb.MezuniyetSurecID equals ms.MezuniyetSurecID
+                            join dnm in entities.Donemlers on mb.KayitOgretimYiliDonemID equals dnm.DonemID
+                            join enst in entities.Enstitulers on ms.EnstituKod equals enst.EnstituKod
+                            join osl in entities.OgrenimTipleris on new { mb.OgrenimTipKod, enst.EnstituKod } equals new { osl.OgrenimTipKod, osl.EnstituKod }
+                            join prg in entities.Programlars on mb.ProgramKod equals prg.ProgramKod
+                            join abd in entities.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
                             where s.MezuniyetBasvurulariTezTeslimFormID == id
                             select new
                             {
@@ -49,7 +49,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                                 urlAdd = enst.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBBBC_" + s.MezuniyetBasvurulariTezTeslimFormID + "_" + s.RowID
                             }).First();
 
-                var sonSr = db.SRTalepleris.First(f =>
+                var sonSr = entities.SRTalepleris.First(f =>
                     f.MezuniyetBasvurulariID==data.MezuniyetBasvurulariID && f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
                 this.DisplayName = data.AdSoyad + " FR-1243 Lisansüstü Ciltli Tez Teslim Formu";
                 cellOgrenciNo.Text = data.OgrenciNo;

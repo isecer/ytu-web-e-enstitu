@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -15,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*")]
     public class HomeController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
 
  
 
@@ -135,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         });
                     }
 
-                    var anketGiris = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", model);
+                    var anketGiris = ViewRenderHelper.RenderPartialView("Ajax", "GetAnket", model);
                     ViewBag.AnketGiris = anketGiris;
 
                 }

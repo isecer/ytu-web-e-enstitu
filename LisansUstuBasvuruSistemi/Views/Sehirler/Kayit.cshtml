@@ -1,16 +1,15 @@
-﻿@using BiskaUtil
-@using LisansUstuBasvuruSistemi.Models
+﻿@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model LisansUstuBasvuruSistemi.Models.Sehirler
+@model Sehirler
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var OldID = (int)ViewBag.OldID;
+    var oldId = (int)ViewBag.OldID;
 }
 <div class="row">
     <form method="post" class="form-horizontal" role="form">
-        <input type="text" style="display:none;" id="OldID" name="OldID" value="@OldID" />
+        <input type="text" style="display:none;" id="OldID" name="OldID" value="@oldId" />
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
@@ -22,7 +21,7 @@
                 <div class="panel-body">
                     <div class="panel panel-default form-horizontal">
                         <div class="panel-body form-group-separated">
-                            @if (OldID <= 0)
+                            @if (oldId <= 0)
                             {
                                 <div class="form-group">
                                     <label class="col-md-3 col-xs-4 control-label">Şehir Kodu</label>
@@ -37,7 +36,7 @@
                                     <input type="text" name="Ad" id="Ad" value="@Model.Ad" class="form-control" />
                                 </div>
                             </div>
-                            @if (OldID > 0)
+                            @if (oldId > 0)
                             {
                                 <div class="form-group">
                                     <label class="col-md-3 col-xs-4 control-label">Durum</label>
@@ -63,7 +62,7 @@
 <script>
 
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 </script>

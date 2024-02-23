@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +25,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
             try
             {
 
-                using (var db = new LisansustuBasvuruSistemiEntities())
+                using (var  entities = new LubsDbEntities())
                 {
 
-                    db.Logs.Add(new Log
+                    entities.Logs.Add(new Log
                     {
                         TabloAdi = tabloAdi,
                         IslemTipi = islemTipi,
@@ -38,7 +38,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
                         IslemYapanID = isSystemUser ? GlobalSistemSetting.SystemDefaultAdminKullaniciId : UserIdentity.Current.Id,
                         IslemYapanIP = isSystemUser ? UserIdentity.Ip : "::1"
                     });
-                    db.SaveChanges();
+                    entities.SaveChanges();
                 }
             }
             catch

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -13,9 +13,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Universitelers.Where(p => !isYtuHaric || p.UniversiteID != GlobalSistemSetting.UniversiteYtuKod).OrderBy(o => o.Ad).ToList();
+                var data = entities.Universitelers.Where(p => !isYtuHaric || p.UniversiteID != GlobalSistemSetting.UniversiteYtuKod).OrderBy(o => o.Ad).ToList();
                 dct.AddRange(data.Select(item => new CmbIntDto { Value = item.UniversiteID, Caption = item.Ad + (item.KisaAd.IsNullOrWhiteSpace() ? "" : " (" + item.KisaAd + ")") }));
             }
             return dct;

@@ -5,7 +5,7 @@
     Layout = null;
     var tezDiliTr = Model.IsYeniTezDiliTr.HasValue ? Model.IsYeniTezDiliTr == true : Model.IsTezDiliTr;
 }
-@using (Ajax.BeginForm("TdoDanismanBaslikDilDegisiklikFormuPost", "TDOBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
+@using (Ajax.BeginForm("TdoDanismanBaslikDilDegisiklikFormuPost", "TdoBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
 {
     @Html.HiddenFor(p => p.TDOBasvuruID);
     @Html.HiddenFor(p => p.TDOBasvuruDanismanID);
@@ -170,7 +170,7 @@
         var sndrVal = $(sndr).val();
         if (sndrVal != null && sndrVal != "" && sndrVal != "-1") {
             $.ajax({
-                url: '@Url.Action("GetSinavTip", "TDOBasvuru")',
+                url: '@Url.Action("GetSinavTip", "TdoBasvuru")',
                 data: { 'TDOBasvuruID': @Model.TDOBasvuruID, 'SinavTipID': sndrVal },
                 success: function (result) {
                      if (result.OzelNot == true) {
@@ -255,7 +255,7 @@
         var sndrVal = $(sndr).val();
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getProgramlar", "TDOBasvuru")',
+                url: '@Url.Action("getProgramlar", "TdoBasvuru")',
                 data: { 'TDAnabilimDaliID': sndrVal },
                 success: function (result) {
                     $('#TDProgramKod').empty();

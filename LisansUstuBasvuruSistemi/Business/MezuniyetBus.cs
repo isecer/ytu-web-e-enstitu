@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -23,11 +23,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static int? GetMezuniyetAktifSurecId(string enstituKod, int? mezuniyetSurecId = null)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
                 var nowDate = DateTime.Now;
-                var bf = db.MezuniyetSurecis.Where(p =>
+                var bf = entities.MezuniyetSurecis.Where(p =>
                     (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif &&
                     (p.EnstituKod == enstituKod) && p.MezuniyetSurecID ==
                     (mezuniyetSurecId ?? p.MezuniyetSurecID));
@@ -40,11 +40,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static bool IsSurecAktif(int mezuniyetSurecId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
                 var nowDate = DateTime.Now;
-                return db.MezuniyetSurecis.Any(p =>
+                return entities.MezuniyetSurecis.Any(p =>
                     (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif &&
                     p.MezuniyetSurecID == mezuniyetSurecId);
 
@@ -52,20 +52,20 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static void TezDosyasiKontrolYetkilisiAta(int mezuniyetBasvurulariId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var basvuru = db.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                var basvuru = entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                 if (!MezuniyetAyar.TezDosyasiYuklendigindeSorumluyaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false)) return;
 
                 //Dosya yüklendiğinde Kullanıcı atansa bile varolan kullanıcı yetki grubu ve aktiflik durumunu kontrol et eğer aktif bir tez kontrol yetkilisi var ise yeni kullanıcı atamaya izin verme
-                if (basvuru.TezKontrolKullaniciID.HasValue && db.Kullanicilars.Any(a => a.KullaniciID == basvuru.TezKontrolKullaniciID && a.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && a.IsAktif)) return;
+                if (basvuru.TezKontrolKullaniciID.HasValue && entities.Kullanicilars.Any(a => a.KullaniciID == basvuru.TezKontrolKullaniciID && a.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && a.IsAktif)) return;
 
 
                 var groupToplamAtamaList =
-                    (from kul in db.Kullanicilars.Where(p =>
+                    (from kul in entities.Kullanicilars.Where(p =>
                             p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif &&
                             p.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
-                     join mez in db.MezuniyetBasvurularis.Where(p =>
+                     join mez in entities.MezuniyetBasvurularis.Where(p =>
                                  p.TezKontrolKullaniciID.HasValue &&
                                  p.MezuniyetSureci.EnstituKod == basvuru.MezuniyetSureci.EnstituKod) on kul
                                  .KullaniciID
@@ -84,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 basvuru.TezKontrolKullaniciID = enAzAtanan.KullaniciID;
 
 
-                db.SaveChanges();
+                entities.SaveChanges();
             }
         }
 
@@ -95,11 +95,11 @@ namespace LisansUstuBasvuruSistemi.Business
                 IsSuccess = true
             };
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
                 var basvuru =
-                    db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    entities.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                 if (basvuru == null)
                 {
                     msg.IsSuccess = false;
@@ -141,7 +141,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var mMessage = new MmMessage();
             var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
 
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
@@ -356,11 +356,11 @@ namespace LisansUstuBasvuruSistemi.Business
         public static KmMezuniyetBasvuru GetMezuniyetBasvuruBilgi(int mezuniyetBasvurulariId)
         {
             var model = new KmMezuniyetBasvuru();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var basvuru = db.MezuniyetBasvurularis.Include("MezuniyetYayinKontrolDurumlari").First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
-                var kul = db.Kullanicilars.First(p => p.KullaniciID == basvuru.KullaniciID);
+                var basvuru = entities.MezuniyetBasvurularis.Include("MezuniyetYayinKontrolDurumlari").First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                var kul = entities.Kullanicilars.First(p => p.KullaniciID == basvuru.KullaniciID);
 
                 #region BasvuruBilgi
                 model.EnstituKod = basvuru.MezuniyetSureci.EnstituKod;
@@ -370,7 +370,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.MezuniyetYayinKontrolDurumID = basvuru.MezuniyetYayinKontrolDurumID;
                 model.MezuniyetYayinKontrolDurumAciklamasi = basvuru.MezuniyetYayinKontrolDurumAciklamasi;
                 model.KullaniciID = basvuru.KullaniciID;
-                model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi;
+                model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + entities.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi;
                 if (kul.KullaniciTipID != basvuru.KullaniciTipID)
                 {
                     model.KullaniciTipID = kul.KullaniciTipID;
@@ -391,7 +391,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     model.UyrukKod = basvuru.UyrukKod;
                 }
                 model.OgrenciNo = basvuru.OgrenciNo;
-                model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == model.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
+                model.OgrenimTipAdi = entities.OgrenimTipleris.First(p => p.EnstituKod == model.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
                 var progLng = basvuru.Programlar;
                 model.AnabilimdaliAdi = progLng.AnabilimDallari.AnabilimDaliAdi;
                 model.ProgramAdi = progLng.ProgramAdi;
@@ -422,18 +422,18 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.IslemYapanIP = UserIdentity.Ip;
                 #endregion
 
-                var yayins = (from qs in db.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId)
-                              join s in db.MezuniyetSureciYayinTurleris on new { qs.MezuniyetBasvurulari.MezuniyetSurecID, qs.MezuniyetYayinTurID } equals new { s.MezuniyetSurecID, s.MezuniyetYayinTurID }
-                              join sd in db.MezuniyetYayinTurleris on new { s.MezuniyetYayinTurID } equals new { sd.MezuniyetYayinTurID }
-                              join yb in db.MezuniyetYayinBelgeTurleris on new { s.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)yb.MezuniyetYayinBelgeTurID } into defyb
+                var yayins = (from qs in entities.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId)
+                              join s in entities.MezuniyetSureciYayinTurleris on new { qs.MezuniyetBasvurulari.MezuniyetSurecID, qs.MezuniyetYayinTurID } equals new { s.MezuniyetSurecID, s.MezuniyetYayinTurID }
+                              join sd in entities.MezuniyetYayinTurleris on new { s.MezuniyetYayinTurID } equals new { sd.MezuniyetYayinTurID }
+                              join yb in entities.MezuniyetYayinBelgeTurleris on new { s.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)yb.MezuniyetYayinBelgeTurID } into defyb
                               from ybD in defyb.DefaultIfEmpty()
-                              join klk in db.MezuniyetYayinLinkTurleris on new { s.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)klk.MezuniyetYayinLinkTurID } into defklk
+                              join klk in entities.MezuniyetYayinLinkTurleris on new { s.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)klk.MezuniyetYayinLinkTurID } into defklk
                               from klkD in defklk.DefaultIfEmpty()
-                              join ym in db.MezuniyetYayinMetinTurleris on new { s.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)ym.MezuniyetYayinMetinTurID } into defym
+                              join ym in entities.MezuniyetYayinMetinTurleris on new { s.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)ym.MezuniyetYayinMetinTurID } into defym
                               from ymD in defym.DefaultIfEmpty()
-                              join kl in db.MezuniyetYayinLinkTurleris on new { s.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)kl.MezuniyetYayinLinkTurID } into defkl
+                              join kl in entities.MezuniyetYayinLinkTurleris on new { s.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)kl.MezuniyetYayinLinkTurID } into defkl
                               from klD in defkl.DefaultIfEmpty()
-                              join inx in db.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
+                              join inx in entities.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
                               from inxD in definx.DefaultIfEmpty()
                               select new MezuniyetBasvurulariYayinDto
                               {
@@ -500,15 +500,15 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MezuniyetBasvuruDetayDto GetMezuniyetBasvuruDetayBilgi(int mezuniyetBasvurulariId, int? mezuniyetBasvurulariYayinId = null, int? showDetayYayinId = null)
         {
             var model = new MezuniyetBasvuruDetayDto();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var basvuru = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                var basvuru = entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
 
                 var bsurec = basvuru.MezuniyetSureci;
                 var bSurecOtKriter = bsurec.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == basvuru.OgrenimTipKod);
-                var enstitu = db.Enstitulers.First(p => p.EnstituKod == bsurec.EnstituKod);
+                var enstitu = entities.Enstitulers.First(p => p.EnstituKod == bsurec.EnstituKod);
 
-                var eslesenDanisman = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == (basvuru.TezDanismanID ?? 0));
+                var eslesenDanisman = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == (basvuru.TezDanismanID ?? 0));
                 if (eslesenDanisman != null)
                 {
                     model.TezDanismaniUserKey = eslesenDanisman.UserKey;
@@ -525,7 +525,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (model.TezKontrolKullaniciID != null)
                 {
                     var tezAtananKullanici =
-                        db.Kullanicilars.FirstOrDefault(f => model.TezKontrolKullaniciID.HasValue && f.KullaniciID == model.TezKontrolKullaniciID);
+                        entities.Kullanicilars.FirstOrDefault(f => model.TezKontrolKullaniciID.HasValue && f.KullaniciID == model.TezKontrolKullaniciID);
                     model.TezKontrolYetkiliUserKey = tezAtananKullanici.UserKey;
                     model.TezKontrolYetkilisiAdSoyad = tezAtananKullanici.Ad + " " + tezAtananKullanici.Soyad;
                 }
@@ -544,7 +544,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     OnayYapanID = s.OnayYapanID,
                 }).ToList();
                 var onayYapanIDs = model.MezuniyetBasvurulariTezDosyalariDtos.Where(p => p.OnayYapanID.HasValue).Select(s => s.OnayYapanID).ToList();
-                var kuls = db.Kullanicilars.Where(p => onayYapanIDs.Contains(p.KullaniciID)).ToList();
+                var kuls = entities.Kullanicilars.Where(p => onayYapanIDs.Contains(p.KullaniciID)).ToList();
                 foreach (var item in model.MezuniyetBasvurulariTezDosyalariDtos.Where(p => p.OnayYapanID.HasValue))
                 {
                     var kul = kuls.First(p => p.KullaniciID == item.OnayYapanID);
@@ -561,7 +561,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.MezuniyetYayinKontrolDurumID = basvuru.MezuniyetYayinKontrolDurumID;
                 model.MezuniyetYayinKontrolDurumAciklamasi = basvuru.MezuniyetYayinKontrolDurumAciklamasi;
                 model.KullaniciID = basvuru.KullaniciID;
-                model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi;
+                model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + entities.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi;
                 model.KullaniciTipID = basvuru.KullaniciTipID;
                 model.ResimAdi = basvuru.ResimAdi;
                 model.Ad = basvuru.Ad;
@@ -569,7 +569,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.TcKimlikNo = basvuru.TcKimlikNo;
                 model.UyrukKod = basvuru.UyrukKod;
                 model.OgrenciNo = basvuru.OgrenciNo;
-                model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == bsurec.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
+                model.OgrenimTipAdi = entities.OgrenimTipleris.First(p => p.EnstituKod == bsurec.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
                 model.AnabilimdaliAdi = basvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
                 model.ProgramAdi = basvuru.Programlar.ProgramAdi;
                 model.OgrenimDurumID = basvuru.OgrenimDurumID;
@@ -611,29 +611,29 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.IslemYapanID = basvuru.IslemYapanID;
                 model.IslemYapanIP = basvuru.IslemYapanIP;
                 var nowDate = DateTime.Now;
-                model.BasvuruSureciTarihi = bsurec.BaslangicYil + "/" + bsurec.BitisYil + " " + db.Donemlers.First(p => p.DonemID == bsurec.DonemID).DonemAdi + " (" + bsurec.BaslangicTarihi.ToFormatDate() + "-" + bsurec.BitisTarihi.ToFormatDate() + ")";
+                model.BasvuruSureciTarihi = bsurec.BaslangicYil + "/" + bsurec.BitisYil + " " + entities.Donemlers.First(p => p.DonemID == bsurec.DonemID).DonemAdi + " (" + bsurec.BaslangicTarihi.ToFormatDate() + "-" + bsurec.BitisTarihi.ToFormatDate() + ")";
                 model.SonucGirisSureciAktif = bsurec.BaslangicTarihi <= nowDate && bsurec.BitisTarihi >= nowDate;
                 model.IsMezunOldu = basvuru.IsMezunOldu;
                 model.MezuniyetTarihi = basvuru.MezuniyetTarihi;
                 model.EYKTarihi = basvuru.EYKTarihi;
                 model.TezTeslimSonTarih = basvuru.TezTeslimSonTarih;
-                model.MezuniyetJuriOneriFormlaris = db.MezuniyetJuriOneriFormlaris.Include("MezuniyetJuriOneriFormuJurileris").Where(p => p.MezuniyetBasvurulariID == basvuru.MezuniyetBasvurulariID).ToList();
+                model.MezuniyetJuriOneriFormlaris = entities.MezuniyetJuriOneriFormlaris.Include("MezuniyetJuriOneriFormuJurileris").Where(p => p.MezuniyetBasvurulariID == basvuru.MezuniyetBasvurulariID).ToList();
                 model.MezuniyetBasvurulariTezTeslimFormlaris = basvuru.MezuniyetBasvurulariTezTeslimFormlaris;
 
                 model.EykYaGonderildi = model.MezuniyetJuriOneriFormlaris.Select(s => s.EYKYaGonderildi).FirstOrDefault();
                 model.EykDaOnaylandi = model.MezuniyetJuriOneriFormlaris.Select(s => s.EYKDaOnaylandi).FirstOrDefault();
-                var yayins = (from mezuniyetBasvurulariYayin in db.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId)
-                              join mezuniyetSureciYayinTur in db.MezuniyetSureciYayinTurleris on new { mezuniyetBasvurulariYayin.MezuniyetBasvurulari.MezuniyetSurecID, mezuniyetBasvurulariYayin.MezuniyetYayinTurID } equals new { mezuniyetSureciYayinTur.MezuniyetSurecID, mezuniyetSureciYayinTur.MezuniyetYayinTurID }
-                              join mezuniyetYayinTur in db.MezuniyetYayinTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinTurID } equals new { mezuniyetYayinTur.MezuniyetYayinTurID }
-                              join mezuniyetYayinBelgeTur in db.MezuniyetYayinBelgeTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)mezuniyetYayinBelgeTur.MezuniyetYayinBelgeTurID } into defMezuniyetYayinBelgeTur
+                var yayins = (from mezuniyetBasvurulariYayin in entities.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId)
+                              join mezuniyetSureciYayinTur in entities.MezuniyetSureciYayinTurleris on new { mezuniyetBasvurulariYayin.MezuniyetBasvurulari.MezuniyetSurecID, mezuniyetBasvurulariYayin.MezuniyetYayinTurID } equals new { mezuniyetSureciYayinTur.MezuniyetSurecID, mezuniyetSureciYayinTur.MezuniyetYayinTurID }
+                              join mezuniyetYayinTur in entities.MezuniyetYayinTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinTurID } equals new { mezuniyetYayinTur.MezuniyetYayinTurID }
+                              join mezuniyetYayinBelgeTur in entities.MezuniyetYayinBelgeTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)mezuniyetYayinBelgeTur.MezuniyetYayinBelgeTurID } into defMezuniyetYayinBelgeTur
                               from mezuniyetYayinBelgeTurDefItem in defMezuniyetYayinBelgeTur.DefaultIfEmpty()
-                              join mezuniyetYayinLinkTur in db.MezuniyetYayinLinkTurleris on new { mezuniyetSureciYayinTur.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)mezuniyetYayinLinkTur.MezuniyetYayinLinkTurID } into defMezuniyetYayinLinkTur
+                              join mezuniyetYayinLinkTur in entities.MezuniyetYayinLinkTurleris on new { mezuniyetSureciYayinTur.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)mezuniyetYayinLinkTur.MezuniyetYayinLinkTurID } into defMezuniyetYayinLinkTur
                               from mezuniyetYayinLinkTurDefItem in defMezuniyetYayinLinkTur.DefaultIfEmpty()
-                              join mezuniyetYayinMetinTur in db.MezuniyetYayinMetinTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)mezuniyetYayinMetinTur.MezuniyetYayinMetinTurID } into defMezuniyetYayinMetinTur
+                              join mezuniyetYayinMetinTur in entities.MezuniyetYayinMetinTurleris on new { mezuniyetSureciYayinTur.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)mezuniyetYayinMetinTur.MezuniyetYayinMetinTurID } into defMezuniyetYayinMetinTur
                               from mezuniyetYayinMetinTurDefItem in defMezuniyetYayinMetinTur.DefaultIfEmpty()
-                              join mezuniyetYayinLinkTurKaynak in db.MezuniyetYayinLinkTurleris on new { mezuniyetSureciYayinTur.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)mezuniyetYayinLinkTurKaynak.MezuniyetYayinLinkTurID } into defMezuniyetYayinLinkTurKaynak
+                              join mezuniyetYayinLinkTurKaynak in entities.MezuniyetYayinLinkTurleris on new { mezuniyetSureciYayinTur.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)mezuniyetYayinLinkTurKaynak.MezuniyetYayinLinkTurID } into defMezuniyetYayinLinkTurKaynak
                               from mezuniyetYayinLinkTurKaynakrDefItem in defMezuniyetYayinLinkTurKaynak.DefaultIfEmpty()
-                              join mezuniyetYayinIndexTur in db.MezuniyetYayinIndexTurleris on new { mezuniyetBasvurulariYayin.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)mezuniyetYayinIndexTur.MezuniyetYayinIndexTurID } into defMezuniyetYayinIndexTur
+                              join mezuniyetYayinIndexTur in entities.MezuniyetYayinIndexTurleris on new { mezuniyetBasvurulariYayin.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)mezuniyetYayinIndexTur.MezuniyetYayinIndexTurID } into defMezuniyetYayinIndexTur
                               from mezuniyetYayinIndexTurDefItem in defMezuniyetYayinIndexTur.DefaultIfEmpty()
                               select new MezuniyetBasvurulariYayinDto
                               {
@@ -673,7 +673,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                   MezuniyetYayinIndexTurZorunlu = mezuniyetSureciYayinTur.YayinIndexTurIstensin,
                                   MezuniyetYayinIndexTurAdi = mezuniyetYayinIndexTurDefItem != null ? mezuniyetYayinIndexTurDefItem.IndexTurAdi : "",
                                   MezuniyetYayinIndexTurID = mezuniyetBasvurulariYayin.MezuniyetYayinIndexTurID,
-                                  YayinIndexTurleri = db.MezuniyetYayinIndexTurleris.ToList(),
+                                  YayinIndexTurleri = entities.MezuniyetYayinIndexTurleris.ToList(),
                                   MezuniyetKabulEdilmisMakaleZorunlu = mezuniyetSureciYayinTur.YayinKabulEdilmisMakaleIstensin,
                                   MezuniyetYayinKabulEdilmisMakaleAdi = mezuniyetBasvurulariYayin.MezuniyetYayinKabulEdilmisMakaleAdi,
                                   MezuniyetYayinKabulEdilmisMakaleDosyaYolu = mezuniyetBasvurulariYayin.MezuniyetYayinKabulEdilmisMakaleDosyaYolu,
@@ -712,16 +712,16 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
 
                 #region SalonRezervasyonlari 
-                model.MezuniyetSrModel.SalonRezervasyonlari = (from s in db.SRTalepleris
-                                                               join tt in db.SRTalepTipleris on s.SRTalepTipID equals tt.SRTalepTipID
-                                                               join mb in db.MezuniyetBasvurularis on s.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
-                                                               join sal in db.SRSalonlars on s.SRSalonID equals sal.SRSalonID into def1
+                model.MezuniyetSrModel.SalonRezervasyonlari = (from s in entities.SRTalepleris
+                                                               join tt in entities.SRTalepTipleris on s.SRTalepTipID equals tt.SRTalepTipID
+                                                               join mb in entities.MezuniyetBasvurularis on s.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
+                                                               join sal in entities.SRSalonlars on s.SRSalonID equals sal.SRSalonID into def1
                                                                from defSl in def1.DefaultIfEmpty()
-                                                               join hg in db.HaftaGunleris on s.HaftaGunID equals hg.HaftaGunID
-                                                               join d in db.SRDurumlaris on s.SRDurumID equals d.SRDurumID
-                                                               join sd in db.MezuniyetSinavDurumlaris on (s.MezuniyetSinavDurumID ?? MezuniyetSinavDurumEnum.SonucGirilmedi) equals sd.MezuniyetSinavDurumID into def2
+                                                               join hg in entities.HaftaGunleris on s.HaftaGunID equals hg.HaftaGunID
+                                                               join d in entities.SRDurumlaris on s.SRDurumID equals d.SRDurumID
+                                                               join sd in entities.MezuniyetSinavDurumlaris on (s.MezuniyetSinavDurumID ?? MezuniyetSinavDurumEnum.SonucGirilmedi) equals sd.MezuniyetSinavDurumID into def2
                                                                from defSd in def2.DefaultIfEmpty()
-                                                               join sdj in db.MezuniyetSinavDurumlaris on (s.JuriSonucMezuniyetSinavDurumID ?? MezuniyetSinavDurumEnum.SonucGirilmedi) equals sdj.MezuniyetSinavDurumID into def3
+                                                               join sdj in entities.MezuniyetSinavDurumlaris on (s.JuriSonucMezuniyetSinavDurumID ?? MezuniyetSinavDurumEnum.SonucGirilmedi) equals sdj.MezuniyetSinavDurumID into def3
                                                                from defsdj in def3.DefaultIfEmpty()
                                                                let jof = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault()
                                                                where s.MezuniyetBasvurulariID == basvuru.MezuniyetBasvurulariID
@@ -809,12 +809,12 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     if (bsurec.AnketID.HasValue)
                     {
-                        if (!db.AnketCevaplaris.Any(a => a.MezuniyetBasvurulariID == mezuniyetBasvurulariId))
+                        if (!entities.AnketCevaplaris.Any(a => a.MezuniyetBasvurulariID == mezuniyetBasvurulariId))
                         {
 
-                            var anketSorulari = (from bsa in db.Ankets.Where(p => p.AnketID == bsurec.AnketID)
-                                                 join aso in db.AnketSorus on bsa.AnketID equals aso.AnketID
-                                                 join sb in db.AnketCevaplaris.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId && p.Basvurular.KullaniciID == basvuru.KullaniciID) on aso.AnketSoruID equals sb.AnketSoruID into def1
+                            var anketSorulari = (from bsa in entities.Ankets.Where(p => p.AnketID == bsurec.AnketID)
+                                                 join aso in entities.AnketSorus on bsa.AnketID equals aso.AnketID
+                                                 join sb in entities.AnketCevaplaris.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId && p.Basvurular.KullaniciID == basvuru.KullaniciID) on aso.AnketSoruID equals sb.AnketSoruID into def1
                                                  from sbc in def1.DefaultIfEmpty()
                                                  select new
                                                  {
@@ -856,7 +856,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 });
                             }
 
-                            model.AnketView = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", modelAnk);
+                            model.AnketView = ViewRenderHelper.RenderPartialView("Ajax", "GetAnket", modelAnk);
                         }
                     }
                 }
@@ -976,20 +976,20 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static MezuniyetSureciYonetmelikleri GetMezuniyetAktifYonetmelik(int mezuniyetSurecId, int kullaniciId, int? mezuniyetBasvurulariId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 decimal baslangic;
                 if (mezuniyetBasvurulariId > 0)
                 {
-                    var mBasvuru = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var mBasvuru = entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                     baslangic = Convert.ToDecimal(mBasvuru.KayitOgretimYiliBaslangic + "," + mBasvuru.KayitOgretimYiliDonemID.Value);
                 }
                 else
                 {
-                    var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+                    var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
                     baslangic = Convert.ToDecimal(kul.KayitYilBaslangic + "," + kul.KayitDonemID.Value);
                 }
-                var kriter = db.MezuniyetSureciYonetmelikleris.Include("MezuniyetSureciYonetmelikleriOTs").Where(p => p.MezuniyetSurecID == mezuniyetSurecId).ToList().First(f =>
+                var kriter = entities.MezuniyetSureciYonetmelikleris.Include("MezuniyetSureciYonetmelikleriOTs").Where(p => p.MezuniyetSurecID == mezuniyetSurecId).ToList().First(f =>
                     f.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeOncesi ?
                         (Convert.ToDecimal(f.BaslangicYil + "," + f.DonemID) >= baslangic)
                         :
@@ -1007,23 +1007,23 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static List<MezuniyetSureciYonetmelikleriOT> GetMezuniyetAktifOgrenimTipiYayinBilgileri(int mezuniyetSurecId, int kullaniciId, int mezuniyetBasvurulariId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 decimal baslangic;
                 int ogrenimTipKod;
                 if (mezuniyetBasvurulariId > 0)
                 {
-                    var mBasvuru = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var mBasvuru = entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                     baslangic = Convert.ToDecimal(mBasvuru.KayitOgretimYiliBaslangic + "," + mBasvuru.KayitOgretimYiliDonemID.Value);
                     ogrenimTipKod = mBasvuru.OgrenimTipKod;
                 }
                 else
                 {
-                    var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+                    var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
                     baslangic = Convert.ToDecimal(kul.KayitYilBaslangic + "," + kul.KayitDonemID.Value);
                     ogrenimTipKod = kul.OgrenimTipKod.Value;
                 }
-                var kriter = db.MezuniyetSureciYonetmelikleris.Where(p => p.MezuniyetSurecID == mezuniyetSurecId).ToList().First(f =>
+                var kriter = entities.MezuniyetSureciYonetmelikleris.Where(p => p.MezuniyetSurecID == mezuniyetSurecId).ToList().First(f =>
                     f.TarihKriterID == TarihKriterSecimEnum.SecilenTarihVeOncesi ?
                         (Convert.ToDecimal(f.BaslangicYil + "," + f.DonemID) >= baslangic)
                         :
@@ -1043,12 +1043,12 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MmMessage YayinKontrol(KmMezuniyetBasvuru kModel)
         {
             var mmMessage = new MmMessage();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                //var kriterSecim=db.MezuniyetSureciYonetmelikleris.Where(p=>p.BaslangicYil)
+                //var kriterSecim=entities.MezuniyetSureciYonetmelikleris.Where(p=>p.BaslangicYil)
                 var kriter = GetMezuniyetAktifYonetmelik(kModel.MezuniyetSurecID, kModel.KullaniciID, kModel.MezuniyetBasvurulariID);
-                var yturAds = db.MezuniyetYayinTurleris.ToList();
-                var kul = db.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
+                var yturAds = entities.MezuniyetYayinTurleris.ToList();
+                var kul = entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
                 var kriterDetay = (from s in kriter.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == kul.OgrenimTipKod).ToList()
                                    join yta in yturAds on s.MezuniyetYayinTurID equals yta.MezuniyetYayinTurID
                                    group new { s.MezuniyetYayinTurID, yta.MezuniyetYayinTurAdi, s.OgrenimTipKod, s.IsGecerli, s.IsZorunlu, s.GrupKodu } by new { s.IsZorunlu, IsGrup = s.GrupKodu.IsNullOrWhiteSpace() == false, s.GrupKodu } into g1
@@ -1170,18 +1170,18 @@ namespace LisansUstuBasvuruSistemi.Business
         public static KmMezuniyetSureciOgrenimTipModel GetMezuniyetOgrenimTipKriterleri(string enstituKod, int mezuniyetSurecId)
         {
             var model = new KmMezuniyetSureciOgrenimTipModel();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var ogrenimTipleri = db.OgrenimTipleris
+                var ogrenimTipleri = entities.OgrenimTipleris
                     .Where(p => p.EnstituKod == enstituKod && p.IsMezuniyetBasvurusuYapabilir).ToList();
 
-                var sonMezuniyetSurecId = db.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod && p.MezuniyetSurecID != mezuniyetSurecId)
+                var sonMezuniyetSurecId = entities.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod && p.MezuniyetSurecID != mezuniyetSurecId)
                     .OrderByDescending(t => t.MezuniyetSurecID).Select(s => s.MezuniyetSurecID).FirstOrDefault();
 
-                var sonMezuniyetOgrenimTipleri = db.MezuniyetSurecis
+                var sonMezuniyetOgrenimTipleri = entities.MezuniyetSurecis
                     .Where(p => p.MezuniyetSurecID == sonMezuniyetSurecId).SelectMany(s => s.MezuniyetSureciOgrenimTipKriterleris).ToList();
 
-                var mezuniyetOgrenimTipleri = db.MezuniyetSureciOgrenimTipKriterleris
+                var mezuniyetOgrenimTipleri = entities.MezuniyetSureciOgrenimTipKriterleris
                     .Where(p => p.MezuniyetSurecID == mezuniyetSurecId).ToList();
 
                 model.OgrenimTipKriterList = (from ogrenimTipi in ogrenimTipleri
@@ -1234,7 +1234,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (mezuniyetSurecId <= 0 && sonMezuniyetSurecId <= 0)
                 {
                     //seçili enstitüye ait hiç mezuniyet süreci yoksa fbe ye bak ve süreç varsa ilk süreçteki bilgilere göre tekrar metodu çalıştır.
-                    var digerMezuniyetSureci = db.MezuniyetSurecis.OrderByDescending(o => o.EnstituKod == EnstituKodlariEnum.FenBilimleri ? 2 : 1)
+                    var digerMezuniyetSureci = entities.MezuniyetSurecis.OrderByDescending(o => o.EnstituKod == EnstituKodlariEnum.FenBilimleri ? 2 : 1)
                          .ThenByDescending(t => t.MezuniyetSurecID).FirstOrDefault();
                     if (digerMezuniyetSureci != null)
                     {
@@ -1271,19 +1271,19 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MezuniyetBasvurulariYayinDto GetYayinBilgisi(int mezuniyetSurecId, int mezuniyetYayinTurId)
         {
             MezuniyetBasvurulariYayinDto mdl;
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                mdl = (from s in db.MezuniyetSureciYayinTurleris.Where(p => p.MezuniyetSurecID == mezuniyetSurecId && p.MezuniyetYayinTurID == mezuniyetYayinTurId)
-                       join sd in db.MezuniyetYayinTurleris on new { s.MezuniyetYayinTurID } equals new { sd.MezuniyetYayinTurID }
-                       join yb in db.MezuniyetYayinBelgeTurleris on new { s.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)yb.MezuniyetYayinBelgeTurID } into defyb
+                mdl = (from s in entities.MezuniyetSureciYayinTurleris.Where(p => p.MezuniyetSurecID == mezuniyetSurecId && p.MezuniyetYayinTurID == mezuniyetYayinTurId)
+                       join sd in entities.MezuniyetYayinTurleris on new { s.MezuniyetYayinTurID } equals new { sd.MezuniyetYayinTurID }
+                       join yb in entities.MezuniyetYayinBelgeTurleris on new { s.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)yb.MezuniyetYayinBelgeTurID } into defyb
                        from ybD in defyb.DefaultIfEmpty()
-                       join klk in db.MezuniyetYayinLinkTurleris on new { s.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)klk.MezuniyetYayinLinkTurID } into defklk
+                       join klk in entities.MezuniyetYayinLinkTurleris on new { s.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)klk.MezuniyetYayinLinkTurID } into defklk
                        from klkD in defklk.DefaultIfEmpty()
-                       join ym in db.MezuniyetYayinMetinTurleris on new { s.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)ym.MezuniyetYayinMetinTurID } into defym
+                       join ym in entities.MezuniyetYayinMetinTurleris on new { s.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)ym.MezuniyetYayinMetinTurID } into defym
                        from ymD in defym.DefaultIfEmpty()
-                       join kl in db.MezuniyetYayinLinkTurleris on new { s.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)kl.MezuniyetYayinLinkTurID } into defkl
+                       join kl in entities.MezuniyetYayinLinkTurleris on new { s.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)kl.MezuniyetYayinLinkTurID } into defkl
                        from klD in defkl.DefaultIfEmpty()
-                       join inx in db.MezuniyetYayinIndexTurleris on new { s.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
+                       join inx in entities.MezuniyetYayinIndexTurleris on new { s.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
                        from inxD in definx.DefaultIfEmpty()
                        select new MezuniyetBasvurulariYayinDto
                        {
@@ -1317,16 +1317,16 @@ namespace LisansUstuBasvuruSistemi.Business
                            YayinEtkinlikAdiIstensin = s.YayinEtkinlikAdiIstensin,
                            YayinYerBilgisiIstensin = s.YayinYerBilgisiIstensin,
                        }).First();
-                mdl.YayinIndexTurleri = db.MezuniyetYayinIndexTurleris.ToList();
-                mdl.MezuniyetYayinProjeTurleris = db.MezuniyetYayinProjeTurleris.ToList();
+                mdl.YayinIndexTurleri = entities.MezuniyetYayinIndexTurleris.ToList();
+                mdl.MezuniyetYayinProjeTurleris = entities.MezuniyetYayinProjeTurleris.ToList();
             }
             return mdl;
         }
         public static List<MezuniyetYayinKontrolDurumlari> GetMezuniyetYayinDurumListe(List<int> selectedBDurumId = null)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qdata = db.MezuniyetYayinKontrolDurumlaris.Where(p => p.IsAktif);
+                var qdata = entities.MezuniyetYayinKontrolDurumlaris.Where(p => p.IsAktif);
                 if (selectedBDurumId != null) qdata = qdata.Where(p => selectedBDurumId.Contains(p.MezuniyetYayinKontrolDurumID)).OrderBy(o => o.MezuniyetYayinKontrolDurumID);
                 var data = qdata.ToList();
                 return data;
@@ -1346,27 +1346,27 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static IHtmlString ToMezuniyetDetayBasvuru(this MezuniyetBasvuruDetayDto model)
         {
-            var pagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t1_Basvuru");
+            var pagerString = model.ToRenderPartialViewHtml("Ajax", "GetDetailMezuniyet_t1_Basvuru");
             return pagerString;
         }
         public static IHtmlString ToMezuniyetDetayEykSureci(this MezuniyetBasvuruDetayDto model)
         {
-            var pagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t2_EYKSureci");
+            var pagerString = model.ToRenderPartialViewHtml("Ajax", "GetDetailMezuniyet_t2_EYKSureci");
             return pagerString;
         }
         public static IHtmlString ToMezuniyetDetaySinavSureci(this MezuniyetBasvuruDetayDto model)
         {
-            var pagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t3_SinavSureci");
+            var pagerString = model.ToRenderPartialViewHtml("Ajax", "GetDetailMezuniyet_t3_SinavSureci");
             return pagerString;
         }
         public static IHtmlString ToMezuniyetDetayTezKontrolSureci(this MezuniyetBasvuruDetayDto model)
         {
-            var pagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t4_TezKontrolSureci");
+            var pagerString = model.ToRenderPartialViewHtml("Ajax", "GetDetailMezuniyet_t4_TezKontrolSureci");
             return pagerString;
         }
         public static IHtmlString ToMezuniyetDetayMezuniyetSureci(this MezuniyetBasvuruDetayDto model)
         {
-            var pagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t5_MezuniyetSureci");
+            var pagerString = model.ToRenderPartialViewHtml("Ajax", "GetDetailMezuniyet_t5_MezuniyetSureci");
             return pagerString;
         }
 
@@ -1449,10 +1449,10 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod)
-                            join d in db.Donemlers on s.DonemID equals d.DonemID
+                var data = (from s in entities.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod)
+                            join d in entities.Donemlers on s.DonemID equals d.DonemID
                             orderby s.BaslangicTarihi descending
                             select new
                             {
@@ -1475,10 +1475,10 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod)
-                            join d in db.Donemlers on s.DonemID equals d.DonemID
+                var data = (from s in entities.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod)
+                            join d in entities.Donemlers on s.DonemID equals d.DonemID
                             select new
                             {
                                 s.DonemID,
@@ -1497,12 +1497,12 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbStringDto>();
             if (bosSecimVar) lst.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var qData = (from s in db.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod)
-                             join bsv in db.MezuniyetBasvurularis on s.MezuniyetSurecID equals bsv.MezuniyetSurecID
-                             join d in db.Donemlers on bsv.KayitOgretimYiliDonemID equals d.DonemID
+                var qData = (from s in entities.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod)
+                             join bsv in entities.MezuniyetBasvurularis on s.MezuniyetSurecID equals bsv.MezuniyetSurecID
+                             join d in entities.Donemlers on bsv.KayitOgretimYiliDonemID equals d.DonemID
                              orderby s.BaslangicTarihi descending
                              select new
                              {
@@ -1532,9 +1532,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<Kullanicilar> GetAktifTezKontrolSorumlulari(string enstituKod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Kullanicilars.Where(p => p.IsAktif && p.EnstituKod == enstituKod && p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).ToList();
+                var data = entities.Kullanicilars.Where(p => p.IsAktif && p.EnstituKod == enstituKod && p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).ToList();
                 return data;
             }
         }
@@ -1556,9 +1556,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MezuniyetYayinKontrolDurumlaris.Where(p => p.IsAktif && (tumu || p.BasvuranGorsun)).OrderBy(o => o.MezuniyetYayinKontrolDurumID).ToList();
+                var data = entities.MezuniyetYayinKontrolDurumlaris.Where(p => p.IsAktif && (tumu || p.BasvuranGorsun)).OrderBy(o => o.MezuniyetYayinKontrolDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetYayinKontrolDurumID, Caption = item.MezuniyetYayinKontrolDurumAdi });
@@ -1572,9 +1572,9 @@ namespace LisansUstuBasvuruSistemi.Business
             var dct = new List<CmbIntDto>();
             haricSinavDurumIds = haricSinavDurumIds ?? new List<int>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MezuniyetSinavDurumlaris.Where(p => !haricSinavDurumIds.Contains(p.MezuniyetSinavDurumID)).ToList();
+                var data = entities.MezuniyetSinavDurumlaris.Where(p => !haricSinavDurumIds.Contains(p.MezuniyetSinavDurumID)).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetSinavDurumID, Caption = item.MezuniyetSinavDurumAdi });
@@ -1614,12 +1614,12 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kriter = MezuniyetBus.GetMezuniyetAktifOgrenimTipiYayinBilgileri(mezuniyetSurecId, kullaniciId, mezuniyetBasvurulariId);
                 var mezuniyetYayinTurIDs = kriter.Where(p => p.IsGecerli).Select(s => s.MezuniyetYayinTurID).Distinct().ToList();
 
-                var qdata = db.MezuniyetYayinTurleris.AsQueryable();
+                var qdata = entities.MezuniyetYayinTurleris.AsQueryable();
                 if (mezuniyetYayinTurIDs.Count > 0) qdata = qdata.Where(p => mezuniyetYayinTurIDs.Contains(p.MezuniyetYayinTurID));
                 var data = qdata.OrderBy(o => o.MezuniyetYayinTurAdi).ToList();
                 foreach (var item in data)
@@ -1633,9 +1633,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MezuniyetYayinKontrolDurumlaris.Where(p => (tumu || p.BasvuranGorsun)).OrderBy(o => o.MezuniyetYayinKontrolDurumID).ToList();
+                var data = entities.MezuniyetYayinKontrolDurumlaris.Where(p => (tumu || p.BasvuranGorsun)).OrderBy(o => o.MezuniyetYayinKontrolDurumID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetYayinKontrolDurumID, Caption = item.MezuniyetYayinKontrolDurumAdi });
@@ -1649,9 +1649,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MezuniyetYayinBelgeTurleris.OrderBy(o => o.BelgeTurAdi).ToList();
+                var data = entities.MezuniyetYayinBelgeTurleris.OrderBy(o => o.BelgeTurAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetYayinBelgeTurID, Caption = item.BelgeTurAdi });
@@ -1663,9 +1663,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MezuniyetYayinLinkTurleris.Where(p => p.IsKaynakOrYayin == isKaynakOrYayin).OrderBy(o => o.LinkTurAdi).ToList();
+                var data = entities.MezuniyetYayinLinkTurleris.Where(p => p.IsKaynakOrYayin == isKaynakOrYayin).OrderBy(o => o.LinkTurAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetYayinLinkTurID, Caption = item.LinkTurAdi });
@@ -1677,9 +1677,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.MezuniyetYayinMetinTurleris.OrderBy(o => o.MetinTurAdi).ToList();
+                var data = entities.MezuniyetYayinMetinTurleris.OrderBy(o => o.MetinTurAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetYayinMetinTurID, Caption = item.MetinTurAdi });

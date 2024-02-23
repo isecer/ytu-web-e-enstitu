@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
@@ -12,9 +12,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod).OrderBy(o => o.OgrenimTipAdi).ToList();
+                var data = entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod).OrderBy(o => o.OgrenimTipAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.OgrenimTipKod, Caption = item.OgrenimTipAdi });
@@ -28,9 +28,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.OgrenimTipleris.Where(p => p.IsAktif).OrderBy(o => o.OgrenimTipAdi).Select(s => new { s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct().ToList();
+                var data = entities.OgrenimTipleris.Where(p => p.IsAktif).OrderBy(o => o.OgrenimTipAdi).Select(s => new { s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct().ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.OgrenimTipKod, Caption = item.OgrenimTipAdi });
@@ -44,9 +44,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && (!aktif.HasValue || p.IsAktif == aktif.Value) && (!haricOgreniTipKod.HasValue || p.OgrenimTipKod != haricOgreniTipKod.Value)).OrderBy(o => o.OgrenimTipAdi).ToList();
+                var data = entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && (!aktif.HasValue || p.IsAktif == aktif.Value) && (!haricOgreniTipKod.HasValue || p.OgrenimTipKod != haricOgreniTipKod.Value)).OrderBy(o => o.OgrenimTipAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.OgrenimTipKod, Caption = item.OgrenimTipAdi });
@@ -59,11 +59,11 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
-                var data = db.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif).OrderBy(o => o.OgrenimTipAdi).ToList();
+                var data = entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif).OrderBy(o => o.OgrenimTipAdi).ToList();
                 data = data.Where(p => IsDoktora(p.OgrenimTipKod)).ToList();
                 foreach (var item in data)
                 {
@@ -80,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
         public static bool IsDoktora(this int ogrenimTipKod)
-        { 
+        {
             return DoktoraKods().Contains(ogrenimTipKod);
         }
         public static bool IsDoktora(this int? ogrenimTipKod)

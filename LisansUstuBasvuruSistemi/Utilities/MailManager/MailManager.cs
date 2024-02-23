@@ -11,7 +11,7 @@ using System.Web;
 using BiskaUtil;
 using HtmlAgilityPack;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -81,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 HtmlContent = mailItem.Sablon.SablonHtml
             };
 
-          
+
 
             model.Title = model.Title.Replace("{{", "{{_removeRw_");
             var titleStrList = model.Title.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
@@ -115,7 +115,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 Content = model.HtmlContent.Replace("_removeRw_", ""),
                 WebAdresi = mailItem.WebAdresi
             };
-            model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+            model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
 
             if (mailItem.SablonEkleri.Any())
             {
@@ -185,9 +185,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
                 try
                 {
-                    using (var dbb = new LisansustuBasvuruSistemiEntities())
+                    using (var entities = new LubsDbEntities())
                     {
-                        var qeklenen = dbb.GonderilenMaillers.First(p => p.GonderilenMailID == gonderilenMailId);
+                        var qeklenen = entities.GonderilenMaillers.First(p => p.GonderilenMailID == gonderilenMailId);
                         try
                         {
                             SendMail(qeklenen.EnstituKod, konu, icerik, eMails, attachs);
@@ -199,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             qeklenen.HataMesaji = ex.ToExceptionMessage();
                             SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, uid, uIp);
                         }
-                        dbb.SaveChanges();
+                        entities.SaveChanges();
                     }
                 }
                 catch (Exception ex)

@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Linq;
 using DevExpress.XtraPrinting;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using DevExpress.XtraReports.UI;
@@ -14,17 +14,17 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
                 DisplayName = "FR-1227 DOKTORA YETERLİK SINAVI DEĞERLENDİRME FORMU";
 
-                var q = (from s in db.YeterlikBasvurus.Where(p => p.YeterlikBasvuruID == yeterlikBasvuruId)
-                         join bs in db.YeterlikSurecis on s.YeterlikSurecID equals bs.YeterlikSurecID
-                         join ogrenci in db.Kullanicilars on s.KullaniciID equals ogrenci.KullaniciID
-                         join e in db.Enstitulers on s.YeterlikSureci.EnstituKod equals e.EnstituKod
-                         join prg in db.Programlars on s.ProgramKod equals prg.ProgramKod
-                         join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                         join ot in db.OgrenimTipleris on s.OgrenimTipID equals ot.OgrenimTipID
+                var q = (from s in entities.YeterlikBasvurus.Where(p => p.YeterlikBasvuruID == yeterlikBasvuruId)
+                         join bs in entities.YeterlikSurecis on s.YeterlikSurecID equals bs.YeterlikSurecID
+                         join ogrenci in entities.Kullanicilars on s.KullaniciID equals ogrenci.KullaniciID
+                         join e in entities.Enstitulers on s.YeterlikSureci.EnstituKod equals e.EnstituKod
+                         join prg in entities.Programlars on s.ProgramKod equals prg.ProgramKod
+                         join abd in entities.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
+                         join ot in entities.OgrenimTipleris on s.OgrenimTipID equals ot.OgrenimTipID
                          select new
                          {
                              s.BasvuruTarihi,

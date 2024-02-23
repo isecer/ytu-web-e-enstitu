@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -21,9 +21,9 @@ namespace LisansUstuBasvuruSistemi.Business
     {
         public static bool IsAktifDevamEdenTijVarMi(int kullaniciId, string ogrenciNo)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                return db.TijBasvuruOneris.Any(a => a.TijBasvuru.KullaniciID == kullaniciId &&
+                return entities.TijBasvuruOneris.Any(a => a.TijBasvuru.KullaniciID == kullaniciId &&
                                                     a.TijBasvuru.OgrenciNo == ogrenciNo &&
                                                     !a.TijBasvuru.IsYeniBasvuruYapilabilir);
 
@@ -33,9 +33,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<CmbIntDto> CmbTijDegisiklikTipListe(bool bosSecimVar = false)
         {
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var degisiklitTips = db.TijDegisiklikTipleris
+                var degisiklitTips = entities.TijDegisiklikTipleris
                     .Select(s => new CmbIntDto
                     {
                         Value = s.TijDegisiklikTipID,
@@ -49,9 +49,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<CmbIntDto> CmbTijFormTipListe(bool bosSecimVar = false, bool? isIlkOneri = null)
         {
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qDegisiklitTips = db.TijFormTipleris
+                var qDegisiklitTips = entities.TijFormTipleris
                     .Select(s => new CmbIntDto
                     {
                         Value = s.TijFormTipID,
@@ -83,9 +83,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<CmbStringDto> CmbTiDonemListe(string enstituKod, bool bosSecimVar = false)
         {
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var donems = db.TijBasvuruOneris.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
+                var donems = entities.TijBasvuruOneris.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
                     .Distinct().OrderByDescending(o => o.DonemBaslangicYil).ThenByDescending(t => t.DonemID).Select(s => new CmbStringDto
                     {
                         Value = s.DonemBaslangicYil + "" + s.DonemID,
@@ -98,12 +98,12 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static List<CmbIntDto> GetCmbFilterTiAnabilimDallari(string enstituKod, bool bosSecimVar = false)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var yeterliAnabilimDaliIds = db.TijBasvurus
+                var yeterliAnabilimDaliIds = entities.TijBasvurus
                     .Where(p => p.EnstituKod == enstituKod).Select(s => s.Programlar.AnabilimDaliID).Distinct().ToList();
 
-                var anabilimDallaris = db.AnabilimDallaris.Where(p => yeterliAnabilimDaliIds.Contains(p.AnabilimDaliID))
+                var anabilimDallaris = entities.AnabilimDallaris.Where(p => yeterliAnabilimDaliIds.Contains(p.AnabilimDaliID))
                     .Select(s => new { s.AnabilimDaliID, s.AnabilimDaliAdi }).OrderBy(o => o.AnabilimDaliAdi).Select(
                         s =>
                             new CmbIntDto { Value = s.AnabilimDaliID, Caption = s.AnabilimDaliAdi }
@@ -133,10 +133,10 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static List<CmbIntDto> CmbTijOneriTipListe(bool bosSecimVar = false)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var tips = db.TijFormTipleris
+                var tips = entities.TijFormTipleris
                     .Select(s => new { s.TijFormTipID, s.TikFormTipAdi }).Select(
                         s =>
                             new CmbIntDto { Value = s.TijFormTipID, Caption = s.TikFormTipAdi }
@@ -158,7 +158,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static FmTijBasvuru BasvuruBilgi(FmTijBasvuru model)
         {
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
                 var obsOgrenci = KullanicilarBus.OgrenciBilgisiGuncelleObs(model.KullaniciID.Value);
@@ -255,7 +255,7 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<string> TezIzlemeJuriOneriSenkronizasyonMsg(int kullaniciId)
         {
             var msg = new List<string>();
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kul = entities.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
                 if (kul.YtuOgrencisi)
@@ -367,7 +367,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             Guid? basvuruUniqueId = null;
 
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kul = entities.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
                 if (kul.YtuOgrencisi)
@@ -475,7 +475,7 @@ namespace LisansUstuBasvuruSistemi.Business
         public static TijBasvuruDetayDto GetSecilenBasvuruTijDetay(Guid uniqueId)
         {
             var model = new TijBasvuruDetayDto();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
@@ -484,7 +484,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var tiJuriOnerileriYetkili = RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent() || RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
                 if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriYetkili)
                     danismanId = UserIdentity.Current.Id;
-                var basvuru = db.TijBasvurus.First(p => p.UniqueID == uniqueId);
+                var basvuru = entities.TijBasvurus.First(p => p.UniqueID == uniqueId);
 
                 var ogrenciObsBilgi =
                     KullanicilarBus.OgrenciBilgisiGuncelleObs(basvuru.KullaniciID);
@@ -494,11 +494,11 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (basvuru.OgrenciNo == ogrenciObsBilgi.OgrenciInfo.OGR_NO && basvuru.TezDanismanID != ogrenciObsBilgi.AktifDanismanID)
                     {
                         basvuru.TezDanismanID = ogrenciObsBilgi.AktifDanismanID;
-                        db.SaveChanges();
+                        entities.SaveChanges();
                     }
                 }
 
-                var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
+                var enstitu = entities.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
                 var sonTijBasvuruOneri = basvuru.TijBasvuruOneris.OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault();
                 model.TijBasvuruOneriList = basvuru.TijBasvuruOneris.ToList().Where(p => p.TezDanismanID == (danismanId ?? p.TezDanismanID)).Select(s => new TijBasvuruOneriDetayDto
                 {
@@ -550,13 +550,13 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.DonemHtmlString = (sonTij ?? new TijBasvuruOneriDetayDto()).ToTijBasvuruDonemView().ToString();
                 model.IsYeniBasvuruYapilabilir = basvuru.IsYeniBasvuruYapilabilir;
                 model.UniqueID = basvuru.UniqueID;
-                model.TezDanismaniUserKey = db.Kullanicilars.Where(p => p.KullaniciID == basvuru.TezDanismanID)
+                model.TezDanismaniUserKey = entities.Kullanicilars.Where(p => p.KullaniciID == basvuru.TezDanismanID)
                     .Select(s => s.UserKey).FirstOrDefault();
                 model.TezDanismanID = basvuru.TezDanismanID;
                 model.TijBasvuruID = basvuru.TijBasvuruID;
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
                 model.KullaniciID = basvuru.KullaniciID;
-                model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi;
+                model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + entities.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi;
                 model.ResimAdi = basvuru.Kullanicilar.ResimAdi;
                 model.Ad = basvuru.Kullanicilar.Ad;
                 model.Soyad = basvuru.Kullanicilar.Soyad;
@@ -586,9 +586,9 @@ namespace LisansUstuBasvuruSistemi.Business
                 IsSuccess = true
             };
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var basvuru = db.TijBasvuruOneris.FirstOrDefault(p => p.UniqueID == tijBasvuruOneriUniqueId);
+                var basvuru = entities.TijBasvuruOneris.FirstOrDefault(p => p.UniqueID == tijBasvuruOneriUniqueId);
                 if (basvuru == null)
                 {
                     msg.IsSuccess = false;
@@ -634,9 +634,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<int> GetDanismanOgrencileriKullaniciId(int danismanId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var ogrencis = db.Kullanicilars.Where(p => p.DanismanID == danismanId &&
+                var ogrencis = entities.Kullanicilars.Where(p => p.DanismanID == danismanId &&
                                                            p.YtuOgrencisi && p.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && p.DanismanID.HasValue).Select(s => s.KullaniciID)
                     .ToList();
                 return ogrencis;
@@ -644,9 +644,9 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static JsonResult GetFilterOgrenciJsonResult(string term, string enstituKod, int? danismanId = null)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qKul = db.Kullanicilars.Where(p => p.YtuOgrencisi && p.EnstituKod == enstituKod && p.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && p.DanismanID.HasValue).AsQueryable();
+                var qKul = entities.Kullanicilars.Where(p => p.YtuOgrencisi && p.EnstituKod == enstituKod && p.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && p.DanismanID.HasValue).AsQueryable();
 
                 if (!term.IsNullOrWhiteSpace())
                 {

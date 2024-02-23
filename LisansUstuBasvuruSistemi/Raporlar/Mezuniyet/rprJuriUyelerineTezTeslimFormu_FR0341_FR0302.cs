@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
@@ -9,10 +9,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         public RprJuriUyelerineTezTeslimFormu_FR0341_FR0302(int mezuniyetJuriOneriFormId)
         {
             InitializeComponent();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var joForm = db.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
+                var joForm = entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
                 var mBasvuru = joForm.MezuniyetBasvurulari;
 
 
@@ -25,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
                 var danismanBilgi = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.JuriTipAdi == "TezDanismani");
                 xrCellDanismanBilgi.Text = (danismanBilgi.UnvanAdi + " " + danismanBilgi.AdSoyad).ToUpper();
-                xrCellDanismanBilgiUni.Text =  danismanBilgi.UniversiteAdi.ToUpper();
+                xrCellDanismanBilgiUni.Text = danismanBilgi.UniversiteAdi.ToUpper();
 
                 cellTezBaslikTr.Text =
                     joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikTr : mBasvuru.TezBaslikTr;

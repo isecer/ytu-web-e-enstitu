@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {

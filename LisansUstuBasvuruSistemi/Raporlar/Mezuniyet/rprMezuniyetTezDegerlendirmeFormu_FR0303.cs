@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using System.Linq;
 
@@ -9,10 +9,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         public RprMezuniyetTezDegerlendirmeFormu_FR0303(int mezuniyetJuriOneriFormId, int? mezuniyetJuriOneriFormuJuriId)
         {
             InitializeComponent();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var joForm = db.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
+                var joForm = entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
 
                 var mBasvuru = joForm.MezuniyetBasvurulari;
 
@@ -64,7 +64,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     xrCellJuriFaks.Text = "";
                     xrCellJuriEPosta.Text = "";
                 }
-                this.DisplayName = (mBasvuru.Ad + " " + mBasvuru.Soyad) + " FR-0303 Doktora Tez Değerlendirme Formu";
+                DisplayName = (mBasvuru.Ad + " " + mBasvuru.Soyad) + " FR-0303 Doktora Tez Değerlendirme Formu";
 
             }
         }

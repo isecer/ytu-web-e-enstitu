@@ -1,18 +1,12 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using BiskaUtil;
-using System.Linq;
+﻿using System.Linq;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.LUB
 {
-    public partial class rprBasvuruSonucList : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprBasvuruSonucList : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprBasvuruSonucList(int id, int EkBilgiTipID)
+        public RprBasvuruSonucList(int id, int EkBilgiTipID)
         {
             InitializeComponent();
 
@@ -22,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             cpt_Sira.Text = "S.No";
             cpt_Tel.Text = "Telefon";
             cpt_Durum.Text = "Durum";
-            cpt_BasariNotu.Text ="Başarı Notu";
+            cpt_BasariNotu.Text = "Başarı Notu";
             if (EkBilgiTipID == 1) //İletişim
             {
 
@@ -59,16 +53,25 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 xrTable2.DeleteColumn(cpt_BasariNotu);
                 xrTable1.DeleteColumn(Rw_BasariNotu);
             }
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == id).First();
-                string surec = bsurec.BaslangicYil + " / " + bsurec.BitisYil + " " + bsurec.Donemler.DonemAdi;
-                if (bsurec.BasvuruSurecTipID == BasvuruSurecTipiEnum.LisansustuBasvuru) surec += "Lisansüstü Başvuruları Değerlendirme Listesi";
-                else if (bsurec.BasvuruSurecTipID == BasvuruSurecTipiEnum.YatayGecisBasvuru) surec += " Lisansüstü Yatay Geçiş Başvuruları Değerlendirme Listesi";
-                else surec += " YTÜ Yeni Mezun Doktora Başvuruları Değerlendirme Listesi";
-                lbllblDonemBilgi.Text = surec;
+                var bsurec = entities.BasvuruSurecs.First(p => p.BasvuruSurecID == id);
+                var surecAdi = bsurec.BaslangicYil + " / " + bsurec.BitisYil + " " + bsurec.Donemler.DonemAdi;
+                switch (bsurec.BasvuruSurecTipID)
+                {
+                    case BasvuruSurecTipiEnum.LisansustuBasvuru:
+                        surecAdi += " Lisansüstü Başvuruları Değerlendirme Listesi";
+                        break;
+                    case BasvuruSurecTipiEnum.YatayGecisBasvuru:
+                        surecAdi += " Lisansüstü Yatay Geçiş Başvuruları Değerlendirme Listesi";
+                        break;
+                    default:
+                        surecAdi += " YTÜ Yeni Mezun Doktora Başvuruları Değerlendirme Listesi";
+                        break;
+                }
+                lbllblDonemBilgi.Text = surecAdi;
                 lblUniAdi.Text = "YILDIZ TEKNİK ÜNİVERSİTESİ";
-                string logoPath = "/Content/assets/images/ytu_logo_tr.png";
+                var logoPath = "/Content/assets/images/ytu_logo_tr.png";
                 rprLogo.ImageUrl = logoPath;
 
             }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -11,10 +11,10 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.SinavTipleris.Where(s2 => s2.EnstituKod == enstituKodu && s2.IsAktif)
-                            join stl in db.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
+                var data = (from s in entities.SinavTipleris.Where(s2 => s2.EnstituKod == enstituKodu && s2.IsAktif)
+                            join stl in entities.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
                             orderby stl.SinavAdi
                             select new
                             {
@@ -38,12 +38,12 @@ namespace LisansUstuBasvuruSistemi.Business
             sinavTipGrupIDs = sinavTipGrupIDs ?? new List<int>();
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var bssT = db.BasvuruSurecSinavTipleris.Where(p => p.EnstituKod == enstituKodu).Select(s => s.SinavTipID).Distinct();
-                var data = (from s in db.SinavTipleris.Where(s2 => s2.EnstituKod == enstituKodu && bssT.Contains(s2.SinavTipID))
+                var bssT = entities.BasvuruSurecSinavTipleris.Where(p => p.EnstituKod == enstituKodu).Select(s => s.SinavTipID).Distinct();
+                var data = (from s in entities.SinavTipleris.Where(s2 => s2.EnstituKod == enstituKodu && bssT.Contains(s2.SinavTipID))
 
-                            join stl in db.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
+                            join stl in entities.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
                             orderby stl.SinavAdi
                             select new
                             {
@@ -64,10 +64,10 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<CmbIntDto> CmbGetdAktifSinavlar(List<CmbMultyTypeDto> filterM, int basvuruSurecId, int sinavTipGrupId, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.BasvuruSurecSinavTipleris.Where(s2 => s2.IsAktif && s2.BasvuruSurecID == basvuruSurecId)
-                            join stl in db.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
+                var data = (from s in entities.BasvuruSurecSinavTipleris.Where(s2 => s2.IsAktif && s2.BasvuruSurecID == basvuruSurecId)
+                            join stl in entities.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
                             orderby stl.SinavAdi
                             where s.SinavTipGrupID == sinavTipGrupId
                             select new
@@ -77,7 +77,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 stl.SinavAdi
                             }).ToList();
 
-                var qSinavOt = db.BasvuruSurecSinavTipleriOTNotAraliklaris.Where(p => p.BasvuruSurecID == basvuruSurecId).ToList();
+                var qSinavOt = entities.BasvuruSurecSinavTipleriOTNotAraliklaris.Where(p => p.BasvuruSurecID == basvuruSurecId).ToList();
                 var qJoin = (from s in qSinavOt
                              join fl in filterM on new { s.OgrenimTipKod, s.Ingilizce } equals new { OgrenimTipKod = fl.Value, Ingilizce = fl.ValueB }
                              group new { s.SinavTipID, s.OgrenimTipKod, s.IsGecerli, s.IsIstensin, s.Ingilizce, ProgramKod = fl.ValueS2 } by new { s.SinavTipID, s.OgrenimTipKod, s.IsGecerli, s.IsIstensin, s.Ingilizce, ProgramKod = fl.ValueS2 } into g1
@@ -87,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                  g1.Key.OgrenimTipKod,
                                  g1.Key.IsGecerli,
                                  g1.Key.IsIstensin,
-                                 IsIstensin2 = db.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars.Any(p => p.BasvuruSurecSinavTipleriOTNotAraliklari.BasvuruSurecID == basvuruSurecId && p.BasvuruSurecSinavTipleriOTNotAraliklari.SinavTipID == g1.Key.SinavTipID && p.BasvuruSurecSinavTipleriOTNotAraliklari.OgrenimTipKod == g1.Key.OgrenimTipKod && p.BasvuruSurecSinavTipleriOTNotAraliklari.Ingilizce == g1.Key.Ingilizce && p.ProgramKod == g1.Key.ProgramKod) == false,
+                                 IsIstensin2 = entities.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars.Any(p => p.BasvuruSurecSinavTipleriOTNotAraliklari.BasvuruSurecID == basvuruSurecId && p.BasvuruSurecSinavTipleriOTNotAraliklari.SinavTipID == g1.Key.SinavTipID && p.BasvuruSurecSinavTipleriOTNotAraliklari.OgrenimTipKod == g1.Key.OgrenimTipKod && p.BasvuruSurecSinavTipleriOTNotAraliklari.Ingilizce == g1.Key.Ingilizce && p.ProgramKod == g1.Key.ProgramKod) == false,
                                  g1.Key.Ingilizce,
                                  g1.Key.ProgramKod,
 
@@ -123,9 +123,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbDoubleDto>();
             if (bosSecimVar) dct.Add(new CmbDoubleDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.SinavTipleris.Where(p => p.SinavTipID == sinavTipId).SelectMany(s => s.SinavNotlaris).Select(s => new CmbDoubleDto
+                var data = entities.SinavTipleris.Where(p => p.SinavTipID == sinavTipId).SelectMany(s => s.SinavNotlaris).Select(s => new CmbDoubleDto
                 {
                     Value = s.SinavNotDeger,
                     Caption = s.SinavNotAdi + " (Yüzlük karşılığı: " + s.SinavNotDeger + ")"
@@ -140,9 +140,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.SinavTipGruplaris.OrderBy(o => o.SinavTipGrupAdi).ToList();
+                var data = entities.SinavTipGruplaris.OrderBy(o => o.SinavTipGrupAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.SinavTipGrupID, Caption = item.SinavTipGrupAdi });
@@ -156,9 +156,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.OzelNotTipleris.OrderBy(o => o.OzelNotTipID).ToList();
+                var data = entities.OzelNotTipleris.OrderBy(o => o.OzelNotTipID).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.OzelNotTipID, Caption = item.OzelNotTipAdi });

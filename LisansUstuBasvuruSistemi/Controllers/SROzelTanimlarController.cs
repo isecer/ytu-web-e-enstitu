@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.SrOzelTanimlar)]
     public class SrOzelTanimlarController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index()
         {
             return Index(new FmOzelTanimlar());
@@ -287,7 +287,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetSaatList(int srSalonId, int srTalepTipId, DateTime tarih, int? srOzelTanimId)
         {
             var data = SrTalepleriBus.GetSalonBosSaatler(srSalonId, srTalepTipId, tarih, null, srOzelTanimId);
-            var hcb = ViewRenderHelper.RenderPartialView("SROzelTanimlar", "getSaatlerView", data);
+            var hcb = ViewRenderHelper.RenderPartialView("SROzelTanimlar", "GetSaatlerView", data);
             return new { Deger = hcb }.ToJsonResult();
         }
         public ActionResult GetSaatlerView(SRSalonSaatlerModel model)

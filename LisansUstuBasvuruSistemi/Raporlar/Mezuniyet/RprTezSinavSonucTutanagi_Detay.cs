@@ -2,7 +2,7 @@
 using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
@@ -14,10 +14,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
 
-                var data = (from s in db.SRTalepleris
+                var data = (from s in entities.SRTalepleris
                             where s.SRTalepID == srTalepId
                             select new
                             {

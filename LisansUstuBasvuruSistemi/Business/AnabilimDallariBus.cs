@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
@@ -15,9 +15,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == enstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
+                var data = entities.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == enstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbStringDto { Value = item.AnabilimDaliAdi, Caption = item.AnabilimDaliAdi });
@@ -29,9 +29,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == enstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
+                var data = entities.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == enstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.AnabilimDaliID, Caption = item.AnabilimDaliAdi });
@@ -44,9 +44,9 @@ namespace LisansUstuBasvuruSistemi.Business
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.AnabilimDallaris.Where(p => enstKods.Contains(p.EnstituKod));
+                var data = entities.AnabilimDallaris.Where(p => enstKods.Contains(p.EnstituKod));
                 if (enstituKod.IsNullOrWhiteSpace() == false) data = data.Where(p => p.EnstituKod == enstituKod);
                 var data2 = data.OrderBy(o => o.AnabilimDaliAdi).ToList();
                 foreach (var item in data2)

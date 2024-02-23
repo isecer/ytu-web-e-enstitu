@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -13,9 +13,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         public RprTezSinavSonucTutanagi_FR0342_FR0377(int srTalepId)
         {
             InitializeComponent();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var srTalebi = db.SRTalepleris.First(p => p.SRTalepID == srTalepId);
+                var srTalebi = entities.SRTalepleris.First(p => p.SRTalepID == srTalepId);
                 var mBasvuru = srTalebi.MezuniyetBasvurulari;
 
                 var joForm = mBasvuru.MezuniyetJuriOneriFormlaris.First();

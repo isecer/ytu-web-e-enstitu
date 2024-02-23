@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32901.82
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LisansUstuBasvuruSistemi", "LisansUstuBasvuruSistemi\LisansUstuBasvuruSistemi.csproj", "{838B5983-A749-45EE-8980-A550E959C848}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiskaUtil", "BiskaUtil\BiskaUtil.csproj", "{4ACF1C81-0800-46EB-9217-62CFFD65B8F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{D8248604-CFE9-4616-A25E-72CB6A3ABC58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,14 @@ Global
 		{4ACF1C81-0800-46EB-9217-62CFFD65B8F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4ACF1C81-0800-46EB-9217-62CFFD65B8F8}.Release|x86.ActiveCfg = Release|Any CPU
 		{4ACF1C81-0800-46EB-9217-62CFFD65B8F8}.Release|x86.Build.0 = Release|Any CPU
+		{D8248604-CFE9-4616-A25E-72CB6A3ABC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8248604-CFE9-4616-A25E-72CB6A3ABC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8248604-CFE9-4616-A25E-72CB6A3ABC58}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D8248604-CFE9-4616-A25E-72CB6A3ABC58}.Debug|x86.Build.0 = Debug|Any CPU
+		{D8248604-CFE9-4616-A25E-72CB6A3ABC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8248604-CFE9-4616-A25E-72CB6A3ABC58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8248604-CFE9-4616-A25E-72CB6A3ABC58}.Release|x86.ActiveCfg = Release|Any CPU
+		{D8248604-CFE9-4616-A25E-72CB6A3ABC58}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

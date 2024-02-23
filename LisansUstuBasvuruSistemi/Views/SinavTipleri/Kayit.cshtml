@@ -1,15 +1,14 @@
-﻿@using LisansUstuBasvuruSistemi.Models
+﻿@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model SinavTipleriKayitDto
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var SinavDilleris = (List<SinavDilleri>)ViewBag.SinavDilleris;
-    var OgrenimTipleris = (List<OgrenimTipleri>)ViewBag.OgrenimTipleris;
-    var Programlars = (List<Programlar>)ViewBag.Programlars;
+    var sinavDilleris = (List<SinavDilleri>)ViewBag.SinavDilleris;
+    var ogrenimTipleris = (List<OgrenimTipleri>)ViewBag.OgrenimTipleris;
+    var programlars = (List<Programlar>)ViewBag.Programlars;
 
 }
 <div class="row">
@@ -203,7 +202,7 @@
                                             @foreach (var item in Model.SinavTipleriOTNotAraliklaris.OrderBy(o => o.Ingilizce).ThenBy(t => t.OgrenimTipKod))
                                             {
                                                 var dil = item.Ingilizce ? "En" : "Tr";
-                                                var OgrenimTipi = OgrenimTipleris.Where(p => p.OgrenimTipKod == item.OgrenimTipKod).First();
+                                                var OgrenimTipi = ogrenimTipleris.Where(p => p.OgrenimTipKod == item.OgrenimTipKod).First();
                                                 <tr>
                                                     <td>
                                                         <div class="form-group" title="@OgrenimTipi.OgrenimTipAdi">
@@ -260,7 +259,7 @@
                                                                 @{
                                                                     var xID = ("ProgramKod-" + item.OgrenimTipKod + "-" + (item.Ingilizce ? "En" : "Tr"));
                                                                     <select name="IPProgramKod" id="@xID" class="form-control" multiple="multiple" data_actions_box="true" data_live_search="true" data_live_search_placeholder="Search">
-                                                                        @foreach (var itemP in Programlars)
+                                                                        @foreach (var itemP in programlars)
                                                                         {
                                                                             bool ISelected = item.SinavTipleriOTNotAraliklariGecersizProgramlars.Any(a => a.ProgramKod == itemP.ProgramKod);
                                                                             <option value="@(xID + "_" + itemP.ProgramKod)" @ISelected.ToSelected()>@itemP.ProgramAdi</option>
@@ -489,7 +488,7 @@
     }
 
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 

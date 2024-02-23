@@ -7,7 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class KullanicilarBus
     {
-       
+
         public static List<int> GetDanismanUnvanIds()
         {
             //Doç.Dr Prof.Dr, Dr. Öğr. Üye
@@ -37,14 +37,14 @@ namespace LisansUstuBasvuruSistemi.Business
 
             return obsData.GetObsStudentControl(tcOrOgrenciNo, donemId);
         }
-     
+
         public static StudentControl OgrenciBilgisiGuncelleObs(int kullaniciId)
         {
             var kayitBilgi = new StudentControl();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+                var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
                 if (kul.YtuOgrencisi)
                 {
                     var tcKimlikNo = kul.TcKimlikNo;
@@ -59,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             int? danismanId = null;
                             if (!kayitBilgi.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace())
                             {
-                                var danisman = db.Kullanicilars.FirstOrDefault(p => p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
+                                var danisman = entities.Kullanicilars.FirstOrDefault(p => p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
                                 if (danisman != null)
                                     danismanId = danisman.KullaniciID;
                                 kayitBilgi.IsDanismanHesabiBulunamadi = !kul.DanismanID.HasValue;
@@ -81,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         kul.KayitYilBaslangic = null;
                         kul.KayitTarihi = null;
                     }
-                    db.SaveChanges();
+                    entities.SaveChanges();
                 }
                 return kayitBilgi;
             }
@@ -89,9 +89,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static JsonResult GetFilterOgrenciJsonResult(string term, string enstituKod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var ogrenciList = db.Kullanicilars.Where(p => p.YtuOgrencisi && p.Programlar.AnabilimDallari.EnstituKod == enstituKod && ((p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term))).Select(s => new
+                var ogrenciList = entities.Kullanicilars.Where(p => p.YtuOgrencisi && p.Programlar.AnabilimDallari.EnstituKod == enstituKod && ((p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term))).Select(s => new
                 {
                     s.KullaniciID,
                     s.Ad,
@@ -115,9 +115,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.KullaniciTipleris.Where(p => p.YeniHesapOlusturabilir == (isHesapOlusturFiltre || p.YeniHesapOlusturabilir)).OrderBy(o => o.KullaniciTipAdi);
+                var data = entities.KullaniciTipleris.Where(p => p.YeniHesapOlusturabilir == (isHesapOlusturFiltre || p.YeniHesapOlusturabilir)).OrderBy(o => o.KullaniciTipAdi);
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.KullaniciTipID, Caption = item.KullaniciTipAdi });
@@ -131,9 +131,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.KullaniciTipleris.Where(p => p.KurumIci == false).OrderBy(o => o.KullaniciTipAdi);
+                var data = entities.KullaniciTipleris.Where(p => p.KurumIci == false).OrderBy(o => o.KullaniciTipAdi);
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.KullaniciTipID, Caption = item.KullaniciTipAdi });
@@ -147,9 +147,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.KullaniciTipleris.Where(p => p.BasvuruYapabilir).OrderBy(o => o.KullaniciTipAdi);
+                var data = entities.KullaniciTipleris.Where(p => p.BasvuruYapabilir).OrderBy(o => o.KullaniciTipAdi);
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.KullaniciTipID, Caption = item.KullaniciTipAdi });
@@ -162,9 +162,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qData = db.OgrenimDurumlaris.AsQueryable();
+                var qData = entities.OgrenimDurumlaris.AsQueryable();
                 if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
                 if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
                 if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
@@ -179,9 +179,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qData = db.OgrenimDurumlaris.AsQueryable();
+                var qData = entities.OgrenimDurumlaris.AsQueryable();
                 if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
                 if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
                 if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
@@ -196,9 +196,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Cinsiyetlers.Where(p => p.IsAktif).OrderBy(o => o.CinsiyetAdi).ToList();
+                var data = entities.Cinsiyetlers.Where(p => p.IsAktif).OrderBy(o => o.CinsiyetAdi).ToList();
                 dct.AddRange(data.Select(item => new CmbIntDto { Value = item.CinsiyetID, Caption = item.CinsiyetAdi }));
             }
             return dct;
@@ -218,11 +218,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<KulaniciProgramYetkiModel> GetKullaniciProgramlari(int kullaniciId, string enstituKod)
         {
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kull = (from s in entities.Programlars
                             join b in entities.AnabilimDallaris on s.AnabilimDaliID equals b.AnabilimDaliID
-                            join e in entities.Enstitulers on b.EnstituKod equals e.EnstituKod 
+                            join e in entities.Enstitulers on b.EnstituKod equals e.EnstituKod
                             select new KulaniciProgramYetkiModel
                             {
                                 EnstituKod = e.EnstituKod,

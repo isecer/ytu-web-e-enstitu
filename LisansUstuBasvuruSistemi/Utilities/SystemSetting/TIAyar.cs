@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using System.Linq;
 
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
@@ -16,8 +16,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string TezOneriIlkSavunmaHakkiAyKriter = "ilk başvuru için 1. Savunma kaç ay içinde yapılmalı";
         public const string TezOneriIkinciSavunmaHakkiAyKriter = "ilk başvuru için 2. Savunma kaç ay içinde yapılmalı";
 
-        public const string TiBasvurusuAcikmi = "Ara rapor başvuru alımı açık"; 
-    
+        public const string TiBasvurusuAcikmi = "Ara rapor başvuru alımı açık";
+
         public const string TiSonDonemKayitOlunmasiGerekenDersKodlari = "Son dönem kayıt olunması gereken ders kodları";
         public const string TiUyelerMinSinavPuan = "Üyeler için dil sınavı kabulü min puan";
         public const string TiOgrenciMinSinavPuan = "Öğrenci için dil sınavı kabulü min puan";
@@ -27,27 +27,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 
         public static void SetAyarTi(string ayarAdi, string ayarDegeri, string enstituKod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qq = db.TIAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
+                var qq = entities.TIAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
                 if (qq != null)
                 {
                     qq.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.TIAyarlars.Add(new TIAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
+                    entities.TIAyarlars.Add(new TIAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
-                db.SaveChanges();
+                entities.SaveChanges();
             }
 
         }
         public static string GetAyarTi(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qq = db.TIAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                var qq = entities.TIAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
                 return qq != null ? qq.AyarDegeri : varsayilanDeger;
             }
         }

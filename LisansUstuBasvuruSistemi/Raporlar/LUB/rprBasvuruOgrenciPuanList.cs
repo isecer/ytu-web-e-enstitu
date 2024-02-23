@@ -1,18 +1,17 @@
-﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+﻿using System.Linq;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
-using System.Linq;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.LUB
 {
-    public partial class rprBasvuruOgrenciPuanList : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprBasvuruOgrenciPuanList : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprBasvuruOgrenciPuanList(int id)
+        public RprBasvuruOgrenciPuanList(int id)
         {
             InitializeComponent();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
-                var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == id).First(); 
+                var bsurec = entities.BasvuruSurecs.First(p => p.BasvuruSurecID == id); 
                 string surec = bsurec.BaslangicYil + " / " + bsurec.BitisYil + " " + bsurec.Donemler.DonemAdi;
                 if (bsurec.BasvuruSurecTipID==BasvuruSurecTipiEnum.LisansustuBasvuru) surec += "Lisansüstü Başvuruları Değerlendirme Sonuç Listesi";
                 else surec += " Lisansüstü Yatay Geçiş Başvuruları Değerlendirme Sonuç Listesi";

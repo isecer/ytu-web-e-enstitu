@@ -1,14 +1,13 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
+﻿@using Entities.Entities  
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model TalepSurecleri
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var TalepTipleris = (List<TalepTipleri>)ViewBag.TalepTipleris;
-    var TalepTipIDs = (List<int>) ViewBag.TalepTipID;
+    var talepTipleris = (List<TalepTipleri>)ViewBag.TalepTipleris;
+    var talepTipIDs = (List<int>) ViewBag.TalepTipID;
 
 }
 
@@ -50,9 +49,9 @@
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-5 control-label">Talep Tipleri</label>
                                 <div class="col-md-9 col-xs-7">
-                                    @foreach (var talepTipleri in TalepTipleris)
+                                    @foreach (var talepTipleri in talepTipleris)
                                     {
-                                        <input type="checkbox" value="@talepTipleri.TalepTipID" name="TalepTipID" @TalepTipIDs.Contains(talepTipleri.TalepTipID).ToChecked()/> <span style="cursor:pointer;" onclick="$(this).prev().click()">@talepTipleri.TalepTipAdi</span><br/>
+                                        <input type="checkbox" value="@talepTipleri.TalepTipID" name="TalepTipID" @talepTipIDs.Contains(talepTipleri.TalepTipID).ToChecked()/> <span style="cursor:pointer;" onclick="$(this).prev().click()">@talepTipleri.TalepTipAdi</span><br/>
                                     }
 
                                 </div>
@@ -89,7 +88,7 @@
                 timepicker: true,
                 format: 'Y-m-d H:i'
             });
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 

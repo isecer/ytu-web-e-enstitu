@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 using BiskaUtil;
 using DevExpress.XtraRichEdit.Import.OpenXml;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class YeterlikGelenBasvurularController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);

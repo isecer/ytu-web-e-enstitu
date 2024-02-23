@@ -1,5 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
@@ -9,8 +8,7 @@
 @{
     ViewBag.Title = "Index";
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
-    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var kYetki = RoleNames.GelenTalepKayit.InRoleCurrent();
     var kTalepGelenTalepIDs = (List<int>)ViewBag.KTalepGelenTalepIDs;
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BiskaUtil;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -17,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.YetkiGruplari)]
     public class YetkiGruplariController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index()
         {
             return Index(new FmYetkiGruplari());
@@ -120,8 +120,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.YetkiGrupRolleris.RemoveRange(eskiROl);
 
                 var yetkiGrupRolleris = _entities.Rollers.Where(p => rolId.Contains(p.RolID)).ToList().Select(s => new YetkiGrupRolleri
-                    { YetkiGrupID = model.YetkiGrupID, RolID = s.RolID }).ToList();
-                _entities.YetkiGrupRolleris.AddRange(yetkiGrupRolleris); 
+                { YetkiGrupID = model.YetkiGrupID, RolID = s.RolID }).ToList();
+                _entities.YetkiGrupRolleris.AddRange(yetkiGrupRolleris);
                 _entities.SaveChanges();
                 return RedirectToAction("Index");
             }

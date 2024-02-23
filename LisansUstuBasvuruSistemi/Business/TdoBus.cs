@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -19,9 +19,9 @@ namespace LisansUstuBasvuruSistemi.Business
     {
         public static bool IsAktifDanismanOneriVar(int kullaniciId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var danismanOneri = db.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.KullaniciID == kullaniciId)
+                var danismanOneri = entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.KullaniciID == kullaniciId)
                     .OrderByDescending(o => o.TDOBasvuruDanismanID).FirstOrDefault();
                 var isAktif = true;
                 if (danismanOneri == null) isAktif = false;
@@ -34,9 +34,9 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static bool IsAktifEsDanismanOneriVar(int kullaniciId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var danismanOneri = db.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruDanisman.TDOBasvuru.KullaniciID == kullaniciId)
+                var danismanOneri = entities.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruDanisman.TDOBasvuru.KullaniciID == kullaniciId)
                     .OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault();
                 var isAktif = true;
                 if (danismanOneri == null) isAktif = false;
@@ -50,32 +50,32 @@ namespace LisansUstuBasvuruSistemi.Business
             tekrarYukle:
             var model = new TdoBasvuruDetayDto() { TDOBasvuruID = tdoBasvuruId };
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var isYoneticiYetki = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
                 var isDanismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
 
-                var basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
+                var basvuru = entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                 var ogrenciBilgiUpdate = KullanicilarBus.OgrenciBilgisiGuncelleObs(basvuru.KullaniciID);
 
                 var ogrenci = basvuru.Kullanicilar;
                 if (ogrenci.YtuOgrencisi && basvuru.ProgramKod == ogrenci.ProgramKod && basvuru.OgrenimTipKod == ogrenci.OgrenimTipKod && basvuru.OgrenciNo != ogrenci.OgrenciNo)
                 {
                     basvuru.OgrenciNo = ogrenci.OgrenciNo;
-                    db.SaveChanges();
-                    basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
+                    entities.SaveChanges();
+                    basvuru = entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                 }
 
                 model.OgrenciAdi = ogrenci.Ad + " " + ogrenci.Soyad;
                 model.ResimAdi = ogrenci.ResimAdi;
-                var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
+                var enstitu = entities.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
                 var showAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent() || RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
 
                 model.EnstituKod = basvuru.EnstituKod;
                 model.TDOBasvuruDanisman = basvuru.TDOBasvuruDanisman;
                 model.TDOBasvuruDanismanList = (from s in basvuru.TDOBasvuruDanismen
-                                                let varolanTdUserkey = db.Kullanicilars.Where(f => f.KullaniciID == s.VarolanTezDanismanID).Select(sv => sv.UserKey).FirstOrDefault()
-                                                let tdUserkey = db.Kullanicilars.Where(f => f.KullaniciID == s.TezDanismanID).Select(sv => sv.UserKey).FirstOrDefault()
+                                                let varolanTdUserkey = entities.Kullanicilars.Where(f => f.KullaniciID == s.VarolanTezDanismanID).Select(sv => sv.UserKey).FirstOrDefault()
+                                                let tdUserkey = entities.Kullanicilars.Where(f => f.KullaniciID == s.TezDanismanID).Select(sv => sv.UserKey).FirstOrDefault()
                                                 select new TdoBasvuruDanismanDto
                                                 {
                                                     UniqueID = s.UniqueID,
@@ -141,11 +141,11 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (model.TDOBasvuruDanismanList.Any() && !basvuru.AktifTDOBasvuruDanismanID.HasValue)
                 {
                     basvuru.AktifTDOBasvuruDanismanID = model.TDOBasvuruDanismanList.Last().TDOBasvuruDanismanID;
-                    db.SaveChanges();
+                    entities.SaveChanges();
                 }
 
                 var kulIds = model.TDOBasvuruDanismanList.Select(s => s.VarolanTezDanismanID).ToList();
-                var kulls = db.Kullanicilars.Where(p => kulIds.Contains(p.KullaniciID)).ToList();
+                var kulls = entities.Kullanicilars.Where(p => kulIds.Contains(p.KullaniciID)).ToList();
 
                 var inx = 0;
                 foreach (var item in model.TDOBasvuruDanismanList.OrderByDescending(o => o.TDOBasvuruDanismanID))
@@ -184,10 +184,10 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.AktifTDOBasvuruDanismanID = basvuru.AktifTDOBasvuruDanismanID;
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
                 model.KullaniciID = basvuru.KullaniciID;
-                model.KayitDonemi = basvuru.KayitOgretimYiliDonemID.HasValue ? (basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi) : "";
+                model.KayitDonemi = basvuru.KayitOgretimYiliDonemID.HasValue ? (basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + entities.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi) : "";
 
                 model.OgrenciNo = basvuru.OgrenciNo;
-                model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == basvuru.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
+                model.OgrenimTipAdi = entities.OgrenimTipleris.First(p => p.EnstituKod == basvuru.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
                 var progLng = basvuru.Programlar;
                 model.AnabilimdaliAdi = progLng.AnabilimDallari.AnabilimDaliAdi;
                 model.ProgramAdi = progLng.ProgramAdi;
@@ -275,7 +275,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
         //public static bool TosBasvuruOlustur(int kullaniciId)
         //{
-        //    using (var entities = new LisansustuBasvuruSistemiEntities())
+        //   using (var entities = new LubsDbEntities())
         //    {
         //        var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
         //        var isBasvuruEklenebilecekKullanici = kul.YtuOgrencisi &&
@@ -373,7 +373,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
         //        }
-        //        LogIslemleri.LogEkle("TDOBasvuru", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, data.ToJson());
+        //        LogIslemleri.LogEkle("TdoBasvuru", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, data.ToJson());
 
         //    }
 
@@ -382,7 +382,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static Tuple<bool, string> ObsDanismanBasvuruBilgiEslestir(int kullaniciId, int tDoBasvuruId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
                 var ogrenciInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullaniciId);
@@ -399,9 +399,9 @@ namespace LisansUstuBasvuruSistemi.Business
                         return Tuple.Create(false, hataMesaji);
                     }
 
-                    var danismanBasvurusuVar = db.TDOBasvuruDanismen.Any(p => p.TDOBasvuru.KullaniciID == kullaniciId && p.TDOBasvuruID == tDoBasvuruId && p.TezDanismanID == ogrenciInfo.AktifDanismanID);
+                    var danismanBasvurusuVar = entities.TDOBasvuruDanismen.Any(p => p.TDOBasvuru.KullaniciID == kullaniciId && p.TDOBasvuruID == tDoBasvuruId && p.TezDanismanID == ogrenciInfo.AktifDanismanID);
 
-                    var sonbasvuru = db.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.KullaniciID == kullaniciId && p.TDOBasvuruID == tDoBasvuruId).OrderByDescending(o => o.TDOBasvuruDanismanID).FirstOrDefault();
+                    var sonbasvuru = entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.KullaniciID == kullaniciId && p.TDOBasvuruID == tDoBasvuruId).OrderByDescending(o => o.TDOBasvuruDanismanID).FirstOrDefault();
 
                     var sonBasvuruTamamlandi = sonbasvuru == null || sonbasvuru.EYKDaOnaylandi.HasValue || sonbasvuru.EYKYaGonderildi == false || sonbasvuru.DanismanOnayladi == false || sonbasvuru.VarolanDanismanOnayladi == false;
 
@@ -417,7 +417,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         kModel.DonemBaslangicYil = donemBilgi.BaslangicYil;
                         kModel.DonemID = donemBilgi.DonemId;
                         var formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
-                        while (db.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
+                        while (entities.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
                         {
                             formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                         }
@@ -453,13 +453,13 @@ namespace LisansUstuBasvuruSistemi.Business
                         kModel.IslemYapanIP = UserIdentity.Ip;
 
 
-                        var tDoBasvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tDoBasvuruId);
+                        var tDoBasvuru = entities.TDOBasvurus.First(p => p.TDOBasvuruID == tDoBasvuruId);
                         kModel.TDOBasvuruID = tDoBasvuruId;
-                        var added = db.TDOBasvuruDanismen.Add(kModel);
+                        var added = entities.TDOBasvuruDanismen.Add(kModel);
                         tDoBasvuru.AktifTDOBasvuruDanismanID = added.TDOBasvuruDanismanID;
 
 
-                        db.SaveChanges();
+                        entities.SaveChanges();
                         return Tuple.Create(true, "");
                     }
 
@@ -475,12 +475,12 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 IsSuccess = true
             };
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
                 if (tdoBasvuruId.HasValue)
                 {
-                    var basvuru = db.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId.Value);
+                    var basvuru = entities.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId.Value);
                     if (basvuru == null)
                     {
                         msg.IsSuccess = false;
@@ -518,7 +518,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;
                     }
-                    var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
+                    var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
                     if (msg.IsSuccess == false)
                     {
                         msg.Messages.Add("Başvuru süreci kapalı.");
@@ -527,7 +527,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && (kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))
                         {
-                            var aktifDevamEdenBasvuruVar = db.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
+                            var aktifDevamEdenBasvuruVar = entities.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
                             if (aktifDevamEdenBasvuruVar)// toplam başvuru kontrol
                             {
                                 msg.IsSuccess = false;
@@ -555,10 +555,10 @@ namespace LisansUstuBasvuruSistemi.Business
                 IsSuccess = true
             };
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
-                var basvuru = db.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId);
+                var basvuru = entities.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId);
                 if (basvuru == null)
                 {
                     msg.IsSuccess = false;
@@ -593,9 +593,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.TDODanismanTalepTipleris
+                var data = (from s in entities.TDODanismanTalepTipleris
                             select new
                             {
                                 s.TDODanismanTalepTipID,
@@ -614,9 +614,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.TDODanismanTalepTipleris.Where(p => p.TDODanismanTalepTipID == (isDegisiklikTalebi ? p.TDODanismanTalepTipID : 1))
+                var data = (from s in entities.TDODanismanTalepTipleris.Where(p => p.TDODanismanTalepTipID == (isDegisiklikTalebi ? p.TDODanismanTalepTipID : 1))
                             select new
                             {
                                 s.TDODanismanTalepTipID,
@@ -667,9 +667,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<CmbStringDto> CmbTdoDonemListe(string enstituKod, bool bosSecimVar = false)
         {
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var donems = db.TDOBasvuruDanismen.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
+                var donems = entities.TDOBasvuruDanismen.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
                     .Distinct().OrderByDescending(o => o.DonemBaslangicYil).ThenByDescending(t => t.DonemID).Select(s => new CmbStringDto
                     {
                         Value = s.DonemBaslangicYil + "" + s.DonemID,
@@ -706,7 +706,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static IHtmlString ToBasvuruDurumView(this FrTdoBasvuruDto model)
         {
-            var pagerString = model.ToRenderPartialViewHtml("TDOBasvuru", "BasvuruDurumView");
+            var pagerString = model.ToRenderPartialViewHtml("TdoBasvuru", "BasvuruDurumView");
             return pagerString;
         }
         public static IHtmlString ToBasvuruDurumView(this TdoBasvuruDanismanDto model)
@@ -747,7 +747,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     : new TdoBasvuruDurumSortDto { DurumAciklama = "Danışman Onayı Bekleniyor." });
 
             }
-             
+
             var activeDurum = modelData.Any(a => a.IsOnayOrRed.HasValue) ? modelData.First(p => p.IsOnayOrRed.HasValue) : modelData.Last();
             var htmlString = $"<span style=\"color:{activeDurum.DurumColor};\" aria-hidden=\"true\">" +
                              $"<i class=\"{activeDurum.DurumClass}\" style=\"font-size:12pt;\" aria-hidden=\"true\"></i> {activeDurum.DurumAciklama}</span>";

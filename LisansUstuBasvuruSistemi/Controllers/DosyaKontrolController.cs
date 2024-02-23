@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class DosyaKontrolController : Controller
     {
         // GET: DosyaKontrol
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
 
 
         public ActionResult Index(string kod)

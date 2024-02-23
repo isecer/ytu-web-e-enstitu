@@ -1,6 +1,4 @@
-﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
+﻿using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
@@ -10,6 +8,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -18,91 +17,93 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize]
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    public class YGGelenBasvurularController : Controller
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    public class YgGelenBasvurularController : Controller
     {
 
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
 
         [Authorize(Roles = RoleNames.YgGelenBasvurular)]
-        public ActionResult Index(string EKD, int? BelgeDetailBasvuruID = null)
+        public ActionResult Index(string ekd, int? belgeDetailBasvuruId = null)
         {
-            var model = new FmBasvurularDto() { PageSize = 10, Expand = false };
+            var model = new FmBasvurularDto
+            {
+                PageSize = 10, Expand = false,
+                BasvuruSurecID = LisansustuBasvuruBus.GetAktifBasvuruSurecId(EnstituBus.GetSelectedEnstitu(ekd), BasvuruSurecTipiEnum.YatayGecisBasvuru)
+            };
 
-            model.BasvuruSurecID = LisansustuBasvuruBus.GetAktifBasvuruSurecId(EnstituBus.GetSelectedEnstitu(EKD), BasvuruSurecTipiEnum.YatayGecisBasvuru);
             model.Expand = model.BasvuruSurecID.HasValue;
-            return Index(model, EKD, null, false, BelgeDetailBasvuruID);
+            return Index(model, ekd, null, false, belgeDetailBasvuruId);
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.YgGelenBasvurular)]
-        public ActionResult Index(FmBasvurularDto model, string EKD, List<string> ProgramKod = null, bool export = false, int? BelgeDetailBasvuruID = null)
+        public ActionResult Index(FmBasvurularDto model, string ekd, List<string> programKod = null, bool export = false, int? belgeDetailBasvuruId = null)
         {
 
             var nowDate = DateTime.Now;
-            ProgramKod = ProgramKod ?? new List<string>();
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            programKod = programKod ?? new List<string>();
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
 
-            var q = from s in db.Basvurulars
-                    join en in db.Enstitulers on s.BasvuruSurec.EnstituKod equals en.EnstituKod
-                    join bs in db.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == BasvuruSurecTipiEnum.YatayGecisBasvuru) on s.BasvuruSurecID equals bs.BasvuruSurecID
-                    join d in db.Donemlers on bs.DonemID equals d.DonemID
-                    join ktip in db.KullaniciTipleris on s.Kullanicilar.KullaniciTipID equals ktip.KullaniciTipID
-                    join dr in db.BasvuruDurumlaris on s.BasvuruDurumID equals dr.BasvuruDurumID
-                    where en.EnstituKisaAd.Contains(EKD)
-                    select new
-                    {
-                        s.KullaniciID,
-                        s.BasvuruSurecID,
-                        s.BasvuruID,
-                        en.EnstituKod,
-                        EnstituAdi = en.EnstituAd,
-                        s.UyrukKod,
-                        s.CinsiyetID,
-                        s.BasvuruDurumAciklamasi,
-                        BasvuruSurecAdi = bs.BaslangicYil + "/" + bs.BitisYil + " " + d.DonemAdi,
-                        BasTar = bs.BaslangicTarihi,
-                        BitTar = bs.BitisTarihi,
-                        s.Kullanicilar.UserKey,
-                        s.Kullanicilar.ResimAdi,
-                        s.TcKimlikNo,
-                        AdSoyad = s.Ad + " " + s.Soyad,
-                        s.Ad,
-                        s.Soyad,
-                        s.DogumTarihi,
-                        s.Kullanicilar.KullaniciTipID,
-                        ktip.KullaniciTipAdi,
-                        s.LOgrenimDurumID,
-                        s.EMail,
-                        Telefon = s.CepTel ?? s.EvTel ?? s.IsTel,
-                        TercihSayisi = s.BasvurularTercihleris.Count,
-                        s.BasvuruDurumID,
-                        dr.BasvuruDurumAdi,
-                        DurumClassName = dr.ClassName,
-                        DurumColor = dr.Color,
-                        s.BasvuruTarihi,
-                        BasvurularTercihleris = s.BasvurularTercihleris.Select(s2 => new { s2.OgrenimTipKod, s2.ProgramKod }),
-                        BasvurularSinavBilgis = s.BasvurularSinavBilgis.Select(s2 => new { s2.SinavTipKod, s2.IsTaahhutVar }),
-                        //UnAdi = defUn != null ? defUn.Ad : "",
-                        //s.LFakulteAdi,
-                        //LOgrenciBolumAdi = lOb != null ? lOb.BolumAdi : "",
-                        //LOgrenimDurumu = lOd != null ? lOd.OgrenimDurumAdi : "",
-                        LNotSistemi = s.LNotSistemID,
-                        s.LMezuniyetNotu,
-                        s.LMezuniyetNotu100LukSistem,
-                        MulakatSonucTipIDs = s.MulakatSonuclaris.Select(s2 => s2.MulakatSonucTipID),
-                        KayitliTercihVar = s.BasvurularTercihleris.Any(a => s.BasvuruID == a.BasvuruID && s.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı && s.MulakatSonuclaris.Any(a2 => a2.KayitDurumID.HasValue && a2.KayitDurumlari.IsKayitOldu)),
-                        IsNotDuzelt = (s.BasvuruSurec.AGNOGirisBaslangicTarihi.HasValue && s.LUniversiteID == GlobalSistemSetting.UniversiteYtuKod && (s.BasvuruSurec.AGNOGirisBaslangicTarihi.Value <= nowDate && s.BasvuruSurec.AGNOGirisBitisTarihi.Value >= nowDate && s.BasvurularTercihleris.Any(a => a.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))),
-                    };
+            var q = from s in _entities.Basvurulars
+                join en in _entities.Enstitulers on s.BasvuruSurec.EnstituKod equals en.EnstituKod
+                join bs in _entities.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == BasvuruSurecTipiEnum.YatayGecisBasvuru) on s.BasvuruSurecID equals bs.BasvuruSurecID
+                join d in _entities.Donemlers on bs.DonemID equals d.DonemID
+                join ktip in _entities.KullaniciTipleris on s.Kullanicilar.KullaniciTipID equals ktip.KullaniciTipID
+                join dr in _entities.BasvuruDurumlaris on s.BasvuruDurumID equals dr.BasvuruDurumID
+                where en.EnstituKisaAd.Contains(ekd)
+                select new
+                {
+                    s.KullaniciID,
+                    s.BasvuruSurecID,
+                    s.BasvuruID,
+                    en.EnstituKod,
+                    EnstituAdi = en.EnstituAd,
+                    s.UyrukKod,
+                    s.CinsiyetID,
+                    s.BasvuruDurumAciklamasi,
+                    BasvuruSurecAdi = bs.BaslangicYil + "/" + bs.BitisYil + " " + d.DonemAdi,
+                    BasTar = bs.BaslangicTarihi,
+                    BitTar = bs.BitisTarihi,
+                    s.Kullanicilar.UserKey,
+                    s.Kullanicilar.ResimAdi,
+                    s.TcKimlikNo,
+                    AdSoyad = s.Ad + " " + s.Soyad,
+                    s.Ad,
+                    s.Soyad,
+                    s.DogumTarihi,
+                    s.Kullanicilar.KullaniciTipID,
+                    ktip.KullaniciTipAdi,
+                    s.LOgrenimDurumID,
+                    s.EMail,
+                    Telefon = s.CepTel ?? s.EvTel ?? s.IsTel,
+                    TercihSayisi = s.BasvurularTercihleris.Count,
+                    s.BasvuruDurumID,
+                    dr.BasvuruDurumAdi,
+                    DurumClassName = dr.ClassName,
+                    DurumColor = dr.Color,
+                    s.BasvuruTarihi,
+                    BasvurularTercihleris = s.BasvurularTercihleris.Select(s2 => new { s2.OgrenimTipKod, s2.ProgramKod }),
+                    BasvurularSinavBilgis = s.BasvurularSinavBilgis.Select(s2 => new { s2.SinavTipKod, s2.IsTaahhutVar }),
+                    //UnAdi = defUn != null ? defUn.Ad : "",
+                    //s.LFakulteAdi,
+                    //LOgrenciBolumAdi = lOb != null ? lOb.BolumAdi : "",
+                    //LOgrenimDurumu = lOd != null ? lOd.OgrenimDurumAdi : "",
+                    LNotSistemi = s.LNotSistemID,
+                    s.LMezuniyetNotu,
+                    s.LMezuniyetNotu100LukSistem,
+                    MulakatSonucTipIDs = s.MulakatSonuclaris.Select(s2 => s2.MulakatSonucTipID),
+                    KayitliTercihVar = s.BasvurularTercihleris.Any(a => s.BasvuruID == a.BasvuruID && s.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı && s.MulakatSonuclaris.Any(a2 => a2.KayitDurumID.HasValue && a2.KayitDurumlari.IsKayitOldu)),
+                    IsNotDuzelt = (s.BasvuruSurec.AGNOGirisBaslangicTarihi.HasValue && s.LUniversiteID == GlobalSistemSetting.UniversiteYtuKod && (s.BasvuruSurec.AGNOGirisBaslangicTarihi.Value <= nowDate && s.BasvuruSurec.AGNOGirisBitisTarihi.Value >= nowDate && s.BasvurularTercihleris.Any(a => a.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))),
+                };
             var q2 = q;
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (model.BasvuruSurecID.HasValue) q = q.Where(p => p.BasvuruSurecID == model.BasvuruSurecID.Value);
             if (model.LOgrenimDurumID.HasValue) q = q.Where(p => p.LOgrenimDurumID == model.LOgrenimDurumID.Value);
-            if (ProgramKod.Count > 0) q = q.Where(p => p.BasvurularTercihleris.Any(a => ProgramKod.Contains(a.ProgramKod)));
+            if (programKod.Count > 0) q = q.Where(p => p.BasvurularTercihleris.Any(a => programKod.Contains(a.ProgramKod)));
             if (model.BasvuruDurumID.HasValue)
             {
-                if (model.BasvuruDurumID.Value == BasvuruDurumuEnum.Gonderildi) q = q.Where(p => p.KayitliTercihVar);
-                else q = q.Where(p => p.BasvuruDurumID == model.BasvuruDurumID);
+                q = model.BasvuruDurumID.Value == BasvuruDurumuEnum.Gonderildi ? q.Where(p => p.KayitliTercihVar) : q.Where(p => p.BasvuruDurumID == model.BasvuruDurumID);
             }
             if (model.MulakatSonucTipID.HasValue) q = q.Where(p => p.MulakatSonucTipIDs.Any(a => a == model.MulakatSonucTipID.Value));
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.BasvurularTercihleris.Any(a => a.OgrenimTipKod == model.OgrenimTipKod));
@@ -113,18 +114,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (model.SinavTipKod.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.SinavTipKod == model.SinavTipKod));
             else if (model.IsTaahhutVar.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.IsTaahhutVar == (model.IsTaahhutVar == false ? null : model.IsTaahhutVar)));
             if (model.UyrukKod.HasValue) q = q.Where(p => p.UyrukKod == model.UyrukKod);
-            bool isFiltered = false;
-            if (q != q2)
-                isFiltered = true;
+            var isFiltered = !Equals(q, q2);
 
             model.RowCount = q.Count();
-            var IndexModel = new MIndexBilgi();
-            var KayitCountDurum = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.ClassName, s.Color }).FirstOrDefault();
-            if (KayitCountDurum != null)
+            var indexModel = new MIndexBilgi();
+            var kayitCountDurum = _entities.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.ClassName, s.Color }).FirstOrDefault();
+            if (kayitCountDurum != null)
             {
-                IndexModel.ListB.Add(new mxRowModel { Key = "Toplam", ClassName = "", Color = KayitCountDurum.Color, Toplam = model.RowCount });
+                indexModel.ListB.Add(new mxRowModel { Key = "Toplam", ClassName = "", Color = kayitCountDurum.Color, Toplam = model.RowCount });
             }
-            //var BasvuruDurumlaris = db.BasvuruDurumlaris.Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.BasvuruDurumlari.ClassName, s.BasvuruDurumlari.Color }).ToList();
+            //var BasvuruDurumlaris = _entities.BasvuruDurumlaris.Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.BasvuruDurumlari.ClassName, s.BasvuruDurumlari.Color }).ToList();
             //foreach (var item in BasvuruDurumlaris)
             //{
             //    IndexModel.ListB.Add(new mxRowModel
@@ -149,80 +148,80 @@ namespace LisansUstuBasvuruSistemi.Controllers
             //                        //KayitOlan = g1.Where(p => p.KayitliTercihVar).Count()
             //                    }).ToList();
 
-            //var KayitCountDurum = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumu.Gonderildi ).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.BasvuruDurumlari.ClassName, s.BasvuruDurumlari.Color }).FirstOrDefault();
+            //var KayitCountDurum = _entities.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumu.Gonderildi ).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.BasvuruDurumlari.ClassName, s.BasvuruDurumlari.Color }).FirstOrDefault();
             //if (KayitCountDurum != null)
             //{
             //    IndexModel.ListB.Add(new mxRowModel { Key = KayitCountDurum.BasvuruDurumAdi, ClassName = KayitCountDurum.ClassName, Color = KayitCountDurum.Color, Toplam = IndexModel.ListB.Sum(s => s.KayitOlan) });
             //}
-            IndexModel.Toplam = model.RowCount;
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+            indexModel.Toplam = model.RowCount;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
             var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s =>
-            new FrBasvurularDto
-            {
-                KullaniciID = s.KullaniciID,
-                UserKey = s.UserKey,
-                BasvuruSurecID = s.BasvuruSurecID,
-                BasvuruID = s.BasvuruID,
-                EnstituKod = s.EnstituKod,
-                EnstituAdi = s.EnstituAdi,
-                BasvuruDurumAciklamasi = s.BasvuruDurumAciklamasi,
-                BasvuruSurecAdi = s.BasvuruSurecAdi,
-                BasTar = s.BasTar,
-                BitTar = s.BitTar,
-                Ad = s.Ad,
-                Soyad = s.Soyad,
-                ResimAdi = s.ResimAdi,
-                TcKimlikNo = s.TcKimlikNo,
-                AdSoyad = s.AdSoyad,
-                EMail = s.EMail,
-                CepTel = s.Telefon,
-                KullaniciTipID = s.KullaniciTipID,
-                KullaniciTipAdi = s.KullaniciTipAdi,
-                TercihSayisi = s.TercihSayisi,
-                BasvuruDurumID = s.BasvuruDurumID,
-                BasvuruDurumAdi = s.BasvuruDurumAdi,
-                DurumClassName = s.DurumClassName,
-                DurumColor = s.DurumColor,
-                BasvuruTarihi = s.BasvuruTarihi,
-                IsNotDuzelt = s.IsNotDuzelt,
-                KayitliTercihVar = s.KayitliTercihVar
-            }).ToList();
+                new FrBasvurularDto
+                {
+                    KullaniciID = s.KullaniciID,
+                    UserKey = s.UserKey,
+                    BasvuruSurecID = s.BasvuruSurecID,
+                    BasvuruID = s.BasvuruID,
+                    EnstituKod = s.EnstituKod,
+                    EnstituAdi = s.EnstituAdi,
+                    BasvuruDurumAciklamasi = s.BasvuruDurumAciklamasi,
+                    BasvuruSurecAdi = s.BasvuruSurecAdi,
+                    BasTar = s.BasTar,
+                    BitTar = s.BitTar,
+                    Ad = s.Ad,
+                    Soyad = s.Soyad,
+                    ResimAdi = s.ResimAdi,
+                    TcKimlikNo = s.TcKimlikNo,
+                    AdSoyad = s.AdSoyad,
+                    EMail = s.EMail,
+                    CepTel = s.Telefon,
+                    KullaniciTipID = s.KullaniciTipID,
+                    KullaniciTipAdi = s.KullaniciTipAdi,
+                    TercihSayisi = s.TercihSayisi,
+                    BasvuruDurumID = s.BasvuruDurumID,
+                    BasvuruDurumAdi = s.BasvuruDurumAdi,
+                    DurumClassName = s.DurumClassName,
+                    DurumColor = s.DurumColor,
+                    BasvuruTarihi = s.BasvuruTarihi,
+                    IsNotDuzelt = s.IsNotDuzelt,
+                    KayitliTercihVar = s.KayitliTercihVar
+                }).ToList();
             model.Data = qdata;
 
 
 
             if (export && model.RowCount > 0)
             {
-                db.Database.CommandTimeout = 240;
-                GridView gv = new GridView();
-                var BasvuruIDs = q.Select(s => s.BasvuruID).ToList();
-                var qx = (from s in db.Basvurulars.Where(p => BasvuruIDs.Contains(p.BasvuruID))
-                          join un in db.Universitelers on s.LUniversiteID equals un.UniversiteID into def
-                          from defUn in def.DefaultIfEmpty()
-                          join lb in db.OgrenciBolumleris on s.LOgrenciBolumID equals lb.OgrenciBolumID into deflb
-                          from lOb in deflb.DefaultIfEmpty()
-                          join lo in db.OgrenimDurumlaris on s.LOgrenimDurumID equals lo.OgrenimDurumID into deflod
-                          from lOd in deflod.DefaultIfEmpty()
-                          let os = (from sq in db.BasvurularTercihleris.Where(p => p.MulakatSonuclaris.Any(a => a.KayitDurumID == KayitDurumuEnum.KayitOldu) && p.BasvuruID == s.BasvuruID)
-                                    join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == _EnstituKod) on sq.OgrenimTipKod equals ot.OgrenimTipKod
-                                    join ogt in db.OgrenimTipleris on ot.OgrenimTipID equals ogt.OgrenimTipID
-                                    select new { sq.OgrenimTipKod, ogt.OgrenimTipAdi }).FirstOrDefault()
-                          select new
-                          {
-                              s.TcKimlikNo,
-                              s.Ad,
-                              s.Soyad,
-                              s.EMail,
-                              Telefon = s.CepTel ?? s.EvTel ?? s.IsTel,
-                              s.DogumTarihi,
-                              UniversiteAdi = defUn.Ad,
-                              FakulteAdi = s.LFakulteAdi,
-                              BolumAdi = lOb.BolumAdi,
-                              NotSistyemi = s.LNotSistemID,
-                              MezuniyetNotu = s.LMezuniyetNotu,
-                              MezuniyetNotu100LukSistem = s.LMezuniyetNotu100LukSistem,
-                              KayitOlduguOgrenimSeviyesi = os != null ? os.OgrenimTipAdi : ""
-                          }).ToList();
+                _entities.Database.CommandTimeout = 240;
+                var gv = new GridView();
+                var basvuruIDs = q.Select(s => s.BasvuruID).ToList();
+                var qx = (from s in _entities.Basvurulars.Where(p => basvuruIDs.Contains(p.BasvuruID))
+                    join un in _entities.Universitelers on s.LUniversiteID equals un.UniversiteID into def
+                    from defUn in def.DefaultIfEmpty()
+                    join lb in _entities.OgrenciBolumleris on s.LOgrenciBolumID equals lb.OgrenciBolumID into deflb
+                    from lOb in deflb.DefaultIfEmpty()
+                    join lo in _entities.OgrenimDurumlaris on s.LOgrenimDurumID equals lo.OgrenimDurumID into deflod
+                    from lOd in deflod.DefaultIfEmpty()
+                    let os = (from sq in _entities.BasvurularTercihleris.Where(p => p.MulakatSonuclaris.Any(a => a.KayitDurumID == KayitDurumuEnum.KayitOldu) && p.BasvuruID == s.BasvuruID)
+                        join ot in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod) on sq.OgrenimTipKod equals ot.OgrenimTipKod
+                        join ogt in _entities.OgrenimTipleris on ot.OgrenimTipID equals ogt.OgrenimTipID
+                        select new { sq.OgrenimTipKod, ogt.OgrenimTipAdi }).FirstOrDefault()
+                    select new
+                    {
+                        s.TcKimlikNo,
+                        s.Ad,
+                        s.Soyad,
+                        s.EMail,
+                        Telefon = s.CepTel ?? s.EvTel ?? s.IsTel,
+                        s.DogumTarihi,
+                        UniversiteAdi = defUn.Ad,
+                        FakulteAdi = s.LFakulteAdi,
+                        lOb.BolumAdi,
+                        NotSistyemi = s.LNotSistemID,
+                        MezuniyetNotu = s.LMezuniyetNotu,
+                        MezuniyetNotu100LukSistem = s.LMezuniyetNotu100LukSistem,
+                        KayitOlduguOgrenimSeviyesi = os != null ? os.OgrenimTipAdi : ""
+                    }).ToList();
                 gv.DataSource = qx;
                 gv.DataBind();
                 StringWriter sw = new StringWriter();
@@ -237,14 +236,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            ViewBag.IndexModel = IndexModel;
-            ViewBag.BasvuruSurecID = new SelectList(LisansustuBasvuruBus.GetbasvuruSurecleri(_EnstituKod, BasvuruSurecTipiEnum.YatayGecisBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
-            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(_EnstituKod, true, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.IndexModel = indexModel;
+            ViewBag.BasvuruSurecID = new SelectList(LisansustuBasvuruBus.GetbasvuruSurecleri(enstituKod, BasvuruSurecTipiEnum.YatayGecisBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.BasvuruDurumID = new SelectList(LisansustuBasvuruBus.CmbBasvuruDurumListe(true, true), "Value", "Caption", model.BasvuruDurumID);
             ViewBag.MulakatSonucTipID = new SelectList(LisansustuBasvuruBus.CmbMulakatSonucTip(true), "Value", "Caption", model.MulakatSonucTipID);
-            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(_EnstituKod, false), "Value", "Caption", model.ProgramKod);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(enstituKod), "Value", "Caption", model.ProgramKod);
             ViewBag.LOgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu2(true, isBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
-            ViewBag.SinavTipKod = new SelectList(SinavTipleriBus.CmbGetBsAktifSinavlar(_EnstituKod, new List<int> { SinavTipGrupEnum.DilSinavlari, SinavTipGrupEnum.Tomer, SinavTipGrupEnum.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
+            ViewBag.SinavTipKod = new SelectList(SinavTipleriBus.CmbGetBsAktifSinavlar(enstituKod, new List<int> { SinavTipGrupEnum.DilSinavlari, SinavTipGrupEnum.Tomer, SinavTipGrupEnum.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleriOgrenciler(true), "Value", "Caption", model.KullaniciTipID);
             ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
             ViewBag.IsTaahhutVar = new SelectList(LisansustuBasvuruBus.CmbSinavBelgeTaahhut(true), "Value", "Caption", model.IsTaahhutVar);
@@ -255,10 +254,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ViewBag.kIds = q.Select(s => s.KullaniciID).ToList();
             }
             else ViewBag.kIds = new List<int>();
-            ViewBag.SelectedPrograms = ProgramKod;
+            ViewBag.SelectedPrograms = programKod;
             return View(model);
         }
-         
+
 
     }
 }

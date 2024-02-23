@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -13,7 +13,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.SistemBilgilendirme)]
     public class SistemBilgilendirmeController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index()
         {
             return Index(new FmSistemBilgilendirme());
@@ -21,8 +21,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmSistemBilgilendirme model)
         {
-            var q = from s in db.SistemBilgilendirmes
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID into defK
+            var q = from s in _entities.SistemBilgilendirmes
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID into defK
                     from kd in defK.DefaultIfEmpty()
                     select new
                     {

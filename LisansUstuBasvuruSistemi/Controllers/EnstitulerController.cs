@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -13,20 +13,20 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.Enstituler)]
     public class EnstitulerController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index()
         {
-            return Index(new FmEnstitulerDto { });
+            return Index(new FmEnstitulerDto());
         }
         [HttpPost]
         public ActionResult Index(FmEnstitulerDto model)
         {
 
-            var q = from s in db.Enstitulers
+            var q = from s in _entities.Enstitulers
                     select new FrEnstitulerDto
                     {
 
@@ -71,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!id.IsNullOrWhiteSpace())
             {
 
-                var data = db.Enstitulers.FirstOrDefault(p => p.EnstituKod == id);
+                var data = _entities.Enstitulers.FirstOrDefault(p => p.EnstituKod == id);
                 if (data != null)
                 {
                     model = data;
@@ -149,17 +149,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
-                var data = db.Enstitulers.FirstOrDefault(p => p.EnstituKod == kModel.EnstituKod);
-                if (data==null)
+                var data = _entities.Enstitulers.FirstOrDefault(p => p.EnstituKod == kModel.EnstituKod);
+                if (data == null)
                 {
                     kModel.IsAktif = true;
                     kModel.IslemYapanID = UserIdentity.Current.Id;
                     kModel.IslemYapanIP = UserIdentity.Ip;
                     kModel.IslemTarihi = DateTime.Now;
-                    db.Enstitulers.Add(kModel); 
+                    _entities.Enstitulers.Add(kModel);
                 }
                 else
-                { 
+                {
                     data.EnstituKod = kModel.EnstituKod;
                     data.EnstituAd = kModel.EnstituAd;
                     data.EnstituKisaAd = kModel.EnstituKisaAd;
@@ -179,14 +179,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 }
-                db.SaveChanges();
-                EnstituBus.Enstitulers = db.Enstitulers.Where(p=>p.IsAktif).ToList();
+                _entities.SaveChanges();
+                EnstituBus.Enstitulers = _entities.Enstitulers.Where(p => p.IsAktif).ToList();
                 return RedirectToAction("Index");
             }
-            else
-            {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
-            }
+
+            MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
 
 
             ViewBag.MmMessage = mmMessage;
@@ -194,17 +192,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult Sil(string id)
         {
-            var kayit = db.Enstitulers.FirstOrDefault(p => p.EnstituKod == id);
-            string message = "";
-            bool success = true;
+            var kayit = _entities.Enstitulers.FirstOrDefault(p => p.EnstituKod == id);
+            string message;
+            var success = true;
             if (kayit != null)
             {
 
                 try
                 {
                     message = "'" + kayit.EnstituAd + "' İsimli Enstitü Silindi!";
-                    db.Enstitulers.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.Enstitulers.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
@@ -218,7 +216,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Enstitü sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
     }

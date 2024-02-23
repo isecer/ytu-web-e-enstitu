@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
@@ -32,16 +32,16 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static bool MezuniyetSureciOtoMailOlustur(int mezuniyetSurecId)
         {
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+           using (var entities = new LubsDbEntities())
             {
                 var mezuniyetSureci = entities.MezuniyetSurecis.First(f => f.MezuniyetSurecID == mezuniyetSurecId);
                 var mezuniyetSureciOtoMails = mezuniyetSureci.MezuniyetSureciOtoMails.ToList();
                 var otoMailData = GetOtoMailData();
 
                 var pasifeAlinacak = mezuniyetSureciOtoMails.Where(p => otoMailData.All(a => a.OtoMailID != p.OtoMailID)).ToList();
-                var surecellenecekler = otoMailData.Where(p => mezuniyetSureciOtoMails.Any(a => a.OtoMailID == p.OtoMailID)).ToList();
+                var guncellenecekler = otoMailData.Where(p => mezuniyetSureciOtoMails.Any(a => a.OtoMailID == p.OtoMailID)).ToList();
                 var eklenecekler = otoMailData.Where(p => mezuniyetSureciOtoMails.All(a => a.OtoMailID != p.OtoMailID)).ToList();
-                foreach (var item in surecellenecekler)
+                foreach (var item in guncellenecekler)
                 {
                     var qzaman = mezuniyetSureciOtoMails.First(p => p.OtoMailID == item.OtoMailID);
                     qzaman.Sure = item.Sure;
@@ -56,6 +56,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     mezuniyetSureci.MezuniyetSureciOtoMails.Add(new MezuniyetSureciOtoMail
                     {
                         MailSablonTipID = item.MailSablonTipID,
+                        OtoMailID = item.OtoMailID,
                         Sure = item.Sure,
                         IsAktif = true,
                     });

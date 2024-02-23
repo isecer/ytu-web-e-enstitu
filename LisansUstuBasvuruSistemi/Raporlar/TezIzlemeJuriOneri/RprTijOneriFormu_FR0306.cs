@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
@@ -12,16 +12,16 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
 
 
-                var data = (from s in db.TijBasvuruOneris
-                            join mb in db.TijBasvurus on s.TijBasvuruID equals mb.TijBasvuruID
-                            join k in db.Kullanicilars on mb.KullaniciID equals k.KullaniciID
-                            join e in db.Enstitulers on mb.EnstituKod equals e.EnstituKod
-                            join prg in db.Programlars on mb.ProgramKod equals prg.ProgramKod
-                            join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
+                var data = (from s in entities.TijBasvuruOneris
+                            join mb in entities.TijBasvurus on s.TijBasvuruID equals mb.TijBasvuruID
+                            join k in entities.Kullanicilars on mb.KullaniciID equals k.KullaniciID
+                            join e in entities.Enstitulers on mb.EnstituKod equals e.EnstituKod
+                            join prg in entities.Programlars on mb.ProgramKod equals prg.ProgramKod
+                            join abd in entities.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
                             where s.TijBasvuruOneriID == tijBasvuruOneriId
                             select new
                             {

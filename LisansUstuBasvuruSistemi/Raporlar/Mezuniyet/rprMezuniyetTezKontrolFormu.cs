@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
@@ -14,18 +14,18 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var mezuniyetBasvurulariTezDosyasi = db.MezuniyetBasvurulariTezDosyalaris.First(p => p.RowID == (tezDosyalariRowId ?? p.RowID) && p.MezuniyetBasvurulariTezDosyaID == (mezuniyetBasvurulariTezDosyaId ?? p.MezuniyetBasvurulariTezDosyaID));
+                var mezuniyetBasvurulariTezDosyasi = entities.MezuniyetBasvurulariTezDosyalaris.First(p => p.RowID == (tezDosyalariRowId ?? p.RowID) && p.MezuniyetBasvurulariTezDosyaID == (mezuniyetBasvurulariTezDosyaId ?? p.MezuniyetBasvurulariTezDosyaID));
                 var basvuru = mezuniyetBasvurulariTezDosyasi.MezuniyetBasvurulari;
                 var enstituLng = basvuru.MezuniyetSureci.Enstituler;
                 lblEnstituAdi.Text = enstituLng.EnstituAd;
-                var onaylayan = db.Kullanicilars.First(p => p.KullaniciID == mezuniyetBasvurulariTezDosyasi.OnayYapanID);
+                var onaylayan = entities.Kullanicilars.First(p => p.KullaniciID == mezuniyetBasvurulariTezDosyasi.OnayYapanID);
                 cell_OnaylayanKisi.Text = onaylayan.Ad + " " + onaylayan.Soyad;
-                cellOnayTarihi.Text = mezuniyetBasvurulariTezDosyasi.OnayTarihi.ToFormatDateAndTime(); 
-                var kayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi + " - " + basvuru.KayitTarihi.ToFormatDate();
+                cellOnayTarihi.Text = mezuniyetBasvurulariTezDosyasi.OnayTarihi.ToFormatDateAndTime();
+                var kayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + entities.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi + " - " + basvuru.KayitTarihi.ToFormatDate();
                 lngLbl_AkademikTarih.Text = "Eğitim Öğretim Yılı";
-                cell_AkademikYil.Text = basvuru.MezuniyetSureci.BaslangicYil + "-" + basvuru.MezuniyetSureci.BitisYil + " " + db.Donemlers.First(p => p.DonemID == basvuru.MezuniyetSureci.DonemID).DonemAdi;
+                cell_AkademikYil.Text = basvuru.MezuniyetSureci.BaslangicYil + "-" + basvuru.MezuniyetSureci.BitisYil + " " + entities.Donemlers.First(p => p.DonemID == basvuru.MezuniyetSureci.DonemID).DonemAdi;
                 lblKayitTarihi.Text = "Kayıt Tarihi";
                 cell_KayitTarihi.Text = kayitDonemi;
                 Lbl_AdSoyad.Text = "Ad Soyad";
@@ -35,7 +35,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 lbl_OgrenciNo.Text = "Öğrenci No";
                 cell_OgrenciNo.Text = basvuru.OgrenciNo;
                 lbl_OgrenimTipi.Text = "Öğrenim Seviyesi";
-                cell_OgrenimTipi.Text = db.OgrenimTipleris.First(p => p.OgrenimTipKod == basvuru.OgrenimTipKod && p.EnstituKod == basvuru.MezuniyetSureci.EnstituKod).OgrenimTipAdi;
+                cell_OgrenimTipi.Text = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == basvuru.OgrenimTipKod && p.EnstituKod == basvuru.MezuniyetSureci.EnstituKod).OgrenimTipAdi;
 
                 var urlAdd = enstituLng.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBTDO_" + mezuniyetBasvurulariTezDosyasi.MezuniyetBasvurulariID + "_" + mezuniyetBasvurulariTezDosyasi.RowID.ToString();
                 xrQRCode.ImageUrl = urlAdd;

@@ -1,10 +1,9 @@
-﻿@using LisansUstuBasvuruSistemi.Models
+﻿@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model BelgeTipleri
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
  
 }
@@ -55,7 +54,7 @@
     
 
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 </script>

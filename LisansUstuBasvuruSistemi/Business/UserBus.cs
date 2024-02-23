@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using System;
@@ -17,10 +17,10 @@ namespace LisansUstuBasvuruSistemi.Business
         public static FrKullanicilarDto GetUser(string userName = null)
         {
             var identityName = userName ?? HttpContext.Current.User.Identity.Name;
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var q = from s in db.Kullanicilars
+                var q = from s in entities.Kullanicilars
                         where s.KullaniciAdi == identityName
                         select new FrKullanicilarDto
                         {
@@ -76,9 +76,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static FrKullanicilarDto GetUser(int kullaniciId)
         {
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var q = from s in db.Kullanicilars
+                var q = from s in entities.Kullanicilars
                         where s.KullaniciID == kullaniciId
                         select new FrKullanicilarDto
                         {
@@ -134,10 +134,10 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static FrKullanicilarDto GetLoginUser(string kullaniciAdi)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var q = from s in db.Kullanicilars.Where(p => p.IsAktif)
-                        join ktl in db.KullaniciTipleris on new { s.KullaniciTipID } equals new { ktl.KullaniciTipID }
+                var q = from s in entities.Kullanicilars.Where(p => p.IsAktif)
+                        join ktl in entities.KullaniciTipleris on new { s.KullaniciTipID } equals new { ktl.KullaniciTipID }
                         select new FrKullanicilarDto
                         {
                             EnstituKod = s.EnstituKod,
@@ -193,10 +193,10 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static Kullanicilar Login(string kullaniciAdi, string pwd)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var sifre = pwd.ComputeHash(GlobalSistemSetting.Tuz);
-                var kullanici = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == kullaniciAdi || p.TcKimlikNo == kullaniciAdi || p.EMail == kullaniciAdi);
+                var kullanici = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == kullaniciAdi || p.TcKimlikNo == kullaniciAdi || p.EMail == kullaniciAdi);
                 if (kullanici != null)
                 {
                     return kullanici.Sifre == sifre ? kullanici : null;
@@ -206,9 +206,9 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static Enstituler[] GetKullaniciEnstituler(int kullaniciId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                return db.Enstitulers.Where(p => p.IsAktif && db.KullaniciEnstituYetkileris.Any(a => p.EnstituKod == a.EnstituKod && a.KullaniciID == kullaniciId)).OrderBy(o => o.EnstituAd).ToArray();
+                return entities.Enstitulers.Where(p => p.IsAktif && entities.KullaniciEnstituYetkileris.Any(a => p.EnstituKod == a.EnstituKod && a.KullaniciID == kullaniciId)).OrderBy(o => o.EnstituAd).ToArray();
 
             }
         }
@@ -217,10 +217,10 @@ namespace LisansUstuBasvuruSistemi.Business
             var userName = HttpContext.Current.User.Identity.Name;
 
             if (userName.IsNullOrWhiteSpace()) return new Menuler[] { };
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var menus = new List<Menuler>();
-                var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == userName);
+                var kull = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == userName);
                 if (kull == null)
                 {
                     FormsAuthenticationUtil.SignOut();
@@ -239,9 +239,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var identityName = userName ?? HttpContext.Current.User.Identity.Name;
             var rolls = new UserRoleDto();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == identityName);
+                var kull = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == identityName);
                 if (kull != null)
                 {
                     var kullRoll = kull.Rollers.ToList();
@@ -266,9 +266,9 @@ namespace LisansUstuBasvuruSistemi.Business
         public static UserRoleDto GetUserRoles(int kullaniciId)
         {
             var rolls = new UserRoleDto();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
+                var kull = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
                 if (kull == null) throw new SecurityException("Kullanıcı Tanımlı Değil");
 
                 var dRoll = kull.Rollers.ToList();
@@ -296,9 +296,9 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static void SetUserRoles(int kullaniciId, List<int> rolIDs, int yetkiGrupId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var k = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
+                var k = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
                 if (k != null)
                 {
 
@@ -306,16 +306,16 @@ namespace LisansUstuBasvuruSistemi.Business
                     foreach (var drole in droles)
                         k.Rollers.Remove(drole);
                     k.YetkiGrupID = yetkiGrupId;
-                    db.SaveChanges();
+                    entities.SaveChanges();
                     var uRoles = UserBus.GetUserRoles(k.KullaniciID);
                     rolIDs = rolIDs.Where(p => uRoles.YetkiGrupRolleri.All(a => a.RolID != p)).ToList();
 
                     if (rolIDs.Count > 0)
                     {
-                        var newRoles = db.Rollers.Where(p => rolIDs.Contains(p.RolID));
+                        var newRoles = entities.Rollers.Where(p => rolIDs.Contains(p.RolID));
                         foreach (var nr in newRoles)
                             k.Rollers.Add(nr);
-                        db.SaveChanges();
+                        entities.SaveChanges();
                     }
                 }
                 else
@@ -324,9 +324,9 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static List<Kullanicilar> GetRoluOlanKullanicilar(List<string> rolAdi, string enstituKod = null)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var qRolKuls = db.Kullanicilars.Include("KullaniciProgramlaris").Include("Birimler").Include("KullaniciTipleri").Where(p => p.YetkiGruplari.YetkiGrupRolleris.Any(a => rolAdi.Contains(a.Roller.RolAdi)) || p.Rollers.Any(a => rolAdi.Contains(a.RolAdi))).AsQueryable();
+                var qRolKuls = entities.Kullanicilars.Include("KullaniciProgramlaris").Include("Birimler").Include("KullaniciTipleri").Where(p => p.YetkiGruplari.YetkiGrupRolleris.Any(a => rolAdi.Contains(a.Roller.RolAdi)) || p.Rollers.Any(a => rolAdi.Contains(a.RolAdi))).AsQueryable();
 
                 if (enstituKod.IsNullOrWhiteSpace() == false) qRolKuls = qRolKuls.Where(p => p.EnstituKod == enstituKod);
                 var data = qRolKuls.OrderByDescending(o => o.Ad).ThenBy(t => t.Soyad).ToList();
@@ -335,19 +335,19 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static List<string> GetUserEnstituKods(int kullaniciId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                return db.KullaniciEnstituYetkileris.Where(a => a.KullaniciID == kullaniciId).Select(s => s.EnstituKod).ToList();
+                return entities.KullaniciEnstituYetkileris.Where(a => a.KullaniciID == kullaniciId).Select(s => s.EnstituKod).ToList();
 
             }
         }
         public static List<string> GetUserProgramKods(int kullaniciId, string enstituKod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var kullProg = (from kp in db.KullaniciProgramlaris.Where(a => a.KullaniciID == kullaniciId)
-                                join s in db.Programlars on kp.ProgramKod equals s.ProgramKod
-                                join b in db.AnabilimDallaris on s.AnabilimDaliKod equals b.AnabilimDaliKod
+                var kullProg = (from kp in entities.KullaniciProgramlaris.Where(a => a.KullaniciID == kullaniciId)
+                                join s in entities.Programlars on kp.ProgramKod equals s.ProgramKod
+                                join b in entities.AnabilimDallaris on s.AnabilimDaliKod equals b.AnabilimDaliKod
                                 where b.EnstituKod == enstituKod
                                 select s.ProgramKod
                     ).ToList();
@@ -412,13 +412,13 @@ namespace LisansUstuBasvuruSistemi.Business
         public static void SetLastLogon()
         {
             var userName = HttpContext.Current.User.Identity.Name;
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == userName);
+                var kull = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == userName);
                 if (kull == null) return;
                 kull.LastLogonDate = DateTime.Now;
                 kull.LastLogonIP = UserIdentity.Ip;
-                db.SaveChanges();
+                entities.SaveChanges();
             }
         }
     }

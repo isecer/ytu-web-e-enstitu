@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
@@ -11,23 +11,23 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<Birimler> GetBirimler()
         {
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                return db.Birimlers.OrderBy(o => o.BirimAdi).ToList();
+                return entities.Birimlers.OrderBy(o => o.BirimAdi).ToList();
 
             }
         }
         public static Birimler[] GetBirimlerTreeList()
-        { 
+        {
             return GetBirimler().ToOrderedList("BirimID", "UstBirimID", "BirimAdi");
         }
         public static List<CmbIntDto> CmbBirimler(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = db.Birimlers.OrderBy(o => o.BirimAdi).ToList();
+                var data = entities.Birimlers.OrderBy(o => o.BirimAdi).ToList();
                 dct.AddRange(data.Select(item => new CmbIntDto { Value = item.BirimID, Caption = item.BirimAdi }));
             }
             return dct;

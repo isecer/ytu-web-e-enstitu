@@ -1,4 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.Models;
+﻿using Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,27 +19,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 
         public static void SetAyarBt(string ayarAdi, string ayarDegeri, string enstituKod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var ayar = db.BelgeTalepAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
+                var ayar = entities.BelgeTalepAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
                 if (ayar != null)
                 {
                     ayar.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.BelgeTalepAyarlars.Add(new BelgeTalepAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
+                    entities.BelgeTalepAyarlars.Add(new BelgeTalepAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
-                db.SaveChanges();
+                entities.SaveChanges();
             }
 
         }
         public static string GetAyarBt(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var ayar = db.BelgeTalepAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                var ayar = entities.BelgeTalepAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
                 return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
         }

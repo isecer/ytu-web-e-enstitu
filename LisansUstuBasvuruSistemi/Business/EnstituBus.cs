@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -13,10 +13,10 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<Enstituler> GetEnstituler()
         {
             if (Enstitulers.Any()) return Enstitulers;
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                Enstitulers = db.Enstitulers.Where(p => p.IsAktif).OrderBy(o => o.EnstituAd).ToList();
-            } 
+                Enstitulers = entities.Enstitulers.Where(p => p.IsAktif).OrderBy(o => o.EnstituAd).ToList();
+            }
             return Enstitulers;
 
         }
@@ -34,10 +34,10 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static bool IsContainsEnstitu(string ekod)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 ekod = ekod.ToLower();
-                var sdils = db.Enstitulers.Where(p => p.IsAktif).ToList();
+                var sdils = entities.Enstitulers.Where(p => p.IsAktif).ToList();
                 return sdils.Select(s => s.EnstituKisaAd.ToLower()).Any(a => a == ekod);
             }
         }
@@ -66,7 +66,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var data = Enstitulers.Where(p => enstKods.Contains(p.EnstituKod)).OrderBy(o => o.EnstituAd).ToList();
                 foreach (var item in data)

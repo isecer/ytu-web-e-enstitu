@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class MezuniyetController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(Guid? rowId, int? kullaniciId, string ekd)
         {
             return Index(new FmMezuniyetBasvurulari() { RowID = rowId, KullaniciID = kullaniciId, PageSize = 10 }, ekd);
@@ -688,7 +688,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                }).ToList();
                 foreach (var item in qYayins)
                 {
-                    var rowMdy = new Models.MezuniyetBasvurulariYayin
+                    var rowMdy = new MezuniyetBasvurulariYayin
                     {
                         MezuniyetBasvurulariID = kModel.MezuniyetBasvurulariID,
                         MezuniyetYayinTurID = item.MezuniyetYayinTurID,
@@ -1060,8 +1060,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var yetkiliKullanici = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
             var srYetkiliKullanici = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
             var mezuniyetBasvurularis = _entities.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
-            if (!yetkiliKullanici && !srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.KullaniciID == UserIdentity.Current.Id);
-            else if (srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
+            if (!yetkiliKullanici && !srYetkiliKullanici) mezuniyetBasvurularis = mezuniyetBasvurularis.Where(p => p.KullaniciID == UserIdentity.Current.Id);
+            else if (srYetkiliKullanici) mezuniyetBasvurularis = mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             var mezuniyetBasvuru = mezuniyetBasvurularis.First();
             var model = new SrTalepleriKayitDto
             {
@@ -1644,7 +1644,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
                 mMessage.MessageType = MsgTypeEnum.Success;
             }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return new { mMessage.IsSuccess, Messages = strView }.ToJsonResult();
         }
 
@@ -1995,7 +1995,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return Json(new { mMessage.IsSuccess, Messages = strView, IsRefresh = isRefresh }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -2147,7 +2147,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-            var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
+            var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage) : "";
             return new { mMessage, MessageView = strView, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult();
         }
         [Authorize]
@@ -2217,7 +2217,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             }
-            var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
+            var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage) : "";
             return new { mMessage, MessageView = strView, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult();
         }
         [Authorize]
@@ -2343,7 +2343,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 

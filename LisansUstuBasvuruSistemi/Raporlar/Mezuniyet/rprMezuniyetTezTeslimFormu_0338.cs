@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -15,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
 
                 //4   tr Ulusal Makale 
@@ -28,11 +28,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
 
 
-                var mBasvuru = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                var mBasvuru = entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                 var enstL = mBasvuru.MezuniyetSureci.Enstituler;
                 var prgL = mBasvuru.Programlar;
                 var abdL = mBasvuru.Programlar.AnabilimDallari;
-                var os = db.OgrenimTipleris.First(p => p.EnstituKod == enstL.EnstituKod && p.OgrenimTipKod == mBasvuru.OgrenimTipKod);
+                var os = entities.OgrenimTipleris.First(p => p.EnstituKod == enstL.EnstituKod && p.OgrenimTipKod == mBasvuru.OgrenimTipKod);
                 cellOgrenciNo.Text = mBasvuru.OgrenciNo;
                 cellOgrenciAdSoyad.Text = mBasvuru.Ad + " " + mBasvuru.Soyad;
                 cellOgrenciEnstituAdi.Text = enstL.EnstituAd;

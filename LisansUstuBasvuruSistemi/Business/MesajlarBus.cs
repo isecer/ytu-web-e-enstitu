@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
@@ -13,7 +13,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
 
             var model = new CmbIntDto();
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+           using (var entities = new LubsDbEntities())
             {
                 var enstituKods = UserBus.GetUserEnstituKods(UserIdentity.Current.Id);
                 var qListe = entities.Mesajlars.Where(p => enstituKods.Contains(p.EnstituKod) && p.EnstituKod == enstituKod && p.UstMesajID.HasValue == false && !p.IsAktif && p.Silindi == false).OrderByDescending(o => (o.Mesajlar1.Any() ? o.Mesajlar1.Select(s => s.Tarih).Max() : o.Tarih)).AsQueryable();
@@ -39,7 +39,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static void MesajUpdate(int mesajId)
         {
-            using (var entities=new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var mesaj = entities.Mesajlars.First(p => p.MesajID == mesajId);
                 mesaj.IsAktif = true;
@@ -62,7 +62,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+           using (var entities = new LubsDbEntities())
             {
                 var qdata = entities.MesajKategorileris.AsQueryable();
                 if (isAktif.HasValue) qdata = qdata.Where(p => p.IsAktif == isAktif.Value);
@@ -81,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var entities = new LisansustuBasvuruSistemiEntities())
+           using (var entities = new LubsDbEntities())
             {
                 var qdata = entities.Mesajlars.AsQueryable();
                 if (enstituKod.IsNullOrWhiteSpace() == false) qdata = qdata.Where(p => p.MesajKategorileri.EnstituKod == enstituKod);

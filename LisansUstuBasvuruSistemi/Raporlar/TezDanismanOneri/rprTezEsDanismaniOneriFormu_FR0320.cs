@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
@@ -12,19 +12,19 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
                 this.DisplayName = "FR-0320 TEZ EŞ DANIŞMANI ÖNERİ FORMU";
 
-                var qData = (from s in db.TDOBasvuruDanismen
-                             join ed in db.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId) on s.TDOBasvuruDanismanID equals ed.TDOBasvuruDanismanID
-                             join b in db.TDOBasvurus on s.TDOBasvuruID equals b.TDOBasvuruID
-                             join k in db.Kullanicilars on b.KullaniciID equals k.KullaniciID
-                             join e in db.Enstitulers on b.EnstituKod equals e.EnstituKod
-                             join prg in db.Programlars on b.ProgramKod equals prg.ProgramKod
-                             join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                             join ot in db.OgrenimTipleris on new { b.EnstituKod, b.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                             join dn in db.Donemlers on b.KayitOgretimYiliDonemID equals dn.DonemID
+                var qData = (from s in entities.TDOBasvuruDanismen
+                             join ed in entities.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId) on s.TDOBasvuruDanismanID equals ed.TDOBasvuruDanismanID
+                             join b in entities.TDOBasvurus on s.TDOBasvuruID equals b.TDOBasvuruID
+                             join k in entities.Kullanicilars on b.KullaniciID equals k.KullaniciID
+                             join e in entities.Enstitulers on b.EnstituKod equals e.EnstituKod
+                             join prg in entities.Programlars on b.ProgramKod equals prg.ProgramKod
+                             join abd in entities.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
+                             join ot in entities.OgrenimTipleris on new { b.EnstituKod, b.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
+                             join dn in entities.Donemlers on b.KayitOgretimYiliDonemID equals dn.DonemID
                              select new
                              {
                                  b.OgrenciNo,

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var entities = new LisansustuBasvuruSistemiEntities())
+               using (var entities = new LubsDbEntities())
                 {
 
                     var taleps = (from s in entities.TalepGelenTaleplers
@@ -126,10 +126,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         else
                             erisimAdresi = "http://" + wurlAddr.First();
                         mmmC.LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-                        var hcb = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
+                        var hcb = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", contentBilgi);
                         mmmC.Content = hcb;
                         mmmC.WebAdresi = mailBilgi.WebAdresi;
-                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
                         var emailSend = MailManager.SendMail(mailBilgi.EnstituKod, "Talep İşleminiz Hk.", htmlMail, talep.EMail, null);
 
                         if (emailSend)

@@ -1,9 +1,9 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
+﻿@using Entities.Entities  
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model SikcaSorulanSorular
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     ViewBag.Title = "Kayit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -65,7 +65,7 @@
 <script>
 
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 

@@ -1,8 +1,6 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmYeterlikBasvuruDto
@@ -13,7 +11,7 @@
     var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
     var onayYapmayanKomiteIds = (List<int>)ViewBag.onayYapmayanKomiteIds;
     var onayYapmayanJuriEmails = (List<string>)ViewBag.onayYapmayanJuriEmails;
-    var kayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent(); 
+    var kayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
 }
 
 
@@ -37,7 +35,7 @@
 
                                 <li>
                                     <a href="javascript:void(0);" onclick="IslemGormeyenlerOnay()" title="Kontrol Aşamasında Olan Başvuruları Onayla"><i class="fa fa-thumbs-o-up fa-lg"></i></a>
-                                  
+
                                     <script>
                                     function IslemGormeyenlerOnay() {
                                         var kontrolEdilmeyenTalepIds = @Json.Encode(kontrolEdilmeyenBasvuruIds);
@@ -152,27 +150,27 @@
                             <td>
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
-                                    <tr>
-                                        <td width="150">Başvuru Durumu</td>
-                                        <td>
-                                            @Html.DropDownList("BasvuruDurumID", null, new { @class = "form-control" })
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td width="150">Başvuru Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("BasvuruDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </td>
                             <td style="padding-left: 10px;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
-                                    <tr>
-                                        <td width="150">Anabilim Dalı</td>
-                                        <td>
-                                            @Html.DropDownList("AnabilimDaliID", null, new { @class = "form-control" })
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td width="150">Anabilim Dalı</td>
+                                            <td>
+                                                @Html.DropDownList("AnabilimDaliID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
-                               
+
                             </td>
                         </tr>
                         <tr>
@@ -180,22 +178,22 @@
                             <td style="padding-left: 10px; vertical-align: top;">
                                 <table style="width: 100%; table-layout: fixed;">
                                     <tbody>
-                                    <tr>
-                                        <td width="150">Aranacak Kelime</td>
-                                        <td>
+                                        <tr>
+                                            <td width="150">Aranacak Kelime</td>
+                                            <td>
 
-                                            <table style="width: 100%; table-layout: fixed;">
-                                                <tbody>
-                                                <tr>
-                                                    <td><input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control"/></td>
-                                                    <td width="110">
-                                                        <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width: 110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
+                                                <table style="width: 100%; table-layout: fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width: 110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </td>
@@ -292,9 +290,9 @@
 </div>
 @if (Model.RowCount > 0 && !kayitYetki && Model.Data.First().TezDanismanID == UserIdentity.Current.Id)
 {
-    var firstRowUniqueID = Model.Data.First().UniqueID;
+    var firstRowUniqueId = Model.Data.First().UniqueID;
     <script>
-        setTimeout(function () { ShowDetail('@firstRowUniqueID') }, 200);
+        setTimeout(function () { ShowDetail('@firstRowUniqueId') }, 200);
     </script>
 }
 <script>
@@ -338,7 +336,7 @@
             }
         });
     }
-    function ShowDetail(id) {  
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");

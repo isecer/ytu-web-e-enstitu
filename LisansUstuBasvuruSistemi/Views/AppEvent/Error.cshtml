@@ -1,17 +1,17 @@
 ﻿@model Exception
-@using LisansUstuBasvuruSistemi.Models
+@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    using (var db = new LisansustuBasvuruSistemiEntities())
+    using (var entities = new LubsDbEntities())
     {
         var exceltionMessage = Model.ToExceptionMessage();
         bool saveError = true;
         var errMesgList = new List<string> { "1- The controller for path", "The provided anti-forgery token was meant for user ", "was not found on controller", "__RequestVerificationToken" };
-        if (errMesgList.Any(a=> exceltionMessage.Contains(a)))
+        if (errMesgList.Any(a => exceltionMessage.Contains(a)))
         {
             saveError = false;
             var splitMesssages = exceltionMessage.Split('\'');
@@ -30,7 +30,7 @@
         }
         if (saveError)
         {
-            db.SistemBilgilendirmes.Add(new SistemBilgilendirme
+            entities.SistemBilgilendirmes.Add(new SistemBilgilendirme
             {
                 BilgiTipi = BilgiTipiEnum.Hata,
                 Message = Model.ToExceptionMessage(),
@@ -39,7 +39,7 @@
                 IslemTarihi = DateTime.Now,
                 StackTrace = Model.ToExceptionStackTrace()
             });
-            db.SaveChanges();
+            entities.SaveChanges();
         }
     }
 }

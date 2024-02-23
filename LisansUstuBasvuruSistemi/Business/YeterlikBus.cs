@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -36,11 +36,11 @@ namespace LisansUstuBasvuruSistemi.Business
             if (not.ToStrObj().Split(',').Length > 1)
             {
                 not = not.ToStrObj().Split(',').Last();
-            } 
+            }
             return not;
         }
         public static bool IsHarfNotuBuyukEsit(string notKriteri, string ogrenciNotu)
-        { 
+        {
             var notKriteriIndex = NotDegerleri.IndexOf(notKriteri);
             var ogrenciNotuIndex = NotDegerleri.IndexOf(ogrenciNotu);
             var success = notKriteriIndex <= ogrenciNotuIndex;
@@ -53,21 +53,21 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static int? GetYeterlikAktifSurecId(string enstituKod, int? yeterlikSurecId = null)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var nowDate = DateTime.Now;
-                var aktifSurec = db.YeterlikSurecis.FirstOrDefault(p => (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.YeterlikSurecID == (yeterlikSurecId ?? p.YeterlikSurecID));
+                var aktifSurec = entities.YeterlikSurecis.FirstOrDefault(p => (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.YeterlikSurecID == (yeterlikSurecId ?? p.YeterlikSurecID));
                 return aktifSurec?.YeterlikSurecID;
             }
         }
 
         public static List<KmYeterlikSureciOgrenimTipKriterleri> GetOgrenimTipKriterleri(string enstituKod, int? yeterlikSurecId)
         {
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
 
-                var yeterlikSurecOgrenimTipleri = db.YeterlikSurecOgrenimTipleris.Where(p => p.YeterlikSureci.EnstituKod == enstituKod && p.YeterlikSurecID == (yeterlikSurecId ?? p.YeterlikSurecID)).ToList();
-                var ogrenimTipleri = db.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsMezuniyetBasvurusuYapabilir && p.IsAktif).ToList();
+                var yeterlikSurecOgrenimTipleri = entities.YeterlikSurecOgrenimTipleris.Where(p => p.YeterlikSureci.EnstituKod == enstituKod && p.YeterlikSurecID == (yeterlikSurecId ?? p.YeterlikSurecID)).ToList();
+                var ogrenimTipleri = entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsMezuniyetBasvurusuYapabilir && p.IsAktif).ToList();
                 var ogrenimtipData = (from o in ogrenimTipleri.Where(p => p.OgrenimTipKod.IsDoktora())
                                       join yo in yeterlikSurecOgrenimTipleri on o.OgrenimTipID equals yo.OgrenimTipID into defYod
                                       from defYo in defYod.DefaultIfEmpty()
@@ -104,10 +104,10 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var msg = new MmMessage();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
-                var basvuru = db.YeterlikBasvurus.FirstOrDefault(p => p.YeterlikBasvuruID == yeterlikBasvurulariId);
+                var basvuru = entities.YeterlikBasvurus.FirstOrDefault(p => p.YeterlikBasvuruID == yeterlikBasvurulariId);
                 if (basvuru == null)
                 {
                     msg.Messages.Add("Silinmek istenen başvuru sistemde bulunamadı.");
@@ -143,12 +143,12 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<string> YeterlikBasvuruKontrol(string enstituKod, Guid? uniqueId)
         {
             var errorMessage = new List<string>();
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var kayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
                 if (uniqueId.HasValue)
                 {
-                    var basvuru = db.YeterlikBasvurus.FirstOrDefault(p => p.UniqueID == uniqueId.Value);
+                    var basvuru = entities.YeterlikBasvurus.FirstOrDefault(p => p.UniqueID == uniqueId.Value);
                     if (basvuru == null)
                     {
                         errorMessage.Add("Aranan başvuru sistemde bulunamadı.");
@@ -181,7 +181,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 else
                 {
                     var yeterlikSurecId = GetYeterlikAktifSurecId(enstituKod);
-                    var kul = db.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
+                    var kul = entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
                     if (!yeterlikSurecId.HasValue)
                     {
                         errorMessage.Add("Başvuru Süreci Kapalı");
@@ -192,34 +192,34 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else if (enstituKod != kul.EnstituKod)
                     {
-                        var enstitu = db.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod);
+                        var enstitu = entities.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod);
                         errorMessage.Add("Kullanıcı hesbınızın kayıtlı olduğu enstitü ile başvuru yaptığınız entistü uyuşmamaktadır. Enstitünüz: " + enstitu.EnstituAd + " olarak gözükmektedir.");
                     }
                     else
                     {
                         if (kul.YtuOgrencisi)
                         {
-                            var ogrenimTipAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
+                            var ogrenimTipAdi = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
 
                             if (kul.OgrenimDurumID != OgrenimDurumEnum.HalenOğrenci)
                             {
                                 errorMessage.Add("Yeterlik Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
                             }
-                            var basvuruVar = db.YeterlikBasvurus.Any(p => p.IsEnstituOnaylandi != false && p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
+                            var basvuruVar = entities.YeterlikBasvurus.Any(p => p.IsEnstituOnaylandi != false && p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
                             if (basvuruVar)
                             {
                                 errorMessage.Add("Bu Yeterlik süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
 
                             }
-                            else if (db.YeterlikSurecOgrenimTipleris.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.OgrenimTipKod != kul.OgrenimTipKod) == false)
+                            else if (entities.YeterlikSurecOgrenimTipleris.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.OgrenimTipKod != kul.OgrenimTipKod) == false)
                             {
                                 errorMessage.Add(ogrenimTipAdi + " Öğrenim seviyesinde okuyan öğrenciler Yeterlik başvurusu yapamazlar");
                             }
-                            else if (!db.YeterlikSureciKriterMuafOgrencilers.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.KullaniciID == kul.KullaniciID))
+                            else if (!entities.YeterlikSureciKriterMuafOgrencilers.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.KullaniciID == kul.KullaniciID))
                             {
                                 var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
                                 var controlMessage = new List<string>();
-                                var basvuruKriterleri = db.YeterlikSurecOgrenimTipleris.FirstOrDefault(p => p.YeterlikSurecID == yeterlikSurecId.Value && p.OgrenimTipKod == kul.OgrenimTipKod);
+                                var basvuruKriterleri = entities.YeterlikSurecOgrenimTipleris.FirstOrDefault(p => p.YeterlikSurecID == yeterlikSurecId.Value && p.OgrenimTipKod == kul.OgrenimTipKod);
                                 if (basvuruKriterleri == null)
                                 {
                                     errorMessage.Add("Okuduğunuz öğrenim seviyesi yeterlik başvuru yapmak için uygun değildir.");
@@ -265,10 +265,10 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in db.YeterlikSurecis.Where(p => p.EnstituKod == enstituKod)
-                            join d in db.Donemlers on s.DonemID equals d.DonemID
+                var data = (from s in entities.YeterlikSurecis.Where(p => p.EnstituKod == enstituKod)
+                            join d in entities.Donemlers on s.DonemID equals d.DonemID
                             orderby s.BaslangicTarihi descending
                             select new
                             {
@@ -290,13 +290,13 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var yeterliAnabilimDaliIds = db.YeterlikBasvurus
+                var yeterliAnabilimDaliIds = entities.YeterlikBasvurus
                     .Where(p => p.YeterlikSureci.EnstituKod == enstituKod &&
                                 p.YeterlikSurecID == (basvuruSurecId ?? p.YeterlikSurecID)).Select(s => s.Programlar.AnabilimDaliID).Distinct().ToList();
 
-                var anabilimDallaris = db.AnabilimDallaris.Where(p => yeterliAnabilimDaliIds.Contains(p.AnabilimDaliID))
+                var anabilimDallaris = entities.AnabilimDallaris.Where(p => yeterliAnabilimDaliIds.Contains(p.AnabilimDaliID))
                     .Select(s => new { s.AnabilimDaliID, s.AnabilimDaliAdi }).OrderBy(o => o.AnabilimDaliAdi).ToList();
 
                 foreach (var item in anabilimDallaris)
@@ -328,10 +328,10 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbStringDto>();
             if (bosSecimVar) lst.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var juri = db.YeterlikBasvuruJuriUyeleris.First(f => f.UniqueID == juriUniqueId);
-                var juriUyeleri = db.YeterlikBasvuruJuriUyeleris.Where(p => p.YeterlikBasvuruID == juri.YeterlikBasvuruID && !p.IsSecilenJuri && p.IsYtuIciOrDisi == juri.IsYtuIciOrDisi && p.UniqueID != juriUniqueId).ToList();
+                var juri = entities.YeterlikBasvuruJuriUyeleris.First(f => f.UniqueID == juriUniqueId);
+                var juriUyeleri = entities.YeterlikBasvuruJuriUyeleris.Where(p => p.YeterlikBasvuruID == juri.YeterlikBasvuruID && !p.IsSecilenJuri && p.IsYtuIciOrDisi == juri.IsYtuIciOrDisi && p.UniqueID != juriUniqueId).ToList();
                 var cmbData = juriUyeleri.Select(s => new CmbStringDto
                 {
                     Value = s.UniqueID.ToString(),
@@ -345,9 +345,9 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var lst = new List<CmbStringDto>();
             if (bosSecimVar) lst.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var komite = db.YeterlikBasvuruKomitelers.First(f => f.UniqueID == juriUniqueId);
+                var komite = entities.YeterlikBasvuruKomitelers.First(f => f.UniqueID == juriUniqueId);
                 var komiteler = komite.YeterlikBasvuru.YeterlikBasvuruKomitelers;
                 var anabilimDali = komite.YeterlikBasvuru.Programlar.AnabilimDallari;
                 var haricKomiteKullaniciIds = komiteler.Select(s => s.KullaniciID).ToList();

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using BiskaUtil;
 using DevExpress.Web.Internal.XmlProcessor;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -14,9 +14,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
         {
             InitializeComponent();
 
-            using (var db = new LisansustuBasvuruSistemiEntities())
+            using (var  entities = new LubsDbEntities())
             {
-                var data = (from s in db.ToBasvuruSavunmas
+                var data = (from s in entities.ToBasvuruSavunmas
                             where s.ToBasvuruSavunmaID == toBasvuruSavunmaId
                             select new
                             {

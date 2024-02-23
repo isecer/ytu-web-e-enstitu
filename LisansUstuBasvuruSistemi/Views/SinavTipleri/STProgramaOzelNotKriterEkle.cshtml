@@ -1,9 +1,9 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
+﻿@using Entities.Entities  
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmSinavTipleriSpna
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_LayoutPupupFrame.cshtml";
     var stip = (SinavTipleri)ViewBag.stip;
     var stipAdi = stip.SinavAdi;
@@ -456,19 +456,19 @@
     });
 
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 
 
 </script>
 
-@if (MmMessage.IsCloseDialog)
+@if (mmMessage.IsCloseDialog)
 {
     <script>
         setTimeout(function () {
             window.top.getDetail('@Model.SinavTipID', false, null);
-            window.top.dialogKapat('@MmMessage.DialogID');
+            window.top.dialogKapat('@mmMessage.DialogID');
         }, 4000);
 
     </script>

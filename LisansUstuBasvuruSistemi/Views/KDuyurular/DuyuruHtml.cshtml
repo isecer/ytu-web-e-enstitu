@@ -1,11 +1,11 @@
-﻿@using LisansUstuBasvuruSistemi.Models
+﻿@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model FmDuyurularDto
 @{
     Layout = null; 
 }
-@if (Model.DuyurularDtos != null && Model.DuyurularDtos.Count() > 0)
+@if (Model.DuyurularDtos != null && Model.DuyurularDtos.Any())
 {
     <div style="overflow-x:auto;max-height:600px;">
         <table class="table">

@@ -1,18 +1,18 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
-@using LisansUstuBasvuruSistemi.Models 
+@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var err = (Model.Exception ?? Server.GetLastError()) ?? new Exception(Request.Url.ToString());
-    using (var db = new LisansustuBasvuruSistemiEntities())
+    using (var entities = new LubsDbEntities())
     {
         bool saveError = true;
         var exceltionMessage = err.ToExceptionMessage();
         if (exceltionMessage.Contains("1- The controller for path"))
-        { 
-              var splitMesssages = exceltionMessage.Split('\'');
+        {
+            var splitMesssages = exceltionMessage.Split('\'');
             if (splitMesssages.Count() >= 3)
             {
                 var path = splitMesssages[1];
@@ -28,7 +28,7 @@
         }
         if (saveError)
         {
-            db.SistemBilgilendirmes.Add(new SistemBilgilendirme
+            entities.SistemBilgilendirmes.Add(new SistemBilgilendirme
             {
                 BilgiTipi = BilgiTipiEnum.Hata,
                 Message = exceltionMessage,
@@ -37,7 +37,7 @@
                 IslemTarihi = DateTime.Now,
                 StackTrace = Model.Exception.ToExceptionStackTrace()
             });
-            db.SaveChanges();
+            entities.SaveChanges();
         }
     }
 

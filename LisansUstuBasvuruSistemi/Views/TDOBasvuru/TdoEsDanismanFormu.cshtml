@@ -1,11 +1,11 @@
-﻿@using LisansUstuBasvuruSistemi.Models
+﻿@using Entities.Entities 
 @model TDOBasvuruEsDanisman
 @{
     Layout = null;
 }
 
 
-@using (Ajax.BeginForm("TDOEsDanismanFormuPost", "TDOBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTDOEsDanismanFormu" }))
+@using (Ajax.BeginForm("TDOEsDanismanFormuPost", "TdoBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTDOEsDanismanFormu" }))
 {
     @Html.HiddenFor(p => p.TDOBasvuruEsDanismanID);
     @Html.HiddenFor(p => p.TDOBasvuruDanismanID);

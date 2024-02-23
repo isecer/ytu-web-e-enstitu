@@ -3,7 +3,7 @@ using BiskaUtil;
 using CaptchaMvc.HtmlHelpers;
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Raporlar;
 using LisansUstuBasvuruSistemi.Raporlar.BelgeTalep;
 using LisansUstuBasvuruSistemi.Raporlar.Genel;
@@ -32,6 +32,7 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Raporlar.LUB;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
 
@@ -41,7 +42,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class AjaxController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
 
 
         public ActionResult GetThemeSetting()
@@ -370,7 +371,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             if (data.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
-            { 
+            {
                 var ogrenciler = _entities.Kullanicilars.Where(p => p.DanismanID == data.KullaniciID && p.YtuOgrencisi).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).ToList();
                 ViewBag.Ogrenciler = ogrenciler;
             }
@@ -1219,7 +1220,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             EnstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod).EnstituAd,
                             UniversiteAdi = "Yıldız Teknik Üniversitesi",
                             WebAdresi = mailBilgi.WebAdresi,
-                            Content = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent",
+                            Content = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent",
                                         new MailTableContentDto
                                         {
                                             AciklamaBasligi = "Şifre Sıfırlama İşlemi",
@@ -1229,7 +1230,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png"
 
                         };
-                        var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
                         var eMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true, KullaniciId = kul.KullaniciID } };
                         var rtVal = MailManager.SendMailRetVal(kul.EnstituKod, "Şifre Sıfırlama İşlemi", htmlMail, eMailList, null);
                         if (rtVal == null)
@@ -1666,7 +1667,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             var data = SrTalepleriBus.GetSalonBosSaatler(srSalonId, srTalepTipId, tarih, srTalepId, null, minTarih);
             data.IsPopupFrame = isPopupFrame;
-            var hcb = ViewRenderHelper.RenderPartialView("Ajax", "getSaatlerView", data);
+            var hcb = ViewRenderHelper.RenderPartialView("Ajax", "GetSaatlerView", data);
             return new { Deger = hcb }.ToJsonResult();
         }
         [Authorize]
@@ -1921,7 +1922,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = MsgTypeEnum.Warning;
             }
 
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { success = mmMessage.IsSuccess, responseText = strView }, JsonRequestBehavior.AllowGet);
 
         }
@@ -2278,7 +2279,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult GetUniversitelerYtuDahil(string term)
         {
-            var univeriteler = _entities.Universitelers.Where(p =>  p.Ad.Contains(term)).OrderBy(o => o.Ad).Take(50).Select(s => new
+            var univeriteler = _entities.Universitelers.Where(p => p.Ad.Contains(term)).OrderBy(o => o.Ad).Take(50).Select(s => new
             {
                 id = s.UniversiteID,
                 text = s.Ad
@@ -2305,17 +2306,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var alanTipId = Request["AlanTipID"].ToIntObj();
                     var programKod = Request["ProgramKod"].ToStrObjEmptString();
 
-                    using (var db = new LisansustuBasvuruSistemiEntities())
+                    using (var entities = new LubsDbEntities())
                     {
-                        var q = from s in db.BasvuruSurecs
-                                join b in db.Basvurulars.Where(p => p.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı) on s.BasvuruSurecID equals b.BasvuruSurecID
-                                join t in db.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı) on b.BasvuruID equals t.BasvuruID
-                                join bsOt in db.BasvuruSurecOgrenimTipleris.Where(p => p.BasvuruSurecID == basvuruSurecId) on t.OgrenimTipKod equals bsOt.OgrenimTipKod
-                                join ot in db.OgrenimTipleris on new { s.EnstituKod, t.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                                join at in db.AlanTipleris on t.AlanTipID equals at.AlanTipID
-                                join pr in db.Programlars on t.ProgramKod equals pr.ProgramKod
-                                join bl in db.AnabilimDallaris on new { pr.AnabilimDaliKod, s.EnstituKod } equals new { bl.AnabilimDaliKod, bl.EnstituKod }
-                                join kot in db.BasvuruSurecKotalars.Where(p => p.ProgramKod == programKod) on new { s.BasvuruSurecID, t.OgrenimTipKod } equals new { kot.BasvuruSurecID, kot.OgrenimTipKod }
+                        var q = from s in entities.BasvuruSurecs
+                                join b in entities.Basvurulars.Where(p => p.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı) on s.BasvuruSurecID equals b.BasvuruSurecID
+                                join t in entities.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı) on b.BasvuruID equals t.BasvuruID
+                                join bsOt in entities.BasvuruSurecOgrenimTipleris.Where(p => p.BasvuruSurecID == basvuruSurecId) on t.OgrenimTipKod equals bsOt.OgrenimTipKod
+                                join ot in entities.OgrenimTipleris on new { s.EnstituKod, t.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
+                                join at in entities.AlanTipleris on t.AlanTipID equals at.AlanTipID
+                                join pr in entities.Programlars on t.ProgramKod equals pr.ProgramKod
+                                join bl in entities.AnabilimDallaris on new { pr.AnabilimDaliKod, s.EnstituKod } equals new { bl.AnabilimDaliKod, bl.EnstituKod }
+                                join kot in entities.BasvuruSurecKotalars.Where(p => p.ProgramKod == programKod) on new { s.BasvuruSurecID, t.OgrenimTipKod } equals new { kot.BasvuruSurecID, kot.OgrenimTipKod }
                                 where t.ProgramKod == programKod && t.OgrenimTipKod == ogrenimTipKod && s.BasvuruSurecID == basvuruSurecId
                                 select new
                                 {
@@ -2350,9 +2351,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             TercihNo = s.SiraNo
                         }).ToList();
 
-                        var rpr = new rprBasvuruMulakatsizOgrenciList(basvuruSurecId);
+                        var rpr = new RprBasvuruMulakatsizOgrenciList(basvuruSurecId);
                         rpr.DataSource = data;
-                        var basvuruSurec = db.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
+                        var basvuruSurec = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
                         rpr.DisplayName = basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipiEnum.LisansustuBasvuru ? "Lisansüstü Başvuran Öğrenci Listesi" : "Lisansüstü Yatay Geçiş Başvuran Öğrenci Listesi";
                         rpr.PrintingSystem.ContinuousPageNumbering = true;
                         rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFilePageByPage;
@@ -2385,22 +2386,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
 
-                    using (var db = new LisansustuBasvuruSistemiEntities())
+                    using (var entities = new LubsDbEntities())
                     {
                         var id = basvuruSurecId;
-                        var q = from s in db.BasvuruSurecs
-                                join ms in db.MulakatSonuclaris on s.BasvuruSurecID equals ms.BasvuruSurecID
-                                join kd in db.KayitDurumlaris on ms.KayitDurumID equals kd.KayitDurumID into defKd
+                        var q = from s in entities.BasvuruSurecs
+                                join ms in entities.MulakatSonuclaris on s.BasvuruSurecID equals ms.BasvuruSurecID
+                                join kd in entities.KayitDurumlaris on ms.KayitDurumID equals kd.KayitDurumID into defKd
                                 from kd in defKd.DefaultIfEmpty()
-                                join t in db.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı) on ms.BasvuruTercihID equals t.BasvuruTercihID
-                                join kt in db.BasvuruSurecKotalars on new { s.BasvuruSurecID, t.ProgramKod, t.OgrenimTipKod } equals new { kt.BasvuruSurecID, kt.ProgramKod, kt.OgrenimTipKod }
-                                join ot in db.OgrenimTipleris on new { s.EnstituKod, t.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                                join at in db.AlanTipleris on t.AlanTipID equals at.AlanTipID
-                                join pr in db.Programlars on t.ProgramKod equals pr.ProgramKod
-                                join bsOt in db.BasvuruSurecOgrenimTipleris.Where(p => p.BasvuruSurecID == id) on t.OgrenimTipKod equals bsOt.OgrenimTipKod
-                                join bl in db.AnabilimDallaris on new { pr.AnabilimDaliKod, s.EnstituKod } equals new { bl.AnabilimDaliKod, bl.EnstituKod }
-                                join b in db.Basvurulars on t.BasvuruID equals b.BasvuruID
-                                join bst in db.MulakatSonucTipleris on ms.MulakatSonucTipID equals bst.MulakatSonucTipID
+                                join t in entities.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı) on ms.BasvuruTercihID equals t.BasvuruTercihID
+                                join kt in entities.BasvuruSurecKotalars on new { s.BasvuruSurecID, t.ProgramKod, t.OgrenimTipKod } equals new { kt.BasvuruSurecID, kt.ProgramKod, kt.OgrenimTipKod }
+                                join ot in entities.OgrenimTipleris on new { s.EnstituKod, t.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
+                                join at in entities.AlanTipleris on t.AlanTipID equals at.AlanTipID
+                                join pr in entities.Programlars on t.ProgramKod equals pr.ProgramKod
+                                join bsOt in entities.BasvuruSurecOgrenimTipleris.Where(p => p.BasvuruSurecID == id) on t.OgrenimTipKod equals bsOt.OgrenimTipKod
+                                join bl in entities.AnabilimDallaris on new { pr.AnabilimDaliKod, s.EnstituKod } equals new { bl.AnabilimDaliKod, bl.EnstituKod }
+                                join b in entities.Basvurulars on t.BasvuruID equals b.BasvuruID
+                                join bst in entities.MulakatSonucTipleris on ms.MulakatSonucTipID equals bst.MulakatSonucTipID
                                 where s.BasvuruSurecID == id
                                 select new
                                 {
@@ -2447,7 +2448,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             q = q.Where(p => p.RowID == rowId);
 
                             ekBilgiTipId = 2;
-                            var basvuru = db.Basvurulars.First(p => p.RowID == rowId);
+                            var basvuru = _entities.Basvurulars.First(p => p.RowID == rowId);
                             isOgrenciSonucListesindePuanGozuksun = basvuru.BasvuruSurec.IsOgrenciSonucListesindePuanGozuksun;
                             basvuruSurecId = basvuru.BasvuruSurecID;
                             var programKods = basvuru.BasvurularTercihleris.Select(s => s.ProgramKod + "_" + s.OgrenimTipKod + "_" + s.AlanTipID).ToList();
@@ -2580,7 +2581,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         if (ekBilgiTipId == 3)
                         {
-                            var basvuruSurec = db.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
+                            var basvuruSurec = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
                             var qSinavOt = basvuruSurec.BasvuruSurecSinavTipleriOTNotAraliklaris.ToList();
 
                             foreach (var itemP in data)
@@ -2590,7 +2591,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                 if (sinavYok) itemP.AlesNotu = null;
                             }
-                            var rpr = new rprBasvuruSonucPuanList(basvuruSurecId);
+                            var rpr = new RprBasvuruSonucPuanList(basvuruSurecId);
                             rpr.DataSource = data;
                             rpr.DisplayName = basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipiEnum.LisansustuBasvuru ? "Lisansüstü Başvuru Sonuç Puan Listesi" : "Lisansüstü Yatay Geçiş Başvuru Sonuç Puan Listesi";
                             rpr.PrintingSystem.ContinuousPageNumbering = true;
@@ -2601,9 +2602,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                         {
 
-                            var rpr = new rprBasvuruSonucList(basvuruSurecId, ekBilgiTipId.Value);
+                            var rpr = new RprBasvuruSonucList(basvuruSurecId, ekBilgiTipId.Value);
                             rpr.DataSource = data;
-                            var basvuruSurec = db.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
+                            var basvuruSurec = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
                             rpr.DisplayName = basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipiEnum.LisansustuBasvuru ? "Lisansüstü Başvuru Sonuç Listesi" : "Lisansüstü Yatay Geçiş Başvuru Sonuç Listesi";
                             rpr.PrintingSystem.ContinuousPageNumbering = true;
                             rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
@@ -2621,7 +2622,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     #region BasvuruSonucSayisal
                     var basvuruSurecId = Request["BasvuruSurecID"].ToIntObj();
                     if (RoleNames.LisansustuBasvuruRapor.InRoleCurrent() == false) basvuruSurecId = 0;
-                    using (var entities = new LisansustuBasvuruSistemiEntities())
+                   using (var entities = new LubsDbEntities())
                     {
                         var bsurec = entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
                         var qx = (from s in entities.BasvuruSurecs.Where(p => p.BasvuruSurecID == basvuruSurecId && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod))
@@ -2736,13 +2737,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var eKod = Request["eKod"].ToStrObj();
                     var yilModel = new List<int>();
                     var yilAyModel = new List<RaporBTSayisalModel>();
-                    using (var db = new LisansustuBasvuruSistemiEntities())
+                    using (var entities = new LubsDbEntities())
                     {
-                        var btipdetayIds = db.BelgeTipDetayBelgelers.Where(p => p.BelgeTipDetay.IsAktif).Select(s => s.BelgeTipID).Distinct();
+                        var btipdetayIds = _entities.BelgeTipDetayBelgelers.Where(p => p.BelgeTipDetay.IsAktif).Select(s => s.BelgeTipID).Distinct();
                         if (RoleNames.BelgeTalepleriRapor.InRoleCurrent())
                         {
 
-                            var bTips = db.BelgeTipleris.Where(p => btipdetayIds.Contains(p.BelgeTipID) && p.IsAktif).ToList();
+                            var bTips = _entities.BelgeTipleris.Where(p => btipdetayIds.Contains(p.BelgeTipID) && p.IsAktif).ToList();
                             var t1 = Convert.ToDateTime(baslangicT + "-01");
                             var t2 = Convert.ToDateTime(bitisT + "-01");
                             for (DateTime i = t1; i <= t2; i = i.AddMonths(1))
@@ -2756,7 +2757,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             yilModel = yilAyModel.Select(s => s.Yil).Distinct().ToList();
                         }
 
-                        var data = (from s in db.Enstitulers
+                        var data = (from s in entities.Enstitulers
                                     where s.EnstituKod == eKod
                                     select new RaporBTModel
                                     {
@@ -2767,11 +2768,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                           select new RaporBTSayisalModel
                                                           {
                                                               Yil = ya,
-                                                              Toplam = db.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.TalepTarihi.Year == ya),
-                                                              TalepEdilen = db.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && new List<int> { BelgeTalepDurumEnum.TalepEdildi, BelgeTalepDurumEnum.Hazirlandi, BelgeTalepDurumEnum.Hazirlaniyor }.Contains(p.BelgeDurumID) && p.TalepTarihi.Year == ya),
-                                                              Verilen = db.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.BelgeDurumID == BelgeTalepDurumEnum.Verildi && p.TalepTarihi.Year == ya),
-                                                              Kapatilan = db.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.BelgeDurumID == BelgeTalepDurumEnum.Kapatildi && p.TalepTarihi.Year == ya),
-                                                              IptalEdilen = db.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi && p.TalepTarihi.Year == ya),
+                                                              Toplam = _entities.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.TalepTarihi.Year == ya),
+                                                              TalepEdilen = _entities.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && new List<int> { BelgeTalepDurumEnum.TalepEdildi, BelgeTalepDurumEnum.Hazirlandi, BelgeTalepDurumEnum.Hazirlaniyor }.Contains(p.BelgeDurumID) && p.TalepTarihi.Year == ya),
+                                                              Verilen = _entities.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.BelgeDurumID == BelgeTalepDurumEnum.Verildi && p.TalepTarihi.Year == ya),
+                                                              Kapatilan = _entities.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.BelgeDurumID == BelgeTalepDurumEnum.Kapatildi && p.TalepTarihi.Year == ya),
+                                                              IptalEdilen = _entities.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi && p.TalepTarihi.Year == ya),
 
                                                           }
                                                         ).OrderBy(o => o.Yil),
@@ -2785,11 +2786,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                       Yil = ya.Yil,
                                                       Ay = ya.Ay,
                                                       BelgeTipAdi = ya.BelgeTipAdi,
-                                                      Toplam = db.BelgeTalepleris.Count(p => p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
-                                                      TalepEdilen = db.BelgeTalepleris.Count(p => new List<int> { BelgeTalepDurumEnum.TalepEdildi, BelgeTalepDurumEnum.Hazirlandi, BelgeTalepDurumEnum.Hazirlaniyor }.Contains(p.BelgeDurumID) && p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
-                                                      Verilen = db.BelgeTalepleris.Count(p => p.BelgeDurumID == BelgeTalepDurumEnum.Verildi && p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
-                                                      Kapatilan = db.BelgeTalepleris.Count(p => p.BelgeDurumID == BelgeTalepDurumEnum.Kapatildi && p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
-                                                      IptalEdilen = db.BelgeTalepleris.Count(p => p.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi && p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
+                                                      Toplam = _entities.BelgeTalepleris.Count(p => p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
+                                                      TalepEdilen = _entities.BelgeTalepleris.Count(p => new List<int> { BelgeTalepDurumEnum.TalepEdildi, BelgeTalepDurumEnum.Hazirlandi, BelgeTalepDurumEnum.Hazirlaniyor }.Contains(p.BelgeDurumID) && p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
+                                                      Verilen = _entities.BelgeTalepleris.Count(p => p.BelgeDurumID == BelgeTalepDurumEnum.Verildi && p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
+                                                      Kapatilan = _entities.BelgeTalepleris.Count(p => p.BelgeDurumID == BelgeTalepDurumEnum.Kapatildi && p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
+                                                      IptalEdilen = _entities.BelgeTalepleris.Count(p => p.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi && p.BelgeTipID == ya.BelgeTipID && p.TalepTarihi.Year == ya.Yil && p.TalepTarihi.Month == ya.Ay),
 
                                                   }
                                                         ).OrderBy(o => o.Yil).ThenBy(t => t.Ay).ThenBy(t => t.BelgeTipAdi).ToList();
@@ -2821,14 +2822,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var basTar = Request["BasTar"].ToDate();
                     var bitTar = Request["BitTar"].ToDate();
                     if (RoleNames.AnketlerRapor.InRoleCurrent() == false) anketId = 0;
-                    using (var db = new LisansustuBasvuruSistemiEntities())
+                    using (var entities = new LubsDbEntities())
                     {
-                        var anket = db.Ankets.First(p => p.AnketID == anketId);
+                        var anket = _entities.Ankets.First(p => p.AnketID == anketId);
                         var enstitu = anket.Enstituler;
 
                         var anketSorularis = anket.AnketSorus.ToList();
-                        var anketSoruSecenek = db.AnketSoruSeceneks.Where(p => p.AnketSoru.AnketID == anketId).ToList();
-                        var cevaplar = db.AnketCevaplaris.Where(p => p.AnketID == anketId && p.Tarih >= basTar && p.Tarih <= bitTar).ToList();
+                        var anketSoruSecenek = _entities.AnketSoruSeceneks.Where(p => p.AnketSoru.AnketID == anketId).ToList();
+                        var cevaplar = _entities.AnketCevaplaris.Where(p => p.AnketID == anketId && p.Tarih >= basTar && p.Tarih <= bitTar).ToList();
                         var qModel = (from sa in anketSorularis
                                       select new FrAnketDetayDto
                                       {

@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -17,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.MezuniyetSureci)]
     public class MezuniyetSureciController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string ekd)
         {
 
@@ -334,9 +334,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemYapanIP = kModel.IslemYapanIP;
                     _entities.MezuniyetSureciOgrenimTipKriterleris.RemoveRange(data.MezuniyetSureciOgrenimTipKriterleris);
+                    if(!data.MezuniyetSureciOtoMails.Any()) MezuniyetSureciBus.MezuniyetSureciOtoMailOlustur(data.MezuniyetSurecID);
                 }
 
-                _entities.MezuniyetSureciOgrenimTipKriterleris.AddRange(mezuniyetSureciOgrenimTipKriterleri.Select(s => new Models.MezuniyetSureciOgrenimTipKriterleri
+                _entities.MezuniyetSureciOgrenimTipKriterleris.AddRange(mezuniyetSureciOgrenimTipKriterleri.Select(s => new MezuniyetSureciOgrenimTipKriterleri
                 {
                     MezuniyetSurecID = kModel.MezuniyetSurecID,
                     OgrenimTipID = s.OgrenimTipID.Value,
@@ -451,12 +452,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(mdl);
         }
 
-        public ActionResult GetYonetmelikBilgi(IEnumerable<FrMezuniyetYonetmelikler> model)
-        {
-
-            return View(model);
-        }
-
+         
 
         public ActionResult GetMsSubData(int id, int tbInx)
         {
@@ -820,7 +816,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = true;
             }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }
