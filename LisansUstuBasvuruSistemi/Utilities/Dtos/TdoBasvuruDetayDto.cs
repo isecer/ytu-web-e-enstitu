@@ -26,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsYeniDanismanOneriOrDegisiklik { get; set; }
         public bool IsDanismanHesabiBulunamadi { get; set; }
         public string BulunamayanDanismanAdSoyad { get; set; }
+        public bool IsObsOgrenciNoAktif { get; set; }
         public List<TdoBasvuruDanismanDto> TDOBasvuruDanismanList { get; set; }
     }
     public class TdoBasvuruDanismanDto : TDOBasvuruDanisman

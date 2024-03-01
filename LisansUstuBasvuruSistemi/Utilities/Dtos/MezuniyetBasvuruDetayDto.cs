@@ -38,6 +38,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? EykDaOnaylandi { get; set; }
 
         public string TezDanismanBilgiEslesen { get; set; }
+        public string GuncellenebilirBasvuruDanismanAdi { get; set; }
         public Guid? TezDanismaniUserKey { get; set; }
         public string TezKontrolYetkilisiAdSoyad { get; set; }
         public Guid? TezKontrolYetkiliUserKey{ get; set; }

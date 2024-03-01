@@ -16,34 +16,32 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsYerli { get; set; }
         public string EnstituKod { get; set; }
         public string KullaniciTipAdi { get; set; }
-        public int YayinSayisi { get; set; }
-        public string DanismanImzaliFormDosyaAdi2 { get; set; }
-        public HttpPostedFileBase DanismanImzaliFormDosya { get; set; }
-        public List<int> _MezuniyetBasvurulariYayinID { get; set; }
-        public List<bool?> _Yayinlanmis { get; set; }
-        public List<DateTime?> _MezuniyetYayinTarih { get; set; }
-        public List<int> _MezuniyetYayinTurID { get; set; }
-        public List<string> _YayinBasligi { get; set; }
-        public List<HttpPostedFileBase> _MezuniyetYayinBelgesi { get; set; }
-        public List<string> _MezuniyetYayinBelgesiAdi { get; set; }
-        public List<string> _MezuniyetYayinKaynakLinki { get; set; }
-        public List<HttpPostedFileBase> _YayinMetniBelgesi { get; set; }
-        public List<string> _YayinMetniBelgesiAdi { get; set; }
-        public List<string> _MezuniyetYayinLinki { get; set; }
-        public List<int?> _MezuniyetYayinIndexTurID { get; set; }
-        public List<string> _MezuniyetYayinKabulEdilmisMakaleAdi { get; set; }
-        public List<HttpPostedFileBase> _MezuniyetYayinKabulEdilmisMakaleBelgesi { get; set; }
+        public int YayinSayisi { get; set; } 
+        public List<int> _MezuniyetBasvurulariYayinID { get; set; } = new List<int>();
+        public List<bool?> _Yayinlanmis { get; set; } = new List<bool?>();
+        public List<DateTime?> _MezuniyetYayinTarih { get; set; } = new List<DateTime?>();
+        public List<int> _MezuniyetYayinTurID { get; set; } = new List<int>();
+        public List<string> _YayinBasligi { get; set; } = new List<string>();
+        public List<HttpPostedFileBase> _MezuniyetYayinBelgesi { get; set; } = new List<HttpPostedFileBase>();
+        public List<string> _MezuniyetYayinBelgesiAdi { get; set; } = new List<string>();
+        public List<string> _MezuniyetYayinKaynakLinki { get; set; } = new List<string>();
+        public List<HttpPostedFileBase> _YayinMetniBelgesi { get; set; } = new List<HttpPostedFileBase>();
+        public List<string> _YayinMetniBelgesiAdi { get; set; } = new List<string>();
+        public List<string> _MezuniyetYayinLinki { get; set; } = new List<string>();
+        public List<int?> _MezuniyetYayinIndexTurID { get; set; } = new List<int?>();
+        public List<string> _MezuniyetYayinKabulEdilmisMakaleAdi { get; set; } = new List<string>();
+        public List<HttpPostedFileBase> _MezuniyetYayinKabulEdilmisMakaleBelgesi { get; set; } = new List<HttpPostedFileBase>();
 
-        public List<string> _YazarAdi { get; set; }
-        public List<string> _DergiAdi { get; set; }
-        public List<string> _YilCiltSayiSS { get; set; }
-        public List<int?> _MezuniyetYayinProjeTurID { get; set; }
-        public List<bool?> _IsProjeTamamlandiOrDevamEdiyor { get; set; }
-        public List<string> _ProjeEkibi { get; set; }
-        public List<string> _ProjeDeatKurulus { get; set; }
-        public List<string> _TarihAraligi { get; set; }
-        public List<string> _EtkinlikAdi { get; set; }
-        public List<string> _YerBilgisi { get; set; }
+        public List<string> _YazarAdi { get; set; } = new List<string>();
+        public List<string> _DergiAdi { get; set; } = new List<string>();
+        public List<string> _YilCiltSayiSS { get; set; } = new List<string>();
+        public List<int?> _MezuniyetYayinProjeTurID { get; set; } = new List<int?>();
+        public List<bool?> _IsProjeTamamlandiOrDevamEdiyor { get; set; } = new List<bool?>();
+        public List<string> _ProjeEkibi { get; set; } = new List<string>();
+        public List<string> _ProjeDeatKurulus { get; set; } = new List<string>();
+        public List<string> _TarihAraligi { get; set; } = new List<string>();
+        public List<string> _EtkinlikAdi { get; set; } = new List<string>();
+        public List<string> _YerBilgisi { get; set; } = new List<string>();
 
         public string OgrenimTipAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
@@ -53,35 +51,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public MezuniyetBasvurulariYayinDto YayinBilgisi { get; set; }
 
-        public List<MezuniyetBasvurulariYayinDto> MezuniyetBasvuruYayinlari { get; set; }
-        public KmMezuniyetBasvuru()
-        {
-            _MezuniyetBasvurulariYayinID = new List<int>();
-            _Yayinlanmis = new List<bool?>();
-            _MezuniyetYayinTarih = new List<DateTime?>();
-            MezuniyetBasvuruYayinlari = new List<MezuniyetBasvurulariYayinDto>();
-            _MezuniyetYayinTurID = new List<int>();
-            _YayinBasligi = new List<string>();
-            _MezuniyetYayinBelgesi = new List<HttpPostedFileBase>();
-            _MezuniyetYayinBelgesiAdi = new List<string>();
-            _MezuniyetYayinKaynakLinki = new List<string>();
-            _YayinMetniBelgesi = new List<HttpPostedFileBase>();
-            _YayinMetniBelgesiAdi = new List<string>();
-            _MezuniyetYayinLinki = new List<string>();
-            _MezuniyetYayinIndexTurID = new List<int?>();
-            _MezuniyetYayinKabulEdilmisMakaleAdi = new List<string>();
-            _MezuniyetYayinKabulEdilmisMakaleBelgesi = new List<HttpPostedFileBase>();
-
-            _YazarAdi = new List<string>();
-            _DergiAdi = new List<string>();
-            _YilCiltSayiSS = new List<string>();
-            _MezuniyetYayinProjeTurID = new List<int?>();
-            _IsProjeTamamlandiOrDevamEdiyor = new List<bool?>();
-            _ProjeEkibi = new List<string>();
-            _ProjeDeatKurulus = new List<string>();
-            _TarihAraligi = new List<string>();
-            _EtkinlikAdi = new List<string>();
-            _YerBilgisi = new List<string>();
-        }
+        public List<MezuniyetBasvurulariYayinDto> MezuniyetBasvuruYayinlari { get; set; } = new List<MezuniyetBasvurulariYayinDto>();
     }
 }

@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Entities.Entities;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -489,6 +488,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("Tez danışmanı tarafından onaylanan danışman öneri formları düzeltilemez.");
                 }
             }
+
+            if (!mMessage.Messages.Any())
+            {
+                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(tdoBas.OgrenciNo);
+                if (!ogrenciBilgi.KayitVar)
+                {
+                    mMessage.Messages.Add(tdoBas.OgrenciNo + " öğrenci numaranıza ait OBS isteminde aktif bir öğrenim bilgisine rastlanmadı. " + ogrenciBilgi.HataMsj);
+                }
+            }
             if (!mMessage.Messages.Any())
             {
 
@@ -830,6 +838,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
+                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(tdoBas.OgrenciNo);
+                if (!ogrenciBilgi.KayitVar)
+                {
+                    mMessage.Messages.Add(tdoBas.OgrenciNo + " öğrenci numaranıza ait OBS isteminde aktif bir öğrenim bilgisine rastlanmadı. " + ogrenciBilgi.HataMsj);
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
                 if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
                 {
                     mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
@@ -1089,6 +1105,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.TDOBasvuruDanismanID > 0 && tdoBas.TDOBasvuruDanisman.DanismanOnayladi == true)
             {
                 mMessage.Messages.Add("Tez danışmanı tarafından onaylanan danışman öneri formları düzeltilemez.");
+            }
+
+            if (!mMessage.Messages.Any())
+            {
+                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(tdoBas.OgrenciNo);
+                if (!ogrenciBilgi.KayitVar)
+                {
+                    mMessage.Messages.Add(tdoBas.OgrenciNo + " öğrenci numaranıza ait OBS isteminde aktif bir öğrenim bilgisine rastlanmadı. " + ogrenciBilgi.HataMsj);
+                }
             }
             if (!mMessage.Messages.Any())
             {
@@ -1384,7 +1409,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Tez Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
             }
-            if (kModel.TDOBasvuruDanismanID > 0)
+
+            if (!mMessage.Messages.Any())
+            {
+                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(tdoBas.OgrenciNo);
+                if (!ogrenciBilgi.KayitVar)
+                {
+                    mMessage.Messages.Add(tdoBas.OgrenciNo + " öğrenci numaranıza ait OBS isteminde aktif bir öğrenim bilgisine rastlanmadı. " + ogrenciBilgi.HataMsj);
+                }
+            }
+            if (!mMessage.Messages.Any() && kModel.TDOBasvuruDanismanID > 0)
             {
                 if (tdoBas.TDOBasvuruDanisman.VarolanDanismanOnayladi == true)
                 {
@@ -1499,38 +1533,43 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-            if (kModel.TezDanismanID <= 0)
+            if (!mMessage.Messages.Any())
             {
-                mMessage.Messages.Add("Yeni tez danışmanınızı seçiniz.");
-            }
-            else if (kModel.TezDanismanID == oncekiBasvuru.TezDanismanID)
-            {
-                mMessage.Messages.Add("Varolan danışman ile yeni danışman aynı kişi olamaz!");
-            }
-            else
-            {
-
-                if (kModel.TDAnabilimDaliID > 0 == false)
+                if (kModel.TezDanismanID <= 0)
                 {
-                    mMessage.Messages.Add("Tez danışmanı Anabilim dalı bilgisini seçiniz.");
+                    mMessage.Messages.Add("Yeni tez danışmanınızı seçiniz.");
                 }
-
-                mMessage.MessagesDialog.Add(new MrMessage
+                else if (kModel.TezDanismanID == oncekiBasvuru.TezDanismanID)
                 {
-                    MessageType = (kModel.TDAnabilimDaliID > 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
-                    PropertyName = "TDAnabilimDaliID"
-                });
-                if (kModel.TDProgramKod.IsNullOrWhiteSpace())
-                {
-                    mMessage.Messages.Add("Tez danışmanı program bilgisini seçiniz.");
+                    mMessage.Messages.Add("Varolan danışman ile yeni danışman aynı kişi olamaz!");
                 }
-
-                mMessage.MessagesDialog.Add(new MrMessage
+                else
                 {
-                    MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
-                    PropertyName = "TDProgramKod"
-                });
 
+                    if (kModel.TDAnabilimDaliID > 0 == false)
+                    {
+                        mMessage.Messages.Add("Tez danışmanı Anabilim dalı bilgisini seçiniz.");
+                    }
+
+                    mMessage.MessagesDialog.Add(new MrMessage
+                    {
+                        MessageType = (kModel.TDAnabilimDaliID > 0 ? MsgTypeEnum.Success : MsgTypeEnum.Warning),
+                        PropertyName = "TDAnabilimDaliID"
+                    });
+                    if (kModel.TDProgramKod.IsNullOrWhiteSpace())
+                    {
+                        mMessage.Messages.Add("Tez danışmanı program bilgisini seçiniz.");
+                    }
+
+                    mMessage.MessagesDialog.Add(new MrMessage
+                    {
+                        MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace()
+                            ? MsgTypeEnum.Success
+                            : MsgTypeEnum.Warning),
+                        PropertyName = "TDProgramKod"
+                    });
+
+                }
             }
 
             if (!mMessage.Messages.Any())
@@ -2183,6 +2222,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("EYK'ya gönderilen Eş danışman öneri formu üzerinde değişiklik yapılamaz.");
                 }
             }
+
+            if (!mMessage.Messages.Any())
+            {
+                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(tdoBasvuruDanismanData.TDOBasvuru.OgrenciNo);
+                if (!ogrenciBilgi.KayitVar)
+                {
+                    mMessage.Messages.Add(tdoBasvuruDanismanData.TDOBasvuru.OgrenciNo + " öğrenci numaranıza ait OBS isteminde aktif bir öğrenim bilgisine rastlanmadı. " + ogrenciBilgi.HataMsj);
+                }
+            }
             if (!mMessage.Messages.Any())
             {
 
@@ -2239,8 +2287,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ogrenciObsBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBasvuruDanismanData.TDOBasvuru.KullaniciID);
                 if (!ogrenciObsBilgi.IsDanismanHesabiBulunamadi)
                 {
-                    if (ogrenciObsBilgi.DanismanInfo.E_POSTA1.ToLower().Trim() ==
-                        tdoBasvuruDanismanData.Kullanicilar.EMail.ToLower().Trim())
+                    if (ogrenciObsBilgi.DanismanInfo.E_POSTA1.ToLower().Trim() == tdoBasvuruDanismanData.Kullanicilar.EMail.ToLower().Trim())
                     {
                         kModel.TDAdSoyad = ogrenciObsBilgi.DanismanInfo.AD + " " + ogrenciObsBilgi.DanismanInfo.SOYAD;
                         kModel.TDUnvanAdi = ogrenciObsBilgi.DanismanInfo.UNVAN_AD;

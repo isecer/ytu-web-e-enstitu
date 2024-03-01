@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model LisansUstuBasvuruSistemi.Models.AnabilimDallari
+@model  Entities.Entities.AnabilimDallari
 @{
     Layout = null;
     var komiteData = Model.AnabilimDaliYeterlikKomiteUyeleris.OrderBy(o => o.Kullanicilar.Ad + " " + o.Kullanicilar.Soyad).ToList();

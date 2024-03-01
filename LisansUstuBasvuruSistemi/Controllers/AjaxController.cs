@@ -291,16 +291,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (eskiResim.IsNullOrWhiteSpace() == false)
                     {
                         var rsmYol = SistemAyar.KullaniciResimYolu;
-                        var rsm = Server.MapPath("~/" + rsmYol + "/" + eskiResim);
-                        if (System.IO.File.Exists(rsm))
-                            try
-                            {
-                                System.IO.File.Delete(rsm);
-                            }
-                            catch (Exception)
-                            {
-                                // ignored
-                            }
+                        FileHelper.DeleteFile("/" + rsmYol + "/" + eskiResim);
+
                     }
                 }
             }
@@ -1751,16 +1743,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var qDosyaEki = dosyaEki.Select((s, inx) => new { s, inx }).ToList();
             var qDosyaEkYolu = ekYolu.Select((s, inx) => new { s, inx }).ToList();
 
-            var qDosyalar = (from ekGirilenAd in qDosyaEkAdi
-                             join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
-                             join varolanEkYolu in qDosyaEkYolu on ekGirilenAd.inx equals varolanEkYolu.inx
-                             select new
-                             {
-                                 ekGirilenAd.inx,
-                                 Dosya = eklenenEk.s,
-                                 FExtension = eklenenEk.s != null ? (ekGirilenAd.s + eklenenEk.s.FileName.GetFileExtension()) : (ekGirilenAd.s),
-                                 DosyaYolu = eklenenEk.s != null ? ("/MailDosyalari/" + ekGirilenAd.s.ToFileNameAddGuid(eklenenEk.s.FileName.GetFileExtension())) : (varolanEkYolu.s)
-                             }).ToList();
+           
             var kModel = new GonderilenMailler();
             #region Kontrol 
 
@@ -1795,24 +1778,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.AciklamaHtml = model.AciklamaHtml ?? "";
 
                 var eklenenGonderilenMail = _entities.GonderilenMaillers.Add(kModel);
-
-                foreach (var item in qDosyalar)
-                {
-                    item.Dosya?.SaveAs(Server.MapPath("~" + item.DosyaYolu));
-                    eklenenGonderilenMail.GonderilenMailEkleris.Add(new GonderilenMailEkleri
+                var qDosyalar = (from ekGirilenAd in qDosyaEkAdi
+                    join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
+                    join varolanEkYolu in qDosyaEkYolu on ekGirilenAd.inx equals varolanEkYolu.inx
+                    select new
                     {
-                        EkAdi = item.FExtension,
-                        EkDosyaYolu = item.DosyaYolu
-                    });
-                }
+                        ekGirilenAd.inx,
+                        Dosya = eklenenEk.s,
+                        DosyaAdi = eklenenEk.s != null ? ekGirilenAd.s + eklenenEk.s.FileName.GetFileExtension() : ekGirilenAd.s,
+                        DosyaYolu = eklenenEk.s != null ? FileHelper.SaveMailDosya(eklenenEk.s) : varolanEkYolu.s
+                    }).ToList();
+                eklenenGonderilenMail.GonderilenMailEkleris = qDosyalar.Select(s => new GonderilenMailEkleri
+                {
+                    EkAdi = s.DosyaAdi,
+                    EkDosyaYolu = s.DosyaYolu,
+                }).ToList(); 
                 if (model.MesajID.HasValue)
                 {
                     var mesaj = _entities.Mesajlars.FirstOrDefault(p => p.MesajID == model.MesajID.Value);
                     if (mesaj != null)
                     {
-                        mesaj.IsAktif = true;
-
-
+                        mesaj.IsAktif = true; 
                     }
                 }
 
@@ -1860,17 +1846,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     MesajlarBus.MesajUpdate(model.MesajID.Value);
                 }
-                var attach = new List<Attachment>();
-                foreach (var item in qDosyalar)
-                {
-                    var ekTamYol = Server.MapPath("~" + item.DosyaYolu);
-                    if (System.IO.File.Exists(ekTamYol))
-                    {
-                        var fExtension = Path.GetExtension(ekTamYol);
-                        attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.FExtension.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
-                    }
-                    else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.FExtension + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Hata);
-                }
+               
                 var gidecekler = gonderilenMailKullanicilari.Select(s => s.Email).ToList();
                 var dct = new Dictionary<int, List<MailSendList>>();
                 var inx = 0;
@@ -1883,6 +1859,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 inx++;
                 dct.Add(inx, gidecekler.Select(s => new MailSendList { EMail = s, ToOrBcc = gonderilenMailKullanicilariBcc.Any(a => a.Email != s) }).ToList());
 
+                var attach = eklenenGonderilenMail.GonderilenMailEkleris.Select(s=> new FileAttachmentInfo{FileName = s.EkAdi,FilePath = s.EkDosyaYolu}).ToList().GetFileToAttachments();
                 foreach (var item in dct)
                 {
                     var excpt = MailManager.SendMailRetVal(enstituKod, kModel.Konu, kModel.AciklamaHtml, item.Value, attach);
@@ -1904,9 +1881,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             _entities.GonderilenMaillers.Remove(eklenenGonderilenMail);
                             _entities.SaveChanges();
-                            foreach (var item2 in qDosyalar.Where(item2 => System.IO.File.Exists(Server.MapPath("~" + item2.DosyaYolu))))
+                            foreach (var item2 in qDosyalar)
                             {
-                                System.IO.File.Delete(Server.MapPath("~" + item2.DosyaYolu));
+                                FileHelper.DeleteFile(item2.DosyaYolu);
                             }
                         }
                         catch (Exception ex)
@@ -2059,8 +2036,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  dek.inx,
                                  Dosya = de.s,
                                  FExtension = de.s.FileName.GetFileExtension(),
-                                 DosyaAdi = dek.s + de.s.FileName.GetFileExtension(),
-                                 DosyaYolu = "/MailDosyalari/" + de.s.FileName.ToFileNameAddGuid()
+                                 DosyaAdi = dek.s + de.s.FileName.GetFileExtension()
                              }).ToList();
 
             foreach (var item in qDosyalar)
@@ -2144,11 +2120,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var eklenen = _entities.Mesajlars.Add(kModel);
                 foreach (var item in qDosyalar)
                 {
-                    item.Dosya.SaveAs(Server.MapPath("~" + item.DosyaYolu));
                     eklenen.MesajEkleris.Add(new MesajEkleri
                     {
                         EkAdi = item.DosyaAdi,
-                        EkDosyaYolu = item.DosyaYolu
+                        EkDosyaYolu = FileHelper.SaveMesajDosya(item.Dosya)
                     });
                 }
 
@@ -2622,7 +2597,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     #region BasvuruSonucSayisal
                     var basvuruSurecId = Request["BasvuruSurecID"].ToIntObj();
                     if (RoleNames.LisansustuBasvuruRapor.InRoleCurrent() == false) basvuruSurecId = 0;
-                   using (var entities = new LubsDbEntities())
+                    using (var entities = new LubsDbEntities())
                     {
                         var bsurec = entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
                         var qx = (from s in entities.BasvuruSurecs.Where(p => p.BasvuruSurecID == basvuruSurecId && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod))
@@ -2822,97 +2797,94 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var basTar = Request["BasTar"].ToDate();
                     var bitTar = Request["BitTar"].ToDate();
                     if (RoleNames.AnketlerRapor.InRoleCurrent() == false) anketId = 0;
-                    using (var entities = new LubsDbEntities())
+
+                    var anket = _entities.Ankets.First(p => p.AnketID == anketId);
+                    var enstitu = anket.Enstituler;
+
+                    var anketSorularis = anket.AnketSorus.ToList();
+                    var anketSoruSecenek = _entities.AnketSoruSeceneks.Where(p => p.AnketSoru.AnketID == anketId).ToList();
+                    var cevaplar = _entities.AnketCevaplaris.Where(p => p.AnketID == anketId && p.Tarih >= basTar && p.Tarih <= bitTar).ToList();
+                    var qModel = (from sa in anketSorularis
+                                  select new FrAnketDetayDto
+                                  {
+                                      AnketSoruID = sa.AnketSoruID,
+                                      AnketID = sa.AnketID,
+                                      SoruAdi = sa.SoruAdi,
+                                      SiraNo = sa.SiraNo,
+                                      IsTabloVeriGirisi = sa.IsTabloVeriGirisi,
+                                      FrAnketSecenekDetay = (from ss in anketSoruSecenek.Where(p => p.AnketSoruID == sa.AnketSoruID)
+                                                             select new FrAnketSecenekDetayDto
+                                                             {
+                                                                 AnketSoruID = ss.AnketSoruID,
+                                                                 AnketSoruSecenekID = ss.AnketSoruSecenekID,
+                                                                 SiraNo = ss.SiraNo,
+                                                                 SecenekAdi = ss.SecenekAdi,
+                                                                 IsEkAciklamaGir = ss.IsEkAciklamaGir,
+                                                                 Count = cevaplar.Count(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID),
+                                                                 AnketCevaplaris = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).ToList(),
+
+                                                             }
+                                                           ).OrderBy(o => o.SiraNo).ToList(),
+                                      AnketCevaplaris = cevaplar.Where(p => p.AnketSoruID == sa.AnketSoruID).ToList()
+                                  }).OrderBy(o => o.SiraNo).ToList();
+
+
+
+                    foreach (var item in qModel)
                     {
-                        var anket = _entities.Ankets.First(p => p.AnketID == anketId);
-                        var enstitu = anket.Enstituler;
-
-                        var anketSorularis = anket.AnketSorus.ToList();
-                        var anketSoruSecenek = _entities.AnketSoruSeceneks.Where(p => p.AnketSoru.AnketID == anketId).ToList();
-                        var cevaplar = _entities.AnketCevaplaris.Where(p => p.AnketID == anketId && p.Tarih >= basTar && p.Tarih <= bitTar).ToList();
-                        var qModel = (from sa in anketSorularis
-                                      select new FrAnketDetayDto
-                                      {
-                                          AnketSoruID = sa.AnketSoruID,
-                                          AnketID = sa.AnketID,
-                                          SoruAdi = sa.SoruAdi,
-                                          SiraNo = sa.SiraNo,
-                                          IsTabloVeriGirisi = sa.IsTabloVeriGirisi,
-                                          FrAnketSecenekDetay = (from ss in anketSoruSecenek.Where(p => p.AnketSoruID == sa.AnketSoruID)
-                                                                 select new FrAnketSecenekDetayDto
-                                                                 {
-                                                                     AnketSoruID = ss.AnketSoruID,
-                                                                     AnketSoruSecenekID = ss.AnketSoruSecenekID,
-                                                                     SiraNo = ss.SiraNo,
-                                                                     SecenekAdi = ss.SecenekAdi,
-                                                                     IsEkAciklamaGir = ss.IsEkAciklamaGir,
-                                                                     Count = cevaplar.Count(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID),
-                                                                     AnketCevaplaris = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).ToList(),
-
-                                                                 }
-                                                               ).OrderBy(o => o.SiraNo).ToList(),
-                                          AnketCevaplaris = cevaplar.Where(p => p.AnketSoruID == sa.AnketSoruID).ToList()
-                                      }).OrderBy(o => o.SiraNo).ToList();
-
-
-
-                        foreach (var item in qModel)
+                        if (item.IsTabloVeriGirisi)
                         {
-                            if (item.IsTabloVeriGirisi)
+
+                            var tblRw = new AnketTableDetayDto
                             {
-
-                                var tblRw = new AnketTableDetayDto
-                                {
-                                    SiraNo = "#"
-                                };
-                                int i = 0;
-                                foreach (var item2 in item.FrAnketSecenekDetay)
-                                {
-                                    i++;
-                                    PropertyInfo propertyInfo = tblRw.GetType().GetProperty("TabloVeri" + i);
-                                    propertyInfo.SetValue(tblRw, item2.SecenekAdi, null);
-                                }
-                                item.AnketTableDetays.Add(tblRw);
-                                i = 0;
-                                foreach (var item2 in item.AnketCevaplaris)
-                                {
-                                    i++;
-                                    item.AnketTableDetays.Add(new AnketTableDetayDto
-                                    {
-                                        SiraNo = (i).ToString(),
-                                        TabloVeri1 = item2.TabloVeri1,
-                                        TabloVeri2 = item2.TabloVeri2,
-                                        TabloVeri3 = item2.TabloVeri3,
-                                        TabloVeri4 = item2.TabloVeri4,
-
-                                    });
-                                }
+                                SiraNo = "#"
+                            };
+                            int i = 0;
+                            foreach (var item2 in item.FrAnketSecenekDetay)
+                            {
+                                i++;
+                                PropertyInfo propertyInfo = tblRw.GetType().GetProperty("TabloVeri" + i);
+                                propertyInfo.SetValue(tblRw, item2.SecenekAdi, null);
                             }
-                            else
+                            item.AnketTableDetays.Add(tblRw);
+                            i = 0;
+                            foreach (var item2 in item.AnketCevaplaris)
                             {
-                                foreach (var item2 in item.FrAnketSecenekDetay)
+                                i++;
+                                item.AnketTableDetays.Add(new AnketTableDetayDto
                                 {
+                                    SiraNo = (i).ToString(),
+                                    TabloVeri1 = item2.TabloVeri1,
+                                    TabloVeri2 = item2.TabloVeri2,
+                                    TabloVeri3 = item2.TabloVeri3,
+                                    TabloVeri4 = item2.TabloVeri4,
 
-                                    item.AnketSeceneklerDetays.Add(new AnketSeceneklerDetayDto
-                                    {
-                                        EkAciklamas = item2.AnketCevaplaris.Where(p => !p.EkAciklama.IsNullOrWhiteSpace()).ToList(),
-                                        SiraNo = item2.SiraNo,
-                                        SecenekAdi = item2.SecenekAdi,
-                                        Count = item2.Count,
-                                    });
-                                }
+                                });
                             }
                         }
+                        else
+                        {
+                            foreach (var item2 in item.FrAnketSecenekDetay)
+                            {
 
-                        var rpr = new RprAnket(enstitu.EnstituAd, anket.AnketAdi, basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki anket sonuçları");
-                        rpr.DataSource = qModel;
-                        rpr.DisplayName = basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki " + anket.AnketAdi + " anket sonuçları";
-                        rpr.PrintingSystem.ContinuousPageNumbering = true;
-                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
-
-                        rprX = rpr;
-
+                                item.AnketSeceneklerDetays.Add(new AnketSeceneklerDetayDto
+                                {
+                                    EkAciklamas = item2.AnketCevaplaris.Where(p => !p.EkAciklama.IsNullOrWhiteSpace()).ToList(),
+                                    SiraNo = item2.SiraNo,
+                                    SecenekAdi = item2.SecenekAdi,
+                                    Count = item2.Count,
+                                });
+                            }
+                        }
                     }
+
+                    var rpr = new RprAnket(enstitu.EnstituAd, anket.AnketAdi, basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki anket sonuçları");
+                    rpr.DataSource = qModel;
+                    rpr.DisplayName = basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki " + anket.AnketAdi + " anket sonuçları";
+                    rpr.PrintingSystem.ContinuousPageNumbering = true;
+                    rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
+
+                    rprX = rpr;
                 }
                 else if (raporTipi == RaporTipiEnum.MezuniyetCiltFormuRaporu)
                 {

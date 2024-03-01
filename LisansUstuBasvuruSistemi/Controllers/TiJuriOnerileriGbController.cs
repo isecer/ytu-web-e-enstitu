@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition.Primitives;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -23,7 +22,7 @@ using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.TiJuriOnerileriGb)]
     public class TiJuriOnerileriGbController : Controller
     {
@@ -501,7 +500,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (ogrenciInfo.Hata)
                 {
-                    mMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");
+                    mMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
                 }
                 else
                 {
@@ -773,9 +772,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (mMessage.Messages.Count == 0)
                     {
                         tijBasvuruOneri = isJuriOnerisiVar ? new TijBasvuruOneri() : tijBasvuruOneri;
-                        var unilers = _entities.Universitelers.ToList();
                         var kData = qData.Where(p => p.AdSoyadSuccess).ToList();
-                        var isDegisiklikVar = false;
+                        bool isDegisiklikVar;
                         var varolanJurilers = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki).ToList();
                         isDegisiklikVar = tijBasvuruOneri.TijBasvuruOneriJurilers.Count != kData.Count || tijBasvuruOneri.TijDegisiklikTipID != kModel.TijDegisiklikTipID || tijBasvuruOneri.TijFormTipID != kModel.TijFormTipID;
                         foreach (var item in kData)
@@ -1218,8 +1216,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (onaylandi.HasValue && isDegisiklikVar)
                     {
                         var eykDaOnayOrGonderim = onayTipId == 3;
-                        var result = TijBus.SendMailEykOnay(tijBasvuruOneriUniqueId, eykDaOnayOrGonderim,
-                                onaylandi.Value);
+                        TijBus.SendMailEykOnay(tijBasvuruOneriUniqueId, eykDaOnayOrGonderim, onaylandi.Value);
                     }
 
                 }

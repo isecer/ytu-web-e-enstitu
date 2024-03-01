@@ -215,7 +215,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             #endregion
 
-            if (model.AktifDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi)
+            if (model.AktifDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi || model.AktifDurumID == TdoDansimanDurumuEnum.EykDaOnaylandi)
             {
                 model.SelectedTdoBasvuruDanismanIds = q.Where(p => p.AktifTDOBasvuruDanismanID.HasValue).Select(s => s.AktifTDOBasvuruDanismanID.Value).ToList();
             }

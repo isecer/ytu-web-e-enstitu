@@ -29,11 +29,13 @@
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
                     </h3>
                     <ul class="panel-controls">
-                        @if (eykOnayYetki && Model.AktifDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi && Model.SelectedTdoBasvuruDanismanIds.Any())
+                        @if (eykOnayYetki && Model.SelectedTdoBasvuruDanismanIds.Any())
                         {
-                            <li>
-                                <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
-                                <script>
+                            if (Model.AktifDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi)
+                            {
+                                <li>
+                                    <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+                                    <script>
 
                                     function EYKDaOnay() {
                                         var btbx = bootbox.dialog({
@@ -50,7 +52,7 @@
                                                         toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı");
                                                         var selectedTdoBasvuruDanismanIds = eval('@Html.Raw(Json.Encode(Model.SelectedTdoBasvuruDanismanIds))');
                                                         $.ajax({
-                                                            url: '@Url.Action("EYKDaOnay","TdoGelenBasvurular")',
+                                                            url: '@Url.Action("EYKDaOnay", "TdoGelenBasvurular")',
                                                             cache: false,
                                                             type: 'POST',
                                                             data: { selectedTdoBasvuruDanismanIds },
@@ -78,7 +80,8 @@
                                         });
                                     }
                                 </script>
-                            </li>
+                                </li>
+                            }
 
                             <li>
                                 <a href="javascript:void(0);" onclick="showDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
@@ -160,6 +163,7 @@
                                     }
                                 </script>
                             </li>
+
                         }
                         @if (kayitYetki && Model.RowCount > 0)
                         {
@@ -377,8 +381,8 @@
 
 <script type="text/javascript">
     $(function () {
-        Resized(window.innerWidth); 
-    }) 
+        Resized(window.innerWidth);
+    })
     function Resized(screenwidth) {
         if (screenwidth <= 800) {
             $('.clsHide').addClass('hide');

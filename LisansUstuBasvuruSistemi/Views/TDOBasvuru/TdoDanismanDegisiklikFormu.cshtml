@@ -11,14 +11,14 @@
     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
         <table style="width:100%;">
             <tbody>
-                <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                <tr>
                     <td class="CaptionTd" width="150">Tez Başlığı Türkçe</td>
                     <td class="CaptionTd" width="10">:</td>
                     <td class="ValueTd form-group">
                         <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" @(Model.TezBaslikTr.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control UpperTextTr" style="color:black;" />
                     </td>
                 </tr>
-                <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                <tr>
                     <td class="CaptionTd">Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">

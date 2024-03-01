@@ -1,4 +1,4 @@
-﻿@using Entities.Entities 
+﻿@using Entities.Entities
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model Duyurular
@@ -62,14 +62,14 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label"></label>
-                                <div class="col-md-9 col-xs-8"> 
+                                <div class="col-md-9 col-xs-8">
                                     <div class="panel panel-default">
                                         <div class="panel-heading padding-0">
                                             <h3 class="panel-title" style="font-size:9pt;">Duyurunun Popup Olarak Açılacağı Sayfalar</h3>
                                             <ul class="panel-controls">
                                                 <li>
                                                     Tümü:<div class="make-switch switch-small" data-on-label="Evet" data-off-label="Hayır">
-                                                        <input type="checkbox" value="true"  onchange="tumunusec(this)" class="toggle" @allChecked.ToChecked() />
+                                                        <input type="checkbox" value="true" onchange="tumunusec(this)" class="toggle" @allChecked.ToChecked() />
                                                     </div>
                                                 </li>
                                             </ul>
@@ -83,8 +83,8 @@
                                                         <td>
                                                             <div class="checkbox pull-left">
                                                                 <label>
-                                                                    <input type="checkbox" class="icheckbox" name="duyuruPopupTipIds" value="@duyuruPopupTipi.DuyuruPupupTipID" @isChecked.ToChecked()/> 
-                                                                    @duyuruPopupTipi.PopupTipAdi 
+                                                                    <input type="checkbox" class="icheckbox" name="duyuruPopupTipIds" value="@duyuruPopupTipi.DuyuruPupupTipID" @isChecked.ToChecked() />
+                                                                    @duyuruPopupTipi.PopupTipAdi
                                                                 </label>
                                                             </div>
                                                         </td>
@@ -136,7 +136,8 @@
                                                         <input type="text" name="DosyaEkiAdi" style="padding: 0px; height: 22px; " value="@item.s.DosyaEkAdi" maxlength="250" placeholder="Ek Adı Giriniz" class="form-control" />
                                                     </td>
                                                     <td style='padding: 0px; vertical-align: middle;'>
-                                                        <a href="@item.s.DosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item.s.DosyaEkAdi</a>
+                                                        <a href="@item.s.DosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span> @item.s.DosyaEkAdi</a>
+                                                        <input type="file" name="DosyaEki" style="padding: 0px; height: 22px;" class="form-control hide" />
                                                     </td>
                                                     <td style='padding-top: 0px;padding-bottom:0px; vertical-align: middle;text-align:center;'>
                                                         <span style="cursor:pointer;" onclick="EkSil(this)" class="fa fa-trash-o" data-original-title="Eki Sil"></span>

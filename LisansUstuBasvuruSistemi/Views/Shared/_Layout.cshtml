@@ -6,6 +6,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @{
     var urlInfo = Request.Url.ToUrlInfo();
 
@@ -28,6 +29,7 @@
     var selectedEnstitu = enstituler.First(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd));
     var isEnstituYetkisiVar = UserIdentity.Current.IsAuthenticated && UserIdentity.Current.EnstituKods.Contains(selectedEnstitu.EnstituKod);
     const string lImage = "/Content/assets/images/ytu_logo_tr.gif";
+
 }
 
 <!DOCTYPE html>
@@ -246,7 +248,15 @@
                         @if (UserIdentity.Current.IsAuthenticated && !isEnstituYetkisiVar)
                         {
                             <div style="color: #B64645; font-size: 7.5pt;">Bu Enstitü İçin Yetkiniz Yok!!!</div>
+
                         }
+                        @*@if (HttpContext.Current != null && HttpContext.Current.IsDebuggingEnabled && UserIdentity.Current.IsAdmin)
+                        {
+
+                            <div style="color: #B64645; font-size: 7.5pt;">Development Mod <span style="color: #ffd559;">(@GlobalSistemSetting.ConnectionInfo())</span> @Html.Raw(selectedEnstitu.TestEmailAddress.IsNullOrWhiteSpace() ? "" : "All Mail Send: <span style=\"color: #ffd559;\">" + selectedEnstitu.TestEmailAddress + "</span>")</div>
+
+                        }*@
+
                     </li>
                     <!-- END TOGGLE NAVIGATION -->
 
@@ -264,7 +274,7 @@
                             <ul class="xn-drop-left animated zoomIn" style="z-index:997;">
                                 <li><a href="javascript:void(0)" onclick="DetayGor('@UserIdentity.Current.UserKey')"><i class="fa fa-user"></i> Hesap Bilgileri</a></li>
                                 <li><a href="javascript:void(0);" onclick="HesapKayit(@UserIdentity.Current.Id)"><span class="fa fa-id-card-o fa-lg"></span>Hesap Bilgilerini Düzenle</a></li>
-                              
+
                                 @if (RoleNames.Kullanicilar.InRoleCurrent())
                                 {
                                     <li>
@@ -364,7 +374,7 @@
                                             alert(err.responseText);
                                         }
                                     });
-                                } 
+                                }
                             </script>
 
                         </li>

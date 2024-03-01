@@ -269,6 +269,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Utilities\ApplicationTasks\MailTaskRunner.cs" />
+    <Compile Include="Utilities\Dtos\FileAttachmentInfo.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariTezDosyalariDto.cs" />
     <Compile Include="Controllers\TdoAyarlarController.cs" />
     <Compile Include="Controllers\TdoBasvuruController.cs" />
@@ -427,6 +428,7 @@
     <Compile Include="Utilities\Dtos\MulakatBilgiModel.cs" />
     <Compile Include="Utilities\Dtos\OnlineOdemeProgramDetayModel.cs" />
     <Compile Include="Utilities\Enums\MezuniyetJofDurumuEnum.cs" />
+    <Compile Include="Utilities\Helpers\FileHelper.cs" />
     <Compile Include="Utilities\SystemSetting\GlobalSistemSetting.cs" />
     <Compile Include="WebServiceData\PersisService\PersisServiceModel.cs" />
     <Compile Include="Utilities\Dtos\RprBasvuruSonucBolumModel.cs" />
@@ -4806,7 +4808,6 @@
     <Content Include="Views\Ajax\MailGonder.cshtml" />
     <Content Include="Views\Kullanicilar\Yetkilendirme.cshtml" />
     <Content Include="Views\Kullanicilar\YetkilendirmeEnstitu.cshtml" />
-    <Content Include="Views\MailIslemleri\Gonder.cshtml" />
     <Content Include="Views\MailIslemleri\Index.cshtml" />
     <Content Include="Views\MailIslemleri\MailDetay.cshtml" />
     <Content Include="Views\OgrenciBolumleri\Index.cshtml" />
@@ -5008,9 +5009,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="BasvuruDosyalari\MezuniyetBelgeleri\" />
-    <Folder Include="BasvuruDosyalari\TezIzlemeBelgeleri\" />
-    <Folder Include="BasvuruDosyalari\TezOneriSavunmaBelgeleri\" />
     <Folder Include="Content\assets\uploads\Welcome\folder 1\" />
     <Folder Include="Content\assets\uploads\Welcome\folder 2\folder 1\" />
     <Folder Include="Content\assets\uploads\Welcome\folder 2\folder 2\" />

@@ -53,8 +53,7 @@
                 $this.addClass('easyWizardElement');
                 $steps = $this.find('.' + thisSettings.stepClassName);
                 thisSettings.steps = $steps.length;
-                thisSettings.width = $(this).width();
-
+                thisSettings.width = $(this).width(); 
                 if (thisSettings.steps > 1) {
                     // Create UI
                     //$this.wrapInner('<div class="stepContainer" />');

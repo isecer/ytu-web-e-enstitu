@@ -481,22 +481,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kModel.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci)
                     {
-                        var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kModel.TcKimlikNo);
-                        if (ogrenciBilgi.Hata)
+                        var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kModel.TcKimlikNo);
+                        if (ogrenciInfo.Hata)
                         {
-                            mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciBilgi.HataMsj);
+                            mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
                         }
                         else
                         {
-                            if (ogrenciBilgi.KayitVar)
+                            if (ogrenciInfo.KayitVar)
                             {
-                                if (kModel.OgrenciNo != ogrenciBilgi.OgrenciInfo.OGR_NO)
+                                if (kModel.OgrenciNo != ogrenciInfo.OgrenciInfo.OGR_NO)
                                 {
                                     mmMessage.Messages.Add(
                                         "Girdiğiniz Öğrenci Numarası bilgisi OBS sisteminde doğrulanamadı.");
                                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
                                 }
-                                if (kModel.OgrenimTipKod != ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
+                                if (kModel.OgrenimTipKod != ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
                                 {
                                     mmMessage.Messages.Add(
                                         "Girdiğiniz Öğrenim Seviyesi bilgisi OBS sisteminde doğrulanamadı.");
@@ -505,10 +505,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 if (!mmMessage.Messages.Any())
                                 {
                                     kModel.ProgramKod = kModel.ProgramKod;
-                                    kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
-                                    kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
-                                    kModel.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
-                                    kModel.KayitDonemID = ogrenciBilgi.DonemID;
+                                    kModel.OgrenimTipKod = ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
+                                    kModel.KayitTarihi = ogrenciInfo.KayitTarihi;
+                                    kModel.KayitYilBaslangic = ogrenciInfo.BaslangicYil;
+                                    kModel.KayitDonemID = ogrenciInfo.DonemID;
                                 }
 
                             }

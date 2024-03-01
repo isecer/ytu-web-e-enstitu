@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace LisansUstuBasvuruSistemi.Utilities.Enums
+﻿namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public class HttpDurumKodEnum
     {
         public const int Continue = 100;
         public const int SwitchingProtocols = 101;
         public const int Processing = 102;
-        public const int OK = 200;
+        public const int Ok = 200;
         public const int Created = 201;
         public const int Accepted = 202;
         public const int NonAuthoritativeInformation = 203;
@@ -40,7 +35,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int LengthRequired = 411;
         public const int PreconditionAiled = 412;
         public const int RequestEntityTooLarge = 413;
-        public const int RequestURITooLong = 414;
+        public const int RequestUriTooLong = 414;
         public const int UnsupportedMediaType = 415;
         public const int RequestedrangeUnsatifiable = 416;
         public const int Expectationfailed = 417;
@@ -52,7 +47,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int GeçersizAğGeçidi = 502;
         public const int HizmetYok = 503;
         public const int GatewayTimeout = 504;
-        public const int HTTPVersionNotSupported = 505;
+        public const int HttpVersionNotSupported = 505;
         public const int InsufficientStorage = 507;
 
     }

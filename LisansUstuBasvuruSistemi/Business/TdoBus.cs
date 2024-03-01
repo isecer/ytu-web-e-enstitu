@@ -12,6 +12,7 @@ using System.Linq;
 using System.Web;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -57,10 +58,13 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var basvuru = entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                 var ogrenciBilgiUpdate = KullanicilarBus.OgrenciBilgisiGuncelleObs(basvuru.KullaniciID);
+                var obsOgrenciBilgi = KullanicilarBus.OgrenciKontrol(basvuru.OgrenciNo);
+                model.IsObsOgrenciNoAktif = obsOgrenciBilgi.KayitVar;
+
 
                 var ogrenci = basvuru.Kullanicilar;
                 if (ogrenci.YtuOgrencisi && basvuru.ProgramKod == ogrenci.ProgramKod && basvuru.OgrenimTipKod == ogrenci.OgrenimTipKod && basvuru.OgrenciNo != ogrenci.OgrenciNo)
-                { 
+                {
                     basvuru = entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                 }
 
@@ -169,6 +173,9 @@ namespace LisansUstuBasvuruSistemi.Business
                             item.TdoEsBasvurusuYapabilir = item.EsDanismanBilgi == null || (item.EsDanismanBilgi.EYKYaGonderildi == false ||
                                 item.EsDanismanBilgi.EYKDaOnaylandi.HasValue);
                         }
+                        // obs de öğrenci numarası aktif gözüküyor ise baivuru yapabilsin
+                        if (item.TdoEsBasvurusuYapabilir) item.TdoEsBasvurusuYapabilir = model.IsObsOgrenciNoAktif;
+
                         if (item.TdoEsBasvurusuYapabilir)
                         {
                             if (model.TDOBasvuruDanisman != null)
@@ -243,27 +250,45 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (basvuru.TDOBasvuruDanisman != null)
                     lastEsBasvuru = basvuru.TDOBasvuruDanisman.TDOBasvuruEsDanismen
                         .OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault();
+
+
                 model.IsYeniDanismanOneriOrDegisiklik = model.TDOBasvuruDanisman == null || model.TDOBasvuruDanismanList.All(a => a.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniOnerisi && a.EYKDaOnaylandi != true);
+
+                // obs de öğrenci numarası aktif gözüküyor ise başvuru yapabilsin
+                model.TdoBasvurusuYapabilir = model.IsObsOgrenciNoAktif;
+                if (!model.TdoBasvurusuYapabilir) return model;
+
+
                 if (model.IsYeniDanismanOneriOrDegisiklik)
                 {
-                    model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman == null || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi == false);
+                    model.TdoBasvurusuYapabilir =
+                        model.TDOBasvuruDanisman == null ||
+                        model.TDOBasvuruDanisman.DanismanOnayladi == false ||
+                        model.TDOBasvuruDanisman.EYKYaGonderildi == false ||
+                        model.TDOBasvuruDanisman.EYKDaOnaylandi == false;
 
 
                 }
                 else
                 {
-                    model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman.VarolanDanismanOnayladi == false || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi.HasValue);
+                    model.TdoBasvurusuYapabilir = model.TDOBasvuruDanisman.VarolanDanismanOnayladi == false ||
+                                                  model.TDOBasvuruDanisman.DanismanOnayladi == false ||
+                                                  model.TDOBasvuruDanisman.EYKYaGonderildi == false ||
+                                                  model.TDOBasvuruDanisman.EYKDaOnaylandi.HasValue;
 
-                    if (model.TdoBasvurusuYapabilir) model.TdoBasvurusuYapabilir = (lastEsBasvuru == null || lastEsBasvuru.EYKYaGonderildi == false || lastEsBasvuru.EYKDaOnaylandi.HasValue);
+                    if (model.TdoBasvurusuYapabilir)
+                        model.TdoBasvurusuYapabilir = (lastEsBasvuru == null ||
+                                                       lastEsBasvuru.EYKYaGonderildi == false ||
+                                                       lastEsBasvuru.EYKDaOnaylandi.HasValue);
                     if (model.TdoBasvurusuYapabilir)
                     {
                         if (model.TDOBasvuruDanisman != null)
                         {
-                            model.TdoBasvurusuYapabilir = isYoneticiYetki || model.KullaniciID == UserIdentity.Current.Id;
+                            model.TdoBasvurusuYapabilir =
+                                isYoneticiYetki || model.KullaniciID == UserIdentity.Current.Id;
                         }
                     }
                 }
-
 
             }
             return model;
@@ -526,7 +551,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && (kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))
                         {
                             var aktifDevamEdenBasvuruVar = entities.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);
-                            if (aktifDevamEdenBasvuruVar) 
+                            if (aktifDevamEdenBasvuruVar)
                             {
                                 msg.IsSuccess = false;
                                 msg.Messages.Add("Aktif olarak devam eden bir Tez danışmanı öneri süreciniz bulunuyor. Yeni başvuru yapamazsınız.Tez danışmanı önerisi oluşturmak için aşağıda bulunan başvuru detayınızdan 'Yeni tez danışmanı önerisi' butonuna tıklayınız.");

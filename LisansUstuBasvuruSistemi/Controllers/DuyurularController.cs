@@ -15,7 +15,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.Duyurular)]
     public class DuyurularController : Controller
     {
@@ -24,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             return Index(new FmDuyurularDto() { PageSize = 15 }, ekd);
         }
-       
+
         [HttpPost]
         public ActionResult Index(FmDuyurularDto model, string ekd)
         {
@@ -111,12 +111,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var data = _entities.Duyurulars.FirstOrDefault(p => p.DuyuruID == id);
                 if (data != null) model = data;
             }
-            string sEnstituKod = "";
-            if (enstKods.Count == 1)
-            {
-                sEnstituKod = enstKods.First();
-            }
-            else sEnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var sEnstituKod = enstKods.Count == 1 ? enstKods.First() : EnstituBus.GetSelectedEnstitu(ekd);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.DuyuruPopupTipleris = _entities.DuyuruPopupTipleris.ToList();
@@ -135,16 +130,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var qDosyaEkAdi = dosyaEkiAdi.Select((s, inx) => new { s, inx }).ToList();
             var qDosyaEki = dosyaEki.Select((s, inx) => new { s, inx }).ToList();
             var qDuyuruDosyaEkId = duyuruDosyaEkId.Select((s, inx) => new { s, inx }).ToList();
-            var qDosyalar = (from ekGirilenAd in qDosyaEkAdi
-                             join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
-                             select new { ekGirilenAd.inx, DosyaEkAdi = ekGirilenAd.s, Dosya = eklenenEk.s }).ToList();
+            var eklenecekDosyalar = (from ekGirilenAd in qDosyaEkAdi
+                                   join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
+                                   select new { ekGirilenAd.inx, DosyaEkAdi = ekGirilenAd.s, Dosya = eklenenEk.s }).Where(p => p.Dosya != null).ToList();
 
-            var qVarolanlar = (from s in qDosyaEkAdi
-                               join sid in qDuyuruDosyaEkId on s.inx equals sid.inx
-                               select new { s.inx, DosyaEkAdi = s.s, DuyuruDosyaEkID = sid.s });
+            var varolanDosyalar = (from s in qDosyaEkAdi
+                                   join sid in qDuyuruDosyaEkId on s.inx equals sid.inx
+                                   select new { s.inx, DosyaEkAdi = s.s, DuyuruDosyaEkID = sid.s }).ToList();
             duyuruPopupTipIds = duyuruPopupTipIds ?? new List<int>();
-            kModel.DuyuruPopuplars = duyuruPopupTipIds.Select(s => new DuyuruPopuplar { DuyuruPopupTipID = s })
-                .ToList();
+            kModel.DuyuruPopuplars = duyuruPopupTipIds.Select(s => new DuyuruPopuplar { DuyuruPopupTipID = s }).ToList();
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
@@ -189,77 +183,61 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
                 kModel.Aciklama = kModel.Aciklama ?? "";
+                Duyurular duyuru;
                 if (kModel.DuyuruID <= 0)
                 {
                     kModel.IsAktif = true;
-                 
-                    var eklenen = _entities.Duyurulars.Add(kModel);
-
-                    foreach (var item in qDosyalar)
-                    {
-                        string dosyaYolu = "/DuyuruDosyaları/" + item.DosyaEkAdi.ToFileNameAddGuid(item.Dosya.FileName.GetFileExtension());
-                        item.Dosya.SaveAs(Server.MapPath("~" + dosyaYolu));
-
-                        _entities.DuyuruEkleris.Add(new DuyuruEkleri
-                        {
-                            DuyuruID = eklenen.DuyuruID,
-                            DosyaEkAdi = item.DosyaEkAdi,
-                            DosyaYolu = dosyaYolu
-                        });
-                    }
+                    duyuru = _entities.Duyurulars.Add(kModel);
                 }
                 else
                 {
-                    var data = _entities.Duyurulars.First(p => p.DuyuruID == kModel.DuyuruID);
-                    data.Baslik = kModel.Baslik;
-                    data.Aciklama = kModel.Aciklama;
-                    data.AciklamaHtml = kModel.AciklamaHtml;
-                    data.Tarih = kModel.Tarih;
-                    data.IsEnUsteSabitle = kModel.IsEnUsteSabitle;
-                    data.YayinSonTarih = kModel.YayinSonTarih;
-                    data.AnaSayfadaGozuksun = kModel.AnaSayfadaGozuksun;
+                    duyuru = _entities.Duyurulars.First(p => p.DuyuruID == kModel.DuyuruID);
+                    duyuru.Baslik = kModel.Baslik;
+                    duyuru.Aciklama = kModel.Aciklama;
+                    duyuru.AciklamaHtml = kModel.AciklamaHtml;
+                    duyuru.Tarih = kModel.Tarih;
+                    duyuru.IsEnUsteSabitle = kModel.IsEnUsteSabitle;
+                    duyuru.YayinSonTarih = kModel.YayinSonTarih;
+                    duyuru.AnaSayfadaGozuksun = kModel.AnaSayfadaGozuksun;
 
-                    data.IsAktif = kModel.IsAktif;
-                    data.IslemTarihi = DateTime.Now;
-                    data.IslemYapanID = kModel.IslemYapanID;
-                    data.IslemYapanIP = kModel.IslemYapanIP;
+                    duyuru.IsAktif = kModel.IsAktif;
+                    duyuru.IslemTarihi = DateTime.Now;
+                    duyuru.IslemYapanID = kModel.IslemYapanID;
+                    duyuru.IslemYapanIP = kModel.IslemYapanIP;
 
-                    _entities.DuyuruPopuplars.RemoveRange(data.DuyuruPopuplars);
-                    data.DuyuruPopuplars = kModel.DuyuruPopuplars; 
+                    _entities.DuyuruPopuplars.RemoveRange(duyuru.DuyuruPopuplars);
+                    duyuru.DuyuruPopuplars = kModel.DuyuruPopuplars;
 
-                    var silinenDuyuruEkleri = _entities.DuyuruEkleris.Where(p => duyuruDosyaEkId.Contains(p.DuyuruDosyaEkID) == false && p.DuyuruID == data.DuyuruID).ToList();
-                    var varolanDuyuruEkleri = _entities.DuyuruEkleris.Where(p => duyuruDosyaEkId.Contains(p.DuyuruDosyaEkID) && p.DuyuruID == data.DuyuruID).ToList();
+                    var silinenDuyuruEkleri = _entities.DuyuruEkleris.Where(p => duyuruDosyaEkId.Contains(p.DuyuruDosyaEkID) == false && p.DuyuruID == duyuru.DuyuruID).ToList();
+                    var varolanDuyuruEkleri = _entities.DuyuruEkleris.Where(p => duyuruDosyaEkId.Contains(p.DuyuruDosyaEkID) && p.DuyuruID == duyuru.DuyuruID).ToList();
                     foreach (var item in varolanDuyuruEkleri)
                     {
-                        var qd = qVarolanlar.FirstOrDefault(p => p.DuyuruDosyaEkID == item.DuyuruDosyaEkID);
+                        var qd = varolanDosyalar.FirstOrDefault(p => p.DuyuruDosyaEkID == item.DuyuruDosyaEkID);
                         if (qd != null)
                         {
-                            item.DosyaEkAdi = qd.DosyaEkAdi;
+                            item.DosyaEkAdi = qd.DosyaEkAdi.GetFileName(item.DosyaYolu);
                         }
                     }
-
                     _entities.DuyuruEkleris.RemoveRange(silinenDuyuruEkleri);
-
-                    foreach (var item in qDosyalar)
-                    {
-                        string dosyaYolu = "/DuyuruDosyaları/" + item.Dosya.FileName.ToFileNameAddGuid();
-                        item.Dosya.SaveAs(Server.MapPath("~" + dosyaYolu));
-
-                        _entities.DuyuruEkleris.Add(new DuyuruEkleri
-                        {
-                            DuyuruID = data.DuyuruID,
-                            DosyaEkAdi = item.DosyaEkAdi,
-                            DosyaYolu = dosyaYolu
-                        });
-                    }
+                    FileHelper.DeleteFiles(silinenDuyuruEkleri.Select(s => s.DosyaYolu).ToList());
                 }
                 _entities.SaveChanges();
+                foreach (var item in eklenecekDosyalar)
+                {
+                    var eklenecekRow = new DuyuruEkleri
+                    {
+                        DuyuruID = duyuru.DuyuruID,
+                        DosyaEkAdi = item.DosyaEkAdi.GetFileName(item.Dosya.FileName),
+                        DosyaYolu = FileHelper.SaveDuyuruDosya(item.Dosya)
+                    };
+                    _entities.DuyuruEkleris.Add(eklenecekRow);
+                }
+                if (eklenecekDosyalar.Any()) _entities.SaveChanges();
+
                 return RedirectToAction("Index");
             }
-            else
-            {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
-            }
+
+            MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             ViewBag.MmMessage = mmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
@@ -269,27 +247,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int id)
         {
             var kayit = _entities.Duyurulars.FirstOrDefault(p => p.DuyuruID == id);
-            string message = "";
-            bool success = true;
+            string message;
+            var success = true;
             if (kayit != null)
             {
                 try
                 {
                     message = "'" + kayit.Baslik + "' Başlıklı Duyuru Silindi!";
-                    var dosyalar = kayit.DuyuruEkleris.ToList();
-
+                    var duyuruEkiPaths = kayit.DuyuruEkleris.Select(s => s.DosyaYolu).ToList();
                     _entities.Duyurulars.Remove(kayit);
                     _entities.SaveChanges();
-                    foreach (var item in dosyalar)
-                    {
-                        System.IO.File.Delete(Server.MapPath("~" + item.DosyaYolu));
-                    }
+                    FileHelper.DeleteFiles(duyuruEkiPaths);
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + kayit.Baslik + "' Başlıklı Duyuru! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else

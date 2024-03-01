@@ -1,5 +1,5 @@
-﻿@using Entities.Entities 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using Entities.Entities
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model MailSablonlari
 @{
@@ -29,7 +29,7 @@
                                     @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
                                 </div>
                             </div>
-                           
+
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Şablon Adı</label>
                                 <div class="col-md-9 col-xs-8">
@@ -68,7 +68,8 @@
                                                         <input type="text" name="EkAdi" style="padding: 0px; height: 22px; " value="@item.s.EkAdi" maxlength="250" placeholder="Ek Adı Giriniz" class="form-control" />
                                                     </td>
                                                     <td style='padding: 0px; vertical-align: middle;'>
-                                                        <a href="@item.s.EkDosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item.s.EkAdi</a>
+                                                        <a href="@item.s.EkDosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span> @item.s.EkAdi</a>
+                                                        <input type="file" name="DosyaEki" style="padding: 0px; height: 22px;" class="form-control hide" />
                                                     </td>
                                                     <td style='padding-top: 0px;padding-bottom:0px; vertical-align: middle;text-align:center;'>
                                                         <span style="cursor:pointer;" onclick="EkSil(this)" class="fa fa-trash-o" data-original-title="Eki Sil"></span>
@@ -113,7 +114,7 @@
 <script src="~/Content/ckeditor/showCk.js"></script>
 <script>
 
-    $(function () {   
+    $(function () {
         var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
@@ -176,7 +177,7 @@
                 });
             }
         });
-    
+
         if ($('#SablonAdi').val() == "") {
             saveOk = false;
             $('#SablonAdi').parents('div').first().pulsate({
@@ -197,7 +198,7 @@
                 speed: 400,
                 glow: true
             });
-        }   
+        }
         if (saveOk) $('form').submit();
         else return saveOk;
     }

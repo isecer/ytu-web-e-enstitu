@@ -35,7 +35,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             get
             {
                 var attahcMentEkler = Attachments.Select(s => new GonderilenMailEkleri { EkAdi = s.Name }).ToList();
-                var sablonEkiDosyalari = SablonEkleri.Select(s => new GonderilenMailEkleri { EkAdi = s.EkAdi,EkDosyaYolu = s.EkDosyaYolu}).ToList();
+                var sablonEkiDosyalari = SablonEkleri.Select(s => new GonderilenMailEkleri { EkAdi = s.EkAdi, EkDosyaYolu = s.EkDosyaYolu }).ToList();
                 attahcMentEkler.AddRange(sablonEkiDosyalari);
                 return attahcMentEkler;
             }
@@ -56,7 +56,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
                 model.SablonEkleri.AddRange(Sablon.MailSablonlariEkleris);
                 model.SablonParametreleri = Sablon.MailSablonTipleri.Parametreler.CustomSplit();
                 model.EMails.AddRange(Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
-                model.Attachments.AddRange(SablonEkleri.ToList().GetFileToAttachment());
+                model.Attachments.AddRange(SablonEkleri.Select(s => new FileAttachmentInfo { FileName = s.EkAdi, FilePath = s.EkDosyaYolu }).ToList().GetFileToAttachments());
             }
 
             return model;

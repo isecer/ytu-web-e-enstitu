@@ -221,7 +221,7 @@
             this.lblAlanTip.StylePriority.UseFont = false;
             this.lblAlanTip.StylePriority.UseForeColor = false;
             this.lblAlanTip.StylePriority.UseTextAlignment = false;
-            this.lblAlanTip.Text = "Anabilimdalı / Program Listesi";
+            this.lblAlanTip.Text = "Anabilim Dalı / Program Listesi";
             this.lblAlanTip.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // BottomMargin

@@ -149,7 +149,7 @@
                                         </table>
                                         <input type="text" class="hide" name="RowID" value="@Model.RowID" />
                                         <input type="text" class="hide" name="MezuniyetBasvurulariTezDosyaID" value="@(onayBekleyen != null ? onayBekleyen.MezuniyetBasvurulariTezDosyaID.ToString() : "")" />
-                                        <input class="hide" type="file" name="BelgeDosyasi" accept="application/pdf" id="Belge_@Model.MezuniyetBasvurulariID" onchange="ChangeFile(this,'@Model.MezuniyetBasvurulariID');" />
+                                        <input class="hide" type="file" name="TezSablonDosyasi" accept="application/pdf" id="Belge_@Model.MezuniyetBasvurulariID" onchange="ChangeFile(this,'@Model.MezuniyetBasvurulariID');" />
 
                                     </div>
                                 </div>
@@ -195,7 +195,7 @@
                                             </table>
                                             <input type="text" class="hide" name="RowID" value="@Model.RowID" />
                                             <input type="text" class="hide" name="MezuniyetBasvurulariTezDosyaID" value="@(onayBekleyen != null ? onayBekleyen.MezuniyetBasvurulariTezDosyaID.ToString() : "")" />
-                                            <input class="hide" type="file" name="BelgeDosyasi" accept="application/pdf" id="Belge_@Model.MezuniyetBasvurulariID" onchange="ChangeFile(this,'@Model.MezuniyetBasvurulariID');" />
+                                            <input class="hide" type="file" name="TezSablonDosyasi" accept="application/pdf" id="Belge_@Model.MezuniyetBasvurulariID" onchange="ChangeFile(this,'@Model.MezuniyetBasvurulariID');" />
 
                                         </div>
                                     </div>

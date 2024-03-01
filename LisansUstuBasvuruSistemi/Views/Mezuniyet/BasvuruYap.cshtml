@@ -1,6 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmMezuniyetBasvuru
 @{
@@ -38,7 +37,7 @@
                         <div id="myWizard" class="wizard">
                             <ul class="tabsK steps_2 anchor">
                                 <li>
-                                    <a href="#step-1" data-step="1" class="selected">
+                                    <a data-step="1" class="selected">
                                         <span class="stepNumber">1</span>
                                         <span style="text-align:center;" class="stepDesc">
                                             1.Adım
@@ -47,7 +46,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#step-2" data-step="2" class="disabled">
+                                    <a data-step="2" class="disabled">
                                         <span class="stepNumber">2</span>
                                         <span class="stepDesc" style="text-align:center;">
                                             2.Adım
@@ -242,33 +241,6 @@
                                                         <input type="text" name="AbstractAnahtarKelimeler" id="AbstractAnahtarKelimeler" value="@Model.AbstractAnahtarKelimeler" class="form-control" />
                                                     </div>
                                                 </div>
-                                                @if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
-                                                {
-                                                    <div class="form-group">
-                                                        <label class="col-md-3 col-xs-4 control-label">
-                                                            @(Model.OgrenimTipKod.IsDoktora()? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu") 
-                                                        </label>
-                                                        <div class="col-md-9 col-xs-8">
-                                                            <table>
-                                                                <tr>
-                                                                    <td width="30" style="text-align:center;"><i class="fa fa-file-pdf-o" style="color:green;font-size:17pt;"></i></td>
-                                                                    <td>
-                                                                        <input type="file" class="fileinput btn-info" name="DanismanImzaliFormDosya" id="DanismanImzaliFormDosya" title="@(Model.MezuniyetBasvurulariID > 0 ? (Model.OgrenimTipKod.IsDoktora()? "Yeni Danışman İmzalı FR-0299 (DR) Formu Dosyasını Seçiniz" : "Yeni Danışman İmzalı FR-0338 (YL) Formu Dosyasını Seçiniz") : "Dosya seçmek için tıklayınız")" />
-                                                                        @if (Model.MezuniyetBasvurulariID > 0)
-                                                                        {
-                                                                            <input type="text" class="hide" name="DanismanImzaliFormDosyaAdi" id="DanismanImzaliFormDosyaAdi" value="@Model.DanismanImzaliFormDosyaAdi" />
-                                                                            <a href="@Url.Content(Model.DanismanImzaliFormDosyaYolu)" target="_blank" style="color:green;font-weight:bold;">@Model.DanismanImzaliFormDosyaAdi</a>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <input type="text" class="hide" name="DanismanImzaliFormDosyaAdi" id="DanismanImzaliFormDosyaAdi" value="@Model.DanismanImzaliFormDosyaAdi" />
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -441,27 +413,27 @@
     var nextTxt = 'İleri';
     var prvText = 'Geri';
     var kydet = 'Kaydet';
-
     $('#myWizard').easyWizard({
-        'stepClassName' : 'content',
-        'showSteps' : false,
-        'stepsText' : '{n}. {t}',
-        'showButtons' : true,
+        'stepClassName': 'content',
+        'showSteps': false,
+        'stepsText': '{n}. {t}',
+        'showButtons': true,
         'buttonIleriClass': 'btn btn-default pull-right',
         'buttonGeriClass': 'btn btn-default pull-left',
-        'prevButton' : prvText,
-        'nextButton' : nextTxt,
-        'debug' : false,
+        'prevButton': prvText,
+        'nextButton': nextTxt,
+        'debug': false,
         'submitButton': true,
         'submitButtonText': kydet,
         'submitButtonClass': 'btn btn-primary pull-right',
+    }); 
+    $(window).on('resize', function () {
+        var wizardWidth = $('#myWizard').width(); 
+
     });
-
-
 
     $(function () {
         btnkKontrol();
-        $('._popover').popover({ trigger: 'hover' });
         $('#myWizard').find(".content").css("display","");
     })
     function btnkKontrol()
@@ -535,9 +507,7 @@
                 "TezOzet": $('#TezOzet').val(),
                 "OzetAnahtarKelimeler":$('#OzetAnahtarKelimeler').val(),
                 "TezAbstract":  $('#TezAbstract').val(),
-                "AbstractAnahtarKelimeler":$('#AbstractAnahtarKelimeler').val(),
-                "DanismanImzaliFormDosyaAdi":$('#DanismanImzaliFormDosyaAdi').val() ,
-                "DanismanImzaliFormDosyaAdi2":$('#DanismanImzaliFormDosya').length>0? $('#DanismanImzaliFormDosya').val().split('/').pop().split('\\').pop():""
+                "AbstractAnahtarKelimeler":$('#AbstractAnahtarKelimeler').val()
             }
         }
         else if (step == 2) {

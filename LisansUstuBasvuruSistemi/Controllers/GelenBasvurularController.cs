@@ -1,5 +1,4 @@
-﻿using BiskaUtil;
-using Entities.Entities;
+﻿using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -18,7 +17,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize]
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class GelenBasvurularController : Controller
     {
 
@@ -101,8 +100,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (programKod.Count > 0) q = q.Where(p => p.BasvurularTercihleris.Any(a => programKod.Contains(a.ProgramKod)));
             if (model.BasvuruDurumID.HasValue)
             {
-                if (model.BasvuruDurumID.Value == BasvuruDurumuEnum.Gonderildi) q = q.Where(p => p.KayitliTercihVar);
-                else q = q.Where(p => p.BasvuruDurumID == model.BasvuruDurumID);
+                q = model.BasvuruDurumID.Value == BasvuruDurumuEnum.Gonderildi ? q.Where(p => p.KayitliTercihVar) : q.Where(p => p.BasvuruDurumID == model.BasvuruDurumID);
             }
             if (model.MulakatSonucTipID.HasValue) q = q.Where(p => p.MulakatSonucTipIDs.Any(a => a == model.MulakatSonucTipID.Value));
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.BasvurularTercihleris.Any(a => a.OgrenimTipKod == model.OgrenimTipKod));
@@ -113,7 +111,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (model.SinavTipKod.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.SinavTipKod == model.SinavTipKod));
             else if (model.IsTaahhutVar.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.IsTaahhutVar == (model.IsTaahhutVar == false ? null : model.IsTaahhutVar)));
             if (model.UyrukKod.HasValue) q = q.Where(p => p.UyrukKod == model.UyrukKod);
-            bool isFiltered = q != q2;
+            bool isFiltered = !Equals(q, q2);
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();
             var kayitCountDurum = _entities.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumuEnum.Onaylandı).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.ClassName, s.Color }).FirstOrDefault();
@@ -205,21 +203,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.IndexModel = indexModel;
             ViewBag.BasvuruSurecID = new SelectList(LisansustuBasvuruBus.GetbasvuruSurecleri(enstituKod, BasvuruSurecTipiEnum.LisansustuBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
-            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.BasvuruDurumID = new SelectList(LisansustuBasvuruBus.CmbBasvuruDurumListe(true, true), "Value", "Caption", model.BasvuruDurumID);
             ViewBag.MulakatSonucTipID = new SelectList(LisansustuBasvuruBus.CmbMulakatSonucTip(true), "Value", "Caption", model.MulakatSonucTipID);
-            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(enstituKod, false), "Value", "Caption", model.ProgramKod);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(enstituKod), "Value", "Caption", model.ProgramKod);
             ViewBag.LOgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu2(true, isBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
             ViewBag.SinavTipKod = new SelectList(SinavTipleriBus.CmbGetBsAktifSinavlar(enstituKod, new List<int> { SinavTipGrupEnum.DilSinavlari, SinavTipGrupEnum.Tomer, SinavTipGrupEnum.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleriOgrenciler(true), "Value", "Caption", model.KullaniciTipID);
             ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
             ViewBag.IsTaahhutVar = new SelectList(LisansustuBasvuruBus.CmbSinavBelgeTaahhut(true), "Value", "Caption", model.IsTaahhutVar);
             ViewBag.UyrukKod = new SelectList(LisansustuBasvuruBus.CmbUyruk(true), "Value", "Caption", model.UyrukKod);
-            if (isFiltered)
-            {
-                ViewBag.kIds = q.Select(s => s.KullaniciID).ToList();
-            }
-            else ViewBag.kIds = new List<int>();
+            ViewBag.kIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.SelectedPrograms = programKod;
             return View(model);
         }

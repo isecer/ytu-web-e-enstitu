@@ -45,7 +45,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var success = notKriteriIndex <= ogrenciNotuIndex;
             if (!success)
             {
-                //geçmiş öğrenciler için özel kontrol G notu geçerli
+                //eski öğrenciler için özel kontrol G notu geçerli
                 success = ogrenciNotu == "G";
             }
             return success;

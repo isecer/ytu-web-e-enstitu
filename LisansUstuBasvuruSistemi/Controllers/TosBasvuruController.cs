@@ -3,7 +3,6 @@ using Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -16,7 +15,7 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class TosBasvuruController : Controller
     {
         // GET: TosBasvuru
@@ -25,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (!UserIdentity.Current.IsAuthenticated && isDegerlendirme == null) return RedirectToActionPermanent("Login", "Account");
 
-            return Index(new FmTosBasvuru() { UniqueId = uniqueId, KullaniciID = kullaniciId, IsDegerlendirme = isDegerlendirme, PageSize = 10 }, ekd);
+            return Index(new FmTosBasvuru { UniqueId = uniqueId, KullaniciID = kullaniciId, IsDegerlendirme = isDegerlendirme, PageSize = 10 }, ekd);
         }
         [HttpPost]
         public ActionResult Index(FmTosBasvuru model, string ekd)
@@ -140,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AktifDonemAdi = ard == null ? "----" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
                         AktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
                         DurumID = ard == null ? 0 : ard.ToBasvuruSavunmaDurumID,
-                        IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
+                        IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : null,
                         DurumModel = new TosDurumDto
                         {
                             ToBasvuruSavunmaDurumID = ard.ToBasvuruSavunmaDurumID,
@@ -568,7 +567,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (mMessage.Messages.Count == 0)
                     {
-                        var dosyaYolu = "";
                         try
                         {
 
@@ -609,26 +607,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             if (kModel.Dosya != null)
                             {
-                                var dosyaAdi = kModel.Dosya.FileName.ToFileNameAddGuid(null, toBasvuru.ToBasvuruID.ToString());
-
-                                dosyaYolu = "/BasvuruDosyalari/TezOneriSavunmaBelgeleri/" + dosyaAdi;
-                                var sfilename = Server.MapPath("~" + dosyaYolu);
-                                kModel.Dosya.SaveAs(sfilename);
-                                if (!toBasvuruSavunma.CalismaRaporDosyaYolu.IsNullOrWhiteSpace())
-                                {
-                                    try
-                                    {
-
-                                        var path = Server.MapPath("~" + toBasvuruSavunma.CalismaRaporDosyaYolu);
-                                        if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
-                                    }
-                                    catch
-                                    {
-                                        // ignored
-                                    }
-                                }
-                                toBasvuruSavunma.CalismaRaporDosyaAdi = dosyaAdi;
-                                toBasvuruSavunma.CalismaRaporDosyaYolu = dosyaYolu;
+                                FileHelper.DeleteFile(toBasvuruSavunma.CalismaRaporDosyaYolu);
+                                toBasvuruSavunma.CalismaRaporDosyaAdi = kModel.Dosya.FileName.GetFileName();
+                                toBasvuruSavunma.CalismaRaporDosyaYolu = FileHelper.SaveToSavunmaDosya(kModel.Dosya);
                             }
                             toBasvuruSavunma.DonemBaslangicYil = (baslangicYil ?? donemBilgi.BaslangicYil);
                             toBasvuruSavunma.DonemID = (donemId ?? donemBilgi.DonemId);
@@ -665,19 +646,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         catch (Exception ex)
                         {
-                            if (dosyaYolu != null)
-                            {
-                                try
-                                {
-                                    var path = Server.MapPath("~" + dosyaYolu);
-                                    if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
-
-                                }
-                                catch
-                                {
-                                    // ignored
-                                }
-                            }
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
                             SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Hata);
@@ -740,7 +708,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.IslemTarihi = srTalep.IslemTarihi;
                     model.IslemYapanID = srTalep.IslemYapanID;
                     model.IslemYapanIP = srTalep.IslemYapanIP;
-                    model.Aciklama = srTalep.Aciklama; 
+                    model.Aciklama = srTalep.Aciklama;
                 }
                 else
                 {
@@ -748,7 +716,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.EnstituKod = toBasvuruSavunma.ToBasvuru.EnstituKod;
                     model.SRTalepTipID = 4;
                     model.TalepYapanID = toBasvuruSavunma.ToBasvuru.KullaniciID;
-                    model.Tarih = DateTime.Now.Date;  
+                    model.Tarih = DateTime.Now.Date;
                 }
 
                 model.UniqueID = toBasvuruSavunma.UniqueID;
@@ -860,7 +828,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kModel.Tarih = tarih.Date;
                         kModel.HaftaGunID = (int)tarih.DayOfWeek;
                         kModel.BasSaat = kModel.IsSalonSecilsin ? kModel.BasSaat : tarih.TimeOfDay;
-                        kModel.BitSaat = kModel.IsSalonSecilsin ? kModel.BitSaat : kModel.BasSaat.Add(new TimeSpan(2, 0, 0)); 
+                        kModel.BitSaat = kModel.IsSalonSecilsin ? kModel.BitSaat : kModel.BasSaat.Add(new TimeSpan(2, 0, 0));
                         kModel.SRDurumID = SrTalepDurumEnum.Onaylandı;
                         kModel.SRDurumAciklamasi = kModel.SRDurumAciklamasi;
                         kModel.IslemTarihi = kModel.IslemTarihi;
@@ -925,7 +893,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             srTalep.SRSalonID = null;
                             srTalep.Tarih = kModel.Tarih;
                             srTalep.HaftaGunID = kModel.HaftaGunID;
-                            srTalep.BasSaat = kModel.BasSaat;   
+                            srTalep.BasSaat = kModel.BasSaat;
                             srTalep.BitSaat = kModel.BitSaat;
                             srTalep.DanismanAdi = kModel.DanismanAdi;
                             srTalep.EsDanismanAdi = kModel.EsDanismanAdi;
@@ -1152,26 +1120,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (sendMailLink)
                         {
                             var messages = TosBus.SendMailTosDegerlendirmeLink(komite.ToBasvuruSavunma.UniqueID, null, true);
-                            if (isTezDanismani || degerlendirmeDuzeltmeYetki)
+                            if (messages.IsSuccess)
                             {
-                                if (messages.IsSuccess)
-                                {
-                                    mMessage.Messages.Add("Değerlendirme Linki Komite Üyelerine Gönderildi.");
-                                }
-                                else
-                                {
-                                    mMessage.Messages.AddRange(messages.Messages);
-                                    mMessage.Messages.Add("Değerlendirmeniz geri alınmıştır, Lütfen tekrar değerlendirme yapınız.");
-                                    mMessage.IsSuccess = false;
-                                    isRefresh = true;
-                                    komite.IsCalismaRaporuAltAlanUygun = null;
-                                    komite.ToBasvuruSavunmaDurumID = null;
-                                    komite.Aciklama = null;
-                                    komite.DegerlendirmeIslemTarihi = null;
-                                    komite.DegerlendirmeIslemYapanIP = null;
-                                    komite.DegerlendirmeYapanID = null;
-                                    _entities.SaveChanges();
-                                }
+                                mMessage.Messages.Add("Değerlendirme Linki Komite Üyelerine Gönderildi.");
+                            }
+                            else
+                            {
+                                mMessage.Messages.AddRange(messages.Messages);
+                                mMessage.Messages.Add("Değerlendirmeniz geri alınmıştır, Lütfen tekrar değerlendirme yapınız.");
+                                mMessage.IsSuccess = false;
+                                isRefresh = true;
+                                komite.IsCalismaRaporuAltAlanUygun = null;
+                                komite.ToBasvuruSavunmaDurumID = null;
+                                komite.Aciklama = null;
+                                komite.DegerlendirmeIslemTarihi = null;
+                                komite.DegerlendirmeIslemYapanIP = null;
+                                komite.DegerlendirmeYapanID = null;
+                                _entities.SaveChanges();
                             }
                         }
                         else mMessage.Messages.Add("Değerlendirme işlemi tamamlandı.");
@@ -1215,7 +1180,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             toBasvuruSavunma.IsOyBirligiOrCoklugu = null;
                             toBasvuruSavunma.ToBasvuruSavunmaDurumID = null;
-                        } 
+                        }
                         _entities.SaveChanges();
                         LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", LogCrudType.Update, komite.ToJson());
                         LogIslemleri.LogEkle("ToBasvuruSavunma", LogCrudType.Update, toBasvuruSavunma.ToJson());
@@ -1325,7 +1290,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult SilDetay(Guid tosUniqueId)
         {
             var mmMessage = TosBus.GetTosSilKontrol(tosUniqueId);
-            var removedAllData = false;
             if (mmMessage.IsSuccess)
             {
                 var tezOneriSavunma = _entities.ToBasvuruSavunmas.First(f => f.UniqueID == tosUniqueId);
@@ -1356,7 +1320,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
-            return Json(new { mmMessage.IsSuccess, messageView, removedAllData }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { mmMessage.IsSuccess, messageView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
         public ActionResult DegerlendirmeLinkView(Guid? tosKomiteUniqueId)

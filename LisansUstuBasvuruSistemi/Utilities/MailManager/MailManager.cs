@@ -263,24 +263,29 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
         }
 
 
-        public static List<Attachment> GetFileToAttachment(this List<MailSablonlariEkleri> mailSablonlariEkleris)
+        public static Attachment GetFileToAttachment(this FileAttachmentInfo fileAttachmentInfo)
+        {
+
+
+            var fullPath = HttpContext.Current.Server.MapPath("~" + fileAttachmentInfo.FilePath);
+            if (File.Exists(fullPath))
+            {
+                fileAttachmentInfo.FileName = fileAttachmentInfo.FileName.IsNullOrWhiteSpace() ? Path.GetFileName(fullPath) : fileAttachmentInfo.FileName.ToSetNameFileExtension(Path.GetExtension(fullPath));
+                return new Attachment(new MemoryStream(File.ReadAllBytes(fullPath)), fileAttachmentInfo.FileName, MediaTypeNames.Application.Octet);
+            }
+            SistemBilgilendirmeBus.SistemBilgisiKaydet("Dosya eki sistemde bulunamadı! <br/>Dosya Yolu:" + fullPath, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Uyarı, null, "::");
+            return null;
+        }
+        public static List<Attachment> GetFileToAttachments(this List<FileAttachmentInfo> fileAttachmentInfos)
         {
             var attachments = new List<Attachment>();
-            foreach (var itemEk in mailSablonlariEkleris)
+            foreach (var fileAttachmentInfo in fileAttachmentInfos)
             {
-                var ekTamYol = HttpContext.Current.Server.MapPath("~" + itemEk.EkDosyaYolu);
-                if (File.Exists(ekTamYol))
-                {
-                    var fExtension = Path.GetExtension(ekTamYol);
-                    attachments.Add(new Attachment(new MemoryStream(File.ReadAllBytes(ekTamYol)),
-                        itemEk.EkAdi.ToSetNameFileExtension(fExtension), MediaTypeNames.Application.Octet));
-                }
-                else SistemBilgilendirmeBus.SistemBilgisiKaydet("Dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemEk.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Uyarı, null, "::");
-
+                var attach = fileAttachmentInfo.GetFileToAttachment();
+                if (attach != null) attachments.Add(attach);
             }
             return attachments;
         }
-
         public static List<MailSendList> ToSplitEmailSendList(this string emailsString, bool toOrBcc = false)
         {
             if (emailsString.IsNullOrWhiteSpace()) return new List<MailSendList>();

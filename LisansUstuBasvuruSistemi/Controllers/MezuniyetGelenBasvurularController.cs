@@ -368,7 +368,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess = false;
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            return Json(new { Messages = mmMessage }, "application/json", JsonRequestBehavior.AllowGet);
+            return new { Messages = mmMessage }.ToJsonResult();
 
         }
 
@@ -1178,7 +1178,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (ogrenciInfo.Hata)
                 {
-                    mMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");
+                    mMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
                 }
                 else
                 {
@@ -1745,9 +1745,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (juriOneriFormu.EYKYaGonderildi.HasValue || eykYaGonderildi != false)
                 {
-                   
-                   var ogrenciObsBilgi =
-                       KullanicilarBus.OgrenciBilgisiGuncelleObs(juriOneriFormu.MezuniyetBasvurulari.KullaniciID);
+
+                    var ogrenciObsBilgi =
+                        KullanicilarBus.OgrenciBilgisiGuncelleObs(juriOneriFormu.MezuniyetBasvurulari.KullaniciID);
 
                     if (!ogrenciObsBilgi.KayitVar)
                     {
@@ -1821,21 +1821,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-            if (!mMessage.Messages.Any() && eykYaHazirlandi == true)
-            {
-                string msg = "";
-                var asilCount = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Count(p => p.IsAsilOrYedek == true);
-                var yedekCount = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Count(p => p.IsAsilOrYedek == false);
-                var countSizeAsil = juriOneriFormu.MezuniyetBasvurulari.OgrenimTipKod.IsDoktora() ? 5 : 3;
-                if (asilCount != countSizeAsil)
-                    msg += ("<br />* Jüri adayı önerisinden " + countSizeAsil + " Asil aday belirlemeniz gerekmektedi.");
-                if (yedekCount != 2)
-                    msg += ("<br />* Jüri adayı önerisinde 2 Yedek aday belirlemeniz gerekmektedi.");
-                if (msg != "")
-                {
-                    mMessage.Messages.Add("Jüri öneri formunda EYK'ya onaylandı işlemini yapabilmeniz için: " + msg);
-                }
-            }
+          
             if (!mMessage.Messages.Any())
             {
 
@@ -2197,11 +2183,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Delete, kayit.ToJson());
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;
-                    foreach (var item in fFList)
-                    {
-                        var path = Server.MapPath("~" + item);
-                        if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
-                    }
+                    FileHelper.DeleteFiles(fFList); 
                 }
                 catch (Exception ex)
                 {

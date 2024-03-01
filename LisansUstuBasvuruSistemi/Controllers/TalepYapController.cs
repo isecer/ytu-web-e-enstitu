@@ -4,7 +4,6 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +12,10 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize]
     public class TalepYapController : Controller
     {
@@ -51,7 +49,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bbModel.KullaniciTipYetki = true;
             if (kullanici.KayitDonemID.HasValue == false && kullanici.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci && kullanici.KayitDonemID.HasValue == false)
             {
-                var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
+                KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
                 kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
             }
             if (kullanici.YtuOgrencisi)
@@ -86,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join tt in _entities.TalepTipleris on s.TalepTipID equals tt.TalepTipID
                     join td in _entities.TalepDurumlaris on s.TalepDurumID equals td.TalepDurumID
                     join ags in _entities.TalepArGorStatuleris on s.TalepArGorStatuID equals ags.TalepArGorStatuID into defAgs
-                    from Ags in defAgs.DefaultIfEmpty()
+                    from talepArGorStatuleri in defAgs.DefaultIfEmpty()
                     join ot in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod into defO
                     from Ot in defO.DefaultIfEmpty()
                     join otl in _entities.OgrenimTipleris on Ot.OgrenimTipID equals otl.OgrenimTipID into defOtl
@@ -126,7 +124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         Prl.ProgramAdi,
                         s.IsYtuArGor,
                         s.TalepArGorStatuID,
-                        Ags.StatuAdi,
+                        talepArGorStatuleri.StatuAdi,
                         s.IsDersYukuTamamlandi,
                         s.IsHarcBorcuVar,
                         s.IslemTarihi,
@@ -549,13 +547,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     talep = _entities.TalepGelenTaleplers.First(p => p.TalepGelenTalepID == kModel.TalepGelenTalepID && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
                     talep.TalepTipID = kModel.TalepTipID;
                     talep.AdSoyad = kModel.AdSoyad;
-                    talep.OgrenciNo = kModel.OgrenciNo;
-                    talep.OgrenimTipID = kModel.OgrenimTipID;
-                    talep.OgrenimTipKod = kModel.OgrenimTipKod;
                     talep.IsTezOnerisiYapildi = kModel.IsTezOnerisiYapildi;
                     talep.DoktoraTezOneriTarihi = kModel.DoktoraTezOneriTarihi;
                     talep.IsDersYukuTamamlandi = kModel.IsDersYukuTamamlandi;
-                    talep.ProgramKod = kModel.ProgramKod;
                     talep.IsYtuArGor = kModel.IsYtuArGor;
                     talep.IsHarcBorcuVar = kModel.IsHarcBorcuVar;
                     talep.IsDersYukuTamamlandi = kModel.IsDersYukuTamamlandi;
@@ -569,23 +563,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (talepTip.IsBelgeYuklemeVar && dosya != null)
                 {
-                    string dosyaYolu = "/TalepDosyalari/TT_" + kModel.TalepTipID + "_" + talep.TalepGelenTalepID + "_" + dosya.FileName.ToFileNameAddGuid();
-                    var sfilename = Server.MapPath("~" + dosyaYolu);
-                    dosya.SaveAs(sfilename);
-
-                    _entities.TalepGelenTalepBelgeleris.RemoveRange(talep.TalepGelenTalepBelgeleris).Where(p => p.IsDanismanOnayDosyasi == false);
-                    foreach (var belge in talep.TalepGelenTalepBelgeleris)
-                    {
-                        var path = Server.MapPath("~" + belge.DosyaYolu);
-                        if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
-                    }
-
-
+                    var silinecekler = talep.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi == false)
+                        .ToList();
+                    _entities.TalepGelenTalepBelgeleris.RemoveRange(silinecekler);
+                    FileHelper.DeleteFiles(silinecekler.Select(s => s.DosyaYolu).ToList());
                     talep.TalepGelenTalepBelgeleris.Add(new TalepGelenTalepBelgeleri()
                     {
-
-                        DosyaAdi = dosya.FileName.GetFileName().ReplaceSpecialCharacter(),
-                        DosyaYolu = dosyaYolu
+                        DosyaAdi = dosya.FileName.GetFileName(),
+                        DosyaYolu = FileHelper.SaveTalepDosya(dosya)
 
                     });
                     _entities.SaveChanges();
@@ -599,31 +584,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         dosyalar.Add(new TalepGelenTalepBelgeleri
                         {
                             IsDanismanOnayDosyasi = true,
-                            DosyaAdi = dosyaDanismanOnay.FileName.ReplaceSpecialCharacter(),
-                            DosyaYolu = "/TalepDosyalari/TT_" + kModel.TalepTipID + "_" + talep.TalepGelenTalepID + "_" + dosyaDanismanOnay.FileName.ToFileNameAddGuid()
+                            DosyaAdi = dosyaDanismanOnay.FileName.GetFileName(dosyaDanismanOnay.FileName),
                         }, dosyaDanismanOnay);
                     }
 
                     foreach (var itemD in dosyalar)
                     {
-                        var sfilename = Server.MapPath("~" + itemD.Key.DosyaYolu);
-                        itemD.Value.SaveAs(sfilename);
-                        var qSilinecekler = talep.TalepGelenTalepBelgeleris.AsQueryable();
-                        if (itemD.Key.IsDanismanOnayDosyasi == true) qSilinecekler = qSilinecekler.Where(p => p.IsDanismanOnayDosyasi);
-                        var silinecekler = qSilinecekler.ToList();
-                        foreach (var belge in silinecekler)
+                        if (itemD.Key.IsDanismanOnayDosyasi)
                         {
-                            var path = Server.MapPath("~" + belge.DosyaYolu);
-                            if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+                            var silinecekler = talep.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi).ToList();
+                            _entities.TalepGelenTalepBelgeleris.RemoveRange(silinecekler);
+                            FileHelper.DeleteFiles(silinecekler.Select(s => s.DosyaYolu).ToList());
+
                         }
-                        _entities.TalepGelenTalepBelgeleris.RemoveRange(silinecekler);
-
-
                         talep.TalepGelenTalepBelgeleris.Add(new TalepGelenTalepBelgeleri()
                         {
 
                             DosyaAdi = itemD.Key.DosyaAdi,
-                            DosyaYolu = itemD.Key.DosyaYolu,
+                            DosyaYolu = FileHelper.SaveTalepDosya(dosyaDanismanOnay),
                             IsDanismanOnayDosyasi = itemD.Key.IsDanismanOnayDosyasi,
 
                         });
@@ -636,12 +614,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = MsgTypeEnum.Success;
                 return mmMessage.ToJsonResult();
             }
-            else
-            {
-                mmMessage.IsSuccess = false;
-                mmMessage.MessageType = MsgTypeEnum.Warning;
-                return mmMessage.ToJsonResult();
-            }
+
+            mmMessage.IsSuccess = false;
+            mmMessage.MessageType = MsgTypeEnum.Warning;
+            return mmMessage.ToJsonResult();
         }
 
 
@@ -709,7 +685,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     catch (Exception ex)
                     {
                         mmMessage.Messages.Add("Onaylanan Taleplere mail gönderilirken bir hata oluştu.");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                     }
                     LogIslemleri.LogEkle("TalepGelenTalepler", LogCrudType.Update, talepler.ToJson());
 
@@ -719,7 +695,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = MsgTypeEnum.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Toplu Talep Onay işlemi yapılırken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu Talep Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(),  ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu Talep Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 }
             }
             else
@@ -819,20 +795,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.TalepGelenTaleplers.Remove(talep);
                     _entities.TalepGelenTalepBelgeleris.RemoveRange(talepDosyalar);
                     _entities.SaveChanges();
-                    foreach (var dosya in talepDosyalar)
-                    {
-                        if (System.IO.File.Exists(dosya.DosyaYolu))
-                        {
-                            try
-                            {
-                                System.IO.File.Delete(dosya.DosyaYolu);
-                            }
-                            catch (Exception)
-                            {
-                                // ignored
-                            }
-                        }
-                    }
+                    FileHelper.DeleteFiles(talepDosyalar.Select(s => s.DosyaYolu).ToList());
                     LogIslemleri.LogEkle("TalepGelenTalepler", LogCrudType.Delete, talep.ToJson());
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
@@ -843,11 +806,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Talep silinirken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
                     mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id,  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -51,7 +51,7 @@
                             <td class="CaptionTd" width="140">Ad Soyad</td>
                             <td class="CaptionTd" width="10">:</td>
                             <td class="ValueTd">
-                                @Model.OgrenciAdi (@Model.OgrenciNo)
+                                @Model.OgrenciAdi (@Model.OgrenciNo) @Html.Raw($"<span title=\"{(Model.IsObsOgrenciNoAktif ? $"{Model.OgrenciNo} öğrenci numarası ile aktif olarak okumakta" : $"{Model.OgrenciNo} öğrenci numarası ile OBS sisteminde aktif öğrenim bilgisine rastlanmadı")}\" class=\"fa fa-circle text-{(Model.IsObsOgrenciNoAktif ? "success" : "danger")}\"></span>")
                             </td>
                         </tr>
                         @if (!Model.DegerlendirenUniqueID.HasValue)
@@ -175,7 +175,7 @@
                                         else
                                         {
                                             @item.ToBasvuruDurumView()
-                                        } 
+                                        }
                                     </td>
                                     <td>
                                         @if (item.EsDanismanBilgi == null)
@@ -1382,7 +1382,7 @@
     function EYKyaHazirla(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
-        var EykYaHazirlandi = $('#EYKyaHazirlandi_' + id).val(); 
+        var EykYaHazirlandi = $('#EYKyaHazirlandi_' + id).val();
         $.ajax({
             url: '@Url.Action("TdoEykYaHazirlaPost", "TdoBasvuru")',
             type: 'POST',

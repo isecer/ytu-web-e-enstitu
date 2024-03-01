@@ -218,7 +218,7 @@
                                                     @if (silme)
                                                     {
                                                         <li>
-                                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.UserKey')"><i class="fa fa-trash-o"></i>Sil</a>
+                                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.UserKey')"><i class="fa fa-trash-o"></i>Sil</a>
                                                         </li>
                                                     }
                                                 </ul>
@@ -328,10 +328,10 @@
 </script>
 <script type="text/javascript">
 
-    function silmeOnay(sndr, userKey) {
+    function SilmeOnay(sndr, userKey) {
         setTimeout(function () {
             $.ajax({
-                url: '@Url.Action("getKullaniciDetay", "Ajax")',
+                url: '@Url.Action("GetKullaniciDetay", "Ajax")',
                 data: { userKey },
                 success: function (result) {
                     bootbox.dialog({
@@ -342,7 +342,7 @@
                                 label: "Kullanıcıyı Sil",
                                 className: "btn-danger",
                                 callback: function () {
-                                    sil(sndr, id);
+                                    Sil(sndr, userKey);
                                 }
                             },
                             danger: {
@@ -361,7 +361,7 @@
             });
         }, 120);
     }
-    function sil(sndr, userKey) {
+    function Sil(sndr, userKey) {
         $.ajax({
             url: '@Url.Action("Sil", "Kullanicilar")',
             data: { userKey },

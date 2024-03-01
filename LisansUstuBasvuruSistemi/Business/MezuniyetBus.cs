@@ -158,14 +158,12 @@ namespace LisansUstuBasvuruSistemi.Business
                     //Önce Kayıt yetkisi varsa ona göre kontrol et
                     if (kayitYetki)
                     {
-                        if (UserIdentity.Current.IsAdmin == false
-                            //&& !IsSurecAktif(basvuru.MezuniyetSurecID)
-                            )
-                        {
-                            mMessage.Messages.Add(
-                                "Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
-                            return mMessage;
-                        }
+                        //if (UserIdentity.Current.IsAdmin == false && !IsSurecAktif(basvuru.MezuniyetSurecID))
+                        //{
+                        //    mMessage.Messages.Add(
+                        //        "Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
+                        //    return mMessage;
+                        //}
 
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod))
                         {
@@ -529,6 +527,18 @@ namespace LisansUstuBasvuruSistemi.Business
                     model.TezKontrolYetkiliUserKey = tezAtananKullanici.UserKey;
                     model.TezKontrolYetkilisiAdSoyad = tezAtananKullanici.Ad + " " + tezAtananKullanici.Soyad;
                 }
+
+                if (!model.IsDanismanOnay.HasValue)
+                {
+                    var ogrenci = basvuru.Kullanicilar;
+
+                    if (ogrenci.DanismanID.HasValue && basvuru.TezDanismanID != ogrenci.DanismanID)
+                    {
+                        var aktifDanisman = entities.Kullanicilars.First(f => f.KullaniciID == ogrenci.DanismanID);
+                        model.GuncellenebilirBasvuruDanismanAdi = aktifDanisman.Unvanlar.UnvanAdi + " " + aktifDanisman.Ad + " " + aktifDanisman.Soyad;
+                    }
+                }
+
                 model.MezuniyetBasvurulariTezDosyalariDtos = basvuru.MezuniyetBasvurulariTezDosyalaris.Select(s => new MezuniyetBasvurulariTezDosyalariDto
                 {
                     MezuniyetBasvurulariTezDosyaID = s.MezuniyetBasvurulariTezDosyaID,

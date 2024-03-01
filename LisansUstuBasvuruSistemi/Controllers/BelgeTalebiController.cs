@@ -382,18 +382,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kul.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
                     {
-                        var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
-                        if (ogrenciBilgi.Hata)
+                        var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+                        if (ogrenciInfo.Hata)
                         {
-                            mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");
+                            mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
                         }
                         else
                         {
-                            if (ogrenciBilgi.KayitVar)
+                            if (ogrenciInfo.KayitVar)
                             {
-                                kul.KayitTarihi = ogrenciBilgi.KayitTarihi;
-                                kul.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
-                                kul.KayitDonemID = ogrenciBilgi.DonemID;
+                                kul.KayitTarihi = ogrenciInfo.KayitTarihi;
+                                kul.KayitYilBaslangic = ogrenciInfo.BaslangicYil;
+                                kul.KayitDonemID = ogrenciInfo.DonemID;
                                 _entities.SaveChanges();
                             }
                             else
