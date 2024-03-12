@@ -33,6 +33,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public bool IsSonBasvuru { get; set; }
         public string DonemAdi { get; set; }
+        public Guid? TezDanismaniUserKey { get; set; }
         public string DanismanAdi { get; set; }
         public string TijFormTipAdi{ get; set; }
         public string TijDegisiklikTipAdi { get; set; } 

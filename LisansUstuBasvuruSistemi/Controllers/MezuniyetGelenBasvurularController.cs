@@ -562,23 +562,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("Danışman olarak atanmadığını bir mezuniyet başvurusu için onay işlemi yapamazsınız!");
                 }
-            }
-            if (_entities.SRTalepleris.Any(a => a.SRTalepID > srTalepId && a.MezuniyetBasvurulariID == srTalep.MezuniyetSinavDurumID))
-            {
-                mmMessage.Messages.Add("Öğrenci tarafından yeni sınav talebi oluşturuldu. Bu işlemi yapamazsınız.");
-            }
-            else
-            {
-                var mezuniyetSureciOgrenimTip = srTalep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == srTalep.MezuniyetBasvurulari.OgrenimTipKod);
-                var uzatmaSonrasiYeniSinavTalebiSonTarih = srTalep.UzatmaSonrasiYeniSinavTalebiSonTarih ?? srTalep.Tarih.AddDays(mezuniyetSureciOgrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun);
-                if (onayTarihi > uzatmaSonrasiYeniSinavTalebiSonTarih)
-                {
-                    mmMessage.Messages.Add("Mezuniyet sınavı sonucunda uzatma işlemi sonrası yeni sınav alma işemi için son tarihi olan '" + uzatmaSonrasiYeniSinavTalebiSonTarih.ToFormatDate() + "' tarihini aşıldığı için tez kontrol taahhüt onay işlemi yapamazsınız.");
-                }
-            }
+            } 
             if (srTalep.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
             {
                 mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
+            else
+            {
+                if (_entities.SRTalepleris.Any(a => a.SRTalepID > srTalepId && a.MezuniyetBasvurulariID == srTalep.MezuniyetSinavDurumID))
+                {
+                    mmMessage.Messages.Add("Öğrenci tarafından yeni sınav talebi oluşturuldu. Bu işlemi yapamazsınız.");
+                }
+                else
+                {
+                    var mezuniyetSureciOgrenimTip = srTalep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == srTalep.MezuniyetBasvurulari.OgrenimTipKod);
+                    var uzatmaSonrasiYeniSinavTalebiSonTarih = srTalep.UzatmaSonrasiYeniSinavTalebiSonTarih ?? srTalep.Tarih.AddDays(mezuniyetSureciOgrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun);
+                    if (onayTarihi > uzatmaSonrasiYeniSinavTalebiSonTarih)
+                    {
+                        mmMessage.Messages.Add("Mezuniyet sınavı sonucunda uzatma işlemi sonrası yeni sınav alma işemi için son tarihi olan '" + uzatmaSonrasiYeniSinavTalebiSonTarih.ToFormatDate() + "' tarihini aşıldığı için tez kontrol taahhüt onay işlemi yapamazsınız.");
+                    }
+                }
             }
             if (!mmMessage.Messages.Any())
             {
@@ -1075,7 +1078,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (srTalep.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
             {
-                mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+                var durumAdi = srTalep.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumlari
+                    .MezuniyetYayinKontrolDurumAdi;
+                mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir. Başvuru durumunuz: '" + durumAdi + "' olarak gözükmektedir.");
             }
             else if (sonSinavTarih.HasValue && sonSinavTarih.Value.Date < DateTime.Now.Date)
             {
@@ -1821,7 +1826,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-          
+
             if (!mMessage.Messages.Any())
             {
 
@@ -2183,7 +2188,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Delete, kayit.ToJson());
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;
-                    FileHelper.DeleteFiles(fFList); 
+                    FileHelper.DeleteFiles(fFList);
                 }
                 catch (Exception ex)
                 {

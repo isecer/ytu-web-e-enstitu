@@ -1580,7 +1580,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                mez.EYKTarihi.HasValue &&
                                mez.MezuniyetJuriOneriFormlaris.Any() &&
                                otoMail.MezuniyetSureciOtoMailGonderilenlers.All(a => a.MezuniyetBasvurulariID != mez.MezuniyetBasvurulariID) &&
-                               drOgrenimTipKods.Contains(mez.OgrenimTipKod) == (otoMail.MailSablonTipID == MailSablonTipiEnum.MezSinavDegerlendirmeHatirlantmaDanismanDr) &&
                                DbFunctions.DiffHours(DbFunctions.CreateDateTime(sonRezervasyon.Tarih.Year, sonRezervasyon.Tarih.Month, sonRezervasyon.Tarih.Day, sonRezervasyon.BasSaat.Hours, sonRezervasyon.BasSaat.Minutes, 0), nowDate) >= otoMail.Sure
 
 
@@ -1613,11 +1612,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && sablonTipIds.Contains(p.MailSablonTipID)).ToList();
                     foreach (var basvuru in mezuniyetBasvurulari)
                     {
-
+                        var mailSablonTipId = drOgrenimTipKods.Contains(basvuru.OgrenimTipKod) ? MailSablonTipiEnum.MezSinavDegerlendirmeHatirlantmaDanismanDr : MailSablonTipiEnum.MezSinavDegerlendirmeHatirlantmaDanismanYl;
 
                         var item = new SablonMailModel
                         {
-                            Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod),
+                            Sablon = sablonlar.FirstOrDefault(p => p.EnstituKod == basvuru.EnstituKod && p.MailSablonTipID == mailSablonTipId),
                             EnstituAdi = basvuru.EnstituAd,
                             WebAdresi = basvuru.WebAdresi,
                             SistemErisimAdresi = basvuru.SistemErisimAdresi

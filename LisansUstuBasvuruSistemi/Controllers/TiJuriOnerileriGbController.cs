@@ -40,7 +40,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             //TezIzlemeJuriOneriBus.TezIzlemeJuriOneriSenkronizasyon(model.KullaniciID.Value);
             var q = from s in _entities.TijBasvurus.Where(p => p.EnstituKod == model.EnstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod))
                     join ogrenci in _entities.Kullanicilars on s.KullaniciID equals ogrenci.KullaniciID
-                    join danisman in _entities.Kullanicilars on s.TezDanismanID equals danisman.KullaniciID
                     select new
                     {
                         s.TijBasvuruID,
@@ -57,7 +56,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ogrenci.ResimAdi,
                         s.Programlar.ProgramAdi,
                         s.Programlar.AnabilimDallari.AnabilimDaliAdi,
-                        TezDanismanAdi = danisman.Ad + " " + danisman.Soyad,
+                        s.TezDanismanID,
                         TezDanismanIds = s.TijBasvuruOneris.Select(sd => sd.TezDanismanID).ToList(),
                         JuriAdis = s.TijBasvuruOneris.SelectMany(s2 => s2.TijBasvuruOneriJurilers.Select(sm => sm.AdSoyad)).ToList(),
                         SonBasvuru = s.TijBasvuruOneris.Select(s2 => new TijBasvuruOneriDetayDto
@@ -106,7 +105,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 q = q.Where(p =>
                     p.AdSoyad.Contains(model.AdSoyad)
                     || p.OgrenciNo.Contains(model.AdSoyad)
-                    || p.TezDanismanAdi.Contains(model.AdSoyad)
                     || p.ProgramAdi.Contains(model.AdSoyad)
                     || p.JuriAdis.Contains(model.AdSoyad)
                     );

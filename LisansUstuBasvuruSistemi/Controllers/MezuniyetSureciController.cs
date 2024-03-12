@@ -181,8 +181,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                            uzs.SinavUzatmaSinavAlmaSuresiMaxGun,
                                                            tts.TezTeslimSuresiGun
                                                        }).ToList();
-
-
+             
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {

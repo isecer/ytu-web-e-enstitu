@@ -467,6 +467,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         kModel.DanismanOnayladi = true;
                         kModel.EYKYaGonderildi = true;
+                        kModel.EYKYaHazirlandi = true;
                         kModel.EYKDaOnaylandi = true;
 
                         kModel.TDODanismanTalepTipID = TdoDanismanTalepTipEnum.TezDanismaniOnerisi;

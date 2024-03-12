@@ -1276,18 +1276,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             srTalebi.IslemTarihi = kModel.IslemTarihi;
                             srTalebi.IslemYapanID = kModel.IslemYapanID;
                             srTalebi.IslemYapanIP = kModel.IslemYapanIP;
-                            if (srTalebi.SRTaleplerJuris.Any(a => a.UniversiteAdi.IsNullOrWhiteSpace()))
-                            {
-                                _entities.SRTaleplerJuris.RemoveRange(srTalebi.SRTaleplerJuris);
-                                srTalebi.SRTaleplerJuris = kModel.SRTaleplerJuris;
 
-                            }
+                            _entities.SRTaleplerJuris.RemoveRange(srTalebi.SRTaleplerJuris);
+                            srTalebi.SRTaleplerJuris = kModel.SRTaleplerJuris;
 
 
                         }
                         _entities.SaveChanges();
 
                         LogIslemleri.LogEkle("SRTalepleri", kModel.SRTalepID <= 0 ? LogCrudType.Insert : LogCrudType.Update, srTalebi.ToJson());
+                        foreach (var itemJuri in srTalebi.SRTaleplerJuris)
+                        {
+                            LogIslemleri.LogEkle("SRTaleplerJuri", kModel.SRTalepID <= 0 ? LogCrudType.Insert : LogCrudType.Update, itemJuri.ToJson());
+                        }
                         mmMessage.IsSuccess = true;
                         mmMessage.MessageType = MsgTypeEnum.Success;
                         mmMessage.Messages.Add("Belirtilen tarih için rezervasyon talebi oluşturuldu.");
@@ -1534,14 +1535,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (mMessage.Messages.Count == 0)
             {
-
+                var siraNo = mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any() ? mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Max(m => m.SiraNo) + 1 : 1;
                 if (tezDosyasi == null)
                 {
                     tezDosyasi = _entities.MezuniyetBasvurulariTezDosyalaris.Add(new MezuniyetBasvurulariTezDosyalari
                     {
                         MezuniyetBasvurulariID = mezuniyetBasvurusu.MezuniyetBasvurulariID,
                         RowID = Guid.NewGuid(),
-                        SiraNo = mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Count + 1,
+                        SiraNo = siraNo,
                         YuklemeTarihi = DateTime.Now,
                         TezDosyaAdi = tezSablonDosyasi.FileName.GetFileName(),
                         TezDosyaYolu = FileHelper.SaveMezuniyetTezSablonDosya(tezSablonDosyasi),
@@ -1573,7 +1574,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessageType = MsgTypeEnum.Success;
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
-            return new { mMessage.IsSuccess, Messages = strView }.ToJsonResult();
+            return new
+            {
+                mMessage.IsSuccess,
+                Messages = strView
+            }.ToJsonResult();
         }
 
         [AllowAnonymous]

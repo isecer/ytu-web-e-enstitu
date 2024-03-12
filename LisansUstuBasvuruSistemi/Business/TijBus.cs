@@ -523,6 +523,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     TezBaslikEn = s.TezBaslikEn,
                     TezDanismanID = s.TezDanismanID,
                     DanismanAdi = s.TezDanismanID.HasValue ? (s.Kullanicilar.Unvanlar.UnvanAdi + " " + s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad) : "",
+                    TezDanismaniUserKey = s.TezDanismanID.HasValue ? s.Kullanicilar.UserKey : (Guid?)null,
                     IsDilTaahhutuOnaylandi = s.IsDilTaahhutuOnaylandi,
                     DanismanOnayladi = s.DanismanOnayladi,
                     DanismanOnayTarihi = s.DanismanOnayTarihi,
