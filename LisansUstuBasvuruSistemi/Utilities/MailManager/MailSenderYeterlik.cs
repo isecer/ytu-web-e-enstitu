@@ -86,8 +86,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanAdSoyad", Value = danisman.Ad + " " + danisman.Soyad });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanUnvanAdi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanUnvanAdi", Value = danisman.Unvanlar.UnvanAdi });
-                        if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = anabilimDali.AnabilimDaliAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@AnabilimDaliAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDali.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = program.ProgramAdi });
                         if (basvuru.IsEnstituOnaylandi == false && item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
@@ -193,8 +193,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = basvuru.OgrenciNo });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenci.Ad + " " + ogrenci.Soyad });
-                        if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = anabilimDali.AnabilimDaliAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@AnabilimDaliAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDali.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = program.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanAdSoyad"))
@@ -312,8 +312,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = basvuru.OgrenciNo });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenci.Ad + " " + ogrenci.Soyad });
-                        if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = anabilimDali.AnabilimDaliAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@AnabilimDaliAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDali.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = program.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanAdSoyad"))
@@ -513,8 +513,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = basvuru.OgrenciNo });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenci.Ad + " " + ogrenci.Soyad });
-                        if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = anabilimDali.AnabilimDaliAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@AnabilimDaliAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDali.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = program.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanAdSoyad"))
@@ -694,8 +694,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = basvuru.OgrenciNo });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenci.Ad + " " + ogrenci.Soyad });
-                        if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = anabilimDali.AnabilimDaliAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@AnabilimDaliAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDali.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = program.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanAdSoyad"))

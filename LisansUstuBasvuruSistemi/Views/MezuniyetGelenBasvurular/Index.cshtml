@@ -1060,8 +1060,10 @@
             $('#EYKOnayAciklamaRow_' + id).addClass('hide');
             var eykTarih = $('#EYKDaOnaylandiOnayTarihi_' + id).val();
             if (eykTarih == "") {
-                var today = new Date();
-                var formattedDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                var today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, day = today.getDate();
+                if (month < 10) month = "0" + month;
+                if (day < 10) day = "0" + day;
+                var formattedDate = year + "-" + month + "-" + day;
                 $('#EYKDaOnaylandiOnayTarihi_' + id).val(formattedDate);
             }
             $('#EYKOnayEykTarihTd_' + id).removeClass('hide');

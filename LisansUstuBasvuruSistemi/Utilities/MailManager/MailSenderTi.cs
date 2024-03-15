@@ -124,8 +124,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenci.Ad + " " + ogrenci.Soyad });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = tiAraRapor.TIBasvuru.OgrenciNo });
-                        if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = anabilimDali.AnabilimDaliAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@AnabilimDaliAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDali.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = program.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
@@ -334,8 +334,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = kul.Ad + " " + kul.Soyad });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = tiAraRapor.TIBasvuru.OgrenciNo });
-                        if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimdaliAdi", Value = abdL.AnabilimDaliAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@AnabilimDaliAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimDaliAdi", Value = abdL.AnabilimDaliAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = prgL.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))

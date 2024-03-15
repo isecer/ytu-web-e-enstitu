@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -26,9 +27,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             // Yalnızca harfler ve sayıları koru
             const string pattern = "[^a-zA-Z0-9]";
-            var cleanedText = Regex.Replace(input, pattern, ""); 
+            var cleanedText = Regex.Replace(input, pattern, "");
             return cleanedText;
-        } 
-         
+        }
+
+
+
+
     }
 }

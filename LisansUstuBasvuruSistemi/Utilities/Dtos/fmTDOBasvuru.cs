@@ -10,6 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FmTdoBasvuruDto : PagerModel
     {
         public List<int> SelectedTdoBasvuruDanismanIds { get; set; } = new List<int>();
+        public List<int> SelectedTdoBasvuruEsDanismanIds { get; set; } = new List<int>();
         public int? TDOBasvuruID { get; set; }
         public int? KullaniciID { get; set; }
         public string Kod { get; set; }
@@ -60,7 +61,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public DateTime? EYKYaGonderildiIslemTarihiES { get; set; }
         public bool? EYKDaOnaylandi { get; set; }
         public bool EsDanismanOnerisiVar { get; set; }
+        public int? AktifTdBasvuruEsDanismanID { get; set; }
         public bool? Es_EYKYaGonderildi { get; set; }
+        public bool? Es_EYKYaHazirlandi { get; set; }
         public bool? Es_EYKDaOnaylandi { get; set; }
         public int Sira { get; set; }
         public List<TdoDanismanFiltreModel> TDODanismanDetayModels { get; set; }

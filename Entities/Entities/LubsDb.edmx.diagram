@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3d3f865a364a4319a8ffae5f3f523605" Name="Diagram1">
+      <Diagram DiagramId="3d3f865a364a4319a8ffae5f3f523605" Name="Diagram1" ZoomLevel="52">
         <EntityTypeShape EntityType="LubsDbModel.AlanTipleri" Width="1.5" PointX="19.5" PointY="174" IsExpanded="true" />
         <EntityTypeShape EntityType="LubsDbModel.AlesTipleri" Width="1.5" PointX="11.25" PointY="167.125" IsExpanded="true" />
         <EntityTypeShape EntityType="LubsDbModel.AnabilimDaliYeterlikKomiteUyeleri" Width="1.5" PointX="16.5" PointY="185.5" IsExpanded="true" />

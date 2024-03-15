@@ -494,8 +494,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "CinsiyetID" });
                 }
                 else messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "CinsiyetID" });
-
-
+ 
 
                 if (kModel.CepTel.IsNullOrWhiteSpace())
                 {

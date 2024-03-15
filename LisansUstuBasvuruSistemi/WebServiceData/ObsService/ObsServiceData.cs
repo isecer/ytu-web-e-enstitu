@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
             try
             {
                 if (tcOrOgrenciNo.IsNullOrWhiteSpace()) throw new Exception("tcOrOgrenciNo boş geliyor!");
-                tcOrOgrenciNo = tcOrOgrenciNo.RemoveNonAlphanumeric(); 
+                tcOrOgrenciNo = tcOrOgrenciNo.RemoveNonAlphanumeric();
                 using (var service =
                        new proliz_ytu_enstitu_minerSoapClient())
                 {
@@ -41,10 +41,10 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                             if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
                             {
                                 model.KayitTarihi = ogrenci.KAYIT_TARIHI.ToDate().Value;
-                                var donem = model.KayitTarihi.Value.ToAkademikDonemBilgi();
-                                model.BaslangicYil = donem.BaslangicYil;
-                                model.BitisYil = donem.BitisYil;
-                                model.DonemID = donem.DonemId;
+                                var parsedDonem = ogrenci.KAYITLI_DONEM.ParseObsDonem();
+                                model.BaslangicYil = parsedDonem.BaslangicYil;
+                                model.BitisYil = parsedDonem.BitisYil;
+                                model.DonemID = parsedDonem.DonemNo;
 
                             }
 

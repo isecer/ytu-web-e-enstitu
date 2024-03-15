@@ -12,7 +12,6 @@ using System.Linq;
 using System.Web;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -683,6 +682,8 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 4, Caption = "EYK'ya Gönderimi Bekleniyor" });
             dct.Add(new CmbIntDto { Value = 5, Caption = "EYK'ya Gönderimi Onaylandı" });
             dct.Add(new CmbIntDto { Value = 6, Caption = "EYK'ya Gönderimi Onaylanmadı" });
+            dct.Add(new CmbIntDto { Value = 10, Caption = "EYK'ya Hazırlanma Bekleniyor" });
+            dct.Add(new CmbIntDto { Value = 11, Caption = "EYK'ya Hazırlandı" });
             dct.Add(new CmbIntDto { Value = 7, Caption = "EYK'da Onay Bekliyor" });
             dct.Add(new CmbIntDto { Value = 8, Caption = "EYK'Da Onaylandı" });
             dct.Add(new CmbIntDto { Value = 9, Caption = "EYK'Da Onaylanmadı" });
@@ -778,6 +779,28 @@ namespace LisansUstuBasvuruSistemi.Business
             return new MvcHtmlString(htmlString);
 
         }
+        public static IHtmlString ToBasvuruDurumViewEs(this TDOBasvuruEsDanisman model)
+        {
+
+            var modelData = new List<TdoBasvuruDurumSortDto>
+            {
+                model.EYKDaOnaylandi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.EYKDaOnaylandi.Value, DurumAciklama = model.EYKDaOnaylandi.Value ? "EYK'da Onaylandı." : "EYK'da Onaylanmadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "EYK'da Onay işlemi bekleniyor." },
+                model.EYKYaHazirlandi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.EYKYaHazirlandi.Value, DurumAciklama = model.EYKYaHazirlandi.Value ? "EYK'ya Hazırlandı." : "EYK'ya Hazırlanmadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "EYK'ya Hazırlanma işlemi bekleniyor." },
+                model.EYKYaGonderildi.HasValue
+                    ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.EYKYaGonderildi.Value, DurumAciklama = model.EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı." : "EYK'ya Gönderimi Onaylanmadı." }
+                    : new TdoBasvuruDurumSortDto { DurumAciklama = "EYK'ya Gönderim Onayı Bekleniyor." }
+            }; 
+            var activeDurum = modelData.Any(a => a.IsOnayOrRed.HasValue) ? modelData.First(p => p.IsOnayOrRed.HasValue) : modelData.Last();
+            var htmlString = $"<span style=\"color:{activeDurum.DurumColor};\" aria-hidden=\"true\">" +
+                             $"<i class=\"{activeDurum.DurumClass}\" style=\"font-size:12pt;\" aria-hidden=\"true\"></i> {activeDurum.DurumAciklama}</span>";
+            return new MvcHtmlString(htmlString);
+
+        }
+
 
     }
 }

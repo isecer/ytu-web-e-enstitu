@@ -273,8 +273,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 85000, MenuAdi = "Birimler", MenuCssClass = "fa fa-list-alt", MenuUrl = "Birimler/Index", SiraNo = 2)]
         [Role(GorunurAdi = "Birimler", Kategori = "Kullanıcı İşlemleri", Aciklama = "Bu yetki Birimler menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string Birimler = "Birimler";
-        [Menu(BagliMenuID = 85000, MenuAdi = "Ünvanlar", MenuCssClass = "fa fa-list-alt", MenuUrl = "Unvanlar/Index", SiraNo = 3)]
-        [Role(GorunurAdi = "Ünvanlar", Kategori = "Kullanıcı İşlemleri", Aciklama = "Bu yetki Ünvanlar menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
+        [Menu(BagliMenuID = 85000, MenuAdi = "Unvanlar", MenuCssClass = "fa fa-list-alt", MenuUrl = "Unvanlar/Index", SiraNo = 3)]
+        [Role(GorunurAdi = "Unvanlar", Kategori = "Kullanıcı İşlemleri", Aciklama = "Bu yetki Unvanlar menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string Unvanlar = "Ünvanlar";
         [Menu(BagliMenuID = 90000, MenuAdi = "Uyruklar", MenuCssClass = "fa fa-list-alt", MenuUrl = "Uyruklar/Index", SiraNo = 1)]
         [Role(GorunurAdi = "Uyruklar", Kategori = "Tanımlamalar", Aciklama = "Bu yetki Uyruklar menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]

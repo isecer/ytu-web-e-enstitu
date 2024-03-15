@@ -84,7 +84,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         EYKDaOnaylandi = ard != null ? ard.EYKDaOnaylandi : null,
                         EsDanismanOnerisiVar = ardEs != null,
+                        AktifTdBasvuruEsDanismanID = ardEs != null ? (int?)ardEs.TDOBasvuruEsDanismanID : null,
                         Es_EYKYaGonderildi = ardEs != null ? ardEs.EYKYaGonderildi : null,
+                        Es_EYKYaHazirlandi = ardEs != null ? ardEs.EYKYaHazirlandi : null,
                         Es_EYKDaOnaylandi = ardEs != null ? ardEs.EYKDaOnaylandi : null,
                         RowDate = (ardEs.EYKYaGonderildi == true && !ardEs.EYKDaOnaylandi.HasValue ? ardEs.EYKYaGonderildiIslemTarihi.Value : (ard.EYKYaGonderildi == true && !ard.EYKDaOnaylandi.HasValue ? ard.EYKYaGonderildiIslemTarihi.Value : (ard != null ? ard.BasvuruTarihi : DateTime.MinValue))),
                         Sira = (ard != null && (ard.EYKYaGonderildi == true && ard.EYKDaOnaylandi == null) || (ardEs != null && ardEs.EYKYaGonderildi == null)) ? 0 : 1,
@@ -134,33 +136,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.EsDanismanOnerisiVar && !p.Es_EYKYaGonderildi.HasValue);
                 else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.Es_EYKYaGonderildi == true);
                 else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.Es_EYKYaGonderildi == false);
+                else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaHazirlanmaBekleniyor) q = q.Where(p => p.Es_EYKYaGonderildi == true && !p.Es_EYKYaHazirlandi.HasValue);
+                else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi) q = q.Where(p => p.Es_EYKYaHazirlandi == true && !p.Es_EYKDaOnaylandi.HasValue);
                 else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykDaOnayBekleniyor) q = q.Where(p => p.Es_EYKYaGonderildi == true && !p.Es_EYKDaOnaylandi.HasValue);
                 else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.Es_EYKDaOnaylandi == true);
                 else if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.Es_EYKDaOnaylandi == false);
             }
             if (model.TDOBasvuruID.HasValue) q = q.Where(p => p.TDOBasvuruID == model.TDOBasvuruID);
-            //if (!model.DonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TDODanismanDetayModels.Any(a => a.RaporDonemID == model.DonemID));
-            //if (model.DurumID.HasValue)
-            //{
-            //    if (model.DurumID == TdoDansimanDurumuEnum.DanismanOnayiBekliyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.DanismanOnayladi.HasValue));
-            //    else if (model.DurumID == TdoDansimanDurumuEnum.DanismanTarafindanOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true));
-            //    else if (model.DurumID == TdoDansimanDurumuEnum.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == false));
-            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true && !p2.EYKYaGonderildi.HasValue));
-            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true));
-            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == false));
-            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true && !p2.EYKDaOnaylandi.HasValue));
-            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == true));
-            //    else if (model.DurumID == TdoDansimanDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == false));
-            //}
-            //if (model.EsDurumID.HasValue)
-            //{
-            //    if (model.EsDurumID == TdoDansimanDurumuEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.Es_EYKYaGonderildi.HasValue));
-            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true));
-            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == false));
-            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true && !p2.Es_EYKDaOnaylandi.HasValue));
-            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == true));
-            //    else if (model.EsDurumID == TdoDansimanDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == false));
-            //}
 
             if (!model.AdSoyad.IsNullOrWhiteSpace())
                 q = q.Where(p =>
@@ -218,6 +200,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.AktifDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi || model.AktifDurumID == TdoDansimanDurumuEnum.EykDaOnaylandi)
             {
                 model.SelectedTdoBasvuruDanismanIds = q.Where(p => p.AktifTDOBasvuruDanismanID.HasValue).Select(s => s.AktifTDOBasvuruDanismanID.Value).ToList();
+            }
+            if (model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi || model.AktifEsDurumID == TdoDansimanDurumuEnum.EykDaOnaylandi)
+            {
+                model.SelectedTdoBasvuruEsDanismanIds = q.Where(p => p.EsDanismanOnerisiVar).Select(s => s.AktifTdBasvuruEsDanismanID.Value).ToList();
             }
             model.RowCount = q.Count();
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
@@ -596,6 +582,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return new { qDanismans.Count }.ToJsonResult();
         }
 
-
+        [Authorize(Roles = RoleNames.TdoEykdaOnayYetkisi)]
+        public ActionResult EYKDaOnayEs(List<int> selectedTdoBasvuruEsDanismanIds)
+        {
+            selectedTdoBasvuruEsDanismanIds = selectedTdoBasvuruEsDanismanIds ?? new List<int>();
+            var qDanismans = _entities.TDOBasvuruEsDanismen.Where(p =>
+                    selectedTdoBasvuruEsDanismanIds.Contains(p.TDOBasvuruEsDanismanID) &&
+                    p.EYKYaHazirlandi == true && !p.EYKDaOnaylandi.HasValue)
+                .ToList();
+            foreach (var item in qDanismans)
+            {
+                item.EYKDaOnaylandi = true;
+                item.EYKDaOnaylandiOnayTarihi = DateTime.Now;
+                item.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
+            }
+            _entities.SaveChanges();
+            foreach (var item in qDanismans)
+            {
+                TdoBus.SendMailTdoEsEykOnay(item.TDOBasvuruEsDanismanID, true);
+            }
+            return new { qDanismans.Count }.ToJsonResult();
+        }
     }
 }

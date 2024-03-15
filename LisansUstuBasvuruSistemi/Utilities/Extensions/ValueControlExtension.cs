@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
@@ -18,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
         public static bool ToIsValidateTckn(this string tcKimlikNo)
         {
-          
+
             if (tcKimlikNo.Length != 11)
                 return false;
 
@@ -46,6 +45,48 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 
             return true;
         }
+        public static ObsDonemDto ParseObsDonem(this string donem)
+        {
+            var donemModel = new ObsDonemDto();
+
+            var parts = donem.Split(' ');
+
+            if (parts.Length == 2)
+            {
+                var yillar = parts[0].Split('-');
+                if (yillar.Length != 2)
+                    throw new ArgumentException("Obs öğrenci dönem bilgisinde Geçersiz yıl formatı.");
+                var ilkYil = yillar[0].Trim().ToInt();
+                var ikinciYil = yillar[1].Trim().ToInt();
+
+                if (!ilkYil.HasValue || !ikinciYil.HasValue)
+                    throw new ArgumentException("Obs öğrenci dönem bilgisinde Geçersiz yıl formatı.");
+
+                donemModel.BaslangicYil = ilkYil.Value;
+                donemModel.BitisYil = ikinciYil.Value;
+
+                var donemStr = parts[1].Trim();
+                donemModel.DonemAdi = donemStr;
+
+                donemModel.DonemNo = donemStr.Equals("Güz", StringComparison.OrdinalIgnoreCase) ? 1 :
+                    donemStr.Equals("Bahar", StringComparison.OrdinalIgnoreCase) ? 2 : 0;
+
+                if (donemModel.DonemNo == 0)
+                {
+                    throw new ArgumentException("Obs öğrenci dönem bilgisinde Geçersiz dönem formatı.");
+                }
+
+
+            }
+            else
+            {
+                throw new ArgumentException("Obs öğrenci dönem bilgisinde Geçersiz dönem formatı.");
+            }
+
+            return donemModel;
+        }
+
+
         //public static bool IsNullOrEmpty(this string str) => string.IsNullOrEmpty(str);
 
         //public static bool IsNullOrWhiteSpace(this string str) => string.IsNullOrWhiteSpace(str);

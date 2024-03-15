@@ -68,11 +68,7 @@
             {
                 <span>Eş Danışman Formu Oluşturulmadı </span>
             }
-            else if (!Model.Es_EYKYaGonderildi.HasValue)
-            {
-                <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Bekleniyor</span>
-            }
-            else if (Model.Es_EYKYaGonderildi == true && !Model.Es_EYKDaOnaylandi.HasValue)
+            else if (Model.Es_EYKYaGonderildi == true && !Model.Es_EYKYaHazirlandi.HasValue)
             {
                 <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı</span>
             }
@@ -80,7 +76,11 @@
             {
                 <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı</span>
             }
-            else if (Model.Es_EYKDaOnaylandi == true )
+            else if (Model.Es_EYKYaHazirlandi == true && !Model.Es_EYKDaOnaylandi.HasValue)
+            {
+                <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlandı</span>
+            } 
+            else if (Model.Es_EYKDaOnaylandi == true)
             {
                 <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı</span>
             }

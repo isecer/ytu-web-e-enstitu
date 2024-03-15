@@ -1,4 +1,5 @@
-﻿@using BiskaUtil;
+﻿@using System.Web.Hosting
+@using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using CaptchaMvc.HtmlHelpers
@@ -250,12 +251,15 @@
                             <div style="color: #B64645; font-size: 7.5pt;">Bu Enstitü İçin Yetkiniz Yok!!!</div>
 
                         }
-                        @*@if (HttpContext.Current != null && HttpContext.Current.IsDebuggingEnabled && UserIdentity.Current.IsAdmin)
-                        {
+                        @if (HttpContext.Current != null && HttpContext.Current.Server != null && UserIdentity.Current.IsAdmin)
+                        { 
+                            string serverName = HttpContext.Current.Server.MachineName;
+                            if (serverName.Contains("IRFANYTUPC") )
+                            { 
+                                <div style="color: #B64645; font-size: 7.5pt;">ConnStr: <span style="color: #ffd559;">(@GlobalSistemSetting.ConnectionInfo())</span> @Html.Raw(selectedEnstitu.TestEmailAddress.IsNullOrWhiteSpace() ? "" : "All Mail Send: <span style=\"color: #ffd559;\">" + selectedEnstitu.TestEmailAddress + "</span>")</div>
 
-                            <div style="color: #B64645; font-size: 7.5pt;">Development Mod <span style="color: #ffd559;">(@GlobalSistemSetting.ConnectionInfo())</span> @Html.Raw(selectedEnstitu.TestEmailAddress.IsNullOrWhiteSpace() ? "" : "All Mail Send: <span style=\"color: #ffd559;\">" + selectedEnstitu.TestEmailAddress + "</span>")</div>
-
-                        }*@
+                            }
+                        } 
 
                     </li>
                     <!-- END TOGGLE NAVIGATION -->

@@ -830,10 +830,19 @@
                 $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).addClass("hide");
             }
             if (val == '') {
+
                 $('#EYKTarihi_' + tijBasvuruOneriUniqueId).addClass("hide");
 
             }
             else {
+                var eykTarih = $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val();
+                if (eykTarih == "") {
+                    var today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, day = today.getDate();
+                    if (month < 10) month = "0" + month;
+                    if (day < 10) day = "0" + day;
+                    var formattedDate = year + "-" + month + "-" + day;
+                    $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val(formattedDate);
+                }
                 $('#EYKTarihi_' + tijBasvuruOneriUniqueId).removeClass("hide");
             }
         }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LubsDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LubsDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AlanTipleri">
           <Key>
             <PropertyRef Name="AlanTipID" />
@@ -2395,6 +2395,10 @@
           <Property Name="EYKYaGonderildi" Type="bit" />
           <Property Name="EYKYaGonderildiIslemYapanID" Type="int" />
           <Property Name="EYKYaGonderildiIslemTarihi" Type="datetime" />
+          <Property Name="EYKYaGonderimDurumAciklamasi" Type="nvarchar" MaxLength="512" />
+          <Property Name="EYKYaHazirlandi" Type="bit" />
+          <Property Name="EYKYaHazirlandiIslemYapanID" Type="int" />
+          <Property Name="EYKYaHazirlandiIslemTarihi" Type="datetime" />
           <Property Name="EYKDaOnaylandi" Type="bit" />
           <Property Name="EYKDaOnaylandiIslemYapanID" Type="int" />
           <Property Name="EYKDaOnaylandiOnayTarihi" Type="datetime" />
@@ -8393,8 +8397,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="YetkiGrupRolleri" EntitySet="YetkiGrupRolleri" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LubsDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -11332,6 +11335,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="TDOBasvuruDanisman" Relationship="Self.FK_TDOBasvuruEsDanisman_TDOBasvuruDanisman" FromRole="TDOBasvuruEsDanisman" ToRole="TDOBasvuruDanisman" />
+          <Property Name="EYKYaHazirlandi" Type="Boolean" />
+          <Property Name="EYKYaHazirlandiIslemYapanID" Type="Int32" />
+          <Property Name="EYKYaHazirlandiIslemTarihi" Type="DateTime" Precision="3" />
+          <Property Name="EYKYaGonderimDurumAciklamasi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TDODanismanTalepTipleri">
           <Key>
@@ -19831,6 +19838,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySetMapping Name="TDOBasvuruEsDanismen">
             <EntityTypeMapping TypeName="LubsDbModel.TDOBasvuruEsDanisman">
               <MappingFragment StoreEntitySet="TDOBasvuruEsDanisman">
+                <ScalarProperty Name="EYKYaGonderimDurumAciklamasi" ColumnName="EYKYaGonderimDurumAciklamasi" />
+                <ScalarProperty Name="EYKYaHazirlandiIslemTarihi" ColumnName="EYKYaHazirlandiIslemTarihi" />
+                <ScalarProperty Name="EYKYaHazirlandiIslemYapanID" ColumnName="EYKYaHazirlandiIslemYapanID" />
+                <ScalarProperty Name="EYKYaHazirlandi" ColumnName="EYKYaHazirlandi" />
                 <ScalarProperty Name="TDOBasvuruEsDanismanID" ColumnName="TDOBasvuruEsDanismanID" />
                 <ScalarProperty Name="TDOBasvuruDanismanID" ColumnName="TDOBasvuruDanismanID" />
                 <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />

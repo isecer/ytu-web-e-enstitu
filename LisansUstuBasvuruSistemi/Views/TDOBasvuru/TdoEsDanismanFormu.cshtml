@@ -13,7 +13,7 @@
     @Html.HiddenFor(p => p.UniqueID);
     <div class="panel panel-default form-horizontal">
         <div class="panel-heading padding-0" style="padding: 0px; margin: 0px;">
-            <h3 class="panel-title"><span style="color:@(Model.IsDegisiklikTalebi==true?"maroon":"")">Tez Eş Danışmanı @(Model.IsDegisiklikTalebi ? "Değişikliği " : "")Öneri Formu</span> </h3>
+            <h3 class="panel-title"><span style="color:@(Model.IsDegisiklikTalebi==true?"maroon":"")">Tez Eş Danışmanı @(Model.IsDegisiklikTalebi ? "Değişikliği " : "")Öneri Formu için Eş Danışman bilgilerini giriniz.</span> </h3>
         </div>
         <div class="panel-body form-group-separated" style="padding:5px;">
             @if (Model.IsDegisiklikTalebi)

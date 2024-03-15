@@ -29,18 +29,18 @@
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
                     </h3>
                     <ul class="panel-controls">
-                        @if (eykOnayYetki && Model.SelectedTdoBasvuruDanismanIds.Any())
+                        @if (eykOnayYetki && (Model.SelectedTdoBasvuruDanismanIds.Any() || Model.SelectedTdoBasvuruEsDanismanIds.Any()))
                         {
                             if (Model.AktifDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi)
                             {
                                 <li>
-                                    <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnay()" title="EYK'ya hazırlanmış olan Danışman başvurularını Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
                                     <script>
 
                                     function EYKDaOnay() {
                                         var btbx = bootbox.dialog({
-                                            message: "Listelenen @Model.SelectedTdoBasvuruDanismanIds.Count() adet EYK'ya hazırlanmış olup EYK'da onay işlemi bekleyen</b> Danışman öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
-                                            title: "Toplu EYK'da onaylama işlemi",
+                                            message: "Listelenen @Model.SelectedTdoBasvuruDanismanIds.Count() adet EYK'ya hazırlanmış olup EYK'da onay işlemi bekleyen</b> Danışman formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
+                                            title: "Danışman Toplu EYK'da onaylama işlemi",
                                             buttons: {
                                                 success: {
                                                     label: "Onayla",
@@ -79,7 +79,59 @@
                                             }
                                         });
                                     }
-                                </script>
+                                    </script>
+                                </li>
+                            }
+
+                            if (Model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi)
+                            {
+                                <li>
+                                    <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnayEs()" title="EYK'ya hazırlanmış olan Eş Danışman başvurularını Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+                                    <script>
+
+                                        function EYKDaOnayEs() {
+                                            var btbx = bootbox.dialog({
+                                                message: "Listelenen @Model.SelectedTdoBasvuruEsDanismanIds.Count() adet EYK'ya hazırlanmış olup EYK'da onay işlemi bekleyen</b> Eş Danışman formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
+                                                title: "Eş Danışman Toplu EYK'da onaylama işlemi",
+                                                buttons: {
+                                                    success: {
+                                                        label: "Onayla",
+                                                        className: "btn-info btnBbOnaylama",
+                                                        callback: function () {
+                                                            $('.btnBbOnaylama').html('Onaylanıyor...');
+                                                            var _panel = $(btbx).find('.modal-content');
+                                                            PanelRefresh(_panel, false);
+                                                            toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı");
+                                                            var selectedTdoBasvuruEsDanismanIds = eval('@Html.Raw(Json.Encode(Model.SelectedTdoBasvuruEsDanismanIds))');
+                                                            $.ajax({
+                                                                url: '@Url.Action("EYKDaOnayEs", "TdoGelenBasvurular")',
+                                                                cache: false,
+                                                                type: 'POST',
+                                                                data: { selectedTdoBasvuruEsDanismanIds },
+                                                                success: function (result) {
+                                                                    PanelRefresh(_panel, true);
+                                                                    toastr["info"](result.Count + " adet Eş Danışman başvurusu eyk'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
+                                                                    $(btbx).find('.close').first().click();
+                                                                },
+                                                                error: function (err) {
+                                                                    $('.btnBbOnaylama').html('Onayla');
+                                                                    PanelRefresh(_panel, true);
+                                                                    alert(err.responseText);
+                                                                }
+                                                            });
+                                                            return false;
+                                                        }
+                                                    },
+                                                    danger: {
+                                                        label: "Vazgeç",
+                                                        className: "btn-primary",
+                                                        callback: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
                                 </li>
                             }
 

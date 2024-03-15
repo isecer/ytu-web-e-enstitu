@@ -154,6 +154,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EYKDaOnaylandi = ard != null ? ard.EYKDaOnaylandi : null,
                         EsDanismanOnerisiVar = ardEs != null,
                         Es_EYKYaGonderildi = ardEs != null ? ardEs.EYKYaGonderildi : null,
+                        Es_EYKYaHazirlandi = ardEs != null ? ardEs.EYKYaHazirlandi : null,
                         Es_EYKDaOnaylandi = ardEs != null ? ardEs.EYKDaOnaylandi : null,
 
 
@@ -2094,7 +2095,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruDanis.EYKDaOnaylandi = eykDaOnaylandi;
                 if (eykDaOnaylandi == true) tdoBasvuruDanis.EYKDaOnaylandiOnayTarihi = eykDaOnaylandiOnayTarihi.Value;
                 tdoBasvuruDanis.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
-                if (eykDaOnaylandi == false) tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
+                if (eykDaOnaylandi == false)
+                {
+                    if (eykDaOnaylanmadiDurumAciklamasi.Trim() != tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi.Trim()) sendMail = true;
+                    tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
+                }
 
                 if (isBaslikGuncellensin)
                 {
@@ -2121,6 +2126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
                     TdoBus.SendMailTdoEykOnay(tdoBasvuruDanismanId, eykDaOnaylandi.Value);
                 }
+                mMessage.Messages.Add("Eyk da onay durum bilgisi güncellendi" + (sendMail ? " ve ilgili kişilere mail gönderildi." : "."));
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
@@ -2372,7 +2378,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        public ActionResult TdoEykYaGonderimPostEs(int tdoBasvuruEsDanismanId, bool? eykYaGonderildi)
+        public ActionResult TdoEykYaGonderimPostEs(int tdoBasvuruEsDanismanId, bool? eykYaGonderildi, string eykYaGonderimDurumAciklamasi)
         {
             var mMessage = new MmMessage
             {
@@ -2389,9 +2395,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Tez danışmanı öneri formu EYK'da onaylanmadığından Tez Eş Danışman EYK'ya gönderim işlemi yapılamaz.");
             }
-            else if (tdoBasvuruEsDanis.EYKDaOnaylandi.HasValue)
+            else if (tdoBasvuruEsDanis.EYKYaHazirlandi.HasValue)
             {
-                mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan Tez Eş Danışman öneri formu üzerinden EYK'ya gönderim işlemi yapılamaz.");
+                mMessage.Messages.Add("Enstitü tarafından EYK'ya hazırlanma işlemi yapılan Tez Eş Danışman öneri formu üzerinden EYK'ya gönderim işlemi yapılamaz.");
+            }
+            else if (eykYaGonderildi == false && eykYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("EYK'ya gönderilmeme sebebi açıklaması giriniz.");
             }
             if (!mMessage.Messages.Any())
             {
@@ -2400,6 +2410,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruEsDanis.EYKYaGonderildi = eykYaGonderildi;
                 tdoBasvuruEsDanis.EYKYaGonderildiIslemTarihi = DateTime.Now;
                 tdoBasvuruEsDanis.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
+                tdoBasvuruEsDanis.EYKYaGonderimDurumAciklamasi = tdoBasvuruEsDanis.EYKYaGonderildi == false ? eykYaGonderimDurumAciklamasi : "";
                 tdoBasvuruEsDanis.IslemTarihi = DateTime.Now;
                 tdoBasvuruEsDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruEsDanis.IslemYapanIP = UserIdentity.Ip;
@@ -2411,6 +2422,65 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
+        public ActionResult TdoEykYaHazirlaPostEs(int tdoBasvuruEsDanismanId, bool? eykYaHazirlandi)
+        {
+            var mMessage = new MmMessage
+            {
+                MessageType = MsgTypeEnum.Success,
+                Title = "Tez Danışmanı Öneri Formu EYK'ya Hazırlama İşlemi"
+            };
+            var tdoBasvuruEsDanis = _entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
+            if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
+            {
+                mMessage.Messages.Add("EYK'ya hazırlama yetkiniz bulunmamaktadır.");
+            }
+            else if (tdoBasvuruEsDanis.EYKYaGonderildi != true)
+            {
+                mMessage.Messages.Add("Enstitü tarafından Eyk'ya gönderim işlemi yapılmayan Eş Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
+            }
+            else if (tdoBasvuruEsDanis.EYKDaOnaylandi.HasValue)
+            {
+                mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan Eş Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
+            }
+
+            if (!mMessage.Messages.Any())
+            {
+                if (tdoBasvuruEsDanis.EYKYaGonderildi.HasValue || eykYaHazirlandi != false)
+                {
+                    // eykya gönderimi onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
+                    var ogrenciObsBilgi =
+                        KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBasvuruEsDanis.TDOBasvuruDanisman.TDOBasvuru.KullaniciID);
+
+                    if (!ogrenciObsBilgi.KayitVar)
+                    {
+                        mMessage.Messages.Add(
+                            "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                    }
+                    else if (tdoBasvuruEsDanis.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
+                    {
+                        mMessage.Messages.Add(
+                            "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir.");
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
+
+                tdoBasvuruEsDanis.EYKYaHazirlandi = eykYaHazirlandi;
+                tdoBasvuruEsDanis.EYKYaHazirlandiIslemTarihi = DateTime.Now;
+                tdoBasvuruEsDanis.EYKYaHazirlandiIslemYapanID = UserIdentity.Current.Id;
+                tdoBasvuruEsDanis.IslemTarihi = DateTime.Now;
+                tdoBasvuruEsDanis.IslemYapanID = UserIdentity.Current.Id;
+                tdoBasvuruEsDanis.IslemYapanIP = UserIdentity.Ip;
+                _entities.SaveChanges();
+                LogIslemleri.LogEkle("TDOBasvuruEsDanisman", LogCrudType.Update, tdoBasvuruEsDanis.ToJson());
+                mMessage.IsSuccess = true;
+            }
+
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mMessage.ToJsonResult();
+        }
+
 
         public ActionResult TdoEykDaOnayPostEs(int tdoBasvuruEsDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
         {
@@ -2428,9 +2498,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Tez danışmanı öneri formu EYK'da onaylanmadığından Tez Eş Danışman EYK'da onay işlemi yapılamaz.");
             }
-            else if (tdoBasvuruEsDanis.EYKYaGonderildi != true)
+            else if (tdoBasvuruEsDanis.EYKYaHazirlandi != true)
             {
-                mMessage.Messages.Add("Enstitü tarafından EYK'ya gönderildi işlemi yapılmayan Eş Danışman öneri formu üzerinden EYK onay işlemi yapılamaz.");
+                mMessage.Messages.Add("Enstitü tarafından EYK'ya hazırlanma işlemi yapılmayan Eş Danışman öneri formu üzerinden EYK onay işlemi yapılamaz.");
             }
             if (eykDaOnaylandi == false)
             {
@@ -2453,11 +2523,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!mMessage.Messages.Any())
             {
                 var sendMail = eykDaOnaylandi.HasValue && eykDaOnaylandi != tdoBasvuruEsDanis.EYKDaOnaylandi;
-
                 tdoBasvuruEsDanis.EYKDaOnaylandi = eykDaOnaylandi;
                 if (eykDaOnaylandi == true) tdoBasvuruEsDanis.EYKDaOnaylandiOnayTarihi = eykDaOnaylandiOnayTarihi.Value;
                 tdoBasvuruEsDanis.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
-                if (eykDaOnaylandi == false) tdoBasvuruEsDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
+                if (eykDaOnaylandi == false)
+                {
+                    if (eykDaOnaylanmadiDurumAciklamasi.Trim() != tdoBasvuruEsDanis.EYKDaOnaylanmadiDurumAciklamasi.Trim()) sendMail = true;
+                    tdoBasvuruEsDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
+                }
                 tdoBasvuruEsDanis.IslemTarihi = DateTime.Now;
                 tdoBasvuruEsDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruEsDanis.IslemYapanIP = UserIdentity.Ip;
@@ -2469,6 +2542,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     LogIslemleri.LogEkle("TDOBasvuruEsDanisman", LogCrudType.Update, tdoBasvuruEsDanis.ToJson());
                     TdoBus.SendMailTdoEsEykOnay(tdoBasvuruEsDanismanId, eykDaOnaylandi.Value);
                 }
+                mMessage.Messages.Add("Eyk da onay durum bilgisi güncellendi" + (sendMail ? " ve ilgili kişilere mail gönderildi." : "."));
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;

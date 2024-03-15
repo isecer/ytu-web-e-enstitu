@@ -182,37 +182,9 @@
                                         {
                                             <span style="color:maroon;font-size:10pt;" aria-hidden="true">Eş Danışman Önerisi Yok.</span>
                                         }
-                                        else if (!item.EsDanismanBilgi.EYKDaOnaylandi.HasValue)
+                                        else  
                                         {
-                                            if (!item.EsDanismanBilgi.EYKYaGonderildi.HasValue)
-                                            {
-                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderim Onayı Bekleniyor.</span>
-                                            }
-                                            else if (item.EsDanismanBilgi.EYKYaGonderildi == true)
-                                            {
-                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı.</span>
-                                            }
-                                            else
-                                            {
-                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı.</span>
-
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (!item.EsDanismanBilgi.EYKDaOnaylandi.HasValue)
-                                            {
-                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'da onay işlemi Bekleniyor.</span>
-                                            }
-                                            else if (item.EsDanismanBilgi.EYKDaOnaylandi == true)
-                                            {
-                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı.</span>
-                                            }
-                                            else
-                                            {
-                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı.</span>
-
-                                            }
+                                           @item.EsDanismanBilgi.ToBasvuruDurumViewEs()
                                         }
 
                                     </td>
@@ -1016,19 +988,36 @@
                                                                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                                                                                     <table style="width:100%;">
                                                                                                         <tr>
-                                                                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> EYK Onay Durumu</td>
+                                                                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
                                                                                                         </tr>
-                                                                                                        @if (tdoEykyaGonderimYetkisi && !itemE.EYKDaOnaylandi.HasValue)
+                                                                                                        @if (tdoEykyaGonderimYetkisi && !itemE.EYKYaHazirlandi.HasValue)
                                                                                                         {
                                                                                                             <tr>
                                                                                                                 <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
                                                                                                                 <td class="CaptionTd" width="10">:</td>
                                                                                                                 <td class="ValueTd">
-                                                                                                                    <select class="form-control" id="EYKYaGonderildiEs_@itemE.TDOBasvuruEsDanismanID" onchange="EYKyaGonderES(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)">
-                                                                                                                        <option @(!itemE.EYKYaGonderildi.HasValue ? "selected" : "")></option>
-                                                                                                                        <option value="true" @(itemE.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı</option>
-                                                                                                                        <option value="false" @(itemE.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı</option>
-                                                                                                                    </select>
+                                                                                                                    <table>
+                                                                                                                        <tr>
+                                                                                                                            <td>
+                                                                                                                                <select class="form-control" id="EYKYaGonderildiEs_@itemE.TDOBasvuruEsDanismanID" onchange="EYKYaOnayChangeEs(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)">
+                                                                                                                                    <option @(!itemE.EYKYaGonderildi.HasValue ? "selected" : "")></option>
+                                                                                                                                    <option value="true" @(itemE.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı</option>
+                                                                                                                                    <option value="false" @(itemE.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı</option>
+                                                                                                                                </select>
+                                                                                                                            </td>
+                                                                                                                            <td>
+                                                                                                                                <label class="btn btn-primary btn-sm" onclick="EYKyaGonderES(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                                                            </td>
+                                                                                                                        </tr>
+                                                                                                                    </table>
+
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr id="EYKYaGonderimAciklamaEsRow_@itemE.TDOBasvuruEsDanismanID" class="form-group @(itemE.EYKYaGonderildi == false ? "" : "hide")">
+                                                                                                                <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                                                                <td class="CaptionTd">:</td>
+                                                                                                                <td class="ValueTd">
+                                                                                                                    <textarea class="form-control" style="min-height:100px;" id="EYKYaGonderimOnaylanmadiDurumAciklamasiEs_@itemE.TDOBasvuruEsDanismanID" maxlength="512">@itemE.EYKYaGonderimDurumAciklamasi</textarea>
                                                                                                                 </td>
                                                                                                             </tr>
                                                                                                         }
@@ -1045,23 +1034,82 @@
                                                                                                                     }
                                                                                                                     else if (itemE.EYKYaGonderildi == true)
                                                                                                                     {
-                                                                                                                        <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı.</span>
+
+                                                                                                                        <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı. (@itemE.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
+
                                                                                                                     }
                                                                                                                     else
                                                                                                                     {
-                                                                                                                        <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı.</span>
+                                                                                                                        <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı. (@itemE.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
 
                                                                                                                     }
-
                                                                                                                 </td>
                                                                                                             </tr>
+                                                                                                            if (itemE.EYKYaGonderildi == false && !itemE.EYKYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+                                                                                                            {
+                                                                                                                <tr>
+                                                                                                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                                                                    <td class="CaptionTd">:</td>
+                                                                                                                    <td class="ValueTd">
+                                                                                                                        @itemE.EYKYaGonderimDurumAciklamasi
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            }
+                                                                                                        }
+                                                                                                        @if (itemE.EYKYaGonderildi == true)
+                                                                                                        {
+                                                                                                            if (tdoEykdaOnayYetkisi && !itemE.EYKDaOnaylandi.HasValue && item.TDOBasvuruDanismanID == Model.AktifTDOBasvuruDanismanID)
+                                                                                                            {
+                                                                                                                <tr>
+                                                                                                                    <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
+                                                                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                                                                    <td class="ValueTd">
+                                                                                                                        <table>
+                                                                                                                            <tr>
+                                                                                                                                <td>
+                                                                                                                                    <select class="form-control" id="EYKyaHazirlandiEs_@itemE.TDOBasvuruEsDanismanID">
+                                                                                                                                        <option @(!itemE.EYKYaHazirlandi.HasValue ? "selected" : "")></option>
+                                                                                                                                        <option value="true" @(itemE.EYKYaHazirlandi == true ? "selected" : "")>EYK'ya Hazırlandı @(itemE.EYKYaHazirlandiIslemTarihi.HasValue ? "(" + itemE.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
+                                                                                                                                    </select>
+                                                                                                                                </td>
+                                                                                                                                <td>
+                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKyaHazirlaEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                        </table>
+                                                                                                                    </td>
+                                                                                                                </tr>
+
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                <tr>
+                                                                                                                    <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
+                                                                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                                                                    <td class="ValueTd">
+                                                                                                                        @if (!itemE.EYKYaHazirlandi.HasValue)
+                                                                                                                        {
+
+                                                                                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlanma İşlemi Bekleniyor.</span>
+                                                                                                                        }
+                                                                                                                        else if (itemE.EYKYaHazirlandi == true)
+                                                                                                                        {
+                                                                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlandı. (@itemE.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime())</span>
+
+                                                                                                                        }
+                                                                                                                    </td>
+                                                                                                                </tr>
+
+
+
+                                                                                                            }
                                                                                                         }
 
-                                                                                                        @if (itemE.EYKYaGonderildi == true)
+                                                                                                        @if (itemE.EYKYaHazirlandi == true)
                                                                                                         {
                                                                                                             if (tdoEykdaOnayYetkisi && showRowE && item.TDOBasvuruDanismanID == Model.AktifTDOBasvuruDanismanID)
                                                                                                             {
-                                                                                                                <tr>
+                                                                                                                <tr id="EYKdaOnayOnayRowEs_@itemE.TDOBasvuruEsDanismanID" class="@(itemE.EYKYaHazirlandi == true ? "" : "hide")">
                                                                                                                     <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
                                                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                                                     <td class="ValueTd">
@@ -1070,12 +1118,12 @@
                                                                                                                                 <td>
                                                                                                                                     <select class="form-control" id="EYKDaOnaylandiES_@itemE.TDOBasvuruEsDanismanID" onchange="EYKOnayChangeES(@itemE.TDOBasvuruEsDanismanID)">
                                                                                                                                         <option @(!itemE.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
-                                                                                                                                        <option value="true" @(itemE.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı</option>
-                                                                                                                                        <option value="false" @(itemE.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı</option>
+                                                                                                                                        <option value="true" @(itemE.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı @(itemE.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
+                                                                                                                                        <option value="false" @(itemE.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(itemE.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
                                                                                                                                     </select>
                                                                                                                                 </td>
                                                                                                                                 <td class="form-group">
-                                                                                                                                    <input type="text" class="form-control tarihB @(itemE.EYKDaOnaylandi == true ? "" : "hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihiEs_@itemE.TDOBasvuruEsDanismanID" value="@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateAndTimeInput()" />
+                                                                                                                                    <input type="text" class="form-control tarihB @(itemE.EYKDaOnaylandi == true ? "" : "hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihiEs_@itemE.TDOBasvuruEsDanismanID" value="@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateInput()" />
 
                                                                                                                                 </td>
                                                                                                                                 <td>
@@ -1083,9 +1131,9 @@
                                                                                                                                 </td>
                                                                                                                             </tr>
                                                                                                                         </table>
-
                                                                                                                     </td>
                                                                                                                 </tr>
+
                                                                                                                 <tr id="EYKOnayAciklamaRowES_@itemE.TDOBasvuruEsDanismanID" class="form-group @(itemE.EYKDaOnaylandi == false ? "" : "hide")">
                                                                                                                     <td class="CaptionTd">Onaylanmama Açıklaması</td>
                                                                                                                     <td class="CaptionTd">:</td>
@@ -1108,7 +1156,7 @@
                                                                                                                         else if (itemE.EYKDaOnaylandi == true)
                                                                                                                         {
 
-                                                                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate())</span>
+                                                                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateInput())</span>
                                                                                                                         }
                                                                                                                         else
                                                                                                                         {
@@ -1127,11 +1175,11 @@
                                                                                                                         </td>
                                                                                                                     </tr>
                                                                                                                 }
-
                                                                                                             }
                                                                                                         }
                                                                                                     </table>
                                                                                                 </div>
+
                                                                                             </td>
                                                                                         </tr>
                                                                                     </table>
@@ -1244,6 +1292,14 @@
             $('#EYKOnayAciklamaRow_' + id).addClass('hide');
         }
         if (val == 'true') {
+            var eykTarih = $('#EYKDaOnaylandiOnayTarihi_' + id).val();
+            if (eykTarih == "") {
+                var today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, day = today.getDate();
+                if (month < 10) month = "0" + month;
+                if (day < 10) day = "0" + day;
+                var formattedDate = year + "-" + month + "-" + day;
+                $('#EYKDaOnaylandiOnayTarihi_' + id).val(formattedDate);
+            }
             $('#EYKDaOnaylandiOnayTarihi_' + id).removeClass('hide');
             $('#EYKOnayTezBaslikTrRow_' + id).removeClass('hide');
             $('#EYKOnayTezBaslikEnRow_' + id).removeClass('hide');
@@ -1264,7 +1320,16 @@
             $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
         }
     }
-    function DOnay(id,id2) {
+    function EYKYaOnayChangeEs(id) {
+        var val = $('#EYKYaGonderildiEs_' + id).val();
+        if (val == 'false') {
+            $('#EYKYaGonderimAciklamaEsRow_' + id).removeClass('hide');
+        }
+        else {
+            $('#EYKYaGonderimAciklamaEsRow_' + id).addClass('hide');
+        }
+    }
+    function DOnay(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
         var TDProgramKod = $('#TDProgramKod_' + id).val();
@@ -1310,14 +1375,12 @@
             }
         });
     }
-       function DVarolanOnay(id,id2) {
+    function DVarolanOnay(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
 
         var DanismanOnayladi = $('#VarolanDanismanOnayladi_' + id).val();
-           var DanismanOnaylanmadiAciklama = $('#VarolanDanismanOnaylanmadiAciklama_' + id).val();
-
-
+        var DanismanOnaylanmadiAciklama = $('#VarolanDanismanOnaylanmadiAciklama_' + id).val(); 
 
         var model = {
             TDOBasvuruDanismanID: id,
@@ -1441,8 +1504,11 @@
             data: model,
             success: function (result) {
                 PanelRefresh(_panel, true);
-                if (result.Messages.length > 0) getMsg(result);
-                else GetDetail(id2);
+                if (result.IsSuccess) {
+                    toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                    GetDetail(id2);
+                }
+                else if(result.Messages.length > 0) getMsg(result);
 
             },
             error: function (err) {
@@ -1461,6 +1527,14 @@
             $('#EYKOnayAciklamaRowES_' + id).addClass('hide');
         }
         if (val == 'true') {
+            var eykTarih = $('#EYKDaOnaylandiOnayTarihiEs_' + id).val();
+            if (eykTarih == "") {
+                var today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, day = today.getDate();
+                if (month < 10) month = "0" + month;
+                if (day < 10) day = "0" + day;
+                var formattedDate = year + "-" + month + "-" + day;
+                $('#EYKDaOnaylandiOnayTarihiEs_' + id).val(formattedDate);
+            }
             $('#EYKDaOnaylandiOnayTarihiEs_' + id).removeClass('hide');
 
         }
@@ -1570,6 +1644,33 @@
             }
         });
     }
+      function EYKyaHazirlaEs(id, id2) {
+      var _panel = $('#bsvrDet_' + id2);
+      PanelRefresh(_panel, false);
+          var EykYaHazirlandi = $('#EYKyaHazirlandiEs_' + id).val();
+      $.ajax({
+          url: '@Url.Action("TdoEykYaHazirlaPostEs", "TdoBasvuru")',
+          type: 'POST',
+          enctype: "multipart/form-data",
+          cache: false,
+          dataType: "json",
+          data: {
+              TDOBasvuruEsDanismanID: id,
+              EykYaHazirlandi
+          },
+          success: function (result) {
+              PanelRefresh(_panel, true);
+              GetDetail(id2);
+              if (result.Messages.length > 0) getMsg(result);
+
+          },
+          error: function (err) {
+
+              PanelRefresh(_panel, true);
+              alert(err.responseText);
+          }
+      });
+  }
     function EYKdaOnayES(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
@@ -1593,8 +1694,11 @@
             data: model,
             success: function (result) {
                 PanelRefresh(_panel, true);
-                if (result.Messages.length > 0) getMsg(result);
-                else GetDetail(id2);
+                if (result.IsSuccess) {
+                    toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                    GetDetail(id2);
+                }
+                else if (result.Messages.length > 0) getMsg(result);
 
             },
             error: function (err) {
@@ -1605,367 +1709,367 @@
         });
     }
 
-        function GetTdoDanismanDegisiklikFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
+    function GetTdoDanismanDegisiklikFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
 
-         var _panel = $('#bsvrDet_' + TDOBasvuruID);
-         PanelRefresh(_panel, false);
-         $.ajax({
-             url: '@Url.Action("GetTdoDanismanDegisiklikFormu", "TdoBasvuru")',
-             data: {
-                 TDOBasvuruID,
-                 TDOBasvuruDanismanID
-             },
-             success: function (resultG) {
-                 PanelRefresh(_panel, true);
-                 if (resultG.IsSuccess) {
-                     var btbxxFS = bootbox.dialog({
-                         message: resultG.Content,
-                         title: "<i class='fa fa-book'></i> Tez Danışmanı Değişiklik İşlemi",
-                         buttons: {
-                             success: {
-                                 label: 'Kaydet',
-                                 className: "btn-info DanDegKayit_" + TDOBasvuruDanismanID,
-                                 callback: function (event) {
-                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                     PanelRefresh(pnlx, false);
-                                     $('#FrmTdoFormu').ajaxForm({
-                                         success: function (result) {
-                                             $('.DanDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
-                                             if (result.IsSuccess) {
-                                                 if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                 var _clsBtn = $('.bootbox-close-button').first();
-                                                 $(_clsBtn).click();
-                                                 GetDetail(TDOBasvuruID);
+        var _panel = $('#bsvrDet_' + TDOBasvuruID);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetTdoDanismanDegisiklikFormu", "TdoBasvuru")',
+            data: {
+                TDOBasvuruID,
+                TDOBasvuruDanismanID
+            },
+            success: function (resultG) {
+                PanelRefresh(_panel, true);
+                if (resultG.IsSuccess) {
+                    var btbxxFS = bootbox.dialog({
+                        message: resultG.Content,
+                        title: "<i class='fa fa-book'></i> Tez Danışmanı Değişiklik İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Kaydet',
+                                className: "btn-info DanDegKayit_" + TDOBasvuruDanismanID,
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmTdoFormu').ajaxForm({
+                                        success: function (result) {
+                                            $('.DanDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
+                                            if (result.IsSuccess) {
+                                                if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                GetDetail(TDOBasvuruID);
 
-                                             }
-                                             else {
-                                                 if (result.Messages.length > 0) getMsg(result);
-                                                 return false;
-                                             }
-                                             PanelRefresh(pnlx, true);
-                                         },
-                                         complete: function (cmp) {
-                                             $('.DanDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
-                                             PanelRefresh(pnlx, true);
-                                         }
+                                            }
+                                            else {
+                                                if (result.Messages.length > 0) getMsg(result);
+                                                return false;
+                                            }
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
+                                            $('.DanDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
+                                            PanelRefresh(pnlx, true);
+                                        }
 
-                                     }).submit();
-                                     return false;
-                                 }
-                             },
-                             danger: {
-                                 label: 'Kapat',
-                                 className: "btn-primary",
-                                 callback: function () {
-                                 }
-                             }
+                                    }).submit();
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: 'Kapat',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
 
-                         }
-                     });
-                     if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
+                        }
+                    });
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
-                 }
-                 else {
-                     showMmMessage(resultG.Messages, 'Tamam');
-                 }
+                }
+                else {
+                    showMmMessage(resultG.Messages, 'Tamam');
+                }
 
-             },
-             error: function (err) {
-                 PanelRefresh(_panel, true);
-             }
-         });
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+            }
+        });
     }
     function GetTdoDilBaslikDegisiklikFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
 
-         var _panel = $('#bsvrDet_' + TDOBasvuruID);
-         PanelRefresh(_panel, false);
-         $.ajax({
-             url: '@Url.Action("GetTdoDilBaslikDegisiklikFormu", "TdoBasvuru")',
-             data: {
-                 TDOBasvuruID,
-                 TDOBasvuruDanismanID
-             },
-             success: function (resultG) {
-                 PanelRefresh(_panel, true);
-                 if (resultG.IsSuccess) {
-                     var btbxxFS = bootbox.dialog({
-                         message: resultG.Content,
-                         title: "<i class='fa fa-book'></i> Tez Dili,Başlığı Değişiklik İşlemi",
-                         buttons: {
-                             success: {
-                                 label: 'Kaydet',
-                                 className: "btn-info TezDilDegKayit_" + TDOBasvuruDanismanID,
-                                 callback: function (event) {
-                                     $('.TezDilDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
-                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                     PanelRefresh(pnlx, false);
-                                     $('#FrmTdoFormu').ajaxForm({
-                                         success: function (result) {
-                                             if (result.IsSuccess) {
-                                                 if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                 var _clsBtn = $('.bootbox-close-button').first();
-                                                 $(_clsBtn).click();
-                                                 GetDetail(TDOBasvuruID);
+        var _panel = $('#bsvrDet_' + TDOBasvuruID);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetTdoDilBaslikDegisiklikFormu", "TdoBasvuru")',
+            data: {
+                TDOBasvuruID,
+                TDOBasvuruDanismanID
+            },
+            success: function (resultG) {
+                PanelRefresh(_panel, true);
+                if (resultG.IsSuccess) {
+                    var btbxxFS = bootbox.dialog({
+                        message: resultG.Content,
+                        title: "<i class='fa fa-book'></i> Tez Dili,Başlığı Değişiklik İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Kaydet',
+                                className: "btn-info TezDilDegKayit_" + TDOBasvuruDanismanID,
+                                callback: function (event) {
+                                    $('.TezDilDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmTdoFormu').ajaxForm({
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
+                                                if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                GetDetail(TDOBasvuruID);
 
-                                             }
-                                             else {
-                                                 if (result.Messages.length > 0) getMsg(result);
-                                                 return false;
-                                             }
-                                             PanelRefresh(pnlx, true);
-                                         },
-                                         complete: function (cmp) {
-                                             $('.TezDilDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
-                                             PanelRefresh(pnlx, true);
-                                         }
+                                            }
+                                            else {
+                                                if (result.Messages.length > 0) getMsg(result);
+                                                return false;
+                                            }
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
+                                            $('.TezDilDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
+                                            PanelRefresh(pnlx, true);
+                                        }
 
-                                     }).submit();
-                                     return false;
-                                 }
-                             },
-                             danger: {
-                                 label: 'Kapat',
-                                 className: "btn-primary",
-                                 callback: function () {
-                                 }
-                             }
+                                    }).submit();
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: 'Kapat',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
 
-                         }
-                     });
-                     if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
+                        }
+                    });
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
-                 }
-                 else {
-                     showMmMessage(resultG.Messages, 'Tamam');
-                 }
+                }
+                else {
+                    showMmMessage(resultG.Messages, 'Tamam');
+                }
 
-             },
-             error: function (err) {
-                 PanelRefresh(_panel, true);
-             }
-         });
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+            }
+        });
     }
     function GetTdoDanismanDilBaslikDegisiklikFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
 
-         var _panel = $('#bsvrDet_' + TDOBasvuruID);
-         PanelRefresh(_panel, false);
-         $.ajax({
-             url: '@Url.Action("GetTdoDanismanBaslikDilDegisiklikFormu", "TdoBasvuru")',
-             data: {
-                 TDOBasvuruID,
-                 TDOBasvuruDanismanID
-             },
-             success: function (resultG) {
-                 PanelRefresh(_panel, true);
-                 if (resultG.IsSuccess) {
-                     var btbxxFS = bootbox.dialog({
-                         message: resultG.Content,
-                         title: "<i class='fa fa-book'></i> Tez Danışmanı,Dili,Başlığı Değişiklik İşlemi",
-                         buttons: {
-                             success: {
-                                 label: 'Kaydet',
-                                 className: "btn-info TezDanDilDegKayit_" + TDOBasvuruDanismanID,
-                                 callback: function (event) {
+        var _panel = $('#bsvrDet_' + TDOBasvuruID);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetTdoDanismanBaslikDilDegisiklikFormu", "TdoBasvuru")',
+            data: {
+                TDOBasvuruID,
+                TDOBasvuruDanismanID
+            },
+            success: function (resultG) {
+                PanelRefresh(_panel, true);
+                if (resultG.IsSuccess) {
+                    var btbxxFS = bootbox.dialog({
+                        message: resultG.Content,
+                        title: "<i class='fa fa-book'></i> Tez Danışmanı,Dili,Başlığı Değişiklik İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Kaydet',
+                                className: "btn-info TezDanDilDegKayit_" + TDOBasvuruDanismanID,
+                                callback: function (event) {
 
-                                     $('.TezDanDilDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
-                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                     PanelRefresh(pnlx, false);
-                                     $('#FrmTdoFormu').ajaxForm({
-                                         success: function (result) {
-                                             if (result.IsSuccess) {
-                                                 if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                 var _clsBtn = $('.bootbox-close-button').first();
-                                                 $(_clsBtn).click();
-                                                 GetDetail(TDOBasvuruID);
+                                    $('.TezDanDilDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmTdoFormu').ajaxForm({
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
+                                                if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                GetDetail(TDOBasvuruID);
 
-                                             }
-                                             else {
-                                                 if (result.Messages.length > 0) getMsg(result);
-                                                 return false;
-                                             }
-                                             PanelRefresh(pnlx, true);
-                                         },
-                                         complete: function (cmp) {
-                                             $('.TezDanDilDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
-                                             PanelRefresh(pnlx, true);
-                                         }
+                                            }
+                                            else {
+                                                if (result.Messages.length > 0) getMsg(result);
+                                                return false;
+                                            }
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
+                                            $('.TezDanDilDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
+                                            PanelRefresh(pnlx, true);
+                                        }
 
-                                     }).submit();
-                                     return false;
-                                 }
-                             },
-                             danger: {
-                                 label: 'Kapat',
-                                 className: "btn-primary",
-                                 callback: function () {
-                                 }
-                             }
+                                    }).submit();
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: 'Kapat',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
 
-                         }
-                     });
-                     if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
+                        }
+                    });
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
-                 }
-                 else {
-                     showMmMessage(resultG.Messages, 'Tamam');
-                 }
+                }
+                else {
+                    showMmMessage(resultG.Messages, 'Tamam');
+                }
 
-             },
-             error: function (err) {
-                 PanelRefresh(_panel, true);
-             }
-         });
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+            }
+        });
     }
     function GetTdoYeniDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
-          var _panel = $('#bsvrDet_' + TDOBasvuruID);
-            PanelRefresh(_panel, false);
-            $.ajax({
-                url: '@Url.Action("GetTdoYeniDanismanFormu", "TdoBasvuru")',
-                data: {
-                    'TDOBasvuruID': TDOBasvuruID,
-                    'TDOBasvuruDanismanID': TDOBasvuruDanismanID
-                },
-                success: function (resultG) {
-                    PanelRefresh(_panel, true);
-                    if (resultG.IsSuccess) {
-                        var btbxxFS = bootbox.dialog({
-                            message: resultG.Content,
-                            title: "<i class='fa fa-pencil'></i> Tez danışmanı öneri formu",
-                            buttons: {
+        var _panel = $('#bsvrDet_' + TDOBasvuruID);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetTdoYeniDanismanFormu", "TdoBasvuru")',
+            data: {
+                'TDOBasvuruID': TDOBasvuruID,
+                'TDOBasvuruDanismanID': TDOBasvuruDanismanID
+            },
+            success: function (resultG) {
+                PanelRefresh(_panel, true);
+                if (resultG.IsSuccess) {
+                    var btbxxFS = bootbox.dialog({
+                        message: resultG.Content,
+                        title: "<i class='fa fa-pencil'></i> Tez danışmanı öneri formu",
+                        buttons: {
 
-                                success: {
-                                    label: 'Kaydet',
-                                    className: "btn-info YeniDanKayit_" + TDOBasvuruDanismanID,
-                                    callback: function (event) {
-                                        $('.YeniDanKayit_' + TDOBasvuruDanismanID).addClass('disabled');
-                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        PanelRefresh(pnlx, false);
-                                        $('#FrmTdoFormu').ajaxForm({
-                                            success: function (result) {
-                                                if (result.IsSuccess) {
-                                                    if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                    var _clsBtn = $('.bootbox-close-button').first();
-                                                    $(_clsBtn).click();
-                                                    GetDetail(TDOBasvuruID);
+                            success: {
+                                label: 'Kaydet',
+                                className: "btn-info YeniDanKayit_" + TDOBasvuruDanismanID,
+                                callback: function (event) {
+                                    $('.YeniDanKayit_' + TDOBasvuruDanismanID).addClass('disabled');
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmTdoFormu').ajaxForm({
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
+                                                if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                GetDetail(TDOBasvuruID);
 
-                                                }
-                                                else {
-                                                    if (result.Messages.length > 0) getMsg(result);
-                                                    return false;
-                                                }
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            complete: function (cmp) {
-                                                $('.YeniDanKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            error: function (err) {
-                                                PanelRefresh(pnlx, true);
                                             }
+                                            else {
+                                                if (result.Messages.length > 0) getMsg(result);
+                                                return false;
+                                            }
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
+                                            $('.YeniDanKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                        }
 
-                                        }).submit();
-                                        return false;
-                                    }
-                                },
-                                danger: {
-                                    label: 'Kapat',
-                                    className: "btn-primary",
-                                    callback: function () {
-                                    }
+                                    }).submit();
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: 'Kapat',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
                             }
 
                         }
-                        });
-                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
-
-                    }
-                    else {
-                        showMmMessage(resultG.Messages, 'Tamam');
-                    }
-
-                },
-                error: function (err) {
-                    PanelRefresh(_panel, true);
-                    alert(err.responseText);
+                    });
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
                 }
-            })
-        }
-    function GetTDOEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi ) {
-          var _panel = $('#bsvrDet_' + TDOBasvuruID);
-            PanelRefresh(_panel, false);
-            $.ajax({
-                url: '@Url.Action("GetTDOEsDanismanFormu", "TdoBasvuru")',
-                data: {
-                    'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
-                    'TDOBasvuruEsDanismanID': TDOBasvuruEsDanismanID,
-                    'IsDegisiklikTalebi': IsDegisiklikTalebi
-                },
-                success: function (resultG) {
-                    PanelRefresh(_panel, true);
-                    if (resultG.IsSuccess) {
-                        var btbxxFS = bootbox.dialog({
-                            message: resultG.Content,
-                            buttons: {
+                else {
+                    showMmMessage(resultG.Messages, 'Tamam');
+                }
 
-                                success: {
-                                    label: 'Kaydet',
-                                    className: "btn-info EsDanismanKayit_" + TDOBasvuruDanismanID,
-                                    callback: function (event) {
-                                        $('.EsDanismanKayit_' + TDOBasvuruDanismanID).addClass('disabled');
-                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        PanelRefresh(pnlx, false);
-                                        $('#FrmTDOEsDanismanFormu').ajaxForm({
-                                            success: function (result) {
-                                                if (result.IsSuccess) {
-                                                    if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                    var _clsBtn = $('.bootbox-close-button').first();
-                                                    $(_clsBtn).click();
-                                                    GetDetail(TDOBasvuruID);
-                                                }
-                                                else {
-                                                    if (result.Messages.length > 0) getMsg(result);
-                                                    return false;
-                                                }
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            complete: function (cmp) {
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
 
-                                                $('.EsDanismanKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            error: function (err) {
-                                                PanelRefresh(pnlx, true);
+            }
+        })
+    }
+    function GetTDOEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi) {
+        var _panel = $('#bsvrDet_' + TDOBasvuruID);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetTDOEsDanismanFormu", "TdoBasvuru")',
+            data: {
+                'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
+                'TDOBasvuruEsDanismanID': TDOBasvuruEsDanismanID,
+                'IsDegisiklikTalebi': IsDegisiklikTalebi
+            },
+            success: function (resultG) {
+                PanelRefresh(_panel, true);
+                if (resultG.IsSuccess) {
+                    var btbxxFS = bootbox.dialog({
+                        message: resultG.Content,
+                        buttons: {
+
+                            success: {
+                                label: 'Kaydet',
+                                className: "btn-info EsDanismanKayit_" + TDOBasvuruDanismanID,
+                                callback: function (event) {
+                                    $('.EsDanismanKayit_' + TDOBasvuruDanismanID).addClass('disabled');
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmTDOEsDanismanFormu').ajaxForm({
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
+                                                if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                GetDetail(TDOBasvuruID);
                                             }
+                                            else {
+                                                if (result.Messages.length > 0) getMsg(result);
+                                                return false;
+                                            }
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
 
-                                        }).submit();
-                                        return false;
-                                    }
-                                },
-                                danger: {
-                                    label: 'Kapat',
-                                    className: "btn-primary",
-                                    callback: function () {
-                                    }
+                                            $('.EsDanismanKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                        }
+
+                                    }).submit();
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: 'Kapat',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
                             }
 
                         }
-                        });
+                    });
 
-                       // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
-
-                    }
-                    else {
-                        showMmMessage(resultG.Messages, 'Tamam');
-                    }
-
-                },
-                error: function (err) {
-                    PanelRefresh(_panel, true);
-                    alert(err.responseText);
+                    // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
                 }
-            })
-        }
+                else {
+                    showMmMessage(resultG.Messages, 'Tamam');
+                }
+
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+
+            }
+        })
+    }
 </script>

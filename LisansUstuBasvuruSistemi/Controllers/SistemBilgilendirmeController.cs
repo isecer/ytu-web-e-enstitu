@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -21,6 +22,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmSistemBilgilendirme model)
         {
+            var btip = new LogTypeData();
+
             var q = from s in _entities.SistemBilgilendirmes
                     join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID into defK
                     from kd in defK.DefaultIfEmpty()
@@ -32,9 +35,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.Message,
                         s.StackTrace,
                         s.IslemYapanID,
-                        UserKey= kd!=null ? kd.UserKey : (Guid?)null,
-                        AdSoyad = s.IslemYapanID.HasValue ? (kd.Ad + " " + kd.Soyad) : (string)null,
-                        KullaniciAdi = s.IslemYapanID.HasValue ? "[" + kd.KullaniciAdi + "]" : (string)null,
+                        UserKey = kd != null ? kd.UserKey : (Guid?)null,
+                        AdSoyad = s.IslemYapanID.HasValue ? (kd.Ad + " " + kd.Soyad) : null,
+                        KullaniciAdi = s.IslemYapanID.HasValue ? "[" + kd.KullaniciAdi + "]" : null,
                         s.IslemTarihi,
                         s.IslemYapanIP
                     };
@@ -49,13 +52,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.Message.IsNullOrWhiteSpace()) q = q.Where(p => p.Message.Contains(model.Message));
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.IslemYapanIP.Contains(model.AdSoyad));
             if (model.BilgiTipi.HasValue) q = q.Where(p => p.BilgiTipi == model.BilgiTipi);
+            else
+            {
+                var bilgiTipIds = btip.LogTipiData.Where(p => p.BilgiTipID != BilgiTipiEnum.Bilgi)
+                    .Select(s => s.BilgiTipID).ToList();
+                q = q.Where(p => bilgiTipIds.Contains(p.BilgiTipi));
 
-            model.RowCount = q.Count(); 
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.IslemTarihi); 
+            }
+            model.RowCount = q.Count();
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.IslemTarihi);
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount
-            }; 
+            };
             model.FrSistemBilgilendirmes = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrSistemBilgilendirme
             {
                 SistemBilgiID = s.SistemBilgiID,
@@ -70,12 +79,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemZamani = s.IslemTarihi,
                 IpAdresi = s.IslemYapanIP
             }).ToArray();
-            var btip = new LogTypeData();
             ViewBag.BilgiTipi = new SelectList(btip.LogTipiData.Select(s => new { s.BilgiTipID, s.BilgiTipAdi }).ToList(), "BilgiTipID", "BilgiTipAdi", model.BilgiTipi);
             ViewBag.IndexModel = indexModel;
             return View(model);
         }
-      
+
 
     }
 }
