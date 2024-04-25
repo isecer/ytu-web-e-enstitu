@@ -224,8 +224,7 @@
                             <span class="xn-text" style="font-size:9.2pt">Sıkça Sorulan Sorular</span>
                         </a>
                     </li>
-
-                    @{Html.RenderPartial("_MenuPartial");}
+                    @MenuGenerator.GetMenuIHtml(Request); 
 
                 </ul>
                 <!-- END X-NAVIGATION -->
@@ -1689,13 +1688,12 @@
             $mbox.find('.mb-content').first().html(Content);
             $mbox.addClass("open");
         }
-        function authenticatedControl(sndr) {
-
+        function authenticatedControl(sndr) { 
             var retUrl = $(sndr).attr("menuurl");
             $.ajax({
                 url:'@Url.Action("AuthenticatedControl", "Home")',
                 data: {},
-                success: function (result) {
+                success: function (result) { 
                     if (!result) {
                         $('#loginPanel').addClass("active");
                         $('.pnlLgn').removeClass('hide');
@@ -1709,7 +1707,7 @@
                             glow: true
                         });
                     }
-                    else {
+                    else { 
                         window.location.href = retUrl;
                     }
                 },

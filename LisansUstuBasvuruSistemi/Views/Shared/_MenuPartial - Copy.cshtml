@@ -1,0 +1,81 @@
+﻿@using Entities.Entities 
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
+@{
+    Layout = null;
+
+    var root = GlobalSistemSetting.GetRoot();
+    root = root.EndsWith("/") ? root : root + "/";
+
+    var apath = Request.Url.AbsolutePath.IndexOf("?", StringComparison.Ordinal) > -1 ? Request.Url.AbsolutePath.Substring(0, Request.Url.AbsolutePath.IndexOf("?", StringComparison.Ordinal)) : Request.Url.AbsolutePath;
+
+    var spl = apath.Split('/').Where(p => p != "").Select((item, inx) => new { item, inx }).ToList();
+    string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (EnstituBus.IsContainsEnstitu(spl.First().item) ? spl.First().item : "FBE")).ToLower();
+    var enst = (selectedEnstKisAd + "/").ToLower();
+    root = root + enst;
+    var eKod = EnstituBus.GetSelectedEnstitu(selectedEnstKisAd);
+    //var unShowMenuIds = new List<int> { 80000, 80500, 81000 };
+    var unShowMenuIds = new List<int> { };
+    var menudata = MenulerBus.Menulers.Where(p => p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
+
+    var mMenu = UserBus.GetUserMenus().ToList();
+    IEnumerable<Menuler> eklenecekler;
+    do
+    {
+        var pids = mMenu.Where(p => p.BagliMenuID.HasValue && p.BagliMenuID.Value > 0).Select(s => s.BagliMenuID.Value);
+        var ids = mMenu.Select(s => s.MenuID);
+        var ekiskIds = pids.Except(ids);
+        eklenecekler = menudata.Where(p => ekiskIds.Contains(p.MenuID)).ToArray();
+
+        mMenu.AddRange(eklenecekler);
+    }
+    while (eklenecekler.Any());
+
+    mMenu.AddRange(menudata.Where(p => p.YetkisizErisim.HasValue && p.YetkisizErisim.Value && mMenu.Any(a => a.MenuID == p.MenuID) == false));
+    mMenu = mMenu.Where(p => !unShowMenuIds.Contains(p.MenuID) || unShowMenuIds.Contains(p.BagliMenuID ?? 0)).OrderBy(o => o.SiraNo).ToList();
+
+    var sb = new System.Text.StringBuilder();
+    Func<int?, bool> fxMenu = null;
+
+    fxMenu = new Func<int?, bool>((parentId) =>
+    {
+        Menuler[] menuler = null;
+        menuler = !parentId.HasValue ? mMenu.Where(p => p.BagliMenuID == 0).ToArray() : mMenu.Where(p => p.BagliMenuID == parentId).ToArray();
+        if (menuler.Any())
+        {
+            for (var i = 0; i < menuler.Count(); i++)
+            {
+                var menu = menuler[i];
+                var menuAdi = menu.MenuAdi;
+                var menuAd = (parentId.HasValue ? menuAdi : "<span class='xn-text'>" + menuAdi + "</span>");
+
+                var autC = menu.AuthenticationControl;
+                var navAutC = !menu.AuthenticationControl.IsNullOrWhiteSpace();
+                var hrefUrl = navAutC || menu.MenuUrl.IsNullOrWhiteSpace() ? "javascript:void(0);" : (root + menu.MenuUrl);
+
+                var hassubmenu = (mMenu.Any(a => a.BagliMenuID == menu.MenuID));
+                sb.AppendLine("<li " + (hassubmenu ? "class='xn-openable'" : "") + ">" +
+                                    "<a href='" + hrefUrl + "' " + (navAutC ? ("onclick='" + autC + "'") : "") + " menuurl='" + root.ToLower() + (menu.MenuUrl.IndexOf("I", StringComparison.Ordinal) > -1 ? menu.MenuUrl.Replace("I", "i") : menu.MenuUrl).ToLower() + "'>" +
+                                       "<span class='" + menu.MenuCssClass + "'></span>" +
+                                        menuAd +
+                                     "</a>");
+                if (hassubmenu)
+                {
+                    sb.AppendLine("<ul>");
+                    fxMenu(menu.MenuID);
+                    sb.AppendLine("</ul>");
+                }
+                sb.AppendLine("</li>");
+            }
+        }
+
+        return true;
+    });
+
+
+    fxMenu(null);
+
+}
+@Html.Raw(sb.ToString())
+

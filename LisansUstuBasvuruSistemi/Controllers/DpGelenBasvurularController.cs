@@ -71,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DonemAdi = sonBasvuru == null ? "Başvuru Yapılmadı" : (sonBasvuru.BasvuruYil + " / " + (sonBasvuru.BasvuruYil + 1) + " " + (sonBasvuru.BasvuruDonemID == 1 ? "Güz" : "Bahar")),
                         ToplantiTarihi = sonBasvuru != null ? sonBasvuru.SRTalepleris.Select(sr => sr.Tarih).FirstOrDefault() : (DateTime?)null,
                         ToplantiSaati = sonBasvuru != null ? sonBasvuru.SRTalepleris.Select(sr => sr.BasSaat).FirstOrDefault() : (TimeSpan?)null,
-
+                        DonemProjesiDurumID = sonBasvuru != null ? sonBasvuru.DonemProjesiDurumID : DonemProjesiDurumEnum.BasvuruTamamlanmadi,
                         SonBasvuruDurum = sonBasvuru != null ? new DpBasvuruDurumDto
                         {
                             DonemProjesiID = sonBasvuru.DonemProjesiID,

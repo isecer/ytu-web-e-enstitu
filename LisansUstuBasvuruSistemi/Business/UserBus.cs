@@ -225,11 +225,12 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     FormsAuthenticationUtil.SignOut();
                     return new Menuler[] { };
-                }
-                var kullRoll = kull.Rollers.SelectMany(s => s.Menulers).Distinct().OrderBy(o => o.SiraNo).ToList();
-                var ygRoll = kull.YetkiGruplari.YetkiGrupRolleris.SelectMany(s => s.Roller.Menulers).Distinct().OrderBy(o => o.SiraNo).ToList();
-                menus.AddRange(kullRoll);
-                menus.AddRange(ygRoll.Where(p => kullRoll.All(a => a.MenuID != p.MenuID)));
+                } 
+                var allMenus = MenulerBus.GetAllMenu();
+                var kullRollIds = kull.YetkiGruplari.YetkiGrupRolleris.Select(s => s.RolID).ToList();
+                kullRollIds.AddRange(kull.Rollers.Select(s=>s.RolID).ToList());
+                var kullaniciMenuleris = allMenus.Where(p=>p.YetkisizErisim==true || p.Rollers.Any(a=>  kullRollIds.Contains(a.RolID))).OrderBy(o => o.SiraNo).ToList(); 
+                menus.AddRange(kullaniciMenuleris);
                 return menus.ToArray();
             }
 

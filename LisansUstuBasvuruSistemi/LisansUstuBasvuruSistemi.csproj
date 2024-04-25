@@ -461,6 +461,7 @@
     <Compile Include="Utilities\Enums\MezuniyetJofDurumuEnum.cs" />
     <Compile Include="Utilities\Helpers\FileHelper.cs" />
     <Compile Include="Utilities\MailManager\MailSenderDp.cs" />
+    <Compile Include="Utilities\MenuAndRoles\MenuGenerator.cs" />
     <Compile Include="Utilities\SystemSetting\GlobalSistemSetting.cs" />
     <Compile Include="Utilities\SystemSetting\DonemProjesiAyar.cs" />
     <Compile Include="WebServiceData\PersisService\PersisServiceModel.cs" />
@@ -5056,6 +5057,7 @@
     <Content Include="Views\DpGelenBasvurular\Index.cshtml" />
     <Content Include="Views\DpBasvuru\DegerlendirmeLinkView.cshtml" />
     <Content Include="Views\DpGelenBasvurular\GetTutanakRaporu.cshtml" />
+    <Content Include="Views\Shared\_MenuPartial - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

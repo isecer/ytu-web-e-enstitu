@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using BiskaUtil;
+using DevExpress.Pdf.Native.BouncyCastle.X509;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -15,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Business
             if (Menulers != null) return Menulers;
             using (var entities = new LubsDbEntities())
             {
-                Menulers = entities.Menulers.OrderBy(o => o.SiraNo).ToArray();
+                Menulers = entities.Menulers.Include("Rollers").OrderBy(o => o.SiraNo).ToArray();
             }
             return Menulers;
         }
