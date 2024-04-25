@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model FrMesajlarDto
 @{
     Layout = null;
@@ -84,7 +85,7 @@
                                         <td width="130">@(isGenelMesaj ? "Gelen Ekler" : "Gönderilen Ekler")</td>
                                         <td width="5">:</td>
                                         <td>
-                                            @Html.Raw(string.Join(", ", itemx.MesajEkleris.Select(s => "<a href='" + s.EkDosyaYolu + "' target='_blank'><span class='fa fa-download' style='color: green;'></span>&nbsp;" + s.EkAdi + "</a>")))
+                                            @Html.Raw(string.Join(", ", itemx.MesajEkleris.Select(s => "<a href='" +Url.CustomUrlContent(s.EkDosyaYolu) + "' target='_blank'><span class='fa fa-download' style='color: green;'></span>&nbsp;" + s.EkAdi + "</a>")))
 
                                                 
                                         </td>

@@ -3,6 +3,7 @@
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model TosBasvuruDetayDto
 @{
@@ -174,7 +175,7 @@
                                                 <tr>
                                                     <td class="CaptionTd">Çalışma Dosyası</td>
                                                     <td class="CaptionTd">:</td>
-                                                    <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@item.CalismaRaporDosyaYolu','@item.CalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.CalismaRaporDosyaAdi</a></td>
+                                                    <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(item.CalismaRaporDosyaYolu)','@item.CalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.CalismaRaporDosyaAdi</a></td>
                                                 </tr>
 
                                                 @if (item.ToBasvuruSavunmaDurumID.HasValue)
@@ -188,7 +189,7 @@
                                                         <td class="CaptionTd">Tez Öneri Savunma Formu</td>
                                                         <td class="CaptionTd">:</td>
                                                         <td class="ValueTd">
-                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Doktora Öneri Savunma Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezOneriSavunmaFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                            <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Doktora Öneri Savunma Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezOneriSavunmaFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                 <i class="fa fa-print"></i> FR-0348 Doktora Tez Öneri Savunma Formunu İndir
                                                             </a>
                                                         </td>
@@ -601,7 +602,7 @@
                                             @if (!Model.DegerlendirenUniqueID.HasValue)
                                             {
                                                 <ul class="panel-controls">
-                                                    <li id="iShow_Rpr_@item.ToBasvuruSavunmaID" onclick="showDetailY('Rpr_@item.UniqueID')">
+                                                    <li id="iShow_Rpr_@item.ToBasvuruSavunmaID" onclick="ShowDetailY('Rpr_@item.UniqueID')">
                                                         <a href="javascript:void(0)"><span class="fa fa-angle-@(showRow ? "up" : "down")"></span> </a>
                                                     </li>
                                                 </ul>
@@ -653,7 +654,7 @@
                                                     <tr>
                                                         <td class="CaptionTd">Çalışma Dosyası</td>
                                                         <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@item.CalismaRaporDosyaYolu','@item.CalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.CalismaRaporDosyaAdi</a></td>
+                                                        <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(item.CalismaRaporDosyaYolu)','@item.CalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.CalismaRaporDosyaAdi</a></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="CaptionTd">100/2000 YÖK Bursiyeri</td>
@@ -671,7 +672,7 @@
                                                             <td class="CaptionTd">Tez Öneri Savunma Formu</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">
-                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0348 Doktora Tez Öneri Savunma Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezOneriSavunmaFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'FR-0348 Doktora Tez Öneri Savunma Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezOneriSavunmaFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                     <i class="fa fa-print"></i> FR-0348 Doktora Tez Öneri Savunma Formunu İndir
                                                                 </a>
                                                             </td>
@@ -706,7 +707,7 @@
                                                                 <td>
 
                                                                     <ul class="panel-controls">
-                                                                        <li id="iShow_Jo_@itemJr.UniqueID" onclick="showDetailY('Jo_@itemJr.UniqueID')">
+                                                                        <li id="iShow_Jo_@itemJr.UniqueID" onclick="ShowDetailY('Jo_@itemJr.UniqueID')">
                                                                             <a href="javascript:void(0)"><span class="fa fa-angle-@(openRow ? "up" : "down")"></span> </a>
                                                                         </li>
                                                                     </ul>
@@ -958,7 +959,7 @@
                                                         <td width="120" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;padding-bottom:2px;">
                                                             @if (toplantiYetki && !item.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue))
                                                             {
-                                                                <span class="label label-info" style="cursor:pointer;" onclick="ShowSRDialog('@Model.UniqueID','@item.UniqueID',@(srTalebiYapildi ? item.SRModel.SRTalepID : 0))"><i class="fa fa-@(srTalebiYapildi?"edit":"plus") fa-lg"></i> @(srTalebiYapildi ? "Toplantı Bilgilerini Düzenle" : "Yeni Toplantı Oluştur")</span>
+                                                                <span class="label label-info" style="cursor:pointer;" onclick="ShowSrDialog('@Model.UniqueID','@item.UniqueID',@(srTalebiYapildi ? item.SRModel.SRTalepID : 0))"><i class="fa fa-@(srTalebiYapildi?"edit":"plus") fa-lg"></i> @(srTalebiYapildi ? "Toplantı Bilgilerini Düzenle" : "Yeni Toplantı Oluştur")</span>
                                                             }
                                                         </td>
                                                     </tr>
@@ -1025,8 +1026,7 @@
 <script>
 
     $(function () {
-        $('.switch_@Model.UniqueID')['bootstrapSwitch']();
-        jQuery('._popover').popover({ trigger: 'hover' });
+        $('.switch_@Model.UniqueID')['bootstrapSwitch'](); 
         $(".popover-dismiss").popover({ trigger: 'hover', html: true });
 
     })
@@ -1171,7 +1171,7 @@
 
                                                 }
                                                 else {
-                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    if (result.mMessage.Messages.length > 0) GetMsg(result.mMessage);
                                                     return false;
                                                 }
                                             },
@@ -1196,11 +1196,11 @@
                             }
                         });
                         $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+                        if (resultG.Messages.trim()!="") ShowMmMessage(resultG.Messages, 'Tamam');
 
                     }
                     else {
-                        showMmMessage(resultG.Messages, 'Tamam');
+                        ShowMmMessage(resultG.Messages, 'Tamam');
                     }
 
                 },
@@ -1283,7 +1283,7 @@
 
 
         }
-        function ShowSRDialog(toUniqueId, tosUniqueId, SRTalepID) {
+        function ShowSrDialog(toUniqueId, tosUniqueId, SRTalepID) {
             var _panel = $('#bsvrDet_' + toUniqueId);
             PanelRefresh(_panel, false);
             $.ajax({
@@ -1298,7 +1298,7 @@
                         buttons: {
                             success: {
                                 label: "Kaydet",
-                                className: "btn-primary btnSrKayit_" + tosUniqueId,
+                                className: "btn-success btnSrKayit_" + tosUniqueId,
                                 callback: function (event) {
                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                     $('.btnSrKayit_' + tosUniqueId).addClass('disabled');
@@ -1312,7 +1312,7 @@
                                                 $(_clsBtn).click();
                                             }
                                             else {
-                                                getMsg(result);
+                                                GetMsg(result);
                                                 return false;
                                             }
                                             PanelRefresh(pnlx, true);

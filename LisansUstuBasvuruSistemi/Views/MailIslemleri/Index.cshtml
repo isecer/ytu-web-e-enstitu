@@ -121,10 +121,10 @@
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(sndr, cls, unTogled);
-        if (unTogled) getDetail(id);
+        if (unTogled) GetDetail(id);
     }
 
-    function getDetail(GonderilenMailID) {
+    function GetDetail(GonderilenMailID) {
         var _panel = $('#panel-body-' + GonderilenMailID);
         PanelRefresh(_panel, false);
         setTimeout(function () {
@@ -142,7 +142,7 @@
             });
         }, 120);
     }
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var Tarih = $("#tdAs_" + id).html();
         var Baslik = $("#tdKa_" + id).html();
         bootbox.dialog({
@@ -153,7 +153,7 @@
                     label: "Gönerilen Maili Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -165,7 +165,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil")',
             data: { id: id },
@@ -181,38 +181,5 @@
             }
         });
     }
-    function tekrarGonder(id) {
-        var Tarih = $("#tdAs_" + id).html();
-        var Baslik = $("#tdKa_" + id).html();
-        bootbox.dialog({
-            message: "Tarih: " + Tarih + " <br/>Başlık: " + Baslik + " <br/><br/> Seçilen Maili Tekrar Göndermek İtiyor Musunuz?",
-            title: "Mail Gönderim İşlemi",
-            buttons: {
-                success: {
-                    label: "Seçilen Maili Tekrar Gönder",
-                    className: "btn-danger",
-                    callback: function () {
-                        $.ajax({
-                            url: '@Url.Action("TekrarGonder")',
-                            data: { id: id },
-                            success: function (result) {
-                                toastr[result ? "success" : "error"]("Mail Gönderiliyor...", "Mail Tekrar Gönderme İşlemi")
-
-                            },
-                            error: function (err) {
-                                alert(err.responseText);
-                            }
-                        });
-                    }
-                },
-                danger: {
-                    label: "Vazgeç",
-                    className: "btn-primary",
-                    callback: function () {
-                    }
-                }
-            }
-        });
-
-    }
+   
 </script>

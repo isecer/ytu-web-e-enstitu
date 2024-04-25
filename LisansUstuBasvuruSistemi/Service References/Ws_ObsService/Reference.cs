@@ -1416,6 +1416,33 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string AKTIF_DNM_TUM_DERSField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DONEM_IDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DONEM_ADField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DERS_KODField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DERS_ADField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NOT_DEGERField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string HARF_KODField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string HOCA_TCKField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string HOCA_UNVANField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string HOCA_AD_SOYADField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -1578,6 +1605,123 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
                 if ((object.ReferenceEquals(this.AKTIF_DNM_TUM_DERSField, value) != true)) {
                     this.AKTIF_DNM_TUM_DERSField = value;
                     this.RaisePropertyChanged("AKTIF_DNM_TUM_DERS");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=12)]
+        public string DONEM_ID {
+            get {
+                return this.DONEM_IDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DONEM_IDField, value) != true)) {
+                    this.DONEM_IDField = value;
+                    this.RaisePropertyChanged("DONEM_ID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=13)]
+        public string DONEM_AD {
+            get {
+                return this.DONEM_ADField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DONEM_ADField, value) != true)) {
+                    this.DONEM_ADField = value;
+                    this.RaisePropertyChanged("DONEM_AD");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=14)]
+        public string DERS_KOD {
+            get {
+                return this.DERS_KODField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DERS_KODField, value) != true)) {
+                    this.DERS_KODField = value;
+                    this.RaisePropertyChanged("DERS_KOD");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=15)]
+        public string DERS_AD {
+            get {
+                return this.DERS_ADField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DERS_ADField, value) != true)) {
+                    this.DERS_ADField = value;
+                    this.RaisePropertyChanged("DERS_AD");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=16)]
+        public string NOT_DEGER {
+            get {
+                return this.NOT_DEGERField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NOT_DEGERField, value) != true)) {
+                    this.NOT_DEGERField = value;
+                    this.RaisePropertyChanged("NOT_DEGER");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=17)]
+        public string HARF_KOD {
+            get {
+                return this.HARF_KODField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.HARF_KODField, value) != true)) {
+                    this.HARF_KODField = value;
+                    this.RaisePropertyChanged("HARF_KOD");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=18)]
+        public string HOCA_TCK {
+            get {
+                return this.HOCA_TCKField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.HOCA_TCKField, value) != true)) {
+                    this.HOCA_TCKField = value;
+                    this.RaisePropertyChanged("HOCA_TCK");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=19)]
+        public string HOCA_UNVAN {
+            get {
+                return this.HOCA_UNVANField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.HOCA_UNVANField, value) != true)) {
+                    this.HOCA_UNVANField = value;
+                    this.RaisePropertyChanged("HOCA_UNVAN");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=20)]
+        public string HOCA_AD_SOYAD {
+            get {
+                return this.HOCA_AD_SOYADField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.HOCA_AD_SOYADField, value) != true)) {
+                    this.HOCA_AD_SOYADField = value;
+                    this.RaisePropertyChanged("HOCA_AD_SOYAD");
                 }
             }
         }
@@ -2675,6 +2819,13 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         System.Threading.Tasks.Task<LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirResponse> OgrenciDersBilgileriGetirAsync(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirRequest request);
         
         // CODEGEN: Generating message contract since element name servisUserName from namespace http://tempuri.org/ is not marked nillable
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/OgrenciDersNotBilgileriGetir", ReplyAction="*")]
+        LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirResponse OgrenciDersNotBilgileriGetir(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/OgrenciDersNotBilgileriGetir", ReplyAction="*")]
+        System.Threading.Tasks.Task<LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirResponse> OgrenciDersNotBilgileriGetirAsync(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequest request);
+        
+        // CODEGEN: Generating message contract since element name servisUserName from namespace http://tempuri.org/ is not marked nillable
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/OgrenciTezBilgileriGetir", ReplyAction="*")]
         LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezBilgileriGetirResponse OgrenciTezBilgileriGetir(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciTezBilgileriGetirRequest request);
         
@@ -2944,6 +3095,86 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         
         public OgrenciDersBilgileriGetirResponseBody(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgi[] OgrenciDersBilgileriGetirResult) {
             this.OgrenciDersBilgileriGetirResult = OgrenciDersBilgileriGetirResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class OgrenciDersNotBilgileriGetirRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="OgrenciDersNotBilgileriGetir", Namespace="http://tempuri.org/", Order=0)]
+        public LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequestBody Body;
+        
+        public OgrenciDersNotBilgileriGetirRequest() {
+        }
+        
+        public OgrenciDersNotBilgileriGetirRequest(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequestBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
+    public partial class OgrenciDersNotBilgileriGetirRequestBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public string servisUserName;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
+        public string servisPass;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
+        public string ogrenciNo;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=3)]
+        public string tcKimlikNo;
+        
+        public OgrenciDersNotBilgileriGetirRequestBody() {
+        }
+        
+        public OgrenciDersNotBilgileriGetirRequestBody(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo) {
+            this.servisUserName = servisUserName;
+            this.servisPass = servisPass;
+            this.ogrenciNo = ogrenciNo;
+            this.tcKimlikNo = tcKimlikNo;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class OgrenciDersNotBilgileriGetirResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="OgrenciDersNotBilgileriGetirResponse", Namespace="http://tempuri.org/", Order=0)]
+        public LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirResponseBody Body;
+        
+        public OgrenciDersNotBilgileriGetirResponse() {
+        }
+        
+        public OgrenciDersNotBilgileriGetirResponse(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirResponseBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
+    public partial class OgrenciDersNotBilgileriGetirResponseBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgi[] OgrenciDersNotBilgileriGetirResult;
+        
+        public OgrenciDersNotBilgileriGetirResponseBody() {
+        }
+        
+        public OgrenciDersNotBilgileriGetirResponseBody(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgi[] OgrenciDersNotBilgileriGetirResult) {
+            this.OgrenciDersNotBilgileriGetirResult = OgrenciDersNotBilgileriGetirResult;
         }
     }
     
@@ -3387,6 +3618,37 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
             inValue.Body.tcKimlikNo = tcKimlikNo;
             inValue.Body.Donemid = Donemid;
             return ((LisansUstuBasvuruSistemi.Ws_ObsService.proliz_ytu_enstitu_minerSoap)(this)).OgrenciDersBilgileriGetirAsync(inValue);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirResponse LisansUstuBasvuruSistemi.Ws_ObsService.proliz_ytu_enstitu_minerSoap.OgrenciDersNotBilgileriGetir(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequest request) {
+            return base.Channel.OgrenciDersNotBilgileriGetir(request);
+        }
+        
+        public LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgi[] OgrenciDersNotBilgileriGetir(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo) {
+            LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequest inValue = new LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequest();
+            inValue.Body = new LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequestBody();
+            inValue.Body.servisUserName = servisUserName;
+            inValue.Body.servisPass = servisPass;
+            inValue.Body.ogrenciNo = ogrenciNo;
+            inValue.Body.tcKimlikNo = tcKimlikNo;
+            LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirResponse retVal = ((LisansUstuBasvuruSistemi.Ws_ObsService.proliz_ytu_enstitu_minerSoap)(this)).OgrenciDersNotBilgileriGetir(inValue);
+            return retVal.Body.OgrenciDersNotBilgileriGetirResult;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirResponse> LisansUstuBasvuruSistemi.Ws_ObsService.proliz_ytu_enstitu_minerSoap.OgrenciDersNotBilgileriGetirAsync(LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequest request) {
+            return base.Channel.OgrenciDersNotBilgileriGetirAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirResponse> OgrenciDersNotBilgileriGetirAsync(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo) {
+            LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequest inValue = new LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequest();
+            inValue.Body = new LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgileriGetirRequestBody();
+            inValue.Body.servisUserName = servisUserName;
+            inValue.Body.servisPass = servisPass;
+            inValue.Body.ogrenciNo = ogrenciNo;
+            inValue.Body.tcKimlikNo = tcKimlikNo;
+            return ((LisansUstuBasvuruSistemi.Ws_ObsService.proliz_ytu_enstitu_minerSoap)(this)).OgrenciDersNotBilgileriGetirAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]

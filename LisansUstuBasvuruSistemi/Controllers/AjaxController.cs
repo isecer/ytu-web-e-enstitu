@@ -35,6 +35,7 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Raporlar.LUB;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -291,7 +292,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (eskiResim.IsNullOrWhiteSpace() == false)
                     {
                         var rsmYol = SistemAyar.KullaniciResimYolu;
-                        FileHelper.DeleteFile("/" + rsmYol + "/" + eskiResim);
+                        FileHelper.Delete("/" + rsmYol + "/" + eskiResim);
 
                     }
                 }
@@ -319,8 +320,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult GetKullaniciDetay(Guid userKey)
         {
+            KullanicilarBus.OgrenciBilgisiGuncelleObs(userKey);
 
             var data = _entities.Kullanicilars.First(p => p.UserKey == userKey);
+           
             ViewBag.ResimVar = data.ResimAdi.IsNullOrWhiteSpace() == false;
             data.ResimAdi = data.ResimAdi.ToKullaniciResim();
 
@@ -355,8 +358,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             #region programYetkileri
             var dataKp = KullanicilarBus.GetKullaniciProgramlari(data.KullaniciID, null);
+
             ViewBag.KProgramlar = dataKp.Where(p => p.YetkiVar).ToList();
             #endregion
+
             if (data.KayitDonemID.HasValue)
             {
                 ViewBag.Donem = _entities.Donemlers.FirstOrDefault(p => p.DonemID == data.KayitDonemID.Value);
@@ -1161,9 +1166,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = TdoBus.GetSecilenBasvuruTdoDetay(id, uniqueId);
             ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
             return View(model);
+        } 
+        [HttpGet]
+        public ActionResult GetDetailDpBasvuru(Guid donemProjesiUniqueId, Guid? uniqueId)
+        {
+            var model = DonemProjesiBus.GetSecilenBasvuruDetay(donemProjesiUniqueId, uniqueId);
+            return View(model);
         }
-
-
 
         public ActionResult SifreResetle(string mailAddress)
         {
@@ -1743,7 +1752,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var qDosyaEki = dosyaEki.Select((s, inx) => new { s, inx }).ToList();
             var qDosyaEkYolu = ekYolu.Select((s, inx) => new { s, inx }).ToList();
 
-           
+
             var kModel = new GonderilenMailler();
             #region Kontrol 
 
@@ -1779,26 +1788,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 var eklenenGonderilenMail = _entities.GonderilenMaillers.Add(kModel);
                 var qDosyalar = (from ekGirilenAd in qDosyaEkAdi
-                    join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
-                    join varolanEkYolu in qDosyaEkYolu on ekGirilenAd.inx equals varolanEkYolu.inx
-                    select new
-                    {
-                        ekGirilenAd.inx,
-                        Dosya = eklenenEk.s,
-                        DosyaAdi = eklenenEk.s != null ? ekGirilenAd.s + eklenenEk.s.FileName.GetFileExtension() : ekGirilenAd.s,
-                        DosyaYolu = eklenenEk.s != null ? FileHelper.SaveMailDosya(eklenenEk.s) : varolanEkYolu.s
-                    }).ToList();
+                                 join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
+                                 join varolanEkYolu in qDosyaEkYolu on ekGirilenAd.inx equals varolanEkYolu.inx
+                                 select new
+                                 {
+                                     ekGirilenAd.inx,
+                                     Dosya = eklenenEk.s,
+                                     DosyaAdi = eklenenEk.s != null ? ekGirilenAd.s + eklenenEk.s.FileName.GetFileExtension() : ekGirilenAd.s,
+                                     DosyaYolu = eklenenEk.s != null ? FileHelper.SaveMailDosya(eklenenEk.s) : varolanEkYolu.s
+                                 }).ToList();
                 eklenenGonderilenMail.GonderilenMailEkleris = qDosyalar.Select(s => new GonderilenMailEkleri
                 {
                     EkAdi = s.DosyaAdi,
                     EkDosyaYolu = s.DosyaYolu,
-                }).ToList(); 
+                }).ToList();
                 if (model.MesajID.HasValue)
                 {
                     var mesaj = _entities.Mesajlars.FirstOrDefault(p => p.MesajID == model.MesajID.Value);
                     if (mesaj != null)
                     {
-                        mesaj.IsAktif = true; 
+                        mesaj.IsAktif = true;
                     }
                 }
 
@@ -1846,7 +1855,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     MesajlarBus.MesajUpdate(model.MesajID.Value);
                 }
-               
+
                 var gidecekler = gonderilenMailKullanicilari.Select(s => s.Email).ToList();
                 var dct = new Dictionary<int, List<MailSendList>>();
                 var inx = 0;
@@ -1859,7 +1868,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 inx++;
                 dct.Add(inx, gidecekler.Select(s => new MailSendList { EMail = s, ToOrBcc = gonderilenMailKullanicilariBcc.Any(a => a.Email != s) }).ToList());
 
-                var attach = eklenenGonderilenMail.GonderilenMailEkleris.Select(s=> new FileAttachmentInfo{FileName = s.EkAdi,FilePath = s.EkDosyaYolu}).ToList().GetFileToAttachments();
+                var attach = eklenenGonderilenMail.GonderilenMailEkleris.Select(s => new FileAttachmentInfo { FileName = s.EkAdi, FilePath = s.EkDosyaYolu }).ToList().GetFileToAttachments();
                 foreach (var item in dct)
                 {
                     var excpt = MailManager.SendMailRetVal(enstituKod, kModel.Konu, kModel.AciklamaHtml, item.Value, attach);
@@ -1883,7 +1892,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             _entities.SaveChanges();
                             foreach (var item2 in qDosyalar)
                             {
-                                FileHelper.DeleteFile(item2.DosyaYolu);
+                                FileHelper.Delete(item2.DosyaYolu);
                             }
                         }
                         catch (Exception ex)
@@ -3084,5 +3093,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             _entities.Dispose();
             base.Dispose(disposing);
         }
+
+     
     }
 }

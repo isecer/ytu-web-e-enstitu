@@ -5,6 +5,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public sealed class SrTalepleriKayitDto : SRTalepleri
     {
+        public Guid BasvuruUniqueId { get; set; }
         public new bool? IsOnline { get; set; }
         public bool YetkisizErisim { get; set; }
         public string AdSoyad { get; set; }

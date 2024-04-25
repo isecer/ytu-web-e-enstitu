@@ -1,0 +1,141 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@model  FmDonemProjesiMuafOgrenciler
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Dönem Projesi Başvuru Kriterinden Muaf Öğrenci Listesi</h3>
+                    <ul class="panel-controls">
+                        <li>
+                            <span class="label label-info" style="cursor: pointer;" onclick="GetKriterMuafOgrencilerView()"><i class="fa fa-plus"></i> Kriterden Muaf Öğrenci Ekle</span>
+                            <script>
+                                   function GetKriterMuafOgrencilerView() {
+                                       $.ajax({
+                                           url: '@Url.Action("KriterMuafOgrenciler")',
+                                           data: {   },
+                                           async: false,
+                                           success: function (result) {
+                                               bootbox.dialog({
+                                                   message: "<div id='muafOgrenciContent'>" + result + "</div>",
+                                                   title: "Dönem Projesi Kriterinden Muaf Öğrenci Ekle",
+                                                   buttons: {
+                                                       danger: {
+                                                           label: "Kapat",
+                                                           className: "btn-primary kriterMuafKapatBtn",
+                                                           callback: function () {
+                                                               if ($('#IsKriterMuafOgrenciEklendi').val()=='true')  window.location.href = '@Url.Action("Index")';
+                                                           }
+                                                       }
+                                                   }
+                                               });
+                                           }
+                                       });
+                                   }
+                            </script>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="70"></th>
+                                <th class="sirala" field="AdSoyad">Öğrenci</th>
+                                <th class="sirala" field="IslemTarihi">Eklenme Tarihi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th></th>
+                                <th>
+                                    <input name="AdSoyad" type="text" value="@Model.AdSoyad" class="form-control" />
+                                </th>
+                                <th></th>
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                foreach (var item in Model.DonemProjesiMuafOgrencilers.Select((s, inx) => new { data = s, Index = inx }))
+                                {
+                                    <tr>
+                                        <td>@(item.Index + 1)</td>
+                                        <td id="tdMad_@item.data.DonemProjesiMuafOgrenciID">
+                                            @item.data.AdSoyad [@item.data.OgrenciNo]
+                                        </td>
+                                        <td id="tdIa_@item.data.DonemProjesiMuafOgrenciID">
+                                            @item.data.IslemTarihi
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.data.DonemProjesiMuafOgrenciID)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    function SilmeOnay(sndr, id) {
+        var gMesaj = $("#tdMad_" + id).html();
+        bootbox.dialog({
+            message: "Öğrenci Adı: " + gMesaj + " <br/> Seçilen Kriterden Muaf Öğrenciyi Silmek İstiyor Musunuz?",
+            title: "Kriterden Muaf Öğrenci Silme İşlemi",
+            buttons: {
+                success: {
+                    label: "Kriterden Muaf Öğrenciyi Sil",
+                    className: "btn-danger",
+                    callback: function () {
+                        Sil(sndr, id);
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+    function Sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil")',
+            data: { id: id },
+            success: function (result) {
+                toastr[result.success ? "success" : "error"](result.message, "Kriterden Muaf Öğrenci Silme İşlemi")
+                if (result.success) {
+                    $(sndr).closest("tr").remove();
+                }
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+</script>

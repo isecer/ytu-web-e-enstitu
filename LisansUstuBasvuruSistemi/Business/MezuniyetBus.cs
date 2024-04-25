@@ -1030,6 +1030,9 @@ namespace LisansUstuBasvuruSistemi.Business
                 else
                 {
                     var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+
+
+
                     baslangic = Convert.ToDecimal(kul.KayitYilBaslangic + "," + kul.KayitDonemID.Value);
                     ogrenimTipKod = kul.OgrenimTipKod.Value;
                 }

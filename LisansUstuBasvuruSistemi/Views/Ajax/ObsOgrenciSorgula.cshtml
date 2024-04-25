@@ -73,7 +73,25 @@ else
             </div>
         </div>
     </div>
-
+    <div class="panel panel-danger" style="padding-bottom: 0px;">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title" style="font-size: 9pt; color: #3fbae4;">Öğrenci Dersleri Bilgisi</h3>
+        </div>
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel-body form-group-separated">
+                <textarea readonly="readonly" style="width: 100%; max-width: 560px; min-height:@(Model.OgrenciDersNotBilgis!=null?"200px":"30px;"); overflow: auto;">
+                  @if (Model.OgrenciDersNotBilgis != null)
+                  {
+                      @JsonConvert.SerializeObject(Model.OgrenciDersNotBilgis, Newtonsoft.Json.Formatting.Indented)
+                  }
+                  else
+                  {
+                      @("Öğrenci Ders Bilgisi Yok")
+                  }
+                  </textarea>
+            </div>
+        </div>
+    </div>
     <div class="panel panel-danger" style="padding-bottom: 0px;">
         <div class="panel-heading padding-0">
             <h3 class="panel-title" style="font-size: 9pt; color: #3fbae4;">Öğrenci Tez Bilgisi</h3>

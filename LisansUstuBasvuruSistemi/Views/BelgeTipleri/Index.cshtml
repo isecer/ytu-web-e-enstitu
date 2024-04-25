@@ -75,7 +75,7 @@
                                         <td>
                                             <a href="@Url.Action("Kayit")"><i class="fa fa-plus tooltips" title="Yeni"></i></a>
                                             <a href="@Url.Action("Kayit", "BelgeTipleri", new { id = item.BelgeTipID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.BelgeTipID')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.BelgeTipID')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.BelgeTipID" style="display:none">
@@ -146,7 +146,7 @@
         toggleByClass(sndr, cls, unTogled);
 
     }
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var gMesaj = $("#tdMad_" + id).html();
         bootbox.dialog({
             message: "Belge Tip Adı: " + gMesaj + " <br/> Seçilen Belge Tipini Silmek İstiyor Musunuz?",
@@ -156,7 +156,7 @@
                     label: "Belge Tipini Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -168,7 +168,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "BelgeTipleri")',
             data: { id: id },

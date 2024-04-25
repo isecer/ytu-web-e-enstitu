@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.SystemData
 @model MezuniyetBasvuruDetayDto
 @{
@@ -82,7 +83,7 @@
                                     <td class="fileYayinBelge">
                                         @if (Model.SelectedYayin.MezuniyetYayinBelgeDosyaYolu.IsNullOrWhiteSpace() == false)
                                         {
-                                            <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.SelectedYayin.MezuniyetYayinBelgeDosyaYolu)','@Model.SelectedYayin.MezuniyetYayinBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.SelectedYayin.MezuniyetYayinBelgeAdi</a>
+                                            <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(Model.SelectedYayin.MezuniyetYayinBelgeDosyaYolu)','@Model.SelectedYayin.MezuniyetYayinBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.SelectedYayin.MezuniyetYayinBelgeAdi</a>
                                         }
                                         else
                                         {
@@ -111,7 +112,7 @@
                                     <td class="fileYayinMetni">
                                         @if (Model.SelectedYayin.MezuniyetYayinMetniBelgeYolu.IsNullOrWhiteSpace() == false)
                                         {
-                                            <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.SelectedYayin.MezuniyetYayinMetniBelgeYolu)','@Model.SelectedYayin.MezuniyetYayinMetniBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.SelectedYayin.MezuniyetYayinMetniBelgeAdi</a>
+                                            <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(Model.SelectedYayin.MezuniyetYayinMetniBelgeYolu)','@Model.SelectedYayin.MezuniyetYayinMetniBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.SelectedYayin.MezuniyetYayinMetniBelgeAdi</a>
                                         }
                                         else
                                         {

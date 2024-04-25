@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model TiAraRaporFormuModel
 @{
@@ -144,7 +145,7 @@
                                                                 @if (Model.TICalismaRaporDosyaAdi != null)
                                                                 {
                                                                     <input type="text" class="hide" name="TICalismaRaporDosyaAdi" id="TICalismaRaporDosyaAdi" value="@Model.TICalismaRaporDosyaAdi" />
-                                                                    <span>Yüklenen Belge: <a href="@Url.Content(Model.TICalismaRaporDosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@Model.TICalismaRaporDosyaAdi</a></span>
+                                                                    <span>Yüklenen Belge: <a href="@Url.CustomUrlContent(Model.TICalismaRaporDosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@Model.TICalismaRaporDosyaAdi</a></span>
                                                                 }
                                                                 else
                                                                 {

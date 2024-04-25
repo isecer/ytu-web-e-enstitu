@@ -82,7 +82,7 @@
                                         </td>
                                         <td>
                                              <a href="@Url.Action("Kayit", "SinavTipleri", new { id = item.SinavTipID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="getDetail('@item.SinavTipID',true,this)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="GetDetail('@item.SinavTipID',true,this)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.SinavTipID" style="display:none">
@@ -116,9 +116,9 @@
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(sndr, cls, unTogled);
-        if (unTogled) getDetail(id);
+        if (unTogled) GetDetail(id);
     }
-    function getDetail(id, Isdelete, sndr) {
+    function GetDetail(id, Isdelete, sndr) {
         var _panel = $('#STDetay_' + id);
         PanelRefresh(_panel, false);
         var tbName = "@TabAdiEnum.SinavTipTn-" + id;
@@ -141,7 +141,7 @@
                                 label: 'Sınav tipini sil',
                                 className: "btn-danger",
                                 callback: function () {
-                                    sil(sndr, id);
+                                    Sil(sndr, id);
                                 }
                             },
                             danger: {
@@ -163,7 +163,7 @@
             }
         });
     }
-    function sil(sndr, id, enstKod) {
+    function Sil(sndr, id, enstKod) {
         $.ajax({
             url: '@Url.Action("Sil", "SinavTipleri")',
             data: { id: id, 'EnstituKod': enstKod },
@@ -195,7 +195,7 @@
                             success: function (result) {
                                 toastr[result.success ? "success" : "error"](result.message, "Programa özel not kriteri silme işlemi")
                                 if (result.success) {
-                                    getDetail(STipID, false, null)
+                                    GetDetail(STipID, false, null)
                                 }
 
                             },
@@ -218,7 +218,7 @@
     }
 
     function STProgramaOzelNotKriteriEkle(url) {
-        yeniDialogBB(null, 'Sınav tipi özel not ekleme işlemi', url, 650, '@ModalSizeClassEnum.Large');
+        YeniDialogBB(null, 'Sınav tipi özel not ekleme işlemi', url, 650, '@ModalSizeClassEnum.Large');
 
     }
 </script>

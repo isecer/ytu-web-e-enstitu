@@ -122,7 +122,7 @@
                                     <tr>
                                         <td>
                                             <ul class="panel-controls">
-                                                <li id="iShow_Rpr_@item.TijBasvuruOneriID" onclick="showDetailY('Rpr_@item.TijBasvuruOneriID')">
+                                                <li id="iShow_Rpr_@item.TijBasvuruOneriID" onclick="ShowDetailY('Rpr_@item.TijBasvuruOneriID')">
                                                     <a href="javascript:void(0)"><span class="fa fa-angle-@(showRow ? "up" : "down")"></span> </a>
                                                 </li>
                                             </ul>
@@ -237,7 +237,7 @@
                                                             <td class="CaptionTd">Form</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">
-                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@title','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezIzlemeJuriOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                <a href="javascript:void(0);" onclick="YeniDialogBB(null, '@title','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezIzlemeJuriOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                     <i class="fa fa-print"></i> @title2 İndir
                                                                 </a>
                                                             </td>
@@ -268,7 +268,7 @@
                                                                     <td>
 
                                                                         <ul class="panel-controls">
-                                                                            <li id="iShow_Jo_@itemJr.TijBasvuruOneriJuriID" onclick="showDetailY('Jo_@itemJr.TijBasvuruOneriJuriID')">
+                                                                            <li id="iShow_Jo_@itemJr.TijBasvuruOneriJuriID" onclick="ShowDetailY('Jo_@itemJr.TijBasvuruOneriJuriID')">
                                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
                                                                             </li>
                                                                         </ul>
@@ -361,7 +361,7 @@
                                                                 <td>
 
                                                                     <ul class="panel-controls">
-                                                                        <li id="iShow_Jo_@itemJr.TijBasvuruOneriJuriID" onclick="showDetailY('Jo_@itemJr.TijBasvuruOneriJuriID')">
+                                                                        <li id="iShow_Jo_@itemJr.TijBasvuruOneriJuriID" onclick="ShowDetailY('Jo_@itemJr.TijBasvuruOneriJuriID')">
                                                                             <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
                                                                         </li>
                                                                     </ul>
@@ -539,9 +539,9 @@
                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                                     <table style="width:100%;">
                                                         <tr>
-                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
+                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü EYK İşlemleri</td>
                                                         </tr>
-                                                        @if (item.IsSonBasvuru && item.DanismanOnayladi == true && !item.EYKDaOnaylandi.HasValue && tiJuriOnerileriEykYaGonre && showRow)
+                                                        @if (item.IsSonBasvuru && item.DanismanOnayladi == true && !item.EYKYaHazirlandi.HasValue && tiJuriOnerileriEykYaGonre && showRow)
                                                         {
                                                             <tr>
                                                                 <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
@@ -550,14 +550,14 @@
                                                                     <table>
                                                                         <tr>
                                                                             <td>
-                                                                                <select class="form-control" id="EykYaGonderildi_@item.UniqueID" onchange="EYKYaOnayChange('@item.UniqueID')">
+                                                                                <select class="form-control" id="EykYaGonderildi_@item.UniqueID" onchange="EykYaOnayChange('@item.UniqueID')">
                                                                                     <option @(!item.EYKYaGonderildi.HasValue ? "selected" : "")></option>
                                                                                     <option value="true" @(item.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı @(item.EYKYaGonderildi==true && item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                                     <option value="false" @(item.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(item.EYKYaGonderildi == false && item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                                 </select>
                                                                             </td>
                                                                             <td>
-                                                                                <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID ','@item.UniqueID', 1)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID ','@item.UniqueID', @EykTipEnum.EykYaGonderildi)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -630,7 +630,7 @@
                                                                                     </select>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID', '@item.UniqueID',2);"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                    <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID', '@item.UniqueID',@EykTipEnum.EykYaHazirlandi);"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                 </td>
                                                                             </tr>
                                                                         </table>
@@ -680,7 +680,7 @@
                                                                         <table>
                                                                             <tr>
                                                                                 <td>
-                                                                                    <select class="form-control" id="EykDaOnaylandi_@item.UniqueID" onchange="EYKOnayChange(this,'@item.UniqueID')">
+                                                                                    <select class="form-control" id="EykDaOnaylandi_@item.UniqueID" onchange="EykOnayChange(this,'@item.UniqueID')">
                                                                                         <option @(!item.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
                                                                                         <option value="true" @(item.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı @(item.EYKDaOnaylandi==true && item.EYKDaOnaylandiIslemTarihi.HasValue ? "(" + item.EYKDaOnaylandiIslemTarihi.ToFormatDate() + ")" : "")</option>
                                                                                         <option value="false" @(item.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(item.EYKDaOnaylandi == false && item.EYKDaOnaylandiIslemTarihi.HasValue ? "(" + item.EYKDaOnaylandiIslemTarihi.ToFormatDate() + ")" : "")</option>
@@ -690,7 +690,7 @@
                                                                                     <input type="text" class="form-control tarihB @(item.EYKDaOnaylandi.HasValue?"":"hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKTarihi_@item.UniqueID" value="@item.EYKTarihi.ToFormatDateInput()" />
                                                                                 </td>
                                                                                 <td>
-                                                                                    <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID', '@item.UniqueID',3);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</label>
+                                                                                    <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID', '@item.UniqueID',@EykTipEnum.EykDaOnaylandi);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</label>
                                                                                 </td>
                                                                             </tr>
                                                                         </table>
@@ -768,8 +768,7 @@
 </div>
 <script>
     $(function () {
-
-        jQuery('._popover').popover({ trigger: 'hover' });
+         
         $('.tarihB').datetimepicker({
             lang: 'tr',
             timepicker: false,
@@ -811,7 +810,7 @@
                         toastr["success"](result.Messages.Messages[0], result.Messages.Title);
                         GetDetail(basvuruUniqueId);
                     }
-                    else  getMsg(result.Messages);
+                    else  GetMsg(result.Messages);
 
                     PanelRefresh(_panel, true);
                 },
@@ -821,7 +820,7 @@
                 }
             });
         }
-    function EYKOnayChange(sndr, tijBasvuruOneriUniqueId) {
+        function EykOnayChange(sndr, tijBasvuruOneriUniqueId) {
         var val = $(sndr).val().toLowerCase(); 
             if (val == 'false') {
                 $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).removeClass("hide");
@@ -846,7 +845,7 @@
                 $('#EYKTarihi_' + tijBasvuruOneriUniqueId).removeClass("hide");
             }
         }
-        function EYKYaOnayChange(id) {
+        function EykYaOnayChange(id) {
             var val = $('#EykYaGonderildi_' + id).val().toLowerCase();
             if (val == 'false') {
                 $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
@@ -861,13 +860,13 @@
             var sndrId = "";
             var eykDaOnaylanmadiDurumAciklamasi = "";
             var eykDaOnaylandiOnayTarihi = ""; 
-            if (onayTipId == 3) {
+            if (onayTipId == @EykTipEnum.EykDaOnaylandi) {
                 sndrId = '#EykDaOnaylandi_' + tijBasvuruOneriUniqueId;
                 if ($(sndrId).val().toLowerCase() == 'false') eykDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
                 eykDaOnaylandiOnayTarihi = $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val();
             }
-            else if (onayTipId == 2) sndrId = '#EykYaHazirlandi_' + tijBasvuruOneriUniqueId;
-            else if (onayTipId == 1) {
+            else if (onayTipId == @EykTipEnum.EykYaHazirlandi) sndrId = '#EykYaHazirlandi_' + tijBasvuruOneriUniqueId;
+            else if (onayTipId == @EykTipEnum.EykYaGonderildi) {
                 sndrId = '#EykYaGonderildi_' + tijBasvuruOneriUniqueId;
                 if ($(sndrId).val().toLowerCase() == 'false') eykDaOnaylanmadiDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
             }
@@ -888,7 +887,7 @@
                         GetDetail(basvuruUniqueId);
 
                     }
-                    else showMmMessage(result.Messages, 'Tamam');
+                    else ShowMmMessage(result.Messages, 'Tamam');
 
                 },
                 error: function (err) {
@@ -913,7 +912,7 @@
                     PanelRefresh(_panel, true);
                     if (!result.IsSuccess) {
                         GetDetail(tijBasvuruUniqueId);
-                        showMmMessage(result.Messages, 'Tamam');
+                        ShowMmMessage(result.Messages, 'Tamam');
                     }
 
                 },
@@ -926,11 +925,11 @@
         }
 </script>
 <script>
-        $(function () {
-            var htmlDurum = @Html.Raw(Json.Encode(Model.DurumHtmlString));
-            $('#tijDurumContent_@Model.TijBasvuruID').html(htmlDurum);
+    $(function () {
+        var htmlDurum = @Html.Raw(Json.Encode(Model.DurumHtmlString));
+        $('#tijDurumContent_@Model.TijBasvuruID').html(htmlDurum);
 
-            var htmlDonem = @Html.Raw(Json.Encode(Model.DonemHtmlString));
-            $('#tijDonemContent_@Model.TijBasvuruID').html(htmlDonem);
-        })
+        var htmlDonem = @Html.Raw(Json.Encode(Model.DonemHtmlString));
+        $('#tijDonemContent_@Model.TijBasvuruID').html(htmlDonem);
+    });
 </script>

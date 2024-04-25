@@ -36,12 +36,16 @@ namespace Entities.Entities
             this.BelgeTipleris = new HashSet<BelgeTipleri>();
             this.Birimlers = new HashSet<Birimler>();
             this.BolumEslestirs = new HashSet<BolumEslestir>();
+            this.DonemProjesis = new HashSet<DonemProjesi>();
+            this.DonemProjesiBasvurus = new HashSet<DonemProjesiBasvuru>();
+            this.DonemProjesiMuafOgrencilers = new HashSet<DonemProjesiMuafOgrenciler>();
             this.Duyurulars = new HashSet<Duyurular>();
             this.Enstitulers = new HashSet<Enstituler>();
             this.GonderilenMailKullanicilars = new HashSet<GonderilenMailKullanicilar>();
             this.GonderilenMaillers = new HashSet<GonderilenMailler>();
             this.KullaniciEnstituYetkileris = new HashSet<KullaniciEnstituYetkileri>();
             this.Kullanicilar1 = new HashSet<Kullanicilar>();
+            this.KullaniciOgrenimleris = new HashSet<KullaniciOgrenimleri>();
             this.KullaniciProgramlaris = new HashSet<KullaniciProgramlari>();
             this.MailSablonlaris = new HashSet<MailSablonlari>();
             this.MesajKategorileris = new HashSet<MesajKategorileri>();
@@ -178,6 +182,12 @@ namespace Entities.Entities
         public virtual ICollection<BolumEslestir> BolumEslestirs { get; set; }
         public virtual Cinsiyetler Cinsiyetler { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DonemProjesi> DonemProjesis { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DonemProjesiBasvuru> DonemProjesiBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DonemProjesiMuafOgrenciler> DonemProjesiMuafOgrencilers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Duyurular> Duyurulars { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Enstituler> Enstitulers { get; set; }
@@ -199,6 +209,8 @@ namespace Entities.Entities
         public virtual Unvanlar Unvanlar { get; set; }
         public virtual Uyruklar Uyruklar { get; set; }
         public virtual YetkiGruplari YetkiGruplari { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<KullaniciOgrenimleri> KullaniciOgrenimleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KullaniciProgramlari> KullaniciProgramlaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

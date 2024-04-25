@@ -6,7 +6,7 @@ using System.Web;
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public class DuyuruPopupTipiEnum
-    { 
+    {
         //--1	Anasayfa
         //--2	Belge talebi
         //--3	Talep yapma
@@ -17,6 +17,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         //--8	Tez savunması
         //--9	Tez ara rapor girişi
         //--10	Mezuniyet başvurusu
+        //--11	Dönem Projesi başvurusu
         public const int AnaSayfa = 1;
         public const int BelgeTalebi = 2;
         public const int TalepYap = 3;
@@ -27,6 +28,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int TezOneriSavunma = 8;
         public const int TiBasvuru = 9;
         public const int MezuniyetBasvuru = 10;
+        public const int DonemProjesiBasvuru = 11;
 
     }
 }

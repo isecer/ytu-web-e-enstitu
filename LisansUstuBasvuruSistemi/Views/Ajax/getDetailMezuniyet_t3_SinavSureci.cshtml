@@ -46,7 +46,7 @@
                             }
                             else if (isSrTalebiYapilabilir)
                             {
-                                <span class="label label-primary" style="cursor:pointer;" onclick="showSRDialog(@Model.MezuniyetBasvurulariID,0)">Yeni Sınav Talebi Oluştur</span>
+                                <span class="label label-primary" style="cursor:pointer;" onclick="ShowSrDialog(@Model.MezuniyetBasvurulariID,0)">Yeni Sınav Talebi Oluştur</span>
                             }
                         </td>
                     </tr>
@@ -125,7 +125,7 @@
                                                                             <td style="width:20px;font-size:12pt;">@rowIndex)</td>
                                                                             <td>
                                                                                 <ul class="panel-controls">
-                                                                                    <li id="iShow_Ap_@item.SRTalepID" onclick="showDetailY('Ap_@item.SRTalepID')">
+                                                                                    <li id="iShow_Ap_@item.SRTalepID" onclick="ShowDetailY('Ap_@item.SRTalepID')">
                                                                                         <a href="javascript:void(0)"><span class="fa @(rowIndex == Model.MezuniyetSrModel.SalonRezervasyonlari.Count ? "fa-angle-down" : "fa-angle-up")"></span> </a>
                                                                                     </li>
                                                                                 </ul>
@@ -194,7 +194,7 @@
                                                                 <td width="40">
                                                                     @if (isSrTalebiDuzeltilebilir)
                                                                     {
-                                                                        <a href="javascript:void(0)" onclick="showSRDialog(@Model.MezuniyetBasvurulariID,@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="Rezervasyonu Düzenle"></i></a>
+                                                                        <a href="javascript:void(0)" onclick="ShowSrDialog(@Model.MezuniyetBasvurulariID,@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="Rezervasyonu Düzenle"></i></a>
                                                                     }
                                                                 </td>
                                                             </tr>
@@ -273,9 +273,9 @@
                                                                                                                                     data: { 'id': id, 'SinavTarihi': val },
                                                                                                                                     success: function (result) {
                                                                                                                                         PanelRefresh(_panel, true);
-                                                                                                                                        getMsg(result.MmMessage);
+                                                                                                                                        GetMsg(result.MmMessage);
                                                                                                                                         if (result.IsSuccess) {
-                                                                                                                                            getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                                            GetDetailx(@Model.MezuniyetBasvurulariID);
                                                                                                                                         }
                                                                                                                                     },
                                                                                                                                     error: function (err) {
@@ -450,7 +450,7 @@
                                                                                                         <tr>
                                                                                                             <td>
                                                                                                                 <ul class="panel-controls">
-                                                                                                                    <li id="iShow_SJo_@itemJuri.SRTalepJuriID" onclick="showDetailY('SJo_@itemJuri.SRTalepJuriID')">
+                                                                                                                    <li id="iShow_SJo_@itemJuri.SRTalepJuriID" onclick="ShowDetailY('SJo_@itemJuri.SRTalepJuriID')">
                                                                                                                         <a href="javascript:void(0)"><span class="fa fa-angle-@(showDanismanRow ? "up" : "down")" aria-hidden="true"></span> </a>
                                                                                                                     </li>
                                                                                                                 </ul>
@@ -756,7 +756,7 @@
                                                                                             <td class="CaptionTd">Tutanak Formu</td>
                                                                                             <td class="CaptionTd">:</td>
                                                                                             <td class="ValueTd">
-                                                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                <a href="javascript:void(0);" onclick="YeniDialogBB(null, '@(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                     <i class="fa fa-file-pdf-o"></i> @(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formunu İndir
                                                                                                 </a>
                                                                                             </td>
@@ -848,9 +848,9 @@
                                                                                                                                                 data: { 'id': id, 'tezTeslimSonTarih': val },
                                                                                                                                                 success: function (result) {
                                                                                                                                                     PanelRefresh(_panel, true);
-                                                                                                                                                    getMsg(result.MmMessage);
+                                                                                                                                                    GetMsg(result.MmMessage);
                                                                                                                                                     if (result.IsSuccess) {
-                                                                                                                                                        getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                                                        GetDetailx(@Model.MezuniyetBasvurulariID);
                                                                                                                                                     }
                                                                                                                                                 },
                                                                                                                                                 error: function (err) {
@@ -922,7 +922,7 @@
                                                                                                                     PanelRefresh(_panel, true);
                                                                                                                     toastr[result.IsSuccess ? "success" : "error"](result.MmMessage.Messages.join('<br/>'), result.MmMessage.Title);
                                                                                                                      if (result.IsSuccess) {
-                                                                                                                        getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                        GetDetailx(@Model.MezuniyetBasvurulariID);
                                                                                                                     }
                                                                                                                 },
                                                                                                                 error: function (err) {
@@ -1034,7 +1034,7 @@
                                                                                                                     PanelRefresh(_panel, true);
                                                                                                                     toastr[result.IsSuccess ? "success" : "error"](result.MmMessage.Messages.join('<br/>'), result.MmMessage.Title);
                                                                                                                      if (result.IsSuccess) {
-                                                                                                                        getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                        GetDetailx(@Model.MezuniyetBasvurulariID);
                                                                                                                     }
                                                                                                                 },
                                                                                                                 error: function (err) {
@@ -1116,7 +1116,7 @@
                                                                                                     <td class="CaptionTd">Tez Teslim Formu</td>
                                                                                                     <td class="CaptionTd">:</td>
                                                                                                     <td class="ValueTd">
-                                                                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Düzeltilmiş Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                        <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'FR-0338 Düzeltilmiş Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                             <i class="fa fa-file-pdf-o"></i> FR-0338 Düzeltilmiş Mezuniyet Tez Teslim Formunu İndir
                                                                                                         </a>
                                                                                                     </td>
@@ -1185,7 +1185,7 @@
                                                                                                     <td class="CaptionTd">Tez Teslim Formu</td>
                                                                                                     <td class="CaptionTd">:</td>
                                                                                                     <td class="ValueTd">
-                                                                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                        <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                             <i class="fa fa-file-pdf-o"></i> FR-0338 Mezuniyet Tez Teslim Formunu İndir
                                                                                                         </a>
                                                                                                     </td>
@@ -1261,7 +1261,7 @@
                                         success: function (result) {
                                             PanelRefresh(pnlx, true);
                                             if (result.Messages.length > 0) toastr[result.IsSuccess?"success":"error"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                            getDetailx(MBID);
+                                            GetDetailx(MBID);
                                             var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
                                             $(_clsBtn).click();
 

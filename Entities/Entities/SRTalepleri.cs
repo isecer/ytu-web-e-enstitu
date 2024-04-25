@@ -26,6 +26,7 @@ namespace Entities.Entities
         public Nullable<int> TIBasvuruAraRaporID { get; set; }
         public Nullable<int> MezuniyetBasvurulariID { get; set; }
         public Nullable<int> ToBasvuruSavunmaID { get; set; }
+        public Nullable<int> DonemProjesiBasvuruID { get; set; }
         public bool IsOnline { get; set; }
         public int SRTalepTipID { get; set; }
         public int TalepYapanID { get; set; }
@@ -69,6 +70,7 @@ namespace Entities.Entities
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
+        public virtual DonemProjesiBasvuru DonemProjesiBasvuru { get; set; }
         public virtual Enstituler Enstituler { get; set; }
         public virtual HaftaGunleri HaftaGunleri { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }

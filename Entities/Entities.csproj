@@ -206,6 +206,30 @@
     <Compile Include="Entities\Donemler.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DonemProjesi.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DonemProjesiAyarlar.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DonemProjesiBasvuru.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DonemProjesiDurumlari.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DonemProjesiEnstituOnayDurumlari.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DonemProjesiJurileri.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DonemProjesiJuriOnayDurumlari.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DonemProjesiMuafOgrenciler.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DuyuruEkleri.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
@@ -243,6 +267,9 @@
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Kullanicilar.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\KullaniciOgrenimleri.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\KullaniciProgramlari.cs">

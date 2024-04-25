@@ -77,6 +77,14 @@ namespace Entities.Entities
         public virtual DbSet<BolumEslestir> BolumEslestirs { get; set; }
         public virtual DbSet<Cinsiyetler> Cinsiyetlers { get; set; }
         public virtual DbSet<Donemler> Donemlers { get; set; }
+        public virtual DbSet<DonemProjesi> DonemProjesis { get; set; }
+        public virtual DbSet<DonemProjesiAyarlar> DonemProjesiAyarlars { get; set; }
+        public virtual DbSet<DonemProjesiBasvuru> DonemProjesiBasvurus { get; set; }
+        public virtual DbSet<DonemProjesiDurumlari> DonemProjesiDurumlaris { get; set; }
+        public virtual DbSet<DonemProjesiEnstituOnayDurumlari> DonemProjesiEnstituOnayDurumlaris { get; set; }
+        public virtual DbSet<DonemProjesiJurileri> DonemProjesiJurileris { get; set; }
+        public virtual DbSet<DonemProjesiJuriOnayDurumlari> DonemProjesiJuriOnayDurumlaris { get; set; }
+        public virtual DbSet<DonemProjesiMuafOgrenciler> DonemProjesiMuafOgrencilers { get; set; }
         public virtual DbSet<DuyuruEkleri> DuyuruEkleris { get; set; }
         public virtual DbSet<Duyurular> Duyurulars { get; set; }
         public virtual DbSet<DuyuruPopuplar> DuyuruPopuplars { get; set; }
@@ -90,6 +98,7 @@ namespace Entities.Entities
         public virtual DbSet<KayitDurumlari> KayitDurumlaris { get; set; }
         public virtual DbSet<KullaniciEnstituYetkileri> KullaniciEnstituYetkileris { get; set; }
         public virtual DbSet<Kullanicilar> Kullanicilars { get; set; }
+        public virtual DbSet<KullaniciOgrenimleri> KullaniciOgrenimleris { get; set; }
         public virtual DbSet<KullaniciProgramlari> KullaniciProgramlaris { get; set; }
         public virtual DbSet<KullaniciTipleri> KullaniciTipleris { get; set; }
         public virtual DbSet<Log> Logs { get; set; }

@@ -6,7 +6,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (!Model.isDegerlendirme.HasValue)
+@if (!Model.IsDegerlendirme.HasValue)
 {
     <div class="row">
         <div class="col-md-12">
@@ -197,7 +197,7 @@
 {
     <script>
         $(function () { 
-            GetDetail('@Model.Data.First().UniqueID','@Model.IsKomiteOrJuri.ToString().ToLower()','@Model.isDegerlendirme');
+            GetDetail('@Model.Data.First().UniqueID','@Model.IsKomiteOrJuri.ToString().ToLower()','@Model.IsDegerlendirme');
         },200)
     </script>
 }
@@ -279,7 +279,7 @@ else if (Model.Data.Any())
         }
         ShowDuyuru(popupSetting); 
     }
-    var isDegerlendirme = '@(Model.isDegerlendirme.HasValue?Model.isDegerlendirme.ToString().ToLower():"")';
+    var isDegerlendirme = '@(Model.IsDegerlendirme.HasValue?Model.IsDegerlendirme.ToString().ToLower():"")';
     var isKomiteOrJuri='@(Model.IsKomiteOrJuri.HasValue?Model.IsKomiteOrJuri.ToString().ToLower():"")';
     function GetDetail(id) {
         var panel = $('#bsvrDet_' + id);

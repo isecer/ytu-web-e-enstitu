@@ -32,8 +32,8 @@ namespace LisansUstuBasvuruSistemi
 
             SistemBilgilendirmeBus.SistemBilgisiKaydet("Application_Start()", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
            
-            //RollerBus.UpdateRoles();
-            //MenulerBus.UpdateMenus();
+            RollerBus.UpdateRoles();
+            MenulerBus.UpdateMenus();
 
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();

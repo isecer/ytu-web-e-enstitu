@@ -1365,7 +1365,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mb = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
             if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent())
             {
-                mMessage.Messages.Add("Jür öneri formu kayıt işlemi için yetkili değilsiniz.");
+                mMessage.Messages.Add("Jüri öneri formu kayıt işlemi için yetkili değilsiniz.");
             }
             else if (!RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() && mb.TezDanismanID != UserIdentity.Current.Id)
             {
@@ -1947,142 +1947,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-        public ActionResult JuriOneriFormuOnayDurumKayit(int mezuniyetBasvurulariId, int mezuniyetJuriOneriFormId, bool eykDaOnayOrEykYaGonderim, bool? onaylandi, string durumAciklamasi)
-        {
-            var mmMessage = new MmMessage
-            {
-                IsSuccess = false,
-                Title = "Jüri öneri formu " + (eykDaOnayOrEykYaGonderim ? "EYK'da onay" : "EYK'ya gönderim") + " işlemi",
-                MessageType = MsgTypeEnum.Warning
-            };
-
-            var mb = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
-            var juriOneriFormu = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
-
-
-            if (mb.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
-            {
-                mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
-            }
-            else if (!eykDaOnayOrEykYaGonderim && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent())
-            {
-                mmMessage.Messages.Add("Jüri öneri formunda onay yetkisine sahip değilsiniz!");
-            }
-            else if (eykDaOnayOrEykYaGonderim && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent())
-            {
-                mmMessage.Messages.Add("Jüri öneri formunda EYK'da onay yetkisine sahip değilsiniz!");
-            }
-            else if (juriOneriFormu == null)
-            {
-                mmMessage.Messages.Add("İşlem yapılmak istenen jüri öneri formu sistemde bulunamadı!");
-            }
-            else
-            {
-                if (eykDaOnayOrEykYaGonderim)
-                {
-                    if (juriOneriFormu.EYKYaGonderildi != true)
-                    {
-                        mmMessage.Messages.Add("EYK Ya gönderilmeyen jüri öneri formu üzerinde EYK Onayı işlemi yapılamaz!");
-                    }
-                    else if (onaylandi == false && durumAciklamasi.IsNullOrWhiteSpace())
-                    {
-                        mmMessage.Messages.Add("EYK'da onaylanmama sebebini giriniz!");
-                    }
-                    else if (mb.EYKTarihi.HasValue && mb.SRTalepleris.Any(a => a.SRDurumID == SrTalepDurumEnum.Onaylandı))
-                    {
-                        mmMessage.Messages.Add("Mezuniyet başvurusuna ait Salon rezervasyonu alındığı için jüri öneri formu onay işlemi yapılamaz!");
-                    }
-                }
-                else
-                {
-                    if (juriOneriFormu.EYKDaOnaylandi.HasValue)
-                    {
-                        mmMessage.Messages.Add("EYK onay işlemi yapılan bir form da ön onay işlemi gerçekleştirilemez!");
-                    }
-                }
-
-                if (mmMessage.Messages.Count == 0 && eykDaOnayOrEykYaGonderim && onaylandi == true)
-                {
-
-
-                    string msg = "";
-                    var asilCount = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Count(p => p.IsAsilOrYedek == true);
-                    var yedekCount = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Count(p => p.IsAsilOrYedek == false);
-                    var countSizeAsil = mb.OgrenimTipKod.IsDoktora() ? 5 : 3;
-                    if (asilCount != countSizeAsil)
-                        msg += ("<br />* Jüri adayı önerisinden " + countSizeAsil + " Asil aday belirlemeniz gerekmektedi.");
-                    if (yedekCount != 2)
-                        msg += ("<br />* Jüri adayı önerisinde 2 Yedek aday belirlemeniz gerekmektedi.");
-                    if (msg != "")
-                    {
-                        mmMessage.Messages.Add("Jüri öneri formunda EYK'da onaylandı işlemini yapabilmeniz için: " + msg);
-                    }
-
-                }
-                if (!mmMessage.Messages.Any())
-                {
-
-                    var isEykdaOnaylandiOrGonderildiDurum = eykDaOnayOrEykYaGonderim
-                        ? juriOneriFormu.EYKDaOnaylandi
-                        : juriOneriFormu.EYKYaGonderildi;
-
-                    // eyk yada eykya gönderimi onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
-                    if (isEykdaOnaylandiOrGonderildiDurum.HasValue || onaylandi != false)
-                    {
-                        var ogrenciObsBilgi =
-                            KullanicilarBus.OgrenciBilgisiGuncelleObs(juriOneriFormu.MezuniyetBasvurulari.KullaniciID);
-
-                        if (!ogrenciObsBilgi.KayitVar)
-                        {
-                            mmMessage.Messages.Add(
-                                "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
-                        }
-                        else if (juriOneriFormu.MezuniyetBasvurulari.OgrenciNo != ogrenciObsBilgi.OgrenciInfo.OGR_NO)
-                        {
-                            mmMessage.Messages.Add(
-                                "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir. Onay işlemi yapılamaz.");
-                        }
-                    }
-                }
-                if (mmMessage.Messages.Count == 0)
-                {
-                    if (eykDaOnayOrEykYaGonderim)
-                    {
-                        juriOneriFormu.EYKDaOnaylandi = onaylandi;
-                        if (mb.EYKTarihi == null && onaylandi == true) mb.EYKTarihi = DateTime.Now.Date;
-                        juriOneriFormu.EYKDaOnaylandiOnayTarihi = DateTime.Now;
-                        juriOneriFormu.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
-                        juriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi = onaylandi == false ? durumAciklamasi : "";
-                        _entities.SaveChanges();
-                        var sendMail = onaylandi == true && mb.EYKTarihi.HasValue;
-                        if (sendMail)
-                        {
-                            MezuniyetBus.SendMailJuriOneriFormuOnay(mezuniyetJuriOneriFormId);
-                        }
-                    }
-                    else
-                    {
-                        juriOneriFormu.EYKYaGonderildi = onaylandi;
-                        juriOneriFormu.EYKYaGonderimDurumAciklamasi = onaylandi == false ? durumAciklamasi : "";
-                        juriOneriFormu.EYKYaGonderildiIslemTarihi = DateTime.Now;
-                        juriOneriFormu.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
-                        _entities.SaveChanges();
-                    }
-
-                    mmMessage.MessageType = MsgTypeEnum.Success;
-                    mmMessage.IsSuccess = true;
-
-                    mmMessage.Messages.Add("Form " + (onaylandi.HasValue ? (onaylandi.Value ? "'Onaylandı'" : "'Onaylanmadı'") : "İşlem bekliyor") + " şeklinde güncellendi...");
-                }
-            }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
-            return new
-            {
-                mmMessage.IsSuccess,
-                Messages = strView
-            }.ToJsonResult();
-        }
-
+       
 
         public ActionResult SrJuriDegistir(Guid uniqueId)
         {

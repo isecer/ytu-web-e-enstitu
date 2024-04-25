@@ -1,0 +1,26 @@
+﻿@model Entities.Entities.DonemProjesiBasvuru
+@using (Ajax.BeginForm("DonemProjesiBasvuruFormuPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmDonemProjesiBasvuruFormu" }))
+{
+    @Html.HiddenFor(p => p.DonemProjesiID)
+    @Html.HiddenFor(p => p.DonemProjesiBasvuruID)
+    <div class="panel panel-info" style="margin: 0px; padding: 0px;">
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel panel-default form-horizontal" id="_PnpEADP">
+                <div class="panel-body form-group-separated">
+                    <div class="form-group Online">
+                        <label class="col-md-3 col-xs-3 control-label">Proje Başlığı</label>
+                        <div class="col-md-9 col-xs-9">
+                            <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.ProjeBasligi" name="ProjeBasligi" id="ProjeBasligi">
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 col-xs-3 control-label">Proje Özeti</label>
+                        <div class="col-md-9 col-xs-9">
+                            <textarea style="min-height:100px;width:100%; resize:vertical;" name="ProjeOzeti" id="ProjeOzeti" autocomplete="off">@Model.ProjeOzeti</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

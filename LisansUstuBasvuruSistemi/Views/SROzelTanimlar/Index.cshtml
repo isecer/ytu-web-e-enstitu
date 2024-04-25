@@ -104,7 +104,7 @@
                                         </td>
                                         <td>
                                             <a href="@Url.Action("Kayit", "SrOzelTanimlar" , new { id=item.SROzelTanimID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="getDetail('@item.SROzelTanimID',true,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="GetDetail('@item.SROzelTanimID',true,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.SROzelTanimID" style="display:none">
@@ -139,9 +139,9 @@
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled) getDetail(id, false);
+        if (unTogled) GetDetail(id, false);
     }
-    function getDetail(id, Isdelete, sndr) {
+    function GetDetail(id, Isdelete, sndr) {
         var _panel = $('#dvDetay_' + id);
         PanelRefresh(_panel, false);
         $.ajax({
@@ -162,7 +162,7 @@
                                 label: 'Özel Tanımı Sil',
                                 className: "btn-danger",
                                 callback: function () {
-                                    sil(sndr, id);
+                                    Sil(sndr, id);
                                 }
                             },
                             danger: {
@@ -184,7 +184,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "SrOzelTanimlar")',
             data: { id: id },

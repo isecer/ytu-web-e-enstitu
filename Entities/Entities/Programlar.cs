@@ -24,6 +24,7 @@ namespace Entities.Entities
             this.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars = new HashSet<BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar>();
             this.BelgeTalepleris = new HashSet<BelgeTalepleri>();
             this.BolumEslestirs = new HashSet<BolumEslestir>();
+            this.DonemProjesis = new HashSet<DonemProjesi>();
             this.Kullanicilars = new HashSet<Kullanicilar>();
             this.KullaniciProgramlaris = new HashSet<KullaniciProgramlari>();
             this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
@@ -63,6 +64,8 @@ namespace Entities.Entities
         public virtual ICollection<BelgeTalepleri> BelgeTalepleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BolumEslestir> BolumEslestirs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DonemProjesi> DonemProjesis { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Kullanicilar> Kullanicilars { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }

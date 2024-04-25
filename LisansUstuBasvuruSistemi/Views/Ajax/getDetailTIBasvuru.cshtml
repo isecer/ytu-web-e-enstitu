@@ -3,6 +3,7 @@
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model TiBasvuruDetayDto
 @{
@@ -180,7 +181,7 @@
                                                 <tr>
                                                     <td class="CaptionTd">Rapor Dosyası</td>
                                                     <td class="CaptionTd">:</td>
-                                                    <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@item.TICalismaRaporDosyaYolu','@item.TICalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.TICalismaRaporDosyaAdi</a></td>
+                                                    <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(item.TICalismaRaporDosyaYolu)','@item.TICalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.TICalismaRaporDosyaAdi</a></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -432,7 +433,7 @@
                                             @if (!Model.DegerlendirenUniqueID.HasValue)
                                             {
                                                 <ul class="panel-controls">
-                                                    <li id="iShow_Rpr_@item.TIBasvuruAraRaporID" onclick="showDetailY('Rpr_@item.TIBasvuruAraRaporID')">
+                                                    <li id="iShow_Rpr_@item.TIBasvuruAraRaporID" onclick="ShowDetailY('Rpr_@item.TIBasvuruAraRaporID')">
                                                         <a href="javascript:void(0)"><span class="fa fa-angle-@(showRow ? "up" : "down")"></span> </a>
                                                     </li>
                                                 </ul>
@@ -534,7 +535,7 @@
                                                     <tr>
                                                         <td class="CaptionTd">Rapor Dosyası</td>
                                                         <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@item.TICalismaRaporDosyaYolu','@item.TICalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.TICalismaRaporDosyaAdi</a></td>
+                                                        <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(item.TICalismaRaporDosyaYolu)','@item.TICalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.TICalismaRaporDosyaAdi</a></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="CaptionTd">100/2000 YÖK Bursiyeri</td>
@@ -553,7 +554,7 @@
                                                             <td class="CaptionTd">Tez İzleme Rapor Formu</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">
-                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Doktora Tez İzleme Rapor Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezIzlemeDegerlendirmeFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Doktora Tez İzleme Rapor Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezIzlemeDegerlendirmeFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                     <i class="fa fa-print"></i> FR-0307 Doktora Tez İzleme Rapor Formunu İndir
                                                                 </a>
                                                             </td>
@@ -587,7 +588,7 @@
                                                                 <td>
 
                                                                     <ul class="panel-controls">
-                                                                        <li id="iShow_Jo_@itemJr.TIBasvuruAraRaporKomiteID" onclick="showDetailY('Jo_@itemJr.TIBasvuruAraRaporKomiteID')">
+                                                                        <li id="iShow_Jo_@itemJr.TIBasvuruAraRaporKomiteID" onclick="ShowDetailY('Jo_@itemJr.TIBasvuruAraRaporKomiteID')">
                                                                             <a href="javascript:void(0)"><span class="fa fa-angle-@(openRow ? "up" : "down")"></span> </a>
                                                                         </li>
                                                                     </ul>
@@ -840,7 +841,7 @@
                                                         <td width="120" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;padding-bottom:2px;">
                                                             @if (toplantiYetki && item.TIBasvuruAraRaporDurumID <= TiAraRaporDurumuEnum.ToplantiBilgileriGirildi)
                                                             {
-                                                                <span class="label label-info" style="cursor:pointer;" onclick="showSRDialog(@item.TIBasvuruID,@item.TIBasvuruAraRaporID,@(srTalebiYapildi ? item.SRModel.SRTalepID : 0))"><i class="fa fa-@(srTalebiYapildi?"edit":"plus") fa-lg"></i> @(srTalebiYapildi ? "Toplantı Bilgilerini Düzenle" : "Yeni Toplantı Oluştur")</span>
+                                                                <span class="label label-info" style="cursor:pointer;" onclick="ShowSrDialog(@item.TIBasvuruID,@item.TIBasvuruAraRaporID,@(srTalebiYapildi ? item.SRModel.SRTalepID : 0))"><i class="fa fa-@(srTalebiYapildi?"edit":"plus") fa-lg"></i> @(srTalebiYapildi ? "Toplantı Bilgilerini Düzenle" : "Yeni Toplantı Oluştur")</span>
                                                             }
                                                         </td>
                                                     </tr>
@@ -955,10 +956,4 @@
             </table>
         </div>
     }
-</div>
-<script>
-    $(function () {
-        jQuery('._popover').popover({ trigger: 'hover' });
-    })
-
-</script>
+</div> 

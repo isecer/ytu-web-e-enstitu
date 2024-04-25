@@ -23,12 +23,11 @@
                     @foreach (var cat in grup)
                     {
                         var ayar = Model.Where(p => p.Kategori == cat).ToArray();
-                        var toggleC = dctGrupToggle.Where(p => p.Key == cat).First();
-
-                        <div class="panel panel-warning @(toggleC.Value?"panel-toggled":"")">
+                        var toggleC = dctGrupToggle.First(p => p.Key == cat);
+                        <div class="panel panel-warning">
                             <div class="panel-heading padding-0">
                                 <div class="portlet-title">
-                                    <h3 class="panel-title"><i class="fa fa-cogs"></i>&nbsp;@cat</h3>
+                                    <h3 class="panel-title"><i class="fa fa-cogs"></i> @cat</h3>
                                     <ul class="panel-controls">
                                         <li>
                                             <input type="hidden" name="PanelToggled" value="@(cat)__@toggleC.Value.ToString().ToLower()" />
@@ -41,59 +40,70 @@
                             <div class="panel-body" style="padding:0px;margin:0px;">
                                 <div class="panel panel-default form-horizontal" style="padding:0px;margin:0px;">
                                     <div class="panel-body form-group-separated">
-                                        @foreach (var item in ayar)
-                                        {
+                                        <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                                            @foreach (var item in ayar)
+                                            {
+                                                <tr>
+                                                    <td style="text-align:right;" width="360">
+                                                        @item.AyarAdi
+                                                    </td>
+                                                    <td width="30" style="padding-left:10px;">
+                                                        @if (!item.Aciklama.IsNullOrWhiteSpace())
+                                                        {
+                                                            <button style="padding-left:3px;padding-right:2px;" type="button" class="btn btn-info popover-dismiss glow-on-hover" title="@item.AyarAdi" data-content="@item.Aciklama">
+                                                                <i class="fa fa-info-circle fa-lg" style="margin:0px;"></i>
+                                                            </button>
 
-                                            <div class="form-group">
-                                                <label class="col-md-4 col-xs-4 control-label">@item.AyarAdi</label>
-                                                <div class="col-md-8 col-xs-8">
-                                                    <div class="input-icon right">
-                                                        <input type="text" style="width:100%;display:none;" name="AyarAdi" value="@item.AyarAdi" />
+                                                        }
+                                                    </td>
+                                                    <td>
 
-                                                        @if (item.InpType == "text")
-                                                        {
-                                                            <input type="text" style="width:100%;" name="AyarDegeri" class="form-control" value="@item.AyarDegeri" />
-                                                        }
-                                                        else if (item.InpType == "password")
-                                                        {
-                                                            <input type="password" style="width:100%;" name="AyarDegeri" class="form-control" value="@item.AyarDegeri" />
-                                                        }
-                                                        else if (item.InpType == "textarea")
-                                                        {
-                                                            <textarea style="height: 160px;" name="AyarDegeri" class="form-control">@item.AyarDegeri</textarea>
-                                                        }
-                                                        else if (item.InpType == "checkbox")
-                                                        {
-                                                            var itms = item.SItems.Split(',');
-                                                            var dataOnL = "Evet";
-                                                            var dataOfL = "Hayır";
-                                                            if (itms.Length > 1) { dataOnL = itms[0]; dataOfL = itms[1]; }
-                                                            var chkD = !item.AyarDegeri.IsNullOrWhiteSpace() && Convert.ToBoolean(item.AyarDegeri);
-                                                            <input type="text" name="AyarDegeri" value="@item.AyarDegeri" style="display: none;" />
-                                                            <div class="make-switch" data-on-label="@dataOnL" data-off-label="@dataOfL">
-                                                                <input type="checkbox" value="true" class="toggle" @chkD.ToChecked() onchange="checkControl(this)" />
-                                                            </div>
-                                                        }
-                                                        else if (item.InpType == "select")
-                                                        {
-                                                            var itms = item.SItems.Split(',');
-                                                            <select class="form-control" name="AyarDegeri" style="width: 100%;">
-                                                                @foreach (var val in itms)
-                                                                {
-                                                                    <option value="@val" @(val == item.AyarDegeri ? "selected='selected'" : "")>@val</option>
-                                                                }
-                                                            </select>
-                                                        }
+                                                        <div class="inputContent input-icon right">
+                                                            <input type="text" style="width:100%;display:none;" name="AyarAdi" value="@item.AyarAdi" />
 
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                            @if (item.InpType == "text")
+                                                            {
+                                                                <input type="text" style="width:100%;" name="AyarDegeri" class="form-control" value="@item.AyarDegeri" />
+                                                            }
+                                                            else if (item.InpType == "password")
+                                                            {
+                                                                <input type="password" style="width:100%;" name="AyarDegeri" class="form-control" value="@item.AyarDegeri" />
+                                                            }
+                                                            else if (item.InpType == "textarea")
+                                                            {
+                                                                <textarea style="height: 160px;" name="AyarDegeri" class="form-control">@item.AyarDegeri</textarea>
+                                                            }
+                                                            else if (item.InpType == "checkbox")
+                                                            {
+                                                                var itms = item.SItems.Split(',');
+                                                                var dataOnL = "Evet";
+                                                                var dataOfL = "Hayır";
+                                                                if (itms.Length > 1) { dataOnL = itms[0]; dataOfL = itms[1]; }
+                                                                var chkD = !item.AyarDegeri.IsNullOrWhiteSpace() && Convert.ToBoolean(item.AyarDegeri);
+                                                                <input type="text" name="AyarDegeri" value="@item.AyarDegeri" style="display: none;" />
+                                                                <div class="make-switch" data-on-label="@dataOnL" data-off-label="@dataOfL">
+                                                                    <input type="checkbox" value="true" class="toggle" @chkD.ToChecked() onchange="checkControl(this)" />
+                                                                </div>
+                                                            }
+                                                            else if (item.InpType == "select")
+                                                            {
+                                                                var itms = item.SItems.Split(',');
+                                                                <select class="form-control" name="AyarDegeri" style="width: 100%;">
+                                                                    @foreach (var val in itms)
+                                                                    {
+                                                                        <option value="@val" @(val == item.AyarDegeri ? "selected='selected'" : "")>@val</option>
+                                                                    }
+                                                                </select>
+                                                            }
 
-                                        }
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </table>
                                     </div>
                                 </div>
-                            </div>
-
+                            </div> 
                         </div>
 
                     }
@@ -108,6 +118,9 @@
     }
 </div>
 <script type="text/javascript">
+    $(function () {
+        $(".popover-dismiss").popover({ trigger: 'hover', html: true });
+    });
     function toogleControl(sndr, cat) {
         var _val = $(sndr).prev().val();
         var nval = _val.replace(cat + '__', '') == 'true';
@@ -116,7 +129,7 @@
     }
     function checkControl(sndr) {
         var chk = $(sndr).prop("checked");
-        var pContent = $(sndr).parents(".form-group").first();
+        var pContent = $(sndr).parents('.inputContent').first();
         var pvalFielt = $(pContent).find("input[name='AyarDegeri']").first();
         $(pvalFielt).val(chk);
     }

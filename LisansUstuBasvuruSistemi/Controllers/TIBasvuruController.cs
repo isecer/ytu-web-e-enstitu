@@ -1037,7 +1037,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             if (kModel.Dosya != null)
                             {  
-                                FileHelper.DeleteFile(tiBasvuruAraRapor.TICalismaRaporDosyaYolu); 
+                                FileHelper.Delete(tiBasvuruAraRapor.TICalismaRaporDosyaYolu); 
                                 tiBasvuruAraRapor.TICalismaRaporDosyaAdi = kModel.Dosya.FileName.GetFileName();
                                 tiBasvuruAraRapor.TICalismaRaporDosyaYolu = FileHelper.SaveTiAraRaporDosya(kModel.Dosya);
                             }

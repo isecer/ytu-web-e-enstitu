@@ -94,7 +94,7 @@
                                                 <ul class="dropdown-menu" role="menu">
 
                                                     <li>
-                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                                        <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
                                                             <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> @(isDoktora? "FR-0300 Doktora" : "FR-0339 Yüksek Lisans") Tez Jüri Öneri Formunu İndir
                                                         </a>
                                                     </li>
@@ -104,14 +104,14 @@
                                                         {
 
                                                             <li>
-                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                     <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> @(isDoktora? "FR-0302 Doktora" : "FR-0341 Yüksek Lisans") Jüri Üyelerine Tez Teslim Formunu İndir
                                                                 </a>
                                                             </li>
 
                                                         }
                                                         <li>
-                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                            <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                 <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0304 Tezden Üretilen Yayınları Değerlendirme Formunu İndir
                                                             </a>
                                                         </li>
@@ -149,7 +149,7 @@
                                                                     <td>
 
                                                                         <ul class="panel-controls">
-                                                                            <li id="iShow_Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.MezuniyetJuriOneriFormuJuriID')">
+                                                                            <li id="iShow_Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" onclick="ShowDetailY('Jo_@itemJr.MezuniyetJuriOneriFormuJuriID')">
                                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
                                                                             </li>
                                                                         </ul>
@@ -234,7 +234,7 @@
                                                                 <tr>
                                                                     <td>
                                                                         <ul class="panel-controls">
-                                                                            <li id="iShow_Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID')">
+                                                                            <li id="iShow_Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" onclick="ShowDetailY('Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID')">
                                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
                                                                             </li>
                                                                         </ul>
@@ -321,7 +321,7 @@
                                                                 <tr>
                                                                     <td>
                                                                         <ul class="panel-controls">
-                                                                            <li id="iShow_Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" onclick="showDetailY('Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID')">
+                                                                            <li id="iShow_Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" onclick="ShowDetailY('Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID')">
                                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
                                                                             </li>
                                                                         </ul>
@@ -429,7 +429,7 @@
                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                     <table style="width:100%;">
                                         <tr>
-                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
+                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü EYK İşlemleri</td>
                                         </tr>
                                         @if (jofEykyaGonderimYetkisi && !juriOneriFormu.EYKYaHazirlandi.HasValue)
                                         {
@@ -440,14 +440,14 @@
                                                     <table>
                                                         <tr>
                                                             <td>
-                                                                <select class="form-control" id="EYKYaGonderildi_@juriOneriFormu.MezuniyetJuriOneriFormID" onchange="EYKYaOnayChange(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)">
+                                                                <select class="form-control" id="EYKYaGonderildi_@juriOneriFormu.MezuniyetJuriOneriFormID" onchange="EykYaOnayChange(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)">
                                                                     <option @(!juriOneriFormu.EYKYaGonderildi.HasValue ? "selected" : "")></option>
                                                                     <option value="true" @(juriOneriFormu.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı @(juriOneriFormu.EYKYaGonderildiIslemTarihi.HasValue ? "(" + juriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                     <option value="false" @(juriOneriFormu.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(juriOneriFormu.EYKYaGonderildiIslemTarihi.HasValue ? "(" + juriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <label class="btn btn-primary btn-sm" onclick="EYKyaGonder(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                <label class="btn btn-primary btn-sm" onclick="EykYaGonder(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -513,7 +513,7 @@
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <label class="btn btn-primary btn-sm" onclick="EYKyaHazirla(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                    <label class="btn btn-primary btn-sm" onclick="EykYaHazirla(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -556,7 +556,7 @@
                                                         <table>
                                                             <tr>
                                                                 <td>
-                                                                    <select class="form-control" id="EYKDaOnaylandi_@juriOneriFormu.MezuniyetJuriOneriFormID" onchange="EYKOnayChange(@juriOneriFormu.MezuniyetJuriOneriFormID)">
+                                                                    <select class="form-control" id="EYKDaOnaylandi_@juriOneriFormu.MezuniyetJuriOneriFormID" onchange="EykOnayChange(@juriOneriFormu.MezuniyetJuriOneriFormID)">
                                                                         <option @(!juriOneriFormu.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
                                                                         <option value="true" @(juriOneriFormu.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı</option>
                                                                         <option value="false" @(juriOneriFormu.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı</option>
@@ -567,7 +567,7 @@
 
                                                                 </td>
                                                                 <td>
-                                                                    <label class="btn btn-primary btn-sm" onclick="EYKdaOnay(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                    <label class="btn btn-primary btn-sm" onclick="EykDaOnay(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -620,203 +620,7 @@
                                             }
                                         }
                                     </table>
-                                </div>
-
-                                @*<div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
-                                        <table style="width:100%;">
-                                            <tr>
-                                                <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
-                                            </tr>
-                                            @if (juriOneriFormuOnayYetki && juriOneriFormu.EYKDaOnaylandi != true)
-                                            {
-                                                <tr>
-                                                    <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
-                                                    <td class="CaptionTd" width="10">:</td>
-                                                    <td class="ValueTd">
-                                                        <table>
-                                                            <tr>
-                                                                <td>
-                                                                    <select class="form-control" id="EYKYaGonderildi_@juriOneriFormu.MezuniyetJuriOneriFormID" onchange="EYKYaOnayChange(@juriOneriFormu.MezuniyetJuriOneriFormID)">
-                                                                        <option @(!juriOneriFormu.EYKYaGonderildi.HasValue ? "selected" : "")></option>
-                                                                        <option value="true" @(juriOneriFormu.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı @(juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKYaGonderildiIslemTarihi.HasValue ? "(" + juriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
-                                                                        <option value="false" @(juriOneriFormu.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(juriOneriFormu.EYKYaGonderildi == false && juriOneriFormu.EYKYaGonderildiIslemTarihi.HasValue ? "(" + juriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit(@Model.MezuniyetBasvurulariID, @juriOneriFormu.MezuniyetJuriOneriFormID,false);"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-
-                                                    </td>
-                                                </tr>
-                                                <tr id="EYKYaGonderimAciklamaRow_@juriOneriFormu.MezuniyetJuriOneriFormID" class="form-group @(juriOneriFormu.EYKYaGonderildi == false ? "" : "hide")">
-                                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
-                                                    <td class="CaptionTd">:</td>
-                                                    <td class="ValueTd">
-                                                        <textarea class="form-control" style="min-height:100px;" id="EYKYaGonderimOnaylanmadiDurumAciklamasi_@juriOneriFormu.MezuniyetJuriOneriFormID" maxlength="512">@juriOneriFormu.EYKYaGonderimDurumAciklamasi</textarea>
-                                                    </td>
-                                                </tr>
-                                            }
-                                            else
-                                            {
-                                                <tr>
-                                                    <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
-                                                    <td class="CaptionTd" width="10">:</td>
-                                                    <td class="ValueTd">
-                                                        @if (!juriOneriFormu.EYKYaGonderildi.HasValue)
-                                                        {
-
-                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderim Onayı Bekleniyor.</span>
-                                                        }
-                                                        else if (juriOneriFormu.EYKYaGonderildi == true)
-                                                        {
-
-                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı. (@juriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
-
-                                                        }
-                                                        else
-                                                        {
-                                                            <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı. (@juriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
-
-                                                        }
-                                                    </td>
-                                                </tr>
-                                                if (juriOneriFormu.EYKYaGonderildi == false && !juriOneriFormu.EYKYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
-                                                {
-                                                    <tr>
-                                                        <td class="CaptionTd">Onaylanmama Açıklaması</td>
-                                                        <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd">
-                                                            @juriOneriFormu.EYKYaGonderimDurumAciklamasi
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            }
-                                            @if (juriOneriFormu.EYKYaGonderildi == true)
-                                            {
-                                                if (juriOneriFormuEykYaHazirlandiYetkisi && !juriOneriFormu.EYKDaOnaylandi.HasValue)
-                                                {
-                                                    <tr>
-                                                        <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
-                                                        <td class="CaptionTd" width="10">:</td>
-                                                        <td class="ValueTd">
-                                                            <table>
-                                                                <tr>
-                                                                    <td>
-                                                                        <select class="form-control" id="EYKyaHazirlandi_@juriOneriFormu.MezuniyetJuriOneriFormID">
-                                                                            <option @(!juriOneriFormu.EYKYaHazirlandi.HasValue ? "selected" : "")></option>
-                                                                            <option value="true" @(juriOneriFormu.EYKYaHazirlandi == true ? "selected" : "")>EYK'ya Hazırlandı @(juriOneriFormu.EYKYaHazirlandiIslemTarihi.HasValue ? "(" + juriOneriFormu.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
-                                                                        </select>
-                                                                    </td>
-                                                                    <td>
-                                                                        <label class="btn btn-primary btn-sm" onclick="EYKyaHazirla(@juriOneriFormu.MezuniyetJuriOneriFormID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-
-                                                }
-                                                else
-                                                {
-                                                    <tr>
-                                                        <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
-                                                        <td class="CaptionTd" width="10">:</td>
-                                                        <td class="ValueTd">
-                                                            @if (!juriOneriFormu.EYKYaHazirlandi.HasValue)
-                                                            {
-
-                                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlanma İşlemi Bekleniyor.</span>
-                                                            }
-                                                            else if (juriOneriFormu.EYKYaHazirlandi == true)
-                                                            {
-
-                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlandı. (@juriOneriFormu.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime())</span>
-
-                                                            }
-                                                        </td>
-                                                    </tr>
-
-
-
-                                                }
-
-                                                if (juriOneriFormu.EYKYaHazirlandi == true)
-                                                {
-                                                    if (juriOneriFormuOnayYetkiEykDa)
-                                                    {
-                                                        <tr>
-                                                            <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
-                                                            <td class="CaptionTd" width="10">:</td>
-                                                            <td class="ValueTd">
-                                                                <table>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <select class="form-control" id="EYKDaOnaylandi_@juriOneriFormu.MezuniyetJuriOneriFormID" onchange="EYKOnayChange(@juriOneriFormu.MezuniyetJuriOneriFormID)">
-                                                                                <option @(!juriOneriFormu.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
-                                                                                <option value="true" @(juriOneriFormu.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı @(juriOneriFormu.EYKDaOnaylandi == true && juriOneriFormu.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + juriOneriFormu.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
-                                                                                <option value="false" @(juriOneriFormu.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(juriOneriFormu.EYKDaOnaylandi == false && juriOneriFormu.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + juriOneriFormu.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit(@Model.MezuniyetBasvurulariID, @juriOneriFormu.MezuniyetJuriOneriFormID,true);"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr id="EYKOnayAciklamaRow_@juriOneriFormu.MezuniyetJuriOneriFormID" class="form-group @(juriOneriFormu.EYKDaOnaylandi == false ? "" : "hide")">
-                                                            <td class="CaptionTd">Onaylanmama Açıklaması</td>
-                                                            <td class="CaptionTd">:</td>
-                                                            <td class="ValueTd">
-                                                                <textarea class="form-control" style="min-height:100px;" id="EYKDaOnaylanmadiDurumAciklamasi_@juriOneriFormu.MezuniyetJuriOneriFormID" maxlength="512">@juriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi</textarea>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                    else
-                                                    {
-                                                        <tr>
-                                                            <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
-                                                            <td class="CaptionTd" width="10">:</td>
-                                                            <td class="ValueTd">
-                                                                @if (!juriOneriFormu.EYKDaOnaylandi.HasValue)
-                                                                {
-
-                                                                    <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'da onay işlemi Bekleniyor.</span>
-                                                                }
-                                                                else if (juriOneriFormu.EYKDaOnaylandi == true)
-                                                                {
-
-                                                                    <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@juriOneriFormu.EYKDaOnaylandiOnayTarihi.ToFormatDate())</span>
-
-                                                                }
-                                                                else
-                                                                {
-                                                                    <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı. (@juriOneriFormu.EYKDaOnaylandiOnayTarihi.ToFormatDate())</span>
-
-                                                                }
-                                                            </td>
-                                                        </tr>
-                                                        if (juriOneriFormu.EYKDaOnaylandi == false)
-                                                        {
-                                                            <tr>
-                                                                <td class="CaptionTd">Onaylanmama Açıklaması</td>
-                                                                <td class="CaptionTd">:</td>
-                                                                <td class="ValueTd">
-                                                                    @juriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi
-                                                                </td>
-                                                            </tr>
-                                                        }
-
-                                                    }
-                                                }
-                                            }
-
-
-                                        </table>
-                                    </div>*@
+                                </div> 
                             }
 
                         </td>

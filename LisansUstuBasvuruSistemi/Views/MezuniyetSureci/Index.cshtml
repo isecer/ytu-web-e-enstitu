@@ -138,7 +138,7 @@
         var cls = 'cls-' + tip + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled && tip == "ana-") setTimeout(getDetail(id), 400);
+        if (unTogled && tip == "ana-") setTimeout(GetDetail(id), 400);
     }
     function ShowDetailX(id, tip) {
         var rwID = $('#iShow-' + tip + id);
@@ -146,7 +146,7 @@
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
-    function getDetail(id, sndr) {
+    function GetDetail(id, sndr) {
 
         var tbName = "@TabAdiEnum.MezuniyetSureciTn-" + id;
         var tID = GetSelectedTabID(tbName);
@@ -255,7 +255,7 @@
                     label: "Mezuniyet Sürecini Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(id);
+                        Sil(id);
                     }
                 },
                 danger: {
@@ -267,7 +267,7 @@
             }
         });
     }
-    function sil(id) {
+    function Sil(id) {
         $.ajax({
             url: '@Url.Action("Sil", "MezuniyetSureci")',
             data: { id: id },
@@ -275,7 +275,7 @@
                 if (result.IsSuccess) {
                     $(".delrw_" + id).remove();
                 }
-                showMmMessage(result.Messages, 'Tamam');
+                ShowMmMessage(result.Messages, 'Tamam');
             },
             error: function (err) {
                 alert(err.responseText);

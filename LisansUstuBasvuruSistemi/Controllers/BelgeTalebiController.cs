@@ -1006,7 +1006,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize(Roles = RoleNames.BelgeTalebiDuzelt)]
-        public ActionResult Istenenkaydet(int id, int islemTipId, string islemTipAciklamasi, int miktar)
+        public ActionResult IstenenKaydet(int id, int islemTipId, string islemTipAciklamasi, int miktar)
         {
 
 

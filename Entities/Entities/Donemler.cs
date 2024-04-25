@@ -19,6 +19,7 @@ namespace Entities.Entities
         {
             this.BasvuruSurecs = new HashSet<BasvuruSurec>();
             this.BelgeTalepleris = new HashSet<BelgeTalepleri>();
+            this.DonemProjesiBasvurus = new HashSet<DonemProjesiBasvuru>();
             this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
             this.MezuniyetSurecis = new HashSet<MezuniyetSureci>();
             this.MezuniyetYonetmelikleris = new HashSet<MezuniyetYonetmelikleri>();
@@ -48,6 +49,8 @@ namespace Entities.Entities
         public virtual ICollection<BasvuruSurec> BasvuruSurecs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BelgeTalepleri> BelgeTalepleris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DonemProjesiBasvuru> DonemProjesiBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

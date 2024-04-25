@@ -22,6 +22,21 @@
                             <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
                             <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" /> 
                             <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Ad Soyad</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="Ad" id="Ad" value="@Model.Ad" />
+                                    <input class="hide" name="Soyad" id="Soyad" value="@Model.Soyad" />
+                                    @Model.Ad @Model.Soyad
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Öğrenci No</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="OgrenciNo" id="OgrenciNo" value="@Model.OgrenciNo" />
+                                    @Model.OgrenciNo
+                                </div>
+                            </div> 
+                            <div class="form-group">
                                 <label class="col-md-3 col-xs-2 control-label">Öğrenim Seviyesi</label>
                                 <div class="col-md-9 col-xs-10">
                                     <input class="hide" name="OgrenimTipAdi" id="OgrenimTipAdi" value="@Model.OgrenimTipAdi"/>
@@ -41,23 +56,7 @@
                                     <input class="hide" name="ProgramAdi" id="ProgramAdi" value="@Model.ProgramAdi" />
                                     @Model.ProgramAdi
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-2 control-label">Öğrenci No</label>
-                                <div class="col-md-9 col-xs-10">
-                                    <input class="hide" name="OgrenciNo" id="OgrenciNo" value="@Model.OgrenciNo" />
-                                    @Model.OgrenciNo
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-2 control-label">Ad Soyad</label>
-                                <div class="col-md-9 col-xs-10">
-                                    <input class="hide" name="Ad" id="Ad" value="@Model.Ad" />
-                                    <input class="hide" name="Soyad" id="Soyad" value="@Model.Soyad" />
-                                    @Model.Ad @Model.Soyad
-                                </div>
-                            </div>
-                           
+                            </div> 
                         </div>
 
 

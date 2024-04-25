@@ -246,11 +246,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                         {
-                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
                         }
                         //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                         //{
-                        //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                        //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
                         //}
                     }
 
@@ -474,11 +474,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                         {
-                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi içim bu sürecinin tamamlanması gerekmektedir.");
                         }
                         //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                         //{
-                        //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                        //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
                         //}
                     }
                 }
@@ -607,7 +607,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             if (kModel.Dosya != null)
                             {
-                                FileHelper.DeleteFile(toBasvuruSavunma.CalismaRaporDosyaYolu);
+                                FileHelper.Delete(toBasvuruSavunma.CalismaRaporDosyaYolu);
                                 toBasvuruSavunma.CalismaRaporDosyaAdi = kModel.Dosya.FileName.GetFileName();
                                 toBasvuruSavunma.CalismaRaporDosyaYolu = FileHelper.SaveToSavunmaDosya(kModel.Dosya);
                             }

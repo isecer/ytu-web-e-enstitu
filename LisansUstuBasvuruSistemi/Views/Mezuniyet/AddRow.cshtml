@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.SystemData
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.MezuniyetBasvurulariYayinDto
 @{
@@ -9,7 +10,7 @@
 
 <tr>
     <td class="rownum">@Model.RowNum.ToStrObjEmptString()</td>
-    <td><ul class="panel-controls"><li id="iShow_@Model.guID" style="font-size:8pt;" onclick="showDetailY('@Model.guID','ana-')"><a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a></li></ul></td>
+    <td><ul class="panel-controls"><li id="iShow_@Model.guID" style="font-size:8pt;" onclick="ShowDetailY('@Model.guID','ana-')"><a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a></li></ul></td>
     <td>@Model.MezuniyetYayinTurAdi</td>
     <td>@Model.YayinBasligi</td>
     @if (Model.DegerlendirmeKolonu)
@@ -230,7 +231,7 @@
                                     }
                                     @if (Model.MezuniyetYayinBelgeDosyaYolu.IsNullOrWhiteSpace() == false)
                                     {
-                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.MezuniyetYayinBelgeDosyaYolu)','@Model.MezuniyetYayinBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"> </span>@Model.MezuniyetYayinBelgeAdi</a>
+                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(Model.MezuniyetYayinBelgeDosyaYolu)','@Model.MezuniyetYayinBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"> </span>@Model.MezuniyetYayinBelgeAdi</a>
 
                                     }
                                     else
@@ -272,7 +273,7 @@
                                     }
                                     @if (Model.MezuniyetYayinMetniBelgeYolu.IsNullOrWhiteSpace() == false)
                                     {
-                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.MezuniyetYayinMetniBelgeYolu)','@Model.MezuniyetYayinMetniBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.MezuniyetYayinMetniBelgeAdi</a>
+                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(Model.MezuniyetYayinMetniBelgeYolu)','@Model.MezuniyetYayinMetniBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.MezuniyetYayinMetniBelgeAdi</a>
                                     }
                                     else
                                     {
@@ -326,7 +327,7 @@
                                                     url: '@Url.Action("YayinIndexUpdate", "MezuniyetGelenBasvurular")',
                                                     data: { id: id, "IndexID": inxid },
                                                     success: function (result) {
-                                                        showMmMessage(result.Messages, 'Tamam');
+                                                        ShowMmMessage(result.Messages, 'Tamam');
                                                     },
                                                     error: function (err) {
                                                         alert(err.responseText);
@@ -355,7 +356,7 @@
                                     }
                                     @if (Model.MezuniyetYayinKabulEdilmisMakaleDosyaYolu.IsNullOrWhiteSpace() == false)
                                     {
-                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.MezuniyetYayinKabulEdilmisMakaleDosyaYolu)','@Model.MezuniyetYayinKabulEdilmisMakaleAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.MezuniyetYayinKabulEdilmisMakaleAdi</a>
+                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(Model.MezuniyetYayinKabulEdilmisMakaleDosyaYolu)','@Model.MezuniyetYayinKabulEdilmisMakaleAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.MezuniyetYayinKabulEdilmisMakaleAdi</a>
                                     }
                                     else
                                     {
@@ -416,7 +417,7 @@
                                         <td></td>
                                         <td></td>
                                         <td>
-                                            <a href="javascript:void(0);" class="btn btn-xs btn-primary" onclick="ykKayit('#yayinContent_@Model.MezuniyetBasvurulariID','@Model.MezuniyetBasvurulariYayinID','@Model.MezuniyetBasvurulariID');"><i class="fa fa-save"></i> Kaydet</a>
+                                            <a href="javascript:void(0);" class="btn btn-xs btn-primary" onclick="YkKayit('#yayinContent_@Model.MezuniyetBasvurulariID','@Model.MezuniyetBasvurulariYayinID','@Model.MezuniyetBasvurulariID');"><i class="fa fa-save"></i> Kaydet</a>
                                         </td>
                                     </tr>
                                 </table>

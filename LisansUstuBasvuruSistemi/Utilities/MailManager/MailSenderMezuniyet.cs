@@ -388,8 +388,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, KullaniciId = (item.JuriTipAdi == "TezDanismani" ? mBasvur.TezDanismanID : null), ToOrBcc = true } },
                             MailSablonTipId = (item.JuriTipAdi == "TezDanismani" ? danismanSablonId : asilSablonId),
                             JuriTipAdi = item.JuriTipAdi,
-                            UnvanAdi = item.UnvanAdi,
-                            MezuniyetJuriOneriFormuJuriId = item.MezuniyetJuriOneriFormuJuriID,
+                            UnvanAdi = item.UnvanAdi 
                         });
                         if (item.JuriTipAdi == "TezDanismani" && !mBasvur.TezEsDanismanEMail.IsNullOrWhiteSpace())
                         {

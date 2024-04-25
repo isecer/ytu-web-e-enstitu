@@ -256,7 +256,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
     window.addEventListener('resize', function (event) {
         Resized(window.innerWidth);
     });
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -338,7 +338,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                     $(sndr).closest("tr").remove();
                                     $(".cls-" + id).remove();
                                 }
-                                showMmMessage(result.Messages, 'Tamam');
+                                ShowMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
                                 alert(err.responseText);
@@ -373,7 +373,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                 if (result.IsSuccess) {
                                     GetDetail(id);
                                 }
-                                showMmMessage(result.Messages, 'Tamam');
+                                ShowMmMessage(result.Messages, 'Tamam');
                             }, complete: function (httpObj, textStatus) {
                                 PanelRefresh(_panel, true);
                                 ShowMessageAjaxRequest(httpObj.status, textStatus);
@@ -399,7 +399,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
         
     });
 
-    function showSRDialog(TIBasvuruID,TIBasvuruAraRaporID, SRTalepID) {
+    function ShowSrDialog(TIBasvuruID,TIBasvuruAraRaporID, SRTalepID) {
         var _panel = $('#bsvrDet_' + TIBasvuruID);
         PanelRefresh(_panel, false);
         $.ajax({
@@ -414,7 +414,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                     buttons: {
                         success: {
                             label: "Kaydet",
-                            className: "btn-primary btnSrKayit_"+TIBasvuruAraRaporID,
+                            className: "btn-success btnSrKayit_"+TIBasvuruAraRaporID,
                             callback: function (event) {
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                 $('.btnSrKayit_' + TIBasvuruAraRaporID).addClass('disabled');
@@ -428,7 +428,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                             $(_clsBtn).click();
                                         }
                                         else {
-                                            getMsg(result);
+                                            GetMsg(result);
                                             return false;
                                         }
                                         PanelRefresh(pnlx, true);
@@ -513,7 +513,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                                     $('#SaveData').val("false");
                                                 }
                                                 $("[href='#tab-" + result.SelectedTabID + "']").first().click();
-                                                if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                if (result.mMessage.Messages.length > 0) GetMsg(result.mMessage);
                                                 return false;
                                             }
                                             PanelRefresh(pnlx, true);
@@ -534,11 +534,11 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                     });
 
                     $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
+                    if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
 
                 }
                 else {
-                    showMmMessage(resultG.Messages, 'Tamam');
+                    ShowMmMessage(resultG.Messages, 'Tamam');
                 }
 
             },
@@ -586,7 +586,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                         GetDetail(TIBasvuruID);
 
                                     }
-                                    showMmMessage(result.Messages, 'Tamam');
+                                    ShowMmMessage(result.Messages, 'Tamam');
 
                                 },
                                 error: function (err) {

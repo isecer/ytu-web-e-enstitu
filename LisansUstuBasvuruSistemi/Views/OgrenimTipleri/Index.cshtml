@@ -79,7 +79,7 @@
                                         </td>
                                         <td>
                                             <a href="@Url.Action("Kayit", "OgrenimTipleri", new { id = item.OgrenimTipID })"><i class="fa fa-edit fa-lg" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.OgrenimTipID')"><i class="fa fa-trash-o fa-lg" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.OgrenimTipID')"><i class="fa fa-trash-o fa-lg" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.OgrenimTipID" style="display:none">
@@ -151,7 +151,7 @@
         toggleByClass(sndr, cls, unTogled);
 
     }
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var gMesaj = $("#tdMad_" + id).html();
         bootbox.dialog({
             message: "Öğrenim Tip Adı: " + gMesaj + " <br/> Seçilen Öğrenim Tipini Silmek İstiyor Musunuz?",
@@ -161,7 +161,7 @@
                     label: "Öğrenim Tipi Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -173,7 +173,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "OgrenimTipleri")',
             data: { id: id  },

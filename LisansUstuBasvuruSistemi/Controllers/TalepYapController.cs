@@ -622,7 +622,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         [Authorize(Roles = RoleNames.GelenTalepKayit)]
-        public ActionResult Istenenkaydet(int id, int talepDurumId, string talepDurumAciklamasi)
+        public ActionResult IstenenKaydet(int id, int talepDurumId, string talepDurumAciklamasi)
         {
 
 

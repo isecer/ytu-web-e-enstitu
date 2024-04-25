@@ -19,6 +19,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
 
         public StudentDersModel AktifDonemDers = new StudentDersModel();
+        public List<StudentDersNotModel> TumDonemDersNotlari = new List<StudentDersNotModel>();
         public Ogrenci OgrenciInfo { get; set; }
         public bool IsTezDiliTr { get; set; }
         public OgrenciTez OgrenciTez { get; set; }
@@ -50,11 +51,25 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
         public List<string> DersKodNums { get; set; }
     }
 
+    public class StudentDersNotModel
+    {
+        public string DonemId { get; set; }
+        public string DonemAd { get; set; }
+        public string HocaTc { get; set; }
+        public string HocaUnvan { get; set; }
+        public string HocaAdi { get; set; }
+        public string DersKoduNum { get; set; }
+        public string DersKodu{ get; set; }
+        public string DersAdi { get; set; }
+        public string DersNotu { get; set; }
+        public string NotDeger { get; set; }
+    }
     public class ObsOgrenciSorgulaModel
     {
         public string Tc { get; set; }
         public Ogrenci Ogrenci { get; set; } 
-        public OgrenciDersNot OgrenciDersNot { get; set; }
+        public OgrenciDersNot OgrenciDersNot { get; set; } 
+        public List<OgrenciDersNot> OgrenciDersNotBilgis { get; set; }
         public OgrenciTez OgrenciTez { get; set; }
         public List<TezIzlJuriBilgileri> OgrenciTezJuri { get; set; }
         public List<OgrenciYeter> OgrenciYeters { get; set; }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -21,14 +20,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.ApplicationTasks
 
         private static void ExecuteTask(object state)
         {
+            var runTasks = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
+            if (!runTasks) return;
             StartMezuniyetOtoMailsAsync();
+            StartDpOtoMailsAsync();
         }
 
         private static async void StartMezuniyetOtoMailsAsync()
-        {
-            var runTasks = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
-            if (!runTasks) return;
-
+        { 
             await MailSenderMezuniyet.SendTaslakBasvuruOgrenciye();
             await MailSenderMezuniyet.SendMailMezuniyetEykTarihineGoreSrAlinmaliOgrenciyeDanismana();
             await MailSenderMezuniyet.SendMailMezuniyetEykTarihineGoreSrAlinmadiEnstituye();
@@ -36,9 +35,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.ApplicationTasks
             await MailSenderMezuniyet.SendMailMezuniyetSinavSonucuGirilmediOgrenciyeDanismana();
             await MailSenderMezuniyet.SendMailMezuniyetTezKontrolTezDosyasiYuklenmeliOgrenciye();
             await MailSenderMezuniyet.SendMailCiltliTezTeslimYapilmaliOgrenciye();
-            await MailSenderMezuniyet.SendMailCiltliTezTeslimYapilmadiEnstituye();
+            await MailSenderMezuniyet.SendMailCiltliTezTeslimYapilmadiEnstituye(); 
         }
-
+        private static async void StartDpOtoMailsAsync()
+        { 
+            await MailSenderDp.SendMailDegerlendirmeHatirlatma();
+        }
         public static void Stop()
         {
             // Timer'ı durdur
@@ -47,13 +49,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.ApplicationTasks
 
         public static void Restart()
         {
-            // Timer'ı durdur ve tekrar başlatın
+            // Timer'ı durdur ve tekrar başlat
             _timer?.Change(TimeSpan.Zero, TimeSpan.FromHours(1));
         }
 
         public static void Dispose()
         {
-            // Timer'ı temizleyin
+            // Timer'ı temizle
             _timer?.Dispose();
         }
     }

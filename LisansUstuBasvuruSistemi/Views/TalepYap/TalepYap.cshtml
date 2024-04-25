@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model TalepGelenTalepler
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
@@ -146,8 +147,8 @@
                                                         <input type="file" class="fileinput btn-info" accept="application/pdf" name="DosyaDanismanOnay" id="DosyaDanismanOnay" title="Belge Seç (Belge PDF türünde olmalıdır)" />
                                                         @if (dosyaDanismanOnay != null)
                                                         {
-                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@(dosyaDanismanOnay != null ? dosyaDanismanOnay.DosyaAdi : "")" />
-                                                            <a href="@Url.Content(dosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosyaDanismanOnay.DosyaAdi</a>
+                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@dosyaDanismanOnay.DosyaAdi" />
+                                                            <a href="@Url.CustomUrlContent(dosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosyaDanismanOnay.DosyaAdi</a>
                                                         }
 
                                                     </td>
@@ -185,8 +186,8 @@
                                                         <input type="file" class="fileinput btn-info" accept="application/pdf" name="DosyaDanismanOnay" id="DosyaTezOneri" title="Belge Seç (Belge PDF türünde olmalıdır)" />
                                                         @if (dosyaDanismanOnay != null)
                                                         {
-                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@(dosyaDanismanOnay != null ? dosyaDanismanOnay.DosyaAdi : "")" />
-                                                            <a href="@Url.Content(dosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosyaDanismanOnay.DosyaAdi</a>
+                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@dosyaDanismanOnay.DosyaAdi" />
+                                                            <a href="@Url.CustomUrlContent(dosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosyaDanismanOnay.DosyaAdi</a>
                                                         }
 
                                                     </td>
@@ -210,8 +211,8 @@
 
                                                 @if (dosya != null)
                                                 {
-                                                    <input type="text" class="hide" name="DosyaAdi" id="DosyaAdi" value="@(dosya != null ? dosya.DosyaAdi : "")" />
-                                                    <a href="@Url.Content(dosya.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosya.DosyaAdi</a>
+                                                    <input type="text" class="hide" name="DosyaAdi" id="DosyaAdi" value="@dosya.DosyaAdi" />
+                                                    <a href="@Url.CustomUrlContent(dosya.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosya.DosyaAdi</a>
                                                 }
                                                 else
                                                 {
@@ -272,7 +273,7 @@
                 if (result.IsSuccess) {
                     window.location.href = "@Url.Action("Index")";
                 }
-                else getMsg(result);
+                else GetMsg(result);
 
             },
             complete: function (cmp) {

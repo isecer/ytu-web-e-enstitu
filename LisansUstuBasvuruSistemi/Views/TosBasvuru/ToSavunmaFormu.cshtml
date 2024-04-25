@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model ToSavunmaSaveModel
 @{
@@ -52,7 +53,7 @@
                                         @if (Model.CalismaRaporDosyaAdi != null)
                                         {
                                             <input type="text" class="hide" name="CalismaRaporDosyaYolu" id="CalismaRaporDosyaYolu" value="@Model.CalismaRaporDosyaAdi" />
-                                            <span>Yüklenen Belge: <a href="@Url.Content(Model.CalismaRaporDosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@Model.CalismaRaporDosyaAdi</a></span>
+                                            <span>Yüklenen Belge: <a href="@Url.CustomUrlContent(Model.CalismaRaporDosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@Model.CalismaRaporDosyaAdi</a></span>
                                         }
                                         else
                                         {

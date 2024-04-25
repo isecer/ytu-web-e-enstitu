@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model BasvuruDetayDto
 @{
@@ -265,10 +266,10 @@
                                                                                                     @if (isBelgeVar)
                                                                                                     {
                                                                                                         <td width="35">
-                                                                                                            <span class="input-group-addon" id="BelgeIcon_@rwId" onclick="PopupCenter('@item.BelgeYolu','@item.BelgeAdi',800,600);" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                                                                            <span class="input-group-addon" id="BelgeIcon_@rwId" onclick="PopupCenter('@Url.CustomUrlContent(item.BelgeYolu)','@item.BelgeAdi',800,600);" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
                                                                                                         </td>
                                                                                                         <td>
-                                                                                                            <input type="text" class="form-control" id="BelgeAdi_@rwId" onclick="PopupCenter('@item.BelgeYolu','@item.BelgeAdi',800,600);" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(isBelgeVar ? item.BelgeAdi :"Belge Seçilmedi, Lütfen belge seçiniz.")">
+                                                                                                            <input type="text" class="form-control" id="BelgeAdi_@rwId" onclick="PopupCenter('@Url.CustomUrlContent(item.BelgeYolu)','@item.BelgeAdi',800,600);" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(isBelgeVar ? item.BelgeAdi :"Belge Seçilmedi, Lütfen belge seçiniz.")">
                                                                                                         </td>
                                                                                                     }
                                                                                                     else

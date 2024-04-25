@@ -1,4 +1,4 @@
-﻿@using Entities.Entities 
+﻿@using Entities.Entities
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -329,7 +329,7 @@
                     }
                     <tr>
                         <td>
-                            Tez Danışmanı
+                            @(ytuOgrnB.OgrenimTipKod==OgrenimTipi.TezsizYuksekLisans?"Proje Yürütücüsü":"Tez Danışmanı")
                         </td>
                         <td>:</td>
                         <td>
@@ -522,11 +522,6 @@
             color: 'red',
             height: '500px'
         });
-        $(".panel-collapse").on("click", function () {
-            panel_collapse($(this).parents(".panel").first());
-            $(this).parents(".dropdown").first().removeClass("open");
-            return false;
-        });
     })
     $('.icheckbox').iCheck({ checkboxClass: 'icheckbox_minimal-grey', radioClass: 'iradio_minimal-grey' });
 
@@ -598,7 +593,7 @@
                                         }
                                         else {
                                             $(kbuton).removeAttr('disabled');
-                                            getMsg(result.mMessage);
+                                            GetMsg(result.mMessage);
                                             return false;
                                         }
                                         PanelRefresh(_panel, true);

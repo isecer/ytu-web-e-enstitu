@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model Enstituler
 @{
     ViewBag.Title = "Home";
@@ -46,7 +47,7 @@
                                         {
                                             foreach (var item2 in item.DuyuruEkleris.Select((s, inx) => new { inx, s }))
                                             {
-                                                <a href="@item2.s.DosyaYolu" style="color:green;font-size:8pt;" target="_blank"> @(item2.inx + 1)) <img src="/Images/Attachment.png" style="height: 16px;"> @item2.s.DosyaEkAdi</a><br />
+                                                <a href="@Url.CustomUrlContent(item2.s.DosyaYolu)" style="color:green;font-size:8pt;" target="_blank"> @(item2.inx + 1)) <img src="/Images/Attachment.png" style="height: 16px;"> @item2.s.DosyaEkAdi</a><br />
                                             }
                                         }
                                     </div>
@@ -177,7 +178,7 @@ else if (isMesajGonder)
                                         //$('#tlpFrm').submit();
                                     }
                                     else {
-                                        getMsg(result);
+                                        GetMsg(result);
                                         return false;
                                     }
                                     PanelRefresh(pnlx, true);

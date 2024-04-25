@@ -56,7 +56,7 @@
                     {
                         <li class="@(Model.SelectedTabIndex == 5 ? "active" : "") bnt-@tbName-5" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',5)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-graduation-cap fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Mezuniyet Süreci</span></a></li>
                     }
-                    <li><a href="javascript:void(0);" onclick="getDetailx('@Model.MezuniyetBasvurulariID');" title="Detay Sayfasını Yenile" class="panel-refresh"><span class="fa fa-refresh myValueTd"></span></a></li>
+                    <li><a href="javascript:void(0);" onclick="GetDetailx('@Model.MezuniyetBasvurulariID');" title="Detay Sayfasını Yenile" class="panel-refresh"><span class="fa fa-refresh myValueTd"></span></a></li>
 
                 </ul>
 
@@ -165,9 +165,9 @@
                                                                         url: '@Url.Action("EykTarihiKaydet", "MezuniyetGelenBasvurular")',
                                                                         data: { 'id': id, 'EYKTarihi': val },
                                                                         success: function (result) {
-                                                                            getMsg(result.MmMessage);
+                                                                            GetMsg(result.MmMessage);
                                                                             if (result.IsSuccess) {
-                                                                                getDetailx(id);
+                                                                                GetDetailx(id);
                                                                             }
                                                                         },
                                                                         error: function (err) {
@@ -223,9 +223,7 @@
     <script>
 
     $(function () {
-
-        jQuery('._popover').popover({ trigger: 'hover' });
-
+         
         $('.openFl').click(function (itmx) {
             var FPath = $(this).attr("FPath");
             var FName = $(this).attr("FName");

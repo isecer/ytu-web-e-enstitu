@@ -12,7 +12,7 @@
     var tiTezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
     var toplantiTalepYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
-    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
     var onayYapmayanKomiteEmails = (List<string>)ViewBag.onayYapmayanKomiteEmails;
 }
 
@@ -277,7 +277,7 @@
     window.addEventListener('resize', function (event) {
         Resized(window.innerWidth);
     });
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -327,7 +327,7 @@
 @if (toplantiTalepYetki || tiTezDegerlendirmeDuzeltme)
 {
     <script>
-        function showSRDialog(TIBasvuruID, TIBasvuruAraRaporID, SRTalepID) {
+        function ShowSrDialog(TIBasvuruID, TIBasvuruAraRaporID, SRTalepID) {
             var _panel = $('#bsvrDet_' + TIBasvuruID);
             PanelRefresh(_panel, false);
             $.ajax({
@@ -355,7 +355,7 @@
                                                 $(_clsBtn).click();
                                             }
                                             else {
-                                                getMsg(result);
+                                                GetMsg(result);
                                                 return false;
                                             }
                                             PanelRefresh(pnlx, true);
@@ -430,7 +430,7 @@
                                         GetDetail(TIBasvuruID);
 
                                     }
-                                    showMmMessage(result.Messages, 'Tamam');
+                                    ShowMmMessage(result.Messages, 'Tamam');
 
                                 },
                                 error: function (err) {
@@ -542,7 +542,7 @@
                                 if (result.IsSuccess) {
                                     GetDetail(id);
                                 }
-                                showMmMessage(result.Messages, 'Tamam');
+                                ShowMmMessage(result.Messages, 'Tamam');
                             },
                             complete: function (httpObj, textStatus) {
                                 PanelRefresh(_panel, true);
@@ -586,7 +586,7 @@
                                         $(sndr).closest("tr").remove();
                                         $(".cls-" + id).remove();
                                     }
-                                    showMmMessage(result.Messages, 'Tamam');
+                                    ShowMmMessage(result.Messages, 'Tamam');
                                 },
                                 error: function (err) {
                                     alert(err.responseText);
@@ -660,7 +660,7 @@
                                                         $('#SaveData').val("false");
                                                     }
                                                     $("[href='#tab-" + result.SelectedTabID + "']").first().click();
-                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    if (result.mMessage.Messages.length > 0) GetMsg(result.mMessage);
                                                     return false;
                                                 }
                                                 PanelRefresh(pnlx, true);
@@ -680,11 +680,11 @@
                             }
                         });
                         $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-                        if (resultG.Messages.length > 0) showMmMessage(resultG.Messages, 'Tamam');
+                        if (resultG.Messages.length > 0) ShowMmMessage(resultG.Messages, 'Tamam');
 
                     }
                     else {
-                        showMmMessage(resultG.Messages, 'Tamam');
+                        ShowMmMessage(resultG.Messages, 'Tamam');
                     }
 
                 },

@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 
         public static string Tuz => "@BİSKAmcumu";
         public static int UniversiteYtuKod => 67;
+        public static string UniversiteAdi => "Yıldız Teknik Üni.";
         public static int SystemDefaultAdminKullaniciId => 1;
         public static int PageTableRowSize = 15;
 

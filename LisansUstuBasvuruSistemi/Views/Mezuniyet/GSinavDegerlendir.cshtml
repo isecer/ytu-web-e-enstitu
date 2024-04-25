@@ -421,7 +421,7 @@
                                 },
                                 success: function (result) {
                                     PanelRefresh(_panel, true);
-                                    showMmMessage(result.Messages, 'Tamam');
+                                    ShowMmMessage(result.Messages, 'Tamam');
                                     if (result.IsSuccess || result.IsRefresh) {
                                         setTimeout(function () {
                                              window.location.href = '@Url.Action("GSinavDegerlendir", "Mezuniyet")?UniqueID=@uniqueId';

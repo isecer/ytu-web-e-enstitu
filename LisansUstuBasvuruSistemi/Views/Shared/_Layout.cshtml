@@ -1,5 +1,4 @@
-﻿@using System.Web.Hosting
-@using BiskaUtil;
+﻿@using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using CaptchaMvc.HtmlHelpers
@@ -327,7 +326,7 @@
 
                                 @if (UserIdentity.Current.IsActiveDirectoryUser == false)
                                 {
-                                    <li><a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Şifre Değiştir', '@(Url.Action("ParolaSifirla", "Account", new { KullaniciID = UserIdentity.Current.Id }))', 600, '@ModalSizeClassEnum.Basic')"><span class="fa fa-lock"></span>Şifreyi değiştir</a></li>
+                                    <li><a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Şifre Değiştir', '@(Url.Action("ParolaSifirla", "Account", new { KullaniciID = UserIdentity.Current.Id }))', 600, '@ModalSizeClassEnum.Basic')"><span class="fa fa-lock"></span>Şifreyi değiştir</a></li>
                                 }
 
                                 <li><a href="javascript:void(0);" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span>Çıkış Yap</a></li>
@@ -1019,14 +1018,14 @@
                                         success: function (result) {
                                             if (result.IsSuccess) {
                                                 if (id == "") {
-                                                    getMsg(result);
+                                                    GetMsg(result);
                                                 }
                                                 else {
                                                     toastr["success"](result.Messages[0], result.Title);
                                                 }
                                             }
                                             else {
-                                                getMsg(result);
+                                                GetMsg(result);
                                                 return false;
                                             }
                                             if (result.IsCloseDialog) {
@@ -1167,7 +1166,7 @@
                                     success: function(result){
                                         PanelRefresh($(btbx).find('.modal-dialog').first(), true);
 
-                                        showMmMessage(result.responseText, 'Tamam');
+                                        ShowMmMessage(result.responseText, 'Tamam');
 
                                         if (result.success) {
                                             setTimeout(function(){ return true;},2400)
@@ -1324,7 +1323,7 @@
                                     $('#mailForm').ajaxForm({
                                         success: function (result) {
                                             PanelRefresh($(btbx2).find('.modal-dialog').first(), true);
-                                            showMmMessage(result.responseText, 'Tamam');
+                                            ShowMmMessage(result.responseText, 'Tamam');
                                             if (result.success) {
                                                 if (msID != undefined && msID != null && msID != "") {
                                                     var _Konu = $('#Konu').val();
@@ -1459,7 +1458,7 @@
         var frameLoad = false;
         function loadedFrame()
         { frameLoad = true; }
-        function yeniDialogBB(sndr, title, url, h, mdlSize, fncOnClose) {
+        function YeniDialogBB(sndr, title, url, h, mdlSize, fncOnClose) {
             frameLoad = false;
             var nowx = new Date();
             var id = Number(nowx);
@@ -1571,7 +1570,7 @@
             PW.print();
             PW.close();
         }
-        function printTalep(sndrID,title) {
+        function PrintTalep(sndrID,title) {
             // var ids = sndrID.split("_")[1];
             //$('.prntHide_' + ids).css("display", "none");
             setTimeout(function () {
@@ -1605,7 +1604,7 @@
             }, 200);
 
         }
-        function showMmMessage(msgs,btnName)
+        function ShowMmMessage(msgs,btnName)
         {
             if (msgs != "") {
                 bootbox.dialog({
@@ -1802,7 +1801,7 @@
                     }
                 }, 150);
             }
-        function getMsg(mMessage) {
+        function GetMsg(mMessage) {
 
             if (mMessage.Messages.length > 0)
             {

@@ -8,7 +8,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kyetki = RoleNames.TosGelenBasvuruKayit.InRoleCurrent();
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
-    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
     var onayYapmayanJuriEmails = (List<string>)ViewBag.onayYapmayanJuriEmails;
 }
 
@@ -230,7 +230,7 @@
 
 <script type="text/javascript">
 
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");

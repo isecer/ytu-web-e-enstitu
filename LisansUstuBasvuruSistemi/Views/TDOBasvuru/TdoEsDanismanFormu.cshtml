@@ -37,6 +37,8 @@
                 <div class="col-md-8 col-xs-7">
                     <select class="form-control" id="UnvanAdi" name="UnvanAdi" style="width:100%;color:black;">
                         <option value=""></option>
+                        <option @(@Model.UnvanAdi == "ARŞ.GÖR.DR." ? "selected" : "") value="ARŞ.GÖR.DR.">ARŞ.GÖR.DR.</option>
+                        <option @(@Model.UnvanAdi == "ÖĞR.GÖR.DR." ? "selected" : "") value="ÖĞR.GÖR.DR.">ÖĞR.GÖR.DR.</option>
                         <option @(@Model.UnvanAdi == "DR." ? "selected" : "") value="DR.">DR.</option>
                         <option @(@Model.UnvanAdi == "PROF.DR." ? "selected" : "") value="PROF.DR.">PROF.DR.</option>
                         <option @(@Model.UnvanAdi == "DOÇ.DR." ? "selected" : "") value="DOÇ.DR.">DOÇ.DR.</option>

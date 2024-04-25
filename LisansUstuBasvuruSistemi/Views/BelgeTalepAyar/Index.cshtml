@@ -47,7 +47,7 @@
                                             <div class="form-group">
                                                 <label class="col-md-4 col-xs-4 control-label">@item.AyarAdi</label>
                                                 <div class="col-md-8 col-xs-8">
-                                                    <div class="input-icon right">
+                                                    <div class="inputContent input-icon right">
                                                         <input type="text" style="width:100%;display:none;" name="AyarAdi" value="@item.AyarAdi" />
 
                                                         @if (item.InpType == "text")
@@ -116,7 +116,7 @@
     }
     function checkControl(sndr) {
         var chk = $(sndr).prop("checked");
-        var pContent = $(sndr).parents(".form-group").first();
+        var pContent = $(sndr).parents('.inputContent').first();
         var pvalFielt = $(pContent).find("input[name='AyarDegeri']").first();
         $(pvalFielt).val(chk);
     }

@@ -136,10 +136,10 @@
                             }
 
                             <li>
-                                <a href="javascript:void(0);" onclick="showDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
+                                <a href="javascript:void(0);" onclick="ShowDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
                                 <script>
 
-                                    function showDialogTutanakRpr() {
+                                    function ShowDialogTutanakRpr() {
                                         var _panel = $('#pnlFltr');
 
                                         PanelRefresh(_panel, false);
@@ -180,7 +180,7 @@
                                                                             toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
                                                                         }
                                                                         else {
-                                                                            getMsg(result);
+                                                                            GetMsg(result);
                                                                         }
 
 
@@ -451,7 +451,7 @@
     window.addEventListener('resize', function (event) {
         Resized(window.innerWidth);
     });
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -513,7 +513,7 @@
                                     $(sndr).closest("tr").remove();
                                     $(".cls-" + id).remove();
                                 }
-                                showMmMessage(result.Messages, 'Tamam');
+                                ShowMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
                                 alert(err.responseText);

@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FmYeterlikBasvuruDto : PagerModel
     {
         public bool? IsKomiteOrJuri { get; set; }
-        public Guid? isDegerlendirme { get; set; }
+        public Guid? IsDegerlendirme { get; set; }
         public int? YeterlikBasvuruID { get; set; }
 
         public int? AktifYeterlikSurecId { get; set; }

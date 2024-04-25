@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model  FmTalep
 @{
     ViewBag.Title = "Index";
@@ -260,7 +261,7 @@
                                                                                     <td>:</td>
                                                                                     <td>
 
-                                                                                        <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+                                                                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(bl.DosyaYolu)','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
 
                                                                                     </td>
                                                                                 </tr>
@@ -300,7 +301,7 @@
                                                                                         <td>:</td>
                                                                                         <td>
 
-                                                                                            <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+                                                                                            <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(bl.DosyaYolu)','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
 
                                                                                         </td>
                                                                                     </tr>
@@ -323,7 +324,7 @@
                                                                             <td>:</td>
                                                                             <td>
 
-                                                                                <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+                                                                                <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(bl.DosyaYolu)','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
 
                                                                             </td>
                                                                         </tr>
@@ -438,7 +439,7 @@
                                 if (result.IsSuccess) {
                                     $(".delrw_" + id).remove();
                                 }
-                                showMmMessage(result.Messages, 'Tamam');
+                                ShowMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
                                 alert(err.responseText);

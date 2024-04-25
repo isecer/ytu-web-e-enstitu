@@ -1,0 +1,109 @@
+﻿@{
+    Layout = null;
+}
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-id-card-o fa-lg"></i> Öğrenci Ekle</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 10px; text-align: left;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td><input type="text" id="MuafOgrenci" value="" style="width: 100%;" /></td>
+                        <td width="50">
+                            <button class="btn btn-info" style="cursor: pointer;" onclick="KriterMuafOgrenciEkle()"><i class="fa fa-plus" aria-hidden="true"></i> Ekle</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<input type="hidden" value="false" id="IsKriterMuafOgrenciEklendi"/>
+<script>
+    function OgrenciSelect2Init() {
+        $("#MuafOgrenci").select2({
+            tags: true,
+            tokenSeparators: [",", " "],
+            minimumInputLength: 2,
+            maximumSelectionSize: 1,
+            ajax: {
+                url: '@Url.Action("GetFilterKullanici")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        term: term
+                    };
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var src = result.Images.toString();
+                var cont2 = "<table class='table table-striped' style='width:100%; margin:0px;'>" +
+                    "<tbody>" +
+                    "<tr>" +
+                    "<td style='vertical-align:middle;' width='40'>" +
+                    "<span class='user' style='width: 40px;height:40px;margin-right:5px;'> " +
+                    "<img style='width:40px;height:40px;' src='" + src + "' class='pull-left' alt='" + result.AdSoyad + "'>" +
+                    "</span> " +
+                    "</td>" +
+                    "<td style='vertical-align:middle;'>" +
+                    "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> " +
+                    "<tbody>" +
+                    "<tr> " +
+                    "<td>" + result.text + "</td> " +
+                    "</tr>  " +
+                    "<tr> " +
+                    "<td>" + result.ProgramAdi + "</td> " +
+                    "</tr>" +
+                    "</tbody> " +
+                    "</table> " +
+                    "</td>" +
+                    "</tr> " +
+                    "</tbody>" +
+                    "</table>";
+                return cont2;
+            }
+        });
+    } 
+    $(function () {
+        OgrenciSelect2Init();
+    });
+    function KriterMuafOgrenciEkle() {
+        var ogrenciID = $("#MuafOgrenci").val();
+        var panel = $('#muafOgrenciContent');
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("KriterMuafOgrenciEkle")',
+            data: { ogrenciID },
+            success: function (result) {
+                swal.fire({
+                    text: result.message,
+                    icon: (result.success ? "success" : "error"),
+                    type: (result.success ? "success" : "error"),
+                    confirmButtonText: 'tamam',
+                    padding: '2em'
+                });
+                PanelRefresh(panel, false);
+
+                if (result.success) {
+                    $('#IsKriterMuafOgrenciEklendi').val('true');
+                    $("#MuafOgrenci").select2('data', null);
+                }
+            },
+            error: function (err) {
+                PanelRefresh(panel, false);
+                alert(err.responseText);
+            }
+        });
+    }
+
+</script>
+
+
+

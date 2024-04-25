@@ -213,7 +213,7 @@
     window.addEventListener('resize', function (event) {
         Resized(window.innerWidth);
     });
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -284,7 +284,7 @@
                                     $(sndr).closest("tr").remove();
                                     $(".cls-" + id).remove();
                                 }
-                                showMmMessage(result.Messages, 'Tamam');
+                                ShowMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
                                 alert(err.responseText);

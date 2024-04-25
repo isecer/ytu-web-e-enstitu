@@ -275,7 +275,7 @@
                         label: 'Belge Talebini Sil',
                         className: "btn-danger",
                         callback: function () {
-                            sil(sndr, id);
+                            Sil(sndr, id);
                         }
                     },
                     danger: {
@@ -287,7 +287,7 @@
                 }
             });
         }
-        function sil(sndr, id) {
+        function Sil(sndr, id) {
             $.ajax({
                 url: '@Url.Action("Sil", "GelenBelgeTalepleri")',
                 data: { id: id },
@@ -307,7 +307,7 @@
 @if (kYetki)
 {
     <script type="text/javascript">
-        function kaydet(id) {
+        function Kaydet(id) {
             var mktr = $('#VerilenBelgeSayisi_' + id).val();
             if (mktr == null || mktr == "" || parseInt(mktr) < 1) {
                 alert('Verilen miktarı seçiniz!');
@@ -316,7 +316,7 @@
             var ibtID = $('#IstenenBelgeDurumID_' + id).val();
             var ibTipAciklama = $('#BelgeDurumAciklamasi_' + id).val();
             $.ajax({
-                url: '@Url.Action("Istenenkaydet", "BelgeTalebi")',
+                url: '@Url.Action("IstenenKaydet", "BelgeTalebi")',
                 data: {
                     'id': id,
                     'IslemTipID': ibtID,
@@ -324,7 +324,7 @@
                     'miktar': mktr
                 },
                 success: function (result) {
-                    getDetail(id, false, null);
+                    GetDetail(id, false, null);
                     $(".mColor_" + id).each(function (inx, itmx) {
                         $(itmx).attr("style", "color:"+result.Color);
                     });
@@ -349,9 +349,9 @@
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled) getDetail(id);
+        if (unTogled) GetDetail(id);
     }
-    function getDetail(id) {
+    function GetDetail(id) {
 
         var _panel = $('#btDetay_' + id);
         PanelRefresh(_panel, false);
@@ -369,7 +369,7 @@
         });
 
     }
-    function printTalep(sndrID) {
+    function PrintTalep(sndrID) {
         // var ids = sndrID.split("_")[1];
         //$('.prntHide_' + ids).css("display", "none");
         setTimeout(function () {

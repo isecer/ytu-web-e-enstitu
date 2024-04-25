@@ -5,6 +5,7 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
@@ -35,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                     {
 
                         model.KayitVar = true;
-                        var ogrenci = ogrencis[0].ogrenci.OrderBy(p => (p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8") ? 1 : 2).FirstOrDefault();
+                        var ogrenci = ogrencis[0].ogrenci.OrderBy(p => p.OGRENIMSEVIYE_ID == "4" ? 2 : 1).FirstOrDefault();
                         if (ogrenci != null)
                         {
                             if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
@@ -51,28 +52,31 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                             model.OkuduguDonemNo = ogrenci.OKUDUGU_DNM_YENIKANUN.ToIntObj() ?? 0;
                             model.OgrenciInfo = ogrenci;
 
+                            //öğrenim seviyesi ayarlaması obs öğrenim seviyelerini lubs öğrenim tip koduna çevir koduna çevir 
                             switch (model.OgrenciInfo.OGRENIMSEVIYE_ID)
                             {
                                 case "2":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "1";
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.TezliYuksekLisans.ToString();
                                     break;
                                 case "3":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "3";
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.Doktra.ToString();
                                     break;
                                 case "4":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "2";
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.TezsizYuksekLisans.ToString();
                                     break;
                                 case "5":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "4";
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.SanattaYeterlilik.ToString();
                                     break;
                                 case "8":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "5";
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.ButunlesikDoktora.ToString();
                                     break;
                             }
+                            //enstitü ayarlaması 4 basamaklı olan obs enstitü kodu 3 basamaklı lubs enstitü koduna çevir
+                            if (model.OgrenciInfo.ENSTITU_ID.Length > 3)
+                                model.OgrenciInfo.ENSTITU_ID = model.OgrenciInfo.ENSTITU_ID.Remove(0, 1);
 
 
-                            var ogrenciDersler =
-                                service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null, donemId);
+                            var ogrenciDersler = service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null, donemId);
 
                             if (ogrenciDersler[0].Sucess)
                             {
@@ -115,6 +119,49 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                             }
                             var tezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
                             model.TezIzlJuriBilgileri = tezJuri[0].Sucess ? tezJuri[0].tezIzljuribilgileri.ToList() : new List<TezIzlJuriBilgileri>();
+
+
+
+                            var ogrenciDersNots = service.OgrenciDersNotBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
+                            if (ogrenciDersNots.Any() && ogrenciDersNots[0].Sucess)
+                            {
+
+                                var aktifDonem = DateTime.Now.ToAkademikDonemBilgi();
+
+                                model.TumDonemDersNotlari = ogrenciDersNots[0].ogrencidersnot.Select(s =>
+                                    new StudentDersNotModel
+                                    {
+                                        DonemId = s.DONEM_ID,
+                                        HocaTc = s.HOCA_TCK,
+                                        HocaUnvan = s.HOCA_UNVAN,
+                                        HocaAdi = s.HOCA_AD_SOYAD,
+                                        DonemAd = s.DONEM_AD,
+                                        DersAdi = s.DERS_AD,
+                                        DersKodu = s.DERS_KOD,
+                                        DersKoduNum = s.DERS_KOD.Substring(s.DERS_KOD.Length - 4, 4),
+                                        DersNotu = s.HARF_KOD,
+                                        NotDeger = s.NOT_DEGER
+
+
+                                    }).ToList();
+
+                                var donemProjesiDersKodu =
+                                    DonemProjesiAyar.DonemProjesiDersKodu.GetAyarDp(model.OgrenciInfo.ENSTITU_ID);
+                                if (model.OgrenciInfo.OGRENIMSEVIYE_ID == OgrenimTipi.TezsizYuksekLisans.ToString() && !donemProjesiDersKodu.IsNullOrWhiteSpace())
+                                {
+                                    //Tezsiz yl için dönem projesi yürütücüsü bulunup danışman olarak atanıyor
+                                    var donemProjesiDersi = model.TumDonemDersNotlari.FirstOrDefault(p =>
+                                        p.DersKoduNum == donemProjesiDersKodu &&
+                                        p.DonemId == aktifDonem.BaslangicYil + "" + aktifDonem.DonemId &&
+                                        !p.HocaTc.IsNullOrWhiteSpace());
+                                    if (donemProjesiDersi != null)
+                                    {
+                                        ogrenci.DANISMAN_TC1 = donemProjesiDersi.HocaTc;
+                                        ogrenci.DANISMAN_AD_SOYAD1 = donemProjesiDersi.HocaAdi;
+                                        ogrenci.DANISMAN_UNVAN1 = donemProjesiDersi.HocaUnvan;
+                                    }
+                                }
+                            }
 
                             if (!ogrenci.DANISMAN_TC1.IsNullOrWhiteSpace())
                             {
@@ -174,12 +221,18 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                     }
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                     {
-                        model.Ogrenci = ogrencis[0].ogrenci.OrderBy(p => (p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8") ? 1 : 2).FirstOrDefault();
+                        model.Ogrenci = ogrencis[0].ogrenci.OrderBy(p => p.OGRENIMSEVIYE_ID == "4" ? 2 : 1).FirstOrDefault();
 
                         var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null, donemId);
                         if (ogrenciDers.Any() && ogrenciDers[0].Sucess)
                         {
                             model.OgrenciDersNot = ogrenciDers[0].ogrencidersnot[0];
+                        }
+                        var ogrenciDersNots = service.OgrenciDersNotBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
+                        if (ogrenciDersNots.Any() && ogrenciDersNots[0].Sucess)
+                        {
+                            model.OgrenciDersNotBilgis = ogrenciDersNots[0].ogrencidersnot.ToList();
+                            // model.OgrenciDersNot = ogrenciDersNots[0].ogrencidersnot[0];
                         }
                         var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
                         if (ogrenciTez.Any() && ogrenciTez[0].Sucess)

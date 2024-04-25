@@ -159,23 +159,21 @@ var page_actions = function(){
     /* END MAILBOX */
 
     /* PANELS */
-
-    $(".panel-fullscreen").on("click",function(){
+    $(document).on("click", ".panel-fullscreen", function () { 
         panel_fullscreen($(this).parents(".panel").first());
         return false;
     });
-
-    $(".panel-collapse").on("click",function(){
+    $(document).on("click", ".panel-collapse", function () {
         panel_collapse($(this).parents(".panel").first());
         $(this).parents(".dropdown").first().removeClass("open");
         return false;
-    });    
-    $(".panel-remove").on("click",function(){
+    });  
+    $(document).on("click", ".panel-remove", function () { 
         panel_remove($(this).parents(".panel").first());
         $(this).parents(".dropdown").first().removeClass("open");
         return false;
     });
-    $(".panel-refresh").on("click",function(){
+    $(document).on("click", ".panel-refresh", function () { 
         var panel = $(this).parents(".panel").first();
         panel_refresh(panel);
 
@@ -437,12 +435,11 @@ function panel_fullscreen(panel){
     }
 }
 
-function panel_collapse(panel,action,callback){
-
+function panel_collapse(panel, action, callback) { 
     if(panel.hasClass("panel-toggled")){        
-        panel.removeClass("panel-toggled");
-        
-        panel.find(".panel-collapse .fa-angle-up").removeClass("fa-angle-up").addClass("fa-angle-down");
+        panel.removeClass("panel-toggled"); 
+
+        panel.find(".panel-collapse .fa-angle-down").removeClass("fa-angle-down").addClass("fa-angle-up");
 
         if(action && action === "shown" && typeof callback === "function")
             callback();            
@@ -451,8 +448,7 @@ function panel_collapse(panel,action,callback){
                 
     }else{
         panel.addClass("panel-toggled");
-                
-        panel.find(".panel-collapse .fa-angle-down").removeClass("fa-angle-down").addClass("fa-angle-up");
+        panel.find(".panel-collapse .fa-angle-up").removeClass("fa-angle-up").addClass("fa-angle-down");   
 
         if(action && action === "hidden" && typeof callback === "function")
             callback();

@@ -253,9 +253,9 @@
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled) getDetail(id);
+        if (unTogled) GetDetail(id);
     }
-    function getDetail(id) { 
+    function GetDetail(id) { 
         var _panel = $('#btDetay_' + id);
         PanelRefresh(_panel, false);
         $.ajax({
@@ -286,7 +286,7 @@
                     label: 'Belge Talebini Sil',
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -298,7 +298,7 @@
             }
         }); 
     }
-    function sil(sndr, id) {  
+    function Sil(sndr, id) {  
         $.ajax({
             url: '@Url.Action("Sil", "BelgeTalebi")',
             data: { id: id },
@@ -319,7 +319,7 @@
 {
 <script>
 
-        function kaydet(id) {
+        function Kaydet(id) {
             var mktr = $('#VerilenBelgeSayisi_' + id).val();
             if (mktr == null || mktr == "" || parseInt(mktr) < 1) {
                 alert('Verilen miktarı seçiniz!');
@@ -336,7 +336,7 @@
                     'miktar': mktr
                 },
                 success: function (result) {
-                    getDetail(id, false, null);
+                    GetDetail(id, false, null);
                     $(".mColor_" + id).each(function (inx, itmx) {
                         $(itmx).attr("style","color:"+ result.Color);
                     });

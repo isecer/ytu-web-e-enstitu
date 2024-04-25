@@ -129,8 +129,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 if (targetElement == null) return model;
                 var yeniHtml = "<br/><div><strong><u>İlgili Ekler:</u></strong>";
                 foreach (var itemEk in mailItem.SablonEkleri)
-                {
-                    yeniHtml += "</br><a href='" + mailItem.SistemErisimAdresi.Replace("/fbe", "").Replace("/sbe", "").Replace("/tet", "") + itemEk.EkDosyaYolu + "' target='_blank'>" + itemEk.EkAdi + "<a>";
+                { 
+                    yeniHtml += "</br><a href='" + itemEk.EkDosyaYolu.CustomUrlContentMail(mailItem.SistemErisimAdresi) + "' target='_blank'>" + itemEk.EkAdi + "<a>";
                 }
                 yeniHtml += "</div></br>";
 

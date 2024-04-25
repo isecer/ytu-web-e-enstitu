@@ -66,7 +66,7 @@
                                                                 </li>
 
                                                                 <li>
-                                                                    <a href="javascript:void(0)" onclick="getDetail(@item.MezuniyetYonetmelikID,true,$(this))"><i class="fa fa-trash-o tooltips" title="Sil"></i>Sil</a>
+                                                                    <a href="javascript:void(0)" onclick="GetDetail(@item.MezuniyetYonetmelikID,true,$(this))"><i class="fa fa-trash-o tooltips" title="Sil"></i>Sil</a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -119,10 +119,10 @@
         var cls = 'cls-' + tip + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled && tip == "ana-") setTimeout(getDetail(id), 400);
+        if (unTogled && tip == "ana-") setTimeout(GetDetail(id), 400);
     }
 
-    function getDetail(id, Isdelete, sndr) {
+    function GetDetail(id, Isdelete, sndr) {
 
         $.ajax({
             url: '@Url.Action("GetMyDetail", "MezuniyetYonetmelikler")',

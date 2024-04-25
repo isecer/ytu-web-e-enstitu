@@ -10,7 +10,7 @@
     var eykYaGonderimYetki = RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
     var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
-    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
 }
 
 <div class="row">
@@ -28,9 +28,9 @@
                         @if (UserIdentity.Current.IsYetkiliTij)
                         {
                             <li>
-                                <a href="javascript:void(0);" onclick="showDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
+                                <a href="javascript:void(0);" onclick="ShowDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
                                 <script>
-                                    function showDialogTutanakRpr() {
+                                    function ShowDialogTutanakRpr() {
                                         var _panel = $('#pnlFltr');
 
                                         PanelRefresh(_panel, false);
@@ -66,7 +66,7 @@
 
                                                                             }
                                                                             else {
-                                                                                getMsg(result);
+                                                                                GetMsg(result);
                                                                             }
 
 
@@ -383,7 +383,7 @@
         });
     }
 
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -446,7 +446,7 @@
                                 else if (result.IsSuccess) {
                                     GetDetail(tijBasvuruUniqueId);
                                 }
-                                showMmMessage(result.Messages, 'Tamam');
+                                ShowMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
                                 alert(err.responseText);
@@ -507,7 +507,7 @@
                                                     if (result.selectedJuriNum > 0) {
                                                         ShowContent(result.selectedJuriNum);
                                                     } 
-                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    if (result.mMessage.Messages.length > 0) GetMsg(result.mMessage);
                                                     return false;
                                                 }
                                             },
@@ -531,11 +531,11 @@
                                 }
                             }
                         }); 
-                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+                        if (resultG.Messages.trim()!="") ShowMmMessage(resultG.Messages, 'Tamam');
 
                     }
                     else {
-                        showMmMessage(resultG.Messages, 'Tamam');
+                        ShowMmMessage(resultG.Messages, 'Tamam');
                     }
 
                 },

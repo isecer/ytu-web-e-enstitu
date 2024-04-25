@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model  FmMailSablonlariDto
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -86,7 +87,7 @@
                                         </td>
                                         <td>
                                             <a href="@Url.Action("Kayit", "MailSablonlariSistem", new { id = item.MailSablonlariID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.MailSablonlariID')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.MailSablonlariID')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.MailSablonlariID" style="display:none">
@@ -141,7 +142,7 @@
                                                                                             {
                                                                                                 <tr>
                                                                                                     <td style="width: 25px;">@(item2.inx + 1))</td>
-                                                                                                    <td class="name"><a href="@item2.s.EkDosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item2.s.EkAdi</a></td>
+                                                                                                    <td class="name"><a href="@Url.CustomUrlContent(item2.s.EkDosyaYolu)" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item2.s.EkAdi</a></td>
                                                                                                 </tr>
                                                                                             }
                                                                                         }
@@ -199,7 +200,7 @@
         toggleByClass(sndr, cls, unTogled);
 
     }
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var gMesaj = $("#tdMad_" + id).html();
         bootbox.dialog({
             message:   gMesaj + " <br/> Seçilen Sistem Şablonunu Silmek İstiyor Musunuz?",
@@ -209,7 +210,7 @@
                     label: "Sistem Şablonunu Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -221,7 +222,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "MailSablonlariSistem")',
             data: { id: id },

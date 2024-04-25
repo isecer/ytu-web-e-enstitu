@@ -35,6 +35,10 @@ namespace Entities.Entities
         public Nullable<bool> EYKYaGonderildi { get; set; }
         public Nullable<int> EYKYaGonderildiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKYaGonderildiIslemTarihi { get; set; }
+        public string EYKYaGonderimDurumAciklamasi { get; set; }
+        public Nullable<bool> EYKYaHazirlandi { get; set; }
+        public Nullable<int> EYKYaHazirlandiIslemYapanID { get; set; }
+        public Nullable<System.DateTime> EYKYaHazirlandiIslemTarihi { get; set; }
         public Nullable<bool> EYKDaOnaylandi { get; set; }
         public Nullable<int> EYKDaOnaylandiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKDaOnaylandiOnayTarihi { get; set; }
@@ -42,10 +46,6 @@ namespace Entities.Entities
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
-        public Nullable<bool> EYKYaHazirlandi { get; set; }
-        public Nullable<int> EYKYaHazirlandiIslemYapanID { get; set; }
-        public Nullable<System.DateTime> EYKYaHazirlandiIslemTarihi { get; set; }
-        public string EYKYaGonderimDurumAciklamasi { get; set; }
     
         public virtual TDOBasvuruDanisman TDOBasvuruDanisman { get; set; }
     }

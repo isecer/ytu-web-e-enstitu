@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model FrMailGondermeDto
 @{
     Layout = null;
@@ -128,7 +129,7 @@
                                                         }
                                                         else
                                                         {
-                                                            <a href="@item2.s.EkDosyaYolu" target="_blank"><span class="fa fa-paperclip fa-lg" style="color: green;"></span> @item2.s.EkAdi</a>
+                                                            <a href="@Url.CustomUrlContent(item2.s.EkDosyaYolu)" target="_blank"><span class="fa fa-paperclip fa-lg" style="color: green;"></span> @item2.s.EkAdi</a>
                                                         }
                                                     </td>
                                                 </tr>

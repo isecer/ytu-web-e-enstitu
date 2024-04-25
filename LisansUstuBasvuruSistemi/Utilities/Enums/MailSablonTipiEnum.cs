@@ -173,10 +173,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int TijOneriFormuDanismanTarafindanRetEdildiDanismana = 302;
         public const int TijOneriFormuEykyaGonderimiRetEdildiDanismana = 303;
         public const int TijOneriFormuEykdaOnaylanmadiEdildiDanismana = 304;
-        public const int TijOneriFormuEykdaOnaylandiDanismana = 305; 
+        public const int TijOneriFormuEykdaOnaylandiDanismana = 305;
         public const int TijOneriFormuEykdaOnaylandiOgrenciye = 310;
         public const int TijOneriFormuEykdaOnaylandiJuriUyelerine = 311;
-        
+
         public const int TosBaslatildiOgrenci = 350;
         public const int TosBaslatildiDanisman = 351;
         public const int TosToplantiBilgiOgrenci = 352;
@@ -184,6 +184,20 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int TosDegerlendirmeLinkGonderimKomite = 354;
         public const int TosDegerlendirmeSonucGonderimDanisman = 355;
         public const int TosDegerlendirmeSonucGonderimOgrenci = 356;
+
+
+        public const int DpBasvuruYapildiYurutucuye = 400;
+        public const int DpBasvuruIptalEdildiOgrenciye = 405;
+        public const int DpBasvuruRetlEdildiOgrenciye = 410;
+        public const int DpProjeYurutucusuOnayladiOgrenciye = 415;
+        public const int DpToplantiBilgiOgrenciye = 420;
+        public const int DpToplantiBilgiJurilere = 425;
+        public const int DpDegerlendirmeHatirlatmaYurutucuye = 430;
+        public const int DpDegerlendirmeLinkGonderimJurilere = 435;
+        public const int DpSinavSonucuGonderimOgrenciye = 440;
+        public const int DpSinavSonucuGonderimYurutucuye = 445;
+
+
 
     }
 }

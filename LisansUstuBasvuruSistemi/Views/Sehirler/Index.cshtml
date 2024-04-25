@@ -59,7 +59,7 @@
                                         </td>
                                         <td> 
                                             <a href="@Url.Action("Kayit", "Sehirler", new { id = item.SehirKod })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,@item.SehirKod)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.SehirKod)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
 
                                         </td>
                                     </tr>
@@ -87,7 +87,7 @@
     }
 </div>
 <script type="text/javascript">
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var gMesaj = $("#tdMad_" + id).html();
         bootbox.dialog({
             message: "Şehir Adı: " + gMesaj + " <br/> Seçilen Şehiri Silmek İstiyor Musunuz?",
@@ -97,7 +97,7 @@
                     label: "Şehiri Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -109,7 +109,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "Sehirler")',  
             data: { id: id },

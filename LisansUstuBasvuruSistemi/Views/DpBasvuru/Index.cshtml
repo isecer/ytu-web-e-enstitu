@@ -1,0 +1,556 @@
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model  FmDonemProjesiBasvuruDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (!Model.IsDegerlendirme.HasValue)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td colspan="3" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Bilgisi</td>
+                    </tr>
+                    <tr>
+                        <td width="120" style="color: cadetblue">Enstitü</td>
+                        <td width="10">:</td>
+                        <td>
+                            @Model.EnstituAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color: cadetblue">Ad Soyad</td>
+                        <td>:</td>
+                        <td>@Model.OgrenciNo @Model.AdSoyad</td>
+                    </tr>
+
+                    @if (!Model.IsDonemProjesiBasvurusuAcik)
+                    {
+                        <tr>
+                            <td style="color: cadetblue">Başvuru Durumu</td>
+                            <td>:</td>
+                            <td>
+                                Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                                <br />
+                                <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                            </td>
+                        </tr>
+
+                    }
+                    else
+                    {
+                        if (!Model.IsYtuOgrencisi || !Model.IsOgrenimSeviyeYetki)
+                        {
+                            <tr>
+                                <td style="color: cadetblue">Not</td>
+                                <td>:</td>
+                                <td>
+                                    Dönem projesi başvuru işlemleri sadece <b>Tezsiz Yüksek Lisans</b> Öğrenim seviyesinde aktif olarak okuyan öğrenciler tarafından yapılabilir.
+                                </td>
+                            </tr>
+
+                        }
+                        else if (!Model.IsEnstituYetki)
+                        {
+                            <tr>
+                                <td style="color: cadetblue">Not</td>
+                                <td>:</td>
+                                <td>
+                                    Bu enstitü için Yeterlik başvurusu yapamazsınız!
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td></td>
+                                <td>:</td>
+                                <td>
+                                    @if (Model.IsAktifOgrenimBasvuruVar)
+                                    {
+                                        @("Okuduğunuz program için dönem projesi başvurunuz bulunuyor.")
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus"></i>Yeni Başvuru Yap</button>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+}
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+            @Html.Hidden("IsDegerlendirme", Model.IsDegerlendirme)
+            @if (Model.IsDegerlendirme.HasValue)
+            {
+                if (Model.RowCount > 0)
+                {
+                    <div id="cls-@Model.Data.First().UniqueID"></div>
+                }
+                else
+                {
+                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;font-size:12pt;color:maroon;"> Değerlendirme yapılabilecek herhangi dönem projesi başvurusu bulunamadı!</div>
+                }
+
+            }
+            else
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-heading padding-0">
+                        <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="75"></th>
+                                    <th width="40"></th>
+                                    <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                    <th width="150" class="sirala" field="BasvuruTarihi" width="80">Son Başvuru Tarihi</th>
+                                    <th>Son Başvuru Durumu</th>
+                                    <th width="45"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (Model.RowCount > 0)
+                                {
+
+                                    var rowIndex = Model.StartRowIndex;
+                                    foreach (var item in Model.Data)
+                                    {
+                                        rowIndex++;
+                                        <tr>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 30px;">@rowIndex</td>
+                                                        <td>
+                                                            <ul class="panel-controls">
+                                                                <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
+                                                                    <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <img src="@item.ResimAdi.ToKullaniciResim()" style="width: 40px; height: 40px; cursor: pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail">
+                                            </td>
+                                            <td>
+                                                @item.AdSoyad <br /> @item.OgrenciNo
+                                            </td>
+                                            <td id="DpBasvuruDonem_@item.UniqueID">
+                                                @item.SonBasvuruDurum.ToDpBasvuruDonemView()
+                                            </td>
+                                            <td id="DpBasvuruDurum_@item.UniqueID">
+                                                @item.SonBasvuruDurum.ToDpBasvuruDurumView()
+                                            </td>
+                                            <td>
+                                                @if (item.IsYeniBasvuruYapilabilir)
+                                                {
+                                                    <a href="@Url.Action("BasvuruYap", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" title="Düzelt"></i></a>
+                                                    <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" title="Sil"></i></a>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr class="cls-@item.UniqueID" style="display: none">
+                                            <td colspan="6" style="padding: 1px 1px 2px 75px;">
+                                                <div class="panel" style="padding:0px;margin:0px;" id="cls-@item.UniqueID"></div>
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" style="text-align: center;">
+                                            Listelenen Kayıt Yok
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        @Model.ToPagerString()
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+@if (Model.IsDegerlendirme.HasValue && Model.RowCount > 0)
+{
+    <script>
+        $(function () {
+            GetDetail('@Model.Data.First().UniqueID','@Model.IsDegerlendirme');
+        },200)
+    </script>
+}
+
+<script>
+
+    function YeniBasvuruDuyuruKontrol()
+    {
+        
+        var popupSetting = {
+            title:'||',
+            popupTipId:@DuyuruPopupTipiEnum.DonemProjesiBasvuru,
+            btnAdi: 'Başvuru Yap',
+            redirectUrl: '@Url.Action("BasvuruYap")',
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting); 
+    }
+    function BasvuruSil(sndr, uniqueId, tarih) {
+        Swal.fire({
+            text: tarih + " tarihli dönem projesi başvurusunu silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Dönem Projesi Başvurusunu Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("Sil", "DpBasvuru")',
+                        data: { uniqueId },
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                $(sndr).parents('tr').first().remove();
+                                $(".cls-" + uniqueId).remove();
+                            }
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        }
+                    });
+
+                });
+            }
+        });
+    }
+    function ShowDetail(uniqueId) {
+        var rwID = $('#iShow_' + uniqueId);
+        var cls = 'cls-' + uniqueId;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(uniqueId);
+
+    }
+</script>
+
+<script>
+
+    function GetDetail(donemProjesiUniqueId) {
+        var panel = $('#cls-' + donemProjesiUniqueId);
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetailDpBasvuru", "Ajax")',
+            data: { donemProjesiUniqueId, UniqueID: '@Model.IsDegerlendirme' },
+            success: function (result) {
+                $('#cls-' + donemProjesiUniqueId).html(result);
+                GetDonemProjesiDurumView(donemProjesiUniqueId);
+                PanelRefresh(panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(panel, true);
+            },
+            complete: function (cmp) {
+                PanelRefresh(panel, true);
+            },
+        });
+    }
+    function YeniBasvuruDuyuruKontrol2(donemProjesiUniqueId, donemProjesiBasvuruUniqueId) {
+        var panel = $('#cls-' + donemProjesiUniqueId);
+        PanelRefresh(panel, false);
+        var popupSetting = {
+            title: '||',
+            popupTipId:@DuyuruPopupTipiEnum.DonemProjesiBasvuru,
+            btnAdi: 'Yeni Dönem Projesi Başvurusu Oluştur',
+            redirectUrl: '',
+            fncparameter: { donemProjesiUniqueId, donemProjesiBasvuruUniqueId },
+            callbackFnc: GetDonemProjesiBasvuruFormu
+        }
+        ShowDuyuru(popupSetting);
+        PanelRefresh(panel, true);
+    }
+    function GetDonemProjesiBasvuruFormu(donemProjesiUniqueId, donemProjesiBasvuruUniqueId) {
+        if (donemProjesiUniqueId.donemProjesiUniqueId) donemProjesiUniqueId = donemProjesiUniqueId.donemProjesiUniqueId;
+        if (donemProjesiUniqueId.donemProjesiBasvuruUniqueId) donemProjesiBasvuruUniqueId = donemProjesiUniqueId.donemProjesiBasvuruUniqueId;
+        var panel = $('#cls-' + donemProjesiUniqueId);
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDonemProjesiBasvuruFormu", "DpBasvuru")',
+            data: {
+                donemProjesiUniqueId,
+                donemProjesiBasvuruUniqueId
+            },
+            success: function (resultG) {
+                PanelRefresh(panel, true);
+                if (resultG.IsSuccess) {
+                    var btbxxFS = bootbox.dialog({
+                        message: resultG.Content,
+                        title: "<i class='fa fa-pencil'></i> " + (donemProjesiBasvuruUniqueId ? "Dönem Projesi Başvuru Formu Düzelt" : "Yeni Dönem Projesi Başvuru Formu"),
+                        buttons: {
+                            success: {
+                                label: 'Kaydet',
+                                className: "btn-info btnKaydet",
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmDonemProjesiBasvuruFormu').ajaxForm({
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
+                                                if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                GetDetail(donemProjesiUniqueId);
+
+                                            }
+                                            else {
+                                                if (result.Messages.length > 0) GetMsg(result);
+                                                return false;
+                                            }
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                        }
+
+                                    });
+                                    $('#FrmDonemProjesiBasvuruFormu').submit();
+                                    return false;
+                                }
+                            }
+                            ,danger: {
+                                label: "Kapat",
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    //$(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                    if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
+
+                }
+                else {
+                    ShowMmMessage(resultG.Messages, 'Tamam');
+                }
+
+            },
+            error: function (err) {
+                PanelRefresh(panel, true);
+                alert(err.responseText);
+
+            }
+        })
+    }
+    function BasvuruFormuSil(donemProjesiUniqueId, donemProjesiBasvuruUniqueId, tarih) {
+        Swal.fire({
+            text: tarih + " tarihli dönem projesi başvuru formunu silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Dönem Projesi Başvuru Formunu Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("BasvuruFormuSil", "DpBasvuru")',
+                        data: { 'uniqueId': donemProjesiBasvuruUniqueId },
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                GetDetail(donemProjesiUniqueId);
+                            }
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        }
+                    });
+
+                });
+            }
+        });
+    }
+    function ShowDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+    function GetDonemProjesiJuriForm(donemProjesiUniqueId, donemProjesiBasvuruUniqueId) {
+         var panel = $('#cls-' + donemProjesiUniqueId);
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDonemProjesiJuriFormu", "DpBasvuru")',
+            data: {
+                'donemProjesiUniqueId': donemProjesiUniqueId,
+                'donemProjesiBasvuruUniqueId': donemProjesiBasvuruUniqueId
+            },
+            success: function (resultG) {
+                PanelRefresh(panel, true);
+                if (resultG.IsSuccess) {
+                    var btbxxFS = bootbox.dialog({
+                        message: resultG.Content,
+                        title: '|| Dönem Projesi Jüri Formu',
+                        buttons: {
+
+                            success: {
+                                label: 'Kaydet',
+                                className: "btn-info btnKaydet",
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmDonemProjesiJuriFormu').ajaxForm({
+                                        success: function (result) {
+                                            PanelRefresh(pnlx, true);
+                                            if (result.mMessage.IsSuccess) {
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                GetDetail(donemProjesiUniqueId);
+                                            }
+                                            else {
+                                                if (result.selectedJuriNum > 0) {
+                                                    ShowContent(result.selectedJuriNum);
+                                                }
+                                                if (result.mMessage.Messages.length > 0) GetMsg(result.mMessage);
+                                                return false;
+                                            }
+                                        },
+                                        complete: function (cmp) {
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                        }
+
+                                    });
+                                    $('#FrmDonemProjesiJuriFormu').submit();
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: 'Vazgeç',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
+
+                }
+                else {
+                    ShowMmMessage(resultG.Messages, 'Tamam');
+                }
+
+            },
+            error: function (err) {
+                PanelRefresh(panel, true);
+                alert(err.responseText);
+
+            }
+        });
+    }
+      function DonemProjesiDegerlendir(donemProjesiUniqueId, uniqueId) {
+        var donemProjesiJuriOnayDurumId = $('#DonemProjesiJuriOnayDurumID_' + uniqueId).val();
+        var fileInput = document.getElementById('intihalDosya_' + uniqueId);
+        var intihalDosya = fileInput != null ? fileInput.files[0] : null;
+        var TekKaynakOrani = $('#TekKaynakOrani_' + uniqueId).val();
+        var ToplamKaynakOrani = $('#ToplamKaynakOrani_' + uniqueId).val();
+        var Aciklama = $('#Aciklama_' + uniqueId).val();
+        var panel = $('#cls-' + donemProjesiUniqueId);
+        bootbox.dialog({
+            message: "Dönem projesi değerlendirmenizi kaydetmek istediğinize emin misiniz?",
+            title: "<i class='glyphicon glyphicon-info-sign'></i> Dönem Projesi Değerlendirmesi",
+            buttons: {
+                success: {
+                    label: "Evet",
+                    className: "btn-success",
+                    callback: function (event) {
+                        PanelRefresh(panel, false);
+                        var formData = new FormData();
+                        formData.append('uniqueId', uniqueId);
+                        formData.append('donemProjesiJuriOnayDurumId', donemProjesiJuriOnayDurumId);
+                        formData.append('TekKaynakOrani', TekKaynakOrani);
+                        formData.append('ToplamKaynakOrani', ToplamKaynakOrani);
+                        formData.append('intihalDosya', intihalDosya);
+                        formData.append('Aciklama', Aciklama);
+
+                        $.ajax({
+                            url: '@Url.Action("DonemProjesiDegerlendir", "DpBasvuru")',
+                            type: 'POST',
+                            data: formData,
+                            contentType: false, // İçerik tipini false olarak ayarlayın
+                            processData: false, // jQuery'nin data'yı işlemesini engelleyin
+                            success: function (result) {
+                                PanelRefresh(panel, true);
+                                if (result.IsSuccess || result.IsRefresh) {
+                                    GetDetail(donemProjesiUniqueId);
+                                }
+                                ShowMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                PanelRefresh(panel, true);
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: "Hayır",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    } 
+
+</script>

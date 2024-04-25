@@ -592,5 +592,10 @@ namespace LisansUstuBasvuruSistemi.Business
                 return anabilimDallaris;
             }
         }
+
+
+
+
+
     }
 }

@@ -1,0 +1,26 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.DpBasvuruDurumDto
+@{
+    Layout = null;
+
+}
+@{
+    if (Model != null && Model.DonemProjesiBasvuruID > 0)
+    {
+
+        @(Model.BasvuruYil+"/"+(Model.BasvuruYil+1)+" "+Model.BasvuruDonemAdi)
+        <br />
+        @Model.BasvuruTarihi.ToFormatDateAndTime()
+    }
+    else
+    {
+        @("Başvuru Tamamlanmadı")
+    }
+}
+
+
+
+
+
+
+

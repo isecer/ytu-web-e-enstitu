@@ -1,7 +1,5 @@
-﻿@using Entities.Entities 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
@@ -47,7 +45,7 @@
                                                                         {
                                                                             if (Model.IsAnketVar == false || Model.IsAnketDolduruldu)
                                                                             {
-                                                                                <a href="javascript:void(0);" onclick="showSRBCiltDialog(@Model.MezuniyetBasvurulariID,true)">
+                                                                                <a href="javascript:void(0);" onclick="ShowSRBCiltDialog(@Model.MezuniyetBasvurulariID,true)">
                                                                                     Yeni Tez Teslim Formu Oluştur
                                                                                 </a>
                                                                             }
@@ -74,11 +72,11 @@
                                                                                                                 if (result.IsSuccess) {
                                                                                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                                                                                     $(_clsBtn).click();
-                                                                                                                    showSRBCiltDialog(@Model.MezuniyetBasvurulariID,true);
-                                                                                                                    getDetailx('@Model.MezuniyetSurecID');
+                                                                                                                    ShowSRBCiltDialog(@Model.MezuniyetBasvurulariID,true);
+                                                                                                                    GetDetailx('@Model.MezuniyetSurecID');
                                                                                                                 }
                                                                                                                 else {
-                                                                                                                    getMsg(result);
+                                                                                                                    GetMsg(result);
                                                                                                                     return false;
                                                                                                                 } 
                                                                                                             },
@@ -102,7 +100,7 @@
                                                                         }
                                                                         else
                                                                         {
-                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'LİSANSÜSTÜ CİLTLİ TEZ TESLİM FORMU','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetCiltFormuRaporu&ID=@mezuniyetBasvurulariTezTeslimFormu.MezuniyetBasvurulariTezTeslimFormID' , 'auto', 'modal-dialog modal-lg' )">@mezuniyetBasvurulariTezTeslimFormu.IslemTarihi.ToFormatDate() Tarihinde oluşturulmuş Tez Teslim Formunu Görmek için tıklayınız</a>
+                                                                            <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'LİSANSÜSTÜ CİLTLİ TEZ TESLİM FORMU','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetCiltFormuRaporu&ID=@mezuniyetBasvurulariTezTeslimFormu.MezuniyetBasvurulariTezTeslimFormID' , 'auto', 'modal-dialog modal-lg' )">@mezuniyetBasvurulariTezTeslimFormu.IslemTarihi.ToFormatDate() Tarihinde oluşturulmuş Tez Teslim Formunu Görmek için tıklayınız</a>
 
                                                                         }
 
@@ -110,7 +108,7 @@
                                                                     <td width="10">
                                                                         @if (mezuniyetBasvurulariTezTeslimFormu != null && Model.IsMezunOldu.HasValue == false)
                                                                         {
-                                                                            <a href="javascript:void(0)" onclick="showSRBCiltDialog(@Model.MezuniyetBasvurulariID)"><i class="fa fa-edit fa-lg" title="Tez Teslim Formunu Düzenle"></i></a>
+                                                                            <a href="javascript:void(0)" onclick="ShowSRBCiltDialog(@Model.MezuniyetBasvurulariID)"><i class="fa fa-edit fa-lg" title="Tez Teslim Formunu Düzenle"></i></a>
 
                                                                         }
                                                                     </td>

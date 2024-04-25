@@ -315,7 +315,7 @@
         toggleByClass3(rwID, cls, unTogled);
         //if (unTogled) setTimeout(function () { GetDetail(dbdID, klID); }, 200);
     }
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var htmlCont = $("#cls-" + id).html();
         var eks = $("#tdEk_" + id).html();
         bootbox.dialog({
@@ -326,7 +326,7 @@
                     label: "Mesaj Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {

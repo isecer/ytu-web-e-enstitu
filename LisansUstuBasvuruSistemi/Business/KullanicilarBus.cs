@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IdentityModel.Protocols.WSTrust;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -38,13 +39,23 @@ namespace LisansUstuBasvuruSistemi.Business
             return obsData.GetObsStudentControl(tcOrOgrenciNo, donemId);
         }
 
+        public static StudentControl OgrenciBilgisiGuncelleObs(Guid userKey)
+        {
+            return OgrenciBilgisiGuncelleObs(null, userKey);
+        }
+
         public static StudentControl OgrenciBilgisiGuncelleObs(int kullaniciId)
+        {
+            return OgrenciBilgisiGuncelleObs(kullaniciId, null);
+        }
+
+        private static StudentControl OgrenciBilgisiGuncelleObs(int? kullaniciId, Guid? userKey = null)
         {
             var kayitBilgi = new StudentControl();
             using (var entities = new LubsDbEntities())
             {
 
-                var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+                var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId || p.UserKey==userKey);
                 if (kul.YtuOgrencisi)
                 {
                     var tcKimlikNo = kul.TcKimlikNo;

@@ -204,12 +204,12 @@
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-group">
-                                                                        <input type="text" name="TezEsDanismanAdi" id="TezEsDanismanAdi" maxlength="200" value="@Model.TezEsDanismanAdi" placeholder="Eş danışman bilgisi yoksa boş bırakınız" class="form-control" />
+                                                                        <input type="text" name="TezEsDanismanAdi" id="TezEsDanismanAdi" maxlength="200" value="@Model.TezEsDanismanAdi" placeholder="(Eş danışman Adı) Eş Danışman yoksa boş bırakınız" class="form-control" />
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-group">
-                                                                        <input type="text" name="TezEsDanismanEMail" id="TezEsDanismanEMail" maxlength="120" value="@Model.TezEsDanismanEMail" placeholder="Eş danışman bilgisi yoksa boş bırakınız" class="form-control" />
+                                                                        <input type="text" name="TezEsDanismanEMail" id="TezEsDanismanEMail" maxlength="120" value="@Model.TezEsDanismanEMail" placeholder="(E Posta) Eş danışman bilgisi yoksa boş bırakınız" class="form-control" />
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -379,7 +379,7 @@
 <script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script type="text/javascript">
 
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -721,7 +721,7 @@
                 }
 
                 if (result._MmMessage.IsSuccess == false)
-                    getMsg(result._MmMessage, step);
+                    GetMsg(result._MmMessage, step);
                 else { validateControl(null, result._MmMessage);}
 
             },
@@ -740,7 +740,7 @@
 
     }
 
-    function getMsg(result, step) {
+    function GetMsg(result, step) {
         if (result.IsSuccess == false) {
             var cls = result.MessageType == 1 ?
                 'success' : (result.MessageType == 3 ? 'warning' : (result.MessageType == 2 ? 'danger' : 'info'));

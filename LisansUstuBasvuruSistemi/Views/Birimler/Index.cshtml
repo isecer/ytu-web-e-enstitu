@@ -2,7 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmBirimlerDto
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,9 +15,9 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i> Birim Listesi</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
-                        <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>
-                        <li><span class="label label-danger label-form">P:@IndexModel.Pasif</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
+                        <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
+                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -61,7 +61,7 @@
                                         <td>
                                             <a href="@Url.Action("Kayit")"><i class="fa fa-plus tooltips" title="Yeni"></i></a>
                                             <a href="@Url.Action("Kayit", "Birimler", new { id = item.data.BirimID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,@item.data.BirimID)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.data.BirimID)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
 
@@ -88,7 +88,7 @@
     }
 </div>
 <script type="text/javascript">
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var gMesaj = $("#tdMad_" + id).html();
         bootbox.dialog({
             message: "Birim Adı: " + gMesaj + " <br/> Seçilen Birimi Silmek İstiyor Musunuz?",
@@ -98,7 +98,7 @@
                     label: "Birim Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -110,7 +110,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "Birimler")',
             data: { id: id },

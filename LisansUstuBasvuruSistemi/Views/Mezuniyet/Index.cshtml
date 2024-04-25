@@ -172,7 +172,7 @@
                                             @if (item.IsDanismanOnay != true)
                                             {
                                                 <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
+                                                <a href="javascript:void(0)" onclick="GetDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
                                             }
                                         </td>
                                     </tr>
@@ -210,7 +210,7 @@
     </script>
 }
 <script type="text/javascript">
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -235,10 +235,10 @@
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled) getDetailx(id,false,null,tbNo);
+        if (unTogled) GetDetailx(id,false,null,tbNo);
 
     }
-    function getDetailx(id, Isdelete, sndr,tbNo) {
+    function GetDetailx(id, Isdelete, sndr,tbNo) {
 
         var _panel = $('#bsvrDet_' + id);
 
@@ -264,7 +264,7 @@
                                 label: 'Başvuruyu Sil',
                                 className: "btn-danger",
                                 callback: function () {
-                                    sil(sndr, id);
+                                    Sil(sndr, id);
                                 }
                             },
                             danger: {
@@ -286,7 +286,7 @@
 
     }
 
-      function sil(sndr, id) {
+      function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "Mezuniyet")',
             data: { id: id  },
@@ -295,7 +295,7 @@
                     $(sndr).closest("tr").remove();
                     $(".cls-" + id).remove();
                 }
-                showMmMessage(result.Messages, 'Tamam');
+                ShowMmMessage(result.Messages, 'Tamam');
             },
             error: function (err) {
                 alert(err.responseText);
@@ -311,7 +311,7 @@
         
     });
 
-    function showSRDialog(MezuniyetBasvurulariID, SRTalepID) {
+    function ShowSrDialog(MezuniyetBasvurulariID, SRTalepID) {
         $.ajax({
             url: '@Url.Action("RezervasyonAl", "Mezuniyet")',
             data: { 'MezuniyetBasvurulariID': MezuniyetBasvurulariID, 'SRTalepID': SRTalepID },
@@ -335,12 +335,12 @@
                                     success: function (result) {
                                         if (result.IsSuccess) {
                                             toastr["success"](result.Messages[0], result.Title);
-                                            getDetailx(MezuniyetBasvurulariID);
+                                            GetDetailx(MezuniyetBasvurulariID);
                                             var _clsBtn = $('.modal-header').find('button').first();
                                             $(_clsBtn).click();
                                         }
                                         else {
-                                            getMsg(result);
+                                            GetMsg(result);
                                             return false;
                                         }
                                         PanelRefresh(pnlx, true);
@@ -376,7 +376,7 @@
         });
     }
 
-    function showSRBCiltDialog(MezuniyetBasvurulariID, isYeni) {
+    function ShowSRBCiltDialog(MezuniyetBasvurulariID, isYeni) {
         $.ajax({
             url: '@Url.Action("TezTeslimFormu", "Mezuniyet")',
             data: { 'MezuniyetBasvurulariID': MezuniyetBasvurulariID },
@@ -397,12 +397,12 @@
                                     success: function (result) {
                                         if (result.IsSuccess) {
                                             toastr["success"](result.Messages[0], result.Title);
-                                            getDetailx(MezuniyetBasvurulariID);
+                                            GetDetailx(MezuniyetBasvurulariID);
                                             var _clsBtn = $('.modal-header').find('button').first();
                                             $(_clsBtn).click();
                                         }
                                         else {
-                                            getMsg(result);
+                                            GetMsg(result);
                                             return false;
                                         }
                                     },
@@ -443,9 +443,9 @@
             url: '@Url.Action("OgrenciUzatmaOnayKayit", "Mezuniyet")',
             data: { SRTalepID: SRTalepID, IsOgrenciUzatmaSonrasiOnay: IsOgrenciUzatmaSonrasiOnay },
             success: function (result) {
-                getMsg(result.Messages);
+                GetMsg(result.Messages);
                 if (result.Messages.IsSuccess == true) {
-                    getDetailx(mID);
+                    GetDetailx(mID);
                 }
 
                 PanelRefresh(_panel, true);
@@ -466,10 +466,10 @@
             $('#TdDurumKaydet_' + MezuniyetBasvurulariTezDosyaID).ajaxForm({
                 success: function (result) {
                     if (result.IsSuccess) {
-                        getDetailx(MezuniyetBasvurulariID);
+                        GetDetailx(MezuniyetBasvurulariID);
                     }
                     else {
-                         showMmMessage(result.Messages, 'Tamam');
+                         ShowMmMessage(result.Messages, 'Tamam');
 
                     }
                     PanelRefresh(_panel, true);
@@ -497,7 +497,7 @@
                     'SRDurumAciklamasi': ibTipAciklama
                 },
                 success: function (result) {
-                    getDetailx(MezuniyetBasvurulariID);
+                    GetDetailx(MezuniyetBasvurulariID);
                 },
                 error: function (err) {
                     alert(err.responseText);
@@ -527,12 +527,12 @@
                 },
                 success: function (result) {
                     if (result.IsSuccess) {
-                        getDetailx(MezuniyetBasvurulariID);
+                        GetDetailx(MezuniyetBasvurulariID);
 
 
                     }
                     else {
-                        showMmMessage(result.Messages, 'Tamam');
+                        ShowMmMessage(result.Messages, 'Tamam');
                     }
 
                 },
@@ -554,11 +554,11 @@
                 },
                 success: function (result) {
                     if (result.IsSuccess) {
-                        getDetailx(MezuniyetBasvurulariID);
+                        GetDetailx(MezuniyetBasvurulariID);
 
                     }
                     else {
-                        showMmMessage(result.Messages, 'Tamam');
+                        ShowMmMessage(result.Messages, 'Tamam');
                     }
 
                 },
@@ -597,7 +597,7 @@
 
                                 success: {
                                     label: 'İleri',
-                                    className: "btn-primary btnKaydet",
+                                    className: "btn-success btnKaydet",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                         PanelRefresh(pnlx, false);
@@ -606,7 +606,7 @@
                                                 if (result.mMessage.IsSuccess) {
                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                     $(_clsBtn).click();
-                                                    getDetailx(MezuniyetBasvurulariID);
+                                                    GetDetailx(MezuniyetBasvurulariID);
                                                 }
                                                 else {
                                                     $('#PostDetayTabAdi').val(result.SelectedDetayTabAdi);
@@ -624,7 +624,7 @@
                                                     }
                                                     $("[href='#" + result.SelectedAnaTabAdi + "']").first().click();
                                                     $("[href='#" + result.SelectedDetayTabAdi + "']").first().click();
-                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    if (result.mMessage.Messages.length > 0) GetMsg(result.mMessage);
                                                     return false;
                                                 }
                                                 PanelRefresh(pnlx, true);
@@ -646,7 +646,7 @@
                        // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
                     }
                     else {
-                        showMmMessage(result.Messages, 'Tamam');
+                        ShowMmMessage(result.Messages, 'Tamam');
                     }
 
                 },
@@ -700,10 +700,10 @@
                                 success: function (result) {
                                     PanelRefresh(_panel, true);
                                     if (result.IsSuccess || result.IsRefresh) {
-                                        getDetailx(MBasvuruID);
+                                        GetDetailx(MBasvuruID);
 
                                     }
-                                    showMmMessage(result.Messages, 'Tamam');
+                                    ShowMmMessage(result.Messages, 'Tamam');
 
                                 },
                                 error: function (err) {

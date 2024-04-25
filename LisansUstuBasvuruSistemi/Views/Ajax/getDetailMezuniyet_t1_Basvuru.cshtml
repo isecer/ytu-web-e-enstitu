@@ -102,18 +102,18 @@
                         <td style="font-size:9pt; border-bottom:1px solid;text-align:right;">
                             @if (!Model.DanismanImzaliFormDosyaYolu.IsNullOrWhiteSpace())
                             {
-                                <a href="javascript:void(0);" class="openFl" FPath="@Url.Content(Model.DanismanImzaliFormDosyaYolu)" FName=" @(Model.OgrenimTipKod.IsDoktora()? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu")"><span class="fa fa-download" style="color: green;"></span>&nbsp;@Model.DanismanImzaliFormDosyaAdi</a>
+                                <a href="javascript:void(0);" class="openFl" FPath="@Url.CustomUrlContent(Model.DanismanImzaliFormDosyaYolu)" FName=" @(Model.OgrenimTipKod.IsDoktora()? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu")"><span class="fa fa-download" style="color: green;"></span>&nbsp;@Model.DanismanImzaliFormDosyaAdi</a>
                             }
                             else if (Model.IsDanismanOnay == true && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                             {
-                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=true' , 'auto', 'modal-dialog modal-lg' )">
+                                <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=true' , 'auto', 'modal-dialog modal-lg' )">
                                     <i class="fa fa-file-pdf-o"></i> FR-0338 Mezuniyet Tez Teslim Formunu İndir
                                 </a>
                             }
                             else if (kayitYetki && !Model.IsDanismanOnay.HasValue && !Model.GuncellenebilirBasvuruDanismanAdi.IsNullOrWhiteSpace())
                             {
                                 <a href="javascript:void(0);" onclick="DanismanDegistir(@Model.MezuniyetBasvurulariID,'@Model.GuncellenebilirBasvuruDanismanAdi')">
-                                    <i class="fa fa-refresh"></i> Öğrenci Başvuru Danışmanını Güncelle
+                                    <i class="fa fa-refresh"></i> Öğrenci Mezuniyet Başvurusu Danışmanını Güncelle
                                 </a>
                                 <script>
                                     function DanismanDegistir(id, danismanAdi) {
@@ -139,9 +139,8 @@
                                                         data: { id },
                                                         success: function (result) {
                                                             if (result.IsSuccess) { 
-                                                                getDetailx(id);
-                                                            }
-                                                            debugger
+                                                                GetDetailx(id);
+                                                            } 
                                                             swal.fire({
                                                                 html: result.MessageView,
                                                                 icon: (result.IsSuccess ? "success" : "error"),
@@ -179,7 +178,7 @@
                                             <select id="DanismanBasvuruOnay_@Model.MezuniyetBasvurulariID" onchange="DanOnayChange(this,@Model.MezuniyetBasvurulariID);">
                                                 <option></option>
                                                 <option value="true" @(Model.IsDanismanOnay == true ? "selected" : "")>Öğrenci Başvurusunu Onaylıyorum </option>
-                                                <option value="false" @(Model.IsDanismanOnay == false ? "selected" : "")>Öğrenci Başvurusunu Reddediyorum</option>
+                                                <option value="false" @(Model.IsDanismanOnay == false ? "selected" : "")>Öğrenci Başvurusunu Ret Ediyorum</option>
                                             </select>
                                             <a href="javascript:void(0);" onclick="DanismanBasvuruOnayKayit(@Model.MezuniyetBasvurulariID)" class="btn btn-primary btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
                                             <script>
@@ -206,7 +205,7 @@
                                             <div class="tasks ui-sortable">
                                                 <div class="task-item task-@(Model.IsDanismanOnay.HasValue?"info":"warning")" style="margin-bottom:0px;">
                                                     <div class="task-text ui-sortable-handle" style="padding-bottom: 0px; font-size: 8pt;">
-                                                        <b>Taahhüt 1:</b>  Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                                        <b>Taahhüt 1:</b> Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
                                                         <br /><br />
                                                         <b>Taahhüt 2:</b> Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
                                                     </div>
@@ -336,7 +335,7 @@
                         <td style="font-size:9pt; border-bottom:1px solid;">
                             @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                             {
-                                <a style="float:right;" href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Yayın Şartı Onayı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetBasvuruRaporu&MezuniyetBasvurulariID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                <a style="float:right;" href="javascript:void(0);" onclick="YeniDialogBB(null, 'Mezuniyet Yayın Şartı Onayı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetBasvuruRaporu&MezuniyetBasvurulariID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
                                     <i class="fa fa-file-pdf-o"></i>  Yayın Onayını İndir
                                 </a>
                             }
@@ -403,7 +402,7 @@
                                     <td class="ValueTd">
                                         @if (sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)
                                         {
-                                            @Html.DropDownList("MezuniyetYayinKontrolDurumID", Model.SMezuniyetYayinKontrolDurum, new { id = "MezuniyetYayinKontrolDurumID_" + Model.MezuniyetBasvurulariID, @class = "form-control", onchange = "bDurumChange(this,'#bdurumRowID_" + Model.MezuniyetBasvurulariID + "')" })
+                                            @Html.DropDownList("MezuniyetYayinKontrolDurumID", Model.SMezuniyetYayinKontrolDurum, new { id = "MezuniyetYayinKontrolDurumID_" + Model.MezuniyetBasvurulariID, @class = "form-control", onchange = "BDurumChange(this,'#bdurumRowID_" + Model.MezuniyetBasvurulariID + "')" })
                                         }
                                         else
                                         {
@@ -431,7 +430,7 @@
                                         <td></td>
                                         <td>:</td>
                                         <td class="ValueTd">
-                                            <a href="javascript:void(0);" onclick="bDurumKayit(@Model.MezuniyetBasvurulariID)" class="btn btn-primary "><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
+                                            <a href="javascript:void(0);" onclick="BDurumKayit(@Model.MezuniyetBasvurulariID)" class="btn btn-primary "><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
                                         </td>
                                     </tr>
                                 }

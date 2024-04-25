@@ -1,6 +1,7 @@
 ﻿@using Entities.Entities
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model Duyurular
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -136,7 +137,7 @@
                                                         <input type="text" name="DosyaEkiAdi" style="padding: 0px; height: 22px; " value="@item.s.DosyaEkAdi" maxlength="250" placeholder="Ek Adı Giriniz" class="form-control" />
                                                     </td>
                                                     <td style='padding: 0px; vertical-align: middle;'>
-                                                        <a href="@item.s.DosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span> @item.s.DosyaEkAdi</a>
+                                                        <a href="@Url.CustomUrlContent(item.s.DosyaYolu)" target="_blank"><span class="fa fa-download" style="color: green;"></span> @item.s.DosyaEkAdi</a>
                                                         <input type="file" name="DosyaEki" style="padding: 0px; height: 22px;" class="form-control hide" />
                                                     </td>
                                                     <td style='padding-top: 0px;padding-bottom:0px; vertical-align: middle;text-align:center;'>

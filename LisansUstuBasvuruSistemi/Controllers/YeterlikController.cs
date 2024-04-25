@@ -24,17 +24,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (!UserIdentity.Current.IsAuthenticated && (!isKomiteOrJuri.HasValue || !isDegerlendirme.HasValue)) return RedirectToActionPermanent("Login", "Account");
 
-            return Index(new FmYeterlikBasvuruDto { PageSize = 50, IsKomiteOrJuri = isKomiteOrJuri, isDegerlendirme = isDegerlendirme }, ekd);
+            return Index(new FmYeterlikBasvuruDto { PageSize = 50, IsKomiteOrJuri = isKomiteOrJuri, IsDegerlendirme = isDegerlendirme }, ekd);
         }
         [AllowAnonymous]
         [HttpPost]
         public ActionResult Index(FmYeterlikBasvuruDto model, string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-            if (!UserIdentity.Current.IsAuthenticated && (!model.IsKomiteOrJuri.HasValue || !model.isDegerlendirme.HasValue)) return RedirectToActionPermanent("Login", "Account");
+            if (!UserIdentity.Current.IsAuthenticated && (!model.IsKomiteOrJuri.HasValue || !model.IsDegerlendirme.HasValue)) return RedirectToActionPermanent("Login", "Account");
             #region BilgiModel 
             model.AktifYeterlikSurecId = YeterlikBus.GetYeterlikAktifSurecId(enstituKod);
-            if (!model.isDegerlendirme.HasValue)
+            if (!model.IsDegerlendirme.HasValue)
             {
                 var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
 
@@ -67,8 +67,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             var q = from yeterlikBasvuru in _entities.YeterlikBasvurus.Where(p => model.IsKomiteOrJuri.HasValue
-                                                                                                            ? (model.IsKomiteOrJuri == true ? p.YeterlikBasvuruKomitelers.Any(a => a.UniqueID == model.isDegerlendirme)
-                                                                                                                                            : p.YeterlikBasvuruJuriUyeleris.Any(a => a.UniqueID == model.isDegerlendirme))
+                                                                                                            ? (model.IsKomiteOrJuri == true ? p.YeterlikBasvuruKomitelers.Any(a => a.UniqueID == model.IsDegerlendirme)
+                                                                                                                                            : p.YeterlikBasvuruJuriUyeleris.Any(a => a.UniqueID == model.IsDegerlendirme))
                                                                                                             : p.KullaniciID == UserIdentity.Current.Id)
                     join yeterlikSureci in _entities.YeterlikSurecis.Where(p => p.EnstituKod == enstituKod) on yeterlikBasvuru.YeterlikSurecID equals yeterlikSureci.YeterlikSurecID
                     join kullanicilar in _entities.Kullanicilars on yeterlikBasvuru.KullaniciID equals kullanicilar.KullaniciID
@@ -148,7 +148,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var msg = ogrenciBilgi.DanismanInfo == null
                             ? "Başvuru yapabilmeniz için danışman bilginizin OBS sisteminde tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz."
-                            : $"Başvuru yapabilmeniz için danışmanınızın '{ogrenciBilgi.DanismanInfo.UNVAN_AD + " " + ogrenciBilgi.DanismanInfo.AD + " " + ogrenciBilgi.DanismanInfo.SOYAD}' lisansüstü sisteminde kullanıcı hesabı oluşturması gerekmektedir.";
+                            : $"Başvuru yapabilmeniz için danışmanınızın '{ogrenciBilgi.DanismanInfo.UNVAN_AD} {ogrenciBilgi.DanismanInfo.AD} {ogrenciBilgi.DanismanInfo.SOYAD}' lisansüstü sisteminde kullanıcı hesabı oluşturması gerekmektedir.";
                         MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, msg);
                         return RedirectToAction("Index");
                     }

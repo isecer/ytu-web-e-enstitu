@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model FmDuyurularDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -111,7 +112,7 @@
                                                                                             {
                                                                                                 <tr>
                                                                                                     <td style="width: 25px;">@(item2.inx + 1))</td>
-                                                                                                    <td class="name"><a href="@item2.s.DosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span> @item2.s.DosyaEkAdi</a></td>
+                                                                                                    <td class="name"><a href="@Url.CustomUrlContent(item2.s.DosyaYolu)" target="_blank"><span class="fa fa-download" style="color: green;"></span> @item2.s.DosyaEkAdi</a></td>
                                                                                                 </tr>
                                                                                             }
                                                                                         }

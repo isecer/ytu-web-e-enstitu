@@ -302,6 +302,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.IsTezDiliTr = studentInfo.IsTezDiliTr;
                     model.TezBaslikTr = studentInfo.OgrenciTez.TEZ_BASLIK;
                     model.TezBaslikEn = studentInfo.OgrenciTez.TEZ_BASLIK_ENG;
+                    model.TezEsDanismanUnvani = studentInfo.OgrenciInfo.ES_DANISMAN_UNVAN.ToJuriUnvanAdi();
+                    model.TezEsDanismanAdi = studentInfo.OgrenciInfo.ES_DANISMAN_ADSOYAD.ToUpper();
+                  
                 }
                 var surec = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == model.MezuniyetSurecID);
                 model.DonemAdi = surec.BaslangicYil + "/" + surec.BitisYil + " " + surec.Donemler.DonemAdi;
@@ -309,7 +312,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.IsYerli = kul.KullaniciTipleri.Yerli;
                 model.KullaniciTipAdi = _entities.KullaniciTipleris.First(p => p.KullaniciTipID == kul.KullaniciTipID).KullaniciTipAdi;
                 ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurum(true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
-                ViewBag.TezEsDanismanUnvani = new SelectList(UnvanlarBus.GetCmbJuriUnvanlar(true), "Value", "Caption", model.TezEsDanismanUnvani);
+                ViewBag.TezEsDanismanUnvani = new SelectList(UnvanlarBus.GetCmbEsDanismanUnvanlar(true), "Value", "Caption", model.TezEsDanismanUnvani);
 
                 ViewBag.MezuniyetYayinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecYayinTurleri(model.MezuniyetSurecID, model.KullaniciID, mezuniyetBasvurulariId ?? 0, true), "Value", "Caption");
 
@@ -656,7 +659,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     };
                     if (item.MezuniyetYayinBelgesi != null)
                     {
-                        FileHelper.DeleteFile(rowMdy.MezuniyetYayinBelgeDosyaYolu);
+                        FileHelper.Delete(rowMdy.MezuniyetYayinBelgeDosyaYolu);
                         rowMdy.MezuniyetYayinBelgeDosyaYolu = FileHelper.SaveMezuniyetYayinDosya(item.MezuniyetYayinBelgesi);
                         rowMdy.MezuniyetYayinBelgeTurID = item.MezuniyetYayinBelgeTurID;
                         rowMdy.MezuniyetYayinBelgeAdi = item.MezuniyetYayinBelgesi.FileName.GetFileName();
@@ -666,14 +669,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     rowMdy.MezuniyetYayinKaynakLinki = item.MezuniyetYayinKaynakLinki;
                     if (item.YayinMetniBelgesi != null)
                     {
-                        FileHelper.DeleteFile(rowMdy.MezuniyetYayinMetniBelgeYolu);
+                        FileHelper.Delete(rowMdy.MezuniyetYayinMetniBelgeYolu);
                         rowMdy.MezuniyetYayinMetniBelgeYolu = FileHelper.SaveMezuniyetYayinDosya(item.YayinMetniBelgesi);
                         rowMdy.MezuniyetYayinMetniBelgeAdi = item.YayinMetniBelgesi.FileName.GetFileName();
                     }
                     rowMdy.MezuniyetYayinMetinTurID = item.MezuniyetYayinMetinTurID;
                     if (item.KabulEdilmisMakale != null)
                     {
-                        FileHelper.DeleteFile(rowMdy.MezuniyetYayinMetniBelgeYolu);
+                        FileHelper.Delete(rowMdy.MezuniyetYayinMetniBelgeYolu);
                         rowMdy.MezuniyetYayinKabulEdilmisMakaleDosyaYolu = FileHelper.SaveMezuniyetYayinDosya(item.KabulEdilmisMakale);
                         rowMdy.MezuniyetYayinKabulEdilmisMakaleAdi = item.KabulEdilmisMakale.FileName.GetFileName();
                     }
@@ -708,7 +711,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (stps.Any()) kModel.SetSelectedStep = stps.First();
             ViewBag._MmMessage = mmMessage;
             ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurum(true), "Value", "Caption", kModel.MezuniyetYayinKontrolDurumID);
-            ViewBag.TezEsDanismanUnvani = new SelectList(UnvanlarBus.GetCmbJuriUnvanlar(true), "Value", "Caption", kModel.TezEsDanismanUnvani);
+            ViewBag.TezEsDanismanUnvani = new SelectList(UnvanlarBus.GetCmbEsDanismanUnvanlar(true), "Value", "Caption", kModel.TezEsDanismanUnvani);
             ViewBag.MezuniyetYayinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecYayinTurleri(kModel.MezuniyetSurecID, kModel.KullaniciID, kModel.MezuniyetBasvurulariID, true), "Value", "Caption");
 
 
@@ -1553,7 +1556,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    FileHelper.DeleteFile(tezDosyasi.TezDosyaYolu);
+                    FileHelper.Delete(tezDosyasi.TezDosyaYolu);
                     tezDosyasi.RowID = Guid.NewGuid();
                     tezDosyasi.TezDosyaAdi = tezSablonDosyasi.FileName.GetFileName();
                     tezDosyasi.TezDosyaYolu = FileHelper.SaveMezuniyetTezSablonDosya(tezSablonDosyasi);

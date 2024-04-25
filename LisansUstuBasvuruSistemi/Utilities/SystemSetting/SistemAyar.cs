@@ -44,6 +44,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string RotasyonuDegisenResimleriLogla = "Rotasyonu Değişen Resimleri Logla";
 
         public const string OtomatikMailBilgilendirmeServisiniCalistir = "Otomatik Mail Bilgilendirme Servisini Çalıştır";
+
+
+
+        public const string DosyalarSecilenKonumaArsivlensin = "Dosyalar Seçilen Konumda Arşivlensin";
+        public const string DosyaArsiviSunucusuErisimAdresi = "Dosya Arşivi Sunucusu Erişim Adresi";
+        public const string DosyaArsiviFizikselKayitYolu = "Dosya Arşivi Fiziksel Kayıt Yolu";
         public static void SetAyar(string ayarAdi, string ayarDegeri)
         {
             using (var entities = new LubsDbEntities())

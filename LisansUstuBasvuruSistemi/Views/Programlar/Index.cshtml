@@ -86,7 +86,7 @@
                                         </td>
                                         <td>
                                             <a href="@Url.Action("Kayit", "Programlar", new { id = item.ProgramKod })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.ProgramKod')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.ProgramKod')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.ProgramKod" style="display:none">
@@ -170,7 +170,7 @@
         toggleByClass(sndr, cls, unTogled);
 
     }
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var gMesaj = $("#tdMad_" + id).html();
         bootbox.dialog({
             message: "Program Adı: " + gMesaj + " <br/> Seçilen Programı Silmek İstiyor Musunuz?",
@@ -180,7 +180,7 @@
                     label: "Program Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -192,7 +192,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "Programlar")',
             data: { id: id },

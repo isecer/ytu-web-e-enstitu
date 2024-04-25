@@ -201,8 +201,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
 
             var isFiltered = !Equals(q, q2);
-            model.RowCount = q.Count();
-            var indexModel = new MIndexBilgi();
+            model.RowCount = q.Count(); 
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.filteredOgrenciIds = isFiltered && !model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace() ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.filteredDanismanIds = isFiltered && !model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace() ? q.Where(p => p.AraRaporDanismanID.HasValue).Select(s => s.AraRaporDanismanID.Value).Distinct().ToList() : new List<int>();
@@ -214,8 +213,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.AnabilimDaliID = new SelectList(TiBus.GetCmbFilterTiAnabilimDallari(enstituKod, true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.AktifAraRaporSayisi = new SelectList(TiBus.CmbAraRaporSayisi(true), "Value", "Caption", model.AktifAraRaporSayisi);
             ViewBag.TIAraRaporSayisi = new SelectList(TiBus.CmbAraRaporSayisi(true), "Value", "Caption", model.TIAraRaporSayisi);
-            ViewBag.IndexModel = indexModel;
-            return View(model);
+             return View(model);
         }
 
     }

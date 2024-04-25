@@ -575,7 +575,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!kayitYetki)
             {
-                mMessage.Messages.Add("Jür öneri formu kayıt işlemi için yetkili değilsiniz.");
+                mMessage.Messages.Add("Jüri öneri formu kayıt işlemi için yetkili değilsiniz.");
             }
             else if (!isBasvuruAcik)
             {
@@ -1076,21 +1076,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mmMessage = new MmMessage
             {
                 IsSuccess = false,
-                Title = "Jüri öneri formu " + (onayTipId == 3 ? "EYK'da onay" : (onayTipId == 2 ? "EYK'ya Hazırlık" : "EYK'ya gönderim")) + " işlemi",
+                Title = "Jüri öneri formu " + (onayTipId == EykTipEnum.EykDaOnaylandi ? "EYK'da onay" : (onayTipId == EykTipEnum.EykYaHazirlandi ? "EYK'ya Hazırlık" : "EYK'ya gönderim")) + " işlemi",
                 MessageType = MsgTypeEnum.Warning
             };
 
             var tijBasvuruOneri = _entities.TijBasvuruOneris.FirstOrDefault(p => p.UniqueID == tijBasvuruOneriUniqueId);
 
-            if (onayTipId == 1 && !RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent())
+            if (onayTipId == EykTipEnum.EykYaGonderildi && !RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent())
             {
                 mmMessage.Messages.Add("Jüri öneri formunda EYK'ya gönderme yetkisine sahip değilsiniz!");
             }
-            else if (onayTipId == 3 && !RoleNames.TiJuriOnerileriEykyaHazirlandiYetkisi.InRoleCurrent())
+            else if (onayTipId == EykTipEnum.EykDaOnaylandi && !RoleNames.TiJuriOnerileriEykyaHazirlandiYetkisi.InRoleCurrent())
             {
                 mmMessage.Messages.Add("Jüri öneri formunda EYK'ya hazırlık yetkisine sahip değilsiniz!");
             }
-            else if (onayTipId == 3 && !RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent())
+            else if (onayTipId == EykTipEnum.EykDaOnaylandi && !RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent())
             {
                 mmMessage.Messages.Add("Jüri öneri formunda EYK'da onay yetkisine sahip değilsiniz!");
             }
@@ -1101,7 +1101,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 //  eykDaOnayOrEykYaGonderim
-                if (onayTipId == 3)
+                if (onayTipId == EykTipEnum.EykDaOnaylandi)
                 {
                     if (tijBasvuruOneri.EYKYaHazirlandi != true)
                     {
@@ -1120,7 +1120,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.Messages.Add("Yeni bir jüri önerisi başvurusu varken önceki jüri önerisi eyk onay durumu değiştirilemez!");
                     }
                 }
-                else if (onayTipId == 1)
+                else if (onayTipId == EykTipEnum.EykYaGonderildi)
                 {
                     if (tijBasvuruOneri.EYKYaHazirlandi.HasValue)
                     {
@@ -1132,7 +1132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
 
-                if (mmMessage.Messages.Count == 0 && onayTipId == 3 && onaylandi == true)
+                if (mmMessage.Messages.Count == 0 && onayTipId == EykTipEnum.EykDaOnaylandi && onaylandi == true)
                 {
                     var asilKriterCount = tijBasvuruOneri.TijFormTipID == TijFormTipiEnum.YeniForm ? 3 : (tijBasvuruOneri.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik ? 2 : 1);
                     var asilCount = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki).Count(p => p.IsAsil == true);
@@ -1146,7 +1146,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!mmMessage.Messages.Any())
                 {
 
-                    var isEykdaOnaylandiOrGonderildiDurum = onayTipId == 1 ? tijBasvuruOneri.EYKYaGonderildi : (onayTipId == 2
+                    var isEykdaOnaylandiOrGonderildiDurum = onayTipId == EykTipEnum.EykYaGonderildi ? tijBasvuruOneri.EYKYaGonderildi : (onayTipId == EykTipEnum.EykYaHazirlandi
                         ? tijBasvuruOneri.EYKYaHazirlandi
                         : tijBasvuruOneri.EYKDaOnaylandi);
 
@@ -1172,7 +1172,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (mmMessage.Messages.Count == 0)
                 {
                     var isDegisiklikVar = false;
-                    if (onayTipId == 1)
+                    if (onayTipId == EykTipEnum.EykYaGonderildi)
                     {
                         tijBasvuruOneri.TijBasvuru.IsYeniBasvuruYapilabilir = onaylandi == false;
 
@@ -1183,7 +1183,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         tijBasvuruOneri.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
                         mmMessage.Messages.Add("Form EYK ya " + (onaylandi.HasValue ? (onaylandi.Value ? "'Gönderildi'" : "'Gönderilmedi'") : "Gönderilmesi bekleniyor") + " şeklinde güncellendi...");
                     }
-                    else if (onayTipId == 2)
+                    else if (onayTipId == EykTipEnum.EykYaHazirlandi)
                     {
 
                         tijBasvuruOneri.EYKYaHazirlandi = onaylandi;
@@ -1191,7 +1191,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         tijBasvuruOneri.EYKYaHazirlandiIslemYapanID = UserIdentity.Current.Id;
                         mmMessage.Messages.Add("Form EYK ya " + (onaylandi.HasValue ? (onaylandi.Value ? "'Hazırlandı'" : "'Hazırlanmadı'") : " Hazırlanması bekleniyor") + " şeklinde güncellendi...");
                     }
-                    else if (onayTipId == 3)
+                    else if (onayTipId == EykTipEnum.EykDaOnaylandi)
                     {
                         tijBasvuruOneri.TijBasvuru.IsYeniBasvuruYapilabilir = onaylandi.HasValue;
                         isDegisiklikVar = tijBasvuruOneri.EYKDaOnaylandi != onaylandi || aciklama != tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi || tijBasvuruOneri.EYKTarihi != onayTarihi;
@@ -1209,11 +1209,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = MsgTypeEnum.Success;
                     mmMessage.IsSuccess = true;
 
-                    LogIslemleri.LogEkle("TiJuriOnerileriGb", LogCrudType.Update, tijBasvuruOneri.ToJson());
+                    LogIslemleri.LogEkle("TijBasvuruOneri", LogCrudType.Update, tijBasvuruOneri.ToJson());
 
                     if (onaylandi.HasValue && isDegisiklikVar)
                     {
-                        var eykDaOnayOrGonderim = onayTipId == 3;
+                        var eykDaOnayOrGonderim = onayTipId == EykTipEnum.EykDaOnaylandi;
                         TijBus.SendMailEykOnay(tijBasvuruOneriUniqueId, eykDaOnayOrGonderim, onaylandi.Value);
                     }
 

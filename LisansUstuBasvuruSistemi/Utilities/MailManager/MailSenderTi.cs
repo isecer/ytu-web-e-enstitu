@@ -81,8 +81,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             AdSoyad = item.AdSoyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, KullaniciId = (item.JuriTipAdi == "TezDanismani" ? tiAraRapor.TezDanismanID : null), ToOrBcc = true } },
                             MailSablonTipId = MailSablonTipiEnum.TiToplantiBilgiKomite,
-                            JuriTipAdi = item.JuriTipAdi,
-                            TiBasvuruAraRaporKomiteId = danisman.TIBasvuruAraRaporKomiteID
+                            JuriTipAdi = item.JuriTipAdi 
                         }));
                     }
 
@@ -236,7 +235,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     {
                         entities.SaveChanges();
                         if (isAraRaporOrToplanti) tiAraRapor.RSBaslatildiMailGonderimTarihi = DateTime.Now;
-                        else tiAraRapor.ToplantiBilgiGonderimTarihi = DateTime.Now; 
+                        else tiAraRapor.ToplantiBilgiGonderimTarihi = DateTime.Now;
+                        entities.SaveChanges();
                         LogIslemleri.LogEkle("TIBasvuruAraRapor", LogCrudType.Update, tiAraRapor.ToJson());
                     }
                     mmMessage.IsSuccess = true;

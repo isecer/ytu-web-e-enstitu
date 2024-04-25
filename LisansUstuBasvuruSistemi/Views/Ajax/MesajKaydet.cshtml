@@ -1,6 +1,7 @@
 ﻿@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model Mesajlar
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
@@ -161,7 +162,7 @@
                                                     <input type="text" name="EkAdi" style="padding: 0px; height: 22px; " value="@item.s.EkAdi" maxlength="250" placeholder="Ek Adı Giriniz" class="form-control" />
                                                 </td>
                                                 <td style='padding: 0px; vertical-align: middle;'>
-                                                    <a href="@item.s.EkDosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item.s.EkAdi</a>
+                                                    <a href="@Url.CustomUrlContent(item.s.EkDosyaYolu)" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item.s.EkAdi</a>
                                                 </td>
                                                 <td style='padding-top: 0px; padding-bottom: 0px; vertical-align: middle; text-align: center;'>
                                                     <span style="cursor: pointer;" onclick="EkSil(this)" class="fa fa-trash-o" data-original-title="Eki Sil"></span>

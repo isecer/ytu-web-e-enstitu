@@ -5,6 +5,8 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -48,14 +50,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             _entities.SaveChanges();
+
+            FileHelper.IsSaveFileServer = SistemAyar.DosyalarSecilenKonumaArsivlensin.GetAyar().ToBoolean(false);
+            FileHelper.FileServerUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi.GetAyar();
+            FileHelper.FileServerBasePath = SistemAyar.DosyaArsiviFizikselKayitYolu.GetAyar();
             MessageBox.Show("Sistem Ayarları Güncellendi", MessageBox.MessageType.Success);
             var data = _entities.Ayarlars.OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
             var panelToggledx = new Dictionary<string, bool>();
             foreach (var item in panelToggled)
             {
-                var ptg = item.Replace("__","◘").Split('◘');
+                var ptg = item.Replace("__", "◘").Split('◘');
                 panelToggledx.Add(ptg[0], ptg[1].ToBoolean().Value);
-            } 
+            }
             ViewBag.PanelToggled = panelToggledx;
             return View(data);
         }

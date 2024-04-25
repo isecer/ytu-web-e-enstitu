@@ -220,7 +220,7 @@ else if (Model.UniqueId.HasValue || Model.RowCount > 0)
 
 <script type="text/javascript">
 
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -296,7 +296,7 @@ else if (Model.UniqueId.HasValue || Model.RowCount > 0)
                             data: { tosUniqueId },
                             success: function (result) {
                                 GetDetail(toUniqueId);
-                                showMmMessage(result.messageView, 'Tamam');
+                                ShowMmMessage(result.messageView, 'Tamam');
                             },
                             error: function (err) {
                                 alert(err.responseText);

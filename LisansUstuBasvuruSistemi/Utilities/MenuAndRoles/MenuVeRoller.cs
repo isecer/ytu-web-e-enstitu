@@ -3,7 +3,7 @@
 namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 {
     public class SystemMenu : IMenu
-    { 
+    {
 
         [Menu(MenuID = 65000, MenuAdi = "Salon Rezervasyonu", MenuCssClass = "fa fa-file-text-o", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 3)]
         public const string SalonRezervasyonIslemleri = "Salon Rezervasyon İşlemleri";
@@ -15,19 +15,23 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string TalepIslemleri = "Talep İşlemleri";
 
         [Menu(MenuID = 80000, MenuAdi = "Lisansüstü Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 7)]
-        public const string BasvuruIslemleri = "Başvuru İşlemleri"; 
+        public const string BasvuruIslemleri = "Başvuru İşlemleri";
 
         [Menu(MenuID = 82300, MenuAdi = "Tez Danışmanı Öneri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 12)]
         public const string TdoIslemleri = "Tez danışmanı öneri İşlemleri";
 
         [Menu(MenuID = 82500, MenuAdi = "Yeterlik İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 13)]
-        public const string YeterlikIslemleri = "Yeterlik İşlemleri"; 
+        public const string YeterlikIslemleri = "Yeterlik İşlemleri";
 
         [Menu(MenuID = 83300, MenuAdi = "Tez İzleme İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 15)]
         public const string TiIslemleri = "Tez İzleme İşlemleri";
 
         [Menu(MenuID = 83500, MenuAdi = "Mezuniyet İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 16)]
         public const string MezuniyetIslemleri = "Mezuniyet İşlemleri";
+
+        [Menu(MenuID = 83600, MenuAdi = "Dönem Projesi İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 16)]
+        public const string DonemProjesiIslemleri = "Dönem Projesi İşlemleri";
+
 
         [Menu(MenuID = 84000, MenuAdi = "Rapor İşlemleri", MenuCssClass = "fa fa-bar-chart-o", MenuUrl = "", YetkiliEnstituler = "010,020,030", SiraNo = 18)]
         public const string RaporIslemleri = "RaporIslemleri";
@@ -131,37 +135,37 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 82300, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TDOBasvuru/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
         public const string TdoBasvuru = "TDO Başvuru";
         [Menu(BagliMenuID = 82300, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TDOGelenBasvurular/Index", SiraNo = 4)]
-        [Role(GorunurAdi = "Gelen Başvurular", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Tez/Danışman Öneri Gelen Başvurular menüsüne Erişim yetkisi sağlar.")]
+        [Role(GorunurAdi = "Gelen Başvurular", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Tez/Danışman Öneri Gelen Başvurular menüsüne Erişim yetkisi sağlar.", SiraNo = 1)]
         public const string TdoGelenBasvuru = "TDO Gelen Başvurular";
-        [Role(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Tez/Danışman Öneri Gelen Başvurular menüsüne Başvuru Düzeltme yetkisi sağlar.")]
+        [Role(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Tez/Danışman Öneri Gelen Başvurular menüsüne Başvuru Düzeltme yetkisi sağlar.", SiraNo = 4)]
         public const string TdoGelenBasvuruKayit = "TDO Gelen Başvurular Kayıt";
-        [Role(GorunurAdi = "Gelen Başvurular Sil", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Tez/Danışman Öneri Gelen Başvurular menüsüne Başvuru Silme yetkisi sağlar.")]
+        [Role(GorunurAdi = "Gelen Başvurular Sil", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Tez/Danışman Öneri Gelen Başvurular menüsüne Başvuru Silme yetkisi sağlar.", SiraNo = 9)]
         public const string TdoGelenBasvuruSil = "TDO Gelen Başvurular Sil";
-        [Role(GorunurAdi = "Form Düzeltme Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki TDO Form Oluşturma/Düzeltme yetkisini sağlar. Öğrenci haricinde bu yetkiye sahip olması gerekenlere verilir.")]
+        [Role(GorunurAdi = "Form Düzeltme Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki TDO Form Oluşturma/Düzeltme yetkisini sağlar. Öğrenci haricinde bu yetkiye sahip olması gerekenlere verilir.", SiraNo = 14)]
         public const string TdoFormOlusturmaYetkisi = "TDO Form Oluşturma Yetkisi";
-        [Role(GorunurAdi = "Danışman Onay Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Tez Danışmanı, Tez Dili, Tez Başlığı Değişikliği İşlemi yapıldıktan sonra Danışman Onayı işlemi yapılabilmesi için verilmesi gereken bir yetkidir.")]
+        [Role(GorunurAdi = "Danışman Onay Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Tez Danışmanı, Tez Dili, Tez Başlığı Değişikliği İşlemi yapıldıktan sonra Danışman Onayı işlemi yapılabilmesi için verilmesi gereken bir yetkidir.", SiraNo = 19)]
         public const string TdoDanismanOnayYetkisi = "TDO Danisman Onay Yetkisi";
-        [Role(GorunurAdi = "TDO Eyk'ya Gönderim Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Danışman Onayından sonra Eyk'ya Gönderim işlemi yapabilmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Eyk'ya Gönderim Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Danışman Onayından sonra Eyk'ya Gönderim işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 24)]
         public const string TdoEykyaGonderimYetkisi = "TDO EYK ya Gönderim Yetkisi";
-        [Role(GorunurAdi = "TDO Eyk'ya Hazırlandı Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Eyk'ya Gönderim yapıldıktan sonra Eyk'ya Hazırlık işlemi yapabilmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Eyk'ya Hazırlandı Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Eyk'ya Gönderim yapıldıktan sonra Eyk'ya Hazırlık işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 29)]
         public const string TdoEykyaHazirlandiYetkisi = "TDO EYK ya Hazırlandı Yetkisi";
-        [Role(GorunurAdi = "TDO Eyk'da Onay Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Eyk'ya Hazırlık yapıldıktan sonra Eyk'da Onay işlemi yapabilmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Eyk'da Onay Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki Eyk'ya Hazırlık yapıldıktan sonra Eyk'da Onay işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 34)]
         public const string TdoEykdaOnayYetkisi = "TDO EYK da Onay Yetkisi";
         [Menu(BagliMenuID = 82300, MenuAdi = "TDO Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "TDOAyarlar/Index", SiraNo = 7)]
-        [Role(GorunurAdi = "TDO Ayarları", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki TDO Ayarları menüsüne Erişim ve Kayıt/Düzeltme yetkisi sağlar.")]
+        [Role(GorunurAdi = "Tez Danışman Öneri Ayarları", Kategori = "Tez Danışmanı Öneri", Aciklama = "Bu yetki TDO Ayarları menüsüne Erişim ve Kayıt/Düzeltme yetkisi sağlar.", SiraNo = 39)]
         public const string TdoAyarlari = "TDO Ayarları";
 
         [Menu(BagliMenuID = 83300, MenuAdi = "Jüri Önerileri", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TiJuriOnerileriGb/Index", SiraNo = 3)]
-        [Role(GorunurAdi = "Gelen Jüri Önerileri", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Jüri Önerileri menüsüne Erişim yetkisi sağlar.")]
+        [Role(GorunurAdi = "Gelen Jüri Önerileri", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Jüri Önerileri menüsüne Erişim yetkisi sağlar.", SiraNo = 1)]
         public const string TiJuriOnerileriGb = "Tez İzleme Jüri Önerisileri";
-        [Role(GorunurAdi = "Jüri Önerisi Eyk'ya Gönderme Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Danışman Onayından sonra Eyk'ya Gönderim işlemi yapabilmeyi sağlayan yetkidir.")]
-        public const string TiJuriOnerileriEykYaGonder = "Jüri Önerisi Eyk ya Gönderme Yetkisi";
-        [Role(GorunurAdi = "Jüri Önerisi Eyk'ya Hazırlandı Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Eyk'ya Gönderim yapıldıktan sonra Eyk'ya Hazırlık işlemi yapabilmeyi sağlayan yetkidir.")]
-        public const string TiJuriOnerileriEykyaHazirlandiYetkisi = "Jüri Önerisi Eyk'ya Hazırlandı Yetkisi";
-        [Role(GorunurAdi = "Jüri Önerisi Eyk'da Onay Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Eyk'ya Hazırlık yapıldıktan sonra Eyk'da Onay işlemi yapabilmeyi sağlayan yetkidir.")]
-        public const string TiJuriOnerileriEykDaOnay = "Jüri Önerisi Eyk da Onay Yetkisi";
-        [Role(GorunurAdi = "Jüri Önerisini Öğrenci Adına Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Jüri Öneri işlemini öğrenci adına yapabilmeyi sağlar.")]
+        [Role(GorunurAdi = "Jüri Önerisini Öğrenci Adına Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Jüri Öneri işlemini öğrenci adına yapabilmeyi sağlar.", SiraNo = 3)]
         public const string TiJuriOnerileriOgrenciAdina = "Jüri Önerisini Öğrenci Adına Yap";
+        [Role(GorunurAdi = "Eyk'ya Gönderme Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Jüri Önerilerinde Danışman Onayından sonra Eyk'ya Gönderim işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 5)]
+        public const string TiJuriOnerileriEykYaGonder = "Jüri Önerisi Eyk ya Gönderme Yetkisi";
+        [Role(GorunurAdi = "Eyk'ya Hazırlandı Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Jüri Önerilerinde Eyk'ya Gönderim yapıldıktan sonra Eyk'ya Hazırlık işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 9)]
+        public const string TiJuriOnerileriEykyaHazirlandiYetkisi = "Jüri Önerisi Eyk'ya Hazırlandı Yetkisi";
+        [Role(GorunurAdi = "Eyk'da Onay Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "Bu yetki Jüri Önerilerinde Eyk'ya Hazırlık yapıldıktan sonra Eyk'da Onay işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 14)]
+        public const string TiJuriOnerileriEykDaOnay = "Jüri Önerisi Eyk da Onay Yetkisi";
 
         [Menu(BagliMenuID = 83300, MenuAdi = "Tez Öneri Giriş", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TosBasvuru/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 10)]
         public const string TosBasvuru = "Tos Basvuru";
@@ -201,7 +205,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 83500, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "Mezuniyet/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
         public const string MezuniyetBasvuru = "Mezuniyet Basvuru";
         [Menu(BagliMenuID = 83500, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "MezuniyetGelenBasvurular/Index", SiraNo = 4)]
-        [Role(GorunurAdi = "Gelen Başvurular", Kategori = "Mezuniyet İşlemleri", Aciklama = "Bu yetki Mezuniyet Gelen Başvurular menüsünü görmeyi sağlayan yetkidir.",SiraNo = 1)]
+        [Role(GorunurAdi = "Gelen Başvurular", Kategori = "Mezuniyet İşlemleri", Aciklama = "Bu yetki Mezuniyet Gelen Başvurular menüsünü görmeyi sağlayan yetkidir.", SiraNo = 1)]
         public const string MezuniyetGelenBasvurular = "Mezuniyet Gelen Başvurular";
         [Role(GorunurAdi = "Başvuru Düzeltme Yetkisi", Kategori = "Mezuniyet İşlemleri", Aciklama = "Bu yetki Gelen Başvurular üzerinde düzeltme yapabilmeyi sağlayan yetkidir.", SiraNo = 5)]
         public const string MezuniyetGelenBasvurularKayit = "Mezuniyet Gelen Başvurular Kayıt";
@@ -237,6 +241,44 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 83500, MenuAdi = "Mezuniyet Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "MezuniyetAyarlar/Index", SiraNo = 15)]
         [Role(GorunurAdi = "Mezuniyet Ayarları", Kategori = "Mezuniyet İşlemleri", Aciklama = "Bu yetki Mezuniyet Ayarları menüsünü Görme/Düzeltme işlemlerini yapabilmeyi sağlayan yetkidir.", SiraNo = 75)]
         public const string MezuniyetAyarları = "Mezuniyet Ayarları";
+
+
+
+        [Menu(BagliMenuID = 83600, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "DpBasvuru/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
+        public const string DonemProjesiBasvuru = "Dönem Projesi Basvuru";
+        [Menu(BagliMenuID = 83600, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "DpGelenBasvurular/Index", SiraNo = 4)]
+        [Role(GorunurAdi = "Gelen Başvurular", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi Gelen Başvurular menüsüne Erişim yetkisi sağlar.", SiraNo = 2)]
+        public const string DonemProjesiGelenBasvurular = "Dönem Projesi Gelen Başvurular";
+        [Role(GorunurAdi = "Başvuru Yapma Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi başvurusunda bulunabilmeyi sağlayan yetkidir. Öğrenciler bu yetkiye otomatik olarak sahiptirler başvuru için bu yetkiyi vermeye gerek yoktur.", SiraNo = 8)]
+        public const string DonemProjesiBasvuruYapmaYetkisi = "Dönem Projesi Başvuru Yapma Yetkisi";
+        [Role(GorunurAdi = "Enstitü Başvuru Onay Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Gelen Dönem Projesi Başvuruları menüsünde Enstitü Başvuru Onay yetkisi sağlar.", SiraNo = 6)]
+        public const string DonemProjesiEnstituBasvuruOnayYetkisi = "Dönem Projesi Enstitü Başvuru Onay Yetkisi";
+        [Role(GorunurAdi = "Danışman Başvuru Onay Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Gelen Dönem Projesi Başvuruları menüsünde Danışman Başvuru Onay yetkisi sağlar.", SiraNo = 8)]
+        public const string DonemProjesiDanismanBasvuruOnayYetkisi = "Dönem Projesi Danışman Başvuru Onay Yetkisi";
+        [Role(GorunurAdi = "Sınav Jürisi Oluşturma Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi sınavı için jüri listesi oluşturabilmeyi sağlayan yetkidir.", SiraNo = 10)]
+        public const string DonemProjesiJuriOlusturmaYetkisi = "Dönem Projesi Jüri Oluşturma Yetkisi";
+        [Role(GorunurAdi = "Sınav Oluşturma Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi sınavı için sınav oluşturabilmeyi sağlayan yetkidir.", SiraNo = 12)]
+        public const string DonemProjesiSinavOlusturmaYetkisi = "Dönem Projesi Sınav Oluşturma Yetkisi";
+        [Role(GorunurAdi = "Jüri Değerlendirmesi Düzeltme Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi sınavından sonra değerlendirme işlemlerinin değiştirilebilmesini sağlayan yetkidir. Bu yetki ile toplantı tarihi günümüz tarihi öncesi olsa bile değerlendirme yapılabilir.", SiraNo = 18)]
+        public const string DonemProjesiSinavDegerlendirmeDuzeltme = "Dönem Projesi Sınav Degerlendirme Düzeltme";
+
+        [Role(GorunurAdi = "Eyk'ya Gönderme Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Sınav tamamlandıktan sonra Eyk'ya Gönderim işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 14)]
+        public const string DonemProjesiEykYaGonder = "Dönem Projesi Eyk'ya Gönderme Yetkisi";
+        [Role(GorunurAdi = "Eyk'ya Hazırlandı Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Eyk'ya Gönderim yapıldıktan sonra Eyk'ya Hazırlık işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 16)]
+        public const string DonemProjesiEykYaHazirlandi = "Dönem Projesi Eyk'ya Hazırlandı Yetkisi";
+        [Role(GorunurAdi = "Eyk'da Onay Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Eyk'ya Hazırlık yapıldıktan sonra Eyk'da Onay işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 18)]
+        public const string DonemProjesiEykDaOnay = "Dönem Projesi Eyk'da Onay Yetkisi";
+
+
+
+        [Menu(BagliMenuID = 83600, MenuAdi = "Kriterden Muaf Öğrenciler", MenuCssClass = "fa fa-group", MenuUrl = "DpKriterdenMuafOgrenciler/Index", SiraNo = 13)]
+        [Role(GorunurAdi = "Kriterden Muaf Öğrenciler", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi başvurularında Kriterden Muaf Öğrenciler menüsünü Görme/Ekleme/Silme işlemlerini yapabilmeyi sağlayan yetkidir.", SiraNo = 20)]
+        public const string DonemProjesiKriterdenMuafOgrenciler = "Dönem Projesi Kriterden Muaf Öğrenciler";
+
+
+        [Menu(BagliMenuID = 83600, MenuAdi = "Dönem Projesi Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "DpAyarlar/Index", SiraNo = 15)]
+        [Role(GorunurAdi = "Dönem Projesi Ayarları", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi Ayarları menüsünü Görme/Düzeltme işlemlerini yapabilmeyi sağlayan yetkidir.", SiraNo = 22)]
+        public const string DonemProjesiAyarları = "Dönem Projesi Ayarları";
 
 
         [Menu(BagliMenuID = 84000, MenuAdi = "Lisansüstü Başvuru", MenuCssClass = "fa fa-bar-chart-o", MenuUrl = "RaporlarLUB/Index", SiraNo = 5)]

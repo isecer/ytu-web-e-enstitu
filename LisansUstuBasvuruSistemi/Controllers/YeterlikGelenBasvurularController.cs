@@ -314,9 +314,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 basvuru.EnstituOnayAciklama = enstituOnayAciklama;
                 basvuru.EnstituOnayTarihi = DateTime.Now;
                 _entities.SaveChanges();
-                if (sendMail)
-
-                    mmMessage.IsSuccess = true;
+                mmMessage.IsSuccess = true;
                 mmMessage.MessageType = MsgTypeEnum.Success;
                 LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, basvuru.ToJson());
                 if (sendMail)

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using DevExpress.XtraReports.UI;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;

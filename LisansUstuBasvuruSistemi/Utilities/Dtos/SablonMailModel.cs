@@ -25,9 +25,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string UnvanAdi { get; set; }
         public string ProgramAdi { get; set; }
         public bool IsAsilOrYedek { get; set; }
-        public string JuriTipAdi { get; set; }
-        public int? MezuniyetJuriOneriFormuJuriId { get; set; }
-        public int? TiBasvuruAraRaporKomiteId { get; set; }
+        public string JuriTipAdi { get; set; } 
 
 
         public List<GonderilenMailEkleri> GetGonderilenMailEkleris

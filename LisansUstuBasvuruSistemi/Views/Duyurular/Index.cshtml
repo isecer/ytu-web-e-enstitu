@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model FmDuyurularDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -83,7 +84,7 @@
                                         <td><span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span></td>
                                         <td>
                                             <a href="@Url.Action("Kayit", "Duyurular", new { id = item.DuyuruID })"><i class="fa fa-edit fa-lg" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="silmeOnay(this,@item.DuyuruID)"><i class="fa fa-trash-o fa-lg" title="Sil"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.DuyuruID)"><i class="fa fa-trash-o fa-lg" title="Sil"></i></a>
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.DuyuruID" style="display:none">
@@ -177,7 +178,7 @@
                                                                                                 {
                                                                                                     <tr>
                                                                                                         <td style="width: 25px;">@(item2.inx + 1))</td>
-                                                                                                        <td class="name"><a href="@item2.s.DosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item2.s.DosyaEkAdi</a></td>
+                                                                                                        <td class="name"><a href="@Url.CustomUrlContent(item2.s.DosyaYolu)" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item2.s.DosyaEkAdi</a></td>
                                                                                                     </tr>
                                                                                                 }
                                                                                             }
@@ -247,7 +248,7 @@
         toggleByClass(sndr, cls, unTogled);
 
     }
-    function silmeOnay(sndr, id) {
+    function SilmeOnay(sndr, id) {
         var htmlCont = $("#cls-" + id).html();
         var eks = $("#tdEk_" + id).html();
         bootbox.dialog({
@@ -258,7 +259,7 @@
                     label: "Duyuruyu Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(sndr, id);
+                        Sil(sndr, id);
                     }
                 },
                 danger: {
@@ -270,7 +271,7 @@
             }
         });
     }
-    function sil(sndr, id) {
+    function Sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "Duyurular")',
             data: { id: id },

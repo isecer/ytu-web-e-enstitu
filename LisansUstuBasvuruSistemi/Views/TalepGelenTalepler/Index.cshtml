@@ -3,6 +3,7 @@
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTalep
 @{
@@ -72,7 +73,7 @@
                                                             data: { 'KTalepGelenTalepIDs': KTalepGelenTalepIDs, 'OnayAciklamasi': OnayAciklamasi},
                                                             success: function (result) {
                                                                 PanelRefresh(_panel, true);
-                                                                showMmMessage(result.Messages, 'Tamam');
+                                                                ShowMmMessage(result.Messages, 'Tamam');
                                                                 $(btbx).find('.close').first().click();
                                                             },
                                                             error: function (err) {
@@ -370,7 +371,7 @@
                                                                                     <td>:</td>
                                                                                     <td>
 
-                                                                                        <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+                                                                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(bl.DosyaYolu)','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
 
                                                                                     </td>
                                                                                 </tr>
@@ -410,7 +411,7 @@
                                                                                         <td>:</td>
                                                                                         <td>
 
-                                                                                            <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+                                                                                            <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(bl.DosyaYolu)','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
 
                                                                                         </td>
                                                                                     </tr>
@@ -433,7 +434,7 @@
                                                                             <td>:</td>
                                                                             <td>
 
-                                                                                <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+                                                                                <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(bl.DosyaYolu)','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
 
                                                                             </td>
                                                                         </tr>
@@ -470,7 +471,7 @@
                                                                             <td>Talep Durumu</td>
                                                                             <td>:</td>
                                                                             <td>
-                                                                                <input type="button" value="Kaydet" onclick="kaydet(@item.TalepGelenTalepID)" />
+                                                                                <input type="button" value="Kaydet" onclick="Kaydet(@item.TalepGelenTalepID)" />
 
                                                                             </td>
                                                                         </tr>
@@ -574,7 +575,7 @@
                                 if (result.IsSuccess) {
                                     $(".delrw_" + id).remove();
                                 }
-                                showMmMessage(result.Messages, 'Tamam');
+                                ShowMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
                                 alert(err.responseText);
@@ -600,7 +601,7 @@
 {
     <script>
 
-        function kaydet(id) {
+        function Kaydet(id) {
             var talepDurumID = $('#KTalepDurumID_' + id).val();
             var talepDurumAciklamasi = $('#TalepDurumAciklamasi_' + id).val();
             $.ajax({

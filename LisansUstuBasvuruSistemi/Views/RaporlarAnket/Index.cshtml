@@ -63,6 +63,6 @@
             alert("Başlangıç ve Bitiş Tarihi Giriniz.");
             return;
         } 
-        yeniDialogBB(null, 'Anket Sonuç Raporu', '@Url.Action("GetDxReport","Ajax")?RaporTipi=' + @RaporTipiEnum.Anketler + '&AnketID=' + _AnketID + '&BasTar=' + _BasTar + '&BitTar=' + _BitTar, 'auto', 'modal-dialog modal-lg');
+        YeniDialogBB(null, 'Anket Sonuç Raporu', '@Url.Action("GetDxReport","Ajax")?RaporTipi=' + @RaporTipiEnum.Anketler + '&AnketID=' + _AnketID + '&BasTar=' + _BasTar + '&BitTar=' + _BitTar, 'auto', 'modal-dialog modal-lg');
     }
 </script>

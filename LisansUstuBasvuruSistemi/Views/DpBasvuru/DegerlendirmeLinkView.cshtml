@@ -1,0 +1,35 @@
+﻿@using Entities.Entities 
+@model DonemProjesiJurileri
+@{
+    Layout = null;
+}
+
+<div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
+    <table style="width:100%;">
+        <tbody>
+            <tr>
+                <td width="160">Jüri Üyesi</td>
+                <td width="10">:</td>
+                <td>
+                    @Model.UnvanAdi @Model.AdSoyad
+                </td>
+            </tr> 
+            <tr>
+                <td>E-Posta</td>
+                <td>:</td>
+                <td>
+                    <input type="text" class="form-control" id="EMail_@Model.UniqueID" value="@Model.EMail" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="tasks">
+    <div class="task-item task-warning" style="margin-bottom: 0px; cursor: auto;">
+        <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+            E-Posta gönderildikten sonra eğer komite üyesinin değerlendirmesi varsa değerlendirme sıfırlanacaktır.
+            <br />
+            Değerlendirme linki göndermek istiyor musunuz?
+        </div>
+    </div>
+</div> 
