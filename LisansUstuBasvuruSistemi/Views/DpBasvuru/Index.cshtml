@@ -162,7 +162,7 @@
                                                 @item.SonBasvuruDurum.ToDpBasvuruDurumView()
                                             </td>
                                             <td>
-                                                @if (item.IsYeniBasvuruYapilabilir)
+                                                @if (item.SonBasvuruDurum == null)
                                                 {
                                                     <a href="@Url.Action("BasvuruYap", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" title="Düzelt"></i></a>
                                                     <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" title="Sil"></i></a>
@@ -197,20 +197,32 @@
         </div>
     }
 </div>
-@if (Model.IsDegerlendirme.HasValue && Model.RowCount > 0)
+@if (Model.RowCount > 0)
 {
-    <script>
-        $(function () {
-            GetDetail('@Model.Data.First().UniqueID','@Model.IsDegerlendirme');
-        },200)
-    </script>
+    if (Model.IsDegerlendirme.HasValue)
+    {
+        <script>
+            $(function () {
+                GetDetail('@Model.Data.First().UniqueID');
+            }, 200);
+        </script>
+    }
+    else if (Model.ShowBasvuruUniqueId.HasValue)
+    {
+        <script>
+            $(function () {
+                ShowDetail('@Model.ShowBasvuruUniqueId');
+            }, 200);
+        </script>
+    }
+
 }
 
 <script>
 
     function YeniBasvuruDuyuruKontrol()
     {
-        
+
         var popupSetting = {
             title:'||',
             popupTipId:@DuyuruPopupTipiEnum.DonemProjesiBasvuru,
@@ -218,7 +230,7 @@
             redirectUrl: '@Url.Action("BasvuruYap")',
             callbackFnc: ''
         }
-        ShowDuyuru(popupSetting); 
+        ShowDuyuru(popupSetting);
     }
     function BasvuruSil(sndr, uniqueId, tarih) {
         Swal.fire({
@@ -276,10 +288,9 @@
         PanelRefresh(panel, false);
         $.ajax({
             url: '@Url.Action("GetDetailDpBasvuru", "Ajax")',
-            data: { donemProjesiUniqueId, UniqueID: '@Model.IsDegerlendirme' },
+            data: { donemProjesiUniqueId, ShowBasvuruUniqueId: '@Model.ShowBasvuruUniqueId', UniqueID: '@Model.IsDegerlendirme' },
             success: function (result) {
                 $('#cls-' + donemProjesiUniqueId).html(result);
-                GetDonemProjesiDurumView(donemProjesiUniqueId);
                 PanelRefresh(panel, true);
             },
             error: function (err) {
@@ -291,13 +302,13 @@
             },
         });
     }
-    function YeniBasvuruDuyuruKontrol2(donemProjesiUniqueId, donemProjesiBasvuruUniqueId) {
+    function YeniBasvuruDuyuruKontrol2(donemProjesiUniqueId, donemProjesiBasvuruUniqueId,isBasvuruTamamla) {
         var panel = $('#cls-' + donemProjesiUniqueId);
         PanelRefresh(panel, false);
         var popupSetting = {
             title: '||',
             popupTipId:@DuyuruPopupTipiEnum.DonemProjesiBasvuru,
-            btnAdi: 'Yeni Dönem Projesi Başvurusu Oluştur',
+            btnAdi: isBasvuruTamamla ? 'Dönem Projesi Başvurusunu Tamamla' : 'Yeni Dönem Projesi Başvurusu Oluştur',
             redirectUrl: '',
             fncparameter: { donemProjesiUniqueId, donemProjesiBasvuruUniqueId },
             callbackFnc: GetDonemProjesiBasvuruFormu
@@ -454,6 +465,9 @@
                                                 var _clsBtn = $('.bootbox-close-button').first();
                                                 $(_clsBtn).click();
                                                 GetDetail(donemProjesiUniqueId);
+                                                if (result.showSinavKayitForm) {
+                                                    ShowSrDialog(donemProjesiUniqueId, donemProjesiBasvuruUniqueId, false)
+                                                }
                                             }
                                             else {
                                                 if (result.selectedJuriNum > 0) {
@@ -551,6 +565,6 @@
                 }
             }
         });
-    } 
+    }
 
 </script>

@@ -11,14 +11,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public int? YetkiGrupID { get; set; }
         public string YetkiGrupAdi { get; set; }
-        public List<Roller> EklenenRoller { get; set; }
-        public List<Roller> YetkiGrupRolleri { get; set; }
-        public List<Roller> TumRoller { get; set; }
-        public UserRoleDto()
-        {
-            EklenenRoller = new List<Roller>();
-            YetkiGrupRolleri = new List<Roller>();
-            TumRoller = new List<Roller>();
-        }
+        public List<Roller> EklenenRoller { get; set; } = new List<Roller>();
+        public List<Roller> YetkiGrupRolleri { get; set; } = new List<Roller>();
+        public List<Roller> TumRoller { get; set; } = new List<Roller>();
     }
 }

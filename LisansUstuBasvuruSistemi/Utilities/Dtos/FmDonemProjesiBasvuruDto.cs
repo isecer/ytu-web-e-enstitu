@@ -21,6 +21,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsOgrenimSeviyeYetki { get; set; }
         public bool IsAktifOgrenimBasvuruVar { get; set; }
         public int? AnabilimDaliID { get; set; }
+        public Guid? ShowBasvuruUniqueId { get; set; }
         public Guid? IsDegerlendirme { get; set; }
         public IEnumerable<FrDonemProjesiBasvuruDto> Data { get; set; }
         
@@ -50,6 +51,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public DateTime? ToplantiTarihi { get; set; }
         public TimeSpan? ToplantiSaati { get; set; }
         public List<string> OnayYapmayanJuriEmails { get; set; }
+        public List<string> FilterFormKoduKeys { get; set; }
         public List<string> FilterJuriAdiKeys { get; set; }
         public DpBasvuruDurumDto SonBasvuruDurum { get; set; }
     }

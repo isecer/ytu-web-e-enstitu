@@ -99,6 +99,23 @@
                                                                     }
                                                                 </select>
                                                             }
+                                                            else if (item.InpType == "selectMultiple")
+                                                            {
+                                                                var itms = item.SItems.Split(','); 
+                                                                <input type="text" name="AyarDegeri" value="@item.AyarDegeri" style="display: none;" />
+                                                                <select multiple class="form-control select mSelect" change="SetAyarDegeriMultiSelect(this)">
+                                                                    @foreach (var val in itms)
+                                                                    {
+                                                                        <option value="@val" @(item.AyarDegeri.Split(',').Any(a => a == val) ? "selected='selected'" : "")>@val.ToInt()</option>
+                                                                    }
+                                                                </select>
+                                                                <script>
+                                                                    function SetAyarDegeriMultiSelect(sndr) {
+                                                                        $(sndr).prev().val(sndr.val());
+                                                                        alert(sndr.val());
+                                                                    }
+                                                                </script>
+                                                            }
 
                                                         </div>
                                                     </td>
@@ -126,6 +143,12 @@
 <script type="text/javascript">
     $(function () {
         $(".popover-dismiss").popover({ trigger: 'hover', html: true });
+    });
+    $(".mSelect").change(function () { 
+        var vals = $(this).val();
+        var valStr = vals ? vals.join(","):"";
+        $(this).prev().val(valStr); 
+       
     });
     function toogleControl(sndr, cat) {
         var _val = $(sndr).prev().val();

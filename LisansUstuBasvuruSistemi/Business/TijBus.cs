@@ -12,7 +12,6 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.SystemData;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -383,7 +382,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             var tijBasvuru = kul.TijBasvurus.FirstOrDefault(f => f.KullaniciID == kul.KullaniciID && f.OgrenciNo == kul.OgrenciNo);
                             if (tijBasvuru != null) basvuruUniqueId = tijBasvuru.UniqueID;
-                            if ((tijBasvuru == null || !tijBasvuru.TijBasvuruOneris.Any()))
+                            if (tijBasvuru == null || !tijBasvuru.TijBasvuruOneris.Any())
                             {
                                 var program = entities.Programlars.First(f => f.ProgramKod == kul.ProgramKod);
                                 var enstituKod = program.AnabilimDallari.EnstituKod;

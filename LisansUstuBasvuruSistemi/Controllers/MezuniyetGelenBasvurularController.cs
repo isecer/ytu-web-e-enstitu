@@ -192,11 +192,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.TDDurumID.HasValue)
             {
                 if (model.TDDurumID == 2)
-                    q = q.Where(p => p.MezuniyetBasvurulariTezDosyasi != null && !p.IsOnaylandiOrDuzeltme.HasValue);
+                    q = q.Where(p => p.MezuniyetBasvurulariTezDosyasi != null && !p.IsOnaylandiOrDuzeltme.HasValue && !p.IsMezunOldu.HasValue && p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi);
                 else
                 {
                     var isOnaylandiOrDuzeltme = (model.TDDurumID == 1);
-                    q = q.Where(p => p.IsOnaylandiOrDuzeltme == isOnaylandiOrDuzeltme);
+                    q = q.Where(p => p.IsOnaylandiOrDuzeltme == isOnaylandiOrDuzeltme && !p.IsMezunOldu.HasValue && p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi);
                 }
             }
             if (model.MezuniyetSinavDurumID.HasValue)
@@ -562,7 +562,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("Danışman olarak atanmadığını bir mezuniyet başvurusu için onay işlemi yapamazsınız!");
                 }
-            } 
+            }
             if (srTalep.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
             {
                 mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
@@ -1947,7 +1947,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-       
+
 
         public ActionResult SrJuriDegistir(Guid uniqueId)
         {

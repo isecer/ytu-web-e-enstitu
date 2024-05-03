@@ -40,7 +40,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 }
                 else
                 {
-                    cellToplantiYeri.Text = srTalebi.SRSalonID.HasValue ? srTalebi.SalonAdi : srTalebi.SalonAdi;
+                    cellToplantiYeri.Text = srTalebi.SRSalonID.HasValue ? srTalebi.SRSalonlar.SalonAdi : srTalebi.SalonAdi;
                 }
                 cellToplantiTarihi.Text = srTalebi.Tarih.ToFormatDate();
                 cellToplantiSaati.Text = $"{srTalebi.BasSaat:hh\\:mm}";

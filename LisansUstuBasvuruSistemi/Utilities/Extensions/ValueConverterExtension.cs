@@ -150,7 +150,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDouble(obj);
             return null;
-        } 
+        }
         public static int? ToIntObj(this object obj)
         {
             if (obj != null && (obj.IsNumber())) return Convert.ToInt32(Convert.ToDouble(obj));
@@ -302,6 +302,24 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (tarih.HasValue) return tarih.Value;
             return defaultDate;
         }
+
+        public static string ToMonthName(this int? month)
+        {
+            if (month == null) return "";
+            if (month == 1) return "Ocak";
+            if (month == 2) return "Şubat";
+            if (month == 3) return "Mart";
+            if (month == 4) return "Nisan";
+            if (month == 5) return "Mayıs";
+            if (month == 6) return "Haziran";
+            if (month == 7) return "Temmuz";
+            if (month == 8) return "Ağustos";
+            if (month == 9) return "Eylül";
+            if (month == 10) return "Ekim";
+            if (month == 11) return "Kasım";
+            if (month == 12) return "Aralık";
+            return "";
+        }
         #endregion
 
 
@@ -387,14 +405,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             var ext = filePath.Split('.').Last().ToLower();
             var exts = new[] { "doc", "docx" };
             return exts.Contains(ext);
-        } 
+        }
         public static bool IsExcelFile(this string filePath)
         {
             if (filePath.IsNullOrWhiteSpace()) return false;
             var ext = filePath.Split('.').Last().ToLower();
             var exts = new[] { "xls", "xlsx" };
             return exts.Contains(ext);
-        } 
+        }
         public static MvcHtmlString ToChecked(this bool? attrChecked)
         {
             return new MvcHtmlString(attrChecked.HasValue && attrChecked.Value ? "checked='checked'" : "");
@@ -454,7 +472,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return hesaplananOzetSifre;
         }
 
-        private static readonly string ToOrderedListPadChar = string.Concat(((char)160).ToString(), ((char)160).ToString(), ((char)160).ToString()); 
+        private static readonly string ToOrderedListPadChar = string.Concat(((char)160).ToString(), ((char)160).ToString(), ((char)160).ToString());
         public static T[] ToOrderedList<T>(this IEnumerable<T> objectList, string rootPropertyField, string parentPropertyField, string textPropertyField)
         {
             //string padStr = ((char)160).ToString();

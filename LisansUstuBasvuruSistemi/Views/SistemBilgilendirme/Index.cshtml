@@ -51,7 +51,7 @@
                                 foreach (var item in Model.FrSistemBilgilendirmes.Select((s, inx) => new { data = s, Index = inx }))
                                 {
                                     rowIndex += 1;
-                                    var bilgiTip = bilgiTipleri.LogTipiData.First(p => p.BilgiTipID == item.data.BilgiTipi.Value);
+                                    var bilgiTip = bilgiTipleri.LogTipiData.First(p => p.BilgiTipId == item.data.BilgiTipi.Value);
                                     <tr>
                                         <td>
                                             <table>

@@ -3,79 +3,71 @@ using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.DonemProjesi
 {
     public partial class RprDpSinavTutanakFormuDetay_FR0366 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprDpSinavTutanakFormuDetay_FR0366(int toBasvuruSavunmaId)
+        public RprDpSinavTutanakFormuDetay_FR0366(int donemProjesiBasvuruId)
         {
             InitializeComponent();
 
-            using (var  entities = new LubsDbEntities())
+            using (var entities = new LubsDbEntities())
             {
-                var data = (from s in entities.ToBasvuruSavunmas
-                            where s.ToBasvuruSavunmaID == toBasvuruSavunmaId
+                var data = (from s in entities.DonemProjesiBasvurus
+                            where s.DonemProjesiBasvuruID == donemProjesiBasvuruId
                             select new
                             {
-                                s.IsYokDrBursiyeriVar,
                                 s.FormKodu,
-                                Danisman = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.IsTezDanismani),
-                                TikUyesi1 = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.TikNum == 1),
-                                TikUyesi2 = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.TikNum == 2),
-                                urlAdd = s.ToBasvuru.Enstituler.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TOSF_" + s.ToBasvuruSavunmaID + "_" + s.UniqueID
+                                Juriler = s.DonemProjesiJurileris.ToList(),
+                                urlAdd = s.DonemProjesi.Enstituler.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "DPSF_" + s.DonemProjesiBasvuruID + "_" + s.UniqueID
                             }).First();
 
-                this.DisplayName = "FR-0348 DOKTORA TEZ ÖNERİ FORMU DEĞERLENDİRME EKİ";
+                this.DisplayName = "FR-0366 DÖNEM PROJESİ SINAVI DEĞERLENDİRME EKİ";
 
-                xrTableFK.Text = "Form Kodu: " + data.FormKodu; 
+                xrTableFK.Text = "Form Kodu: " + data.FormKodu;
                 xrQRCode.ImageUrl = data.urlAdd;
                 xrQRCode.Image = data.urlAdd.CreateQrCode();
 
-                cellDanismanUnvanAdSoyad.Text = data.Danisman.UnvanAdi + "\r\n" + data.Danisman.AdSoyad;
-                cellDanismanAbdUniversiteAdi.Text = data.Danisman.AnabilimdaliAdi + "\r\n" + data.Danisman.UniversiteAdi;
-                cellDanismanTarihImza.Text = "";
-                cellDanismanAlanUyum.Text = data.Danisman.IsCalismaRaporuAltAlanUygun == true ? "UYGUN (COMPATIBLE)" : "UYGUN DEĞİL (INCOMPATIBLE)";
-                cellDanismanDegerlendirmeSonucu.Text =
-                    data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
-                        ? "KABUL (ACCEPTED)"
-                        : (data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
-                            ? "RET (REJECTED)"
-                            : "DÜZELTME (REVISION)"
-                        );
-                cellDanismanDegerlendirmeAciklama.Text = data.Danisman.Aciklama.IsNullOrWhiteSpace() ? "" : data.Danisman.Aciklama;
-                cellDanismanTarihImza.Text = data.Danisman.DegerlendirmeIslemTarihi.ToFormatDateAndTime();
+                var danisman = data.Juriler.FirstOrDefault(p => p.IsTezDanismani);
+                var juriUyesi1 = data.Juriler.Where(p => !p.IsTezDanismani).OrderBy(o => o.DonemProjesiJuriID).ToList()[0];
+                var juriUyesi2 = data.Juriler.Where(p => !p.IsTezDanismani).OrderBy(o => o.DonemProjesiJuriID).ToList()[1];
 
-                RwAltAlanSoru.Visible = data.IsYokDrBursiyeriVar;
-                if (!data.IsYokDrBursiyeriVar)
-                {
-                    cellSoru3.Text = cellSoru3.Text.Replace("2.", "1.");
-                    cellSoru4.Text = cellSoru4.Text.Replace("3.", "2.");
-                }
 
-                cellTik1UnvanAdSoyad.Text = data.TikUyesi1.UnvanAdi + " \r\n" + data.TikUyesi1.AdSoyad;
-                cellTik1AbdUniversiteAdi.Text = data.TikUyesi1.AnabilimdaliAdi + "\r\n" + data.TikUyesi1.UniversiteAdi;
-                cellTik1TarihImza.Text = "";
-                cellTik1DegerlendirmeSonucu.Text = data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
-                    ? "KABUL (ACCEPTED)"
-                    : (data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
-                        ? "RET (REJECTED)"
-                        : "DÜZELTME (REVISION)"
+                cellYurutucuUnvanAdSoyad.Text = danisman.UnvanAdi + "\r\n" + danisman.AdSoyad;
+                cellYurutucuAbdUniversiteAdi.Text = danisman.AnabilimdaliAdi + "\r\n" + GlobalSistemSetting.UniversiteAdi;
+                cellYurutucuDegerlendirmeSonucu.Text =
+                  danisman.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili
+                      ? "BAŞARILI (SUCCESSFUL)"
+                      : (danisman.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarisiz
+                          ? "BAŞARISIZ (UNSUCCESSFUL)"
+                          : "BAŞARISIZ KATILMADI (UNSUCCESSFUL)"
+                      );
+                cellYurutucuDegerlendirmeAciklama.Text = danisman.Aciklama.IsNullOrWhiteSpace() ? "" : danisman.Aciklama;
+                cellYurutucuTarihImza.Text = danisman.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + "\r\nTarihinde Elektronik Olarak Onaylandı";
+
+                cellJuri1UnvanAdSoyad.Text = juriUyesi1.UnvanAdi + " \r\n" + juriUyesi1.AdSoyad;
+                cellJuri1AbdUniversiteAdi.Text = juriUyesi1.AnabilimdaliAdi + "\r\n" + GlobalSistemSetting.UniversiteAdi;
+                cellJuri1DegerlendirmeSonucu.Text = juriUyesi1.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili
+                    ? "BAŞARILI (SUCCESSFUL)"
+                    : (juriUyesi1.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarisiz
+                       ? "BAŞARISIZ (UNSUCCESSFUL)"
+                       : "BAŞARISIZ KATILMADI (UNSUCCESSFUL)"
+                   );
+                cellJuri1DegerlendirmeAciklama.Text = juriUyesi1.Aciklama.IsNullOrWhiteSpace() ? "" : juriUyesi1.Aciklama;
+                cellJuri1TarihImza.Text = juriUyesi1.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + "\r\nTarihinde Elektronik Olarak Onaylandı";
+
+                cellJuri2UnvanAdSoyad.Text = juriUyesi2.UnvanAdi + "\r\n" + juriUyesi2.AdSoyad;
+                cellJuri2AbdUniversiteAdi.Text = juriUyesi2.AnabilimdaliAdi + "\r\n" + GlobalSistemSetting.UniversiteAdi;
+                cellJuri2DegerlendirmeSonucu.Text = juriUyesi2.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili
+                    ? "BAŞARILI (SUCCESSFUL)"
+                    : (juriUyesi2.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarisiz
+                        ? "BAŞARISIZ (UNSUCCESSFUL)"
+                        : "BAŞARISIZ KATILMADI (UNSUCCESSFUL)"
                     );
-                cellTik1DegerlendirmeAciklama.Text = data.TikUyesi1.Aciklama.IsNullOrWhiteSpace() ? "" : data.TikUyesi1.Aciklama;
-                cellTik1TarihImza.Text = data.TikUyesi1.DegerlendirmeIslemTarihi.ToFormatDateAndTime();
-
-                cellTik2UnvanAdSoyad.Text = data.TikUyesi2.UnvanAdi + "\r\n" + data.TikUyesi2.AdSoyad;
-                cellTik2AbdUniversiteAdi.Text = data.TikUyesi2.AnabilimdaliAdi + "\r\n" + data.TikUyesi2.UniversiteAdi;
-                cellTik2TarihImza.Text = "";
-                cellTik2DegerlendirmeSonucu.Text = data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
-                    ? "KABUL (ACCEPTED)"
-                    : (data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
-                        ? "RET (REJECTED)"
-                        : "DÜZELTME (REVISION)"
-                    );
-                cellTik2DegerlendirmeAciklama.Text = data.TikUyesi2.Aciklama.IsNullOrWhiteSpace() ? "" : data.TikUyesi2.Aciklama;
-                cellTik2TarihImza.Text = data.TikUyesi2.DegerlendirmeIslemTarihi.ToFormatDateAndTime();
+                cellJuri2DegerlendirmeAciklama.Text = juriUyesi2.Aciklama.IsNullOrWhiteSpace() ? "" : juriUyesi2.Aciklama;
+                cellJuri2TarihImza.Text = juriUyesi2.DegerlendirmeIslemTarihi.ToFormatDateAndTime() + "\r\nTarihinde Elektronik Olarak Onaylandı";
             }
         }
 

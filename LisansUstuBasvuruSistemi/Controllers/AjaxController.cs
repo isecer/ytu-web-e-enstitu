@@ -27,15 +27,13 @@ using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
-using System.Net.Mime;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
 using LisansUstuBasvuruSistemi.Raporlar.LUB;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
-using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -1168,9 +1166,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         } 
         [HttpGet]
-        public ActionResult GetDetailDpBasvuru(Guid donemProjesiUniqueId, Guid? uniqueId)
+        public ActionResult GetDetailDpBasvuru(Guid donemProjesiUniqueId, Guid? showBasvuruUniqueId, Guid? uniqueId)
         {
             var model = DonemProjesiBus.GetSecilenBasvuruDetay(donemProjesiUniqueId, uniqueId);
+            if (!model.DonemProjesiBasvurus.Any() || model.IsYeniBasvuruYapilabilir) model.ShowBasvuruUniqueId = showBasvuruUniqueId;
             return View(model);
         }
 
@@ -3077,7 +3076,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 }
-            }
+                else if (raporTipi == RaporTipiEnum.DonemProjesiSinaviDegerlendirmeFormu)
+                {
+                    var uniqueId = new Guid(Request["UniqueID"]);
+                    var rapor = _entities.DonemProjesiBasvurus.First(p => p.UniqueID == uniqueId);
+
+                    var rpr = new RprDpSinavTutanakFormu_FR0366(rapor.DonemProjesiBasvuruID);
+                    rpr.CreateDocument();
+                    rpr.DisplayName =  rpr.DisplayName;
+
+
+                    if (rapor.DonemProjesi.KullaniciID != UserIdentity.Current.Id || RoleNames.DonemProjesiSinavDegerlendirmeDuzeltme.InRoleCurrent())
+                    {
+                        var rpr2 = new RprDpSinavTutanakFormuDetay_FR0366(rapor.DonemProjesiBasvuruID);
+                        rpr2.CreateDocument();
+                        rpr2.DisplayName = rpr2.DisplayName;
+                        rpr.Pages.AddRange(rpr2.Pages);
+                    }
+                    rprX = rpr;
+                }
+            }  
             if (!isPdfStream) return View(rprX);
 
             var memoryStream = new MemoryStream();

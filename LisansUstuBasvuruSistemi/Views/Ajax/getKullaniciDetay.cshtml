@@ -128,26 +128,13 @@
                                     <tr>
                                         <td>Yetki Grubu</td>
                                         <td>:</td>
-                                        <td>@Model.YetkiGruplari.YetkiGrupAdi @(eYetkiCount > 0 ? "(+ " + eYetkiCount + " Yetki)" : "")</td>
+                                        <td>@Model.YetkiGruplari.YetkiGrupAdi @(eYetkiCount > 0 ? "(+ " + eYetkiCount + " Yetki)" : "")  @(UserIdentity.Current.IsAdmin && Model.IsAdmin ? "(Sistem Admini)":"")</td>
                                     </tr>
-                                }
-                                @if (UserIdentity.Current.IsAdmin)
-                                {
-                                    <tr>
-                                        <td>Yönetici Mi?</td>
-                                        <td>:</td>
-                                        <td>@Model.IsAdmin.ToEvetHayir()</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Son Oturum Ip</td>
-                                        <td>:</td>
-                                        <td>@Model.LastLogonIP</td>
-                                    </tr>
-                                }
+                                } 
                                 <tr>
                                     <td>Son Giriş Tarihi</td>
                                     <td>:</td>
-                                    <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToFormatDateAndTime() : "Henüz Giriş Yapmamış")</td>
+                                    <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToFormatDateAndTime() + (UserIdentity.Current.IsAdmin? " ("+Model.LastLogonIP+")":"") : "Henüz Giriş Yapmamış")</td>
                                 </tr>
                                 <tr>
                                     <td>Oluşturma Tarihi</td>
@@ -172,7 +159,7 @@
 
 
                         </td>
-                        <td width="140" style="background-color:#3fbae4;">
+                        <td width="120" style="background-color:#3fbae4;">
                             <div class="panel-body profile bg-info" style="padding: 0px; margin: 0px;" id="pImageD">
 
                                 <table style="height:100%;width:100%;table-layout:fixed;background-color:#3fbae4;">
@@ -185,7 +172,7 @@
                                         <td>
 
                                             <div class="profile-image" style="padding: 0px; margin: 0px;">
-                                                <img class="pImageD" style="width:120px;" src="@Model.ResimAdi" alt="@Model.Ad @Model.Soyad">
+                                                <img class="pImageD" style="width:100px;max-height:125px;" src="@Model.ResimAdi" alt="@Model.Ad @Model.Soyad">
                                             </div>
                                         </td>
                                     </tr>
@@ -211,7 +198,73 @@
     </div>
 
 </div>
+
 <div class="col-md-12" style="max-height:500px;overflow:auto;">
+    @if (Model.YtuOgrencisi)
+    {
+        <div class="panel panel-info">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-graduation-cap fa-lg"></i> YTÜ Öğrenci Bilgileri</h3>
+                <ul class="panel-controls">
+                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-up" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+            <div class="panel-body padding-0">
+                <table class="table" style="width:100%;margin:0px;">
+                    <tr>
+                        <td width="140">Öğrenci No</td>
+                        <td width="5">:</td>
+                        <td>@Model.OgrenciNo</td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Seviyesi</td>
+                        <td>:</td>
+                        <td>@ytuOgrnB.OgrenimTipAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Program</td>
+                        <td>:</td>
+                        <td>@Model.Programlar.ProgramAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Durumu</td>
+                        <td>:</td>
+                        <td>@Model.OgrenimDurumlari.OgrenimDurumAdi</td>
+                    </tr>
+                    @if (Model.KayitDonemID.HasValue)
+                    {
+
+                        <tr>
+                            <td>Kayıt Tarihi</td>
+                            <td>:</td>
+                            <td>@Model.KayitYilBaslangic/@(Model.KayitYilBaslangic + 1) @donem.DonemAdi , @Model.KayitTarihi.Value.ToFormatDate()</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            @(ytuOgrnB.OgrenimTipKod==OgrenimTipi.TezsizYuksekLisans?"Proje Yürütücüsü":"Tez Danışmanı")
+                        </td>
+                        <td>:</td>
+                        <td>
+                            @if (danisman != null)
+                            {
+                                <a href="javascript:void(0)" onclick="DetayGor('@danisman.UserKey')">
+                                    @danisman.Unvanlar.UnvanAdi @danisman.Ad @danisman.Soyad
+                                </a>
+                            }
+                            else
+                            {
+                                <span style="color:maroon;">@(ytuOgrnB.OgrenimTipKod==OgrenimTipi.TezsizYuksekLisans?"OBS'sisteminde Proje Yürütücüsü bilgisi bulunamadı.": "OBS'sisteminde Tez Danışmanı bilgisi bulunamadı.")</span>
+                            }
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+    }
     @if (kYetki)
     {
         <div class="panel panel-info panel-toggled">
@@ -287,67 +340,7 @@
             </div>
         </div>
     }
-    @if (Model.YtuOgrencisi)
-    {
-        <div class="panel panel-info panel-toggled">
-            <div class="panel-heading padding-0">
-                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-graduation-cap fa-lg"></i> YTÜ Öğrenci Bilgileri</h3>
-                <ul class="panel-controls">
-                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down" aria-hidden="true"></span></a></li>
-                </ul>
-            </div>
-            <div class="panel-body padding-0">
-                <table class="table" style="width:100%;margin:0px;">
-                    <tr>
-                        <td width="140">Öğrenci No</td>
-                        <td width="5">:</td>
-                        <td>@Model.OgrenciNo</td>
-                    </tr>
-                    <tr>
-                        <td>Öğrenim Seviyesi</td>
-                        <td>:</td>
-                        <td>@ytuOgrnB.OgrenimTipAdi</td>
-                    </tr>
-                    <tr>
-                        <td>Program</td>
-                        <td>:</td>
-                        <td>@Model.Programlar.ProgramAdi</td>
-                    </tr>
-                    <tr>
-                        <td>Öğrenim Durumu</td>
-                        <td>:</td>
-                        <td>@Model.OgrenimDurumlari.OgrenimDurumAdi</td>
-                    </tr>
-                    @if (Model.KayitDonemID.HasValue)
-                    {
 
-                        <tr>
-                            <td>Kayıt Tarihi</td>
-                            <td>:</td>
-                            <td>@Model.KayitYilBaslangic/@(Model.KayitYilBaslangic + 1) @donem.DonemAdi , @Model.KayitTarihi.Value.ToFormatDate()</td>
-                        </tr>
-                    }
-                    <tr>
-                        <td>
-                            @(ytuOgrnB.OgrenimTipKod==OgrenimTipi.TezsizYuksekLisans?"Proje Yürütücüsü":"Tez Danışmanı")
-                        </td>
-                        <td>:</td>
-                        <td>
-                            @if (danisman != null)
-                            {
-                                <a href="javascript:void(0)" onclick="DetayGor('@danisman.UserKey')">
-                                    @danisman.Unvanlar.UnvanAdi @danisman.Ad @danisman.Soyad
-                                </a>
-                            }
-
-                        </td>
-                    </tr>
-
-                </table>
-
-            </div>
-        </div>
-    }
     @if (danismanOgrencileriGosterilsin)
     {
         var ogrenciler = (List<Kullanicilar>)ViewBag.Ogrenciler;
@@ -490,7 +483,7 @@
 
                         <div class="panel panel-default">
                             <div class="panel-heading padding-0">
-                                <h3 class="panel-title" style="font-size:9pt;"><a target="_blank" href="@Url.Action("KullaniciProgramYetkileri","Kullanicilar",new { id=Model.KullaniciID})"><i class="fa fa-cog fa-lg"></i> @cat.EnstituAdi (@(allcheckedCnt > 0 ? allcheckedCnt + " Yetki" : "Yetki yok"))</a></h3>
+                                <h3 class="panel-title" style="font-size:9pt;"><a target="_blank" href="@Url.Action("KullaniciProgramYetkileri", "Kullanicilar", new { id = Model.KullaniciID })"><i class="fa fa-cog fa-lg"></i> @cat.EnstituAdi (@(allcheckedCnt > 0 ? allcheckedCnt + " Yetki" : "Yetki yok"))</a></h3>
                             </div>
                             <div class="panel-body padding-0" style="max-height: 75px; overflow: auto;">
                                 <table class="table" style="table-layout:fixed;width:100%;">

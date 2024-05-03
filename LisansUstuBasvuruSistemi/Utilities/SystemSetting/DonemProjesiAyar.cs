@@ -1,8 +1,6 @@
 ﻿using Entities.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
@@ -14,8 +12,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 
         public const string DonemProjesiDersKodu = "Dönem Projesi Ders Kodu";
         public const string DonemProjesiBasvuruAlimiAcik = "Dönem Projesi başvurusu açık";
-        public const string OgrencininBasvuruYapabilecegiMinDonemNo = "Öğrencinin başvuru yapabileceği aktif min dönem no";
-        public const string OgrencininBasvuruYapabilecegiMaxDonemNo = "Öğrencinin başvuru yapabileceği aktif maks dönem no";
+        public const string OgrencininBasvuruYapabilecegiDonemler = "Öğrencinin başvuru yapabileceği dönemler";
+        public const string DonemSecimiIcinBelirlenenAylarBaharDonemi = "Dönem seçimi için belirlenen aylar Bahar dönemi kabul edilecek";
         public const string OgrencininBasvuruDonemindeAlmasiGerekenDersKodlari = "Başvuru döneminde öğrencinin OBS'de alması gereken dersler";
         public const string SinavOnlineYapilabilsin = "Dönem Projesi sınavı online yapılabilsin";
         public const string SinavYuzyuzeYapilabilsin = "Dönem Projesi sınavı yüz yüze yapılabilsin";
@@ -56,6 +54,21 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         {
             var dersKodlariStr = OgrencininBasvuruDonemindeAlmasiGerekenDersKodlari.GetAyarDp(enstituKod);
             return dersKodlariStr.IsNullOrWhiteSpace() ? new List<string>() : dersKodlariStr.Split(',').Select(s => s.Trim()).ToList();
+        }
+
+        public static List<int> GetBasvuruYapilabilecekDonemNos(string enstituKod)
+        {
+            var donemNoStr = OgrencininBasvuruYapabilecegiDonemler.GetAyarDp(enstituKod);
+            if (donemNoStr.IsNullOrWhiteSpace())
+                return new List<int>();
+            return donemNoStr.Split(',').Select(s => s.Trim().ToInt().Value).ToList();
+        }
+        public static List<int> GetBaharDonemiIcinSecilenAyNos(string enstituKod)
+        {
+            var ayNoStr = DonemSecimiIcinBelirlenenAylarBaharDonemi.GetAyarDp(enstituKod);
+            if (ayNoStr.IsNullOrWhiteSpace())
+                return new List<int>();
+            return ayNoStr.Split(',').Select(s => s.Trim().ToInt().Value).ToList();
         }
         public static List<CmbStringDto> GetKontrolEdilecekMinDersNotlari(string enstituKod)
         {

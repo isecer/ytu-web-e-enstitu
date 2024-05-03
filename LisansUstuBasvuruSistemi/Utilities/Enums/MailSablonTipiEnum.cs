@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace LisansUstuBasvuruSistemi.Utilities.Enums
+﻿namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public class MailSablonTipiEnum
     {
@@ -188,14 +183,20 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 
         public const int DpBasvuruYapildiYurutucuye = 400;
         public const int DpBasvuruIptalEdildiOgrenciye = 405;
-        public const int DpBasvuruRetlEdildiOgrenciye = 410;
+        public const int DpBasvuruIptalEdildiYurutucuye= 407;
+        public const int DpBasvuruRetEdildiOgrenciye = 410;
+        public const int DpBasvuruRetEdildiYurutucuye = 412;
         public const int DpProjeYurutucusuOnayladiOgrenciye = 415;
+        public const int DpProjeYurutucusuRetEttiOgrenciye = 417;
         public const int DpToplantiBilgiOgrenciye = 420;
         public const int DpToplantiBilgiJurilere = 425;
         public const int DpDegerlendirmeHatirlatmaYurutucuye = 430;
         public const int DpDegerlendirmeLinkGonderimJurilere = 435;
         public const int DpSinavSonucuGonderimOgrenciye = 440;
         public const int DpSinavSonucuGonderimYurutucuye = 445;
+
+        public const int DpEykYaGonderimiRetEdildiOgrenciye = 450;
+        public const int DpEykDaOnaylanmadiOgrenciye = 455;
 
 
 

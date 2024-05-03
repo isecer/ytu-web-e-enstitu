@@ -101,7 +101,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 contentStrList = contentStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
             }
             model.HtmlContent = string.Join("", contentStrList);
-            foreach (var itemRp in mailItem.MailParameterDtos.Where(p => p.Value != null))
+            foreach (var itemRp in mailItem.MailParameterDtos)
             {
                 itemRp.Value = itemRp.Value ?? "";
                 model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));

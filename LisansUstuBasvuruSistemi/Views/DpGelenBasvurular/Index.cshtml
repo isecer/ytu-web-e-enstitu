@@ -256,7 +256,7 @@
                                             @item.SonBasvuruDurum.ToDpBasvuruDurumView()
                                         </td>
                                         <td>
-                                            @if (item.IsYeniBasvuruYapilabilir)
+                                            @if (item.SonBasvuruDurum == null)
                                             {
                                                 <a href="@Url.Action("BasvuruYap","DpBasvuru", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" title="Sil"></i></a>
@@ -365,7 +365,6 @@
             data: { donemProjesiUniqueId },
             success: function (result) {
                 $('#cls-' + donemProjesiUniqueId).html(result);
-                GetDonemProjesiDurumView(donemProjesiUniqueId);
                 PanelRefresh(panel, true);
             },
             error: function (err) {
@@ -540,6 +539,9 @@
                                                 var _clsBtn = $('.bootbox-close-button').first();
                                                 $(_clsBtn).click();
                                                 GetDetail(donemProjesiUniqueId);
+                                                if (result.showSinavKayitForm) {
+                                                    ShowSrDialog(donemProjesiUniqueId, donemProjesiBasvuruUniqueId, false)
+                                                }
                                             }
                                             else {
                                                 if (result.selectedJuriNum > 0) {

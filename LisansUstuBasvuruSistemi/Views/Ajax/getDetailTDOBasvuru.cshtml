@@ -602,7 +602,7 @@
                                                                 <td class="CaptionTd">Tez Danışman Öneri Formu</td>
                                                                 <td class="CaptionTd">:</td>
                                                                 <td class="ValueTd">
-                                                                    <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezDanismanOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="YeniDialogBB('Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezDanismanOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-print"></i> FR-0347 Tez Danışmanı Öneri Formunu İndir
                                                                     </a>
                                                                 </td>
@@ -615,7 +615,7 @@
                                                                 <td class="CaptionTd">Tez Danışmanı/Konusu/Dili Değişiklik Formu</td>
                                                                 <td class="CaptionTd">:</td>
                                                                 <td class="ValueTd">
-                                                                    <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Danışman Öneri Formu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezDanismanDegisiklikFormu&UniqueID=@item.UniqueID', 'auto', 'modal-dialog modal-lg')">
+                                                                    <a href="javascript:void(0);" onclick="YeniDialogBB('Danışman Öneri Formu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezDanismanDegisiklikFormu&UniqueID=@item.UniqueID', 'auto', 'modal-dialog modal-lg')">
                                                                         <i class="fa fa-print"></i> FR-0308 Tez Danışmanı/Konusu/Dili Değişiklik Formunu İndir
                                                                     </a>
                                                                 </td>
@@ -632,7 +632,7 @@
                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                                     <table style="width:100%;">
                                                         <tr>
-                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü EYK İşlemleri</td>
+                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
                                                         </tr>
                                                         @if (tdoEykyaGonderimYetkisi && !item.IsObsData && !item.EYKYaHazirlandi.HasValue)
                                                         {
@@ -643,14 +643,14 @@
                                                                     <table>
                                                                         <tr>
                                                                             <td>
-                                                                                <select class="form-control" id="EYKYaGonderildi_@item.TDOBasvuruDanismanID" onchange="EykYaOnayChange(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)">
+                                                                                <select class="form-control" id="EYKYaGonderildi_@item.TDOBasvuruDanismanID" onchange="EYKYaOnayChange(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)">
                                                                                     <option @(!item.EYKYaGonderildi.HasValue ? "selected" : "")></option>
                                                                                     <option value="true" @(item.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı @(item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                                     <option value="false" @(item.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                                 </select>
                                                                             </td>
                                                                             <td>
-                                                                                <label class="btn btn-primary btn-sm" onclick="EykYaGonder(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                <label class="btn btn-primary btn-sm" onclick="EYKyaGonder(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -723,7 +723,7 @@
                                                                                     </select>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <label class="btn btn-primary btn-sm" onclick="EykYaHazirla(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKyaHazirla(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                 </td>
                                                                             </tr>
                                                                         </table>
@@ -773,7 +773,7 @@
                                                                         <table>
                                                                             <tr>
                                                                                 <td>
-                                                                                    <select class="form-control" id="EYKDaOnaylandi_@item.TDOBasvuruDanismanID" onchange="EykOnayChange(@item.TDOBasvuruDanismanID)">
+                                                                                    <select class="form-control" id="EYKDaOnaylandi_@item.TDOBasvuruDanismanID" onchange="EYKOnayChange(@item.TDOBasvuruDanismanID)">
                                                                                         <option @(!item.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
                                                                                         <option value="true" @(item.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı @(item.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + item.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
                                                                                         <option value="false" @(item.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(item.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + item.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
@@ -784,7 +784,7 @@
 
                                                                                 </td>
                                                                                 <td>
-                                                                                    <label class="btn btn-primary btn-sm" onclick="EykDaOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKdaOnay(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                 </td>
                                                                             </tr>
                                                                         </table>
@@ -875,11 +875,11 @@
                                                             {
                                                                 if (item.IsYeniEsDanismanOneriOrDegisiklik)
                                                                 {
-                                                                    <span class="label label-info" style="cursor: pointer;" onclick="GetTdoEsDanismanFormu(@Model.TDOBasvuruID, @Model.AktifTDOBasvuruDanismanID);"><i class="fa fa-plus"></i> Tez Eş Danışman Öneri Formu Oluştur</span>
+                                                                    <span class="label label-info" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID, @Model.AktifTDOBasvuruDanismanID);"><i class="fa fa-plus"></i> Tez Eş Danışman Öneri Formu Oluştur</span>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <span class="label label-danger" style="cursor: pointer;" onclick="GetTdoEsDanismanFormu(@Model.TDOBasvuruID,@Model.AktifTDOBasvuruDanismanID,'',true);"><i class="fa fa-plus"></i> Tez Eş Danışman Değişikliği Öneri Formu Oluştur</span>
+                                                                    <span class="label label-danger" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID,@Model.AktifTDOBasvuruDanismanID,'',true);"><i class="fa fa-plus"></i> Tez Eş Danışman Değişikliği Öneri Formu Oluştur</span>
 
                                                                 }
                                                             }
@@ -916,7 +916,7 @@
                                                                             <td>
                                                                                 @if ((tdoEykdaOnayYetkisi || tdoEykyaGonderimYetkisi) && (!itemE.EYKYaGonderildi.HasValue))
                                                                                 {
-                                                                                    <span class="label label-info" style="cursor: pointer;" onclick="GetTdoEsDanismanFormu(@Model.TDOBasvuruID,@itemE.TDOBasvuruDanismanID,@itemE.TDOBasvuruEsDanismanID);"><i class="fa fa-edit"></i> Düzelt</span>
+                                                                                    <span class="label label-info" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID,@itemE.TDOBasvuruDanismanID,@itemE.TDOBasvuruEsDanismanID);"><i class="fa fa-edit"></i> Düzelt</span>
                                                                                     <span class="label label-danger" style="cursor: pointer;" onclick="DetayEsDanismanSil(@item.TDOBasvuruID,'@itemE.UniqueID','@itemE.BasvuruTarihi.ToFormatDateAndTime()')"><i class="fa fa-trash-o"></i> Sil</span>
                                                                                 }
                                                                             </td>
@@ -955,7 +955,7 @@
                                                                                             <td class="ValueTd">@itemE.UnvanAdi @itemE.AdSoyad</td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td class="CaptionTd">Üniversite</td>
+                                                                                            <td class="CaptionTd">Çalıştığı Üniversite</td>
                                                                                             <td class="CaptionTd">:</td>
                                                                                             <td class="ValueTd">@itemE.UniversiteAdi</td>
                                                                                         </tr>
@@ -978,7 +978,7 @@
                                                                                             <td class="CaptionTd">Eş Danışman Öneri Formu</td>
                                                                                             <td class="CaptionTd">:</td>
                                                                                             <td class="ValueTd">
-                                                                                                <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Eş Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezEsDanismanOneriFormu&UniqueID=@itemE.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                <a href="javascript:void(0);" onclick="YeniDialogBB('Eş Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezEsDanismanOneriFormu&UniqueID=@itemE.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                                                                                     <i class="fa fa-print"></i> FR-0320 Eş Danışmanı Öneri Formunu İndir
                                                                                                 </a>
                                                                                             </td>
@@ -988,7 +988,7 @@
                                                                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                                                                                     <table style="width:100%;">
                                                                                                         <tr>
-                                                                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü EYK İşlemleri</td>
+                                                                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
                                                                                                         </tr>
                                                                                                         @if (tdoEykyaGonderimYetkisi && !itemE.EYKYaHazirlandi.HasValue)
                                                                                                         {
@@ -999,14 +999,14 @@
                                                                                                                     <table>
                                                                                                                         <tr>
                                                                                                                             <td>
-                                                                                                                                <select class="form-control" id="EYKYaGonderildiEs_@itemE.TDOBasvuruEsDanismanID" onchange="EykYaOnayChangeEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)">
+                                                                                                                                <select class="form-control" id="EYKYaGonderildiEs_@itemE.TDOBasvuruEsDanismanID" onchange="EYKYaOnayChangeEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)">
                                                                                                                                     <option @(!itemE.EYKYaGonderildi.HasValue ? "selected" : "")></option>
                                                                                                                                     <option value="true" @(itemE.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı</option>
                                                                                                                                     <option value="false" @(itemE.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı</option>
                                                                                                                                 </select>
                                                                                                                             </td>
                                                                                                                             <td>
-                                                                                                                                <label class="btn btn-primary btn-sm" onclick="EykYaGonderEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                                                                <label class="btn btn-primary btn-sm" onclick="EYKyaGonderES(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                                                             </td>
                                                                                                                         </tr>
                                                                                                                     </table>
@@ -1073,7 +1073,7 @@
                                                                                                                                     </select>
                                                                                                                                 </td>
                                                                                                                                 <td>
-                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EykYaHazirlaEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKyaHazirlaEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                                                                 </td>
                                                                                                                             </tr>
                                                                                                                         </table>
@@ -1116,7 +1116,7 @@
                                                                                                                         <table>
                                                                                                                             <tr>
                                                                                                                                 <td>
-                                                                                                                                    <select class="form-control" id="EYKDaOnaylandiES_@itemE.TDOBasvuruEsDanismanID" onchange="EykOnayChangeEs(@itemE.TDOBasvuruEsDanismanID)">
+                                                                                                                                    <select class="form-control" id="EYKDaOnaylandiES_@itemE.TDOBasvuruEsDanismanID" onchange="EYKOnayChangeES(@itemE.TDOBasvuruEsDanismanID)">
                                                                                                                                         <option @(!itemE.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
                                                                                                                                         <option value="true" @(itemE.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı @(itemE.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
                                                                                                                                         <option value="false" @(itemE.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(itemE.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
@@ -1127,7 +1127,7 @@
 
                                                                                                                                 </td>
                                                                                                                                 <td>
-                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EykDaOnayEs(@itemE.TDOBasvuruEsDanismanID,@item.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKdaOnayES(@itemE.TDOBasvuruEsDanismanID,@item.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                                                                 </td>
                                                                                                                             </tr>
                                                                                                                         </table>
@@ -1234,7 +1234,9 @@
     </script>
 }
 <script>
-    $(function () { 
+    $(function () {
+
+        jQuery('._popover').popover({ trigger: 'hover' });
         $('.tarihB').datetimepicker({
             lang: 'tr',
             timepicker: true,
@@ -1281,7 +1283,7 @@
         }
 
     }
-    function EykOnayChange(id) {
+    function EYKOnayChange(id) {
         var val = $('#EYKDaOnaylandi_' + id).val();
         if (val == 'false') {
             $('#EYKOnayAciklamaRow_' + id).removeClass('hide');
@@ -1309,7 +1311,7 @@
             $('#EYKOnayTezBaslikEnRow_' + id).addClass('hide');
         }
     }
-    function EykYaOnayChange(id) {
+    function EYKYaOnayChange(id) {
         var val = $('#EYKYaGonderildi_' + id).val();
         if (val == 'false') {
             $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
@@ -1318,7 +1320,7 @@
             $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
         }
     }
-    function EykYaOnayChangeEs(id) {
+    function EYKYaOnayChangeEs(id) {
         var val = $('#EYKYaGonderildiEs_' + id).val();
         if (val == 'false') {
             $('#EYKYaGonderimAciklamaEsRow_' + id).removeClass('hide');
@@ -1409,11 +1411,12 @@
             }
         });
     }
-    function EykYaGonder(id,id2) {
+    function EYKyaGonder(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
         var EYKYaGonderildi = $('#EYKYaGonderildi_' + id).val();
         var EYKYaGonderimDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + id).val();
+        
         var model = {
             TDOBasvuruDanismanID: id,
             EYKYaGonderildi: EYKYaGonderildi,
@@ -1440,7 +1443,7 @@
             }
         });
     }
-    function EykYaHazirla(id, id2) {
+    function EYKyaHazirla(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
         var EykYaHazirlandi = $('#EYKyaHazirlandi_' + id).val();
@@ -1467,7 +1470,7 @@
             }
         });
     }
-    function EykDaOnay(id, id2) {
+    function EYKdaOnay(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
         var EYKDaOnaylandi = $('#EYKDaOnaylandi_' + id).val();
@@ -1516,7 +1519,7 @@
             }
         });
     }
-    function EykOnayChangeEs(id) {
+    function EYKOnayChangeES(id) {
         var val = $('#EYKDaOnaylandiES_' + id).val();
         if (val == 'false') {
             $('#EYKOnayAciklamaRowES_' + id).removeClass('hide');
@@ -1540,13 +1543,15 @@
             $('#EYKDaOnaylandiOnayTarihiEs_' + id).addClass('hide');
         }
     }
-     function EykYaGonderEs(id,id2) {
+     function EYKyaGonderES(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
          PanelRefresh(_panel, false);
          var EYKYaGonderildi = $('#EYKYaGonderildiEs_' + id).val();
+         var EYKYaGonderimDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasiEs_' + id).val();
          var model = {
              TDOBasvuruEsDanismanID: id,
-             EYKYaGonderildi: EYKYaGonderildi
+             EYKYaGonderildi: EYKYaGonderildi,
+             EYKYaGonderimDurumAciklamasi
 
          };
         $.ajax({
@@ -1642,7 +1647,7 @@
             }
         });
     }
-      function EykYaHazirlaEs(id, id2) {
+      function EYKyaHazirlaEs(id, id2) {
       var _panel = $('#bsvrDet_' + id2);
       PanelRefresh(_panel, false);
           var EykYaHazirlandi = $('#EYKyaHazirlandiEs_' + id).val();
@@ -1669,7 +1674,7 @@
           }
       });
   }
-    function EykDaOnayEs(id, id2) {
+    function EYKdaOnayES(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
 
@@ -1764,11 +1769,11 @@
 
                         }
                     });
-                    if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
                 }
                 else {
-                    ShowMmMessage(resultG.Messages, 'Tamam');
+                    showMmMessage(resultG.Messages, 'Tamam');
                 }
 
             },
@@ -1834,11 +1839,11 @@
 
                         }
                     });
-                    if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
                 }
                 else {
-                    ShowMmMessage(resultG.Messages, 'Tamam');
+                    showMmMessage(resultG.Messages, 'Tamam');
                 }
 
             },
@@ -1905,11 +1910,11 @@
 
                         }
                     });
-                    if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
                 }
                 else {
-                    ShowMmMessage(resultG.Messages, 'Tamam');
+                    showMmMessage(resultG.Messages, 'Tamam');
                 }
 
             },
@@ -1978,11 +1983,11 @@
 
                         }
                     });
-                    if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
                 }
                 else {
-                    ShowMmMessage(resultG.Messages, 'Tamam');
+                    showMmMessage(resultG.Messages, 'Tamam');
                 }
 
             },
@@ -1993,7 +1998,7 @@
             }
         })
     }
-    function GetTdoEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi) {
+    function GetTDOEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi) {
         var _panel = $('#bsvrDet_' + TDOBasvuruID);
         PanelRefresh(_panel, false);
         $.ajax({
@@ -2055,11 +2060,11 @@
                     });
 
                     // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-                    if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
+                    if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
 
                 }
                 else {
-                    ShowMmMessage(resultG.Messages, 'Tamam');
+                    showMmMessage(resultG.Messages, 'Tamam');
                 }
 
             },

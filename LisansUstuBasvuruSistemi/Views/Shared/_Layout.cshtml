@@ -224,7 +224,7 @@
                             <span class="xn-text" style="font-size:9.2pt">Sıkça Sorulan Sorular</span>
                         </a>
                     </li>
-                    @MenuGenerator.GetMenuIHtml(Request); 
+                    @MenuGenerator.GetMenuIHtml(Request);
 
                 </ul>
                 <!-- END X-NAVIGATION -->
@@ -250,14 +250,14 @@
 
                         }
                         @if (HttpContext.Current != null && HttpContext.Current.Server != null && UserIdentity.Current.IsAdmin)
-                        { 
+                        {
                             string serverName = HttpContext.Current.Server.MachineName;
-                            if (serverName.Contains("IRFANYTUPC") )
-                            { 
+                            if (serverName.Contains("IRFANYTUPC"))
+                            {
                                 <div style="color: #B64645; font-size: 7.5pt;">ConnStr: <span style="color: #ffd559;">(@GlobalSistemSetting.ConnectionInfo())</span> @Html.Raw(selectedEnstitu.TestEmailAddress.IsNullOrWhiteSpace() ? "" : "All Mail Send: <span style=\"color: #ffd559;\">" + selectedEnstitu.TestEmailAddress + "</span>")</div>
 
                             }
-                        } 
+                        }
 
                     </li>
                     <!-- END TOGGLE NAVIGATION -->
@@ -325,7 +325,7 @@
 
                                 @if (UserIdentity.Current.IsActiveDirectoryUser == false)
                                 {
-                                    <li><a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Şifre Değiştir', '@(Url.Action("ParolaSifirla", "Account", new { KullaniciID = UserIdentity.Current.Id }))', 600, '@ModalSizeClassEnum.Basic')"><span class="fa fa-lock"></span>Şifreyi değiştir</a></li>
+                                    <li><a href="javascript:void(0);" onclick="YeniDialogBB('Şifre Değiştir', '@(Url.Action("ParolaSifirla", "Account", new { KullaniciID = UserIdentity.Current.Id }))', 600, '@ModalSizeClassEnum.Basic')"><span class="fa fa-lock"></span>Şifreyi değiştir</a></li>
                                 }
 
                                 <li><a href="javascript:void(0);" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span>Çıkış Yap</a></li>
@@ -1457,7 +1457,7 @@
         var frameLoad = false;
         function loadedFrame()
         { frameLoad = true; }
-        function YeniDialogBB(sndr, title, url, h, mdlSize, fncOnClose) {
+        function YeniDialogBB(title, url, h, mdlSize, fncOnClose) {
             frameLoad = false;
             var nowx = new Date();
             var id = Number(nowx);
@@ -1501,7 +1501,7 @@
                 }
             });
         }
-        function yeniDialogBBRprLansCape(sndr, title, url, h,w, mdlSize, fncOnClose) {
+        function YeniDialogBBRprLansCape(title, url, h,w, mdlSize, fncOnClose) {
             frameLoad = false;
             var nowx = new Date();
             var id = Number(nowx);
@@ -1688,12 +1688,12 @@
             $mbox.find('.mb-content').first().html(Content);
             $mbox.addClass("open");
         }
-        function authenticatedControl(sndr) { 
+        function authenticatedControl(sndr) {
             var retUrl = $(sndr).attr("menuurl");
             $.ajax({
                 url:'@Url.Action("AuthenticatedControl", "Home")',
                 data: {},
-                success: function (result) { 
+                success: function (result) {
                     if (!result) {
                         $('#loginPanel').addClass("active");
                         $('.pnlLgn').removeClass('hide');
@@ -1707,7 +1707,7 @@
                             glow: true
                         });
                     }
-                    else { 
+                    else {
                         window.location.href = retUrl;
                     }
                 },
@@ -1791,14 +1791,14 @@
             replaceCharMyMsk(_id,e.keyCode);
         }
 
-            function replaceCharMyMsk(id, kKod) {
-                setTimeout(function () {
-                    if (kKod == 190) {
-                        var val = $('#' + id).val();
-                        $('#' + id).val($('#' + id).val().replace('.', ","));
-                    }
-                }, 150);
-            }
+        function replaceCharMyMsk(id, kKod) {
+            setTimeout(function () {
+                if (kKod == 190) {
+                    var val = $('#' + id).val();
+                    $('#' + id).val($('#' + id).val().replace('.', ","));
+                }
+            }, 150);
+        }
         function GetMsg(mMessage) {
 
             if (mMessage.Messages.length > 0)
@@ -1833,7 +1833,8 @@
             }
             validateControl(null, mMessage);
 
-        }
+        } 
+
         $(function () {
             $('.scrolkikkox').slimScroll({
                 color: 'red',
@@ -2067,12 +2068,12 @@
 
     <script>
         $(function () {
-            layoutOnloatTmr();
+            layoutOnloadTmr();
         });
-        function layoutOnloatTmr() {
+        function layoutOnloadTmr() {
             onload();
             setTimeout(function () {
-                layoutOnloatTmr();
+                layoutOnloadTmr();
             }, 1000);
         }
         function FilterInputKeyPress(sndr, e, gID) {

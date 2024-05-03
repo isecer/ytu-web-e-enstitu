@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Raporlar;
+using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
@@ -170,12 +171,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         break;
                     }
-                case "YETB":
+                case "DPSF":
                     {
-                        var yeterlikBasvuru = _entities.YeterlikBasvurus.FirstOrDefault(p => p.UniqueID == rowId);
-                        if (yeterlikBasvuru != null)
+                        var donemProjesiBasvuru = _entities.DonemProjesiBasvurus.FirstOrDefault(p => p.UniqueID == rowId);
+                        if (donemProjesiBasvuru != null)
                         {
-                            var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(yeterlikBasvuru.YeterlikBasvuruID);
+                            var rpr = new RprDpSinavTutanakFormu_FR0366(donemProjesiBasvuru.DonemProjesiBasvuruID);
                             rpr.CreateDocument();
                             rpr.DisplayName += ".pdf";
                             rprX = rpr;

@@ -16,40 +16,10 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class YeterlikBus
     {
-        public static List<string> NotDegerleri = new List<string>
-        {
-            "F0",
-            "FF",
-            "DD",
-            "DC",
-            "CC",
-            "CB",
-            "BB",
-            "BA",
-            "AA"
-        };
+       
 
 
-        public static string ToLastNot(this string not)
-        {
-            if (not.ToStrObj().Split(',').Length > 1)
-            {
-                not = not.ToStrObj().Split(',').Last();
-            }
-            return not;
-        }
-        public static bool IsHarfNotuBuyukEsit(string notKriteri, string ogrenciNotu)
-        {
-            var notKriteriIndex = NotDegerleri.IndexOf(notKriteri);
-            var ogrenciNotuIndex = NotDegerleri.IndexOf(ogrenciNotu);
-            var success = notKriteriIndex <= ogrenciNotuIndex;
-            if (!success)
-            {
-                //eski öğrenciler için özel kontrol G notu geçerli
-                success = ogrenciNotu == "G";
-            }
-            return success;
-        }
+     
         public static int? GetYeterlikAktifSurecId(string enstituKod, int? yeterlikSurecId = null)
         {
             using (var entities = new LubsDbEntities())
@@ -95,8 +65,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     ).ToList();
                 foreach (var item in ogrenimtipData)
                 {
-                    item.SlistEtikNots = new SelectList(NotDegerleri, item.YsBasEtikNotKriteri);
-                    item.SlistSeminerNots = new SelectList(NotDegerleri, item.YsBasSeminerNotKriteri);
+                    item.SlistEtikNots = new SelectList(HarfNotuHelper.NotDegerleri, item.YsBasEtikNotKriteri);
+                    item.SlistSeminerNots = new SelectList(HarfNotuHelper.NotDegerleri, item.YsBasSeminerNotKriteri);
                 }
                 return ogrenimtipData;
 
@@ -233,11 +203,11 @@ namespace LisansUstuBasvuruSistemi.Business
                                     {
                                         controlMessage.Add("Aktif okuduğunuz dönem " + basvuruKriterleri.YsMaxBasvuruDonemNo + ".dönem veya daha altı olması gerekmektedir.");
                                     }
-                                    if (!basvuruKriterleri.YsBasEtikNotKriteri.IsNullOrWhiteSpace() && !IsHarfNotuBuyukEsit(basvuruKriterleri.YsBasEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
+                                    if (!basvuruKriterleri.YsBasEtikNotKriteri.IsNullOrWhiteSpace() && !HarfNotuHelper.IsHarfNotuBuyukEsit(basvuruKriterleri.YsBasEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
                                     {
                                         controlMessage.Add("Etik dersi için ders notu " + basvuruKriterleri.YsBasEtikNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
                                     }
-                                    if (!basvuruKriterleri.YsBasSeminerNotKriteri.IsNullOrWhiteSpace() && !IsHarfNotuBuyukEsit(basvuruKriterleri.YsBasSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
+                                    if (!basvuruKriterleri.YsBasSeminerNotKriteri.IsNullOrWhiteSpace() && !HarfNotuHelper.IsHarfNotuBuyukEsit(basvuruKriterleri.YsBasSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
                                     {
                                         controlMessage.Add("Seminer dersi için ders notu " + basvuruKriterleri.YsBasSeminerNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
                                     }

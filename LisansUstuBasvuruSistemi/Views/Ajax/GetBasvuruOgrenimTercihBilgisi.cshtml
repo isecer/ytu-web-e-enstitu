@@ -199,7 +199,7 @@
         </h3>
         @if (Model.IsHesaplandi && false)
         {
-            <a style="float:right; cursor:pointer;color:@color;" onclick="YeniDialogBB(null, 'Başvuru Sonuç','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.BasvuruSonucListesi&BasvuruSurecID=@Model.BasvuruSurecID&RowID=@Model.RowID' , 'auto', 'modal-dialog modal-lg' )">
+            <a style="float:right; cursor:pointer;color:@color;" onclick="YeniDialogBB('Başvuru Sonuç','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.BasvuruSonucListesi&BasvuruSurecID=@Model.BasvuruSurecID&RowID=@Model.RowID' , 'auto', 'modal-dialog modal-lg' )">
                 <span style="font-size:12pt;margin-top:7px;" title="Sonuç Listesini Göster" class="fa fa-list"> Sonuç Listesini Göster</span>
 
             </a>

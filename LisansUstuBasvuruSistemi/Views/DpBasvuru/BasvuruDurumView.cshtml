@@ -32,7 +32,7 @@
             durumAdi = "Enstitü Onayı Bekleniyor";
             durumIconClass = "fa fa-clock-o";
             durumDetayIconClass = "fa fa-comments-o";
-            durumDetay = "Başvurunun Yürütücü onayına sunulabilmesi için Enstitü onayı gerekmekte.";
+            durumDetay = "Başvurunun Proje Yürütücüsü onayına sunulabilmesi için Enstitü onayı gerekmekte.";
         }
         else if (Model.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.RetEdildi)
         {
@@ -55,15 +55,15 @@
 
         }
     }
-    else if (Model.DonemProjesiDurumID == DonemProjesiDurumEnum.DanismanOnaySureci)
+    else if (Model.DonemProjesiDurumID == DonemProjesiDurumEnum.YurutucuOnaySureci)
     {
         if (!Model.IsDanismanOnay.HasValue)
         {
             tabAdi = "Yürütücü Başvuru Onay Süreci";
             durumColor = "maroon";
-            durumAdi = "Yürütücü Onayı Bekleniyor";
+            durumAdi = "Proje Yürütücüsü Onayı Bekleniyor";
             durumIconClass = "fa fa-clock-o";
-            durumDetay = "Başvuru Enstitü tarafından onaylandı süreç devamı için Yürütücü onayı gerekmekte.";
+            durumDetay = "Başvuru Enstitü tarafından onaylandı süreç devamı için Proje Yürütücüsü onayı gerekmekte.";
         }
         else if (Model.IsDanismanOnay == false)
         {
@@ -71,7 +71,7 @@
             durumIconClass = "fa fa-thumbs-o-down fa-lg";
             durumAdi = "Başvuru Ret Edildi";
             durumColor = "maroon";
-            durumDetay = "Başvuru Yürütücü tarafından ret edildi.";
+            durumDetay = "Başvuru Proje Yürütücüsü tarafından ret edildi.";
             durumDetayTitle = Model.DanismanOnayAciklama;
         }
     }
@@ -83,7 +83,7 @@
             durumIconClass = "fa fa-clock-o";
             durumAdi = "Sınav Jürisi Oluşturulması Bekleniyor";
             durumColor = "Green";
-            durumDetay = "Süreç devamı için Yürütücü tarafından jüri bilgileri girilmeli.";
+            durumDetay = "Süreç devamı için Proje Yürütücüsü tarafından Jüri bilgileri girilmeli.";
         }
         else if (!Model.IsSrTalebiYapildi)
         {
@@ -91,7 +91,7 @@
             durumIconClass = "fa fa-clock-o";
             durumAdi = "Sınav/Toplantı Oluşturulması Bekleniyor";
             durumColor = "Green";
-            durumDetay = "Süreç devamı için Yürütücü tarafından toplantı bilgileri girilmeli.";
+            durumDetay = "Süreç devamı için Proje Yürütücüsü tarafından Toplantı bilgileri girilmeli.";
         }
     }
     else if (Model.DonemProjesiDurumID == DonemProjesiDurumEnum.SinavDegerlendirmeSureci)
@@ -102,7 +102,7 @@
             durumColor = "Green";
             durumIconClass = "fa fa-clock-o";
             durumAdi = "Değerlendirme Yapılması Bekleniyor";
-            durumDetay = "Süreç devamı için jüri üyeleri değerlendirmelerini tamamlamalı.";
+            durumDetay = "Süreç devamı için Jüri üyeleri değerlendirmelerini tamamlamalı.";
         }
     }
     else if (Model.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci)

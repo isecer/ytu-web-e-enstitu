@@ -13,7 +13,6 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
-using LisansUstuBasvuruSistemi.Ws_GsisMezuniyetBilgi;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

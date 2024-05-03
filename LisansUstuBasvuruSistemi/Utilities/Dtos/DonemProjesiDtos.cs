@@ -53,6 +53,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DurumClassName { get; set; }
         public string DurumColor { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
+        public Guid? ShowBasvuruUniqueId { get; set; }
         public List<DonemProjesiBasvuruDto> DonemProjesiBasvurus { get; set; } 
     }
     public class DonemProjesiBasvuruDto : DonemProjesiBasvuru
@@ -71,7 +72,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class DpBasvuruDurumDto
     {
         public int DonemProjesiID { get; set; }
-        public int DonemProjesiBasvuruID { get; set; }
+        public int DonemProjesiBasvuruID { get; set; } 
         public int BasvuruYil { get; set; }
         public string BasvuruDonemAdi { get; set; } 
         public DateTime BasvuruTarihi { get; set; }
@@ -99,28 +100,17 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
  
     }
 
-    public class DpJuriTutanakModel
+    public class DpTutanakDto
     {
  
-        public string TutanakAdi { get; set; }
-        public string Sayi { get; set; }
-        public string Aciklama { get; set; }
-        public List<RprDpjuriTutanakRowModel> DetayData { get; set; }
-        public DpJuriTutanakModel()
-        {
-            DetayData = new List<RprDpjuriTutanakRowModel>();
-        }
-    }
-    public class RprDpjuriTutanakRowModel
-    { 
-        public string OgrenciBilgi { get; set; }
-        public string DanismanAdSoyad { get; set; }
-        public string DanismanUni { get; set; }
-        public string Uye1 { get; set; }
-        public string Uye1Uni { get; set; }
-        public string Uye2 { get; set; }
-        public string Uye2Uni { get; set; } 
-        public string ProjeBasligi { get; set; }
+        public string OgrenciNo { get; set; }
+        public string OgrenciAdSoyad { get; set; }
+        public string AnabilimDaliAdi { get; set; }
+        public string ProgramAdi { get; set; }
+        public string YurutucuAdSoyad { get; set; }
+        public string MezuniyetDonemAdi { get; set; }
+        public DateTime? MezuniyetEykTarihi { get; set; }
 
     }
+   
 }

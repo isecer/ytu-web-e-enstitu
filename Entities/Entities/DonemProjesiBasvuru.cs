@@ -32,6 +32,7 @@ namespace Entities.Entities
         public int OkuduguDonemNo { get; set; }
         public string ProjeBasligi { get; set; }
         public string ProjeOzeti { get; set; }
+        public bool IsOgrenciTaahhut { get; set; }
         public Nullable<int> DonemProjesiEnstituOnayDurumID { get; set; }
         public System.DateTime EnstituOnayTarihi { get; set; }
         public string EnstituOnayAciklama { get; set; }

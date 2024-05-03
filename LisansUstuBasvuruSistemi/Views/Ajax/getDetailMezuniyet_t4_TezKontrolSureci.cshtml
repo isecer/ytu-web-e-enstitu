@@ -245,7 +245,7 @@
                                                     @if (itemTd.IsOnaylandiOrDuzeltme == true)
                                                     {
                                                         <br />
-                                                        <a href="javascript:void(0);" onclick="YeniDialogBB(null, 'Mezuniyet Tez Kontrol Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezKontrolFormu&ID=@itemTd.RowID' , 'auto', 'modal-dialog modal-lg' )">
+                                                        <a href="javascript:void(0);" onclick="YeniDialogBB('Mezuniyet Tez Kontrol Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetTezKontrolFormu&ID=@itemTd.RowID' , 'auto', 'modal-dialog modal-lg' )">
                                                             <i class="fa fa-file-pdf-o"></i> Tez Kontrol Formunu İndir
                                                         </a>
                                                     }

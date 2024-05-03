@@ -18,6 +18,14 @@ namespace LisansUstuBasvuruSistemi.Business
     public static class DonemProjesiBus
     {
 
+        public static bool IsProjeYurutucusu()
+        {
+            return !RoleNames.DonemProjesiEnstituBasvuruOnayYetkisi.InRoleCurrent() && !RoleNames.DonemProjesiEykYaGonder.InRoleCurrent() && !RoleNames.DonemProjesiSinavDegerlendirmeDuzeltme.InRoleCurrent();
+        }
+        public static bool IsYetkiliKullanici()
+        {
+            return RoleNames.DonemProjesiEnstituBasvuruOnayYetkisi.InRoleCurrent() || RoleNames.DonemProjesiEykYaGonder.InRoleCurrent() || RoleNames.DonemProjesiSinavDegerlendirmeDuzeltme.InRoleCurrent();
+        }
         public static IHtmlString ToDpBasvuruDurumView(this DpBasvuruDurumDto model)
         {
             model = model ?? new DpBasvuruDurumDto();
@@ -91,26 +99,33 @@ namespace LisansUstuBasvuruSistemi.Business
                     errorMessage.Add(projeYurutucuMessage);
                     return errorMessage;
                 }
+                if (donemProjesiBasvuru != null && !IsYetkiliKullanici())
+                {
+                    errorMessage.Add("Başvuru üzerinde değişiklik işlemi sadece Enstitü tarafından yapılabilir.");
+                    return errorMessage;
+                }
                 if (donemProjesiBasvuru == null && !entities.DonemProjesiMuafOgrencilers.Any(a => a.KullaniciID == basvuranKullanici.KullaniciID && a.OgrenciNo == basvuranKullanici.OgrenciNo))
                 {
                     var controlMessage = new List<string>();
-                    var minBasvuruObsAktifDonemNo = DonemProjesiAyar.OgrencininBasvuruYapabilecegiMinDonemNo.GetAyarDp(enstituKod).ToInt().Value;
-                    var maxBasvuruObsAktifDonemNo = DonemProjesiAyar.OgrencininBasvuruYapabilecegiMaxDonemNo.GetAyarDp(enstituKod).ToInt().Value;
+                    var basvuruYapilabilecekDomemNos = DonemProjesiAyar.GetBasvuruYapilabilecekDonemNos(enstituKod);
                     var alimnasiGerekenDersKodlari = DonemProjesiAyar.GetBasvuruDonemindeAlmasiGerekenDersKodlari(enstituKod);
 
-                    if (!(minBasvuruObsAktifDonemNo <= obsStudentInfo.OkuduguDonemNo && maxBasvuruObsAktifDonemNo >= obsStudentInfo.OkuduguDonemNo))
+                    if (!basvuruYapilabilecekDomemNos.Contains(obsStudentInfo.OkuduguDonemNo))
                     {
-                        controlMessage.Add("Aktif okunan dönem " + minBasvuruObsAktifDonemNo + ".dönem ve " + maxBasvuruObsAktifDonemNo + ".dönem aralığında olması gerekmektedir.");
+                        var domeStr = string.Join(",", basvuruYapilabilecekDomemNos.Select(s => s + ". Dönem").ToList());
+                        controlMessage.Add("Aktif okunan dönem " + domeStr + " dönemlerden biri olması gerekmektedir.");
                     }
 
                     if (alimnasiGerekenDersKodlari.Any())
                     {
-                        var aktifDonem = DateTime.Now.ToAkademikDonemBilgi();
+                        var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(enstituKod);
                         var alinanDersler = obsStudentInfo.TumDonemDersNotlari
                             .Where(p => p.DonemId == (aktifDonem.BaslangicYil + "" + aktifDonem.DonemId))
                             .Select(s => s.DersKoduNum).ToList();
                         var alinmayanDersKodlari = alimnasiGerekenDersKodlari.Where(a => alinanDersler.All(a2 => a2 != a)).ToList();
                         if (alinmayanDersKodlari.Any()) controlMessage.Add("Aktif olarak okuduğunuz " + aktifDonem.DonemAdiLong + " dönemi için " + string.Join(",", alinmayanDersKodlari) + " kodlu derslerin alınması gerekmetedir.");
+
+
                     }
                     if (controlMessage.Count > 0)
                     {
@@ -120,6 +135,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
 
                 }
+
 
 
             }
@@ -296,6 +312,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     BasvuruDonemID = s.BasvuruDonemID,
                     DonemAdi = s.BasvuruYil + "/" + (s.BasvuruYil + 1) + " " + s.Donemler.DonemAdi,
                     BasvuruTarihi = s.BasvuruTarihi,
+                    IsOgrenciTaahhut = s.IsOgrenciTaahhut,
                     ProjeBasligi = s.ProjeBasligi,
                     ProjeOzeti = s.ProjeOzeti,
                     TezDanismanID = s.TezDanismanID,
@@ -444,7 +461,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 if (!donemProjesiBasvuru.IsDanismanOnay.HasValue || donemProjesiBasvuru.IsDanismanOnay == false)
                 {
-                    donemProjesiBasvuru.DonemProjesiDurumID = DonemProjesiDurumEnum.DanismanOnaySureci;
+                    donemProjesiBasvuru.DonemProjesiDurumID = DonemProjesiDurumEnum.YurutucuOnaySureci;
                     donemProjesiBasvuru.DonemProjesi.IsYeniBasvuruYapilabilir = donemProjesiBasvuru.IsDanismanOnay == false;
                     entities.SaveChanges();
                     return;
@@ -461,12 +478,12 @@ namespace LisansUstuBasvuruSistemi.Business
                     entities.SaveChanges();
                     return;
                 }
-                donemProjesiBasvuru.DonemProjesi.IsYeniBasvuruYapilabilir = donemProjesiBasvuru.EYKYaGonderildi == false || donemProjesiBasvuru.EYKDaOnaylandi == false;
+                donemProjesiBasvuru.DonemProjesi.IsYeniBasvuruYapilabilir = donemProjesiBasvuru.EYKYaGonderildi == false;
                 donemProjesiBasvuru.DonemProjesiDurumID = DonemProjesiDurumEnum.EnstituYonetimKuruluSureci;
                 entities.SaveChanges();
             }
         }
-        public static void AddOrUpdateDonemProjesi(KmDonemProjesiDto model)
+        public static Guid AddOrUpdateDonemProjesi(KmDonemProjesiDto model)
         {
             using (var entities = new LubsDbEntities())
             {
@@ -499,33 +516,32 @@ namespace LisansUstuBasvuruSistemi.Business
                                                             sonDonemProjesi.EYKDaOnaylandi == false;
                     entities.SaveChanges();
                     LogIslemleri.LogEkle("DonemProjesiBasvuru", LogCrudType.Update, donemProjesi.ToJson());
+                    return donemProjesi.UniqueID;
 
                 }
-                else
+                donemProjesi = entities.DonemProjesis.Add(new DonemProjesi
                 {
+                    UniqueID = Guid.NewGuid(),
+                    EnstituKod = model.EnstituKod,
+                    BasvuruTarihi = DateTime.Now,
+                    KullaniciID = UserIdentity.Current.Id,
+                    OgrenimTipKod = kullanici.OgrenimTipKod.Value,
+                    OgrenciNo = kullanici.OgrenciNo,
+                    ProgramKod = kullanici.ProgramKod,
+                    KayitOgretimYiliBaslangic = kullanici.KayitYilBaslangic.Value,
+                    KayitOgretimYiliDonemID = kullanici.KayitDonemID.Value,
+                    KayitTarihi = kullanici.KayitTarihi.Value,
+                    TezDanismanID = kullanici.DanismanID.Value,
+                    IsYeniBasvuruYapilabilir = true,
+                    IslemTarihi = DateTime.Now,
+                    IslemYapanIP = UserIdentity.Ip,
+                    IslemYapanID = UserIdentity.Current.Id
 
-                    var kayit = entities.DonemProjesis.Add(new DonemProjesi
-                    {
-                        UniqueID = Guid.NewGuid(),
-                        EnstituKod = model.EnstituKod,
-                        BasvuruTarihi = DateTime.Now,
-                        KullaniciID = UserIdentity.Current.Id,
-                        OgrenimTipKod = kullanici.OgrenimTipKod.Value,
-                        OgrenciNo = kullanici.OgrenciNo,
-                        ProgramKod = kullanici.ProgramKod,
-                        KayitOgretimYiliBaslangic = kullanici.KayitYilBaslangic.Value,
-                        KayitOgretimYiliDonemID = kullanici.KayitDonemID.Value,
-                        KayitTarihi = kullanici.KayitTarihi.Value,
-                        TezDanismanID = kullanici.DanismanID.Value,
-                        IsYeniBasvuruYapilabilir = true,
-                        IslemTarihi = DateTime.Now,
-                        IslemYapanIP = UserIdentity.Ip,
-                        IslemYapanID = UserIdentity.Current.Id
+                });
+                entities.SaveChanges();
+                LogIslemleri.LogEkle("DonemProjesiBasvuru", LogCrudType.Insert, donemProjesi.ToJson());
+                return donemProjesi.UniqueID;
 
-                    });
-                    entities.SaveChanges();
-                    LogIslemleri.LogEkle("DonemProjesiBasvuru", LogCrudType.Insert, kayit.ToJson());
-                }
             }
         }
 
@@ -555,16 +571,15 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EnstituOnayiBekliyor, Caption = "Enstitü Onayı Bekleniyor" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EnstituTarafindanOnaylandi, Caption = "Enstitü Tarafından Onaylandı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EnstituTarafindanOnaylanmadi, Caption = "Enstitü Tarafından Onaylanmadı" });
-            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.DanismanOnayiBekliyor, Caption = "Danışman Onayı Bekleniyor" });
-            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.DanismanTarafindanOnaylandi, Caption = "Danışman Tarafından Onaylandı" });
-            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.DanismanTarafindanOnaylanmadi, Caption = "Danışman Tarafından Onaylanmadı" });
+            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.YurutucuOnayiBekliyor, Caption = "Proje Yürütücüsü Onayı Bekleniyor" });
+            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.YurutucuTarafindanOnaylandi, Caption = "Proje Yürütücüsü Tarafından Onaylandı" });
+            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.YurutucuTarafindanOnaylanmadi, Caption = "Proje Yürütücüsü Tarafından Onaylanmadı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.JuriSinavOlusturmaSureci, Caption = "Jüri/Sınav Oluşturma Sürecinde" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.SinavDegerlendirmeSureci, Caption = "Sınav Değerlendirme Sürecinde" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykYaGonderimOnayiBekleniyor, Caption = "EYK'ya Gönderimi Bekleniyor" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykYaGonderimiOnaylandi, Caption = "EYK'ya Gönderimi Onaylandı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykYaGonderimiOnaylanmadi, Caption = "EYK'ya Gönderimi Onaylanmadı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykYaHazirlandi, Caption = "EYK'ya Hazırlandı" });
-            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykDaOnayBekleniyor, Caption = "EYK'da Onay Bekleniyor" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykDaOnaylandi, Caption = "EYK'da Onaylandı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykDaOnaylanmadi, Caption = "EYK'da Onaylanmadı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.BasariliOlanlar, Caption = "Başarılı Olanlar" });
@@ -615,6 +630,12 @@ namespace LisansUstuBasvuruSistemi.Business
             return MailSenderDp.SendMailSinavSonucBilgisi(donemProjesiBasvuruId);
         }
 
+
+
+        public static MmMessage SendMailEykOnaylanmadi(int donemProjesiBasvuruId, bool isEykYaOrEykDa)
+        {
+            return MailSenderDp.SendMailEykOnaylanmadi(donemProjesiBasvuruId, isEykYaOrEykDa);
+        }
 
     }
 }

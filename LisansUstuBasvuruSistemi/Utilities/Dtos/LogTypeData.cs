@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
@@ -14,13 +11,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
             var dct = new List<LogTypeItem>
             {
-                new LogTypeItem { BilgiTipID = BilgiTipiEnum.Hata, BilgiTipAdi = "Hata", BilgiTipCls = "primary" },
-                new LogTypeItem { BilgiTipID = BilgiTipiEnum.Uyarı, BilgiTipAdi = "Uyarı", BilgiTipCls = "warning" },
-                new LogTypeItem { BilgiTipID = BilgiTipiEnum.Kritik, BilgiTipAdi = "Kritik Durum", BilgiTipCls = "danger" },
-                new LogTypeItem { BilgiTipID = BilgiTipiEnum.OnemsizHata, BilgiTipAdi = "Önemsiz Hata", BilgiTipCls = "default" },
-                new LogTypeItem { BilgiTipID = BilgiTipiEnum.Saldırı, BilgiTipAdi = "Saldırı", BilgiTipCls = "danger" },
-                new LogTypeItem { BilgiTipID = BilgiTipiEnum.LoginHatalari, BilgiTipAdi = "loginHatalari", BilgiTipCls = "info" },
-                new LogTypeItem { BilgiTipID = BilgiTipiEnum.Bilgi, BilgiTipAdi = "Bilgi", BilgiTipCls = "success" }
+                new LogTypeItem { BilgiTipId = BilgiTipiEnum.Hata, BilgiTipAdi = "Hata", BilgiTipCls = "primary" },
+                new LogTypeItem { BilgiTipId = BilgiTipiEnum.Uyarı, BilgiTipAdi = "Uyarı", BilgiTipCls = "warning" },
+                new LogTypeItem { BilgiTipId = BilgiTipiEnum.Kritik, BilgiTipAdi = "Kritik Durum", BilgiTipCls = "danger" },
+                new LogTypeItem { BilgiTipId = BilgiTipiEnum.OnemsizHata, BilgiTipAdi = "Önemsiz Hata", BilgiTipCls = "default" },
+                new LogTypeItem { BilgiTipId = BilgiTipiEnum.Saldırı, BilgiTipAdi = "Saldırı", BilgiTipCls = "danger" },
+                new LogTypeItem { BilgiTipId = BilgiTipiEnum.LoginHatalari, BilgiTipAdi = "loginHatalari", BilgiTipCls = "info" },
+                new LogTypeItem { BilgiTipId = BilgiTipiEnum.Bilgi, BilgiTipAdi = "Bilgi", BilgiTipCls = "success" }
             };
             LogTipiData = dct;
              
@@ -28,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     }
     public class LogTypeItem
     {
-        public int BilgiTipID { get; set; }
+        public int BilgiTipId { get; set; }
         public string BilgiTipAdi { get; set; }
         public string BilgiTipCls { get; set; }
     }

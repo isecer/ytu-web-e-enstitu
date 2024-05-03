@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="panel-footer" style="text-align:center;padding-top:1px;padding-bottom:1px;">
-                <a href="javascript:void(0);" onclick="bsSayisalRapor()" class="btn btn-success"><span class="fa fa-bar-chart-o"></span> Rapor Al</a>
+                <a href="javascript:void(0);" onclick="BsSayisalRapor()" class="btn btn-success"><span class="fa fa-bar-chart-o"></span> Rapor Al</a>
             </div>
         </div>
     </div>
@@ -41,13 +41,13 @@
 </div>
 
 <script>
-    function bsSayisalRapor() {
+    function BsSayisalRapor() {
         var id = $('#BasvuruSurecID').val();
         if (id == null || id == "") {
             alert("Akademik Tarih Seçiniz");
             return;
         } 
-        yeniDialogBBRprLansCape(null, 'Başvuru Süreci Sayısal Raporu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=' +@RaporTipiEnum.BasvuruSonucSayisal +'&BasvuruSurecID=' + id, 'auto','1200', 'modal-dialog modal-lg')
+        YeniDialogBBRprLansCape('Başvuru Süreci Sayısal Raporu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=' +@RaporTipiEnum.BasvuruSonucSayisal +'&BasvuruSurecID=' + id, 'auto','1200', 'modal-dialog modal-lg')
                
     }
 </script>

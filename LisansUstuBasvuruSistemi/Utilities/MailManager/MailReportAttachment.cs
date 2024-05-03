@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Mail;
 using DevExpress.XtraReports.UI;
+using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
@@ -93,6 +94,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
         {
             return CreateReportToMailAttachment(new RprTijDegisiklikFormu_FR1460(tijBasvuruOneriId));
         }
+        public static List<Attachment> GetDpSinavTutanagiAttachments(int donemProjesiBasvuruId, bool showTutanakDetay)
+        {
+            if (showTutanakDetay)
+            {
+                return CreateReportToMailAttachment(new RprDpSinavTutanakFormu_FR0366(donemProjesiBasvuruId),
+                    new RprDpSinavTutanakFormuDetay_FR0366(donemProjesiBasvuruId));
+            }
+            return CreateReportToMailAttachment(new RprDpSinavTutanakFormu_FR0366(donemProjesiBasvuruId));
+        }
         public static List<Attachment> CopyAttachments(List<Attachment> originalAttachments)
         {
             // Orijinal Attachment dizisini kopyala
@@ -108,7 +118,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
             return copiedAttachments;
         }
-     
+
         private static List<Attachment> CreateReportToMailAttachment(params XtraReport[] reports)
         {
             if (reports == null || reports.Length == 0)
@@ -122,7 +132,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 var subReport = reports[i];
                 subReport.CreateDocument();
                 masterReport.Pages.AddRange(subReport.Pages);
-            } 
+            }
             masterReport.DisplayName += ".pdf";
             masterReport.ExportOptions.Pdf.Compressed = true;
 

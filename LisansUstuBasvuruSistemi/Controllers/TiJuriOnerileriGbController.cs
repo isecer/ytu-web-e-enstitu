@@ -1294,18 +1294,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                             : tijBasvuru.TijBasvuruOneris.Where(p => (p.IsObsData || p.EYKDaOnaylandi == true) && p.TijBasvuruOneriID != tijBasvuruOneri.TijBasvuruOneriID).OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault()
 
                          where tijBasvuru.EnstituKod == enstituKod &&
-                               enstituOnayDurumId == 1 ? (
-                                                        tijBasvuruOneri.EYKYaGonderildi == true &&
-                                                        tijBasvuruOneri.EYKYaGonderildiIslemTarihi >= baslangicTarihi &&
-                                                        tijBasvuruOneri.EYKYaGonderildiIslemTarihi <= bitisTarihi)
-                                                    : (enstituOnayDurumId == 2 ? (
-                                                                                tijBasvuruOneri.EYKYaHazirlandi == true &&
-                                                                                tijBasvuruOneri.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&
-                                                                                tijBasvuruOneri.EYKYaHazirlandiIslemTarihi <= bitisTarihi)
-                                                                            :
-                                                                               (tijBasvuruOneri.EYKDaOnaylandi == true &&
-                                                                                    tijBasvuruOneri.EYKTarihi >= baslangicTarihi &&
-                                                                                    tijBasvuruOneri.EYKTarihi <= bitisTarihi)
+                               enstituOnayDurumId == 1 ? tijBasvuruOneri.EYKYaGonderildi == true &&
+                                                         !tijBasvuruOneri.EYKYaHazirlandi.HasValue &&
+                                                         tijBasvuruOneri.EYKYaGonderildiIslemTarihi >= baslangicTarihi &&
+                                                         tijBasvuruOneri.EYKYaGonderildiIslemTarihi <= bitisTarihi
+                                                      : 
+                                                        (enstituOnayDurumId == 2 ? tijBasvuruOneri.EYKYaHazirlandi == true &&
+                                                                                   !tijBasvuruOneri.EYKDaOnaylandi.HasValue &&
+                                                                                   tijBasvuruOneri.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&
+                                                                                   tijBasvuruOneri.EYKYaHazirlandiIslemTarihi <= bitisTarihi
+                                                                                 :
+                                                                                   tijBasvuruOneri.EYKDaOnaylandi == true &&
+                                                                                   tijBasvuruOneri.EYKYaHazirlandi == true &&
+                                                                                   tijBasvuruOneri.EYKTarihi >= baslangicTarihi &&
+                                                                                   tijBasvuruOneri.EYKTarihi <= bitisTarihi
                                                                                 ) &&
                                tijBasvuruOneri.TijFormTipleri.IsDegisiklik == isDegisiklik
                          select new

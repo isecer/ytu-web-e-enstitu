@@ -50,6 +50,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 
         public const byte TezOneriSavunmaFormu = 70;
 
+        public const byte DonemProjesiSinaviDegerlendirmeFormu = 80;
 
     }
 }

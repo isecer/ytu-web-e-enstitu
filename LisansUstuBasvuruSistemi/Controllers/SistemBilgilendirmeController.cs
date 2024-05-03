@@ -54,8 +54,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.BilgiTipi.HasValue) q = q.Where(p => p.BilgiTipi == model.BilgiTipi);
             else
             {
-                var bilgiTipIds = btip.LogTipiData.Where(p => p.BilgiTipID != BilgiTipiEnum.Bilgi)
-                    .Select(s => s.BilgiTipID).ToList();
+                var bilgiTipIds = btip.LogTipiData.Where(p => p.BilgiTipId != BilgiTipiEnum.Bilgi)
+                    .Select(s => s.BilgiTipId).ToList();
                 q = q.Where(p => bilgiTipIds.Contains(p.BilgiTipi));
 
             }
@@ -79,7 +79,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemZamani = s.IslemTarihi,
                 IpAdresi = s.IslemYapanIP
             }).ToArray();
-            ViewBag.BilgiTipi = new SelectList(btip.LogTipiData.Select(s => new { s.BilgiTipID, s.BilgiTipAdi }).ToList(), "BilgiTipID", "BilgiTipAdi", model.BilgiTipi);
+            ViewBag.BilgiTipi = new SelectList(btip.LogTipiData.Select(s => new { BilgiTipID = s.BilgiTipId, s.BilgiTipAdi }).ToList(), "BilgiTipID", "BilgiTipAdi", model.BilgiTipi);
             ViewBag.IndexModel = indexModel;
             return View(model);
         }

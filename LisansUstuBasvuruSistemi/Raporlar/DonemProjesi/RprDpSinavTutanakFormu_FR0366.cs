@@ -1,110 +1,79 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.DonemProjesi
 {
     public partial class RprDpSinavTutanakFormu_FR0366 : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprDpSinavTutanakFormu_FR0366(int toBasvuruSavunmaId)
+        public RprDpSinavTutanakFormu_FR0366(int donemProjesiBasvuruId)
         {
             InitializeComponent();
-
-            using (var  entities = new LubsDbEntities())
+            using (var entities = new LubsDbEntities())
             {
+                var donemProjesiBasvuru = entities.DonemProjesiBasvurus.First(p => p.DonemProjesiBasvuruID == donemProjesiBasvuruId);
+                var donemProjesi = donemProjesiBasvuru.DonemProjesi;
+                var sinav = donemProjesiBasvuru.SRTalepleris.First();
+                var ogrenci = donemProjesi.Kullanicilar;
+                var enstL = donemProjesi.Enstituler;
+                var prgL = donemProjesi.Programlar;
+                var abdL = donemProjesi.Programlar.AnabilimDallari;
+                cellOgrenciNo.Text = donemProjesi.OgrenciNo;
+                cellOgrenciAdSoyad.Text = ogrenci.Ad + " " + ogrenci.Soyad;
+                cellOgrenciEnstituAdi.Text = enstL.EnstituAd;
+                cellOgrenciAnabilimDaliAdi.Text = abdL.AnabilimDaliAdi;
+                cellOgrenciProgramAdi.Text = prgL.ProgramAdi;
+                cellOgrenciKayitDonemi.Text = donemProjesi.KayitOgretimYiliBaslangic + " - " + (donemProjesi.KayitOgretimYiliBaslangic + 1) + " / " + (donemProjesi.KayitOgretimYiliDonemID == 1 ? "Güz" : "Bahar") + " (" + (donemProjesi.KayitOgretimYiliDonemID == 1 ? "Fall" : "Spring") + ")";
 
 
-                var data = (from s in entities.ToBasvuruSavunmas
-                            join sr in entities.SRTalepleris on s.ToBasvuruSavunmaID equals sr.ToBasvuruSavunmaID
-                            join mb in entities.ToBasvurus on s.ToBasvuruID equals mb.ToBasvuruID
-                            join k in entities.Kullanicilars on mb.KullaniciID equals k.KullaniciID
-                            join e in entities.Enstitulers on mb.EnstituKod equals e.EnstituKod
-                            join prg in entities.Programlars on mb.ProgramKod equals prg.ProgramKod
-                            join abd in entities.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                            where s.ToBasvuruSavunmaID == toBasvuruSavunmaId
-                            select new
-                            {
-                                k.OgrenciNo,
-                                s.FormKodu,
-                                mb.YeterlikSozluSinavTarihi,
-                                AdSoyad = k.Ad + " " + k.Soyad,
-                                e.EnstituAd,
-                                abd.AnabilimDaliAdi,
-                                prg.ProgramAdi,
-                                OgrenciKayitDonemi = mb.KayitOgretimYiliBaslangic + " - " + (mb.KayitOgretimYiliBaslangic + 1) + " / " + (mb.KayitOgretimYiliDonemID == 1 ? "Güz" : "Bahar") + " (" + (mb.KayitOgretimYiliDonemID == 1 ? "Fall" : "Spring") + ")",
-                                s.IsYokDrBursiyeriVar,
-                                YokDrBursiyeri = s.IsYokDrBursiyeriVar ? "Evet (Yes)" : "Hayır (No)",
-                                YokDrOncelikliAlan = s.IsYokDrBursiyeriVar ? s.YokDrOncelikliAlan : "",
-                                TezDili = s.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)",
-                                ToplantiSekli = sr.IsOnline ? "Çevrimiçi\r\n(Online)" : "Yüz yüze\r\n(Face-to-face)",
-                                ToplantiTarihi = sr.Tarih,
-                                ToplantiSaati = sr.BasSaat,
-                                Toplantiyeri = sr.SalonAdi,
-                                TezIzlemeRaporDonemi = s.DonemBaslangicYil + " - " + (s.DonemBaslangicYil + 1) + " / " + (s.DonemID == 1 ? "Güz" : "Bahar") + " (" + (s.DonemID == 1 ? "Fall" : "Spring") + ")",
-                                KomiteCount = s.ToBasvuruSavunmaKomites.Count,
-                                IsTezIzlemeRaporuAltAlanUygun = s.ToBasvuruSavunmaKomites.Any(p => p.IsTezDanismani && p.IsCalismaRaporuAltAlanUygun == true),
-                                s.ToBasvuruSavunmaDurumID,
-                                s.IsOyBirligiOrCoklugu,
-                                Danisman = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.IsTezDanismani),
-                                TikUyesi1 = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.TikNum == 1),
-                                TikUyesi2 = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.TikNum == 2),
-                                s.YeniTezBaslikTr,
-                                s.YeniTezBaslikEn,
-                                urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TOSF_" + s.ToBasvuruSavunmaID + "_" + s.UniqueID
-                            }).First();
-
-                this.DisplayName = "FR-0348 DOKTORA TEZ ÖNERİ FORMU";
-                cellFormKodu.Text = "Form Kodu: " + data.FormKodu;
-                xrQRCode.ImageUrl = data.urlAdd;
-                xrQRCode.Image = data.urlAdd.CreateQrCode();
-                 
-                cellOgrenciNo.Text = data.OgrenciNo;
-                cellOgrenciAdSoyad.Text = data.AdSoyad;
-                cellOgrenciEnstituAdi.Text = data.EnstituAd;
-                cellOgrenciAnabilimDaliAdi.Text = data.AnabilimDaliAdi;
-                cellOgrenciProgramAdi.Text = data.ProgramAdi; 
-                cellDonemProjesiAdi.Text = data.YokDrOncelikliAlan;
-                cellTezDili.Text = data.TezDili;
-                cellToplantiSekli.Text = data.ToplantiSekli;
-                cellToplantiTarihi.Text = data.ToplantiTarihi.ToLongDateString() + "\n\r" + $"{data.ToplantiSaati:hh\\:mm}";
-                cellToplantiyeri.Text = data.Toplantiyeri;
-                if (data.IsYokDrBursiyeriVar)
+                cellDonemProjesiBaslik.Text = donemProjesiBasvuru.ProjeBasligi;
+                cellEnFazlaTekKaynakOrani.Text = donemProjesiBasvuru.TekKaynakOrani + " %";
+                cellToplamKaynakOrani.Text = donemProjesiBasvuru.ToplamKaynakOrani + " %";
+                if (sinav.IsOnline)
                 {
-                    cellTezYok2000BursAltAlanUyumu.Text = (data.IsTezIzlemeRaporuAltAlanUygun ? "UYGUN " : "UYGUN DEĞİL") + "\r\n(" + (data.IsTezIzlemeRaporuAltAlanUygun ? "COMPATIBLE " : "INCOMPATIBLE") + ")";
+                    cellToplantiYeri.Text = "Online";
                 }
-                else cellTezYok2000BursAltAlanUyumu.Text = "";
+                else
+                {
+                    cellToplantiYeri.Text = sinav.SRSalonID.HasValue ? sinav.SRSalonlar.SalonAdi : sinav.SalonAdi;
+                }
+                cellToplantiTarihi.Text = sinav.Tarih.ToFormatDate();
+                cellToplantiSaati.Text = $"{sinav.BasSaat:hh\\:mm}";
 
 
+                var uyeler = donemProjesiBasvuru.DonemProjesiJurileris.ToList();
 
-                var strDurumAdiTr =
-                    data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
-                        ? "KABUL EDİLDİ"
-                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
-                            ? "RET EDİLDİ"
-                            : "DÜZELTME TALEP EDİLDİ");
-                var strDurumAdiEn =
-                    data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
-                        ? "ACCEPTED"
-                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
-                            ? "REJECTED"
-                            : "REVISION");
+                var danisman = uyeler.First(p => p.IsTezDanismani);
+                var juriler = uyeler.Where(p => !p.IsTezDanismani).ToList();
+                var juri1 = juriler[0];
+                var juri2 = juriler[1];
 
-                cellTezDegerlendirmeSonucu.Text = (data.IsOyBirligiOrCoklugu == true ? "OY BİRLİĞİ İLE " : "OY ÇOKLUĞU İLE ") + strDurumAdiTr +
-                                                  "\r\n(" + (data.IsOyBirligiOrCoklugu == true ? "UNANIMOUSLY " : "BY MAJORITY ") + strDurumAdiEn + ")";
+                cellProjeYurutucuUnvanAdSoyad.Text = danisman.UnvanAdi + " " + danisman.AdSoyad;
+                cellProjeYurutucuAbdUniversiteAdi.Text = danisman.AnabilimdaliAdi + "\r\n" + GlobalSistemSetting.UniversiteAdi;
 
 
-                cellYeniTezBaslikTr.Text = data.YeniTezBaslikTr;
-                cellYeniTezBaslikEn.Text = data.YeniTezBaslikEn;
+                cellJuriUyesi1AdSoyad.Text = juri1.UnvanAdi + " " + juri1.AdSoyad;
+                cellJuriUyesi1AbdUniversiteAdi.Text = juri1.AnabilimdaliAdi + "\r\n" + GlobalSistemSetting.UniversiteAdi;
 
-                cellDanismanUnvanAdSoyad.Text = data.Danisman.UnvanAdi + "\r\n" + data.Danisman.AdSoyad;
-                cellDanismanAbdUniversiteAdi.Text = data.Danisman.AnabilimdaliAdi + " \r\n" + data.Danisman.UniversiteAdi;
-                cellUye1UnvanAdSoyad.Text = data.TikUyesi1.UnvanAdi + "\r\n" + data.TikUyesi1.AdSoyad;
-                cellUye1AbdUniversiteAdi.Text = data.TikUyesi1.AnabilimdaliAdi + " \r\n" + data.TikUyesi1.UniversiteAdi;
-                cellUye2UnvanAdSoyad.Text = data.TikUyesi2.UnvanAdi + "\r\n " + data.TikUyesi2.AdSoyad;
-                cellUye2AbdUniversiteAdi.Text = data.TikUyesi2.AnabilimdaliAdi + "\r\n" + data.TikUyesi2.UniversiteAdi;
-            
+                cellJuriUyesi2AdSoyad.Text = juri2.UnvanAdi + " " + juri2.AdSoyad;
+                cellJuriUyesi2AbdUniversiteAdi.Text = juri2.AnabilimdaliAdi + "\r\n" + GlobalSistemSetting.UniversiteAdi;
+
+                DisplayName = (ogrenci.Ad + " " + ogrenci.Soyad) + " FR-0366 Dönem Projesi Sınavı Sonuç Tutanaği";
+
+                chkOyBirligi.Checked = donemProjesiBasvuru.IsOyBirligiOrCoklugu == true;
+                chkOyCoklugu.Checked = donemProjesiBasvuru.IsOyBirligiOrCoklugu == false;
+                chkBasarili.Checked = donemProjesiBasvuru.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili;
+                chkBasarisiz.Checked = donemProjesiBasvuru.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarisiz;
+                chkUzatma.Checked = donemProjesiBasvuru.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.BasarisizKatilmadi;
+
+                cellFormKodu.Text = "Form Kodu: " + donemProjesiBasvuru.FormKodu;
+                var qrUlr = enstL.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "DPSF_" + donemProjesiBasvuru.DonemProjesiBasvuruID + "_" + donemProjesiBasvuru.UniqueID;
+                xrQRCode.ImageUrl = qrUlr;
+                xrQRCode.Image = qrUlr.CreateQrCode();
 
 
 

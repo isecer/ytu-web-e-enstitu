@@ -126,7 +126,6 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                             if (ogrenciDersNots.Any() && ogrenciDersNots[0].Sucess)
                             {
 
-                                var aktifDonem = DateTime.Now.ToAkademikDonemBilgi();
 
                                 model.TumDonemDersNotlari = ogrenciDersNots[0].ogrencidersnot.Select(s =>
                                     new StudentDersNotModel
@@ -145,8 +144,8 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
                                     }).ToList();
 
-                                var donemProjesiDersKodu =
-                                    DonemProjesiAyar.DonemProjesiDersKodu.GetAyarDp(model.OgrenciInfo.ENSTITU_ID);
+                                var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(model.OgrenciInfo.ENSTITU_ID);
+                                var donemProjesiDersKodu =  DonemProjesiAyar.DonemProjesiDersKodu.GetAyarDp(model.OgrenciInfo.ENSTITU_ID);
                                 if (model.OgrenciInfo.OGRENIMSEVIYE_ID == OgrenimTipi.TezsizYuksekLisans.ToString() && !donemProjesiDersKodu.IsNullOrWhiteSpace())
                                 {
                                     //Tezsiz yl için dönem projesi yürütücüsü bulunup danışman olarak atanıyor

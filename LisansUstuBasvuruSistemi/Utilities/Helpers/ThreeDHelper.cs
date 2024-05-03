@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
@@ -38,7 +35,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             strScript.Append("v" + formId + ".submit();");
             strScript.Append("</script>");
 
-            return strForm.ToString() + strScript.ToString();
+            return strForm + strScript.ToString();
         }
 
         public static string ConvertSha1(string text)

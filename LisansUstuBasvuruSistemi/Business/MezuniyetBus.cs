@@ -18,8 +18,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class MezuniyetBus
     {
-        // tezli Yl öğrencilerinin mezuniyet başvurusu için belli bir dönem okuyu ondan sonra başvurabilirler 31-03-2016 tarihi itibari ile 4 dönem okumaları gerekir.
-        public static DateTime MezuniyetDonemKontrolKriterBasTar = new DateTime(2016, 03, 31);
+        
 
         public static int? GetMezuniyetAktifSurecId(string enstituKod, int? mezuniyetSurecId = null)
         {
@@ -315,12 +314,12 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
 
-                    if (!basvuruKriterleri.AktifDonemEtikNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu.ToLastNot()))
+                    if (!basvuruKriterleri.AktifDonemEtikNotKriteri.IsNullOrWhiteSpace() && !HarfNotuHelper.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu.ToLastNot()))
                     {
                         subMessages.Add("Etik dersi için ders notunuzun " + basvuruKriterleri.AktifDonemEtikNotKriteri + " veya daha üstü bir not olması gerekmektedir.");
                     }
 
-                    if (!basvuruKriterleri.AktifDonemSeminerNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
+                    if (!basvuruKriterleri.AktifDonemSeminerNotKriteri.IsNullOrWhiteSpace() && !HarfNotuHelper.IsHarfNotuBuyukEsit(basvuruKriterleri.AktifDonemSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
                     {
                         subMessages.Add("Seminer dersi için ders notunuzun " + basvuruKriterleri.AktifDonemSeminerNotKriteri + " veya daha üstü bir not olması gerekmektedir.");
                     }
@@ -1240,8 +1239,8 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 foreach (var item in model.OgrenimTipKriterList)
                 {
-                    item.SlistEtikNots = new SelectList(YeterlikBus.NotDegerleri, item.AktifDonemEtikNotKriteri);
-                    item.SlistSeminerNots = new SelectList(YeterlikBus.NotDegerleri, item.AktifDonemSeminerNotKriteri);
+                    item.SlistEtikNots = new SelectList(HarfNotuHelper.NotDegerleri, item.AktifDonemEtikNotKriteri);
+                    item.SlistSeminerNots = new SelectList(HarfNotuHelper.NotDegerleri, item.AktifDonemSeminerNotKriteri);
                 }
 
                 if (mezuniyetSurecId <= 0 && sonMezuniyetSurecId <= 0)
@@ -1756,7 +1755,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return MailSenderMezuniyet.SendMailMezuniyetSinavSonucu(srTalepId, mezuniyetSinavDurumId);
         }
         public static MmMessage SendMailMezuniyetTezSablonKontrol(int mezuniyetBasvurulariTezDosyaId, int sablonTipId, string aciklama = "")
-        {
+        { 
             return MailSenderMezuniyet.SendMailMezuniyetTezSablonKontrol(mezuniyetBasvurulariTezDosyaId, sablonTipId, aciklama);
         }
     }

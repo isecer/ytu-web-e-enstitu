@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -9,47 +8,34 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static class UrlInfoHelper
     {
+        
         public static UrlInfoModel ToUrlInfo(this Uri uri)
         {
             var model = new UrlInfoModel
             {
                 Root = GlobalSistemSetting.GetRoot()
             };
-            var webSite = uri.AbsoluteUri.Replace(uri.AbsolutePath, "");
 
-            webSite = webSite.IndexOf("?", StringComparison.Ordinal) > -1 ? webSite.Substring(0, webSite.IndexOf("?", StringComparison.Ordinal)) : webSite;
-            webSite = webSite.EndsWith("/") ? webSite : webSite + "/";
-            var apath = uri.AbsolutePath.IndexOf("?", StringComparison.Ordinal) > -1 ? uri.AbsolutePath.Substring(0, uri.AbsolutePath.IndexOf("?", StringComparison.Ordinal)) : uri.AbsolutePath;
-            var spl = apath.Split('/').Where(p => p != "").Select((item, inx) => new { item, inx }).ToList();
-            var selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (EnstituBus.IsContainsEnstitu(spl.First().item) ? spl.First().item : "FBE")).ToLower();
+            var webSite = uri.AbsoluteUri.Replace(uri.AbsolutePath, "");
+            webSite = webSite.Split('?')[0].TrimEnd('/') + "/";
+
+            var apath = uri.AbsolutePath.Split('?')[0];
+            var spl = apath.Split('/').Where(p => !string.IsNullOrEmpty(p)).ToList();
+            var selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (EnstituBus.IsContainsEnstitu(spl.First()) ? spl.First() : "FBE")).ToLower();
 
             model.Query = uri.Query;
             model.EnstituKisaAd = selectedEnstKisAd;
             var enst = (selectedEnstKisAd + "/").ToLower();
-            var tspl = new List<string>();
             model.FakeRoot = model.Root + enst;
             model.DefaultUri = webSite + enst;
-            var lstNoEqLnq = new List<string>() { selectedEnstKisAd };
-            var laspath = string.Join("/", spl.Where(p => !EnstituBus.IsContainsEnstitu(p.item)).Select(s => s.item));
-            foreach (var item in spl.Where(p => !lstNoEqLnq.Contains(p.item)).Select(s => s.item))
-            {
-                tspl.Add(item);
-            }
-            if (tspl.Count > 0)
-            {
 
-                apath = model.Root + enst + tspl[0] + "/Index";
-
-            }
-            else
-            {
-                apath = model.Root + enst + "home/index";
-            }
-            model.LastPath = laspath;
-            apath = apath.IndexOf("I", StringComparison.Ordinal) > -1 ? apath.Replace("I", "i").ToLower() : apath.ToLower();
-            model.AbsolutePath = apath;
+            var tspl = spl.Where(p => !selectedEnstKisAd.Equals(p)).ToList();
+            model.LastPath = string.Join("/", tspl.Where(p => !EnstituBus.IsContainsEnstitu(p)));
+            model.AbsolutePath = $"{model.Root}{enst}{(tspl.Count > 0 ? tspl[0] : "home")}/Index".Replace("I", "i").ToLower();
 
             return model;
         }
     }
+ 
+
 }

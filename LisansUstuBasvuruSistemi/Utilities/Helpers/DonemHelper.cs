@@ -1,6 +1,7 @@
 ﻿using System;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
@@ -47,6 +48,28 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return egitimOgretimDonemDto;
         }
 
-     
+
+        public static EgitimOgretimDonemDto ToDonemProjesiDonemBilgi(this DateTime date,string enstituKod)
+        {
+           
+            var egitimOgretimDonemDto = new EgitimOgretimDonemDto
+            {
+                BaharDonemiAylar = DonemProjesiAyar.GetBaharDonemiIcinSecilenAyNos(enstituKod)
+            };
+            if (egitimOgretimDonemDto.BaharDonemiAylar.Contains(date.Month))
+            {
+                egitimOgretimDonemDto.BaslangicYil = date.Year - 1;
+                egitimOgretimDonemDto.DonemId = AkademikDonemEnum.BaharYariyili;
+                egitimOgretimDonemDto.DonemAdi = "Bahar";
+            }
+            else
+            {
+                egitimOgretimDonemDto.BaslangicYil = date.Year;
+                egitimOgretimDonemDto.DonemId = AkademikDonemEnum.GuzYariyili;
+                egitimOgretimDonemDto.DonemAdi = "Güz";
+            }
+            return egitimOgretimDonemDto;
+        }
+
     }
 }
