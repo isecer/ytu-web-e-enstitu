@@ -8,7 +8,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static class FileHelper
-    { 
+    {
 
         public static bool IsSaveFileServer = SistemAyar.DosyalarSecilenKonumaArsivlensin.GetAyar().ToBoolean(false); //true;
         public static string FileServerUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi.GetAyar();//"http://194.27.98.10:81";
@@ -34,6 +34,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         {
             return IsSaveFileServer ? FileServerUrl + contentPath : urlHelper.Content(contentPath);
         }
+        public static string ContentFullPath(this string contentPath)
+        {
+            return IsSaveFileServer ? FileServerUrl + contentPath : HttpContext.Current.Server.MapPath("~" + contentPath);
+        }
+
         private static void Save(HttpPostedFileBase file, string saveFilePath)
         {
             if (IsSaveFileServer) SaveFileBasePath(file, saveFilePath);
@@ -164,7 +169,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         }
         public static void Delete(string filePath)
         {
-            if(filePath.IsNullOrWhiteSpace()) return;
+            if (filePath.IsNullOrWhiteSpace()) return;
             if (IsSaveFileServer) DeleteFileBasePath(filePath);
             else DeleteFile(filePath);
         }
