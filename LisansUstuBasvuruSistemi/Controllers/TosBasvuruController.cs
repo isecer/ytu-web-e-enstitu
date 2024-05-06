@@ -648,7 +648,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                         }
 
 

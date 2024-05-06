@@ -301,7 +301,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         donemProjesiBasvuru.IslemYapanIP = UserIdentity.Ip;
                         donemProjesiBasvuru.IslemYapanID = UserIdentity.Current.Id;
                         DonemProjesiBus.DonemProjesiDurumSet(donemProjesiBasvuru.DonemProjesiBasvuruID);
-                        _entities.SaveChanges();
+                        _entities.SaveChanges(); 
+                        LogIslemleri.LogEkle("DonemProjesiBasvuru", LogCrudType.Insert, donemProjesiBasvuru.ToJson());
                     }
                     else
                     {
@@ -392,8 +393,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                         donemProjesiBasvuru.DonemProjesi.IsYeniBasvuruYapilabilir = true;
-                        _entities.SRTalepleris.RemoveRange(donemProjesiBasvuru.SRTalepleris);
-                        _entities.DonemProjesiJurileris.RemoveRange(donemProjesiBasvuru.DonemProjesiJurileris);
+                        //_entities.SRTalepleris.RemoveRange(donemProjesiBasvuru.SRTalepleris);
+                        //_entities.DonemProjesiJurileris.RemoveRange(donemProjesiBasvuru.DonemProjesiJurileris);
                         _entities.DonemProjesiBasvurus.Remove(donemProjesiBasvuru);
                         _entities.SaveChanges();
                         mmMessage.Messages.Add(donemProjesiBasvuru.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Dönem Projesi başvurusu silindi!");
@@ -814,7 +815,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult RezervasyonAl(Guid donemProjesiBasvuruUniqueId)
         {
-            var toplantiYetki = RoleNames.DonemProjesiSinavOlusturmaYetkisi.InRoleCurrent();
+            var toplantiYetki = RoleNames.DonemProjesiSinaviOlusturmaYetkisi.InRoleCurrent();
             var donemProjesiBasvuru = _entities.DonemProjesiBasvurus.First(p => p.UniqueID == donemProjesiBasvuruUniqueId);
             var model = new SrTalepleriKayitDto();
             if (!toplantiYetki && donemProjesiBasvuru.TezDanismanID != UserIdentity.Current.Id) model.YetkisizErisim = true;
@@ -874,7 +875,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var donemProjesiBasvuru = _entities.DonemProjesiBasvurus.First(p => p.UniqueID == kModel.BasvuruUniqueId);
             var srTalep = donemProjesiBasvuru.SRTalepleris.FirstOrDefault();
-            var toplantiTalebiYap = RoleNames.DonemProjesiSinavOlusturmaYetkisi.InRoleCurrent();
+            var toplantiTalebiYap = RoleNames.DonemProjesiSinaviOlusturmaYetkisi.InRoleCurrent();
             if (!toplantiTalebiYap) kModel.YetkisizErisim = true;
 
 

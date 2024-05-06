@@ -177,12 +177,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     EykYaGonderilmeTarihi = s.TDOBasvuruDanisman?.EYKYaGonderildiIslemTarihi,
                     EYKYaHazirlandi = s.TDOBasvuruDanisman != null ? (s.EYKYaHazirlandi.HasValue ? (s.EYKYaHazirlandi.Value ? "EYK'ya Hazırlandı" : "EYK'ya Hazrılanmadı") : "EYK'ya Hazırlanması Bekleniyor") : "Danışman Yok",
                     EykYaHazirlanmaTarihi = s.TDOBasvuruDanisman?.EYKYaHazirlandiIslemTarihi,
-                    EYKDaOnaylandi = s.TDOBasvuruDanisman != null ? (s.EYKYaGonderildi.HasValue ? (s.EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Danışman Yok",
+                    EYKDaOnaylandi = s.TDOBasvuruDanisman != null ? (s.EYKDaOnaylandi.HasValue ? (s.EYKDaOnaylandi.Value ? "EYK'da Onaylandı" : "EYK'da Onaylanmadı") : "EYK'da Onay işlemi Bekleniyor") : "Danışman Yok",
                     EykDaOnaylanmaTarihi = s.TDOBasvuruDanisman?.EYKDaOnaylandiOnayTarihi,
                     EsDanismanAdSoyad = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanismen.Any(s2 => s2.TDOBasvuruEsDanismen.Any()) ? (s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad) : "Danışman Yok",
                     EsDanismanOnayladi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.DanismanOnayladi.HasValue ? (s.DanismanOnayladi.Value ? "Danışman Onayladı" : "Danışman Onaylamadı") : "Danışman Onayı Bekleniyor") : "Danışman Yok",
                     EsDanismanEYKYaGonderildi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Eş Danışman Yok",
-                    EsDanismanEYKDaOnaylandi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Eş Danışman Yok",
+                    EsDanismanEYKDaOnaylandi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKDaOnaylandi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKDaOnaylandi.Value ? "EYK'da Onaylandı" : "EYK'da Onaylanmadı") : "EYK'da Onay işlemi Bekleniyor") : "Eş Danışman Yok",
 
                 }).ToList();
                 gv.DataBind();

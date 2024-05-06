@@ -20,7 +20,7 @@
 </div>
 <div id="tblFilter" class="panel-body list-group list-group-contacts">
     <div style="max-height: 300px; width:100%; overflow:auto;">
-        @foreach (var item in Model.OrderByDescending(o => o.LoginTime))
+        @foreach (var item in Model.Where(p=>p.IsAuthenticated).OrderByDescending(o => o.LoginTime))
         {
             <a class="filterRw list-group-item" style="padding:1px;">
                 <table class="table table-striped" style="width:100%; margin:0px;">
@@ -58,8 +58,8 @@
     <table class="table" style="margin:0px;border-top:none;table-layout:fixed;">
         <tbody>
             <tr>
-                <td style="border-top:none;padding-right:0px;padding-left:2px;" class="text-left">Toplam Kullanıcı: @Model.Count()</td>
-                <td style="border-top: none; padding-right: 2px; padding-left: 0px;" class="text-right">Misafir: @Model.Where(p => !p.IsAuthenticated).Count()</td>
+                <td style="border-top:none;padding-right:0px;padding-left:2px;" class="text-left">Giriş Yapmış: @Model.Count(p => p.IsAuthenticated)</td>
+                <td style="border-top: none; padding-right: 2px; padding-left: 0px;" class="text-right">Misafir: @Model.Count(p => !p.IsAuthenticated)</td>
             </tr>
             <tr id="filterDetailRw">
                 <td colspan="2" style="border-top: none; padding-right: 2px; padding-left: 2px; " class="text-center" id="filtreKelime"></td>

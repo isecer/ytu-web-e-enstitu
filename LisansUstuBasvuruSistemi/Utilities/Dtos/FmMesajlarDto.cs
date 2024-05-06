@@ -27,6 +27,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int GrupNo { get; set; }
         public string GidenGelen { get; set; }
         public string EnstituAdi { get; set; }
+        public string EnstituKisaAd { get; set; }
         public string KategoriAdi { get; set; }
         public Guid? UserKey { get; set; }
         public string ResimAdi { get; set; }

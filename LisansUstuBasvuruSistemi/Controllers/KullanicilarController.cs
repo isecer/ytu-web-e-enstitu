@@ -743,7 +743,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             UserBus.SetUserRoles(kullaniciId, rolId, yetkiGrupId);
             MessageBox.Show("Yetkiler Kaydedildi", MessageBox.MessageType.Success);
             if (programYetkilerineGit) return RedirectToAction("KullaniciProgramYetkileri", new { id = kullaniciId, EKD = ekd });
-            else return RedirectToAction("Index");
+            return RedirectToAction("Index");
         }
         public ActionResult GetYetkiGrubuRolIDs(int id, int kullaniciId)
         {

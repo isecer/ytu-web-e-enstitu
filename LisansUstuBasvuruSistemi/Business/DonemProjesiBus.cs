@@ -194,9 +194,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
             using (var entities = new LubsDbEntities())
             {
-                var kayitYetki = RoleNames.DonemProjesiEnstituBasvuruOnayYetkisi.InRoleCurrent();
-                var donemProjesiBasvuru =
-                    entities.DonemProjesiBasvurus.FirstOrDefault(p => p.UniqueID == uniqueId);
+                var yetkiliKullanici = IsYetkiliKullanici();
+                var donemProjesiBasvuru = entities.DonemProjesiBasvurus.FirstOrDefault(p => p.UniqueID == uniqueId);
+
                 if (donemProjesiBasvuru == null)
                 {
                     msg.IsSuccess = false;
@@ -204,8 +204,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else
                 {
-                    if (!UserIdentity.Current.EnstituKods.Contains(donemProjesiBasvuru.DonemProjesi.EnstituKod) && kayitYetki &&
-                        donemProjesiBasvuru.DonemProjesi.KullaniciID != UserIdentity.Current.Id)
+                    if (!UserIdentity.Current.EnstituKods.Contains(donemProjesiBasvuru.DonemProjesi.EnstituKod) && yetkiliKullanici && donemProjesiBasvuru.DonemProjesi.KullaniciID != UserIdentity.Current.Id)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
@@ -216,10 +215,16 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.Messages.Add("Dönem Projesi başvuru süreci kapalı olduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
 
                     }
-                    else if (kayitYetki == false && donemProjesiBasvuru.DonemProjesi.KullaniciID != UserIdentity.Current.Id)
+                    else if (yetkiliKullanici == false && donemProjesiBasvuru.DonemProjesi.KullaniciID != UserIdentity.Current.Id)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
+                    }
+                    else if (donemProjesiBasvuru.DonemProjesiDurumID != DonemProjesiDurumEnum.EnstituOnaySureci || donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID.HasValue)
+                    {
+                        msg.IsSuccess = false;
+                        msg.Messages.Add(donemProjesiBasvuru.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Dönem Projesinin silinebilmesi için enstitü tarafından onay işlemi yapılmamış olması gerekmetekdir.");
+
                     }
                     else if (donemProjesiBasvuru.DonemProjesiDurumID != DonemProjesiDurumEnum.EnstituOnaySureci || donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID.HasValue)
                     {
@@ -515,7 +520,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                                             sonDonemProjesi.EYKYaGonderildi == false ||
                                                             sonDonemProjesi.EYKDaOnaylandi == false;
                     entities.SaveChanges();
-                    LogIslemleri.LogEkle("DonemProjesiBasvuru", LogCrudType.Update, donemProjesi.ToJson());
+                    LogIslemleri.LogEkle("DonemProjesi", LogCrudType.Update, donemProjesi.ToJson());
                     return donemProjesi.UniqueID;
 
                 }
@@ -539,7 +544,6 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 });
                 entities.SaveChanges();
-                LogIslemleri.LogEkle("DonemProjesiBasvuru", LogCrudType.Insert, donemProjesi.ToJson());
                 return donemProjesi.UniqueID;
 
             }

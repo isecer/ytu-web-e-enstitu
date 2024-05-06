@@ -258,7 +258,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Role(GorunurAdi = "Sınav Jürisi Oluşturma Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi sınavı için jüri listesi oluşturabilmeyi sağlayan yetkidir.", SiraNo = 10)]
         public const string DonemProjesiJuriOlusturmaYetkisi = "Dönem Projesi Jüri Oluşturma Yetkisi";
         [Role(GorunurAdi = "Sınav Oluşturma Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi sınavı için sınav oluşturabilmeyi sağlayan yetkidir.", SiraNo = 12)]
-        public const string DonemProjesiSinavOlusturmaYetkisi = "Dönem Projesi Sınav Oluşturma Yetkisi";
+        public const string DonemProjesiSinaviOlusturmaYetkisi = "Dönem Projesi Sınavı Oluşturma Yetkisi";
         [Role(GorunurAdi = "Jüri Değerlendirmesi Düzeltme Yetkisi", Kategori = "Dönem Projesi İşlemleri", Aciklama = "Bu yetki Dönem Projesi sınavından sonra değerlendirme işlemlerinin değiştirilebilmesini sağlayan yetkidir. Bu yetki ile toplantı tarihi günümüz tarihi öncesi olsa bile değerlendirme yapılabilir.", SiraNo = 18)]
         public const string DonemProjesiSinavDegerlendirmeDuzeltme = "Dönem Projesi Sınav Degerlendirme Düzeltme";
 

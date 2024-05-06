@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class MezuniyetBus
     {
-        
+
 
         public static int? GetMezuniyetAktifSurecId(string enstituKod, int? mezuniyetSurecId = null)
         {
@@ -903,6 +903,8 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezBaslikEn" });
 
+
+
             if (kModel.TezDanismanUnvani.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Tez Danışman Unvanı Seçiniz.");
@@ -918,36 +920,33 @@ namespace LisansUstuBasvuruSistemi.Business
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezDanismanAdi" });
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezDanismanUnvani" });
             }
-
-
-            if (!kModel.TezEsDanismanAdi.IsNullOrWhiteSpace() || !kModel.TezEsDanismanUnvani.IsNullOrWhiteSpace() || !kModel.TezEsDanismanEMail.IsNullOrWhiteSpace())
+            var esDanismanVerileri = new List<string> { kModel.TezEsDanismanAdi, kModel.TezEsDanismanUnvani, kModel.TezEsDanismanEMail };
+            if (esDanismanVerileri.Any(a => !a.IsNullOrWhiteSpace()))
             {
-                if (kModel.TezEsDanismanUnvani.IsNullOrWhiteSpace())
+                if (esDanismanVerileri.Any(a => a.IsNullOrWhiteSpace()))
                 {
-                    mmMessage.Messages.Add("Tez Eş Danışman Unvanı Seçiniz.");
+
+                    mmMessage.Messages.Add("Tez Eş Danışman bilgisi girilecekse eğer Eş Danışman Unvanı, Ad Soyad bilgisi ve Email bilgisinin tümü girilmelidir. Eğer girilmeyecekse bu bilgileri boş bırakınız.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanUnvani" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezEsDanismanUnvani" });
-
-                if (kModel.TezEsDanismanAdi.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("Tez Eş Danışman Adı Giriniz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanAdi" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezEsDanismanAdi" });
-                if (kModel.TezEsDanismanEMail.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("Eş Danışman E-Posta Bilgisini Giriniz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanEMail" });
 
                 }
-                else if (kModel.TezEsDanismanEMail.ToIsValidEmail())
+                else
                 {
-                    mmMessage.Messages.Add("Lütfen E-Posta Adres Tekrarını Uygun Formatta Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanEMail" });
+                    if (kModel.TezEsDanismanEMail.ToIsValidEmail())
+                    {
+                        mmMessage.Messages.Add("Lütfen Eş danışman E-Posta Adresi bilgisini Uygun Formatta Giriniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanEMail" });
 
+                    }
+                    else
+                    {
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezEsDanismanAdi" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezEsDanismanUnvani" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezEsDanismanEMail" });
+                    }
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezEsDanismanEMail" });
             }
             else
             {
@@ -1564,6 +1563,25 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+        public static List<CmbIntDto> GetCmbMezuniyetYayinDurumBasvuruYapIcin(bool bosSecimVar = false, bool tumu = false)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var entities = new LubsDbEntities())
+            {
+                var data = entities.MezuniyetYayinKontrolDurumlaris.Where(p => p.IsAktif && (tumu || p.BasvuranGorsun)).OrderBy(o => o.MezuniyetYayinKontrolDurumID).ToList();
+                foreach (var item in data)
+                {
+                    if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi)
+                        item.MezuniyetYayinKontrolDurumAdi = "Başvuruyu Onaylıyorum";
+                    else if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Taslak)
+                        item.MezuniyetYayinKontrolDurumAdi = "Başvuru Taslak Durumunda Kalsın";
+                    dct.Add(new CmbIntDto { Value = item.MezuniyetYayinKontrolDurumID, Caption = item.MezuniyetYayinKontrolDurumAdi });
+                }
+            }
+            return dct;
+
+        }
         public static List<CmbIntDto> GetCmbMezuniyetYayinDurum(bool bosSecimVar = false, bool tumu = false)
         {
             var dct = new List<CmbIntDto>();
@@ -1755,7 +1773,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return MailSenderMezuniyet.SendMailMezuniyetSinavSonucu(srTalepId, mezuniyetSinavDurumId);
         }
         public static MmMessage SendMailMezuniyetTezSablonKontrol(int mezuniyetBasvurulariTezDosyaId, int sablonTipId, string aciklama = "")
-        { 
+        {
             return MailSenderMezuniyet.SendMailMezuniyetTezSablonKontrol(mezuniyetBasvurulariTezDosyaId, sablonTipId, aciklama);
         }
     }

@@ -120,18 +120,21 @@ namespace BiskaUtil
                     var attr = (RoleAttribute)oAttr;
                     var oVal = field.GetValue(null);
                     if (oVal == null) continue;
-                   
+
                     var key = string.IsNullOrWhiteSpace(attr.RolAdi) ? oVal.ToString() : attr.RolAdi;
                     attr.RolAdi = key;
                     var rolKey = field.DeclaringType?.FullName + "." + field.Name;
                     if (attr.RolID == 0) attr.RolID = 1000000000 + ToCrc16(rolKey);
+
                     attr.SiraNo = siraNo++;
                     roles.Add(attr);
                 }
-            } 
+            }
+
+          
             return roles.ToArray();
         }
-    
+
         public static MenuAttribute[] Menus()
         {
             var fields = MenuFields();

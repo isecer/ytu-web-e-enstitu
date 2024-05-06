@@ -1,6 +1,6 @@
-﻿@using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model KmMezuniyetSureciOgrenimTipModel
 @{
     Layout = null;
@@ -61,7 +61,7 @@
                             <div class="form-group">
                                 <select class="form-control" name="AktifDonemEtikNotKriteri">
                                     <option value=""></option>
-                                    @foreach (var itemNot in YeterlikBus.NotDegerleri)
+                                    @foreach (var itemNot in HarfNotuHelper.NotDegerleri)
                                     {
                                         <option @((itemNot == item.AktifDonemEtikNotKriteri).ToSelected())>@itemNot</option>
 
@@ -73,7 +73,7 @@
                             <div class="form-group">
                                 <select class="form-control" name="AktifDonemSeminerNotKriteri">
                                     <option value=""></option>
-                                    @foreach (var itemNot in YeterlikBus.NotDegerleri)
+                                    @foreach (var itemNot in HarfNotuHelper.NotDegerleri)
                                     {
                                         <option @((itemNot == item.AktifDonemSeminerNotKriteri).ToSelected())>@itemNot</option>
 

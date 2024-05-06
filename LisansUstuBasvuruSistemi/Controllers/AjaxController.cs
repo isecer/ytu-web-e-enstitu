@@ -2929,7 +2929,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var mezuniyetBasvurusu = srTalebi.MezuniyetBasvurulari;
                     var rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(srTalebi.SRTalepID);
                     rpr.CreateDocument();
-                    if (mezuniyetBasvurusu.TezDanismanID == UserIdentity.Current.Id || RoleNames.MezuniyetGelenBasvurularSrTalebiYap.InRoleCurrent())
+                    if (mezuniyetBasvurusu.TezDanismanID == UserIdentity.Current.Id || RoleNames.MezuniyetGelenBasvurularSrTalebiYap.InRoleCurrent() || RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent())
                     {
                         var rpr2 = new RprTezSinavSonucTutanagi_Detay(srTalebi.SRTalepID);
                         rpr2.CreateDocument();

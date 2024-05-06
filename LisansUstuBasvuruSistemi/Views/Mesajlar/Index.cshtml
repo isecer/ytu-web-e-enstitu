@@ -234,7 +234,7 @@
 
                                         <td>
 
-                                            <b>Kategori:</b> @(item.EnstituKod == EnstituKodlariEnum.FenBilimleri ? "FBE" : "SBE") - @item.KategoriAdi <br />
+                                            <b>Kategori:</b>  @item.EnstituKisaAd.ToUpper() - @item.KategoriAdi <br />
                                             <b>Konu:</b> @(item.Konu.Length > 70 ? item.Konu.Substring(0, 69) + "..." : item.Konu)
                                         </td>
                                         <td style="text-align:right;">
@@ -291,7 +291,7 @@
 </div>
 <script type="text/javascript">
     function senMx(id, mID) {
-        var _konu = $('#konu_' + mID).val(); 
+        var _konu = $('#konu_' + mID).val();
         mGonder(id, _konu, '', mID);
 
     }

@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
         }
 
-        public static Enstituler[] GetEnstituler(bool sadeceYetkiliOlduguEnstituler = false)
+        public static Enstituler[] GetEnstituler(bool sadeceYetkiliOlduguEnstituler)
         {
             var enst = Enstitulers.AsQueryable();
             if (sadeceYetkiliOlduguEnstituler && UserIdentity.Current.IsAdmin == false) enst = enst.Where(p => UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
@@ -34,12 +34,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static bool IsContainsEnstitu(string ekod)
         {
-            using (var entities = new LubsDbEntities())
-            {
-                ekod = ekod.ToLower();
-                var sdils = entities.Enstitulers.Where(p => p.IsAktif).ToList();
-                return sdils.Select(s => s.EnstituKisaAd.ToLower()).Any(a => a == ekod);
-            }
+
+            ekod = ekod.ToLower();
+            var sdils = Enstitulers.Where(p => p.IsAktif).ToList();
+            return sdils.Select(s => s.EnstituKisaAd.ToLower()).Any(a => a == ekod);
+
         }
 
         public static string GetSelectedEnstitu(string ekd)
@@ -66,14 +65,13 @@ namespace LisansUstuBasvuruSistemi.Business
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var entities = new LubsDbEntities())
+
+            var data = Enstitulers.Where(p => enstKods.Contains(p.EnstituKod)).OrderBy(o => o.EnstituAd).ToList();
+            foreach (var item in data)
             {
-                var data = Enstitulers.Where(p => enstKods.Contains(p.EnstituKod)).OrderBy(o => o.EnstituAd).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbStringDto { Value = item.EnstituKod, Caption = item.EnstituAd });
-                }
+                dct.Add(new CmbStringDto { Value = item.EnstituKod, Caption = item.EnstituAd });
             }
+
             return dct;
 
         }

@@ -2,6 +2,7 @@
 using System.Linq;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -11,6 +12,7 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<string> EsDanismanUnvanList=new List<string>{ "ARŞ.GÖR.DR.", "ÖĞR.GÖR.DR.", "DR.", "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
         public static string ToJuriUnvanAdi(this string unvanAdi)
         {
+            if (unvanAdi.IsNullOrWhiteSpace()) return "";
             unvanAdi = unvanAdi.Trim().ToLower().Replace("  ", ".").Replace(". ", ".").Replace(" .", ".").Replace(" ", ".");
             var arGorUnvan = new List<string> { "ARŞ.GÖR.DR." };
             var ogrGrUnvan = new List<string> { "ÖĞR.GÖR.DR." };

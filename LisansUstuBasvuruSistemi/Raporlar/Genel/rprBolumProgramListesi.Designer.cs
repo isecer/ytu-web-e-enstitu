@@ -107,32 +107,32 @@
             // 
             // xrTableCell4
             // 
-            this.xrTableCell4.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "ProgramKodu")});
+            this.xrTableCell4.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[ProgramKodu]")});
             this.xrTableCell4.Name = "xrTableCell4";
             this.xrTableCell4.Weight = 0.6041665649414063D;
             // 
             // xrTableCell3
             // 
-            this.xrTableCell3.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "ProgramAdi")});
+            this.xrTableCell3.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[ProgramAdi]")});
             this.xrTableCell3.Name = "xrTableCell3";
             this.xrTableCell3.Weight = 4.5989587402343748D;
             // 
             // xrTableCell5
             // 
-            this.xrTableCell5.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "EgitimDili")});
+            this.xrTableCell5.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[EgitimDili]")});
             this.xrTableCell5.Multiline = true;
             this.xrTableCell5.Name = "xrTableCell5";
             this.xrTableCell5.Weight = 0.73437500000000044D;
             // 
             // xrTableCell6
             // 
-            this.xrTableCell6.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "OgrenimTipAdi")});
+            this.xrTableCell6.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OgrenimTipAdi]")});
             this.xrTableCell6.Name = "xrTableCell6";
-            this.xrTableCell6.Weight = 1.5724978637695311D;
+            this.xrTableCell6.Weight = 1.572497863769531D;
             // 
             // TopMargin
             // 
@@ -166,7 +166,7 @@
             // 
             this.rprLogo.BackColor = System.Drawing.Color.Transparent;
             this.rprLogo.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.rprLogo.Image = ((System.Drawing.Image)(resources.GetObject("rprLogo.Image")));
+            this.rprLogo.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("rprLogo.ImageSource"));
             this.rprLogo.LocationFloat = new DevExpress.Utils.PointFloat(10F, 10F);
             this.rprLogo.Name = "rprLogo";
             this.rprLogo.SizeF = new System.Drawing.SizeF(85F, 85F);
@@ -269,15 +269,15 @@
             // 
             // xrTableCell2
             // 
-            this.xrTableCell2.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "AnabilimDaliKod")});
+            this.xrTableCell2.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[AnabilimDaliKod]")});
             this.xrTableCell2.Name = "xrTableCell2";
             this.xrTableCell2.Weight = 0.6041665649414063D;
             // 
             // xrTableCell1
             // 
-            this.xrTableCell1.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "AnabilimDaliAdi")});
+            this.xrTableCell1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[AnabilimDaliAdi]")});
             this.xrTableCell1.Name = "xrTableCell1";
             this.xrTableCell1.Weight = 7.0458334350585936D;
             // 
@@ -314,14 +314,13 @@
             // xrTableCell7
             // 
             this.xrTableCell7.BackColor = System.Drawing.Color.SkyBlue;
-            this.xrTableCell7.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "ProgramKodu")});
+            this.xrTableCell7.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "sumCount([ProgramKodu])")});
             this.xrTableCell7.Name = "xrTableCell7";
             this.xrTableCell7.StylePriority.UseBackColor = false;
-            xrSummary1.FormatString = "Toplam:{0}";
-            xrSummary1.Func = DevExpress.XtraReports.UI.SummaryFunc.Count;
             xrSummary1.Running = DevExpress.XtraReports.UI.SummaryRunning.Group;
             this.xrTableCell7.Summary = xrSummary1;
+            this.xrTableCell7.TextFormatString = "Toplam:{0}";
             this.xrTableCell7.Weight = 0.6041665649414063D;
             // 
             // PageFooter
@@ -362,14 +361,13 @@
             // xrTableCell8
             // 
             this.xrTableCell8.BackColor = System.Drawing.Color.SteelBlue;
-            this.xrTableCell8.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "ProgramKodu")});
+            this.xrTableCell8.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "sumCount([ProgramKodu])")});
             this.xrTableCell8.Name = "xrTableCell8";
             this.xrTableCell8.StylePriority.UseBackColor = false;
-            xrSummary2.FormatString = "Genel Toplam:{0}";
-            xrSummary2.Func = DevExpress.XtraReports.UI.SummaryFunc.Count;
             xrSummary2.Running = DevExpress.XtraReports.UI.SummaryRunning.Report;
             this.xrTableCell8.Summary = xrSummary2;
+            this.xrTableCell8.TextFormatString = "Genel Toplam:{0}";
             this.xrTableCell8.Weight = 0.6041665649414063D;
             // 
             // objectDataSource1
@@ -377,7 +375,7 @@
             this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprModelBolumProgramList);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
-            // rprBolumProgramListesi
+            // RprBolumProgramListesi
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,
@@ -390,11 +388,11 @@
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.objectDataSource1});
             this.DataSource = this.objectDataSource1;
-            this.Margins = new DevExpress.Drawing.DXMargins(34, 28, 136, 31);
+            this.Margins = new DevExpress.Drawing.DXMargins(34F, 28F, 136.0417F, 31.33332F);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
-            this.Version = "17.1";
+            this.Version = "23.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).EndInit();

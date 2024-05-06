@@ -14,8 +14,7 @@ namespace LisansUstuBasvuruSistemi.App_Start
     {
         public interface IRouteConstraint
         {
-            bool Match(HttpContextBase httpContext, Route route, string parameterName,
-                RouteValueDictionary values, RouteDirection routeDirection);
+            bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection);
         }
     }
     public class EnstituListConstraint : IRouteConstraint
@@ -30,11 +29,7 @@ namespace LisansUstuBasvuruSistemi.App_Start
 
         private readonly string[] _values;
 
-        public bool Match(HttpContextBase httpContext,
-            Route route,
-            string ekd,
-            RouteValueDictionary values,
-            RouteDirection routeDirection)
+        public bool Match(HttpContextBase httpContext, Route route, string ekd, RouteValueDictionary values, RouteDirection routeDirection)
         {
             // Get the value called "parameterName" from the 
             // RouteValueDictionary called "value"

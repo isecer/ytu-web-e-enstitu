@@ -144,11 +144,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return dosyaYolu;
         }
 
-        public static void Delete(string filePath)
-        {
-            if (IsSaveFileServer) DeleteFileBasePath(filePath);
-            else DeleteFile(filePath);
-        }
         private static void DeleteFile(string filePath)
         {
             var fullPath = HttpContext.Current.Server.MapPath("~" + filePath);
@@ -166,6 +161,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             {
                 File.Delete(combinedPath);
             }
+        }
+        public static void Delete(string filePath)
+        {
+            if(filePath.IsNullOrWhiteSpace()) return;
+            if (IsSaveFileServer) DeleteFileBasePath(filePath);
+            else DeleteFile(filePath);
         }
         public static void DeleteFiles(List<string> filePaths)
         {

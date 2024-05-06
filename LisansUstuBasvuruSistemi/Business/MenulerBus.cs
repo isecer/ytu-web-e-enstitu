@@ -24,6 +24,17 @@ namespace LisansUstuBasvuruSistemi.Business
         public static void UpdateMenus()
         {
             var menuAttrs = Membership.Menus();
+            var menuKeyGroup = menuAttrs.GroupBy(g => g.MenuID).Select(s => new { s.Key, Count = s.Count(), Menus = s.Select(sr => sr.MenuAdi).ToList() });
+            var duplicateKeys = menuKeyGroup.Where(p => p.Count > 1).ToList();
+
+            if (duplicateKeys.Any())
+            {
+
+                var duplicateStringList = duplicateKeys.Select(s => s.Key + " => " + string.Join(",", s.Menus)).ToList();
+                var duplicateString = string.Join("<br/>", duplicateStringList);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Sistem Menüleri güncellenirken Unique olmayan roll id bilgilerine rastlandı! \r\n " + duplicateString, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Kritik);
+                return;
+            }
             using (var entities = new LubsDbEntities())
             {
                 var dbMenus = entities.Menulers.ToArray();

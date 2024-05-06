@@ -133,8 +133,8 @@
             // Rw_Sira
             // 
             this.Rw_Sira.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.Rw_Sira.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "SiraNo")});
+            this.Rw_Sira.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[SiraNo]")});
             this.Rw_Sira.Name = "Rw_Sira";
             this.Rw_Sira.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
             this.Rw_Sira.StylePriority.UseBorders = false;
@@ -144,8 +144,8 @@
             // Rw_AdSoyad
             // 
             this.Rw_AdSoyad.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.Rw_AdSoyad.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "AdSoyad")});
+            this.Rw_AdSoyad.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[AdSoyad]")});
             this.Rw_AdSoyad.Name = "Rw_AdSoyad";
             this.Rw_AdSoyad.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
             this.Rw_AdSoyad.StylePriority.UseBorders = false;
@@ -155,8 +155,8 @@
             // Rw_Tel
             // 
             this.Rw_Tel.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.Rw_Tel.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Telefon")});
+            this.Rw_Tel.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[Telefon]")});
             this.Rw_Tel.Multiline = true;
             this.Rw_Tel.Name = "Rw_Tel";
             this.Rw_Tel.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -169,8 +169,8 @@
             // Rw_Email
             // 
             this.Rw_Email.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.Rw_Email.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "EMail")});
+            this.Rw_Email.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[EMail]")});
             this.Rw_Email.Name = "Rw_Email";
             this.Rw_Email.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 3, 0, 100F);
             this.Rw_Email.StylePriority.UseBorders = false;
@@ -182,19 +182,20 @@
             // Rw_BasariNotu
             // 
             this.Rw_BasariNotu.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.Rw_BasariNotu.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "GenelBasariNotu", "{0:n2}")});
+            this.Rw_BasariNotu.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[GenelBasariNotu]")});
             this.Rw_BasariNotu.Name = "Rw_BasariNotu";
             this.Rw_BasariNotu.StylePriority.UseBorders = false;
             this.Rw_BasariNotu.StylePriority.UseTextAlignment = false;
             this.Rw_BasariNotu.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            this.Rw_BasariNotu.TextFormatString = "{0:n2}";
             this.Rw_BasariNotu.Weight = 0.31922301131686148D;
             // 
             // Rw_Durum
             // 
             this.Rw_Durum.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.Rw_Durum.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "MulakatSonucTipAdi")});
+            this.Rw_Durum.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[MulakatSonucTipAdi]")});
             this.Rw_Durum.Name = "Rw_Durum";
             this.Rw_Durum.StylePriority.UseBorders = false;
             this.Rw_Durum.StylePriority.UseTextAlignment = false;
@@ -232,7 +233,7 @@
             // 
             this.rprLogo.BackColor = System.Drawing.Color.Transparent;
             this.rprLogo.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.rprLogo.Image = ((System.Drawing.Image)(resources.GetObject("rprLogo.Image")));
+            this.rprLogo.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("rprLogo.ImageSource"));
             this.rprLogo.LocationFloat = new DevExpress.Utils.PointFloat(10F, 10F);
             this.rprLogo.Name = "rprLogo";
             this.rprLogo.SizeF = new System.Drawing.SizeF(85F, 85F);
@@ -294,8 +295,8 @@
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel1.BorderWidth = 2F;
-            this.xrLabel1.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "AnabilimDaliAdi")});
+            this.xrLabel1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[AnabilimDaliAdi]")});
             this.xrLabel1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 12.75F);
             this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 4.333305F);
             this.xrLabel1.Name = "xrLabel1";
@@ -330,8 +331,8 @@
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel2.BorderWidth = 2F;
-            this.xrLabel2.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "ProgramGrupAdi")});
+            this.xrLabel2.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[ProgramGrupAdi]")});
             this.xrLabel2.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10.75F);
             this.xrLabel2.LocationFloat = new DevExpress.Utils.PointFloat(0.9736023F, 7.000015F);
             this.xrLabel2.Name = "xrLabel2";
@@ -492,7 +493,7 @@
             this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprBasvuruSonucModel);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
-            // rprBasvuruSonucList
+            // RprBasvuruSonucList
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,
@@ -505,14 +506,14 @@
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.objectDataSource1});
             this.DataSource = this.objectDataSource1;
-            this.Margins = new DevExpress.Drawing.DXMargins(39, 36, 113, 23);
+            this.Margins = new DevExpress.Drawing.DXMargins(39F, 36F, 113.2518F, 23F);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             this.StyleSheet.AddRange(new DevExpress.XtraReports.UI.XRControlStyle[] {
             this.odd,
             this.even});
-            this.Version = "17.1";
+            this.Version = "23.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).EndInit();

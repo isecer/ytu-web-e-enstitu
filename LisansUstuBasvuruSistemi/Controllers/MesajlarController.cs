@@ -41,6 +41,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     select new
                     {
                         s.EnstituKod,
+                        ens.EnstituKisaAd,
                         ens.EnstituAd,
                         s.MesajKategoriID,
                         mk.KategoriAdi,
@@ -140,6 +141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.MesajlarDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrMesajlarDto
             {
                 EnstituAdi = s.EnstituAd,
+                EnstituKisaAd=s.EnstituKisaAd,
                 EnstituKod = s.EnstituKod,
                 MesajKategoriID = s.MesajKategoriID,
                 KategoriAdi = s.KategoriAdi,
