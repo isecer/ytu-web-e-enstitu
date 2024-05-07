@@ -1301,6 +1301,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.ToBasvuruSavunmaKomites.RemoveRange(tezOneriSavunma.ToBasvuruSavunmaKomites);
                     _entities.ToBasvuruSavunmas.Remove(tezOneriSavunma);
                     _entities.SaveChanges();
+                    FileHelper.Delete(tezOneriSavunma.CalismaRaporDosyaYolu);
                     LogIslemleri.LogEkle("ToBasvuruSavunma", LogCrudType.Delete, tezOneriSavunma.ToJson());
                     if (tezOneriSavunma.SRTalepleris.Any()) LogIslemleri.LogEkle("SRTalepleri", LogCrudType.Delete, tezOneriSavunma.SRTalepleris.ToJson());
                     if (tezOneriSavunma.ToBasvuruSavunmaKomites.Any()) LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", LogCrudType.Delete, tezOneriSavunma.ToBasvuruSavunmaKomites.ToJson());
