@@ -1,0 +1,113 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model FmMailIstatistikDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    @using (Html.BeginForm("MailIstatitik", "MailIslemleri"))
+    {
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <div class="portlet-title">
+                        <table style="table-layout:fixed;width:100%;">
+                            <tr>
+                                <td><h3 class="panel-title"><i class="fa fa-envelope"></i> Günlük Mail Gönderim Bilgileri</h3></td>
+                                <td width="45"><b>Yıl/Ay:</b></td>
+                                <td width="90">
+                                    @Html.DropDownList("Yil", null, new { @class = "form-control", style = "padding:0px;", onchange = "$(this).parents('form').first().submit();" })
+                                </td>
+                                <td width="120">
+                                    @Html.DropDownList("AyId", null, new { @class = "form-control", style = "padding:0px;", onchange = "$(this).parents('form').first().submit();" })
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="80"></th>
+                                <th>Tarih</th>
+                                <th style="text-align:right;" class="sirala" field="FbeCount" width="80">Fbe</th>
+                                <th style="text-align:right;" class="sirala" field="SbeCount" width="80">Sbe</th>
+                                <th style="text-align:right;" class="sirala" field="TetCount" width="80">Tet</th>
+                                <th style="text-align:right;" class="sirala" field="ToplamCount" width="100">Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                var rowIndex = 0;
+                                foreach (var item in Model.Data)
+                                {
+                                    rowIndex++;
+                                    <tr>
+                                        <td>@rowIndex</td>
+                                        <td>
+                                            @item.Tarih.ToFormatDate()
+                                        </td>
+                                        <td style="text-align:right;padding-right:13px;">
+                                            @item.FbeCount
+                                        </td>
+                                        <td style="text-align: right; padding-right: 13px;">
+                                            @item.SbeCount
+                                        </td>
+                                        <td style="text-align: right; padding-right: 13px;">
+                                            @item.TetCount
+                                        </td>
+                                        <td style="text-align: right; padding-right: 13px;">
+                                            @item.ToplamCount
+                                        </td>
+                                    </tr>
+
+                                }
+                                <tr>
+                                    <td></td>
+                                    <td style="text-align:right"> Genel Toplam: </td>
+                                    <td style="text-align: right; padding-right: 13px;">
+                                        @Model.Data.Sum(sm => sm.FbeCount) 
+                                    </td>
+                                    <td style="text-align: right; padding-right: 13px;">
+                                        @Model.Data.Sum(sm => sm.SbeCount) 
+                                    </td>
+                                    <td style="text-align: right; padding-right: 13px;">
+                                        @Model.Data.Sum(sm => sm.TetCount) 
+                                    </td>
+                                    <td style="text-align: right; padding-right: 13px;">
+                                        @Model.Data.Sum(sm => sm.ToplamCount) 
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" style="text-align: center">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+
+        </div>
+
+    }
+</div>

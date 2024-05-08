@@ -4,16 +4,12 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Mail;
-using System.Net.Mime;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.MailManager;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -111,7 +107,57 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(data);
         }
 
-        
+
+
+        public ActionResult MailIstatitik()
+        {
+            return MailIstatitik(new FmMailIstatistikDto { AyId = DateTime.Now.Month, Yil = DateTime.Now.Year });
+        }
+        [HttpPost]
+        public ActionResult MailIstatitik(FmMailIstatistikDto model)
+        {
+            var q = _entities.GonderilenMaillers.Where(p =>  p.Tarih.Year == model.Yil).GroupBy(g => new
+            {
+                g.Tarih.Year,
+                g.Tarih.Month,
+                g.Tarih.Day,
+            })
+                .Select(s => new
+                {
+                    s.Key.Year,
+                    s.Key.Month,
+                    s.Key.Day,
+                    FbeCount = s.Count(p => p.EnstituKod == EnstituKodlariEnum.FenBilimleri),
+                    SbeCount = s.Count(p => p.EnstituKod == EnstituKodlariEnum.SosyalBilimleri),
+                    TetCount = s.Count(p => p.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri),
+                    ToplamCount = s.Count()
+
+
+                }).AsQueryable();
+
+            if (model.AyId.HasValue) q = q.Where(p => p.Month == model.AyId);
+
+
+            model.RowCount = q.Count();
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Year).ThenByDescending(t => t.Month).ThenByDescending(o => o.Day);
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList().Select(s => new FrIstatistikDto
+            {
+                Tarih = new DateTime(s.Year, s.Month, s.Day),
+                FbeCount = s.FbeCount,
+                SbeCount = s.SbeCount,
+                TetCount = s.TetCount,
+                ToplamCount = s.ToplamCount,
+
+
+            }).ToList();
+
+            var aylars = SrTalepleriBus.GetCmbAylar(true);
+            var yillars = ComboData.GetCmbGonderilenMailYil();
+            ViewBag.AyId = new SelectList(aylars, "Value", "Caption", model.AyId);
+            ViewBag.Yil = new SelectList(yillars, "Value", "Caption", model.Yil);
+
+            return View(model);
+        }
         public ActionResult Sil(int id)
         {
             var kayit = _entities.GonderilenMaillers.FirstOrDefault(p => p.GonderilenMailID == id);
@@ -134,7 +180,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Konu + "' Konulu Mail Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else

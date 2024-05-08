@@ -13,7 +13,7 @@
                     <div class="portlet-title">
                         <table style="table-layout:fixed;width:100%;">
                             <tr>
-                                <td><h3 class="panel-title"><i class="fa fa-envelope"></i> Gönderilen Mail Listesi</h3></td>
+                                <td><h3 class="panel-title"><i class="fa fa-envelope"></i> <a href="@Url.Action("MailIstatitik")">Gönderilen Mail Listesi</a> </h3></td>
                                 <td width="45"><b>Enstitü:</b></td>
                                 <td width="220">
                                     @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;", onchange = "$(this).parents('form').first().submit();" })
@@ -181,5 +181,5 @@
             }
         });
     }
-   
+
 </script>

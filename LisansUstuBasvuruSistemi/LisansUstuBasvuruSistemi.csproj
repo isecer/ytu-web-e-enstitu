@@ -4805,6 +4805,7 @@
     <Content Include="Views\DpGelenBasvurular\Index.cshtml" />
     <Content Include="Views\DpBasvuru\DegerlendirmeLinkView.cshtml" />
     <Content Include="Views\DpGelenBasvurular\GetTutanakRaporu.cshtml" />
+    <Content Include="Views\MailIslemleri\MailIstatitik.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

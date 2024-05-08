@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -39,7 +41,28 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemData
 
             return lst;
         }
+        public static List<CmbIntDto> GetCmbGonderilenMailYil()
+        {
 
+            using (var entities = new LubsDbEntities())
+            {
+                var minYil = entities.GonderilenMaillers.OrderBy(o => o.Tarih.Year).Select(s => s.Tarih.Year)
+                    .FirstOrDefault();
+
+                if (minYil == 0) minYil = DateTime.Now.Year;
+                var lst = new List<CmbIntDto>();
+
+
+                for (int i = minYil; i <= DateTime.Now.Year; i++)
+                {
+                    lst.Add(new CmbIntDto { Value = minYil, Caption = minYil + " Yılı" });
+                    minYil++;
+                }
+
+                return lst;
+            }
+        }
+    
         public static List<CmbBoolDto> GetCmbAktifPasifData(bool bosSecimVar = false)
         {
             var dct = new List<CmbBoolDto>();
