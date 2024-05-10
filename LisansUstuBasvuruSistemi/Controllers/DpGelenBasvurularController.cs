@@ -42,13 +42,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!UserIdentity.Current.IsAuthenticated && !model.IsDegerlendirme.HasValue) return RedirectToActionPermanent("Login", "Account");
 
-
             var q =
                     from donemProjesi in _entities.DonemProjesis
                     join ogrenci in _entities.Kullanicilars on donemProjesi.KullaniciID equals ogrenci.KullaniciID
                     join programlar in _entities.Programlars on donemProjesi.ProgramKod equals programlar.ProgramKod
                     join ogrenimTipleri in _entities.OgrenimTipleris on new { donemProjesi.EnstituKod, donemProjesi.OgrenimTipKod } equals new { ogrenimTipleri.EnstituKod, ogrenimTipleri.OgrenimTipKod }
                     let sonBasvuru = donemProjesi.DonemProjesiBasvurus.OrderByDescending(o => o.BasvuruTarihi).FirstOrDefault()
+
                     select new FrDonemProjesiBasvuruDto
                     {
                         EnstituKod = donemProjesi.EnstituKod,
@@ -72,6 +72,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ToplantiSaati = sonBasvuru != null ? sonBasvuru.SRTalepleris.Select(sr => sr.BasSaat).FirstOrDefault() : (TimeSpan?)null,
                         DonemProjesiDurumID = sonBasvuru != null ? sonBasvuru.DonemProjesiDurumID : DonemProjesiDurumEnum.BasvuruTamamlanmadi,
                         FormKodu = sonBasvuru != null ? sonBasvuru.FormKodu : "",
+                        DonemProjesiBasvuruID = sonBasvuru != null ? sonBasvuru.DonemProjesiBasvuruID : 0,
                         SonBasvuruDurum = sonBasvuru != null ? new DpBasvuruDurumDto
                         {
                             DonemProjesiID = sonBasvuru.DonemProjesiID,
@@ -102,9 +103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AkademikDonemID = (sonBasvuru.BasvuruYil + "" + sonBasvuru.BasvuruDonemID),
                         KullaniciID = donemProjesi.KullaniciID,
                         TezDanismanID = sonBasvuru.TezDanismanID,
-                        OnayYapmayanJuriEmails = sonBasvuru.DonemProjesiJurileris.Where(p => isDegerlendirmeSurecinde && p.IsLinkGonderildi == true && !p.DonemProjesiJuriOnayDurumID.HasValue).Select(ss => ss.EMail).ToList(),
-                        FilterFormKoduKeys = donemProjesi.DonemProjesiBasvurus.Select(s => s.FormKodu).ToList(),
-                        FilterJuriAdiKeys = sonBasvuru.DonemProjesiJurileris.Select(s => s.AdSoyad).ToList()
+                        OnayYapmayanJuriEmails = sonBasvuru.DonemProjesiJurileris.Where(p => isDegerlendirmeSurecinde && p.IsLinkGonderildi == true && !p.DonemProjesiJuriOnayDurumID.HasValue).Select(ss => ss.EMail).ToList()
                     };
             q = q.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
             var q2 = q;
@@ -133,14 +132,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.BasarisizOlanlar) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci && p.SonBasvuruDurum.EYKDaOnaylandi == true && p.SonBasvuruDurum.DonemProjesiJuriOnayDurumID != DonemProjesiJuriOnayDurumEnum.Basarili);
             }
 
-            if (!model.AdSoyad.IsNullOrWhiteSpace())
-                q = q.Where(p =>
-                    p.AdSoyad.Contains(model.AdSoyad)
-                    || p.OgrenciNo.Contains(model.AdSoyad)
-                    || p.TcKimlikNo.Contains(model.AdSoyad)
-                    || p.FilterFormKoduKeys.Any(a => a == model.AdSoyad)
-                    || p.FilterJuriAdiKeys.Any(a => a.Contains(model.AdSoyad))
-                    );
 
             model.IsFiltered = !Equals(q, q2);
             if (DonemProjesiBus.IsProjeYurutucusu())
@@ -151,6 +142,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
+            }
+            var sonbasvurularIds = q.Select(s => s.DonemProjesiBasvuruID).ToList();
+
+            if (!model.AdSoyad.IsNullOrWhiteSpace())
+            {
+                var donemProjesiIds = q.Select(s => s.DonemProjesiID).ToList();
+                var formKodusAnyIds = _entities.DonemProjesiBasvurus
+                    .Where(p => donemProjesiIds.Contains(p.DonemProjesiID) && p.FormKodu.Contains(model.AdSoyad))
+                    .Select(s => s.DonemProjesiID).Distinct().ToList();
+
+                var sonbasvurularJuriAnyIds = _entities.DonemProjesiJurileris
+                     .Where(p => sonbasvurularIds.Contains(p.DonemProjesiBasvuruID) && p.AdSoyad.Contains(model.AdSoyad))
+                     .Select(s => s.DonemProjesiBasvuruID).ToList();
+
+
+                q = q.Where(p =>
+                    p.AdSoyad.Contains(model.AdSoyad)
+                    || p.OgrenciNo.Contains(model.AdSoyad)
+                    || p.TcKimlikNo.Contains(model.AdSoyad)
+                    || formKodusAnyIds.Any(a => a == p.DonemProjesiID)
+                    || sonbasvurularJuriAnyIds.Any(a => a == p.DonemProjesiBasvuruID)
+                    );
+
             }
             #region export
             if (export && model.RowCount > 0)
@@ -224,11 +238,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
 
-            model.RowCount = q.Count();
-            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.filteredOgrenciIds = model.IsFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.filteredDanismanIds = model.IsFiltered ? q.Where(p => p.TezDanismanID > 0).Select(s => s.TezDanismanID.Value).Distinct().ToList() : new List<int>();
-            ViewBag.onayYapmayanJuriEmails = model.IsFiltered && isDegerlendirmeSurecinde ? q.SelectMany(s => s.OnayYapmayanJuriEmails).Distinct().ToList() : new List<string>();
+
+            if (model.IsFiltered && isDegerlendirmeSurecinde)
+            {
+                var sonBasvuruDonemProjesiBasvuruIds = q.Select(s => s.DonemProjesiBasvuruID).ToList();
+                var onayYapmayanJuriEmails = _entities.DonemProjesiJurileris
+                      .Where(p => sonBasvuruDonemProjesiBasvuruIds.Contains(p.DonemProjesiBasvuruID) &&
+                                  p.IsLinkGonderildi == true && !p.DonemProjesiJuriOnayDurumID.HasValue)
+                      .Select(ss => ss.EMail).Distinct().ToList();
+
+
+                ViewBag.onayYapmayanJuriEmails = onayYapmayanJuriEmails;
+            }
+            else
+            {
+                ViewBag.onayYapmayanJuriEmails = new List<string>();
+            }
+
 
             ViewBag.AkademikDonemID = new SelectList(DonemProjesiBus.CmbDpDonemListe(enstituKod, true), "Value", "Caption", model.AkademikDonemID);
             ViewBag.DonemProjesiDurumID = new SelectList(DonemProjesiBus.CmbDpDurumListe(true), "Value", "Caption", model.DonemProjesiDurumID);
@@ -287,41 +315,41 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
         public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, bool exportWordOrExcel, int enstituOnayDurumId, string ekd)
-        { 
+        {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstitu = _entities.Enstitulers.First(f => f.EnstituKod == enstituKod);
             var baslangicTarihi = basTar.ToDate(DateTime.Now);
             var bitisTarihi = bitTar.ToDate(DateTime.Now);
 
             var tutanakData = (from donemProjesiBasvuru in _entities.DonemProjesiBasvurus
-                         join donemProjesi in _entities.DonemProjesis on donemProjesiBasvuru.DonemProjesiID equals donemProjesi.DonemProjesiID
-                         join tezDanisman in _entities.Kullanicilars on donemProjesiBasvuru.TezDanismanID equals tezDanisman.KullaniciID
-                         join program in _entities.Programlars on donemProjesi.ProgramKod equals program.ProgramKod
-                         join anabilimDali in _entities.AnabilimDallaris on program.AnabilimDaliID equals anabilimDali
-                             .AnabilimDaliID
-                         join ogrenci in _entities.Kullanicilars on donemProjesi.KullaniciID equals ogrenci.KullaniciID
-                         where donemProjesi.EnstituKod == enstituKod &&
-                           (enstituOnayDurumId == 2 ? donemProjesiBasvuru.EYKYaHazirlandi == true &&
-                                                      !donemProjesiBasvuru.EYKDaOnaylandi.HasValue &&
-                                                      donemProjesiBasvuru.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&
-                                                      donemProjesiBasvuru.EYKYaHazirlandiIslemTarihi <= bitisTarihi
-                                                     :
-                                                       donemProjesiBasvuru.EYKDaOnaylandi == true &&
-                                                       !donemProjesiBasvuru.EYKYaHazirlandi == true &&
-                                                       donemProjesiBasvuru.EYKTarihi >= baslangicTarihi &&
-                                                       donemProjesiBasvuru.EYKTarihi <= bitisTarihi)
-                         select new DpTutanakDto
-                         {
+                               join donemProjesi in _entities.DonemProjesis on donemProjesiBasvuru.DonemProjesiID equals donemProjesi.DonemProjesiID
+                               join tezDanisman in _entities.Kullanicilars on donemProjesiBasvuru.TezDanismanID equals tezDanisman.KullaniciID
+                               join program in _entities.Programlars on donemProjesi.ProgramKod equals program.ProgramKod
+                               join anabilimDali in _entities.AnabilimDallaris on program.AnabilimDaliID equals anabilimDali
+                                   .AnabilimDaliID
+                               join ogrenci in _entities.Kullanicilars on donemProjesi.KullaniciID equals ogrenci.KullaniciID
+                               where donemProjesi.EnstituKod == enstituKod &&
+                                 (enstituOnayDurumId == 2 ? donemProjesiBasvuru.EYKYaHazirlandi == true &&
+                                                            !donemProjesiBasvuru.EYKDaOnaylandi.HasValue &&
+                                                            donemProjesiBasvuru.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&
+                                                            donemProjesiBasvuru.EYKYaHazirlandiIslemTarihi <= bitisTarihi
+                                                           :
+                                                             donemProjesiBasvuru.EYKDaOnaylandi == true &&
+                                                             !donemProjesiBasvuru.EYKYaHazirlandi == true &&
+                                                             donemProjesiBasvuru.EYKTarihi >= baslangicTarihi &&
+                                                             donemProjesiBasvuru.EYKTarihi <= bitisTarihi)
+                               select new DpTutanakDto
+                               {
 
-                             OgrenciNo = ogrenci.OgrenciNo,
-                             OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
-                             AnabilimDaliAdi = anabilimDali.AnabilimDaliAdi,
-                             ProgramAdi = program.ProgramAdi,
-                             YurutucuAdSoyad = tezDanisman.Unvanlar.UnvanAdi + " " + tezDanisman.Ad + " " + tezDanisman.Soyad,
-                             MezuniyetDonemAdi = donemProjesiBasvuru.BasvuruYil + "/" + (donemProjesiBasvuru.BasvuruYil + 1) + " " + donemProjesiBasvuru.Donemler.DonemAdi,
-                             MezuniyetEykTarihi = donemProjesiBasvuru.EYKTarihi,
+                                   OgrenciNo = ogrenci.OgrenciNo,
+                                   OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
+                                   AnabilimDaliAdi = anabilimDali.AnabilimDaliAdi,
+                                   ProgramAdi = program.ProgramAdi,
+                                   YurutucuAdSoyad = tezDanisman.Unvanlar.UnvanAdi + " " + tezDanisman.Ad + " " + tezDanisman.Soyad,
+                                   MezuniyetDonemAdi = donemProjesiBasvuru.BasvuruYil + "/" + (donemProjesiBasvuru.BasvuruYil + 1) + " " + donemProjesiBasvuru.Donemler.DonemAdi,
+                                   MezuniyetEykTarihi = donemProjesiBasvuru.EYKTarihi,
 
-                         }).OrderBy(o => o.MezuniyetEykTarihi).ToList();
+                               }).OrderBy(o => o.MezuniyetEykTarihi).ToList();
 
 
 
@@ -335,8 +363,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var rpr = new RprDpTutanak(enstitu.EnstituAd);
             rpr.DataSource = tutanakData;
-            rpr.CreateDocument(); 
-            report.Pages.AddRange(rpr.Pages); 
+            rpr.CreateDocument();
+            report.Pages.AddRange(rpr.Pages);
 
             report.ExportOptions.Html.ExportMode = HtmlExportMode.SingleFilePageByPage;
             using (MemoryStream ms = new MemoryStream())
@@ -345,7 +373,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ms.Position = 0;
                 var sr = new StreamReader(ms);
                 var html = sr.ReadToEnd();
-                var raporAdi = $"Dönem Projesi Mezuniyet Tutanağı - {(enstituOnayDurumId==2?"EYKya Hazırlananlar":"EYKda Onaylananlar")}";
+                var raporAdi = $"Dönem Projesi Mezuniyet Tutanağı - {(enstituOnayDurumId == 2 ? "EYKya Hazırlananlar" : "EYKda Onaylananlar")}";
                 return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
 
             }

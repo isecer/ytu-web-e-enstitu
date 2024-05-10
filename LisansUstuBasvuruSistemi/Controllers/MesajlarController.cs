@@ -30,9 +30,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmMesajlarDto model, bool export = false)
         {
-
-            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in _entities.Mesajlars.Where(p => enstKods.Contains(p.EnstituKod) && p.UstMesajID.HasValue == false && (model.Konu == null || model.Konu.Trim() == "" || p.Aciklama.Contains(model.Konu)))
+            var filteredMesajsQuery = _entities.Mesajlars.Where(p =>  UserIdentity.Current.EnstituKods.Contains(p.EnstituKod) && !p.UstMesajID.HasValue); 
+            if (!model.Konu.IsNullOrWhiteSpace()) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.Aciklama.Contains(model.Konu)); 
+            var q = from s in filteredMesajsQuery
                     join ens in _entities.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
                     join mk in _entities.MesajKategorileris on s.MesajKategoriID equals mk.MesajKategoriID
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID into defK

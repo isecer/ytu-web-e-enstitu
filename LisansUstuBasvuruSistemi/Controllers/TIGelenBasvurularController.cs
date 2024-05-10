@@ -97,8 +97,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             RaporDonemID = ti.DonemBaslangicYil + "" + ti.DonemID,
                             TIBasvuruAraRaporDurumID = ti.TIBasvuruAraRaporDurumID
                         }).ToList(),
-                        IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
-                        IsBasariliOrBasarisiz = ard != null ? ard.IsBasariliOrBasarisiz : (bool?)null
+                        IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : null,
+                        IsBasariliOrBasarisiz = ard != null ? ard.IsBasariliOrBasarisiz : null
 
                     };
 
@@ -108,15 +108,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TIAraRaporAktifDonemID == model.AktifTIAraRaporDonemID);
             if (model.AktifTIAraRaporRaporDurumID.HasValue)
             {
-                if (model.AktifTIAraRaporRaporDurumID < 1000)
-                {
-                    q = q.Where(p => p.TIAraRaporRaporDurumID == model.AktifTIAraRaporRaporDurumID);
-                }
-                else
-                {
-                    q = q.Where(p => p.TIAraRaporRaporDurumID == TiAraRaporDurumuEnum.DegerlendirmeSureciTamamlandi && p.IsBasariliOrBasarisiz == (model.AktifTIAraRaporRaporDurumID.Value == TiAraRaporDurumuEnum.DegerlendirmeBasariliOlanlar));
-                }
-
+                q = model.AktifTIAraRaporRaporDurumID < 1000 ? q.Where(p => p.TIAraRaporRaporDurumID == model.AktifTIAraRaporRaporDurumID)
+                    : q.Where(p => p.TIAraRaporRaporDurumID == TiAraRaporDurumuEnum.DegerlendirmeSureciTamamlandi && p.IsBasariliOrBasarisiz == (model.AktifTIAraRaporRaporDurumID.Value == TiAraRaporDurumuEnum.DegerlendirmeBasariliOlanlar));
             }
             if (model.AktifAraRaporSayisi.HasValue) q = q.Where(p => p.AraRaporSayisi == model.AktifAraRaporSayisi);
             if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);

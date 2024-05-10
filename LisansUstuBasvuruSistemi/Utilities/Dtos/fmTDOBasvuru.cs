@@ -38,6 +38,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     }
     public class FrTdoBasvuruDto : TDOBasvuru
     {
+        public DateTime? BasvuruTarihi { get; set; } 
         public int? TezDanismanID { get; set; }
         public string EnstituAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
@@ -64,10 +65,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? AktifTdBasvuruEsDanismanID { get; set; }
         public bool? Es_EYKYaGonderildi { get; set; }
         public bool? Es_EYKYaHazirlandi { get; set; }
-        public bool? Es_EYKDaOnaylandi { get; set; }
-        public int Sira { get; set; }
-        public List<TdoDanismanFiltreModel> TDODanismanDetayModels { get; set; }
-        public DateTime RowDate { get; internal set; }
+        public bool? Es_EYKDaOnaylandi { get; set; } 
         public int? VarolanTezDanismanID { get; set; }
         public bool? VarolanDanismanOnayladi { get; internal set; }
     }

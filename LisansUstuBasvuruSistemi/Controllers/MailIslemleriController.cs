@@ -25,10 +25,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmMailGondermeDto model)
         {
-            var q = from s in _entities.GonderilenMaillers.Where(p => model.Aciklama == null || model.Aciklama.Trim() == "" || p.Aciklama.Contains(model.Aciklama))
+            var filteredMailsQuery = _entities.GonderilenMaillers.Where(p => p.Silindi == false && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
+
+            if (!model.Aciklama.IsNullOrWhiteSpace()) filteredMailsQuery = filteredMailsQuery.Where(p => p.Aciklama.Contains(model.Aciklama));
+
+            var q = from s in filteredMailsQuery
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
-                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    where s.Silindi == false && UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID 
                     select new
                     {
                         s.GonderilenMailID,
@@ -37,11 +40,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         e.EnstituAd,
                         s.Konu,
                         MailGonderen = k.Ad + " " + k.Soyad,
+                        s.Aciklama,
                         s.Gonderildi,
                         s.HataMesaji,
-                        EkSayisi = s.GonderilenMailEkleris.Count
+                        EkSayisi =s.GonderilenMailEkleris.Count
                     };
-
+            
             if (!model.Konu.IsNullOrWhiteSpace()) q = q.Where(p => p.Konu.Contains(model.Konu));
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.MailGonderen.IsNullOrWhiteSpace()) q = q.Where(p => p.MailGonderen.Contains(model.MailGonderen));
@@ -116,28 +120,38 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult MailIstatitik(FmMailIstatistikDto model)
         {
-            var q = _entities.GonderilenMaillers.Where(p =>  p.Tarih.Year == model.Yil).GroupBy(g => new
-            {
-                g.Tarih.Year,
-                g.Tarih.Month,
-                g.Tarih.Day,
-            })
-                .Select(s => new
+            //var filteredMailsQuery = _entities.GonderilenMaillers.Where(p => p.Tarih.Year == model.Yil);
+
+            //if (model.AyId.HasValue) filteredMailsQuery = filteredMailsQuery.Where(p => p.Tarih.Month == model.AyId);
+
+
+            //var q = from gm in filteredMailsQuery
+            //        group new { gm.EnstituKod } by new { gm.Tarih.Year, gm.Tarih.Month, gm.Tarih.Day }
+            //    into g1
+            //        select new
+            //        {
+            //            g1.Key.Year,
+            //            g1.Key.Month,
+            //            g1.Key.Day,
+            //            FbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.FenBilimleri),
+            //            SbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.SosyalBilimleri),
+            //            TetCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri),
+            //            ToplamCount = g1.Count()
+            //        };
+
+            var q = from gm in _entities.GonderilenMaillers
+                where gm.Tarih.Year == model.Yil && (!model.AyId.HasValue || gm.Tarih.Month == model.AyId)
+                group gm by new { gm.Tarih.Year, gm.Tarih.Month, gm.Tarih.Day } into g1
+                select new
                 {
-                    s.Key.Year,
-                    s.Key.Month,
-                    s.Key.Day,
-                    FbeCount = s.Count(p => p.EnstituKod == EnstituKodlariEnum.FenBilimleri),
-                    SbeCount = s.Count(p => p.EnstituKod == EnstituKodlariEnum.SosyalBilimleri),
-                    TetCount = s.Count(p => p.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri),
-                    ToplamCount = s.Count()
-
-
-                }).AsQueryable();
-
-            if (model.AyId.HasValue) q = q.Where(p => p.Month == model.AyId);
-
-
+                    g1.Key.Year,
+                    g1.Key.Month,
+                    g1.Key.Day,
+                    FbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.FenBilimleri),
+                    SbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.SosyalBilimleri),
+                    TetCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri),
+                    ToplamCount = g1.Count()
+                };
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Year).ThenByDescending(t => t.Month).ThenByDescending(o => o.Day);
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList().Select(s => new FrIstatistikDto

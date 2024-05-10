@@ -14,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AkademikDonemID { get; set; }
         public int? DonemProjesiDurumID { get; set; }
         public int? DurumID { get; set; }
-        public string AdSoyad { get; set; } 
+        public string AdSoyad { get; set; }
         public string OgrenciNo { get; set; }
         public bool IsYtuOgrencisi { get; set; }
         public bool IsEnstituYetki { get; set; }
@@ -24,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public Guid? ShowBasvuruUniqueId { get; set; }
         public Guid? IsDegerlendirme { get; set; }
         public IEnumerable<FrDonemProjesiBasvuruDto> Data { get; set; }
-        
+
     }
     public class FrDonemProjesiBasvuruDto : DonemProjesiBasvuru
     {
@@ -35,7 +35,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ResimAdi { get; set; }
         public Guid UserKey { get; set; }
         public string TcKimlikNo { get; set; }
-        public string OgrenciNo { get; set; } 
+        public string OgrenciNo { get; set; }
         public string AdSoyad { get; set; }
         public string EMail { get; set; }
         public string OgrenimTipAdi { get; set; }
@@ -50,7 +50,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public DateTime? ToplantiTarihi { get; set; }
         public TimeSpan? ToplantiSaati { get; set; }
-        public List<string> OnayYapmayanJuriEmails { get; set; }
+        public List<string> OnayYapmayanJuriEmails { get; set; } 
+
         public List<string> FilterFormKoduKeys { get; set; }
         public List<string> FilterJuriAdiKeys { get; set; }
         public DpBasvuruDurumDto SonBasvuruDurum { get; set; }
