@@ -13,6 +13,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EnstituKod { get; set; }
         public string AnabilimDaliKod { get; set; }
         public string AnabilimDaliAdi { get; set; }
+        public bool? IsProgramVar { get; set; }
         public bool? IsKomiteUyesiVar { get; set; }
         public bool? IsEmailVar { get; set; }
         public bool? IsAktif { get; set; }
@@ -22,6 +23,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FrAnabilimDallariDto : AnabilimDallari
     {
         public  bool IsEmailVar { get; set; }
+        public int ProgramCount { get; set; }
         public List<int> KomiteIds { get; set; }
         public int YeterlikKomiteUyeCount { get; set; } 
         public string EnstituAd { get; set; }

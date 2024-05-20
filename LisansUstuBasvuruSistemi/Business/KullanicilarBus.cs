@@ -27,6 +27,7 @@ namespace LisansUstuBasvuruSistemi.Business
             //Doç.Dr Prof.Dr, Dr. Öğr. Üye
             return new List<int> { 17, 42, 73 };
         }
+
         public static StudentControl OgrenciKontrol(string tcOrOgrenciNo = null, string donemId = null)
         {
             var obsData = new ObsServiceData();
@@ -35,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Business
             //    var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
             //    donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
             //}
-
+            var data2 = new ObsData().GetObsStudentControl(tcOrOgrenciNo);
             return obsData.GetObsStudentControl(tcOrOgrenciNo, donemId);
         }
 
@@ -55,7 +56,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
 
-                var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId || p.UserKey==userKey);
+                var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId || p.UserKey == userKey);
                 if (kul.YtuOgrencisi)
                 {
                     var tcKimlikNo = kul.TcKimlikNo;
@@ -70,7 +71,8 @@ namespace LisansUstuBasvuruSistemi.Business
                             int? danismanId = null;
                             if (!kayitBilgi.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace())
                             {
-                                var danisman = entities.Kullanicilars.FirstOrDefault(p => p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
+                                var danisman = entities.Kullanicilars.FirstOrDefault(p =>
+                                    p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
                                 if (danisman != null)
                                     danismanId = danisman.KullaniciID;
                                 kayitBilgi.IsDanismanHesabiBulunamadi = !kul.DanismanID.HasValue;
@@ -92,8 +94,10 @@ namespace LisansUstuBasvuruSistemi.Business
                         kul.KayitYilBaslangic = null;
                         kul.KayitTarihi = null;
                     }
+
                     entities.SaveChanges();
                 }
+
                 return kayitBilgi;
             }
         }
@@ -102,15 +106,18 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             using (var entities = new LubsDbEntities())
             {
-                var ogrenciList = entities.Kullanicilars.Where(p => p.YtuOgrencisi && p.Programlar.AnabilimDallari.EnstituKod == enstituKod && ((p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term))).Select(s => new
-                {
-                    s.KullaniciID,
-                    s.Ad,
-                    s.Soyad,
-                    s.OgrenciNo,
-                    s.ResimAdi,
-                    s.Programlar.ProgramAdi
-                }).Take(15).ToList()
+                var ogrenciList = entities.Kullanicilars.Where(p =>
+                        p.YtuOgrencisi && p.Programlar.AnabilimDallari.EnstituKod == enstituKod &&
+                        ((p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) ||
+                         p.TcKimlikNo.StartsWith(term))).Select(s => new
+                         {
+                             s.KullaniciID,
+                             s.Ad,
+                             s.Soyad,
+                             s.OgrenciNo,
+                             s.ResimAdi,
+                             s.Programlar.ProgramAdi
+                         }).Take(15).ToList()
                     .Select(s => new
                     {
                         id = s.KullaniciID,
@@ -122,18 +129,22 @@ namespace LisansUstuBasvuruSistemi.Business
                 return ogrenciList.ToJsonResult();
             }
         }
+
         public static List<CmbIntDto> GetCmbKullaniciTipleri(bool bosSecimVar, bool isHesapOlusturFiltre)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var entities = new LubsDbEntities())
             {
-                var data = entities.KullaniciTipleris.Where(p => p.YeniHesapOlusturabilir == (isHesapOlusturFiltre || p.YeniHesapOlusturabilir)).OrderBy(o => o.KullaniciTipAdi);
+                var data = entities.KullaniciTipleris
+                    .Where(p => p.YeniHesapOlusturabilir == (isHesapOlusturFiltre || p.YeniHesapOlusturabilir))
+                    .OrderBy(o => o.KullaniciTipAdi);
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.KullaniciTipID, Caption = item.KullaniciTipAdi });
                 }
             }
+
             return dct;
 
         }
@@ -150,6 +161,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     dct.Add(new CmbIntDto { Value = item.KullaniciTipID, Caption = item.KullaniciTipAdi });
                 }
             }
+
             return dct;
 
         }
@@ -166,10 +178,13 @@ namespace LisansUstuBasvuruSistemi.Business
                     dct.Add(new CmbIntDto { Value = item.KullaniciTipID, Caption = item.KullaniciTipAdi });
                 }
             }
+
             return dct;
 
         }
-        public static List<CmbIntDto> CmbAktifOgrenimDurumu(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? isHesapKayittaGozuksun = null)
+
+        public static List<CmbIntDto> CmbAktifOgrenimDurumu(bool bosSecimVar = false, bool? isAktif = true,
+            int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? isHesapKayittaGozuksun = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -178,15 +193,21 @@ namespace LisansUstuBasvuruSistemi.Business
                 var qData = entities.OgrenimDurumlaris.AsQueryable();
                 if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
                 if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
-                if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
-                if (isHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
+                if (isBasvurudaGozuksun.HasValue)
+                    qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
+                if (isHesapKayittaGozuksun.HasValue)
+                    qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
                 var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
-                dct.AddRange(data.Select(item => new CmbIntDto { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi }));
+                dct.AddRange(data.Select(item => new CmbIntDto
+                { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi }));
             }
+
             return dct;
 
         }
-        public static List<CmbIntDto> CmbAktifOgrenimDurumu2(bool bosSecimVar = false, bool? isAktif = true, int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? isHesapKayittaGozuksun = null)
+
+        public static List<CmbIntDto> CmbAktifOgrenimDurumu2(bool bosSecimVar = false, bool? isAktif = true,
+            int? haricOgreniDurumId = null, bool? isBasvurudaGozuksun = null, bool? isHesapKayittaGozuksun = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -195,14 +216,19 @@ namespace LisansUstuBasvuruSistemi.Business
                 var qData = entities.OgrenimDurumlaris.AsQueryable();
                 if (isAktif.HasValue) qData = qData.Where(p => p.IsAktif == isAktif.Value);
                 if (haricOgreniDurumId.HasValue) qData = qData.Where(p => p.OgrenimDurumID == haricOgreniDurumId.Value);
-                if (isBasvurudaGozuksun.HasValue) qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
-                if (isHesapKayittaGozuksun.HasValue) qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
+                if (isBasvurudaGozuksun.HasValue)
+                    qData = qData.Where(p => p.IsBasvurudaGozuksun == isBasvurudaGozuksun.Value);
+                if (isHesapKayittaGozuksun.HasValue)
+                    qData = qData.Where(p => p.IsHesapKayittaGozuksun == isHesapKayittaGozuksun.Value);
                 var data = qData.OrderBy(o => o.OgrenimDurumAdi).ToList();
-                dct.AddRange(data.Select(item => new CmbIntDto { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi }));
+                dct.AddRange(data.Select(item => new CmbIntDto
+                { Value = item.OgrenimDurumID, Caption = item.OgrenimDurumAdi }));
             }
+
             return dct;
 
         }
+
         public static List<CmbIntDto> CmbCinsiyetler(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -210,12 +236,16 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var data = entities.Cinsiyetlers.Where(p => p.IsAktif).OrderBy(o => o.CinsiyetAdi).ToList();
-                dct.AddRange(data.Select(item => new CmbIntDto { Value = item.CinsiyetID, Caption = item.CinsiyetAdi }));
+                dct.AddRange(data.Select(item => new CmbIntDto
+                { Value = item.CinsiyetID, Caption = item.CinsiyetAdi }));
             }
+
             return dct;
 
         }
-        public static List<CheckObject<Kullanicilar>> GetProgramYetkisiOlanKullanicilar(List<Kullanicilar> kullanicilar, string programKod, string enstituKod = null)
+
+        public static List<CheckObject<Kullanicilar>> GetProgramYetkisiOlanKullanicilar(List<Kullanicilar> kullanicilar,
+            string programKod, string enstituKod = null)
         {
             var qData = kullanicilar.Where(p => p.EnstituKod == (enstituKod ?? p.EnstituKod))
                 .Select(s => new CheckObject<Kullanicilar>
@@ -243,14 +273,17 @@ namespace LisansUstuBasvuruSistemi.Business
                                 AnabilimDaliKod = b.AnabilimDaliKod,
                                 ProgramKod = s.ProgramKod,
                                 ProgramAdi = s.ProgramAdi,
-                                YetkiVar = entities.KullaniciProgramlaris.Any(a => a.KullaniciID == kullaniciId && a.ProgramKod == s.ProgramKod)
+                                YetkiVar = entities.KullaniciProgramlaris.Any(a =>
+                                    a.KullaniciID == kullaniciId && a.ProgramKod == s.ProgramKod)
                             });
 
                 if (enstituKod.IsNullOrWhiteSpace() == false) kull = kull.Where(p => p.EnstituKod == enstituKod);
-                var data = kull.OrderByDescending(o => o.YetkiVar).ThenBy(t => t.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ToList();
+                var data = kull.OrderByDescending(o => o.YetkiVar).ThenBy(t => t.AnabilimDaliAdi)
+                    .ThenBy(t => t.ProgramAdi).ToList();
                 return data;
             }
         }
+
         public static string ResimKaydet(HttpPostedFileBase resim)
         {
             try
@@ -280,7 +313,9 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     catch (Exception ex)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), BilgiTipiEnum.OnemsizHata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(ex,
+                            "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" +
+                            ex.ToExceptionMessage(), BilgiTipiEnum.OnemsizHata);
                     }
                 }
                 else
@@ -319,12 +354,16 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     catch (Exception errQuality)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), BilgiTipiEnum.OnemsizHata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(errQuality,
+                            "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(),
+                            BilgiTipiEnum.OnemsizHata);
                     }
+
                     #endregion
                 }
 
                 #region Rotation
+
                 try
                 {
 
@@ -348,14 +387,19 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (rotasYonDegisimLog)
                         {
 
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(
+                                "Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu,
+                                ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex,
+                        "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" +
+                        ex.ToExceptionMessage(), BilgiTipiEnum.OnemsizHata);
                 }
+
                 #endregion
 
 
@@ -363,10 +407,13 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             catch (Exception ex)
             {
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, null, UserIdentity.Ip);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(
+                    "Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(),
+                    BilgiTipiEnum.Hata, null, UserIdentity.Ip);
                 return null;
             }
         }
+
         private static RotateFlipType GetOrientationToFlipType(int orientationValue)
         {
             RotateFlipType rotateFlipType;
@@ -407,6 +454,84 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MmMessage SendMailYeniHesap(Kullanicilar kModel, string sfr)
         {
             return MailSenderKullanici.SendMailYeniHesap(kModel, sfr);
+        }
+
+
+
+        public static void OgrenciOgrenimBilgileriniCek()
+        {
+            using (var db = new LubsDbEntities())
+            {
+                var kulls = db.Kullanicilars.Where(p => p.YtuOgrencisi).ToList();
+                var danismans = db.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
+                    .Select(s => new { s.TcKimlikNo, s.KullaniciID }).ToList();
+                var obsData = new ObsServiceData();
+                int counter = 0;
+                foreach (var kul in kulls)
+                {
+                    counter++;
+                    var studentData = obsData.GetObsStudentControlX(kul.TcKimlikNo, null);
+
+                    if (!studentData.Any()) continue;
+                    var selectedOgrenim =
+                        studentData.FirstOrDefault(p => p.OgrenciInfo.OGR_NO == kul.OgrenciNo);
+                    if (selectedOgrenim != null)
+                    {
+                        int? danismanId = selectedOgrenim.DanismanInfo != null
+                            ? danismans
+                                .Where(p => p.TcKimlikNo == selectedOgrenim.OgrenciInfo.DANISMAN_TC1)
+                                .Select(s => s.KullaniciID)
+                                .FirstOrDefault()
+                            : (int?)null;
+                        if (!(danismanId > 0)) danismanId = null;
+                        var kullaniciOgrenim = new KullaniciOgrenimleri
+                        {
+                            OgrenimDurumID = kul.OgrenimDurumID,
+                            OgrenimTipKod = kul.OgrenimTipKod,
+                            ProgramKod = kul.ProgramKod,
+                            OgrenciNo = kul.OgrenciNo,
+                            ObsProgramAdi = selectedOgrenim.OgrenciInfo.PROGRAM_AD,
+                            ObsProgramId = selectedOgrenim.OgrenciInfo.PROGRAM_ID,
+                            DanismanID = danismanId,
+                            KayitDonemID = selectedOgrenim.DonemID,
+                            KayitTarihi = selectedOgrenim.KayitTarihi,
+                            KayitYilBaslangic = selectedOgrenim.BaslangicYil,
+                            IslemTarihi = DateTime.Now,
+                            IslemYapanID = 1,
+                            IslemYapanIP = "::",
+                        };
+                        kul.KullaniciOgrenimleris.Add(kullaniciOgrenim);
+
+                    }
+                    foreach (var itemDigerOgrenim in studentData.Where(p =>
+                                 p.OgrenciInfo.OGRENIMSEVIYE_ID != kul.OgrenimTipKod.ToString()))
+                    {
+                        int? danismanId1 = itemDigerOgrenim.DanismanInfo != null ? danismans
+                            .Where(p => p.TcKimlikNo == itemDigerOgrenim.OgrenciInfo.DANISMAN_TC1)
+                            .Select(s => s.KullaniciID).FirstOrDefault() : (int?)null;
+                        if (!(danismanId1 > 0)) danismanId1 = null;
+                        var kullaniciOgrenim1 = new KullaniciOgrenimleri
+                        {
+                            OgrenimDurumID = kul.OgrenimDurumID,
+                            OgrenimTipKod = kul.OgrenimTipKod,
+                            ProgramKod = null,
+                            OgrenciNo = kul.OgrenciNo,
+                            ObsProgramAdi = itemDigerOgrenim.OgrenciInfo.PROGRAM_AD,
+                            ObsProgramId = itemDigerOgrenim.OgrenciInfo.PROGRAM_ID,
+                            KayitDonemID = itemDigerOgrenim.DonemID,
+                            KayitTarihi = itemDigerOgrenim.KayitTarihi,
+                            KayitYilBaslangic = itemDigerOgrenim.BaslangicYil,
+                            DanismanID = danismanId1,
+                            IslemTarihi = DateTime.Now,
+                            IslemYapanID = 1,
+                            IslemYapanIP = "::",
+                        };
+                        kul.KullaniciOgrenimleris.Add(kullaniciOgrenim1);
+                    }
+                }
+
+                db.SaveChanges();
+            }
         }
     }
 }

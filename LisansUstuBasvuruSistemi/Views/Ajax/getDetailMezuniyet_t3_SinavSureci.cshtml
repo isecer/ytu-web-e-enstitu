@@ -233,10 +233,10 @@
                                                                                                             <td id="SrSinavTarihiContent_@item.SRTalepID" class="hide">
                                                                                                                 <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@item.Tarih.AddHours(item.BasSaat.Hours).AddMinutes(item.BasSaat.Minutes).ToFormatDateAndTimeInput()" id="SrSinavTarihiIInput_@item.SRTalepID">
                                                                                                             </td>
-                                                                                                            @if (kayitYetki)
+                                                                                                            @if (kayitYetki && !isEnstituSonucuGirdi)
                                                                                                             {
                                                                                                                 <td width="25" style="text-align:right;font-size:10pt;">
-                                                                                                                    <a href="javascript:void(0)" onclick="ShowSinavTarihi(@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="EYK Tarihini Düzenle"></i></a>
+                                                                                                                    <a href="javascript:void(0)" onclick="ShowSinavTarihi(@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="Sınav Tarihini Düzenle"></i></a>
                                                                                                                     <script>
                                                                                                                         $('#SrSinavTarihiIInput_@item.SRTalepID').datetimepicker({
                                                                                                                             lang: 'tr',
