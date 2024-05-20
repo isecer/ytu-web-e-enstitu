@@ -458,6 +458,9 @@
     <Compile Include="Utilities\MenuAndRoles\MenuGenerator.cs" />
     <Compile Include="Utilities\SystemSetting\GlobalSistemSetting.cs" />
     <Compile Include="Utilities\SystemSetting\DonemProjesiAyar.cs" />
+    <Compile Include="WebServiceData\ObsService\ObsData.cs" />
+    <Compile Include="WebServiceData\ObsService\ObsDtos\ObsStudentDto.cs" />
+    <Compile Include="WebServiceData\ObsService\ObsServiceExtension.cs" />
     <Compile Include="WebServiceData\PersisService\PersisServiceModel.cs" />
     <Compile Include="Utilities\Dtos\RprBasvuruSonucBolumModel.cs" />
     <Compile Include="Utilities\Dtos\RprBasvuruSonucModel.cs" />
