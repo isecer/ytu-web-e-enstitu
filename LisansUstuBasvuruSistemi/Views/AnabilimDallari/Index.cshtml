@@ -51,7 +51,6 @@
                                 <th class="sirala" field="AnabilimDaliKod" width="50">Kod</th>
                                 <th class="sirala" field="AnabilimDaliAdi">Anabilim Dalı Adı</th>
                                 <th class="sirala" field="IsEmailVar">EMail</th>
-                                <th class="sirala" field="ProgramCount">P.Sayısı</th>
                                 <th class="sirala" field="YeterlikKomiteUyeCount" width="90">Y.Komite.Üye</th>
                                 <th class="sirala" field="IsAktif" width="60">Durum</th>
                                 <th width="40"></th>
@@ -67,9 +66,6 @@
                                 </th>
                                 <th>
                                     @Html.DropDownList("IsEmailVar", null, new { @class = "form-control", style = "padding:0px;" })
-                                </th>
-                                <th>
-                                    @Html.DropDownList("IsProgramVar", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
                                 <th>
                                     @Html.DropDownList("IsKomiteUyesiVar", null, new { @class = "form-control", style = "padding:0px;" })
@@ -99,9 +95,6 @@
                                             }
                                         </td>
                                         <td>
-                                             <i class="fa fa-list fa-lg"></i> @item.ProgramCount Program
-                                        </td>
-                                        <td>
                                             <label class="label label-@(item.YeterlikKomiteUyeCount>0 ? "success" : "default") label-form" onclick="GetYeterlikKomiteUyeleri(@item.AnabilimDaliID);" style="cursor: pointer;" id="yeterlikUyeRowContent_@item.AnabilimDaliID"><i class="fa fa-group fa-lg"></i> @item.YeterlikKomiteUyeCount Üye</label>
                                         </td>
                                         <td id="tdIa_@item.AnabilimDaliID" style="text-align:center;">
@@ -117,7 +110,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="7" style="text-align: center;">
+                                    <td colspan="6" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

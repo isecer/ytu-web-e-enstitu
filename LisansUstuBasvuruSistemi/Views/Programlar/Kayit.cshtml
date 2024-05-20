@@ -1,13 +1,13 @@
-﻿@using Entities.Entities
+﻿@using Entities.Entities 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model Programlar
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var oldId = (string)ViewBag.OldID;
-    var kulIds = (List<int>)ViewBag.KullaniciIDs;
-    var enstituKod = (string)ViewBag.EnstituKod;
+    var oldId = (string)ViewBag.OldID; 
+    var kulIds = (List<int>)ViewBag.KullaniciIDs;   
+    var enstituKod = (string)ViewBag.EnstituKod; 
 }
 <div class="row">
     <form method="post" class="form-horizontal" role="form">
@@ -41,19 +41,12 @@
                                 </div>
                             }
                             <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">OBS Program Kodu</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="ObsProgramId" id="ObsProgramId" value="@Model.ObsProgramId.ToEmptyStringZero()" class="form-control" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Program Adı</label>
                                 <div class="col-md-9 col-xs-8">
                                     <input type="text" name="ProgramAdi" id="ProgramAdi" value="@Model.ProgramAdi" class="form-control" />
                                 </div>
                             </div>
-
+                            
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Program Dili İnglizce Mi?</label>
                                 <div class="col-md-9 col-xs-8">
@@ -62,7 +55,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
 
 
                             @if (!oldId.IsNullOrWhiteSpace())
@@ -75,14 +68,14 @@
                                         </div>
                                     </div>
                                 </div>
-                            }
+                            } 
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Yetkili Kullanıcılar</label>
                                 <div class="col-md-9 col-xs-8">
                                     @Html.DropDownList("KullaniciID", null, new { @class = "form-control selectpicker", id = "KullaniciID", multiple = "multiple", data_live_search = "true", data_live_search_placeholder = "Search", data_actions_box = "true" })
                                 </div>
                             </div>
-
+                            
                         </div>
                     </div>
                     <div id="kulList"></div>
@@ -97,17 +90,17 @@
     </form>
 </div>
 <script>
-
-
+  
+     
     $(function () {
         $('.selectpicker').selectpicker();
-        GetKullanicilar();
+        GetKullanicilar();  
         var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
 
-
+        
     });
-
+ 
 
     function GetKullanicilar() {
         var _panel = $('#prgPbody');
@@ -147,5 +140,5 @@
         else {
             PanelRefresh(_panel, true);
         }
-    }
+    } 
 </script>

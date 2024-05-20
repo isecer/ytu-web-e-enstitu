@@ -5,200 +5,200 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="3d3f865a364a4319a8ffae5f3f523605" Name="Diagram1" ZoomLevel="30">
-        <EntityTypeShape EntityType="LubsDbModel.AlanTipleri" Width="1.5" PointX="27.5" PointY="217.875" />
-        <EntityTypeShape EntityType="LubsDbModel.AlesTipleri" Width="1.5" PointX="11.25" PointY="251.5" />
-        <EntityTypeShape EntityType="LubsDbModel.AnabilimDaliYeterlikKomiteUyeleri" Width="1.5" PointX="13.5" PointY="203.875" />
-        <EntityTypeShape EntityType="LubsDbModel.AnabilimDallari" Width="1.5" PointX="11.25" PointY="190.375" />
-        <EntityTypeShape EntityType="LubsDbModel.Anket" Width="1.5" PointX="19.5" PointY="185.625" />
-        <EntityTypeShape EntityType="LubsDbModel.AnketCevaplari" Width="1.5" PointX="5.25" PointY="192.625" />
-        <EntityTypeShape EntityType="LubsDbModel.AnketSoru" Width="1.5" PointX="21.75" PointY="197.5" />
-        <EntityTypeShape EntityType="LubsDbModel.AnketSoruSecenek" Width="1.5" PointX="24" PointY="197.625" />
-        <EntityTypeShape EntityType="LubsDbModel.Ayarlar" Width="1.5" PointX="11.25" PointY="235.75" />
-        <EntityTypeShape EntityType="LubsDbModel.Aylar" Width="1.5" PointX="2.75" PointY="3.75" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruAgnoAlimTipleri" Width="1.5" PointX="4.75" PointY="3.75" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruBelgeTipleri" Width="1.5" PointX="11.25" PointY="231.5" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruBelgeTipleriYuklemeSekli" Width="1.5" PointX="13.5" PointY="232.25" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruDurumlari" Width="1.5" PointX="11.25" PointY="243.375" />
-        <EntityTypeShape EntityType="LubsDbModel.Basvurular" Width="1.5" PointX="34" PointY="217" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvurularSinavBilgi" Width="1.5" PointX="42.25" PointY="219.25" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvurularTercihleri" Width="1.5" PointX="29.75" PointY="203.375" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvurularTercihleriKayitOdemeleri" Width="1.5" PointX="40" PointY="213.25" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvurularYuklenenBelgeler" Width="1.5" PointX="39.25" PointY="228.125" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurec" Width="1.5" PointX="27.75" PointY="183.375" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecBelgeTipleri" Width="1.5" PointX="30" PointY="217.875" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecBelgeTipleriYuklemeSekli" Width="1.5" PointX="36.25" PointY="227.25" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecKontrolTipleri" Width="1.5" PointX="25.5" PointY="177.25" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecKotalar" Width="1.5" PointX="36" PointY="191.625" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecMulakatSinavTurleri" Width="1.5" PointX="39" PointY="186.125" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOgrenimTipleri" Width="1.5" PointX="40" PointY="201.375" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOtoMail" Width="1.5" PointX="30" PointY="179" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOTOrtBasvr" Width="1.5" PointX="30" PointY="240" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="30" PointY="209.875" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavNotlari" Width="1.5" PointX="38.25" PointY="194.5" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTarihleri" Width="1.5" PointX="38.25" PointY="179.75" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleri" Width="1.5" PointX="36" PointY="182.125" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriDil" Width="1.5" PointX="41.25" PointY="185.375" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriDonem" Width="1.5" PointX="41.25" PointY="181" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA" Width="1.5" PointX="38" PointY="197.625" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA_OT" Width="1.5" PointX="40.25" PointY="175.25" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA_PR" Width="1.5" PointX="26.75" PointY="209.125" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklari" Width="1.5" PointX="39" PointY="190" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="26.75" PointY="212.125" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTiplerSubSinavAralik" Width="1.5" PointX="38.25" PointY="182.375" />
-        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecTipleri" Width="1.5" PointX="25.5" PointY="174.75" />
-        <EntityTypeShape EntityType="LubsDbModel.BelgeDurumlari" Width="1.5" PointX="11.25" PointY="172.375" />
-        <EntityTypeShape EntityType="LubsDbModel.BelgeTalepAyarlar" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="LubsDbModel.BelgeTalepleri" Width="1.5" PointX="3" PointY="196.375" />
-        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetay" Width="1.5" PointX="6" PointY="198.875" />
-        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetayBelgeler" Width="1.5" PointX="13.5" PointY="227.125" />
-        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetaySaatler" Width="1.5" PointX="11.25" PointY="199.625" />
-        <EntityTypeShape EntityType="LubsDbModel.BelgeTipleri" Width="1.5" PointX="11.25" PointY="254.625" />
-        <EntityTypeShape EntityType="LubsDbModel.Birimler" Width="1.5" PointX="11.25" PointY="247.5" />
-        <EntityTypeShape EntityType="LubsDbModel.BolumEslestir" Width="1.5" PointX="23.75" PointY="211.875" />
-        <EntityTypeShape EntityType="LubsDbModel.Cinsiyetler" Width="1.5" PointX="6.75" PointY="208.125" />
-        <EntityTypeShape EntityType="LubsDbModel.Donemler" Width="1.5" PointX="0.75" PointY="189.75" />
-        <EntityTypeShape EntityType="LubsDbModel.DonemProjesi" Width="1.5" PointX="32.75" PointY="203.75" />
-        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiAyarlar" Width="1.5" PointX="2.75" PointY="6.75" />
-        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiBasvuru" Width="1.5" PointX="48" PointY="185.625" />
-        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiDurumlari" Width="1.5" PointX="45.75" PointY="182.75" />
-        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiEnstituOnayDurumlari" Width="1.5" PointX="45.75" PointY="176.625" />
-        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiJurileri" Width="1.5" PointX="50.25" PointY="183.375" />
-        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiJuriOnayDurumlari" Width="1.5" PointX="45.75" PointY="180.125" />
-        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiMuafOgrenciler" Width="1.5" PointX="16.5" PointY="187" />
-        <EntityTypeShape EntityType="LubsDbModel.DuyuruEkleri" Width="1.5" PointX="23.75" PointY="202.375" />
-        <EntityTypeShape EntityType="LubsDbModel.Duyurular" Width="1.5" PointX="21.5" PointY="201.25" />
-        <EntityTypeShape EntityType="LubsDbModel.DuyuruPopuplar" Width="1.5" PointX="32.75" PointY="210.375" />
-        <EntityTypeShape EntityType="LubsDbModel.DuyuruPopupTipleri" Width="1.5" PointX="30.5" PointY="224.5" />
-        <EntityTypeShape EntityType="LubsDbModel.Enstituler" Width="1.5" PointX="11.25" PointY="176.375" />
-        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailEkleri" Width="1.5" PointX="39.5" PointY="218.625" />
-        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailKullanicilar" Width="1.5" PointX="50.5" PointY="199" />
-        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailler" Width="1.5" PointX="37.25" PointY="205.25" />
-        <EntityTypeShape EntityType="LubsDbModel.HaftaGunleri" Width="1.5" PointX="9" PointY="184" />
-        <EntityTypeShape EntityType="LubsDbModel.Kampusler" Width="1.5" PointX="41" PointY="167.625" />
-        <EntityTypeShape EntityType="LubsDbModel.KayitDurumlari" Width="1.5" PointX="40" PointY="238.875" />
-        <EntityTypeShape EntityType="LubsDbModel.KullaniciEnstituYetkileri" Width="1.5" PointX="16.5" PointY="191" />
-        <EntityTypeShape EntityType="LubsDbModel.Kullanicilar" Width="1.5" PointX="9" PointY="187.75" />
-        <EntityTypeShape EntityType="LubsDbModel.KullaniciOgrenimleri" Width="1.5" PointX="11.25" PointY="214.375" />
-        <EntityTypeShape EntityType="LubsDbModel.KullaniciProgramlari" Width="1.5" PointX="23.75" PointY="209.125" />
-        <EntityTypeShape EntityType="LubsDbModel.KullaniciTipleri" Width="1.5" PointX="6.75" PointY="188.125" />
-        <EntityTypeShape EntityType="LubsDbModel.Log" Width="1.5" PointX="4.75" PointY="6.75" />
-        <EntityTypeShape EntityType="LubsDbModel.MailSablonlari" Width="1.5" PointX="19.5" PointY="190.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MailSablonlariEkleri" Width="1.5" PointX="21.75" PointY="191.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MailSablonTipleri" Width="1.5" PointX="17.25" PointY="178.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MedeniHaller" Width="1.5" PointX="31.75" PointY="221.375" />
-        <EntityTypeShape EntityType="LubsDbModel.Menuler" Width="1.5" PointX="9" PointY="215.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MesajEkleri" Width="1.5" PointX="27" PointY="180.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MesajKategorileri" Width="1.5" PointX="13.5" PointY="189.75" />
-        <EntityTypeShape EntityType="LubsDbModel.Mesajlar" Width="1.5" PointX="24.75" PointY="189.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetAyarlar" Width="1.5" PointX="6.75" PointY="5.75" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulari" Width="1.5" PointX="35" PointY="202.25" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezDosyalari" Width="1.5" PointX="37.25" PointY="211.75" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezTeslimFormlari" Width="1.5" PointX="37.25" PointY="216.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="48.25" PointY="204.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetJuriOneriFormlari" Width="1.5" PointX="37.25" PointY="221" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetJuriOneriFormuJurileri" Width="1.5" PointX="39.5" PointY="222.125" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSinavDurumlari" Width="1.5" PointX="51" PointY="194.75" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureci" Width="1.5" PointX="26.75" PointY="196.75" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciKriterMuafOgrenciler" Width="1.5" PointX="40" PointY="209.875" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOgrenimTipKriterleri" Width="1.5" PointX="41" PointY="195.125" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOtoMail" Width="1.5" PointX="29" PointY="214" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOtoMailGonderilenler" Width="1.5" PointX="31.25" PointY="214.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYayinTurleri" Width="1.5" PointX="8.75" PointY="0.75" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYonetmelikleri" Width="1.5" PointX="13.5" PointY="208" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYonetmelikleriOT" Width="1.5" PointX="15.75" PointY="208.625" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinBelgeTurleri" Width="1.5" PointX="46" PointY="219.75" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinIndexTurleri" Width="1.5" PointX="46" PointY="224.625" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinKontrolDurumlari" Width="1.5" PointX="32.75" PointY="234.5" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinLinkTurleri" Width="1.5" PointX="19" PointY="223.125" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinMetinTurleri" Width="1.5" PointX="19" PointY="220.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinProjeTurleri" Width="1.5" PointX="46" PointY="222.25" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinTurleri" Width="1.5" PointX="21.25" PointY="206.25" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYonetmelikleri" Width="1.5" PointX="19.5" PointY="195.125" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYonetmelikleriOT" Width="1.5" PointX="24.5" PointY="205.125" />
-        <EntityTypeShape EntityType="LubsDbModel.Mulakat" Width="1.5" PointX="35" PointY="197.125" />
-        <EntityTypeShape EntityType="LubsDbModel.MulakatDetay" Width="1.5" PointX="43.25" PointY="197.375" />
-        <EntityTypeShape EntityType="LubsDbModel.MulakatJuri" Width="1.5" PointX="37.25" PointY="201.5" />
-        <EntityTypeShape EntityType="LubsDbModel.MulakatSinavTurleri" Width="1.5" PointX="36.75" PointY="176" />
-        <EntityTypeShape EntityType="LubsDbModel.MulakatSonuclari" Width="1.5" PointX="42.25" PointY="211.875" />
-        <EntityTypeShape EntityType="LubsDbModel.MulakatSonucTipleri" Width="1.5" PointX="40" PointY="235.75" />
-        <EntityTypeShape EntityType="LubsDbModel.NotSistemleri" Width="1.5" PointX="8.75" PointY="8.75" />
-        <EntityTypeShape EntityType="LubsDbModel.OgrenciBolumleri" Width="1.5" PointX="11.25" PointY="227.5" />
-        <EntityTypeShape EntityType="LubsDbModel.OgrenimDurumlari" Width="1.5" PointX="0.75" PointY="199.25" />
-        <EntityTypeShape EntityType="LubsDbModel.OgrenimTipleri" Width="1.5" PointX="13.5" PointY="198.375" />
-        <EntityTypeShape EntityType="LubsDbModel.OzelNotTipleri" Width="1.5" PointX="14.25" PointY="187.125" />
-        <EntityTypeShape EntityType="LubsDbModel.OzelTarihTipleri" Width="1.5" PointX="33.75" PointY="173.75" />
-        <EntityTypeShape EntityType="LubsDbModel.Programlar" Width="1.5" PointX="18.5" PointY="201.5" />
-        <EntityTypeShape EntityType="LubsDbModel.Roller" Width="1.5" PointX="11.25" PointY="203.625" />
-        <EntityTypeShape EntityType="LubsDbModel.Sehirler" Width="1.5" PointX="11.25" PointY="194.75" />
-        <EntityTypeShape EntityType="LubsDbModel.ServiceLog" Width="1.5" PointX="10.75" PointY="0.75" />
-        <EntityTypeShape EntityType="LubsDbModel.ServiceRole" Width="1.5" PointX="0.75" PointY="1.125" />
-        <EntityTypeShape EntityType="LubsDbModel.ServiceUser" Width="1.5" PointX="0.75" PointY="5.375" />
-        <EntityTypeShape EntityType="LubsDbModel.ServiceUserRole" Width="1.5" PointX="3" PointY="0.875" />
-        <EntityTypeShape EntityType="LubsDbModel.SikcaSorulanSorular" Width="1.5" PointX="10.75" PointY="3.75" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavDilleri" Width="1.5" PointX="39" PointY="171" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavNotlari" Width="1.5" PointX="18.75" PointY="213.125" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavTipGruplari" Width="1.5" PointX="14.25" PointY="216.625" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavTipleri" Width="1.5" PointX="16.5" PointY="194.5" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA" Width="1.5" PointX="18.75" PointY="181.625" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA_OT" Width="1.5" PointX="21" PointY="181.125" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA_PR" Width="1.5" PointX="30" PointY="183.125" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOTNotAraliklari" Width="1.5" PointX="23.75" PointY="181.5" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="33" PointY="186.125" />
-        <EntityTypeShape EntityType="LubsDbModel.SinavTiplerSubSinavAralik" Width="1.5" PointX="18.75" PointY="209.75" />
-        <EntityTypeShape EntityType="LubsDbModel.SistemBilgilendirme" Width="1.5" PointX="11.25" PointY="239.875" />
-        <EntityTypeShape EntityType="LubsDbModel.SistemDilleri" Width="1.5" PointX="4.75" PointY="10.75" />
-        <EntityTypeShape EntityType="LubsDbModel.SRDurumlari" Width="1.5" PointX="51" PointY="210.5" />
-        <EntityTypeShape EntityType="LubsDbModel.SROzelTanimlar" Width="1.5" PointX="21.75" PointY="176.25" />
-        <EntityTypeShape EntityType="LubsDbModel.SROzelTanimTipleri" Width="1.5" PointX="19.5" PointY="173.5" />
-        <EntityTypeShape EntityType="LubsDbModel.SRSaatler" Width="1.5" PointX="24.75" PointY="186.125" />
-        <EntityTypeShape EntityType="LubsDbModel.SRSalonDurumlari" Width="1.5" PointX="10.75" PointY="7.75" />
-        <EntityTypeShape EntityType="LubsDbModel.SRSalonlar" Width="1.5" PointX="13.5" PointY="193.625" />
-        <EntityTypeShape EntityType="LubsDbModel.SRSalonTalepTipleri" Width="1.5" PointX="21.75" PointY="194.375" />
-        <EntityTypeShape EntityType="LubsDbModel.SRTalepleri" Width="1.5" PointX="53.25" PointY="188.75" />
-        <EntityTypeShape EntityType="LubsDbModel.SRTaleplerJuri" Width="1.5" PointX="55.5" PointY="204.125" />
-        <EntityTypeShape EntityType="LubsDbModel.SRTalepTipleri" Width="1.5" PointX="19.5" PointY="176.875" />
-        <EntityTypeShape EntityType="LubsDbModel.sysdiagram" Width="1.5" PointX="0.75" PointY="11.75" />
-        <EntityTypeShape EntityType="LubsDbModel.TalepArGorStatuleri" Width="1.5" PointX="10.75" PointY="11.75" />
-        <EntityTypeShape EntityType="LubsDbModel.TalepDurumlari" Width="1.5" PointX="13.5" PointY="219.375" />
-        <EntityTypeShape EntityType="LubsDbModel.TalepGelenTalepBelgeleri" Width="1.5" PointX="18" PointY="216.625" />
-        <EntityTypeShape EntityType="LubsDbModel.TalepGelenTalepler" Width="1.5" PointX="15.75" PointY="201.625" />
-        <EntityTypeShape EntityType="LubsDbModel.TalepSureciTalepTipleri" Width="1.5" PointX="15.75" PointY="223" />
-        <EntityTypeShape EntityType="LubsDbModel.TalepSurecleri" Width="1.5" PointX="13.5" PointY="222.625" />
-        <EntityTypeShape EntityType="LubsDbModel.TalepTipleri" Width="1.5" PointX="13.5" PointY="174.375" />
-        <EntityTypeShape EntityType="LubsDbModel.TDOAyarlar" Width="1.5" PointX="12.75" PointY="0.75" />
-        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuru" Width="1.5" PointX="26.75" PointY="202.75" />
-        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuruDanisman" Width="1.5" PointX="46" PointY="205.375" />
-        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuruEsDanisman" Width="1.5" PointX="48.25" PointY="215.375" />
-        <EntityTypeShape EntityType="LubsDbModel.TDODanismanTalepTipleri" Width="1.5" PointX="43.75" PointY="225.25" />
-        <EntityTypeShape EntityType="LubsDbModel.TIAyarlar" Width="1.5" PointX="12.75" PointY="5.75" />
-        <EntityTypeShape EntityType="LubsDbModel.TIBasvuru" Width="1.5" PointX="33.75" PointY="189.625" />
-        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRapor" Width="1.5" PointX="43" PointY="201.5" />
-        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRaporDurumlari" Width="1.5" PointX="40.75" PointY="233.25" />
-        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRaporKomite" Width="1.5" PointX="51.25" PointY="202.75" />
-        <EntityTypeShape EntityType="LubsDbModel.TijBasvuru" Width="1.5" PointX="32.75" PointY="196.625" />
-        <EntityTypeShape EntityType="LubsDbModel.TijBasvuruOneri" Width="1.5" PointX="45" PointY="187.875" />
-        <EntityTypeShape EntityType="LubsDbModel.TijBasvuruOneriJuriler" Width="1.5" PointX="50.25" PointY="190.125" />
-        <EntityTypeShape EntityType="LubsDbModel.TijDegisiklikTipleri" Width="1.5" PointX="42.75" PointY="175.5" />
-        <EntityTypeShape EntityType="LubsDbModel.TijFormTipleri" Width="1.5" PointX="42.75" PointY="178" />
-        <EntityTypeShape EntityType="LubsDbModel.ToBasvuru" Width="1.5" PointX="29.75" PointY="196.375" />
-        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunma" Width="1.5" PointX="46" PointY="197.625" />
-        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunmaDurumlari" Width="1.5" PointX="43.75" PointY="185.125" />
-        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunmaKomite" Width="1.5" PointX="48.25" PointY="197.25" />
-        <EntityTypeShape EntityType="LubsDbModel.Universiteler" Width="1.5" PointX="49" PointY="223.625" />
-        <EntityTypeShape EntityType="LubsDbModel.Unvanlar" Width="1.5" PointX="6.75" PointY="211.375" />
-        <EntityTypeShape EntityType="LubsDbModel.Uyruklar" Width="1.5" PointX="6.75" PointY="204.75" />
-        <EntityTypeShape EntityType="LubsDbModel.WsSinavCekimTipleri" Width="1.5" PointX="33.75" PointY="176.25" />
-        <EntityTypeShape EntityType="LubsDbModel.WsSinavCekipTipDetay" Width="1.5" PointX="6.75" PointY="12.75" />
-        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuru" Width="1.5" PointX="30.75" PointY="186.125" />
-        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuruJuriUyeleri" Width="1.5" PointX="33" PointY="179" />
-        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuruKomiteler" Width="1.5" PointX="42" PointY="190.125" />
-        <EntityTypeShape EntityType="LubsDbModel.YeterlikSureci" Width="1.5" PointX="13.5" PointY="179.125" />
-        <EntityTypeShape EntityType="LubsDbModel.YeterlikSureciKriterMuafOgrenciler" Width="1.5" PointX="21.75" PointY="187.5" />
-        <EntityTypeShape EntityType="LubsDbModel.YeterlikSurecOgrenimTipleri" Width="1.5" PointX="15.75" PointY="181.5" />
-        <EntityTypeShape EntityType="LubsDbModel.YetkiGruplari" Width="1.5" PointX="6.75" PointY="214.625" />
-        <EntityTypeShape EntityType="LubsDbModel.YetkiGrupRolleri" Width="1.5" PointX="13.5" PointY="213.125" />
-        <EntityTypeShape EntityType="LubsDbModel.ZamanTipleri" Width="1.5" PointX="27.75" PointY="177.5" />
-        <EntityTypeShape EntityType="LubsDbModel.vW_ProgramBasvuruSonucSayisal" Width="1.5" PointX="12.75" PointY="10.75" />
+        <EntityTypeShape EntityType="LubsDbModel.AlanTipleri" Width="1.5" PointX="16.5" PointY="43" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.AlesTipleri" Width="1.5" PointX="5.25" PointY="51.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.AnabilimDaliYeterlikKomiteUyeleri" Width="1.5" PointX="7.5" PointY="56.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.AnabilimDallari" Width="1.5" PointX="5.25" PointY="57.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Anket" Width="1.5" PointX="10.5" PointY="52.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.AnketCevaplari" Width="1.5" PointX="7.5" PointY="50.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.AnketSoru" Width="1.5" PointX="12.75" PointY="55.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.AnketSoruSecenek" Width="1.5" PointX="15" PointY="55.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Ayarlar" Width="1.5" PointX="5.25" PointY="64.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Aylar" Width="1.5" PointX="2.75" PointY="2.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruAgnoAlimTipleri" Width="1.5" PointX="4.75" PointY="2.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruBelgeTipleri" Width="1.5" PointX="5.25" PointY="61.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruBelgeTipleriYuklemeSekli" Width="1.5" PointX="7.5" PointY="61.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruDurumlari" Width="1.5" PointX="5.25" PointY="60" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Basvurular" Width="1.5" PointX="24" PointY="56.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvurularSinavBilgi" Width="1.5" PointX="29.25" PointY="52.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvurularTercihleri" Width="1.5" PointX="18.75" PointY="48" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvurularTercihleriKayitOdemeleri" Width="1.5" PointX="24" PointY="44.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvurularYuklenenBelgeler" Width="1.5" PointX="26.25" PointY="60.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurec" Width="1.5" PointX="15.75" PointY="50.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecBelgeTipleri" Width="1.5" PointX="23" PointY="60.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecBelgeTipleriYuklemeSekli" Width="1.5" PointX="26.25" PointY="62" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecKontrolTipleri" Width="1.5" PointX="13.5" PointY="44" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecKotalar" Width="1.5" PointX="21" PointY="49.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecMulakatSinavTurleri" Width="1.5" PointX="24" PointY="48.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOgrenimTipleri" Width="1.5" PointX="18" PointY="45.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOtoMail" Width="1.5" PointX="23" PointY="46.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecOTOrtBasvr" Width="1.5" PointX="18" PointY="62" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="18" PointY="49.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavNotlari" Width="1.5" PointX="23.25" PointY="62.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTarihleri" Width="1.5" PointX="23.25" PointY="38.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleri" Width="1.5" PointX="21" PointY="47.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriDil" Width="1.5" PointX="26.25" PointY="45.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriDonem" Width="1.5" PointX="26.25" PointY="43.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA" Width="1.5" PointX="21" PointY="44.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA_OT" Width="1.5" PointX="23.25" PointY="42.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA_PR" Width="1.5" PointX="21.75" PointY="56.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklari" Width="1.5" PointX="23" PointY="50.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="18.75" PointY="58.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecSinavTiplerSubSinavAralik" Width="1.5" PointX="23.25" PointY="40.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BasvuruSurecTipleri" Width="1.5" PointX="13.5" PointY="45.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeDurumlari" Width="1.5" PointX="5.25" PointY="58.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTalepAyarlar" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTalepleri" Width="1.5" PointX="5.25" PointY="50.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetay" Width="1.5" PointX="5.25" PointY="48.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetayBelgeler" Width="1.5" PointX="7.5" PointY="45.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTipDetaySaatler" Width="1.5" PointX="7.5" PointY="48.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BelgeTipleri" Width="1.5" PointX="5.25" PointY="42.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Birimler" Width="1.5" PointX="5.25" PointY="63.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.BolumEslestir" Width="1.5" PointX="17.75" PointY="46.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Cinsiyetler" Width="1.5" PointX="0.75" PointY="49" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Donemler" Width="1.5" PointX="3" PointY="48.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DonemProjesi" Width="1.5" PointX="20.75" PointY="55.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiAyarlar" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiBasvuru" Width="1.5" PointX="27" PointY="55.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiDurumlari" Width="1.5" PointX="24.75" PointY="73.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiEnstituOnayDurumlari" Width="1.5" PointX="24.75" PointY="75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiJurileri" Width="1.5" PointX="29.25" PointY="56.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiJuriOnayDurumlari" Width="1.5" PointX="24.75" PointY="65.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DonemProjesiMuafOgrenciler" Width="1.5" PointX="7.5" PointY="53.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DuyuruEkleri" Width="1.5" PointX="9.75" PointY="67.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Duyurular" Width="1.5" PointX="7.5" PointY="55.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DuyuruPopuplar" Width="1.5" PointX="12.75" PointY="62.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.DuyuruPopupTipleri" Width="1.5" PointX="10.5" PointY="69.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Enstituler" Width="1.5" PointX="5.25" PointY="54.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailEkleri" Width="1.5" PointX="30.5" PointY="51" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailKullanicilar" Width="1.5" PointX="31.5" PointY="49.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.GonderilenMailler" Width="1.5" PointX="28.25" PointY="50.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.HaftaGunleri" Width="1.5" PointX="5.25" PointY="46.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Kampusler" Width="1.5" PointX="23" PointY="34" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.KayitDurumlari" Width="1.5" PointX="24" PointY="64.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.KullaniciEnstituYetkileri" Width="1.5" PointX="10.5" PointY="46.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Kullanicilar" Width="1.5" PointX="3" PointY="50.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.KullaniciOgrenimleri" Width="1.5" PointX="5.25" PointY="56.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.KullaniciProgramlari" Width="1.5" PointX="18.75" PointY="52" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.KullaniciTipleri" Width="1.5" PointX="0.75" PointY="52.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Log" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MailSablonlari" Width="1.5" PointX="7.5" PointY="58.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MailSablonlariEkleri" Width="1.5" PointX="9.75" PointY="63.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MailSablonTipleri" Width="1.5" PointX="5.25" PointY="66.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MedeniHaller" Width="1.5" PointX="21.75" PointY="65.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Menuler" Width="1.5" PointX="6" PointY="41.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MesajEkleri" Width="1.5" PointX="15" PointY="62.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MesajKategorileri" Width="1.5" PointX="10.5" PointY="54.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Mesajlar" Width="1.5" PointX="12.75" PointY="57.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetAyarlar" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulari" Width="1.5" PointX="20" PointY="54" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezDosyalari" Width="1.5" PointX="22.25" PointY="54" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezTeslimFormlari" Width="1.5" PointX="22.25" PointY="58.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="25.25" PointY="57.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetJuriOneriFormlari" Width="1.5" PointX="22.25" PointY="59.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetJuriOneriFormuJurileri" Width="1.5" PointX="24.5" PointY="59.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSinavDurumlari" Width="1.5" PointX="27" PointY="39.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureci" Width="1.5" PointX="15.75" PointY="52.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciKriterMuafOgrenciler" Width="1.5" PointX="24" PointY="45.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOgrenimTipKriterleri" Width="1.5" PointX="25" PointY="54.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOtoMail" Width="1.5" PointX="18" PointY="60.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciOtoMailGonderilenler" Width="1.5" PointX="20.25" PointY="60.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYayinTurleri" Width="1.5" PointX="6.75" PointY="2.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYonetmelikleri" Width="1.5" PointX="7.5" PointY="66.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetSureciYonetmelikleriOT" Width="1.5" PointX="9.75" PointY="62" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinBelgeTurleri" Width="1.5" PointX="23" PointY="70.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinIndexTurleri" Width="1.5" PointX="23" PointY="69.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinKontrolDurumlari" Width="1.5" PointX="17.75" PointY="64" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinLinkTurleri" Width="1.5" PointX="3" PointY="53.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinMetinTurleri" Width="1.5" PointX="3" PointY="52.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinProjeTurleri" Width="1.5" PointX="23" PointY="71.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYayinTurleri" Width="1.5" PointX="5.25" PointY="53.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYonetmelikleri" Width="1.5" PointX="10.5" PointY="58.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetYonetmelikleriOT" Width="1.5" PointX="15.75" PointY="57.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Mulakat" Width="1.5" PointX="21" PointY="52" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatDetay" Width="1.5" PointX="25.25" PointY="50" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatJuri" Width="1.5" PointX="23.25" PointY="52" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatSinavTurleri" Width="1.5" PointX="21.75" PointY="37.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatSonuclari" Width="1.5" PointX="26.25" PointY="52" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.MulakatSonucTipleri" Width="1.5" PointX="24" PointY="63.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.NotSistemleri" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.OgrenciBolumleri" Width="1.5" PointX="5.25" PointY="45" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.OgrenimDurumlari" Width="1.5" PointX="0.75" PointY="50.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.OgrenimTipleri" Width="1.5" PointX="10.5" PointY="56.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.OzelNotTipleri" Width="1.5" PointX="8.25" PointY="44" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.OzelTarihTipleri" Width="1.5" PointX="18.75" PointY="41.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Programlar" Width="1.5" PointX="13.5" PointY="53.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Roller" Width="1.5" PointX="8.25" PointY="52.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Sehirler" Width="1.5" PointX="5.25" PointY="62.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ServiceLog" Width="1.5" PointX="6.75" PointY="4.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ServiceRole" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ServiceUser" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ServiceUserRole" Width="1.5" PointX="3" PointY="0.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SikcaSorulanSorular" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavDilleri" Width="1.5" PointX="24" PointY="36.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavNotlari" Width="1.5" PointX="12.75" PointY="50.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipGruplari" Width="1.5" PointX="8.25" PointY="46.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleri" Width="1.5" PointX="10.5" PointY="48.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA" Width="1.5" PointX="12.75" PointY="47.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA_OT" Width="1.5" PointX="15" PointY="47.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOT_SNA_PR" Width="1.5" PointX="15.75" PointY="44.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOTNotAraliklari" Width="1.5" PointX="15.75" PointY="53.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="18" PointY="50.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SinavTiplerSubSinavAralik" Width="1.5" PointX="12.75" PointY="49.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SistemBilgilendirme" Width="1.5" PointX="5.25" PointY="43.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SistemDilleri" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SRDurumlari" Width="1.5" PointX="27" PointY="41" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SROzelTanimlar" Width="1.5" PointX="12.75" PointY="42.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SROzelTanimTipleri" Width="1.5" PointX="10.5" PointY="42.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SRSaatler" Width="1.5" PointX="15.75" PointY="48.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SRSalonDurumlari" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SRSalonlar" Width="1.5" PointX="10.5" PointY="50.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SRSalonTalepTipleri" Width="1.5" PointX="12.75" PointY="48.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SRTalepleri" Width="1.5" PointX="29.25" PointY="49.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SRTaleplerJuri" Width="1.5" PointX="31.5" PointY="55.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.SRTalepTipleri" Width="1.5" PointX="10.5" PointY="44.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.sysdiagram" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepArGorStatuleri" Width="1.5" PointX="8.75" PointY="2.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepDurumlari" Width="1.5" PointX="7.5" PointY="63.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepGelenTalepBelgeleri" Width="1.5" PointX="12" PointY="60" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepGelenTalepler" Width="1.5" PointX="9.75" PointY="60" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepSureciTalepTipleri" Width="1.5" PointX="9.75" PointY="65.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepSurecleri" Width="1.5" PointX="7.5" PointY="65.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TalepTipleri" Width="1.5" PointX="7.5" PointY="62.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TDOAyarlar" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuru" Width="1.5" PointX="18.75" PointY="57.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuruDanisman" Width="1.5" PointX="28" PointY="54.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TDOBasvuruEsDanisman" Width="1.5" PointX="30.25" PointY="54.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TDODanismanTalepTipleri" Width="1.5" PointX="25.75" PointY="67.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TIAyarlar" Width="1.5" PointX="8.75" PointY="4.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TIBasvuru" Width="1.5" PointX="20.75" PointY="46.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRapor" Width="1.5" PointX="26" PointY="47.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRaporDurumlari" Width="1.5" PointX="23.75" PointY="35.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TIBasvuruAraRaporKomite" Width="1.5" PointX="28.25" PointY="47.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TijBasvuru" Width="1.5" PointX="17.75" PointY="56.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TijBasvuruOneri" Width="1.5" PointX="27" PointY="59.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TijBasvuruOneriJuriler" Width="1.5" PointX="29.25" PointY="59.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TijDegisiklikTipleri" Width="1.5" PointX="24.75" PointY="77.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.TijFormTipleri" Width="1.5" PointX="24.75" PointY="76.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ToBasvuru" Width="1.5" PointX="20.75" PointY="50.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunma" Width="1.5" PointX="25" PointY="53.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunmaDurumlari" Width="1.5" PointX="22.75" PointY="67.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ToBasvuruSavunmaKomite" Width="1.5" PointX="29.25" PointY="55.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Universiteler" Width="1.5" PointX="26" PointY="42.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Unvanlar" Width="1.5" PointX="0.75" PointY="47.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.Uyruklar" Width="1.5" PointX="0.75" PointY="54.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.WsSinavCekimTipleri" Width="1.5" PointX="18.75" PointY="44" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.WsSinavCekipTipDetay" Width="1.5" PointX="4.75" PointY="8.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuru" Width="1.5" PointX="17.75" PointY="55" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuruJuriUyeleri" Width="1.5" PointX="20" PointY="64" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikBasvuruKomiteler" Width="1.5" PointX="27" PointY="48.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikSureci" Width="1.5" PointX="7.5" PointY="59.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikSureciKriterMuafOgrenciler" Width="1.5" PointX="14.75" PointY="61" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.YeterlikSurecOgrenimTipleri" Width="1.5" PointX="14.75" PointY="59.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.YetkiGruplari" Width="1.5" PointX="0.75" PointY="53.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.YetkiGrupRolleri" Width="1.5" PointX="13.5" PointY="52.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.ZamanTipleri" Width="1.5" PointX="20.75" PointY="42.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="LubsDbModel.vW_ProgramBasvuruSonucSayisal" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="false" />
         <AssociationConnector Association="LubsDbModel.FK_BasvurularTercihleri_AlanTipleri" />
         <AssociationConnector Association="LubsDbModel.FK_MulakatSonuclari_AlanTipleri" />
         <AssociationConnector Association="LubsDbModel.FK_AlesTipleri_Kullanicilar" />

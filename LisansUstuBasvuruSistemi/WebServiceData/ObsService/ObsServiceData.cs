@@ -25,11 +25,11 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                        new proliz_ytu_enstitu_minerSoapClient())
                 {
 
-                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, tcOrOgrenciNo, null);
+                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcOrOgrenciNo);
 
                     if (!ogrencis.Any() || !ogrencis[0].Sucess)
                     {
-                        ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password,  null, tcOrOgrenciNo);
+                        ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, tcOrOgrenciNo, null);
                     }
 
                     if (ogrencis.Any() && ogrencis[0].Sucess)
@@ -137,7 +137,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                         DonemAd = s.DONEM_AD,
                                         DersAdi = s.DERS_AD,
                                         DersKodu = s.DERS_KOD,
-                                        DersKoduNum = s.DERS_KOD.Length > 4 ? s.DERS_KOD.Substring(s.DERS_KOD.Length - 4, 4) : s.DERS_KOD,
+                                        DersKoduNum = s.DERS_KOD.Substring(s.DERS_KOD.Length - 4, 4),
                                         DersNotu = s.HARF_KOD,
                                         NotDeger = s.NOT_DEGER
 
@@ -145,7 +145,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                     }).ToList();
 
                                 var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(model.OgrenciInfo.ENSTITU_ID);
-                                var donemProjesiDersKodu = DonemProjesiAyar.DonemProjesiDersKodu.GetAyarDp(model.OgrenciInfo.ENSTITU_ID);
+                                var donemProjesiDersKodu =  DonemProjesiAyar.DonemProjesiDersKodu.GetAyarDp(model.OgrenciInfo.ENSTITU_ID);
                                 if (model.OgrenciInfo.OGRENIMSEVIYE_ID == OgrenimTipi.TezsizYuksekLisans.ToString() && !donemProjesiDersKodu.IsNullOrWhiteSpace())
                                 {
                                     //Tezsiz yl için dönem projesi yürütücüsü bulunup danışman olarak atanıyor
@@ -205,117 +205,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
             return model;
         }
 
-        public List<StudentControl> GetObsStudentControlX(string tcKimlikNo, string donemId)
-        {
-            var returnData = new List<StudentControl>();
 
-            if (tcKimlikNo.IsNullOrWhiteSpace()) throw new Exception("tcOrOgrenciNo boş geliyor!");
-            tcKimlikNo = tcKimlikNo.RemoveNonAlphanumeric();
-            using (var service =
-                   new proliz_ytu_enstitu_minerSoapClient())
-            {
-
-                var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
-                if (ogrencis.Any() && ogrencis[0].Sucess)
-                {
-                    foreach (var ogrenci in ogrencis[0].ogrenci)
-                    {
-                        var model = new StudentControl();
-
-
-                        model.KayitVar = true;
-
-                        if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
-                        {
-                            model.KayitTarihi = ogrenci.KAYIT_TARIHI.ToDate().Value;
-                            var parsedDonem = ogrenci.KAYITLI_DONEM.ParseObsDonem();
-                            model.BaslangicYil = parsedDonem.BaslangicYil;
-                            model.BitisYil = parsedDonem.BitisYil;
-                            model.DonemID = parsedDonem.DonemNo;
-
-                        }
-
-                        model.OkuduguDonemNo = ogrenci.OKUDUGU_DNM_YENIKANUN.ToIntObj() ?? 0;
-                        model.OgrenciInfo = ogrenci;
-
-                        //öğrenim seviyesi ayarlaması obs öğrenim seviyelerini lubs öğrenim tip koduna çevir koduna çevir 
-                        switch (model.OgrenciInfo.OGRENIMSEVIYE_ID)
-                        {
-                            case "2":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID =
-                                    OgrenimTipi.TezliYuksekLisans.ToString();
-                                break;
-                            case "3":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.Doktra.ToString();
-                                break;
-                            case "4":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID =
-                                    OgrenimTipi.TezsizYuksekLisans.ToString();
-                                break;
-                            case "5":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID =
-                                    OgrenimTipi.SanattaYeterlilik.ToString();
-                                break;
-                            case "8":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID =
-                                    OgrenimTipi.ButunlesikDoktora.ToString();
-                                break;
-                        } 
-
-                         
-                        var ogrenciDersNots =
-                            service.OgrenciDersNotBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
-                        if (ogrenciDersNots.Any() && ogrenciDersNots[0].Sucess)
-                        {
-
-
-                            model.TumDonemDersNotlari = ogrenciDersNots[0].ogrencidersnot.Select(s =>
-                                new StudentDersNotModel
-                                {
-                                    DonemId = s.DONEM_ID,
-                                    HocaTc = s.HOCA_TCK,
-                                    HocaUnvan = s.HOCA_UNVAN,
-                                    HocaAdi = s.HOCA_AD_SOYAD,
-                                    DonemAd = s.DONEM_AD,
-                                    DersAdi = s.DERS_AD,
-                                    DersKodu = s.DERS_KOD,
-                                    DersKoduNum = s.DERS_KOD.Length > 4 ? s.DERS_KOD.Substring(s.DERS_KOD.Length - 4, 4) : s.DERS_KOD,
-                                    DersNotu = s.HARF_KOD,
-                                    NotDeger = s.NOT_DEGER
-
-
-                                }).ToList();
-
-                            var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(model.OgrenciInfo.ENSTITU_ID);
-                            var donemProjesiDersKodu = DonemProjesiAyar.DonemProjesiDersKodu.GetAyarDp(model.OgrenciInfo.ENSTITU_ID);
-                            if (model.OgrenciInfo.OGRENIMSEVIYE_ID == OgrenimTipi.TezsizYuksekLisans.ToString() && !donemProjesiDersKodu.IsNullOrWhiteSpace())
-                            {
-                                //Tezsiz yl için dönem projesi yürütücüsü bulunup danışman olarak atanıyor
-                                var donemProjesiDersi = model.TumDonemDersNotlari.FirstOrDefault(p =>
-                                    p.DersKoduNum == donemProjesiDersKodu &&
-                                    p.DonemId == aktifDonem.BaslangicYil + "" + aktifDonem.DonemId &&
-                                    !p.HocaTc.IsNullOrWhiteSpace());
-                                if (donemProjesiDersi != null)
-                                {
-                                    ogrenci.DANISMAN_TC1 = donemProjesiDersi.HocaTc;
-                                    ogrenci.DANISMAN_AD_SOYAD1 = donemProjesiDersi.HocaAdi;
-                                    ogrenci.DANISMAN_UNVAN1 = donemProjesiDersi.HocaUnvan;
-                                }
-                            }
-                        }
-  
-
-                        returnData.Add(model);
-
-                    }
-
-
-                }
-            }
-
-
-            return returnData;
-        }
         public ObsOgrenciSorgulaModel GetOgrenciBilgi(string tcKimlikNo, string donemId)
         {
             var model = new ObsOgrenciSorgulaModel();

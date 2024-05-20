@@ -4,9 +4,11 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -18,8 +20,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
  
 
         public ActionResult Index(string ekd, string mesajGroupId, int? basvuruId, string rowId, bool isMesajGonder = false)
-        {
-             
+        { 
+           
+
             var enstitu = _entities.Enstitulers.First(p => p.EnstituKisaAd.Contains(ekd));
 
             #region duyurular 

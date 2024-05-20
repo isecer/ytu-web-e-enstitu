@@ -101,15 +101,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemData
             return dct;
 
         }
-        public static List<CmbBoolDto> GetCmbProgramCountDurumData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Programı Olanlar" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Programı Olmayanlar" });
-            return dct;
-
-        }
         public static List<CmbBoolDto> GetCmbAsilYedekDurumData(bool bosSecimVar = false)
         {
             var dct = new List<CmbBoolDto>();

@@ -31,10 +31,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int Yil { get; set; }
         public int? AyId { get; set; }
         public string EnstituKod { get; set; }
-        public int FbeCount { get; set; }
-        public int SbeCount { get; set; }
-        public int TetCount { get; set; }
-        public int ToplamCount { get; set; }
         public IEnumerable<FrIstatistikDto> Data { get; set; }
     }
     public class FrIstatistikDto

@@ -14,14 +14,14 @@ using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.AnabilimDallari)]
     public class AnabilimDallariController : Controller
     {
         private readonly LubsDbEntities _entities = new LubsDbEntities();
         public ActionResult Index(string ekd)
         {
-            return Index(new FmAnabilimDallariDto(), ekd);
+            return Index(new FmAnabilimDallariDto { },ekd);
         }
         [HttpPost]
         public ActionResult Index(FmAnabilimDallariDto model, string ekd)
@@ -40,7 +40,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnabilimDaliAdi = s.AnabilimDaliAdi,
                         IsEmailVar = s.EMail != null && s.EMail != "",
                         EMail = s.EMail,
-                        ProgramCount = s.Programlars.Count,
                         KomiteIds = s.AnabilimDaliYeterlikKomiteUyeleris.Select(sk => sk.KullaniciID).ToList(),
                         YeterlikKomiteUyeCount = s.AnabilimDaliYeterlikKomiteUyeleris.Count,
                         IsAktif = s.IsAktif,
@@ -53,12 +52,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.AnabilimDaliKod.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliKod == model.AnabilimDaliKod);
             if (!model.AnabilimDaliAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliAdi.Contains(model.AnabilimDaliAdi));
-            if (model.IsProgramVar.HasValue) q = q.Where(p => p.ProgramCount > 0 == model.IsProgramVar.Value);
             if (model.IsKomiteUyesiVar.HasValue) q = q.Where(p => p.YeterlikKomiteUyeCount > 0 == model.IsKomiteUyesiVar.Value);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             if (model.IsEmailVar.HasValue) q = q.Where(p => p.IsEmailVar == model.IsEmailVar.Value);
             ViewBag.filteredKomiteIds = q.SelectMany(s => s.KomiteIds).Distinct().ToList();
-            ViewBag.filteredAbdIds = q.Where(p => p.IsEmailVar).Select(s => s.EMail).Distinct().ToList();
+            ViewBag.filteredAbdIds = q.Where(p=>p.IsEmailVar).Select(s => s.EMail).Distinct().ToList();
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnabilimDaliAdi);
             model.FrAnabilimDallaris = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
@@ -71,7 +69,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IsKomiteUyesiVar = new SelectList(ComboData.GetCmbKomiteUyeKayitDurumData(true), "Value", "Caption", model.IsKomiteUyesiVar);
-            ViewBag.IsProgramVar = new SelectList(ComboData.GetCmbProgramCountDurumData(true), "Value", "Caption", model.IsProgramVar);
             ViewBag.IsEmailVar = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsEmailVar);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
@@ -153,7 +150,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.AnabilimDaliID <= 0)
                 {
                     kModel.IsAktif = true;
-                    _entities.AnabilimDallaris.Add(kModel);
+                    var enst = _entities.AnabilimDallaris.Add(kModel);
                 }
                 else
                 {
@@ -165,7 +162,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
-                    data.IslemTarihi = DateTime.Now;
+                    data.IslemTarihi = DateTime.Now; ;
+
                 }
                 _entities.SaveChanges();
                 return RedirectToAction("Index");
@@ -252,8 +250,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int id)
         {
             var kayit = _entities.AnabilimDallaris.FirstOrDefault(p => p.AnabilimDaliID == id);
-            string message;
-            var success = true;
+            string message = "";
+            bool success = true;
             if (kayit != null)
             {
 
@@ -267,7 +265,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.AnabilimDaliAdi + "' İsimli Anabilim Dalı Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else

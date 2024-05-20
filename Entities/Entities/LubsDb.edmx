@@ -1159,8 +1159,6 @@
           <Property Name="OgrenimDurumID" Type="int" />
           <Property Name="OgrenimTipKod" Type="int" />
           <Property Name="ProgramKod" Type="nvarchar" MaxLength="20" />
-          <Property Name="ObsProgramAdi" Type="nvarchar" MaxLength="1256" />
-          <Property Name="ObsProgramId" Type="nvarchar" MaxLength="20" />
           <Property Name="OgrenciNo" Type="nvarchar" MaxLength="20" />
           <Property Name="KayitTarihi" Type="datetime" />
           <Property Name="KayitYilBaslangic" Type="int" />
@@ -1946,7 +1944,6 @@
           <Property Name="ProgramKod" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="AnabilimDaliID" Type="int" Nullable="false" />
           <Property Name="AnabilimDaliKod" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="ObsProgramId" Type="int" />
           <Property Name="Ingilizce" Type="bit" Nullable="false" />
           <Property Name="ProgramAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
@@ -11837,8 +11834,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="OgrenimDurumID" Type="Int32" />
           <Property Name="OgrenimTipKod" Type="Int32" />
           <Property Name="ProgramKod" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ObsProgramAdi" Type="String" MaxLength="1256" FixedLength="false" Unicode="true" />
-          <Property Name="ObsProgramId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="OgrenciNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="KayitTarihi" Type="DateTime" Precision="3" />
           <Property Name="KayitYilBaslangic" Type="Int32" />
@@ -12741,7 +12736,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="AnabilimDaliID" Type="Int32" Nullable="false" />
           <Property Name="AnabilimDaliKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ObsProgramId" Type="Int32" />
           <Property Name="Ingilizce" Type="Boolean" Nullable="false" />
           <Property Name="ProgramAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="IsAktif" Type="Boolean" Nullable="false" />
@@ -19460,8 +19454,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="KayitYilBaslangic" ColumnName="KayitYilBaslangic" />
                 <ScalarProperty Name="KayitTarihi" ColumnName="KayitTarihi" />
                 <ScalarProperty Name="OgrenciNo" ColumnName="OgrenciNo" />
-                <ScalarProperty Name="ObsProgramId" ColumnName="ObsProgramId" />
-                <ScalarProperty Name="ObsProgramAdi" ColumnName="ObsProgramAdi" />
                 <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />
                 <ScalarProperty Name="OgrenimTipKod" ColumnName="OgrenimTipKod" />
                 <ScalarProperty Name="OgrenimDurumID" ColumnName="OgrenimDurumID" />
@@ -20279,7 +20271,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
                 <ScalarProperty Name="ProgramAdi" ColumnName="ProgramAdi" />
                 <ScalarProperty Name="Ingilizce" ColumnName="Ingilizce" />
-                <ScalarProperty Name="ObsProgramId" ColumnName="ObsProgramId" />
                 <ScalarProperty Name="AnabilimDaliKod" ColumnName="AnabilimDaliKod" />
                 <ScalarProperty Name="AnabilimDaliID" ColumnName="AnabilimDaliID" />
                 <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />

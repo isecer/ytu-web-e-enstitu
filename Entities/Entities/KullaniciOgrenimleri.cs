@@ -19,8 +19,6 @@ namespace Entities.Entities
         public Nullable<int> OgrenimDurumID { get; set; }
         public Nullable<int> OgrenimTipKod { get; set; }
         public string ProgramKod { get; set; }
-        public string ObsProgramAdi { get; set; }
-        public string ObsProgramId { get; set; }
         public string OgrenciNo { get; set; }
         public Nullable<System.DateTime> KayitTarihi { get; set; }
         public Nullable<int> KayitYilBaslangic { get; set; }

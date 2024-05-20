@@ -74,41 +74,25 @@
                                 }
                                 <tr>
                                     <td></td>
-                                    <td style="text-align:right">Sayfa Genel Toplam: </td>
+                                    <td style="text-align:right"> Genel Toplam: </td>
                                     <td style="text-align: right; padding-right: 13px;">
-                                        @Model.Data.Sum(sm => sm.FbeCount)
+                                        @Model.Data.Sum(sm => sm.FbeCount) 
                                     </td>
                                     <td style="text-align: right; padding-right: 13px;">
-                                        @Model.Data.Sum(sm => sm.SbeCount)
+                                        @Model.Data.Sum(sm => sm.SbeCount) 
                                     </td>
                                     <td style="text-align: right; padding-right: 13px;">
-                                        @Model.Data.Sum(sm => sm.TetCount)
+                                        @Model.Data.Sum(sm => sm.TetCount) 
                                     </td>
                                     <td style="text-align: right; padding-right: 13px;">
-                                        @Model.Data.Sum(sm => sm.ToplamCount)
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td style="text-align:right">Filtre Genel Toplam: </td>
-                                    <td style="text-align: right; padding-right: 13px;">
-                                        @Model.FbeCount
-                                    </td>
-                                    <td style="text-align: right; padding-right: 13px;">
-                                        @Model.SbeCount
-                                    </td>
-                                    <td style="text-align: right; padding-right: 13px;">
-                                        @Model.TetCount
-                                    </td>
-                                    <td style="text-align: right; padding-right: 13px;">
-                                        @Model.ToplamCount
+                                        @Model.Data.Sum(sm => sm.ToplamCount) 
                                     </td>
                                 </tr>
                             }
                             else
                             {
                                 <tr>
-                                    <td colspan="6" style="text-align: center">
+                                    <td colspan="4" style="text-align: center">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

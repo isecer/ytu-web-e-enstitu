@@ -46,13 +46,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join ktip in _entities.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
                     join ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID into defard
                     from ard in defard.DefaultIfEmpty()
-                    let ardEs = _entities.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruDanismanID == ard.TDOBasvuruDanismanID).OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).FirstOrDefault()
+                    let ardEs = ard.TDOBasvuruEsDanismen.OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).FirstOrDefault()
 
                     select new FrTdoBasvuruDto
                     {
                         TezDanismanID = ard.TezDanismanID,
                         TDOBasvuruID = s.TDOBasvuruID,
-                        BasvuruTarihi = ard.BasvuruTarihi,
+                        BasvuruTarihi = ard.BasvuruTarihi, 
                         EnstituKod = en.EnstituKod,
                         EnstituAdi = en.EnstituAd,
                         OgrenimTipAdi = o.OgrenimTipAdi,
@@ -81,12 +81,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DanismanOnayladi = ard != null ? ard.DanismanOnayladi : null,
                         EYKYaGonderildi = ard != null ? ard.EYKYaGonderildi : null,
                         EYKYaHazirlandi = ard != null ? ard.EYKYaHazirlandi : null,
-                        EYKDaOnaylandi = ard != null ? ard.EYKDaOnaylandi : null,
+                        EYKDaOnaylandi = ard != null ? ard.EYKDaOnaylandi : null, 
                         EsDanismanOnerisiVar = ardEs != null,
                         AktifTdBasvuruEsDanismanID = ardEs != null ? (int?)ardEs.TDOBasvuruEsDanismanID : null,
                         Es_EYKYaGonderildi = ardEs != null ? ardEs.EYKYaGonderildi : null,
                         Es_EYKYaHazirlandi = ardEs != null ? ardEs.EYKYaHazirlandi : null,
-                        Es_EYKDaOnaylandi = ardEs != null ? ardEs.EYKDaOnaylandi : null
+                        Es_EYKDaOnaylandi = ardEs != null ? ardEs.EYKDaOnaylandi : null 
 
                     };
             var q2 = q;
@@ -126,7 +126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!model.AdSoyad.IsNullOrWhiteSpace())
             {
-                var tdoBasvuruIds = q.Select(s => s.TDOBasvuruID).ToList();
+                var tdoBasvuruIds = q.Select(s => s.TDOBasvuruID).ToList();  
                 var formKoduBasvuruIds = _entities.TDOBasvuruDanismen.Where(p => tdoBasvuruIds.Contains(p.TDOBasvuruID) && p.FormKodu == model.AdSoyad).Select(s => s.TDOBasvuruID).Distinct().ToList();
                 var formKoduEsBasvuruIds = _entities.TDOBasvuruEsDanismen.Where(p => tdoBasvuruIds.Contains(p.TDOBasvuruDanisman.TDOBasvuruID) && p.FormKodu == model.AdSoyad).Select(s => s.TDOBasvuruDanisman.TDOBasvuruID).Distinct().ToList();
                 var danismanAdSoyadBasvuruIds = _entities.TDOBasvuruDanismen.Where(p => tdoBasvuruIds.Contains(p.TDOBasvuruID) && p.TDAdSoyad.Contains(model.AdSoyad)).Select(s => s.TDOBasvuruID).Distinct().ToList();
@@ -200,6 +200,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (model.AktifEsDurumID == 5 || model.EsDurumID == 5)
                 q = q.OrderBy(o => o.EYKYaGonderildiIslemTarihiES);
             else q = q.OrderByDescending(o => o.BasvuruTarihi);
+            // else q = q.OrderBy(o => o.Sira).ThenByDescending(o => o.RowDate);
             model.TdoBasvuruDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.filteredOgrenciIds = isFiltered ? q.Select(s => s.KullaniciID).Distinct().ToList() : new List<int>();
             ViewBag.filteredDanismanIds = isFiltered ? q.Where(p => p.TezDanismanID.HasValue).Select(s => s.TezDanismanID.Value).Distinct().ToList() : new List<int>();

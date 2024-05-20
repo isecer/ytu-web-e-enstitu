@@ -14,7 +14,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.Programlar)]
     public class ProgramlarController : Controller
     {
@@ -154,7 +154,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         AnabilimDaliID = kModel.AnabilimDaliID,
                         AnabilimDaliKod = bolm.AnabilimDaliKod,
-                        ObsProgramId = kModel.ObsProgramId,
                         ProgramKod = id,
                         ProgramAdi = kModel.ProgramAdi,
                         IsAktif = true,
@@ -171,7 +170,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var data = _entities.Programlars.First(p => p.ProgramKod == id);
                     data.AnabilimDaliID = kModel.AnabilimDaliID;
                     data.AnabilimDaliKod = bolm.AnabilimDaliKod;
-                    data.ObsProgramId = kModel.ObsProgramId;
                     data.ProgramAdi = kModel.ProgramAdi;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
@@ -229,8 +227,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var kayit = _entities.Programlars.FirstOrDefault(p => p.ProgramKod == id);
             var pAdi = _entities.Programlars.First(p => p.ProgramKod == id);
-            string message;
-            var success = true;
+            string message = "";
+            bool success = true;
             if (kayit != null)
             {
 

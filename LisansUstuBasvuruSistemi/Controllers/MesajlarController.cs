@@ -30,21 +30,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmMesajlarDto model, bool export = false)
         {
-            var filteredMesajsQuery = _entities.Mesajlars.Where(p => UserIdentity.Current.EnstituKods.Contains(p.EnstituKod) && !p.UstMesajID.HasValue);
-            if (!model.EnstituKod.IsNullOrWhiteSpace()) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.EnstituKod == model.EnstituKod);
-            if (model.MesajKategoriID.HasValue) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.MesajKategoriID == model.MesajKategoriID.Value);
-            if (!model.Konu.IsNullOrWhiteSpace()) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.Konu.Contains(model.Konu));
-            if (model.IsAktif.HasValue) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.IsAktif == model.IsAktif);
-            if (model.IsDosyaEkDurum.HasValue) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.MesajEkleris.Any() == model.IsDosyaEkDurum.Value);
-            if (model.Tarih.HasValue)
-            {
-                var trih = model.Tarih.Value.TodateToShortDate();
-                filteredMesajsQuery = filteredMesajsQuery.Where(p => p.Tarih == trih);
-
-            }
-            if (model.MesajYili.HasValue) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.Tarih.Year == model.MesajYili);
-            if (!model.Konu.IsNullOrWhiteSpace()) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.Aciklama.Contains(model.Konu));
-
+            var filteredMesajsQuery = _entities.Mesajlars.Where(p =>  UserIdentity.Current.EnstituKods.Contains(p.EnstituKod) && !p.UstMesajID.HasValue); 
+            if (!model.Konu.IsNullOrWhiteSpace()) filteredMesajsQuery = filteredMesajsQuery.Where(p => p.Aciklama.Contains(model.Konu)); 
             var q = from s in filteredMesajsQuery
                     join ens in _entities.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
                     join mk in _entities.MesajKategorileris on s.MesajKategoriID equals mk.MesajKategoriID
@@ -72,9 +59,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         UserKey = kul != null ? kul.UserKey : (Guid?)null,
                     };
 
+
+
+            if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
+            if (model.MesajKategoriID.HasValue) q = q.Where(p => p.MesajKategoriID == model.MesajKategoriID.Value);
+            if (!model.Konu.IsNullOrWhiteSpace()) q = q.Where(p => p.Konu.Contains(model.Konu));
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.Email.Contains(model.AdSoyad));
+            if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
+            if (model.IsDosyaEkDurum.HasValue) q = q.Where(p => model.IsDosyaEkDurum.Value ? p.EkSayisi > 0 : p.EkSayisi == 0);
+            if (model.Tarih.HasValue)
+            {
+                var trih = model.Tarih.Value.TodateToShortDate();
+                q = q.Where(p => p.Tarih == trih);
 
-
+            }
+            if (model.MesajYili.HasValue) q = q.Where(p => p.Tarih.Year == model.MesajYili);
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi
             {
@@ -142,7 +141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.MesajlarDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrMesajlarDto
             {
                 EnstituAdi = s.EnstituAd,
-                EnstituKisaAd = s.EnstituKisaAd,
+                EnstituKisaAd=s.EnstituKisaAd,
                 EnstituKod = s.EnstituKod,
                 MesajKategoriID = s.MesajKategoriID,
                 KategoriAdi = s.KategoriAdi,
@@ -371,7 +370,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 KayitTarihi = kullaniciDef.KayitTarihi,
                                 OgrenimTipAdi = ogrenimTipiDef != null ? ogrenimTipiDef.OgrenimTipAdi : "",
                                 AnabilimdaliAdi = anabilimDaliDef != null ? anabilimDaliDef.AnabilimDaliAdi : "",
-                                ProgramAdi = programDef != null ? programDef.ProgramAdi : ""
+                                ProgramAdi = programDef != null ? programDef.ProgramAdi : "" 
                             }).ToList();
 
             altMesaj.AddRange(_entities.GonderilenMaillers.Where(p => mesajId.Contains(p.MesajID ?? 0)).Select(s => new FrMesajlarDto
