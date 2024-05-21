@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return new List<int> { 17, 42, 73 };
         }
 
-        public static StudentControl OgrenciKontrol(string tcOrOgrenciNo = null, string donemId = null)
+        public static StudentControl OgrenciKontrol(string tcOrOgrenciNo = null)
         {
             var obsData = new ObsServiceData();
             //if (donemId == null)
@@ -37,7 +37,7 @@ namespace LisansUstuBasvuruSistemi.Business
             //    donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
             //}
             var data2 = new ObsData().GetObsStudentControl(tcOrOgrenciNo);
-            return obsData.GetObsStudentControl(tcOrOgrenciNo, donemId);
+            return obsData.GetObsStudentControl(tcOrOgrenciNo);
         }
 
         public static StudentControl OgrenciBilgisiGuncelleObs(Guid userKey)
@@ -59,8 +59,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId || p.UserKey == userKey);
                 if (kul.YtuOgrencisi)
                 {
-                    var tcKimlikNo = kul.TcKimlikNo;
-                    kayitBilgi = OgrenciKontrol(tcKimlikNo);
+                    kayitBilgi = OgrenciKontrol(kul.OgrenciNo); 
                     if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == kul.OgrenimTipKod)
                     {
                         kul.KayitDonemID = kayitBilgi.DonemID;
@@ -81,18 +80,36 @@ namespace LisansUstuBasvuruSistemi.Business
 
                             kul.DanismanID = danismanId;
                             kayitBilgi.AktifDanismanID = danismanId;
+                            if (!kul.KullaniciOgrenimleris.Any(a =>a.KullaniciID==kul.KullaniciID && a.OgrenciNo == kul.OgrenciNo))
+                            {
+                                var kullaniciOgrenim = new KullaniciOgrenimleri
+                                {
+                                    OgrenimDurumID = kul.OgrenimDurumID,
+                                    OgrenimTipKod = kul.OgrenimTipKod,
+                                    ProgramKod = kul.ProgramKod,
+                                    ProgramAdi = kul.Programlar.ProgramAdi,
+                                    OgrenciNo = kul.OgrenciNo,
+                                    ObsProgramAdi = kayitBilgi.OgrenciInfo.PROGRAM_AD,
+                                    ObsProgramId = kayitBilgi.OgrenciInfo.PROGRAM_ID,
+                                    DanismanID = danismanId,
+                                    KayitDonemID = kayitBilgi.DonemID,
+                                    KayitTarihi = kayitBilgi.KayitTarihi,
+                                    KayitYilBaslangic = kayitBilgi.BaslangicYil,
+                                    IslemTarihi = DateTime.Now,
+                                    IslemYapanID = UserIdentity.Current.Id,
+                                    IslemYapanIP = UserIdentity.Ip,
+                                };
+                                kul.KullaniciOgrenimleris.Add(kullaniciOgrenim);
+
+                                var program = entities.Programlars.FirstOrDefault(f => f.ProgramKod == kul.ProgramKod);
+                                program.ObsProgramId = kayitBilgi.OgrenciInfo.PROGRAM_ID.ToInt();
+                            }
                         }
 
                     }
                     else if (!kayitBilgi.Hata)
                     {
-                        kul.YtuOgrencisi = false;
-                        kul.OgrenimTipKod = null;
-                        kul.ProgramKod = null;
-                        kul.OgrenciNo = null;
-                        kul.KayitDonemID = null;
-                        kul.KayitYilBaslangic = null;
-                        kul.KayitTarihi = null;
+                        kul.YtuOgrencisi = false; 
                     }
 
                     entities.SaveChanges();

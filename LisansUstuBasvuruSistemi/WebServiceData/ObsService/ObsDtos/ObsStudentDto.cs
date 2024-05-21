@@ -21,6 +21,10 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService.ObsDtos
 
     public class ObsStudentOgrenimDto
     {
+        public bool KayitVar { get; set; }
+        public bool Hata { get; set; }
+        public string HataMsj { get; set; }
+
         public int? BaslangicYil { get; set; }
         public int? BitisYil { get; set; }
         public int? DonemId { get; set; }

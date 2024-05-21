@@ -214,7 +214,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var donemBilgi = (toBasvuruSavunma?.SavunmaBasvuruTarihi ?? DateTime.Now).ToAkademikDonemBilgi();
 
-                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
 
                 if (ogrenciBilgi.Hata)
                 {

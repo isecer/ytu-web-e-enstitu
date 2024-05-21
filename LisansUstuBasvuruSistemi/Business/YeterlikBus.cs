@@ -190,7 +190,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             }
                             else if (!entities.YeterlikSureciKriterMuafOgrencilers.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.KullaniciID == kul.KullaniciID))
                             {
-                                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+                                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
                                 var controlMessage = new List<string>();
                                 var basvuruKriterleri = entities.YeterlikSurecOgrenimTipleris.FirstOrDefault(p => p.YeterlikSurecID == yeterlikSurecId.Value && p.OgrenimTipKod == kul.OgrenimTipKod);
                                 if (basvuruKriterleri == null)

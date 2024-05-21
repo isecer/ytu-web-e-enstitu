@@ -380,9 +380,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kul.YtuOgrencisi)
                 {
 
-                    if (kul.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
-                    {
-                        var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+                    //if (kul.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
+                    //{
+                        var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
                         if (ogrenciInfo.Hata)
                         {
                             mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
@@ -402,7 +402,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
                             }
                         }
-                    }
+                    //}
 
                 }
             }

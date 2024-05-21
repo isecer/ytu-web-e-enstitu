@@ -39,8 +39,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl,string ekd)
-        { 
+        public ActionResult Login(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl, string ekd)
+        {
             ViewBag.UserName = userName;
             ViewBag.Password = password;
             string hata;
@@ -116,7 +116,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, string.Empty, isRememberMe);
                             UserBus.SetLastLogon();
 
-                      
+
                             if (returnUrl.IsNullOrWhiteSpace()) return RedirectToAction("Index", "Home");
                             return Redirect(returnUrl);
 
@@ -374,8 +374,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 model.Sifre = "";
-            } 
-            
+            }
+
             ViewBag.EnstituKod = RoleNames.KullanicilarKayit.InRoleCurrent() ? new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod)
                 : new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, (!kayitYetki)), "Value", "Caption", model.KullaniciTipID);
@@ -494,7 +494,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "CinsiyetID" });
                 }
                 else messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "CinsiyetID" });
- 
+
 
                 if (kModel.CepTel.IsNullOrWhiteSpace())
                 {
@@ -683,49 +683,49 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
                         }
                     }
-                    if (kModel.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci)
-                    {
+                    //if (kModel.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci)
+                    //{
 
-                        var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kModel.TcKimlikNo);
-                        if (ogrenciInfo.Hata)
+                    var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kModel.OgrenciNo);
+                    if (ogrenciInfo.Hata)
+                    {
+                        messageModel.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
+                    }
+                    else
+                    {
+                        if (ogrenciInfo.KayitVar)
                         {
-                            messageModel.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
+                            if (kModel.TcKimlikNo != ogrenciInfo.OgrenciInfo.TCKIMLIKNO)
+                            {
+                                messageModel.Messages.Add(
+                                    "Girdiğiniz Öğrenci Numarası bilgisi OBS sisteminde doğrulanamadı.");
+                                messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
+                            }
+                            if (kModel.OgrenimTipKod != ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
+                            {
+                                messageModel.Messages.Add(
+                                    "Girdiğiniz Öğrenim Seviyesi bilgisi OBS sisteminde doğrulanamadı.");
+                                messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimTipKod" });
+                            }
+                            if (!messageModel.Messages.Any())
+                            {
+                                kModel.ProgramKod = kModel.ProgramKod;
+                                kModel.OgrenimTipKod = ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
+                                kModel.KayitTarihi = ogrenciInfo.KayitTarihi;
+                                kModel.KayitYilBaslangic = ogrenciInfo.BaslangicYil;
+                                kModel.KayitDonemID = ogrenciInfo.DonemID;
+                            }
+
                         }
                         else
                         {
-                            if (ogrenciInfo.KayitVar)
-                            {
-                                if (kModel.OgrenciNo != ogrenciInfo.OgrenciInfo.OGR_NO)
-                                {
-                                    messageModel.Messages.Add(
-                                        "Girdiğiniz Öğrenci Numarası bilgisi OBS sisteminde doğrulanamadı.");
-                                    messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
-                                }
-                                if (kModel.OgrenimTipKod != ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
-                                {
-                                    messageModel.Messages.Add(
-                                        "Girdiğiniz Öğrenim Seviyesi bilgisi OBS sisteminde doğrulanamadı.");
-                                    messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimTipKod" });
-                                }
-                                if (!messageModel.Messages.Any())
-                                {
-                                    kModel.ProgramKod = kModel.ProgramKod;
-                                    kModel.OgrenimTipKod = ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
-                                    kModel.KayitTarihi = ogrenciInfo.KayitTarihi;
-                                    kModel.KayitYilBaslangic = ogrenciInfo.BaslangicYil;
-                                    kModel.KayitDonemID = ogrenciInfo.DonemID;
-                                }
-
-                            }
-                            else
-                            {
-                                messageModel.Messages.Add(
-                                    "Girdiğiniz Kimlik bilgisi OBS sisteminde doğrulanamadı.");
-                                messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
-                            }
-
+                            messageModel.Messages.Add(
+                                "Girdiğiniz Kimlik bilgisi OBS sisteminde doğrulanamadı.");
+                            messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
                         }
+
                     }
+                    //}
 
                 }
             }
@@ -896,6 +896,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kullanici.IslemYapanIP = kModel.IslemYapanIP;
                     if (kullanici.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = kullanici.ResimAdi.ToKullaniciResim(); }
                     _entities.SaveChanges();
+                    if (kullanici.KullaniciEnstituYetkileris.All(a => a.EnstituKod != kullanici.EnstituKod))
+                    {
+                        _entities.KullaniciEnstituYetkileris.Add(new KullaniciEnstituYetkileri
+                        {
+                            EnstituKod = kullanici.EnstituKod,
+                            KullaniciID = kullanici.KullaniciID,
+                            IslemYapanID = kullanici.IslemYapanID.Value,
+                            IslemTarihi = kullanici.IslemTarihi.Value,
+                            IslemYapanIP = kullanici.IslemYapanIP
+
+                        });
+                        _entities.SaveChanges();
+                    }
+
                     messageModel.Messages.Add("'" + kullanici.Ad + " " + kullanici.Soyad + "' Kullanıcı hesabı güncellendi.");
                     messageModel.IsCloseDialog = true;
                     messageModel.IsSuccess = true;

@@ -18,6 +18,7 @@ namespace Entities.Entities
         public int KullaniciID { get; set; }
         public Nullable<int> OgrenimDurumID { get; set; }
         public Nullable<int> OgrenimTipKod { get; set; }
+        public string ProgramAdi { get; set; }
         public string ProgramKod { get; set; }
         public string ObsProgramAdi { get; set; }
         public string ObsProgramId { get; set; }

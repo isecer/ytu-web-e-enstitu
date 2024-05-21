@@ -282,7 +282,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         p.MezuniyetSurecID == mezuniyetSurecId.Value &&
                         p.OgrenimTipKod == kul.OgrenimTipKod);
 
-                    var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+                    var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
 
                     //düzenlenecek max dönem kriterleri süreç e eklenebilecek ve bu kriteri açanlar başvuru yapamayacak 
                     //if (kul.KayitTarihi > MezuniyetDonemKontrolKriterBasTar && kul.OkuduguDonemNo.Value < 4)

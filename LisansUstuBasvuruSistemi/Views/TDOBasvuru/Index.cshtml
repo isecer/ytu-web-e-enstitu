@@ -1,11 +1,11 @@
 ﻿@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using LisansUstuBasvuruSistemi.Utilities.Extensions 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmTdoBasvuruDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel; 
+    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
 }
 
 <div class="row">
@@ -39,11 +39,11 @@
                 {
                     if (Model.AktifOgrenimIcinBasvuruVar)
                     {
-                        <tr>
-                            <td>Not</td>
-                            <td>:</td>
-                            <td>Okuduğunuz '@bilgiModel.ProgramAdi' programı için Tez danışmanı öneri başvurunuz bulunmaktadır. Yeni danışman önerisinde bulunmak için aşağıda bulunan Yeni Tez Danışmanı Öner isimli mavi butona tıklayınız </td>
-                        </tr>
+                        @*<tr>
+                                <td>Not</td>
+                                <td>:</td>
+                                <td>Okuduğunuz '@bilgiModel.ProgramAdi' programı için Tez danışmanı öneri başvurunuz bulunmaktadır.</td>
+                            </tr>*@
                     }
                     else
                     {

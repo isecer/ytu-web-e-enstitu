@@ -1158,6 +1158,7 @@
           <Property Name="KullaniciID" Type="int" Nullable="false" />
           <Property Name="OgrenimDurumID" Type="int" />
           <Property Name="OgrenimTipKod" Type="int" />
+          <Property Name="ProgramAdi" Type="nvarchar" MaxLength="1256" />
           <Property Name="ProgramKod" Type="nvarchar" MaxLength="20" />
           <Property Name="ObsProgramAdi" Type="nvarchar" MaxLength="1256" />
           <Property Name="ObsProgramId" Type="nvarchar" MaxLength="20" />
@@ -11836,6 +11837,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="KullaniciID" Type="Int32" Nullable="false" />
           <Property Name="OgrenimDurumID" Type="Int32" />
           <Property Name="OgrenimTipKod" Type="Int32" />
+          <Property Name="ProgramAdi" Type="String" MaxLength="1256" FixedLength="false" Unicode="true" />
           <Property Name="ProgramKod" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="ObsProgramAdi" Type="String" MaxLength="1256" FixedLength="false" Unicode="true" />
           <Property Name="ObsProgramId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
@@ -19463,6 +19465,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="ObsProgramId" ColumnName="ObsProgramId" />
                 <ScalarProperty Name="ObsProgramAdi" ColumnName="ObsProgramAdi" />
                 <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />
+                <ScalarProperty Name="ProgramAdi" ColumnName="ProgramAdi" />
                 <ScalarProperty Name="OgrenimTipKod" ColumnName="OgrenimTipKod" />
                 <ScalarProperty Name="OgrenimDurumID" ColumnName="OgrenimDurumID" />
                 <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />

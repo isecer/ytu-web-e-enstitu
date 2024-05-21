@@ -222,7 +222,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                                 var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
 
-                                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+                                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
 
                                 var bkMsg = new List<string>();
                                 if (sondonemKayitOlmasiGerekenDersKodlariList.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => sondonemKayitOlmasiGerekenDersKodlariList.Any(a => a == p)) != sondonemKayitOlmasiGerekenDersKodlariList.Count)

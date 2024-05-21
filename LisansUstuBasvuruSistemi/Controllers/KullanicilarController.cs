@@ -479,48 +479,48 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                     }
 
-                    if (kModel.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci)
+                    //if (kModel.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci)
+                    //{
+                    var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kModel.OgrenciNo);
+                    if (ogrenciInfo.Hata)
                     {
-                        var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kModel.TcKimlikNo);
-                        if (ogrenciInfo.Hata)
+                        mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
+                    }
+                    else
+                    {
+                        if (ogrenciInfo.KayitVar)
                         {
-                            mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
+                            if (kModel.TcKimlikNo != ogrenciInfo.OgrenciInfo.TCKIMLIKNO)
+                            {
+                                mmMessage.Messages.Add(
+                                    "Girdiğiniz Öğrenci Numarası bilgisi OBS sisteminde doğrulanamadı.");
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
+                            }
+                            if (kModel.OgrenimTipKod != ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
+                            {
+                                mmMessage.Messages.Add(
+                                    "Girdiğiniz Öğrenim Seviyesi bilgisi OBS sisteminde doğrulanamadı.");
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimTipKod" });
+                            }
+                            if (!mmMessage.Messages.Any())
+                            {
+                                kModel.ProgramKod = kModel.ProgramKod;
+                                kModel.OgrenimTipKod = ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
+                                kModel.KayitTarihi = ogrenciInfo.KayitTarihi;
+                                kModel.KayitYilBaslangic = ogrenciInfo.BaslangicYil;
+                                kModel.KayitDonemID = ogrenciInfo.DonemID;
+                            }
+
                         }
                         else
                         {
-                            if (ogrenciInfo.KayitVar)
-                            {
-                                if (kModel.OgrenciNo != ogrenciInfo.OgrenciInfo.OGR_NO)
-                                {
-                                    mmMessage.Messages.Add(
-                                        "Girdiğiniz Öğrenci Numarası bilgisi OBS sisteminde doğrulanamadı.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
-                                }
-                                if (kModel.OgrenimTipKod != ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
-                                {
-                                    mmMessage.Messages.Add(
-                                        "Girdiğiniz Öğrenim Seviyesi bilgisi OBS sisteminde doğrulanamadı.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimTipKod" });
-                                }
-                                if (!mmMessage.Messages.Any())
-                                {
-                                    kModel.ProgramKod = kModel.ProgramKod;
-                                    kModel.OgrenimTipKod = ogrenciInfo.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
-                                    kModel.KayitTarihi = ogrenciInfo.KayitTarihi;
-                                    kModel.KayitYilBaslangic = ogrenciInfo.BaslangicYil;
-                                    kModel.KayitDonemID = ogrenciInfo.DonemID;
-                                }
-
-                            }
-                            else
-                            {
-                                mmMessage.Messages.Add(
-                                    "Girdiğiniz Kimlik bilgisi OBS sisteminde doğrulanamadı.");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
-                            }
-
+                            mmMessage.Messages.Add(
+                                "Girdiğiniz Kimlik bilgisi OBS sisteminde doğrulanamadı.");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
                         }
+
                     }
+                    //}
 
                 }
 
@@ -617,68 +617,82 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var data = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
-                    data.EnstituKod = kModel.EnstituKod;
-                    data.KullaniciTipID = kModel.KullaniciTipID;
-                    data.Ad = kModel.Ad;
+                    var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
+                    kullanici.EnstituKod = kModel.EnstituKod;
+                    kullanici.KullaniciTipID = kModel.KullaniciTipID;
+                    kullanici.Ad = kModel.Ad;
                     bool isYetkiDegisti = false;
                     if (erisimYetki)
                     {
-                        isYetkiDegisti = data.YetkiGrupID != kModel.YetkiGrupID;
-                        data.YetkiGrupID = kModel.YetkiGrupID;
+                        isYetkiDegisti = kullanici.YetkiGrupID != kModel.YetkiGrupID;
+                        kullanici.YetkiGrupID = kModel.YetkiGrupID;
 
                     }
-                    data.Soyad = kModel.Soyad;
-                    data.TcKimlikNo = kModel.TcKimlikNo;
-                    data.CinsiyetID = kModel.CinsiyetID;
-                    data.CepTel = kModel.CepTel;
-                    data.EMail = kModel.EMail;
-                    data.Adres = kModel.Adres;
+                    kullanici.Soyad = kModel.Soyad;
+                    kullanici.TcKimlikNo = kModel.TcKimlikNo;
+                    kullanici.CinsiyetID = kModel.CinsiyetID;
+                    kullanici.CepTel = kModel.CepTel;
+                    kullanici.EMail = kModel.EMail;
+                    kullanici.Adres = kModel.Adres;
 
-                    data.YtuOgrencisi = kModel.YtuOgrencisi;
-                    data.OgrenimDurumID = kModel.OgrenimDurumID;
-                    data.OgrenimTipKod = kModel.OgrenimTipKod;
-                    data.OgrenciNo = kModel.OgrenciNo;
-                    data.ProgramKod = kModel.ProgramKod;
-                    data.KayitTarihi = kModel.KayitTarihi;
-                    data.KayitYilBaslangic = kModel.KayitYilBaslangic;
-                    data.KayitDonemID = kModel.KayitDonemID;
+                    kullanici.YtuOgrencisi = kModel.YtuOgrencisi;
+                    kullanici.OgrenimDurumID = kModel.OgrenimDurumID;
+                    kullanici.OgrenimTipKod = kModel.OgrenimTipKod;
+                    kullanici.OgrenciNo = kModel.OgrenciNo;
+                    kullanici.ProgramKod = kModel.ProgramKod;
+                    kullanici.KayitTarihi = kModel.KayitTarihi;
+                    kullanici.KayitYilBaslangic = kModel.KayitYilBaslangic;
+                    kullanici.KayitDonemID = kModel.KayitDonemID;
 
-                    data.BirimID = kModel.BirimID;
-                    data.UnvanID = kModel.UnvanID;
-                    data.SicilNo = kModel.SicilNo;
-                    data.ABDKoordinatoru = kModel.ABDKoordinatoru;
+                    kullanici.BirimID = kModel.BirimID;
+                    kullanici.UnvanID = kModel.UnvanID;
+                    kullanici.SicilNo = kModel.SicilNo;
+                    kullanici.ABDKoordinatoru = kModel.ABDKoordinatoru;
 
-                    data.KullaniciAdi = kModel.KullaniciAdi;
+                    kullanici.KullaniciAdi = kModel.KullaniciAdi;
                     if (!kModel.Sifre.IsNullOrWhiteSpace())
-                        data.Sifre = kModel.Sifre.ComputeHash(GlobalSistemSetting.Tuz);
-                    data.SifresiniDegistirsin = kModel.SifresiniDegistirsin;
-                    data.Aciklama = kModel.Aciklama;
-                    data.IsActiveDirectoryUser = kModel.IsActiveDirectoryUser;
-                    data.IsAdmin = kModel.IsAdmin;
-                    data.IsAktif = kModel.IsAktif;
+                        kullanici.Sifre = kModel.Sifre.ComputeHash(GlobalSistemSetting.Tuz);
+                    kullanici.SifresiniDegistirsin = kModel.SifresiniDegistirsin;
+                    kullanici.Aciklama = kModel.Aciklama;
+                    kullanici.IsActiveDirectoryUser = kModel.IsActiveDirectoryUser;
+                    kullanici.IsAdmin = kModel.IsAdmin;
+                    kullanici.IsAktif = kModel.IsAktif;
 
-                    data.IslemYapanID = kModel.IslemYapanID;
-                    data.IslemTarihi = kModel.IslemTarihi;
-                    data.IslemYapanIP = kModel.IslemYapanIP;
+                    kullanici.IslemYapanID = kModel.IslemYapanID;
+                    kullanici.IslemTarihi = kModel.IslemTarihi;
+                    kullanici.IslemYapanIP = kModel.IslemYapanIP;
                     if (profilResmi != null)
                     {
-                        if (data.ResimAdi.IsNullOrWhiteSpace() == false)
+                        if (kullanici.ResimAdi.IsNullOrWhiteSpace() == false)
                         {
-                            var eskiResimLazim = LisansustuBasvuruBus.ResimBilgisiLazimOlanKayitVarMi(data.KullaniciID);
+                            var eskiResimLazim = LisansustuBasvuruBus.ResimBilgisiLazimOlanKayitVarMi(kullanici.KullaniciID);
                             if (eskiResimLazim == false)
                             {
                                 var rsmYol = SistemAyar.KullaniciResimYolu;
-                                var rsm = Server.MapPath("~/" + rsmYol + "/" + data.ResimAdi);
+                                var rsm = Server.MapPath("~/" + rsmYol + "/" + kullanici.ResimAdi);
                                 if (System.IO.File.Exists(rsm)) System.IO.File.Delete(rsm);
                             }
                         }
-                        data.ResimAdi = KullanicilarBus.ResimKaydet(profilResmi);
+                        kullanici.ResimAdi = KullanicilarBus.ResimKaydet(profilResmi);
                     }
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("Kullanicilar", LogCrudType.Update, data.ToJson());
-                    if (isYetkiDegisti) UserBus.SetUserRoles(data.KullaniciID, new List<int>(), data.YetkiGrupID);
-                    if (data.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = data.ResimAdi.ToKullaniciResim(); }
+                    _entities.SaveChanges();
+                    if (kullanici.KullaniciEnstituYetkileris.All(a => a.EnstituKod != kullanici.EnstituKod))
+                    {
+                        _entities.KullaniciEnstituYetkileris.Add(new KullaniciEnstituYetkileri
+                        {
+                            EnstituKod = kullanici.EnstituKod,
+                            KullaniciID = kullanici.KullaniciID,
+                            IslemYapanID = kullanici.IslemYapanID.Value,
+                            IslemTarihi = kullanici.IslemTarihi.Value,
+                            IslemYapanIP = kullanici.IslemYapanIP
+
+                        });
+                        _entities.SaveChanges();
+                    }
+                    LogIslemleri.LogEkle("Kullanicilar", LogCrudType.Update, kullanici.ToJson());
+                    if (isYetkiDegisti) UserBus.SetUserRoles(kullanici.KullaniciID, new List<int>(), kullanici.YetkiGrupID);
+                    if (kullanici.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = kullanici.ResimAdi.ToKullaniciResim(); }
 
                 }
 

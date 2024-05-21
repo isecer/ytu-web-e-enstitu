@@ -228,6 +228,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
             }
             return model;
         }
+         
 
     }
 }
