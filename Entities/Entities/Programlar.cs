@@ -31,6 +31,7 @@ namespace Entities.Entities
             this.Mulakats = new HashSet<Mulakat>();
             this.SinavTipleriOT_SNA_PR = new HashSet<SinavTipleriOT_SNA_PR>();
             this.SinavTipleriOTNotAraliklariGecersizProgramlars = new HashSet<SinavTipleriOTNotAraliklariGecersizProgramlar>();
+            this.TalepGelenTaleplers = new HashSet<TalepGelenTalepler>();
             this.TDOBasvurus = new HashSet<TDOBasvuru>();
             this.TDOBasvuruDanismen = new HashSet<TDOBasvuruDanisman>();
             this.TIBasvurus = new HashSet<TIBasvuru>();
@@ -80,6 +81,8 @@ namespace Entities.Entities
         public virtual ICollection<SinavTipleriOT_SNA_PR> SinavTipleriOT_SNA_PR { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SinavTipleriOTNotAraliklariGecersizProgramlar> SinavTipleriOTNotAraliklariGecersizProgramlars { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TalepGelenTalepler> TalepGelenTaleplers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TDOBasvuru> TDOBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

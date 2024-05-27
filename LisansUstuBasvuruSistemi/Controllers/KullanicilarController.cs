@@ -892,7 +892,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (!RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent()) return RedirectToAction("Index", "Home");
             var kullanici = _entities.Kullanicilars.First(p => p.UserKey == userKey);
-
+            var enstitu = _entities.Enstitulers.First(f => f.EnstituKod == kullanici.EnstituKod);
+            var ekd = enstitu.EnstituKisaAd.ToLower();
             var prevUserKey = Guid.NewGuid().ToString();
 
             FormsAuthenticationUtil.SetAuthCookie(kullanici.KullaniciAdi, String.Empty, false);
@@ -903,7 +904,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             UserIdentity.SetCurrent();
 
 
-            return RedirectToAction("Index");
+            return RedirectToAction("index","home",new { ekd });
         }
 
         protected override void Dispose(bool disposing)

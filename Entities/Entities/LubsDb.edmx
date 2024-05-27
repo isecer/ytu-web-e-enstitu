@@ -2901,6 +2901,7 @@
           <Property Name="UnvanID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UnvanAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="UnvanSiraNo" Type="int" Nullable="false" />
+          <Property Name="YetkiGrupID" Type="int" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
@@ -6431,6 +6432,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TalepGelenTalepler_Programlar">
+          <End Role="Programlar" Type="Self.Programlar" Multiplicity="0..1" />
+          <End Role="TalepGelenTalepler" Type="Self.TalepGelenTalepler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="TalepGelenTalepler">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TalepGelenTalepler_TalepDurumlari">
           <End Role="TalepDurumlari" Type="Self.TalepDurumlari" Multiplicity="1" />
           <End Role="TalepGelenTalepler" Type="Self.TalepGelenTalepler" Multiplicity="*" />
@@ -7070,6 +7083,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="ToBasvuruSavunmaKomite">
               <PropertyRef Name="ToBasvuruSavunmaDurumID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Unvanlar_YetkiGruplari">
+          <End Role="YetkiGruplari" Type="Self.YetkiGruplari" Multiplicity="0..1" />
+          <End Role="Unvanlar" Type="Self.Unvanlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="YetkiGruplari">
+              <PropertyRef Name="YetkiGrupID" />
+            </Principal>
+            <Dependent Role="Unvanlar">
+              <PropertyRef Name="YetkiGrupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -8554,6 +8579,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Kullanicilar" EntitySet="Kullanicilar" />
             <End Role="TalepGelenTalepler" EntitySet="TalepGelenTalepler" />
           </AssociationSet>
+          <AssociationSet Name="FK_TalepGelenTalepler_Programlar" Association="Self.FK_TalepGelenTalepler_Programlar">
+            <End Role="Programlar" EntitySet="Programlar" />
+            <End Role="TalepGelenTalepler" EntitySet="TalepGelenTalepler" />
+          </AssociationSet>
           <AssociationSet Name="FK_TalepGelenTalepler_TalepDurumlari" Association="Self.FK_TalepGelenTalepler_TalepDurumlari">
             <End Role="TalepDurumlari" EntitySet="TalepDurumlari" />
             <End Role="TalepGelenTalepler" EntitySet="TalepGelenTalepler" />
@@ -8765,6 +8794,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_ToBasvuruSavunmaKomite_ToBasvuruSavunmaDurumlari" Association="Self.FK_ToBasvuruSavunmaKomite_ToBasvuruSavunmaDurumlari">
             <End Role="ToBasvuruSavunmaDurumlari" EntitySet="ToBasvuruSavunmaDurumlari" />
             <End Role="ToBasvuruSavunmaKomite" EntitySet="ToBasvuruSavunmaKomite" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Unvanlar_YetkiGruplari" Association="Self.FK_Unvanlar_YetkiGruplari">
+            <End Role="YetkiGruplari" EntitySet="YetkiGruplari" />
+            <End Role="Unvanlar" EntitySet="Unvanlar" />
           </AssociationSet>
           <AssociationSet Name="FK_YeterlikBasvuru_Donemler" Association="Self.FK_YeterlikBasvuru_Donemler">
             <End Role="Donemler" EntitySet="Donemler" />
@@ -10110,6 +10143,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Programlar" EntitySet="Programlars" />
             <End Role="SinavTipleriOTNotAraliklariGecersizProgramlar" EntitySet="SinavTipleriOTNotAraliklariGecersizProgramlars" />
           </AssociationSet>
+          <AssociationSet Name="FK_TalepGelenTalepler_Programlar" Association="LubsDbModel.FK_TalepGelenTalepler_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="TalepGelenTalepler" EntitySet="TalepGelenTaleplers" />
+          </AssociationSet>
           <AssociationSet Name="FK_TDOBasvuru_Programlar" Association="LubsDbModel.FK_TDOBasvuru_Programlar">
             <End Role="Programlar" EntitySet="Programlars" />
             <End Role="TDOBasvuru" EntitySet="TDOBasvurus" />
@@ -10325,6 +10362,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_ToBasvuruSavunmaKomite_ToBasvuruSavunmaDurumlari" Association="LubsDbModel.FK_ToBasvuruSavunmaKomite_ToBasvuruSavunmaDurumlari">
             <End Role="ToBasvuruSavunmaDurumlari" EntitySet="ToBasvuruSavunmaDurumlaris" />
             <End Role="ToBasvuruSavunmaKomite" EntitySet="ToBasvuruSavunmaKomites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Unvanlar_YetkiGruplari" Association="LubsDbModel.FK_Unvanlar_YetkiGruplari">
+            <End Role="YetkiGruplari" EntitySet="YetkiGruplaris" />
+            <End Role="Unvanlar" EntitySet="Unvanlars" />
           </AssociationSet>
           <AssociationSet Name="FK_YeterlikBasvuru_YeterlikSureci" Association="LubsDbModel.FK_YeterlikBasvuru_YeterlikSureci">
             <End Role="YeterlikSureci" EntitySet="YeterlikSurecis" />
@@ -12766,6 +12807,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Mulakats" Relationship="LubsDbModel.FK_Mulakat_Programlar" FromRole="Programlar" ToRole="Mulakat" />
           <NavigationProperty Name="SinavTipleriOT_SNA_PR" Relationship="LubsDbModel.FK_SinavTipleriOT_SNA_PR_Programlar" FromRole="Programlar" ToRole="SinavTipleriOT_SNA_PR" />
           <NavigationProperty Name="SinavTipleriOTNotAraliklariGecersizProgramlars" Relationship="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" FromRole="Programlar" ToRole="SinavTipleriOTNotAraliklariGecersizProgramlar" />
+          <NavigationProperty Name="TalepGelenTaleplers" Relationship="LubsDbModel.FK_TalepGelenTalepler_Programlar" FromRole="Programlar" ToRole="TalepGelenTalepler" />
           <NavigationProperty Name="TDOBasvurus" Relationship="LubsDbModel.FK_TDOBasvuru_Programlar" FromRole="Programlar" ToRole="TDOBasvuru" />
           <NavigationProperty Name="TDOBasvuruDanismen" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_Programlar" FromRole="Programlar" ToRole="TDOBasvuruDanisman" />
           <NavigationProperty Name="TIBasvurus" Relationship="LubsDbModel.FK_TIBasvuru_Programlar" FromRole="Programlar" ToRole="TIBasvuru" />
@@ -13296,6 +13338,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_TalepGelenTalepler_Kullanicilar" FromRole="TalepGelenTalepler" ToRole="Kullanicilar" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TalepGelenTalepler_Programlar" FromRole="TalepGelenTalepler" ToRole="Programlar" />
           <NavigationProperty Name="TalepDurumlari" Relationship="LubsDbModel.FK_TalepGelenTalepler_TalepDurumlari" FromRole="TalepGelenTalepler" ToRole="TalepDurumlari" />
           <NavigationProperty Name="TalepGelenTalepBelgeleris" Relationship="LubsDbModel.FK_TalepGelenTalepBelgeleri_TalepGelenTalepler" FromRole="TalepGelenTalepler" ToRole="TalepGelenTalepBelgeleri" />
           <NavigationProperty Name="TalepSurecleri" Relationship="LubsDbModel.FK_TalepGelenTalepler_TalepSurecleri" FromRole="TalepGelenTalepler" ToRole="TalepSurecleri" />
@@ -13876,11 +13919,13 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="UnvanID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UnvanAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="UnvanSiraNo" Type="Int32" Nullable="false" />
+          <Property Name="YetkiGrupID" Type="Int32" />
           <Property Name="IsAktif" Type="Boolean" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Kullanicilars" Relationship="LubsDbModel.FK_Kullanicilar_Unvanlar" FromRole="Unvanlar" ToRole="Kullanicilar" />
+          <NavigationProperty Name="YetkiGruplari" Relationship="LubsDbModel.FK_Unvanlar_YetkiGruplari" FromRole="Unvanlar" ToRole="YetkiGruplari" />
         </EntityType>
         <EntityType Name="Uyruklar">
           <Key>
@@ -14077,6 +14122,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Kullanicilars" Relationship="LubsDbModel.FK_Kullanicilar_YetkiGruplari" FromRole="YetkiGruplari" ToRole="Kullanicilar" />
+          <NavigationProperty Name="Unvanlars" Relationship="LubsDbModel.FK_Unvanlar_YetkiGruplari" FromRole="YetkiGruplari" ToRole="Unvanlar" />
           <NavigationProperty Name="YetkiGrupRolleris" Relationship="LubsDbModel.FK_YetkiGrupRolleri_YetkiGruplari" FromRole="YetkiGruplari" ToRole="YetkiGrupRolleri" />
         </EntityType>
         <EntityType Name="YetkiGrupRolleri">
@@ -17465,6 +17511,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TalepGelenTalepler_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="0..1" />
+          <End Type="LubsDbModel.TalepGelenTalepler" Role="TalepGelenTalepler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="TalepGelenTalepler">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TDOBasvuru_Programlar">
           <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
           <End Type="LubsDbModel.TDOBasvuru" Role="TDOBasvuru" Multiplicity="*" />
@@ -18136,6 +18194,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="ToBasvuruSavunmaKomite">
               <PropertyRef Name="ToBasvuruSavunmaDurumID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Unvanlar_YetkiGruplari">
+          <End Type="LubsDbModel.YetkiGruplari" Role="YetkiGruplari" Multiplicity="0..1" />
+          <End Type="LubsDbModel.Unvanlar" Role="Unvanlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="YetkiGruplari">
+              <PropertyRef Name="YetkiGrupID" />
+            </Principal>
+            <Dependent Role="Unvanlar">
+              <PropertyRef Name="YetkiGrupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -21290,6 +21360,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
+                <ScalarProperty Name="YetkiGrupID" ColumnName="YetkiGrupID" />
                 <ScalarProperty Name="UnvanSiraNo" ColumnName="UnvanSiraNo" />
                 <ScalarProperty Name="UnvanAdi" ColumnName="UnvanAdi" />
                 <ScalarProperty Name="UnvanID" ColumnName="UnvanID" />

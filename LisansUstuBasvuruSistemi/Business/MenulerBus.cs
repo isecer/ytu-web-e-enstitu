@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using BiskaUtil;
-using DevExpress.Pdf.Native.BouncyCastle.X509;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;

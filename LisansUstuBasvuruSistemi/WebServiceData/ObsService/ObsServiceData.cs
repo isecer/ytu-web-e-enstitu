@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Entities.Entities;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -29,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
                     if (!ogrencis.Any() || !ogrencis[0].Sucess)
                     {
-                        ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password,  null, tcOrOgrenciNo);
+                        ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcOrOgrenciNo);
                     }
 
                     if (ogrencis.Any() && ogrencis[0].Sucess)
@@ -205,6 +206,27 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
             return model;
         }
 
+        public List<string> ObsSutentList(List<string> ogrenciNos)
+        {
+            var returnogrenciNos = new List<string>(); 
+
+            if (ogrenciNos == null) throw new Exception("ogrenciNos boş geliyor!");
+
+            using (var service = new proliz_ytu_enstitu_minerSoapClient())
+            {
+
+                foreach (var ogrenciNo in ogrenciNos)
+                {
+                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, ogrenciNo, null); 
+                    if (ogrencis.Any() && ogrencis[0].Sucess)
+                        returnogrenciNos.Add(ogrenciNo);
+                }
+            }
+
+
+
+            return returnogrenciNos;
+        }
         public List<StudentControl> GetObsStudentControlX(string tcKimlikNo, string donemId)
         {
             var returnData = new List<StudentControl>();
@@ -260,9 +282,9 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                 model.OgrenciInfo.OGRENIMSEVIYE_ID =
                                     OgrenimTipi.ButunlesikDoktora.ToString();
                                 break;
-                        } 
+                        }
 
-                         
+
                         var ogrenciDersNots =
                             service.OgrenciDersNotBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
                         if (ogrenciDersNots.Any() && ogrenciDersNots[0].Sucess)
@@ -303,7 +325,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                 }
                             }
                         }
-  
+
 
                         returnData.Add(model);
 
@@ -316,6 +338,54 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
             return returnData;
         }
+
+        public class ProgramModel
+        {
+            public int OgrenimTipKod { get; set; }
+            public int ProgramId { get; set; }
+            public string ProgramAdi { get; set; }
+        }
+        public void GetAllStudent()
+        {
+            List<ProgramModel> programs = new List<ProgramModel>();
+            using (var service =
+                   new proliz_ytu_enstitu_minerSoapClient())
+            {
+                using (var entities = new LubsDbEntities())
+                {
+                    var kulls = entities.Kullanicilars.Where(p => p.YtuOgrencisi).Select(s => new { s.OgrenimTipKod, s.ProgramKod, s.TcKimlikNo }).ToList();
+                    var kullTcsGroup = kulls.GroupBy(g => new { g.ProgramKod, g.OgrenimTipKod }).Select(s =>
+                        new
+                        {
+                            s.Key.OgrenimTipKod,
+                            s.Key.ProgramKod,
+                            Tc = s.Select(s2 => s2.TcKimlikNo).FirstOrDefault()
+                        }).ToList();
+                    var tcNos = kullTcsGroup.Select(s => s.Tc).ToList();
+                    foreach (var tc in tcNos)
+                    {
+                        var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, "", tc);
+
+                        foreach (var ogrenci in ogrencis.Where(p => p.Sucess).SelectMany(s => s.ogrenci))
+                        {
+                            if (programs.All(a => a.ProgramId != ogrenci.PROGRAM_ID.ToInt(0)))
+                            {
+                                programs.Add(new ProgramModel
+                                {
+                                    ProgramId = ogrenci.PROGRAM_ID.ToInt(0),
+                                    OgrenimTipKod = ogrenci.OGRENIMSEVIYE_ID.ToOgrenimTipKod().Value,
+                                    ProgramAdi = ogrenci.PROGRAM_AD
+                                });
+                            }
+                        }
+                    }
+                }
+
+                var jsonText = programs.ToJson();
+
+            }
+        }
+
         public ObsOgrenciSorgulaModel GetOgrenciBilgi(string tcKimlikNo, string donemId)
         {
             var model = new ObsOgrenciSorgulaModel();

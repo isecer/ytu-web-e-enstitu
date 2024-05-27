@@ -993,6 +993,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendMailDegerlendirmeHatirlatma() => " + donemProjesiBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
                 }
             }
             catch (Exception ex)

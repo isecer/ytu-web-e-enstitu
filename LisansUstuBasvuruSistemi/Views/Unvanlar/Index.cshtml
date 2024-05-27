@@ -1,4 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmUnvanlar
 @{
@@ -10,7 +10,7 @@
     @using (Html.BeginForm())
     {
         <div class="col-md-12">
-                                             
+
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i> Ünvan Listesi</h3>
@@ -21,23 +21,27 @@
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
-                <div class="panel-body">  
+                <div class="panel-body">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th width="70">Sıra No</th>
                                 <th class="sirala" field="UnvanAdi">Ünvan Adı</th>
+                                <th class="sirala" field="YetkiGrupID">Yetki Grubu</th>
                                 <th width="70" class="sirala" field="IsAktif">Durum</th>
                                 <th width="50">
                                     <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" title="Yeni"><i class="fa fa-plus"></i></a>
-                                </th>   
-                            </tr>   
+                                </th>
+                            </tr>
                         </thead>
-                        <tbody>   
+                        <tbody>
                             <tr class="filtrele">
                                 <th></th>
                                 <th>
                                     <input name="UnvanAdi" type="text" value="@Model.UnvanAdi" class="form-control" />
+                                </th>
+                                <th>
+                                    @Html.DropDownList("YetkiGrupID", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
                                 <th>
                                     @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
@@ -48,12 +52,15 @@
                             </tr>
                             @if (Model.RowCount > 0)
                             {
-                                foreach (var item in Model.data.Select((s, Inx) => new { data = s, Index = Inx }))
+                                foreach (var item in Model.data.Select((s, inx) => new { data = s, Index = inx }))
                                 {
                                     <tr>
                                         <td>@(item.Index + 1)</td>
                                         <td id="tdMad_@item.data.UnvanID">
                                             @item.data.UnvanAdi
+                                        </td>
+                                        <td id="tddu_@item.data.UnvanID" style="text-align:center;">
+                                            @(item.data.YetkiGrupID.HasValue?item.data.YetkiGruplari.YetkiGrupAdi:"")
                                         </td>
                                         <td id="tdIa_@item.data.UnvanID" style="text-align:center;">
                                             <span class="label label-@(item.data.IsAktif ? "success" : "danger")">@item.data.IsAktif.ToAktifPasif()</span>
@@ -62,7 +69,7 @@
                                             <a href="@Url.Action("Kayit")"><i class="fa fa-plus tooltips" title="Yeni"></i></a>
                                             <a href="@Url.Action("Kayit", "Unvanlar", new { id = item.data.UnvanID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
                                             <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.data.UnvanID)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
-                                          </td>  
+                                        </td>
                                     </tr>
 
 
@@ -71,7 +78,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="4" style="text-align: center;">
+                                    <td colspan="5" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>
@@ -81,7 +88,7 @@
                     </table>
                 </div>
                 <div class="panel-footer">
-                   @Model.ToPagerString()
+                    @Model.ToPagerString()
                 </div>
             </div>
         </div>
@@ -111,7 +118,7 @@
         });
     }
     function Sil(sndr, id) {
-        $.ajax({                         
+        $.ajax({
             url: '@Url.Action("Sil", "Unvanlar")',
             data: { id: id },
             success: function (result) {

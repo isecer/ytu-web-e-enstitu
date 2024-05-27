@@ -69,7 +69,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 
             fxMenu(null);
             return new HtmlString(menuStringBuilder.ToString());
-        }
-
+        } 
     }
 }

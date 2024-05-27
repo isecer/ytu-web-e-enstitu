@@ -292,6 +292,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Utilities\ApplicationTasks\MailTaskRunner.cs" />
+    <Compile Include="Utilities\ApplicationTasks\ObsStudentControlTaskRunner.cs" />
     <Compile Include="Utilities\Dtos\DonemProjesiDtos.cs" />
     <Compile Include="Utilities\Dtos\FileAttachmentInfo.cs" />
     <Compile Include="Utilities\Dtos\FmDonemProjesiBasvuruDto.cs" />

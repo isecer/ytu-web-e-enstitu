@@ -41,6 +41,7 @@ namespace LisansUstuBasvuruSistemi
 
 
             MailTaskRunner.Start();
+            ObsStudentControlTaskRunner.Start();
 
             ScriptPermissionManager.GlobalInstance = new ScriptPermissionManager(ExecutionMode.Unrestricted);
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Disabled;

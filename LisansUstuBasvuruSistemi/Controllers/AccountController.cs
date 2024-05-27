@@ -811,8 +811,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var yeniKullanici = kModel.KullaniciID <= 0;
                 if (yeniKullanici)
                 {
+
+                    if (!erisimYetki && isKurumIci)
+                    {
+                        var unvan = _entities.Unvanlars.FirstOrDefault(f => f.UnvanID == kModel.UnvanID);
+                        kModel.YetkiGrupID = unvan.YetkiGrupID ?? 1;
+                    } 
+                    if (kModel.YetkiGrupID <= 0) kModel.YetkiGrupID = 1;
                     kModel.UserKey = Guid.NewGuid();
-                    kModel.YetkiGrupID = erisimYetki ? kModel.YetkiGrupID : (kModel.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && KullanicilarBus.GetDanismanUnvanIds().Contains(kModel.UnvanID ?? 0) ? 6 : 1);//danışman yetkisi vermek için
                     kModel.OlusturmaTarihi = DateTime.Now;
                     kModel.IsAktif = true;
                     kModel.FixedHeader = false;

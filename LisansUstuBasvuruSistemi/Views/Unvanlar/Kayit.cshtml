@@ -1,5 +1,6 @@
-﻿@using Entities.Entities  
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using BiskaUtil
+@using Entities.Entities
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model Unvanlar
 @{
@@ -22,10 +23,19 @@
                         <div class="panel-body form-group-separated">
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Ünvan Adı</label>
-                                <div class="col-md-9 col-xs-8">     
-                                        <input type="text" name="UnvanAdi" id="UnvanAdi" value="@Model.UnvanAdi" class="form-control" />   
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="UnvanAdi" id="UnvanAdi" value="@Model.UnvanAdi" class="form-control" />
                                 </div>
                             </div>
+                            @if (UserIdentity.Current.IsAdmin)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label" title="Hesap oluşturan bu ünvandaki kullanıcıları seçilen yetki grubuna atanır. Boş bırakılırsa yetki grubu yetkisiz olarak atanır.">Yetki Grubu Atama</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        @Html.DropDownList("YetkiGrupID", null, new { @class = "form-control", style = "padding:0px;" })
+                                    </div>
+                                </div>
+                            }
                             @if (Model.UnvanID > 0)
                             {
                                 <div class="form-group">
@@ -40,7 +50,7 @@
 
                         </div>
                     </div>
-                </div>   
+                </div>
                 <div class="panel-footer">
                     <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i>Geri Dön</a>
                     <button class="btn btn-primary pull-right"><i class="fa fa-save"></i>Kaydet</button>

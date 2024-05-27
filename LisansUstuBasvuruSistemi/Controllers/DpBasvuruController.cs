@@ -53,7 +53,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.IsOgrenimSeviyeYetki = kullanici.OgrenimTipKod == OgrenimTipi.TezsizYuksekLisans;
 
 
-                model.IsAktifOgrenimBasvuruVar = _entities.DonemProjesis.Any(a => a.KullaniciID == kullanici.KullaniciID && a.OgrenciNo == kullanici.OgrenciNo);
+                model.IsAktifOgrenimBasvuruVar = _entities.DonemProjesis.Any(a => a.KullaniciID == kullanici.KullaniciID && a.OgrenciNo == kullanici.OgrenciNo && a.ProgramKod==kullanici.ProgramKod);
                 if (model.IsOgrenimSeviyeYetki)
                 {
                     KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
@@ -168,11 +168,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, errprMessages.ToArray());
             return RedirectToAction("Index");
-        }
-
-
-
-
+        } 
         public ActionResult Sil(Guid? uniqueId)
         {
 
@@ -206,9 +202,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess,
                 messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage)
             }, "application/json", JsonRequestBehavior.AllowGet);
-        }
-
-
+        } 
         public ActionResult GetDonemProjesiBasvuruFormu(Guid donemProjesiUniqueId, Guid? donemProjesiBasvuruUniqueId)
         {
 
@@ -301,7 +295,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         donemProjesiBasvuru.IslemYapanIP = UserIdentity.Ip;
                         donemProjesiBasvuru.IslemYapanID = UserIdentity.Current.Id;
                         DonemProjesiBus.DonemProjesiDurumSet(donemProjesiBasvuru.DonemProjesiBasvuruID);
-                        _entities.SaveChanges(); 
+                        _entities.SaveChanges();
                         LogIslemleri.LogEkle("DonemProjesiBasvuru", LogCrudType.Insert, donemProjesiBasvuru.ToJson());
                     }
                     else
@@ -393,8 +387,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                         donemProjesiBasvuru.DonemProjesi.IsYeniBasvuruYapilabilir = true;
-                        //_entities.SRTalepleris.RemoveRange(donemProjesiBasvuru.SRTalepleris);
-                        //_entities.DonemProjesiJurileris.RemoveRange(donemProjesiBasvuru.DonemProjesiJurileris);
+                        _entities.SRTalepleris.RemoveRange(donemProjesiBasvuru.SRTalepleris);
+                        _entities.DonemProjesiJurileris.RemoveRange(donemProjesiBasvuru.DonemProjesiJurileris);
                         _entities.DonemProjesiBasvurus.Remove(donemProjesiBasvuru);
                         _entities.SaveChanges();
                         mmMessage.Messages.Add(donemProjesiBasvuru.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Dönem Projesi başvurusu silindi!");
@@ -938,9 +932,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (mmMessage.Messages.Count == 0)
                 {
-                    if (donemProjesiBasvuru.DonemProjesiDurumID != DonemProjesiDurumEnum.JuriSinavOlusturmaSureci)
+
+                    if (donemProjesiBasvuru.DonemProjesiDurumID != DonemProjesiDurumEnum.JuriSinavOlusturmaSureci &&
+                        donemProjesiBasvuru.DonemProjesiDurumID != DonemProjesiDurumEnum.SinavDegerlendirmeSureci)
                     {
                         mmMessage.Messages.Add("Jüri/Sınav oluşturma sürecinde bulunmayan bir başvuru için. Toplantı oluşturma/düzenleme işlemi yapılamaz.");
+                    }
+
+                    if (donemProjesiBasvuru.DonemProjesiDurumID == DonemProjesiDurumEnum.SinavDegerlendirmeSureci && donemProjesiBasvuru.DonemProjesiJurileris.Any(a=>a.DonemProjesiJuriOnayDurumID.HasValue))
+                    {
+                        mmMessage.Messages.Add("Değerlendirme süreci başlamış bir sınav bilgisi düzeltilemez. Düzeltme işlemi için enstitü ile görüşünüz.");
                     }
                 }
                 if (mmMessage.Messages.Count == 0)

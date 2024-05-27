@@ -44,6 +44,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string RotasyonuDegisenResimleriLogla = "Rotasyonu Değişen Resimleri Logla";
 
         public const string OtomatikMailBilgilendirmeServisiniCalistir = "Otomatik Mail Bilgilendirme Servisini Çalıştır";
+        public const string OtomatikObsOgrenciKontrolServisiniCalistir = "Otomatik Obs Öğrenci Kontrol Servisini Çalıştır";
 
 
 

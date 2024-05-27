@@ -9,7 +9,8 @@ namespace LisansUstuBasvuruSistemi.Business
     public static class UnvanlarBus
     {
         public static List<string> JuriUnvanList = new List<string> { "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
-        public static List<string> EsDanismanUnvanList=new List<string>{ "ARŞ.GÖR.DR.", "ÖĞR.GÖR.DR.", "DR.", "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
+        public static List<string> EsDanismanUnvanList = new List<string> { "ARŞ.GÖR.DR.", "ÖĞR.GÖR.DR.", "DR.", "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
+        public static List<string> DpJuriUnvanList = new List<string> { "ARŞ.GÖR.DR.", "ÖĞR.GÖR.DR.", "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
         public static string ToJuriUnvanAdi(this string unvanAdi)
         {
             if (unvanAdi.IsNullOrWhiteSpace()) return "";
@@ -24,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Business
             if (docUnvan.Any(a => a.Contains(unvanAdi))) return "DOÇ.DR.";
             if (arGorUnvan.Any(a => a.Contains(unvanAdi))) return "ARŞ.GÖR.DR.";
             if (ogrGrUnvan.Any(a => a.Contains(unvanAdi))) return "ÖĞR.GÖR.DR.";
-            if (drUnvan.Any(a => a.ToLower()==unvanAdi.ToLower())) return "DR.";
+            if (drUnvan.Any(a => a.ToLower() == unvanAdi.ToLower())) return "DR.";
             return ogUyeUnvan.Any(a => a.Contains(unvanAdi)) ? "DR.ÖĞR.ÜYE." : unvanAdi.ToUpper();
         }
 
@@ -38,10 +39,10 @@ namespace LisansUstuBasvuruSistemi.Business
 
         }
         public static List<CmbStringDto> GetCmbEsDanismanUnvanlar(bool bosSecimVar = false)
-        { 
+        {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            var unvanList = new List<string> { "ARŞ.GÖR.DR.", "ÖĞR.GÖR.DR.","DR.", "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
+            var unvanList = new List<string> { "ARŞ.GÖR.DR.", "ÖĞR.GÖR.DR.", "DR.", "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
             dct.AddRange(unvanList.Select(item => new CmbStringDto { Value = item, Caption = item }));
             return dct;
 

@@ -321,7 +321,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             KullanicilarBus.OgrenciBilgisiGuncelleObs(userKey);
 
             var data = _entities.Kullanicilars.First(p => p.UserKey == userKey);
-           
+
             ViewBag.ResimVar = data.ResimAdi.IsNullOrWhiteSpace() == false;
             data.ResimAdi = data.ResimAdi.ToKullaniciResim();
 
@@ -349,7 +349,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToList();
             ViewBag.KRoller = dataR;
             var kategr = roles.Select(s => s.Kategori).Distinct().ToArray();
-            var menuK = _entities.Menulers.Where(a => a.BagliMenuID == 0 && kategr.Contains(a.MenuAdi)).ToList();
+            var menuK = MenulerBus.Menulers.Where(a => a.BagliMenuID == 0 && kategr.Contains(a.MenuAdi)).ToList();
             var dct = menuK.Select(item => new CmbIntDto { Value = item.SiraNo, Caption = item.MenuAdi }).ToList();
             ViewBag.cats = dct;
             #endregion
@@ -367,7 +367,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (data.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
             {
-                var ogrenciler = _entities.Kullanicilars.Where(p => p.DanismanID == data.KullaniciID && p.YtuOgrencisi).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).ToList();
+                var ogrenciler = _entities.Kullanicilars.Where(p => p.DanismanID == data.KullaniciID && p.YtuOgrencisi).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).Select(s => new
+                {
+                    s.UserKey,
+                    s.ResimAdi,
+                    s.OgrenciNo,
+                    s.Ad,
+                    s.Soyad,
+                    s.Programlar
+                }).ToList().Select(s => new Kullanicilar
+                {
+                    UserKey = s.UserKey,
+                    ResimAdi = s.ResimAdi,
+                    Ad = s.Ad,
+                    Soyad = s.Soyad,
+                    OgrenciNo = s.OgrenciNo,
+                    Programlar = s.Programlar
+
+                }).ToList();
                 ViewBag.Ogrenciler = ogrenciler;
             }
 
@@ -1164,7 +1181,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = TdoBus.GetSecilenBasvuruTdoDetay(id, uniqueId);
             ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
             return View(model);
-        } 
+        }
         [HttpGet]
         public ActionResult GetDetailDpBasvuru(Guid donemProjesiUniqueId, Guid? showBasvuruUniqueId, Guid? uniqueId)
         {
@@ -2227,6 +2244,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return kul2.ToJsonResult();
         }
+        [Authorize]
+        public ActionResult GetYtuOgretimElemanDp(string term)
+        {
+            var data = PersisServiceData.GetWsPersisOe(term);
+            var ytuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == GlobalSistemSetting.UniversiteYtuKod);
+            var kul2 = data.Table.Select(s => new
+            {
+                id = s.ADSOYAD,
+                AdSoyad = s.ADSOYAD,
+                text = s.ADSOYAD,
+                BolumAdi = s.BOLUMADI.Replace("BÖLÜMÜ", ""),
+                UnvanAdi = s.AKADEMIKUNVAN.ToJuriUnvanAdi(),
+                UniversiteID = ytuUni?.UniversiteID ?? GlobalSistemSetting.UniversiteYtuKod,
+                UniversiteAdi = (ytuUni != null ? ytuUni.Ad : "Yıldız Teknik Üniversitesi").ToUpper(),
+                EMail = s.KURUMMAIL
+            }).Where(p => UnvanlarBus.DpJuriUnvanList.Contains(p.UnvanAdi)).OrderBy(o => o.AdSoyad).Take(25).ToList();
+
+            return kul2.ToJsonResult();
+        }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularTezKontrolYetkiliAtama)]
         public ActionResult GetTezkontrolYetkilisi(string term, string ekd)
         {
@@ -3083,7 +3119,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     var rpr = new RprDpSinavTutanakFormu_FR0366(rapor.DonemProjesiBasvuruID);
                     rpr.CreateDocument();
-                    rpr.DisplayName =  rpr.DisplayName;
+                    rpr.DisplayName = rpr.DisplayName;
 
 
                     if (rapor.DonemProjesi.KullaniciID != UserIdentity.Current.Id || RoleNames.DonemProjesiSinavDegerlendirmeDuzeltme.InRoleCurrent())
@@ -3095,7 +3131,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     rprX = rpr;
                 }
-            }  
+            }
             if (!isPdfStream) return View(rprX);
 
             var memoryStream = new MemoryStream();
@@ -3106,12 +3142,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return new FileStreamResult(memoryStream, "application/pdf");
         }
 
+
+
         protected override void Dispose(bool disposing)
         {
             _entities.Dispose();
             base.Dispose(disposing);
         }
 
-     
+
     }
 }

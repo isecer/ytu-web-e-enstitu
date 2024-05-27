@@ -12,6 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? UnvanSiraNo { get; set; }
         public string UnvanAdi { get; set; }
         public bool? IsAktif { get; set; }
+        public int? YetkiGrupID { get; set; }
         public IEnumerable<Unvanlar> data { get; set; }
 
     }

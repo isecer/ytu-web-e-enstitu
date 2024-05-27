@@ -18,6 +18,7 @@ namespace Entities.Entities
         public YetkiGruplari()
         {
             this.Kullanicilars = new HashSet<Kullanicilar>();
+            this.Unvanlars = new HashSet<Unvanlar>();
             this.YetkiGrupRolleris = new HashSet<YetkiGrupRolleri>();
         }
     
@@ -29,6 +30,8 @@ namespace Entities.Entities
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Kullanicilar> Kullanicilars { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Unvanlar> Unvanlars { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YetkiGrupRolleri> YetkiGrupRolleris { get; set; }
     }

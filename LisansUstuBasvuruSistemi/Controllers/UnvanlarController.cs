@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.Unvanlar)]
         public ActionResult Index()
         {
-            return Index(new FmUnvanlar { });
+            return Index(new FmUnvanlar());
         }
         [HttpPost]
         public ActionResult Index(FmUnvanlar model)
@@ -32,9 +32,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (model.UnvanSiraNo.HasValue) q = q.Where(p => p.UnvanSiraNo == model.UnvanSiraNo);
             if (!model.UnvanAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.UnvanAdi.Contains(model.UnvanAdi));
+            if (model.YetkiGrupID.HasValue) q = q.Where(p => p.YetkiGrupID == model.YetkiGrupID.Value);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             model.RowCount = q.Count();
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.UnvanAdi); 
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.UnvanAdi);
             model.data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
@@ -44,6 +45,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(true), "Value", "Caption", model.YetkiGrupID);
             return View(model);
         }
         public ActionResult Kayit(int? id, string dlgid)
@@ -61,6 +63,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (data != null) model = data;
             }
 
+            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(true), "Value", "Caption", model.YetkiGrupID);
             return View(model);
         }
         [HttpPost]
@@ -82,7 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             //}
             //else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "UnvanSiraNo" });
             if (kModel.UnvanAdi.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Ünvan Adı Boş bırakılamaz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "UnvanAdi" });
             }
@@ -106,6 +109,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var data = _entities.Unvanlars.First(p => p.UnvanID == kModel.UnvanID);
                     //data.UnvanSiraNo = kModel.UnvanSiraNo;
                     data.UnvanAdi = kModel.UnvanAdi;
+                    if (UserIdentity.Current.IsAdmin) data.YetkiGrupID = kModel.YetkiGrupID;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
@@ -114,11 +118,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
-            else
-            {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
-            }
 
+            MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
+
+            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(true), "Value", "Caption", kModel.YetkiGrupID);
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }
@@ -140,7 +143,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.UnvanAdi + "' İsimli Ünvan Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message,  ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }
             else

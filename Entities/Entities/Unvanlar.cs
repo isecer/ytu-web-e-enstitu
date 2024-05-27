@@ -23,6 +23,7 @@ namespace Entities.Entities
         public int UnvanID { get; set; }
         public string UnvanAdi { get; set; }
         public int UnvanSiraNo { get; set; }
+        public Nullable<int> YetkiGrupID { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
@@ -30,5 +31,6 @@ namespace Entities.Entities
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Kullanicilar> Kullanicilars { get; set; }
+        public virtual YetkiGruplari YetkiGruplari { get; set; }
     }
 }

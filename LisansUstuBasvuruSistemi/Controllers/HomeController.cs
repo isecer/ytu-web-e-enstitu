@@ -88,7 +88,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                          select new
                                          {
                                              aso.AnketSoruID,
-                                             AnketSoruSecenekID = sbc != null ? sbc.AnketSoruSecenekID : (int?)null,
+                                             AnketSoruSecenekID = sbc != null ? sbc.AnketSoruSecenekID : null,
                                              Aciklama = sbc != null ? sbc.EkAciklama : "",
                                              aso.SiraNo,
                                              aso.SoruAdi,
@@ -137,11 +137,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-            ViewBag.IsMesajGonder = isMesajGonder;
+            ViewBag.IsMesajGonder = isMesajGonder; 
+
+           // new ObsServiceData().GetAllStudent();
 
             return View(enstitu);
         }
-
+         
         public ActionResult AuthenticatedControl()
         {
             if (Request.Browser.IsMobileDevice) { }

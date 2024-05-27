@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IdentityModel.Protocols.WSTrust;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -21,13 +20,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class KullanicilarBus
     {
-
-        public static List<int> GetDanismanUnvanIds()
-        {
-            //Doç.Dr Prof.Dr, Dr. Öğr. Üye
-            return new List<int> { 17, 42, 73 };
-        }
-
+ 
         public static StudentControl OgrenciKontrol(string tcOrOgrenciNo = null)
         {
             var obsData = new ObsServiceData();
@@ -35,8 +28,7 @@ namespace LisansUstuBasvuruSistemi.Business
             //{
             //    var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
             //    donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
-            //}
-            var data2 = new ObsData().GetObsStudentControl(tcOrOgrenciNo);
+            //} 
             return obsData.GetObsStudentControl(tcOrOgrenciNo);
         }
 
@@ -47,73 +39,85 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static StudentControl OgrenciBilgisiGuncelleObs(int kullaniciId)
         {
-            return OgrenciBilgisiGuncelleObs(kullaniciId, null);
+            return OgrenciBilgisiGuncelleObs(new List<int> { kullaniciId }, null);
+        }
+        public static StudentControl OgrenciBilgisiGuncelleObs(List<int> kullaniciIds)
+        {
+            return OgrenciBilgisiGuncelleObs(kullaniciIds, null);
         }
 
-        private static StudentControl OgrenciBilgisiGuncelleObs(int? kullaniciId, Guid? userKey = null)
-        {
+        private static StudentControl OgrenciBilgisiGuncelleObs(List<int> kullaniciId, Guid? userKey)
+        { 
             var kayitBilgi = new StudentControl();
             using (var entities = new LubsDbEntities())
             {
+                var ogrenciQuery = entities.Kullanicilars.Where(p => p.YtuOgrencisi).AsQueryable();
+                if (kullaniciId != null && kullaniciId.Any())
+                    ogrenciQuery = ogrenciQuery.Where(p => kullaniciId.Contains(p.KullaniciID));
+                if (userKey != null) ogrenciQuery = ogrenciQuery.Where(p => p.UserKey == userKey);
 
-                var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId || p.UserKey == userKey);
-                if (kul.YtuOgrencisi)
+                var ogrenciler = ogrenciQuery.ToList();
+                foreach (var ogrenci in ogrenciler)
                 {
-                    kayitBilgi = OgrenciKontrol(kul.OgrenciNo); 
-                    if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == kul.OgrenimTipKod)
+                    if (ogrenci.YtuOgrencisi)
                     {
-                        kul.KayitDonemID = kayitBilgi.DonemID;
-                        kul.KayitYilBaslangic = kayitBilgi.BaslangicYil;
-                        kul.KayitTarihi = kayitBilgi.KayitTarihi;
-                        if (kayitBilgi.OgrenciInfo != null)
+                        kayitBilgi = OgrenciKontrol(ogrenci.OgrenciNo);
+                        if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == ogrenci.OgrenimTipKod)
                         {
-                            int? danismanId = null;
-                            if (!kayitBilgi.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace())
+                            ogrenci.KayitDonemID = kayitBilgi.DonemID;
+                            ogrenci.KayitYilBaslangic = kayitBilgi.BaslangicYil;
+                            ogrenci.KayitTarihi = kayitBilgi.KayitTarihi;
+                            if (kayitBilgi.OgrenciInfo != null)
                             {
-                                var danisman = entities.Kullanicilars.FirstOrDefault(p =>
-                                    p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
-                                if (danisman != null)
-                                    danismanId = danisman.KullaniciID;
-                                kayitBilgi.IsDanismanHesabiBulunamadi = !kul.DanismanID.HasValue;
-
-                            }
-
-                            kul.DanismanID = danismanId;
-                            kayitBilgi.AktifDanismanID = danismanId;
-                            if (!kul.KullaniciOgrenimleris.Any(a =>a.KullaniciID==kul.KullaniciID && a.OgrenciNo == kul.OgrenciNo))
-                            {
-                                var kullaniciOgrenim = new KullaniciOgrenimleri
+                                int? danismanId = null;
+                                if (!kayitBilgi.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace())
                                 {
-                                    OgrenimDurumID = kul.OgrenimDurumID,
-                                    OgrenimTipKod = kul.OgrenimTipKod,
-                                    ProgramKod = kul.ProgramKod,
-                                    ProgramAdi = kul.Programlar.ProgramAdi,
-                                    OgrenciNo = kul.OgrenciNo,
-                                    ObsProgramAdi = kayitBilgi.OgrenciInfo.PROGRAM_AD,
-                                    ObsProgramId = kayitBilgi.OgrenciInfo.PROGRAM_ID,
-                                    DanismanID = danismanId,
-                                    KayitDonemID = kayitBilgi.DonemID,
-                                    KayitTarihi = kayitBilgi.KayitTarihi,
-                                    KayitYilBaslangic = kayitBilgi.BaslangicYil,
-                                    IslemTarihi = DateTime.Now,
-                                    IslemYapanID = UserIdentity.Current.Id,
-                                    IslemYapanIP = UserIdentity.Ip,
-                                };
-                                kul.KullaniciOgrenimleris.Add(kullaniciOgrenim);
+                                    var danisman = entities.Kullanicilars.FirstOrDefault(p =>
+                                        p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
+                                    if (danisman != null)
+                                        danismanId = danisman.KullaniciID;
+                                    kayitBilgi.IsDanismanHesabiBulunamadi = !ogrenci.DanismanID.HasValue;
 
-                                var program = entities.Programlars.FirstOrDefault(f => f.ProgramKod == kul.ProgramKod);
-                                program.ObsProgramId = kayitBilgi.OgrenciInfo.PROGRAM_ID.ToInt();
+                                }
+
+                                ogrenci.DanismanID = danismanId;
+                                kayitBilgi.AktifDanismanID = danismanId;
+                                if (!ogrenci.KullaniciOgrenimleris.Any(a => a.KullaniciID == ogrenci.KullaniciID && a.OgrenciNo == ogrenci.OgrenciNo))
+                                {
+                                    var kullaniciOgrenim = new KullaniciOgrenimleri
+                                    {
+                                        OgrenimDurumID = ogrenci.OgrenimDurumID,
+                                        OgrenimTipKod = ogrenci.OgrenimTipKod,
+                                        ProgramKod = ogrenci.ProgramKod,
+                                        ProgramAdi = ogrenci.Programlar.ProgramAdi,
+                                        OgrenciNo = ogrenci.OgrenciNo,
+                                        ObsProgramAdi = kayitBilgi.OgrenciInfo.PROGRAM_AD,
+                                        ObsProgramId = kayitBilgi.OgrenciInfo.PROGRAM_ID,
+                                        DanismanID = danismanId,
+                                        KayitDonemID = kayitBilgi.DonemID,
+                                        KayitTarihi = kayitBilgi.KayitTarihi,
+                                        KayitYilBaslangic = kayitBilgi.BaslangicYil,
+                                        IslemTarihi = DateTime.Now,
+                                        IslemYapanID = UserIdentity.Current.Id,
+                                        IslemYapanIP = UserIdentity.Ip,
+                                    };
+                                    ogrenci.KullaniciOgrenimleris.Add(kullaniciOgrenim);
+
+                                    var program = entities.Programlars.FirstOrDefault(f => f.ProgramKod == ogrenci.ProgramKod);
+                                    program.ObsProgramId = kayitBilgi.OgrenciInfo.PROGRAM_ID.ToInt();
+                                }
                             }
+
+                        }
+                        else if (!kayitBilgi.Hata)
+                        {
+                            ogrenci.YtuOgrencisi = false;
                         }
 
+                        entities.SaveChanges();
                     }
-                    else if (!kayitBilgi.Hata)
-                    {
-                        kul.YtuOgrencisi = false; 
-                    }
-
-                    entities.SaveChanges();
                 }
+
 
                 return kayitBilgi;
             }

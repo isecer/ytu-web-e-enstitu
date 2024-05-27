@@ -99,43 +99,71 @@ namespace LisansUstuBasvuruSistemi.Business
                     errorMessage.Add(projeYurutucuMessage);
                     return errorMessage;
                 }
-                if (donemProjesiBasvuru != null && !IsYetkiliKullanici())
+                if (donemProjesi != null)
                 {
-                    errorMessage.Add("Başvuru üzerinde değişiklik işlemi sadece Enstitü tarafından yapılabilir.");
-                    return errorMessage;
+                    if (!donemProjesi.IsYeniBasvuruYapilabilir)
+                    {
+                        errorMessage.Add("Yeni başvuru yapamazsınız.");
+                        return errorMessage;
+                    }
                 }
-                if (donemProjesiBasvuru == null && !entities.DonemProjesiMuafOgrencilers.Any(a => a.KullaniciID == basvuranKullanici.KullaniciID && a.OgrenciNo == basvuranKullanici.OgrenciNo))
+                if (donemProjesi == null)
                 {
-                    var controlMessage = new List<string>();
-                    var basvuruYapilabilecekDomemNos = DonemProjesiAyar.GetBasvuruYapilabilecekDonemNos(enstituKod);
-                    var alimnasiGerekenDersKodlari = DonemProjesiAyar.GetBasvuruDonemindeAlmasiGerekenDersKodlari(enstituKod);
-
-                    if (!basvuruYapilabilecekDomemNos.Contains(obsStudentInfo.OkuduguDonemNo))
+                    if (entities.DonemProjesis.Any(a => a.KullaniciID == basvuranKullaniciId && a.OgrenciNo == basvuranKullanici.OgrenciNo && a.ProgramKod == basvuranKullanici.ProgramKod))
                     {
-                        var domeStr = string.Join(",", basvuruYapilabilecekDomemNos.Select(s => s + ". Dönem").ToList());
-                        controlMessage.Add("Aktif okunan dönem " + domeStr + " dönemlerden biri olması gerekmektedir.");
+                        errorMessage.Add("Okuduğunuz program için zaten bir başvurunuz bulunmaktadır.");
                     }
+                }
 
-                    if (alimnasiGerekenDersKodlari.Any())
+
+
+                if (donemProjesiBasvuru != null)
+                {
+                    if (!IsYetkiliKullanici())
                     {
-                        var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(enstituKod);
-                        var alinanDersler = obsStudentInfo.TumDonemDersNotlari
-                            .Where(p => p.DonemId == (aktifDonem.BaslangicYil + "" + aktifDonem.DonemId))
-                            .Select(s => s.DersKoduNum).ToList();
-                        var alinmayanDersKodlari = alimnasiGerekenDersKodlari.Where(a => alinanDersler.All(a2 => a2 != a)).ToList();
-                        if (alinmayanDersKodlari.Any()) controlMessage.Add("Aktif olarak okuduğunuz " + aktifDonem.DonemAdiLong + " dönemi için " + string.Join(",", alinmayanDersKodlari) + " kodlu derslerin alınması gerekmetedir.");
-
-
-                    }
-                    if (controlMessage.Count > 0)
-                    {
-                        errorMessage.Add("Dönem Projesi başvurusu aşağıdaki sebeplerden dolayı başlatılamadı.");
-                        errorMessage.AddRange(controlMessage);
+                        errorMessage.Add("Başvuru üzerinde değişiklik işlemi sadece Enstitü tarafından yapılabilir.");
                         return errorMessage;
                     }
 
                 }
 
+                if (donemProjesiBasvuru == null)
+                {
+                    if (!entities.DonemProjesiMuafOgrencilers.Any(a => a.KullaniciID == basvuranKullanici.KullaniciID && a.OgrenciNo == basvuranKullanici.OgrenciNo))
+                    {
+
+
+
+                        var controlMessage = new List<string>();
+                        var basvuruYapilabilecekDomemNos = DonemProjesiAyar.GetBasvuruYapilabilecekDonemNos(enstituKod);
+                        var alimnasiGerekenDersKodlari = DonemProjesiAyar.GetBasvuruDonemindeAlmasiGerekenDersKodlari(enstituKod);
+
+                        if (!basvuruYapilabilecekDomemNos.Contains(obsStudentInfo.OkuduguDonemNo))
+                        {
+                            var domeStr = string.Join(",", basvuruYapilabilecekDomemNos.Select(s => s + ". Dönem").ToList());
+                            controlMessage.Add("Aktif okunan dönem " + domeStr + " dönemlerden biri olması gerekmektedir.");
+                        }
+
+                        if (alimnasiGerekenDersKodlari.Any())
+                        {
+                            var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(enstituKod);
+                            var alinanDersler = obsStudentInfo.TumDonemDersNotlari
+                                .Where(p => p.DonemId == (aktifDonem.BaslangicYil + "" + aktifDonem.DonemId))
+                                .Select(s => s.DersKoduNum).ToList();
+                            var alinmayanDersKodlari = alimnasiGerekenDersKodlari.Where(a => alinanDersler.All(a2 => a2 != a)).ToList();
+                            if (alinmayanDersKodlari.Any()) controlMessage.Add("Aktif olarak okuduğunuz " + aktifDonem.DonemAdiLong + " dönemi için " + string.Join(",", alinmayanDersKodlari) + " kodlu derslerin alınması gerekmetedir.");
+
+
+                        }
+                        if (controlMessage.Count > 0)
+                        {
+                            errorMessage.Add("Dönem Projesi başvurusu aşağıdaki sebeplerden dolayı başlatılamadı.");
+                            errorMessage.AddRange(controlMessage);
+                            return errorMessage;
+                        }
+
+                    }
+                }
 
 
             }
@@ -220,13 +248,13 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
                     }
-                    else if (donemProjesiBasvuru.DonemProjesiDurumID != DonemProjesiDurumEnum.EnstituOnaySureci || donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID.HasValue)
+                    else if ((donemProjesiBasvuru.DonemProjesiDurumID != DonemProjesiDurumEnum.EnstituOnaySureci || donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID.HasValue))
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add(donemProjesiBasvuru.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Dönem Projesinin silinebilmesi için enstitü tarafından onay işlemi yapılmamış olması gerekmetekdir.");
 
                     }
-                    else if (donemProjesiBasvuru.DonemProjesiDurumID != DonemProjesiDurumEnum.EnstituOnaySureci || donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID.HasValue)
+                    else if (!UserIdentity.Current.IsAdmin && donemProjesiBasvuru.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituOnaySureci && !donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID.HasValue && donemProjesiBasvuru.DonemProjesiJurileris.Any())
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add(donemProjesiBasvuru.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Dönem Projesinin silinebilmesi için enstitü tarafından onay işlemi yapılmamış olması gerekmetekdir.");

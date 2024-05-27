@@ -1298,6 +1298,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendTaslakBasvuruOgrenciye() => "+ mezuniyetBasvurulari.Count+" başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+
                 }
             }
             catch (Exception ex)
@@ -1427,6 +1429,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendMailMezuniyetEykTarihineGoreSrAlinmaliOgrenciyeDanismana() => " + mezuniyetBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+
                 }
             }
             catch (Exception ex)
@@ -1544,6 +1548,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendMailMezuniyetEykTarihineGoreSrAlinmadiEnstituye() => " + mezuniyetBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+
                 }
             }
             catch (Exception ex)
@@ -1679,6 +1685,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendMailMezuniyetDanismanDegerlendirmeHatirlatmaDanismana() => " + mezuniyetBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+
                 }
             }
             catch (Exception ex)
@@ -1807,6 +1815,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendMailMezuniyetSinavSonucuGirilmediOgrenciyeDanismana() => " + mezuniyetBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+
                 }
             }
             catch (Exception ex)
@@ -1924,6 +1934,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendMailMezuniyetTezKontrolTezDosyasiYuklenmeliOgrenciye() => " + mezuniyetBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+
                 }
             }
             catch (Exception ex)
@@ -2044,6 +2056,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendMailCiltliTezTeslimYapilmaliOgrenciye() => " + mezuniyetBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+
                 }
             }
             catch (Exception ex)
@@ -2164,6 +2178,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendMailCiltliTezTeslimYapilmadiEnstituye() => " + mezuniyetBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
                 }
             }
             catch (Exception ex)
