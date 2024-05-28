@@ -398,10 +398,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
-        public ActionResult DurumKayit(int id, int? mezuniyetYayinKontrolDurumId, string mezuniyetYayinKontrolDurumAciklamasi)
+        public ActionResult DurumKayit(int id, int? mezuniyetYayinKontrolDurumId, int? tekKaynakOrani, int? toplamKaynakOrani, string mezuniyetYayinKontrolDurumAciklamasi)
         {
             var mmMessage = new MmMessage { Title = "Mezuniyet başvurusu durum değişiklik işlemi" };
             var mBasvur = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
+            var ogrenimTipKrt =
+                mBasvur.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.FirstOrDefault(f =>
+                    f.OgrenimTipKod == mBasvur.OgrenimTipKod);
             if (mezuniyetYayinKontrolDurumId.HasValue == false)
             {
                 mmMessage.Messages.Add("Başvuru durumu seçiniz");
@@ -433,6 +436,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("Başvurunun kabul edilebilmesi için  öncelikle yayın onaylarının yapılması gerekmektedir.");
                 }
+                else
+                {
+
+                    if (ogrenimTipKrt.TekKaynakOrani.HasValue)
+                    {
+                        if (!tekKaynakOrani.HasValue)
+                            mmMessage.Messages.Add("Tek Kaynak İntihal Oranı bilgisi giriniz.");
+
+                        else if (tekKaynakOrani.Value > ogrenimTipKrt.TekKaynakOrani.Value || tekKaynakOrani.Value < 0)
+                            mmMessage.Messages.Add($"En fazla Tek Kaynak İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
+                    }
+                    if (!mmMessage.Messages.Any() && ogrenimTipKrt.ToplamKaynakOrani.HasValue)
+                    {
+                        if (!toplamKaynakOrani.HasValue)
+                            mmMessage.Messages.Add("Toplam İntihal Oranı bilgisi giriniz.");
+                        else if(toplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || toplamKaynakOrani.Value < 0)
+                            mmMessage.Messages.Add($"Toplam İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
+                    }
+                }
 
             }
             if (mmMessage.Messages.Count == 0)
@@ -452,6 +474,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                 }
+
+                if (ogrenimTipKrt.TekKaynakOrani.HasValue) mBasvur.TekKaynakOrani = tekKaynakOrani;
+                if (ogrenimTipKrt.ToplamKaynakOrani.HasValue) mBasvur.ToplamKaynakOrani = toplamKaynakOrani;
 
                 mBasvur.MezuniyetYayinKontrolDurumID = mezuniyetYayinKontrolDurumId.Value;
                 mBasvur.MezuniyetYayinKontrolDurumAciklamasi = mezuniyetYayinKontrolDurumAciklamasi;
@@ -846,7 +871,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }.ToJsonResult();
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
-        public ActionResult MezuniyetDurumKaydet(int id, bool? isMezunOldu, DateTime? tarih)
+        public ActionResult MezuniyetDurumKaydet(int id, bool? isMezunOldu, int? sonTekKaynakOrani, int? sonToplamKaynakOrani, DateTime? tarih)
         {
             var mmMessage = new MmMessage
             {
@@ -855,28 +880,48 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageType = MsgTypeEnum.Warning
             };
 
-            var talep = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
+            var mBasvur = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
+            var ogrenimTipKrt =
+                mBasvur.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.FirstOrDefault(f =>
+                    f.OgrenimTipKod == mBasvur.OgrenimTipKod);
 
-            if (isMezunOldu == true && tarih.HasValue == false)
-            {
-                mmMessage.Messages.Add("Mezuniyet Tarihi giriniz.");
-            }
-            else if (isMezunOldu == true)
+            if (isMezunOldu == true)
             {
 
-                if (talep.MezuniyetBasvurulariTezTeslimFormlaris.Any() == false)
+                if (mBasvur.MezuniyetBasvurulariTezTeslimFormlaris.Any() == false)
                 {
                     mmMessage.Messages.Add("Öğrencinin mezun olabilmesi için Tez Teslim formunun oluşturulması gerekmektedir.");
 
                 }
                 else
                 {
+
                     //Düzenlenecek 
                     //var TezTeslimSonTarihi = SonAlinanSr.Tarih.AddDays(talep.MezuniyetSureci.TezTeslimSuresiGun);
                     //if (Tarih > TezTeslimSonTarihi)
                     //{
                     //    mmMessage.Messages.Add("Mezuniyeti onaylanacak öğrencinin mezuniyet tarihi tez teslim tarihinden büyük olamaz! Tez teslim son tarih:" + TezTeslimSonTarihi.ToFormatDate());
                     //}
+                    if (ogrenimTipKrt.TekKaynakOrani.HasValue)
+                    {
+                        if (!sonTekKaynakOrani.HasValue)
+                            mmMessage.Messages.Add("Tek Kaynak İntihal Oranı bilgisi giriniz.");
+
+                        else if (sonTekKaynakOrani.Value > ogrenimTipKrt.TekKaynakOrani.Value || sonTekKaynakOrani.Value < 0)
+                            mmMessage.Messages.Add($"En fazla Tek Kaynak İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
+                    }
+                    if (!mmMessage.Messages.Any() && ogrenimTipKrt.ToplamKaynakOrani.HasValue)
+                    {
+                        if (!sonToplamKaynakOrani.HasValue)
+                            mmMessage.Messages.Add("Toplam İntihal Oranı bilgisi giriniz.");
+                        else if (sonToplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || sonToplamKaynakOrani.Value < 0)
+                            mmMessage.Messages.Add($"Toplam İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
+                    }
+                    
+                    if (!mmMessage.Messages.Any() && tarih.HasValue == false)
+                    {
+                        mmMessage.Messages.Add("Mezuniyet Tarihi giriniz.");
+                    }
                 }
 
 
@@ -884,19 +929,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (mmMessage.Messages.Count == 0)
             {
                 if (isMezunOldu != true) tarih = null;
-                if (talep.IsMezunOldu != isMezunOldu)
-                {
-                    talep.IsMezunOldu = isMezunOldu;
-                    talep.MezuniyetTarihi = tarih;
-                    var kul = talep.Kullanicilar;
+
+                mBasvur.IsMezunOldu = isMezunOldu;
+                mBasvur.MezuniyetTarihi = tarih;
+                if (ogrenimTipKrt.TekKaynakOrani.HasValue) mBasvur.SonTekKaynakOrani = sonTekKaynakOrani;
+                if (ogrenimTipKrt.ToplamKaynakOrani.HasValue) mBasvur.SonToplamKaynakOrani = sonToplamKaynakOrani;
+
+                var kul = mBasvur.Kullanicilar;
+                if (mBasvur.ProgramKod == kul.ProgramKod && mBasvur.OgrenimTipKod == kul.OgrenimTipKod) kul.OgrenimDurumID = mBasvur.IsMezunOldu == true ? OgrenimDurumEnum.Mezun : OgrenimDurumEnum.HalenOğrenci;
 
 
-                    if (talep.ProgramKod == kul.ProgramKod && talep.OgrenimTipKod == kul.OgrenimTipKod) kul.OgrenimDurumID = talep.IsMezunOldu == true ? OgrenimDurumEnum.Mezun : OgrenimDurumEnum.HalenOğrenci;
+                _entities.SaveChanges();
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, mBasvur.ToJson());
 
-
-                    _entities.SaveChanges();
-                    LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, talep.ToJson());
-                }
                 mmMessage.IsSuccess = true;
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);

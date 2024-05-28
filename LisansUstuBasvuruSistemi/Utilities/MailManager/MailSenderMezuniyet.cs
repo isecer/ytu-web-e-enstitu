@@ -278,7 +278,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = mBasvur.Ad + " " + mBasvur.Soyad });
                         if (item.SablonParametreleri.Any(a => a == "@IptalAciklamasi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "IptalAciklamasi", Value = mBasvur.MezuniyetYayinKontrolDurumAciklamasi });
-
+                        if (item.SablonParametreleri.Any(a => a == "@IlkKontrolTekKaynakIntihalOrani"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "IlkKontrolTekKaynakIntihalOrani", Value = mBasvur.TekKaynakOrani.ToStrObj() });
+                        if (item.SablonParametreleri.Any(a => a == "@IlkKontrolToplamIntihalOrani"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "IlkKontrolToplamIntihalOrani", Value = mBasvur.ToplamKaynakOrani.ToStrObj() });
 
 
                         if (item.MailSablonTipId != MailSablonTipiEnum.MezYayinSartiSaglandiDanisman && mBasvur.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
@@ -289,6 +292,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             item.Attachments.AddRange(MailReportAttachment.GetMezuniyetTezTeslimFormuAttachments(mBasvur.MezuniyetBasvurulariID, true));
                         }
+
+
+
+
+
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
                         if (!snded) continue;
@@ -388,7 +396,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, KullaniciId = (item.JuriTipAdi == "TezDanismani" ? mBasvur.TezDanismanID : null), ToOrBcc = true } },
                             MailSablonTipId = (item.JuriTipAdi == "TezDanismani" ? danismanSablonId : asilSablonId),
                             JuriTipAdi = item.JuriTipAdi,
-                            UnvanAdi = item.UnvanAdi 
+                            UnvanAdi = item.UnvanAdi
                         });
                         if (item.JuriTipAdi == "TezDanismani" && !mBasvur.TezEsDanismanEMail.IsNullOrWhiteSpace())
                         {
@@ -445,6 +453,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "TezBaslikTr", Value = tezKonusu });
+                        if (item.SablonParametreleri.Any(a => a == "@IlkKontrolTekKaynakIntihalOrani"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "IlkKontrolTekKaynakIntihalOrani", Value = mBasvur.TekKaynakOrani.ToStrObj() });
+                        if (item.SablonParametreleri.Any(a => a == "@IlkKontrolToplamIntihalOrani"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "IlkKontrolToplamIntihalOrani", Value = mBasvur.ToplamKaynakOrani.ToStrObj() });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanBilgi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanBilgi", Value = danisman.UnvanAdi + " " + danisman.AdSoyad });
                         foreach (var itemAsil in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi != "TezDanismani" && p.IsAsilOrYedek == true).Select((s, inx) => new { s, inx = inx + 1 }))
@@ -1298,7 +1310,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
                     await entities.SaveChangesAsync();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendTaslakBasvuruOgrenciye() => "+ mezuniyetBasvurulari.Count+" başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("MailTaskRunner.SendTaslakBasvuruOgrenciye() => " + mezuniyetBasvurulari.Count + " başvuru için bilgilendirme maili gönderildi.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
 
                 }
             }

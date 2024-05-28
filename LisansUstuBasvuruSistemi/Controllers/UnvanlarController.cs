@@ -36,7 +36,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.UnvanAdi);
-            model.data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
+            model.data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrUnvanlar
+            {
+                UnvanID = s.UnvanID,
+                UnvanAdi = s.UnvanAdi,
+                UnvanSiraNo = s.UnvanSiraNo,
+                YetkiGrupID = s.YetkiGrupID,
+                YetkiGrupAdi = s.YetkiGrupID.HasValue ? s.YetkiGruplari.YetkiGrupAdi : "",
+                UnvanUserCount = s.YetkiGrupID.HasValue ? s.Kullanicilars.Count(p => p.KullaniciTipleri.KurumIci) : 0,
+                IsAktif = s.IsAktif,
+                IslemTarihi = s.IslemTarihi,
+                IslemYapanID = s.IslemYapanID,
+                IslemYapanIP = s.IslemYapanIP,
+
+            }).ToArray();
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount,
@@ -157,6 +170,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             _entities.Dispose();
             base.Dispose(disposing);
+        }
+
+        public ActionResult UpdateUnvanYetkiGrubu(int unvanId, int yetkiGrupId)
+        {
+
+            if (!UserIdentity.Current.IsAdmin) return new { IsSuccess = false, message = "Bu işlemi yapmak için yetkili değilsiniz" }.ToJsonResult();
+
+            var unvan = _entities.Unvanlars.First(f => f.UnvanID == unvanId);
+            var yetkiGrubu = _entities.YetkiGruplaris.First(f => f.YetkiGrupID == yetkiGrupId);
+
+            var users = _entities.Kullanicilars.Where(p =>
+                p.UnvanID == unvanId && p.KullaniciTipleri.KurumIci).ToList();
+
+            foreach (var user in users)
+            {
+                user.YetkiGrupID = yetkiGrupId;
+                user.IslemYapanID = UserIdentity.Current.Id;
+                user.IslemYapanIP = UserIdentity.Ip;
+                user.IslemTarihi = DateTime.Now;
+            }
+            _entities.SaveChanges();
+            var message = unvan.UnvanAdi + " ünvanındaki " + users.Count + " kullanıcının yetki grubu '" + yetkiGrubu.YetkiGrupAdi + "' olarak güncellendi";
+            if (users.Count == 0) message = "yetki grubu güncellenecek kullanıcı yok";
+            return new { IsSuccess = true, message }.ToJsonResult();
         }
     }
 }

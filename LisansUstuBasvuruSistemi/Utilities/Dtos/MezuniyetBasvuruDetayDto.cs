@@ -28,6 +28,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public List<MezuniyetBasvurulariYayinDto> YayinBilgileri { get; set; } = new List<MezuniyetBasvurulariYayinDto>();
 
+        public bool IsToplamKaynakOraniGirisiYapilacak { get; set; }
+        public bool IsTekKaynakOraniGirisiYapilacak { get; set; }
         public string MezuniyetYayinKontrolDurumAdi { get; set; }
         public string DurumClassName { get; set; }
         public string DurumColor { get; set; }

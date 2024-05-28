@@ -48,6 +48,8 @@ namespace Entities.Entities
         public Nullable<bool> IsTezDiliTr { get; set; }
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
+        public Nullable<int> ToplamKaynakOrani { get; set; }
+        public Nullable<int> TekKaynakOrani { get; set; }
         public Nullable<int> TezDanismanID { get; set; }
         public Nullable<bool> IsDanismanOnay { get; set; }
         public Nullable<System.DateTime> DanismanOnayTarihi { get; set; }
@@ -73,6 +75,8 @@ namespace Entities.Entities
         public Nullable<System.DateTime> EYKTarihi { get; set; }
         public Nullable<int> TezKontrolKullaniciID { get; set; }
         public Nullable<System.DateTime> TezTeslimSonTarih { get; set; }
+        public Nullable<int> SonToplamKaynakOrani { get; set; }
+        public Nullable<int> SonTekKaynakOrani { get; set; }
         public Nullable<bool> IsMezunOldu { get; set; }
         public Nullable<System.DateTime> MezuniyetTarihi { get; set; }
         public System.DateTime IslemTarihi { get; set; }

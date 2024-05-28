@@ -14,19 +14,21 @@
 
         <table class="table" style="width:100%;table-layout:fixed;">
             <thead>
-                <tr>
+                <tr >
                     <th>Öğrenim Tipleri</th>
-                    <th width="70" title="Öğrencinin mezuniyet başvurusu yapabilmesi için en fazla kaçıncı dönemde olması gerekir.">Dönem K.</th>
-                    <th width="100" title="Son dönem kayıt yaptırması gereken ders kodları">K.Y.D.K</th>
-                    <th width="60" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
-                    <th width="60" title="Seminer dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Smnr Not</th>
-                    <th width="60" title="Tüm dönem toplam kredi kriteri">Min Kredi</th>
-                    <th width="60" title="Genel AGNO kriteri">Min AGNO</th>
-                    <th width="60" title="Genel AKTS kriteri">Min AKTS</th>
-                    <th width="40" title="EYK tarihinden sonra sınav talebi en erken kaç gün sonra yapılabilir (Gün)">S.R.G</th>
-                    <th width="50" title="Tez sınavı uzatma sonrası en geç kaç gün içinde öğrenci tez teslimi yapmalı (Gün)">U.S.T.T</th>
-                    <th width="50" title="Tez sınavı uzatma sonrası en geç kaç gün içinde sınav alınmalı (Gün)">U.S.S.R</th>
-                    <th width="40" title="Tez sınavdan başarılı olunduktan sonra tez teslimi en geç kaç gün içinde yapılmalı (Gün)">T.T.S</th>
+                    <th style="font-size:7pt;" width="70" title="Öğrencinin mezuniyet başvurusu yapabilmesi için en fazla kaçıncı dönemde olması gerekir.">Dönem K.</th>
+                    <th style="font-size:7pt;" width="80" title="Son dönem kayıt yaptırması gereken ders kodları">K.Y.D.K</th>
+                    <th style="font-size:7pt;" width="40" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik <br/> Not</th>
+                    <th style="font-size:7pt;" width="40" title="Seminer dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Smnr <br /> Not</th>
+                    <th style="font-size:7pt;" width="40" title="Tüm dönem toplam kredi kriteri">Min <br /> Kredi</th>
+                    <th style="font-size:7pt;" width="40" title="Genel AGNO kriteri">Min <br /> AGNO</th>
+                    <th style="font-size:7pt;" width="40" title="Genel AKTS kriteri">Min <br /> AKTS</th>
+                    <th style="font-size:7pt;" width="50" title="Mezuniyet Başvuru kabulü için En Fazla Tek Kaynak İntihal Oranı kontrol kriteri (boş bırakılırsa bu kriter kontrolü yapılmaz.)">Tek Kay.<br/>İnt.Orn.</th>
+                    <th style="font-size:7pt;" width="50" title="Mezuniyet Başvuru kabulü için Toplam İntihal Oranı kontrol kriteri (boş bırakılırsa bu kriter kontrolü yapılmaz.)">Toplam<br/>İnt.Orn.</th>
+                    <th style="font-size:7pt;" width="50" title="EYK tarihinden sonra sınav talebi en erken kaç gün sonra yapılabilir (Gün)">Snv.Talep<br/>Suresi</th>
+                    <th style="font-size:7pt;" width="50" title="Tez sınavı uzatma sonrası en geç kaç gün içinde öğrenci tez teslimi yapmalı (Gün)">U.Sonrasi<br/>Tez Teslim</th>
+                    <th style="font-size:7pt;" width="50" title="Tez sınavı uzatma sonrası en geç kaç gün içinde sınav alınmalı (Gün)">U.Sonrasi<br />Snv.Talep</th>
+                    <th style="font-size:7pt;" width="50" title="Tez sınavdan başarılı olunduktan sonra tez teslimi en geç kaç gün içinde yapılmalı (Gün)">Tez Teslim<br/>Süresi</th>
                 </tr>
             </thead>
             <tbody id="Rw_tbody">
@@ -94,6 +96,16 @@
                         <td>
                             <div class="form-group">
                                 <input type="text" class="form-control" name="AktifDonemAktsKriteri" value="@item.AktifDonemAktsKriteri">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="TekKaynakOraniKriteri" value="@item.TekKaynakOrani">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="ToplamKaynakOraniKriteri" value="@item.ToplamKaynakOrani">
                             </div>
                         </td>
                         <td>

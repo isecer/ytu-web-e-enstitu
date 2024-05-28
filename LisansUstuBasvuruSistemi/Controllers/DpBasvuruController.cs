@@ -12,13 +12,8 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using System.Collections.Generic;
-using DevExpress.Data.Mask.Internal;
-using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using System.IO;
 using System.Web;
-using LisansUstuBasvuruSistemi.Utilities.MailManager;
-using System.Xml;
-using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -130,7 +125,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!errorMessage.Any())
             {
-                var ogrenciBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(UserIdentity.Current.Id);
+                KullanicilarBus.OgrenciBilgisiGuncelleObs(UserIdentity.Current.Id);
                 // if (ogrenciBilgi.DanismanInfo == null || ogrenciBilgi.IsDanismanHesabiBulunamadi)
                 //{
                 //    var msg = ogrenciBilgi.DanismanInfo == null
@@ -140,7 +135,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 //    return RedirectToAction("Index");
                 //}
                 model = DonemProjesiBus.GetDonemProjesiBasvuru(id, enstituKod);
-
             }
             else
             {
@@ -210,7 +204,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mMessage = new MmMessage();
             var donemProjesi = _entities.DonemProjesis.First(p => p.UniqueID == donemProjesiUniqueId);
             var donemProjesiBasvuru = donemProjesi.DonemProjesiBasvurus.FirstOrDefault(p => p.UniqueID == donemProjesiBasvuruUniqueId);
-            var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(donemProjesi.KullaniciID);
+            KullanicilarBus.OgrenciBilgisiGuncelleObs(donemProjesi.KullaniciID);
 
             var model = donemProjesiBasvuru ?? new DonemProjesiBasvuru { DonemProjesiID = donemProjesi.DonemProjesiID };
             var view = ViewRenderHelper.RenderPartialView("DpBasvuru", "DonemProjesiBasvuruFormu", model);
@@ -1359,7 +1353,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             donemProjesiBasvuru.DonemProjesiJuriOnayDurumID = firstGroupDegerlendirmeData.Key;
                             donemProjesiBasvuru.IsOyBirligiOrCoklugu = qGruopDegerlendirme.Count == 1;
-
+                            _entities.SaveChanges();
                             var messages = DonemProjesiBus.SendMailSinavSonucBilgisi(donemProjesiJuri.DonemProjesiBasvuruID);
                             if (donemProjesiJuri.IsTezDanismani || degerlendirmeDuzeltmeYetki)
                             {

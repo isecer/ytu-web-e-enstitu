@@ -13,7 +13,6 @@
     var isKendiBasvuruSu = Model.KullaniciID == UserIdentity.Current.Id;
 
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-
     var isTezDanisman = Model.TezDanismanID == UserIdentity.Current.Id;
     var sonucGirisSureciAktif = (Model.SonucGirisSureciAktif || kayitYetki);// && Model.MezuniyetJuriOneriFormlaris.All(a => a.EYKYaGonderildi != true);
 
@@ -84,6 +83,63 @@
                                         @Model.OzetAnahtarKelimeler
                                     </td>
                                 </tr>
+                                @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                                {
+                                    if ((Model.IsTekKaynakOraniGirisiYapilacak || Model.IsToplamKaynakOraniGirisiYapilacak) && (Model.TekKaynakOrani.HasValue || Model.SonTekKaynakOrani.HasValue || Model.ToplamKaynakOrani.HasValue || Model.SonToplamKaynakOrani.HasValue))
+                                    {
+                                        <tr>
+                                            <td class="CaptionTd">Tez İntihal Oranları</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                <table class="table table-hover" style="margin:0px;">
+                                                    <tr class="info">
+                                                        <th width="190"></th>
+                                                        @if (Model.TekKaynakOrani.HasValue || Model.ToplamKaynakOrani.HasValue)
+                                                        {
+                                                            <th>İlk Kontrol</th>
+                                                        }
+                                                        @if (Model.SonTekKaynakOrani.HasValue || Model.SonToplamKaynakOrani.HasValue)
+                                                        {
+                                                            <th>Son Kontrol</th>
+                                                        }
+                                                    </tr>
+                                                    @if (Model.IsTekKaynakOraniGirisiYapilacak && (Model.TekKaynakOrani.HasValue || Model.SonTekKaynakOrani.HasValue))
+                                                    {
+                                                        <tr>
+                                                            <td>Tek Kaynak İntihal Oranı</td>
+                                                            @if (Model.TekKaynakOrani.HasValue)
+                                                            {
+                                                                <td>%@Model.TekKaynakOrani</td>
+                                                            }
+                                                            @if (Model.SonTekKaynakOrani.HasValue)
+                                                            {
+                                                                <td>
+                                                                    %@Model.SonTekKaynakOrani
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                    @if (Model.IsToplamKaynakOraniGirisiYapilacak && (Model.ToplamKaynakOrani.HasValue || Model.SonToplamKaynakOrani.HasValue))
+                                                    {
+                                                        <tr>
+                                                            <td>Toplam İntihal Oranı</td>
+                                                            @if (Model.ToplamKaynakOrani.HasValue)
+                                                            {
+                                                                <td>%@Model.ToplamKaynakOrani</td>
+                                                            }
+                                                            @if (Model.SonToplamKaynakOrani.HasValue)
+                                                            {
+                                                                <td>
+                                                                    %@Model.SonToplamKaynakOrani
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
 
                             </table>
                         </td>
@@ -138,9 +194,9 @@
                                                         url: '@Url.Action("DanismanGuncelle", "Mezuniyet")',
                                                         data: { id },
                                                         success: function (result) {
-                                                            if (result.IsSuccess) { 
+                                                            if (result.IsSuccess) {
                                                                 GetDetailx(id);
-                                                            } 
+                                                            }
                                                             swal.fire({
                                                                 html: result.MessageView,
                                                                 icon: (result.IsSuccess ? "success" : "error"),
@@ -153,8 +209,8 @@
 
                                                 });
                                             }
-                                        }); 
- 
+                                        });
+
                                     }
 
                                 </script>
@@ -397,12 +453,12 @@
                         <td style="padding-left:10px;text-align:left;">
                             <table style="width:100%;">
                                 <tr>
-                                    <td class="CaptionTd" width="140">Başvuru Durumu</td>
+                                    <td class="CaptionTd" width="170">Başvuru Durumu</td>
                                     <td class="CaptionTd">:</td>
                                     <td class="ValueTd">
                                         @if (sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)
                                         {
-                                            @Html.DropDownList("MezuniyetYayinKontrolDurumID", Model.SMezuniyetYayinKontrolDurum, new { id = "MezuniyetYayinKontrolDurumID_" + Model.MezuniyetBasvurulariID, @class = "form-control", onchange = "BDurumChange(this,'#bdurumRowID_" + Model.MezuniyetBasvurulariID + "')" })
+                                            @Html.DropDownList("MezuniyetYayinKontrolDurumID", Model.SMezuniyetYayinKontrolDurum, new { id = "MezuniyetYayinKontrolDurumID_" + Model.MezuniyetBasvurulariID, @class = "form-control", onchange = "BDurumChange(this,'" + Model.MezuniyetBasvurulariID + "')" })
                                         }
                                         else
                                         {
@@ -410,6 +466,26 @@
                                         }
                                     </td>
                                 </tr>
+                                @if (Model.IsTekKaynakOraniGirisiYapilacak && sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)
+                                {
+                                    <tr class="intihalRwBasvuru_@Model.MezuniyetBasvurulariID @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi ? "" : "hide")">
+                                        <td class="CaptionTd">Tek Kaynak İntihal Oranı %</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            <input type="text" id="TekKaynakOrani_@Model.MezuniyetBasvurulariID" maxlength="3" value="@Model.TekKaynakOrani" class="form-control" style="color:black;" />
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.IsToplamKaynakOraniGirisiYapilacak && sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)
+                                {
+                                    <tr class="intihalRwBasvuru_@Model.MezuniyetBasvurulariID @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi ? "" : "hide")">
+                                        <td class="CaptionTd">Toplam İntihal Oranı %</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            <input type="text" id="ToplamKaynakOrani_@Model.MezuniyetBasvurulariID" maxlength="3" value="@Model.ToplamKaynakOrani" class="form-control" style="color:black;" />
+                                        </td>
+                                    </tr>
+                                }
                                 <tr id="bdurumRowID_@Model.MezuniyetBasvurulariID" class="@(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi || Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi ? "" : "hide")">
                                     <td class="CaptionTd">Açıklama</td>
                                     <td class="CaptionTd">:</td>

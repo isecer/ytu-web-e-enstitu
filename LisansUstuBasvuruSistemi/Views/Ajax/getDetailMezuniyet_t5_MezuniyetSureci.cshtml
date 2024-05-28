@@ -1,17 +1,17 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model MezuniyetBasvuruDetayDto
-@{ 
+@{
     Layout = null;
-    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent(); 
+    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
     var itemOnaylananSr = Model.MezuniyetSrModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
 
-    var mezuniyetBasvurulariTezTeslimFormu = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(); 
-    var item = itemOnaylananSr; 
+    var mezuniyetBasvurulariTezTeslimFormu = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
+    var item = itemOnaylananSr;
     var colorMz = Model.IsMezunOldu.HasValue ? (Model.IsMezunOldu.Value ? "Green" : "Maroon") : "Gray";
 }
 
@@ -35,7 +35,7 @@
                                             <td style="padding-left:10px;text-align:left;">
                                                 <table style="width:100%;">
                                                     <tr>
-                                                        <td class="CaptionTd" width="140">Tez Teslim Formu</td>
+                                                        <td class="CaptionTd" width="170">Tez Teslim Formu</td>
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">
                                                             <table style="table-layout:fixed;width:100%;">
@@ -78,11 +78,11 @@
                                                                                                                 else {
                                                                                                                     GetMsg(result);
                                                                                                                     return false;
-                                                                                                                } 
+                                                                                                                }
                                                                                                             },
                                                                                                             complete: function (cmp) {
                                                                                                                 PanelRefresh(pnlx, true);
-                                                                                                            } 
+                                                                                                            }
 
                                                                                                         });
                                                                                                         $('#FrmAnket').submit();
@@ -141,7 +141,7 @@
                                             <td style="padding-left:10px;text-align:left;">
                                                 <table style="width:100%;">
                                                     <tr>
-                                                        <td class="CaptionTd" width="140">Mezuniyet Durumu</td>
+                                                        <td class="CaptionTd" width="170">Mezuniyet Durumu</td>
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">
                                                             @if (kayitYetki && item.IsSonSrTalebi && Model.IsDelete == false)
@@ -153,10 +153,12 @@
                                                                         var sndrVal = $(sndr).val();
                                                                         if (sndrVal == "True") {
                                                                             $('#MezuniyetTrhDv_' + id).removeClass("hide");
+                                                                            $('.intihalRwBasvuruMez_' + id).removeClass("hide");
                                                                         }
                                                                         else {
 
                                                                             $('#MezuniyetTrhDv_' + id).addClass("hide");
+                                                                            $('.intihalRwBasvuruMez_' + id).removeClass("hide");
                                                                         }
                                                                     }
                                                                 </script>
@@ -167,6 +169,26 @@
                                                             }
                                                         </td>
                                                     </tr>
+                                                    @if (Model.IsToplamKaynakOraniGirisiYapilacak && kayitYetki && item.IsSonSrTalebi && Model.IsDelete == false)
+                                                    {
+                                                        <tr class="intihalRwBasvuruMez_@Model.MezuniyetBasvurulariID @(Model.IsMezunOldu == true ? "" : "hide")">
+                                                            <td class="CaptionTd">Tek Kaynak İntihal Oranı %</td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">
+                                                                <input type="text" id="SonTekKaynakOrani_@Model.MezuniyetBasvurulariID" maxlength="3" value="@Model.SonTekKaynakOrani" class="form-control" style="color:black;" />
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    @if (Model.IsToplamKaynakOraniGirisiYapilacak && kayitYetki && item.IsSonSrTalebi && Model.IsDelete == false)
+                                                    {
+                                                        <tr class="intihalRwBasvuruMez_@Model.MezuniyetBasvurulariID @(Model.IsMezunOldu == true ? "" : "hide")">
+                                                            <td class="CaptionTd">Toplam İntihal Oranı %</td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">
+                                                                <input type="text" id="SonToplamKaynakOrani_@Model.MezuniyetBasvurulariID" maxlength="3" value="@Model.SonToplamKaynakOrani" class="form-control" style="color:black;" />
+                                                            </td>
+                                                        </tr>
+                                                    }
                                                     <tr class="@(Model.IsMezunOldu == true ? "" : "hide")" id="MezuniyetTrhDv_@Model.MezuniyetBasvurulariID">
                                                         <td class="CaptionTd" style="font-weight:bold;">Mezuniyet Tarihi</td>
                                                         <td class="CaptionTd" style="font-weight:bold;">:</td>

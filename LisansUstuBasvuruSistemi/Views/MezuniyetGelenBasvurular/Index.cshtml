@@ -46,8 +46,8 @@
                                                         $('.btnBbOnaylama').html('Onaylanıyor...');
                                                         var _panel = $(btbx).find('.modal-content');
                                                         PanelRefresh(_panel, false);
-                                                        toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı"); 
-                                                        var mezuniyetBasvurulariIds = eval('@Html.Raw(Json.Encode(Model.SelectedMezuniyetBasvurulariIds))'); 
+                                                        toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı");
+                                                        var mezuniyetBasvurulariIds = eval('@Html.Raw(Json.Encode(Model.SelectedMezuniyetBasvurulariIds))');
                                                         $.ajax({
                                                             url: '@Url.Action("EYKDaOnay", "MezuniyetGelenBasvurular")',
                                                             cache: false,
@@ -62,7 +62,7 @@
                                                                 PanelRefresh(_panel, true);
                                                                 alert(err.responseText);
                                                             }
-                                                        }); 
+                                                        });
                                                         return false;
                                                     }
                                                 },
@@ -486,8 +486,8 @@
         var STabID = "@Model.STabID";
 
         var tID = GetSelectedTabID(tbName);
-        if (STabID != "") tID = STabID;
-        PanelRefresh(_panel, false);
+        if (STabID != "") tID = STabID; 
+        PanelRefresh(_panel, false); 
         $.ajax({
             url: '@Url.Action("GetDetailMezuniyet", "Ajax")',
             data: { id: id, ShowDetayYayinID: mbyID, tbInx: tID, IsDelete: (Isdelete == true), 'GelenBasvuru': true },
@@ -530,27 +530,35 @@
 
     function BDurumChange(sndr, id) {
         if ($(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" || $(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.KaydiSilindi" ) {
-            $(id).removeClass("hide");
+            $('#bdurumRowID_'+id).removeClass("hide");
         } else {
-            $(id).addClass("hide");
+            $('#bdurumRowID_' + id).addClass("hide");
+        }
+        if ($(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.KabulEdildi") {
+            $('.intihalRwBasvuru_' + id).removeClass("hide");
+        } else {
+            $('.intihalRwBasvuru_' + id).addClass("hide");
         }
     }
-    function BDurumKayit(mID) {
+    function BDurumKayit(id) {
         var message = "";
         var successSave = true;
-        var $durumInput =$('#MezuniyetYayinKontrolDurumID_' + mID).first();
-        var durumID = $durumInput.val();
+        var $durumInput = $('#MezuniyetYayinKontrolDurumID_' + id).first();
+        var mezuniyetYayinKontrolDurumID = $durumInput.val();
         var selectedBasvuruDurumAdi = $durumInput.children("option").filter(":selected").text();
-        var durumAck = $('#MezuniyetYayinKontrolDurumAciklamasi_' + mID).val();
-        if (durumID == "" || durumID == null) {
+        var mezuniyetYayinKontrolDurumAciklamasi = $('#MezuniyetYayinKontrolDurumAciklamasi_' + id).val();
+
+        var tekKaynakOrani = $('#TekKaynakOrani_' + id).val();
+        var toplamKaynakOrani = $('#ToplamKaynakOrani_' + id).val();
+        if (mezuniyetYayinKontrolDurumID == "" || mezuniyetYayinKontrolDurumID == null) {
             message = "kayıt işlemini yapabilmek için başvuru durumunu seçiniz";
             successSave = false;
         }
-        else if ((durumID == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" || durumID == "@MezuniyetYayinKontrolDurumuEnum.KaydiSilindi") && durumAck.trim() == "") {
+        else if ((mezuniyetYayinKontrolDurumID == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" || mezuniyetYayinKontrolDurumID == "@MezuniyetYayinKontrolDurumuEnum.KaydiSilindi") && mezuniyetYayinKontrolDurumAciklamasi.trim() == "") {
             successSave = false;
             message ="Açıklaması giriniz";
         }
-        else if (durumID == "@MezuniyetYayinKontrolDurumuEnum.Taslak") {
+        else if (mezuniyetYayinKontrolDurumID == "@MezuniyetYayinKontrolDurumuEnum.Taslak") {
             message = "Başvuru taslağa çekilecek fakat varsa eğer danışman onayı, yayın onayı işlemleri geri alınacak.";
         }
         else {
@@ -586,11 +594,11 @@
                         url: '@Url.Action("DurumKayit", "MezuniyetGelenBasvurular")',
                         type: 'POST',
                         cache: false,
-                        data: { id: mID, MezuniyetYayinKontrolDurumID: durumID, MezuniyetYayinKontrolDurumAciklamasi: durumAck },
+                        data: { id, mezuniyetYayinKontrolDurumID, tekKaynakOrani, toplamKaynakOrani, mezuniyetYayinKontrolDurumAciklamasi },
                         success: function (result) {
                             $('.swal2-cancel').first().text("Evet");
                             if (result.success) {
-                                GetDetailx(mID);
+                                GetDetailx(id);
                             }
                             swal.close();
                             swal.fire({
@@ -783,10 +791,6 @@
             }
         });
     }
-
-    $(function () {
-
-    })
     function ShowSrDialog(MezuniyetBasvurulariID, SRTalepID) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
         PanelRefresh(_panel, false);
@@ -974,16 +978,20 @@
     }
 
     function MzDurumKaydet(MezuniyetBasvurulariID) {
-        var _IsMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();
-        var _MezuniyetTarihi = $('#MezuniyetTarihi_' + MezuniyetBasvurulariID).val();
+        var isMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();
+        var tarih = $('#MezuniyetTarihi_' + MezuniyetBasvurulariID).val();
+        var sonTekKaynakOrani = $('#SonTekKaynakOrani_' + MezuniyetBasvurulariID).val();
+        var sonToplamKaynakOrani = $('#SonToplamKaynakOrani_' + MezuniyetBasvurulariID).val();
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
         PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("MezuniyetDurumKaydet", "MezuniyetGelenBasvurular")',
             data: {
                 'id': MezuniyetBasvurulariID,
-                'IsMezunOldu': _IsMezunOldu,
-                'Tarih': _MezuniyetTarihi
+                isMezunOldu,
+                sonTekKaynakOrani,
+                sonToplamKaynakOrani,
+                tarih
             },
             success: function (result) {
                 PanelRefresh(_panel, true);
@@ -1001,7 +1009,7 @@
                 alert(err.responseText);
 
             }
-        })
+        });
     }
     function JoOnayDurumAcklmVisible(sndr, JoFormID) {
         var value = $(sndr).val();
@@ -1164,7 +1172,7 @@
                 alert(err.responseText);
             }
         });
-    } 
+    }
     function GetJuriOneriFormu(mezuniyetBasvurulariID) {
         var _panel = $('#bsvrDet_' + mezuniyetBasvurulariID);
         PanelRefresh(_panel, false);

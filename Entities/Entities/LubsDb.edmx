@@ -1372,6 +1372,8 @@
           <Property Name="IsTezDiliTr" Type="bit" />
           <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="ToplamKaynakOrani" Type="int" />
+          <Property Name="TekKaynakOrani" Type="int" />
           <Property Name="TezDanismanID" Type="int" />
           <Property Name="IsDanismanOnay" Type="bit" />
           <Property Name="DanismanOnayTarihi" Type="datetime" />
@@ -1397,6 +1399,8 @@
           <Property Name="EYKTarihi" Type="date" />
           <Property Name="TezKontrolKullaniciID" Type="int" />
           <Property Name="TezTeslimSonTarih" Type="date" />
+          <Property Name="SonToplamKaynakOrani" Type="int" />
+          <Property Name="SonTekKaynakOrani" Type="int" />
           <Property Name="IsMezunOldu" Type="bit" />
           <Property Name="MezuniyetTarihi" Type="date" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
@@ -1579,6 +1583,8 @@
           <Property Name="AktifDonemToplamKrediKriteri" Type="int" Nullable="false" />
           <Property Name="AktifDonemAgnoKriteri" Type="float" Nullable="false" />
           <Property Name="AktifDonemAktsKriteri" Type="int" Nullable="false" />
+          <Property Name="ToplamKaynakOrani" Type="int" />
+          <Property Name="TekKaynakOrani" Type="int" />
           <Property Name="SinavKacGunSonraAlabilir" Type="int" Nullable="false" />
           <Property Name="SinavUzatmaOgrenciTaahhutMaxGun" Type="int" Nullable="false" />
           <Property Name="SinavUzatmaSinavAlmaSuresiMaxGun" Type="int" Nullable="false" />
@@ -12101,6 +12107,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IsTezDiliTr" Type="Boolean" />
           <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="ToplamKaynakOrani" Type="Int32" />
+          <Property Name="TekKaynakOrani" Type="Int32" />
           <Property Name="TezDanismanID" Type="Int32" />
           <Property Name="IsDanismanOnay" Type="Boolean" />
           <Property Name="DanismanOnayTarihi" Type="DateTime" Precision="3" />
@@ -12126,6 +12134,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="EYKTarihi" Type="DateTime" Precision="0" />
           <Property Name="TezKontrolKullaniciID" Type="Int32" />
           <Property Name="TezTeslimSonTarih" Type="DateTime" Precision="0" />
+          <Property Name="SonToplamKaynakOrani" Type="Int32" />
+          <Property Name="SonTekKaynakOrani" Type="Int32" />
           <Property Name="IsMezunOldu" Type="Boolean" />
           <Property Name="MezuniyetTarihi" Type="DateTime" Precision="0" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
@@ -12346,6 +12356,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="AktifDonemToplamKrediKriteri" Type="Int32" Nullable="false" />
           <Property Name="AktifDonemAgnoKriteri" Type="Double" Nullable="false" />
           <Property Name="AktifDonemAktsKriteri" Type="Int32" Nullable="false" />
+          <Property Name="ToplamKaynakOrani" Type="Int32" />
+          <Property Name="TekKaynakOrani" Type="Int32" />
           <Property Name="SinavKacGunSonraAlabilir" Type="Int32" Nullable="false" />
           <Property Name="SinavUzatmaOgrenciTaahhutMaxGun" Type="Int32" Nullable="false" />
           <Property Name="SinavUzatmaSinavAlmaSuresiMaxGun" Type="Int32" Nullable="false" />
@@ -19720,6 +19732,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="MezuniyetTarihi" ColumnName="MezuniyetTarihi" />
                 <ScalarProperty Name="IsMezunOldu" ColumnName="IsMezunOldu" />
+                <ScalarProperty Name="SonTekKaynakOrani" ColumnName="SonTekKaynakOrani" />
+                <ScalarProperty Name="SonToplamKaynakOrani" ColumnName="SonToplamKaynakOrani" />
                 <ScalarProperty Name="TezTeslimSonTarih" ColumnName="TezTeslimSonTarih" />
                 <ScalarProperty Name="TezKontrolKullaniciID" ColumnName="TezKontrolKullaniciID" />
                 <ScalarProperty Name="EYKTarihi" ColumnName="EYKTarihi" />
@@ -19745,6 +19759,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="DanismanOnayTarihi" ColumnName="DanismanOnayTarihi" />
                 <ScalarProperty Name="IsDanismanOnay" ColumnName="IsDanismanOnay" />
                 <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />
+                <ScalarProperty Name="TekKaynakOrani" ColumnName="TekKaynakOrani" />
+                <ScalarProperty Name="ToplamKaynakOrani" ColumnName="ToplamKaynakOrani" />
                 <ScalarProperty Name="TezBaslikEn" ColumnName="TezBaslikEn" />
                 <ScalarProperty Name="TezBaslikTr" ColumnName="TezBaslikTr" />
                 <ScalarProperty Name="IsTezDiliTr" ColumnName="IsTezDiliTr" />
@@ -19950,6 +19966,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="SinavUzatmaSinavAlmaSuresiMaxGun" ColumnName="SinavUzatmaSinavAlmaSuresiMaxGun" />
                 <ScalarProperty Name="SinavUzatmaOgrenciTaahhutMaxGun" ColumnName="SinavUzatmaOgrenciTaahhutMaxGun" />
                 <ScalarProperty Name="SinavKacGunSonraAlabilir" ColumnName="SinavKacGunSonraAlabilir" />
+                <ScalarProperty Name="TekKaynakOrani" ColumnName="TekKaynakOrani" />
+                <ScalarProperty Name="ToplamKaynakOrani" ColumnName="ToplamKaynakOrani" />
                 <ScalarProperty Name="AktifDonemAktsKriteri" ColumnName="AktifDonemAktsKriteri" />
                 <ScalarProperty Name="AktifDonemAgnoKriteri" ColumnName="AktifDonemAgnoKriteri" />
                 <ScalarProperty Name="AktifDonemToplamKrediKriteri" ColumnName="AktifDonemToplamKrediKriteri" />

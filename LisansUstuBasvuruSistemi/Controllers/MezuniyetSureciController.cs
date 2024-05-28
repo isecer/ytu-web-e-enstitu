@@ -141,6 +141,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var aktifDonemToplamKrediKriteri = kModel.AktifDonemToplamKrediKriteri.Select((s, inx) => new { Inx = inx, AktifDonemToplamKrediKriteri = s }).ToList();
             var aktifDonemAgnoKriteri = kModel.AktifDonemAgnoKriteri.Select((s, inx) => new { Inx = inx, AktifDonemAgnoKriteri = s }).ToList();
             var aktifDonemAktsKriteri = kModel.AktifDonemAktsKriteri.Select((s, inx) => new { Inx = inx, AktifDonemAktsKriteri = s }).ToList();
+            var toplamKaynakOraniKriteri = kModel.ToplamKaynakOraniKriteri.Select((s, inx) => new { Inx = inx, ToplamKaynakOraniKriteri = s }).ToList();
+            var tekKaynakOraniKriteri = kModel.TekKaynakOraniKriteri.Select((s, inx) => new { Inx = inx, TekKaynakOraniKriteri = s }).ToList();
             var sinavUzatmaOgrenciTaahhutMaxGun = kModel.SinavUzatmaOgrenciTaahhutMaxGun.Select((s, inx) => new { Inx = inx, SinavUzatmaOgrenciTaahhutMaxGun = s }).ToList();
             var sinavUzatmaSinavAlmaSuresiMaxGun = kModel.SinavUzatmaSinavAlmaSuresiMaxGun.Select((s, inx) => new { Inx = inx, SinavUzatmaSinavAlmaSuresiMaxGun = s }).ToList();
             var tezTeslimSuresiGun = kModel.TezTeslimSuresiGun.Select((s, inx) => new { Inx = inx, TezTeslimSuresiGun = s }).ToList();
@@ -157,6 +159,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                        join kk in aktifDonemToplamKrediKriteri on kr.Inx equals kk.Inx
                                                        join agk in aktifDonemAgnoKriteri on kr.Inx equals agk.Inx
                                                        join akts in aktifDonemAktsKriteri on kr.Inx equals akts.Inx
+                                                       join tpko in toplamKaynakOraniKriteri on kr.Inx equals tpko.Inx
+                                                       join tkko in tekKaynakOraniKriteri on kr.Inx equals tkko.Inx
                                                        join uzt in sinavUzatmaOgrenciTaahhutMaxGun on kr.Inx equals uzt.Inx
                                                        join uzs in sinavUzatmaSinavAlmaSuresiMaxGun on kr.Inx equals uzs.Inx
                                                        join tts in tezTeslimSuresiGun on kr.Inx equals tts.Inx
@@ -176,6 +180,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                            kk.AktifDonemToplamKrediKriteri,
                                                            agk.AktifDonemAgnoKriteri,
                                                            akts.AktifDonemAktsKriteri,
+                                                           tpko.ToplamKaynakOraniKriteri,
+                                                           tkko.TekKaynakOraniKriteri,
                                                            srg.SinavKacGunSonraAlabilir,
                                                            uzt.SinavUzatmaOgrenciTaahhutMaxGun,
                                                            uzs.SinavUzatmaSinavAlmaSuresiMaxGun,
@@ -267,6 +273,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Min Akts bilgisi 0 dan büyük olmalı.");
                     }
+                    if (item.TekKaynakOraniKriteri.HasValue && (item.TekKaynakOraniKriteri <= 0 || item.TekKaynakOraniKriteri > 100))
+                    {
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Tek Kaynak İntihal Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
+                    }
+                    if (item.ToplamKaynakOraniKriteri.HasValue && (item.ToplamKaynakOraniKriteri <= 0 ||  item.ToplamKaynakOraniKriteri>100))
+                    {
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Topla İntihal Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
+                    }
                     if (!item.SinavUzatmaOgrenciTaahhutMaxGun.HasValue || item.SinavUzatmaOgrenciTaahhutMaxGun <= 0)
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için U.S.T.T bilgisi 0 dan büyük olmalı.");
@@ -348,6 +362,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     AktifDonemToplamKrediKriteri = s.AktifDonemToplamKrediKriteri.Value,
                     AktifDonemAgnoKriteri = s.AktifDonemAgnoKriteri.Value,
                     AktifDonemAktsKriteri = s.AktifDonemAktsKriteri.Value,
+                    ToplamKaynakOrani = s.ToplamKaynakOraniKriteri,
+                    TekKaynakOrani = s.TekKaynakOraniKriteri,
                     SinavUzatmaOgrenciTaahhutMaxGun = s.SinavUzatmaOgrenciTaahhutMaxGun.Value,
                     SinavUzatmaSinavAlmaSuresiMaxGun = s.SinavUzatmaSinavAlmaSuresiMaxGun.Value,
                     TezTeslimSuresiGun = s.TezTeslimSuresiGun.Value,
@@ -384,6 +400,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.SinavKacGunSonraAlabilir = sItem.SinavKacGunSonraAlabilir ?? 0;
                 item.AktifDonemEtikNotKriteri = sItem.AktifDonemEtikNotKriteri;
                 item.AktifDonemSeminerNotKriteri = sItem.AktifDonemSeminerNotKriteri;
+                item.ToplamKaynakOrani = sItem.ToplamKaynakOraniKriteri;
+                item.TekKaynakOrani = sItem.TekKaynakOraniKriteri;
 
             }
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);

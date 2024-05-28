@@ -590,6 +590,10 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.IsTezDiliTr = basvuru.IsTezDiliTr;
                 model.TezBaslikTr = basvuru.TezBaslikTr;
                 model.TezBaslikEn = basvuru.TezBaslikEn;
+                model.IsTekKaynakOraniGirisiYapilacak = bSurecOtKriter.TekKaynakOrani.HasValue;
+                model.IsToplamKaynakOraniGirisiYapilacak = bSurecOtKriter.ToplamKaynakOrani.HasValue;
+                model.TekKaynakOrani = basvuru.TekKaynakOrani;
+                model.ToplamKaynakOrani = basvuru.ToplamKaynakOrani;
                 model.IsDanismanOnay = basvuru.IsDanismanOnay;
                 model.DanismanOnayTarihi = basvuru.DanismanOnayTarihi;
                 model.DanismanOnayAciklama = basvuru.DanismanOnayAciklama;
@@ -622,7 +626,9 @@ namespace LisansUstuBasvuruSistemi.Business
                 var nowDate = DateTime.Now;
                 model.BasvuruSureciTarihi = bsurec.BaslangicYil + "/" + bsurec.BitisYil + " " + entities.Donemlers.First(p => p.DonemID == bsurec.DonemID).DonemAdi + " (" + bsurec.BaslangicTarihi.ToFormatDate() + "-" + bsurec.BitisTarihi.ToFormatDate() + ")";
                 model.SonucGirisSureciAktif = bsurec.BaslangicTarihi <= nowDate && bsurec.BitisTarihi >= nowDate;
-                model.IsMezunOldu = basvuru.IsMezunOldu;
+                model.IsMezunOldu = basvuru.IsMezunOldu; 
+                model.SonTekKaynakOrani = basvuru.SonTekKaynakOrani;
+                model.SonToplamKaynakOrani = basvuru.SonToplamKaynakOrani;
                 model.MezuniyetTarihi = basvuru.MezuniyetTarihi;
                 model.EYKTarihi = basvuru.EYKTarihi;
                 model.TezTeslimSonTarih = basvuru.TezTeslimSonTarih;
@@ -1224,6 +1230,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                         sonSurecOgrenimTipi?.AktifDonemAgnoKriteri ?? 0,
                                                   AktifDonemAktsKriteri = surecOgrenimTipi?.AktifDonemAktsKriteri ??
                                                                         sonSurecOgrenimTipi?.AktifDonemAktsKriteri ?? 0,
+                                                  TekKaynakOrani = surecOgrenimTipi.TekKaynakOrani ?? sonSurecOgrenimTipi?.TekKaynakOrani,
+                                                  ToplamKaynakOrani = surecOgrenimTipi.ToplamKaynakOrani ?? sonSurecOgrenimTipi.ToplamKaynakOrani,
                                                   SinavUzatmaOgrenciTaahhutMaxGun = surecOgrenimTipi?.SinavUzatmaOgrenciTaahhutMaxGun ??
                                                                                       sonSurecOgrenimTipi?.SinavUzatmaOgrenciTaahhutMaxGun ?? 0,
                                                   SinavUzatmaSinavAlmaSuresiMaxGun = surecOgrenimTipi?.SinavUzatmaSinavAlmaSuresiMaxGun ??
@@ -1266,6 +1274,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                 ogrenimTip.AktifDonemToplamKrediKriteri = secilenOgrenimTipi.AktifDonemToplamKrediKriteri;
                                 ogrenimTip.AktifDonemAgnoKriteri = secilenOgrenimTipi.AktifDonemAgnoKriteri;
                                 ogrenimTip.AktifDonemAktsKriteri = secilenOgrenimTipi.AktifDonemAktsKriteri;
+                                ogrenimTip.TekKaynakOrani = secilenOgrenimTipi.TekKaynakOrani;
+                                ogrenimTip.ToplamKaynakOrani = secilenOgrenimTipi.ToplamKaynakOrani;
                                 ogrenimTip.SinavKacGunSonraAlabilir = secilenOgrenimTipi.SinavKacGunSonraAlabilir;
                                 ogrenimTip.SinavUzatmaOgrenciTaahhutMaxGun = secilenOgrenimTipi.SinavUzatmaOgrenciTaahhutMaxGun;
                                 ogrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun = secilenOgrenimTipi.SinavUzatmaSinavAlmaSuresiMaxGun;

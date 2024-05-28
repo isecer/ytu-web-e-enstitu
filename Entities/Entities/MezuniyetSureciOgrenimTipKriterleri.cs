@@ -25,6 +25,8 @@ namespace Entities.Entities
         public int AktifDonemToplamKrediKriteri { get; set; }
         public double AktifDonemAgnoKriteri { get; set; }
         public int AktifDonemAktsKriteri { get; set; }
+        public Nullable<int> ToplamKaynakOrani { get; set; }
+        public Nullable<int> TekKaynakOrani { get; set; }
         public int SinavKacGunSonraAlabilir { get; set; }
         public int SinavUzatmaOgrenciTaahhutMaxGun { get; set; }
         public int SinavUzatmaSinavAlmaSuresiMaxGun { get; set; }

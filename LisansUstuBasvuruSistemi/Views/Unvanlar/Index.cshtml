@@ -1,8 +1,9 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmUnvanlar
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,9 +16,9 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i> Ünvan Listesi</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
-                        <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>
-                        <li><span class="label label-danger label-form">P:@IndexModel.Pasif</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
+                        <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
+                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -27,8 +28,9 @@
                             <tr>
                                 <th width="70">Sıra No</th>
                                 <th class="sirala" field="UnvanAdi">Ünvan Adı</th>
-                                <th class="sirala" field="YetkiGrupID">Yetki Grubu</th>
+                                <th class="sirala" width="240" field="YetkiGrupID">Yetki Grubu</th>
                                 <th width="70" class="sirala" field="IsAktif">Durum</th>
+
                                 <th width="50">
                                     <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" title="Yeni"><i class="fa fa-plus"></i></a>
                                 </th>
@@ -59,8 +61,21 @@
                                         <td id="tdMad_@item.data.UnvanID">
                                             @item.data.UnvanAdi
                                         </td>
-                                        <td id="tddu_@item.data.UnvanID" style="text-align:center;">
-                                            @(item.data.YetkiGrupID.HasValue?item.data.YetkiGruplari.YetkiGrupAdi:"")
+                                        <td id="tddu_@item.data.UnvanID">
+                                            @if (item.data.YetkiGrupID.HasValue)
+                                            {
+                                                <table style="width:100%;">
+                                                    <tr>
+                                                        <td>@item.data.YetkiGrupAdi </td>
+                                                        @if (UserIdentity.Current.IsAdmin)
+                                                        {
+                                                            <td width="30">
+                                                                <a href="javascript:void(0);" onclick="UpdateUnvanYetkiGrubu('@item.data.UnvanID','@item.data.UnvanAdi','@item.data.YetkiGrupID','@item.data.YetkiGrupAdi','@item.data.UnvanUserCount')"><i class="fa fa-users" style="font-size:12pt;" title="@item.data.UnvanAdi ünvanı olan tüm kullanıcıların yetkisini @item.data.YetkiGrupAdi yetki grubunu olarak güncelle"></i></a>
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                </table>
+                                            }
                                         </td>
                                         <td id="tdIa_@item.data.UnvanID" style="text-align:center;">
                                             <span class="label label-@(item.data.IsAktif ? "success" : "danger")">@item.data.IsAktif.ToAktifPasif()</span>
@@ -68,7 +83,7 @@
                                         <td>
                                             <a href="@Url.Action("Kayit")"><i class="fa fa-plus tooltips" title="Yeni"></i></a>
                                             <a href="@Url.Action("Kayit", "Unvanlar", new { id = item.data.UnvanID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.data.UnvanID)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                            <a href="javascript:void(0);" onclick="SilmeOnay(this,@item.data.UnvanID)"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
 
@@ -117,21 +132,61 @@
             }
         });
     }
-    function Sil(sndr, id) {
-        $.ajax({
-            url: '@Url.Action("Sil", "Unvanlar")',
-            data: { id: id },
-            success: function (result) {
-                toastr[result.success ? "success" : "error"](result.message, "Ünvan Silme İşlemi")
-                if (result.success) {
-                    $(sndr).closest("tr").remove();
-                    // $(".cls-" + id).remove();
-                }
+     function Sil(sndr, id) {
+     $.ajax({
+         url: '@Url.Action("Sil", "Unvanlar")',
+         data: { id: id },
+         success: function (result) {
+             toastr[result.success ? "success" : "error"](result.message, "Ünvan Silme İşlemi")
+             if (result.success) {
+                 $(sndr).closest("tr").remove();
+                 // $(".cls-" + id).remove();
+             }
 
-            },
-            error: function (err) {
-                alert(err.responseText);
+         },
+         error: function (err) {
+             alert(err.responseText);
+         }
+     });
+ }
+
+    function UpdateUnvanYetkiGrubu(unvanId,unvanAdi,yetkiGrupId,YetkiGrupAdi,yetkiliUserCount) {
+
+        Swal.fire({
+            html: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + unvanAdi + " ünvanı olan " + yetkiliUserCount + " kullanıcı hesabı yetkisi '" + YetkiGrupAdi +"' yetki grubunu olarak güncellemek istiyor musunuz?</td></tr></table>",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Yetki Gruplarını Güncelle',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Güncelleniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("UpdateUnvanYetkiGrubu", "Unvanlar")',
+                        data: { unvanId, yetkiGrupId },
+                        success: function (result) { 
+                            swal.fire({
+                                html: result.message,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        },
+                        error: function (err) {
+                            alert(err.responseText);
+                        }
+                    });
+                });
             }
         });
+
     }
 </script>
