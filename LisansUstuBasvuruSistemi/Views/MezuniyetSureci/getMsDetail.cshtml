@@ -38,7 +38,7 @@
                 <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt fa-lg" ></i> <span class="" style="text-align:right;font-size:9pt;margin:0px;">Yönetmelik Bilgileri</span></a></li>
                 <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3"><a href="#" onclick="tbChangeSetPage('@tbName','@Model.MezuniyetSurecID',3)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-file-text-o fa-lg" ></i> <span class="" style="text-align:right;font-size:9pt;margin:0px;">Tez Kontrol Bilgileri</span></a></li>
 
-                <li><a href="javascript:void(0);" onclick="subData('@Model.MezuniyetSurecID');" class="panel-refresh"><span class="fa fa-refresh myValueTdx" ></span></a></li>
+                <li><a href="javascript:void(0);" onclick="subData('@Model.MezuniyetSurecID');"><span class="fa fa-refresh myValueTdx" ></span></a></li>
 
             </ul>
             <div class="panel-body tab-content" style="padding:0px;">

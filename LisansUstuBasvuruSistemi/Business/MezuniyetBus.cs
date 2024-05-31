@@ -60,6 +60,10 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (basvuru.TezKontrolKullaniciID.HasValue && entities.Kullanicilars.Any(a => a.KullaniciID == basvuru.TezKontrolKullaniciID && a.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && a.IsAktif)) return;
 
 
+
+                var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.TezDosyasiYuklendigindeIlgiliSorumluyaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
+
+
                 var groupToplamAtamaList =
                     (from kul in entities.Kullanicilars.Where(p =>
                             p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif &&
@@ -70,14 +74,21 @@ namespace LisansUstuBasvuruSistemi.Business
                                  .KullaniciID
                              equals mez.TezKontrolKullaniciID into defMez
                      from mezBas in defMez.DefaultIfEmpty()
-                     group new { kul.KullaniciID, mezBas.MezuniyetSurecID, IsAtandi = mezBas != null } by new { kul.KullaniciID }
+                     group new { kul.KullaniciID, mezBas.MezuniyetSurecID, IsAtandi = mezBas != null } by new
+                     {
+                         kul.KullaniciID,
+                         kul.KullaniciAdi,
+                         ProgramIcinYetkiliInx = isTezDosyasiIlgiliSorumluyaAta ? (kul.KullaniciProgramlaris.Any(a => a.ProgramKod == basvuru.ProgramKod) ? 0 : 1) : 1 //programı yetkisi olan yetkililere sıralamada öncelik ver
+                     }
                         into g1
                      select new
                      {
                          g1.Key.KullaniciID,
-                         //SurecAtamaCount = g1.Count(c => c.MezuniyetSurecID == basvuru.MezuniyetSurecID),
+                         g1.Key.KullaniciAdi,
+                         g1.Key.ProgramIcinYetkiliInx,
+                         //SurecAtamaCount = g1.Count(c => c.MezuniyetSurecID == basvuru.MezuniyetSurecID), 
                          ToplamAtamaCount = g1.Count(c => c.IsAtandi)
-                     }).OrderBy(o => o.ToplamAtamaCount).ThenBy(t => Guid.NewGuid()).ToList();
+                     }).OrderBy(o => o.ProgramIcinYetkiliInx).ThenBy(o => o.ToplamAtamaCount).ThenBy(t => Guid.NewGuid()).ToList();
                 var enAzAtanan = groupToplamAtamaList.FirstOrDefault();
                 if (enAzAtanan == null) return;
                 basvuru.TezKontrolKullaniciID = enAzAtanan.KullaniciID;
@@ -626,7 +637,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var nowDate = DateTime.Now;
                 model.BasvuruSureciTarihi = bsurec.BaslangicYil + "/" + bsurec.BitisYil + " " + entities.Donemlers.First(p => p.DonemID == bsurec.DonemID).DonemAdi + " (" + bsurec.BaslangicTarihi.ToFormatDate() + "-" + bsurec.BitisTarihi.ToFormatDate() + ")";
                 model.SonucGirisSureciAktif = bsurec.BaslangicTarihi <= nowDate && bsurec.BitisTarihi >= nowDate;
-                model.IsMezunOldu = basvuru.IsMezunOldu; 
+                model.IsMezunOldu = basvuru.IsMezunOldu;
                 model.SonTekKaynakOrani = basvuru.SonTekKaynakOrani;
                 model.SonToplamKaynakOrani = basvuru.SonToplamKaynakOrani;
                 model.MezuniyetTarihi = basvuru.MezuniyetTarihi;

@@ -487,7 +487,8 @@
 
         var tID = GetSelectedTabID(tbName);
         if (STabID != "") tID = STabID; 
-        PanelRefresh(_panel, false); 
+        PanelRefresh(_panel, false);
+        debugger
         $.ajax({
             url: '@Url.Action("GetDetailMezuniyet", "Ajax")',
             data: { id: id, ShowDetayYayinID: mbyID, tbInx: tID, IsDelete: (Isdelete == true), 'GelenBasvuru': true },

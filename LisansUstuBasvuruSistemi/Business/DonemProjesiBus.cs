@@ -598,7 +598,6 @@ namespace LisansUstuBasvuruSistemi.Business
             var dct = new List<CmbIntDto>();
 
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.BasvuruTamamlanmadi, Caption = "Henüz Başvuru Tamamlanmadı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EnstituOnayiBekliyor, Caption = "Enstitü Onayı Bekleniyor" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EnstituTarafindanOnaylandi, Caption = "Enstitü Tarafından Onaylandı" });
@@ -608,14 +607,14 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.YurutucuTarafindanOnaylanmadi, Caption = "Proje Yürütücüsü Tarafından Onaylanmadı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.JuriSinavOlusturmaSureci, Caption = "Jüri/Sınav Oluşturma Sürecinde" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.SinavDegerlendirmeSureci, Caption = "Sınav Değerlendirme Sürecinde" });
+            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.BasariliOlanlar, Caption = "Sınav Sonucu Başarılı Olanlar" });
+            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.BasarisizOlanlar, Caption = "Sınav Sonucu Başarısız Olanlar" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykYaGonderimOnayiBekleniyor, Caption = "EYK'ya Gönderimi Bekleniyor" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykYaGonderimiOnaylandi, Caption = "EYK'ya Gönderimi Onaylandı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykYaGonderimiOnaylanmadi, Caption = "EYK'ya Gönderimi Onaylanmadı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykYaHazirlandi, Caption = "EYK'ya Hazırlandı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykDaOnaylandi, Caption = "EYK'da Onaylandı" });
             dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.EykDaOnaylanmadi, Caption = "EYK'da Onaylanmadı" });
-            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.BasariliOlanlar, Caption = "Başarılı Olanlar" });
-            dct.Add(new CmbIntDto { Value = DpBasvuruDurumEnum.BasarisizOlanlar, Caption = "Başarısız Olanlar" });
             return dct;
         }
         public static List<CmbIntDto> GetCmbFilterDpAnabilimDallari(string enstituKod, bool bosSecimVar = false)

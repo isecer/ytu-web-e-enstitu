@@ -1517,25 +1517,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Bu başvuru üstünde işlem yapmaya yetkili değilsiniz.");
             }
-            else if (tezSablonDosyasi != null && tezSablonDosyasi.ContentLength > (1024 * 1024 * 20))
+            else if (tezSablonDosyasi == null)
+            {
+                mMessage.Messages.Add("Önce tez dosyasını seçiniz.");
+            }
+            else if (tezSablonDosyasi.ContentLength > (1024 * 1024 * 20))
             {
                 mMessage.Messages.Add("Yükleyeceğiniz dosya boyutu en fazla 20MB olmalıdır.");
             }
-            else if (tezSablonDosyasi != null && tezSablonDosyasi.FileName.Length > 1024)
+            else if (tezSablonDosyasi.FileName.Length > 1024)
             {
                 mMessage.Messages.Add("Yükleyeceğiniz dosya adı en fazla 1024 karakter uzunluğunda olmalıdır.");
             }
-            else
+            else 
             {
                 if (tezDosyasi != null && tezDosyasi.IsOnaylandiOrDuzeltme.HasValue)
                 {
                     mMessage.Messages.Add("Tez dosyası işlem gördüğünden belge yükleme işlemi yapamazsınız.");
                 }
-                else if (tezSablonDosyasi != null && tezSablonDosyasi.FileName.Split('.').Last().ToLower() != "pdf")
+                else if (tezSablonDosyasi.FileName.Split('.').Last().ToLower() != "pdf")
                 {
                     mMessage.Messages.Add("Yükleyeceğiniz belge 'PDF' türünde olmalıdır.");
                 }
             }
+          
             if (mMessage.Messages.Count == 0)
             {
                 var siraNo = mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any() ? mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Max(m => m.SiraNo) + 1 : 1;

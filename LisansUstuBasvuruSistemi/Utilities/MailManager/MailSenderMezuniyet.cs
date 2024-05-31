@@ -484,7 +484,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (!snded) continue;
                         if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
                         if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
-
+                       
                         var kModel = new GonderilenMailler
                         {
                             Tarih = DateTime.Now,

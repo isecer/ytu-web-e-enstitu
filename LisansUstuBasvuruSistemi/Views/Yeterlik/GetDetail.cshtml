@@ -29,11 +29,11 @@
                 <td width="100" style="font-weight: bold; font-size: 15pt; border-bottom: 1px solid; text-align: right;">
                     @if (!Model.IsDegerlendirme.HasValue)
                     {
-                        <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID');" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                        <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID');"><span class="fa fa-refresh" aria-hidden="true"></span></a>
                     }
                     else
                     {
-                        <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID','@Model.IsKomiteOrJuri.ToString().ToLower()','@Model.IsDegerlendirme');" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                        <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID','@Model.IsKomiteOrJuri.ToString().ToLower()','@Model.IsDegerlendirme');"><span class="fa fa-refresh" aria-hidden="true"></span></a>
                     }
                 </td>
 

@@ -52,26 +52,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
                             model.OkuduguDonemNo = ogrenci.OKUDUGU_DNM_YENIKANUN.ToIntObj() ?? 0;
                             model.OgrenciInfo = ogrenci;
-
-                            //öğrenim seviyesi ayarlaması obs öğrenim seviyelerini lubs öğrenim tip koduna çevir koduna çevir 
-                            switch (model.OgrenciInfo.OGRENIMSEVIYE_ID)
-                            {
-                                case "2":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.TezliYuksekLisans.ToString();
-                                    break;
-                                case "3":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.Doktra.ToString();
-                                    break;
-                                case "4":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.TezsizYuksekLisans.ToString();
-                                    break;
-                                case "5":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.SanattaYeterlilik.ToString();
-                                    break;
-                                case "8":
-                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = OgrenimTipi.ButunlesikDoktora.ToString();
-                                    break;
-                            }
+                            model.OgrenciInfo.OGRENIMSEVIYE_ID = model.OgrenciInfo.OGRENIMSEVIYE_ID.ToOgrenimTipKod().ToStrObj(); 
                             //enstitü ayarlaması 4 basamaklı olan obs enstitü kodu 3 basamaklı lubs enstitü koduna çevir
                             if (model.OgrenciInfo.ENSTITU_ID.Length > 3)
                                 model.OgrenciInfo.ENSTITU_ID = model.OgrenciInfo.ENSTITU_ID.Remove(0, 1);
@@ -208,7 +189,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
         public List<string> ObsSutentList(List<string> ogrenciNos)
         {
-            var returnogrenciNos = new List<string>(); 
+            var returnogrenciNos = new List<string>();
 
             if (ogrenciNos == null) throw new Exception("ogrenciNos boş geliyor!");
 
@@ -217,7 +198,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
                 foreach (var ogrenciNo in ogrenciNos)
                 {
-                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, ogrenciNo, null); 
+                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, ogrenciNo, null);
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                         returnogrenciNos.Add(ogrenciNo);
                 }

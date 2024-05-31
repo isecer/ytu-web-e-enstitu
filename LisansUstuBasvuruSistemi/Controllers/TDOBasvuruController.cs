@@ -2097,7 +2097,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruDanis.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
                 if (eykDaOnaylandi == false)
                 {
-                    if (eykDaOnaylanmadiDurumAciklamasi.Trim() != tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi.Trim()) sendMail = true;
+
+                    if (tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi == null || eykDaOnaylanmadiDurumAciklamasi.Trim() != tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi.Trim()) sendMail = true; 
                     tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
                 }
 

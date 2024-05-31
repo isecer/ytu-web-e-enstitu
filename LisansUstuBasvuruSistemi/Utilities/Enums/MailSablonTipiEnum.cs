@@ -171,6 +171,7 @@
         public const int TijOneriFormuEykdaOnaylandiDanismana = 305;
         public const int TijOneriFormuEykdaOnaylandiOgrenciye = 310;
         public const int TijOneriFormuEykdaOnaylandiJuriUyelerine = 311;
+        public const int TijOneriFormuEykdaOnaylandiEskiJuriUyelerine = 313;
 
         public const int TosBaslatildiOgrenci = 350;
         public const int TosBaslatildiDanisman = 351;

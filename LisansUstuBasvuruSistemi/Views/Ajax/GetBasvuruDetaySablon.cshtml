@@ -19,7 +19,7 @@
                 {
                     <li class="@(Model.SelectedTabIndex == 4 ? "active" : "") bnt-@Model.BasvuruID-4" style="margin-right:3px;"><a href="#" onclick="tabchangeSetD('@tbName',@Model.BasvuruID,4)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i style="color: @color;" class="fa fa-file-pdf-o fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;color:@color;">Kayıt İçin Gerekli Belgeler</span></a></li>
                 }
-                <li><a href="javascript:void(0);" onclick="SubData(@Model.BasvuruID);" class="panel-refresh" title="Yenile"><span class="fa fa-refresh"></span></a></li>
+                <li><a href="javascript:void(0);" onclick="SubData(@Model.BasvuruID);" title="Yenile"><span class="fa fa-refresh"></span></a></li>
             </ul>
             <div class="panel-body tab-content BsTabCont_@Model.BasvuruID" style="padding:0px;">
                 <input type="text" id="SelectedTb-@tbName" style="display:none;" value="@Model.SelectedTabIndex" />

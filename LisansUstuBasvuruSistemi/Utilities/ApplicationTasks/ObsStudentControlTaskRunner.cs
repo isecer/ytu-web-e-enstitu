@@ -35,7 +35,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.ApplicationTasks
 
         }
 
-        public static async Task OgrenciObsKontrol()
+        private static async Task OgrenciObsKontrol()
         {
             try
             {

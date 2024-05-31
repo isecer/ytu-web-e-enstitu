@@ -1,27 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class AppEventController : Controller
     {
         //
         // GET: /PageNotFound/
-        public ActionResult PageNotFound(string aspxerrorpath, int? ErrC=null)
+        public ActionResult PageNotFound(string aspxerrorpath, int? errC=null)
         {
             ViewBag.SayfaAdi = aspxerrorpath;
-            ViewBag.ErrC = ErrC;
+            ViewBag.ErrC = errC;
             return View();
         }
 
-        public ActionResult Error(string url, int ErrC,Exception exception)
+        public ActionResult Error(string url, int errC,Exception exception)
         {
             ViewBag.SayfaAdi = url;
-            ViewBag.ErrC = ErrC;
+            ViewBag.ErrC = errC;
             return View(exception);
         }
     }

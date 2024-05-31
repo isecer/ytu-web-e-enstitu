@@ -41,7 +41,7 @@
                                             <tr>
 
                                                 <td width="35">
-                                                    <span class="input-group-addon"  style="cursor:pointer;background-color:@colorTky;">
+                                                    <span class="input-group-addon" style="cursor:pointer;background-color:@colorTky;">
                                                         @if (kayitYetki && Model.TezKontrolYetkiliUserKey.HasValue)
                                                         {
                                                             <a href="javascript:void(0)" onclick="DetayGor('@Model.TezKontrolYetkiliUserKey','#kulPnl')"><span class="fa fa-user fa-lg" style="color:white;"></span></a>
@@ -49,8 +49,8 @@
                                                         else
                                                         {
                                                             <span class="fa fa-user fa-lg"></span>
-                                                        } 
-                                                        
+                                                        }
+
                                                     </span>
                                                 </td>
 
@@ -274,7 +274,7 @@
                                                                                         <td class="ValueTd">
                                                                                             @if (yetki && showRow)
                                                                                             {
-                                                                                                <select name="IsOnaylandiOrDuzeltme" id="TdOnay_@itemTd.MezuniyetBasvurulariTezDosyaID" onchange="if ($(this).val() != '') { $('#TdAciklama_@itemTd.MezuniyetBasvurulariTezDosyaID').removeClass('hide');} else { $('#TdAciklama_@itemTd.MezuniyetBasvurulariTezDosyaID').addClass('hide'); }">
+                                                                                                <select name="IsOnaylandiOrDuzeltme" id="TdOnay_@itemTd.MezuniyetBasvurulariTezDosyaID" onchange="TKayitDurumChange(this,@itemTd.MezuniyetBasvurulariTezDosyaID);">
                                                                                                     <option @(itemTd.IsOnaylandiOrDuzeltme.HasValue ? "" : "selected")></option>
                                                                                                     <option value="true" @(itemTd.IsOnaylandiOrDuzeltme == true ? "selected" : "")>Onayla</option>
                                                                                                     <option value="false" @(itemTd.IsOnaylandiOrDuzeltme == false ? "selected" : "")>Düzeltme Talep Et</option>
@@ -286,7 +286,26 @@
                                                                                             }
                                                                                         </td>
                                                                                     </tr>
-
+                                                                                    @if (Model.IsToplamKaynakOraniGirisiYapilacak && yetki && showRow && Model.IsDelete == false)
+                                                                                    {
+                                                                                        <tr class="intihalRwBasvuruTk_@itemTd.MezuniyetBasvurulariTezDosyaID @(itemTd.IsOnaylandiOrDuzeltme == true ? "" : "hide")">
+                                                                                            <td class="CaptionTd">Tek Kaynak İntihal Oranı %</td>
+                                                                                            <td class="CaptionTd">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                <input type="text" name="SonTekKaynakOrani" maxlength="3" value="@Model.SonTekKaynakOrani" class="form-control" style="color:black;" />
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    } 
+                                                                                    @if (Model.IsToplamKaynakOraniGirisiYapilacak && yetki && showRow && Model.IsDelete == false)
+                                                                                    {
+                                                                                        <tr class="intihalRwBasvuruTk_@itemTd.MezuniyetBasvurulariTezDosyaID @(itemTd.IsOnaylandiOrDuzeltme == true ? "" : "hide")">
+                                                                                            <td class="CaptionTd">Toplam İntihal Oranı %</td>
+                                                                                            <td class="CaptionTd">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                <input type="text" name="SonToplamKaynakOrani" maxlength="3" value="@Model.SonToplamKaynakOrani" class="form-control" style="color:black;" />
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
                                                                                     @if (itemTd.IsOnaylandiOrDuzeltme.HasValue)
                                                                                     {
                                                                                         <tr>
@@ -442,18 +461,22 @@
 
         }
     }
+    function TKayitDurumChange(sndr, mezuniyetBasvurulariTezDosyaID) { 
+        if ($(sndr).val() != '') { $('#TdAciklama_' + mezuniyetBasvurulariTezDosyaID).removeClass('hide'); }
+        else { $('#TdAciklama_' + mezuniyetBasvurulariTezDosyaID).addClass('hide'); }
+        if ($(sndr).val() == 'true') { $('.intihalRwBasvuruTk_' + mezuniyetBasvurulariTezDosyaID).removeClass('hide'); }
+        else { $('.intihalRwBasvuruTk_' + mezuniyetBasvurulariTezDosyaID).addClass('hide'); }
+    }
     function TdDurumKayit(MezuniyetBasvurulariID, MezuniyetBasvurulariTezDosyaID) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
         PanelRefresh(_panel, false);
         $('#TdDurumKaydet_' + MezuniyetBasvurulariTezDosyaID).ajaxForm({
             success: function (result) {
-                if (result.IsSuccess) {
-                    GetDetailx(MezuniyetBasvurulariID);
-                }
-                else {
-                    ShowMmMessage(result.Messages, 'Tamam');
 
-                }
+                ShowMmMessage(result.Messages, 'Tamam');
+                if (result.IsSuccess) {  
+                    GetDetailx(MezuniyetBasvurulariID);
+                } 
                 PanelRefresh(_panel, true);
 
             },

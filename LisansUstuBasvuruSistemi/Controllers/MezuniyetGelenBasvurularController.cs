@@ -451,7 +451,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (!toplamKaynakOrani.HasValue)
                             mmMessage.Messages.Add("Toplam İntihal Oranı bilgisi giriniz.");
-                        else if(toplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || toplamKaynakOrani.Value < 0)
+                        else if (toplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || toplamKaynakOrani.Value < 0)
                             mmMessage.Messages.Add($"Toplam İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
                     }
                 }
@@ -818,10 +818,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult TdDurumKaydet(MezuniyetBasvurulariTezDosyalari kModel)
+        public ActionResult TdDurumKaydet(MezuniyetBasvurulariTezDosyalari kModel, int? sonTekKaynakOrani, int? sonToplamKaynakOrani)
         {
             var mmMessage = new MmMessage
             {
+                Title = "Tez Kontrol Durum Kayıt İşlemi",
                 IsSuccess = false
             };
 
@@ -835,18 +836,45 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (kModel.IsOnaylandiOrDuzeltme == false && kModel.Aciklama.IsNullOrWhiteSpace()) mmMessage.Messages.Add("Düzeltme talebi için açıklama giriniz.");
             }
+
+            if (kModel.IsOnaylandiOrDuzeltme == true && (sonTekKaynakOrani.HasValue || sonToplamKaynakOrani.HasValue))
+            {
+                var ogrenimTipKrt =
+                    talep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.FirstOrDefault(f =>
+                        f.OgrenimTipKod == talep.MezuniyetBasvurulari.OgrenimTipKod);
+                if (sonTekKaynakOrani.HasValue)
+                {
+                    if (sonTekKaynakOrani.Value > ogrenimTipKrt.TekKaynakOrani.Value || sonTekKaynakOrani.Value < 0)
+                        mmMessage.Messages.Add($"En fazla Tek Kaynak İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
+                }
+                if (!mmMessage.Messages.Any() && ogrenimTipKrt.ToplamKaynakOrani.HasValue)
+                {
+                    if (sonToplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || sonToplamKaynakOrani.Value < 0)
+                        mmMessage.Messages.Add($"Toplam İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
+                }
+            }
             if (mmMessage.Messages.Count == 0)
             {
                 try
-                {
+                { 
+
                     if (kModel.IsOnaylandiOrDuzeltme.HasValue) talep.Aciklama = kModel.Aciklama.IsNullOrWhiteSpace() ? null : kModel.Aciklama.Trim();
                     else talep.Aciklama = null;
+
+                    if (kModel.IsOnaylandiOrDuzeltme == true)
+                    {
+                        talep.MezuniyetBasvurulari.SonTekKaynakOrani = sonTekKaynakOrani;
+                        talep.MezuniyetBasvurulari.SonToplamKaynakOrani = sonToplamKaynakOrani;
+                    }
+
                     talep.IsOnaylandiOrDuzeltme = kModel.IsOnaylandiOrDuzeltme;
                     talep.OnayTarihi = DateTime.Now;
                     talep.OnayYapanID = UserIdentity.Current.Id;
                     talep.IslemTarihi = DateTime.Now;
                     talep.IslemYapanID = UserIdentity.Current.Id;
                     talep.IslemYapanIP = UserIdentity.Ip;
+
+                    mmMessage.Messages.Add("Tez kontrol bilgisi kayıt edildi.");
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("MezuniyetBasvurulariTezDosyalari", LogCrudType.Update, talep.ToJson());
                     mmMessage.IsSuccess = true;
@@ -860,12 +888,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Tez dosyası kontrolü durum bilgisi kayıt edilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
                     SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
                 }
-            }
-            mmMessage.Title = "Tez Kontrol Durumu Kayıt İşlemi";
+            } 
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var strView = mmMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage) : "";
             return new
             {
+                mmMessage,
                 mmMessage.IsSuccess,
                 Messages = strView,
             }.ToJsonResult();
@@ -917,7 +945,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else if (sonToplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || sonToplamKaynakOrani.Value < 0)
                             mmMessage.Messages.Add($"Toplam İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
                     }
-                    
+
                     if (!mmMessage.Messages.Any() && tarih.HasValue == false)
                     {
                         mmMessage.Messages.Add("Mezuniyet Tarihi giriniz.");
