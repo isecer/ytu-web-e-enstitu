@@ -142,8 +142,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             var domeStr = string.Join(",", basvuruYapilabilecekDomemNos.Select(s => s + ". Dönem").ToList());
                             controlMessage.Add("Aktif okunan dönem " + domeStr + " dönemlerden biri olması gerekmektedir.");
-                        }
-
+                        } 
                         if (alimnasiGerekenDersKodlari.Any())
                         {
                             var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(enstituKod);
@@ -155,6 +154,8 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                         }
+
+                        
                         if (controlMessage.Count > 0)
                         {
                             errorMessage.Add("Dönem Projesi başvurusu aşağıdaki sebeplerden dolayı başlatılamadı.");

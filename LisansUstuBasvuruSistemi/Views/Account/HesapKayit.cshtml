@@ -155,7 +155,7 @@
                                                 <table style="height:100%;width:100%;table-layout:fixed;background-color:#3fbae4;">
                                                     <tr class="_EditImg">
                                                         <td style="text-align:center;">
-                                                            <a class="btn btn-info" href="javascript:void(0);" onclick="ShowFileD()"><i class="fa fa-image fa-lg"></i> @(Model.ResimAdi.IsNullOrWhiteSpace() ? "Resim Yükle" : "Resmi Değiştir") </a>
+                                                            <a class="btn btn-info" href="javascript:void(0);" title="Buraya güncel bir profil fotoğrafı yükleyiniz." onclick="ShowFileD()"><i class="fa fa-image fa-lg"></i> @(Model.ResimAdi.IsNullOrWhiteSpace() ? "Resim Yükle" : "Resmi Değiştir") </a>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -550,8 +550,7 @@
         let input = document.createElement('input');
         input.type = 'file';
         input.onchange = _this => {
-            let files = Array.from(input.files);
-            console.log(files);
+            let files = Array.from(input.files); 
             if (files.length > 0) {
                 PanelRefresh(_panel, false);
                 var EskiResimAdi = $('#ResimAdi').val();

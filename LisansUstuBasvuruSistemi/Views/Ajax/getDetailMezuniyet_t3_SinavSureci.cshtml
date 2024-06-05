@@ -886,6 +886,7 @@
                                                                         if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && (isEnstituSonucuGirdi || item.IsOgrenciUzatmaSonrasiOnay.HasValue))
                                                                         {
                                                                             var showKayitOgrenci = (isOgrenci || kayitYetki) && !item.IsDanismanUzatmaSonrasiOnay.HasValue && item.IsSonSrTalebi;
+                                                                            var showTahhutSonTarih = kayitYetki && item.IsSonSrTalebi && !item.IsOgrenciUzatmaSonrasiOnay.HasValue;
                                                                             <br />
 
                                                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
@@ -898,7 +899,7 @@
                                                                                         <td class="CaptionTd" width="140">Taahhüt Son Tarih</td>
                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                         <td class="ValueTd">
-                                                                                            @if (kayitYetki ? item.IsOgrenciUzatmaSonrasiOnay.HasValue : !item.IsOgrenciUzatmaSonrasiOnay.HasValue)
+                                                                                            @if (!showTahhutSonTarih)
                                                                                             {
                                                                                                 <span>
                                                                                                     Uzatma alınan sınav sonrası tez teslim taahhüt işlemi <b>@item.UzatmaTaahhutSonTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.
@@ -1000,6 +1001,7 @@
                                                                             if (item.IsOgrenciUzatmaSonrasiOnay == true)
                                                                             {
                                                                                 var showKayitDanisman = (isDanismani || kayitYetki) && item.IsSonSrTalebi;
+                                                                                var showUzatmaSonrasiSonTarih = kayitYetki && item.IsSonSrTalebi;
                                                                                 <br />
                                                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
                                                                                     <table style="width:100%;">
@@ -1010,7 +1012,7 @@
                                                                                             <td class="CaptionTd" width="140">Sınav Son Tarih</td>
                                                                                             <td class="CaptionTd" width="10">:</td>
                                                                                             <td class="ValueTd">
-                                                                                                @if (kayitYetki ? !showKayitDanisman : !item.IsDanismanUzatmaSonrasiOnay.HasValue)
+                                                                                                @if (!showUzatmaSonrasiSonTarih)
                                                                                                 {
                                                                                                     <span>
                                                                                                         Uzatma alınan sınav sonrası yeni sınav alma işlemi <b>@item.UzatmaSonSrTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.

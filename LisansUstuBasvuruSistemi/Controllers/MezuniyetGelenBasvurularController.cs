@@ -1178,6 +1178,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return new
             {
+
                 mmMessage.IsSuccess,
                 MmMessage = mmMessage,
             }.ToJsonResult();

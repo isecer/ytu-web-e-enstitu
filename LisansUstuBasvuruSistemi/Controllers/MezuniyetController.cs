@@ -1508,7 +1508,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (mezuniyetBasvurusu.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
             {
                 mMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
-            }
+            } 
             else if (mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true))
             {
                 mMessage.Messages.Add("Onaylanmış bir tez dosyanız bulunmaktadır. Yeni tez dosyası yüklenemez!");
@@ -1560,7 +1560,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     });
                 }
                 else
-                {
+                { 
                     FileHelper.Delete(tezDosyasi.TezDosyaYolu);
                     tezDosyasi.RowID = Guid.NewGuid();
                     tezDosyasi.TezDosyaAdi = tezSablonDosyasi.FileName.GetFileName();

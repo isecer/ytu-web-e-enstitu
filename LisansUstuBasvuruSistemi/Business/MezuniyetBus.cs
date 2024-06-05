@@ -63,33 +63,41 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.TezDosyasiYuklendigindeIlgiliSorumluyaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
 
-
+                 
+                //Yüklenen tezin ait olduğu programda yetkisi olanlar öncelikli, sonrasında hiç program yetkisi olmayanlar öncelikli, sonrasında count sayısına göre öncelikli, sonrasında random atama. Program yetkisi var ve gelen programda yetkisi yoksa hiç sıralamaya dahil edilmeyecek.
                 var groupToplamAtamaList =
                     (from kul in entities.Kullanicilars.Where(p =>
                             p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif &&
                             p.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
-                     join mez in entities.MezuniyetBasvurularis.Where(p =>
-                                 p.TezKontrolKullaniciID.HasValue &&
-                                 p.MezuniyetSureci.EnstituKod == basvuru.MezuniyetSureci.EnstituKod) on kul
-                                 .KullaniciID
-                             equals mez.TezKontrolKullaniciID into defMez
-                     from mezBas in defMez.DefaultIfEmpty()
-                     group new { kul.KullaniciID, mezBas.MezuniyetSurecID, IsAtandi = mezBas != null } by new
-                     {
-                         kul.KullaniciID,
-                         kul.KullaniciAdi,
-                         ProgramIcinYetkiliInx = isTezDosyasiIlgiliSorumluyaAta ? (kul.KullaniciProgramlaris.Any(a => a.ProgramKod == basvuru.ProgramKod) ? 0 : 1) : 1 //programı yetkisi olan yetkililere sıralamada öncelik ver
-                     }
+                        join mez in entities.MezuniyetBasvurularis.Where(p =>
+                                p.TezKontrolKullaniciID.HasValue &&
+                                p.MezuniyetSureci.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
+                            on kul.KullaniciID equals mez.TezKontrolKullaniciID into defMez
+                        from mezBas in defMez.DefaultIfEmpty()
+                        group new { kul.KullaniciID, mezBas.MezuniyetSurecID, IsAtandi = mezBas != null } by new
+                        {
+                            kul.KullaniciID,
+                            kul.KullaniciAdi,
+                            ProgramIcinYetkiliInx = isTezDosyasiIlgiliSorumluyaAta
+                                ? kul.KullaniciProgramlaris.Any(a => a.ProgramKod == basvuru.ProgramKod) ? 0 :
+                                !kul.KullaniciProgramlaris.Any() ? 1 : -1
+                                : 1
+                        }
                         into g1
-                     select new
-                     {
-                         g1.Key.KullaniciID,
-                         g1.Key.KullaniciAdi,
-                         g1.Key.ProgramIcinYetkiliInx,
-                         //SurecAtamaCount = g1.Count(c => c.MezuniyetSurecID == basvuru.MezuniyetSurecID), 
-                         ToplamAtamaCount = g1.Count(c => c.IsAtandi)
-                     }).OrderBy(o => o.ProgramIcinYetkiliInx).ThenBy(o => o.ToplamAtamaCount).ThenBy(t => Guid.NewGuid()).ToList();
+                        select new
+                        {
+                            g1.Key.KullaniciID,
+                            g1.Key.KullaniciAdi,
+                            g1.Key.ProgramIcinYetkiliInx,
+                            ToplamAtamaCount = g1.Count(c => c.IsAtandi)
+                        }).Where(p => p.ProgramIcinYetkiliInx >= 0)
+                    .OrderBy(o => o.ProgramIcinYetkiliInx)
+                    .ThenBy(o => o.ToplamAtamaCount)
+                    .ThenBy(t => Guid.NewGuid()).ToList();
+
                 var enAzAtanan = groupToplamAtamaList.FirstOrDefault();
+
+
                 if (enAzAtanan == null) return;
                 basvuru.TezKontrolKullaniciID = enAzAtanan.KullaniciID;
 
@@ -532,8 +540,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.RowID = basvuru.RowID;
                 if (model.TezKontrolKullaniciID != null)
                 {
-                    var tezAtananKullanici =
-                        entities.Kullanicilars.FirstOrDefault(f => model.TezKontrolKullaniciID.HasValue && f.KullaniciID == model.TezKontrolKullaniciID);
+                    var tezAtananKullanici = entities.Kullanicilars.FirstOrDefault(f => model.TezKontrolKullaniciID.HasValue && f.KullaniciID == model.TezKontrolKullaniciID);
                     model.TezKontrolYetkiliUserKey = tezAtananKullanici.UserKey;
                     model.TezKontrolYetkilisiAdSoyad = tezAtananKullanici.Ad + " " + tezAtananKullanici.Soyad;
                 }

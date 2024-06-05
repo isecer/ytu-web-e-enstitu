@@ -207,7 +207,7 @@
                                                         }
                                                         else
                                                         {
-                                                            @(item.TekKaynakOrani.HasValue?item.TekKaynakOrani + "%":"")
+                                                            @(item.TekKaynakOrani.HasValue? "%" + item.TekKaynakOrani:"")
                                                         }
                                                     </td>
                                                 </tr>
@@ -221,7 +221,7 @@
                                                         }
                                                         else
                                                         {
-                                                            @(item.ToplamKaynakOrani.HasValue?item.ToplamKaynakOrani + "%":"")
+                                                            @(item.ToplamKaynakOrani.HasValue? "%" + item.ToplamKaynakOrani:"")
                                                         }
                                                     </td>
                                                 </tr>
@@ -453,12 +453,12 @@ else
                                                     <tr>
                                                         <td class="CaptionTd">En Fazla Tek Kaynak Oranı</td>
                                                         <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd">@item.TekKaynakOrani%</td>
+                                                        <td class="ValueTd">%@item.TekKaynakOrani</td>
                                                     </tr>
                                                     <tr>
                                                         <td class="CaptionTd">Toplam Kaynak Oranı</td>
                                                         <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd">@item.ToplamKaynakOrani%</td>
+                                                        <td class="ValueTd">%@item.ToplamKaynakOrani</td>
                                                     </tr>
                                                     if (!item.IntihalRaporuDosyaYolu.IsNullOrWhiteSpace())
                                                     {
