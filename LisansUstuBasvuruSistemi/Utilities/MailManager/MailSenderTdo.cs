@@ -190,9 +190,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         }
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {
-                            if (item.JuriTipAdi == "Öğrenci")
-                                item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
-                            else item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOGelenBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
+                            var isOgrenci = item.JuriTipAdi == "Öğrenci";
+                            item.MailParameterDtos.Add(new MailParameterDto
+                            {
+                                Key = "Link",
+                                Value = $"{enstitu.SistemErisimAdresi}/{(isOgrenci ? "TDOBasvurular" : "TDOGelenBasvurular")}/Index?TDOBasvuruID={tdoBasvuruDanisman.TDOBasvuruID}",
+                                IsLink = true
+                            });
                         }
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
@@ -413,12 +417,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             string retAciklama;
 
                             if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi || tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniOnerisi) retAciklama = tdoBasvuruDanisman.DanismanOnaylanmadiAciklama;
-                            else retAciklama = tdoBasvuruDanisman.VarolanDanismanOnaylanmadiAciklama; 
+                            else retAciklama = tdoBasvuruDanisman.VarolanDanismanOnaylanmadiAciklama;
 
                             if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
                             {
                                 item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = retAciklama });
-                            } 
+                            }
                         }
                         if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
                         {
@@ -426,9 +430,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         }
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {
-                            if (item.JuriTipAdi == "Öğrenci")
-                                item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
-                            else item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOGelenBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
+                            var isOgrenci = item.JuriTipAdi == "Öğrenci";
+                            item.MailParameterDtos.Add(new MailParameterDto
+                            {
+                                Key = "Link",
+                                Value = $"{enstitu.SistemErisimAdresi}/{(isOgrenci ? "TDOBasvurular" : "TDOGelenBasvurular")}/Index?TDOBasvuruID={tdoBasvuruDanisman.TDOBasvuruID}",
+                                IsLink = true
+                            }); 
                         }
 
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
@@ -639,9 +647,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         }
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {
-                            if (item.JuriTipAdi == "Öğrenci")
-                                item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
-                            else item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOGelenBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
+                            var isOgrenci = item.JuriTipAdi == "Öğrenci";
+                            item.MailParameterDtos.Add(new MailParameterDto
+                            {
+                                Key = "Link",
+                                Value = $"{enstitu.SistemErisimAdresi}/{(isOgrenci ? "TDOBasvurular" : "TDOGelenBasvurular")}/Index?TDOBasvuruID={tdoBasvuruDanisman.TDOBasvuruID}",
+                                IsLink = true
+                            });
                         }
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
@@ -807,9 +819,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {
-                            if (item.JuriTipAdi == "Öğrenci")
-                                item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
-                            else item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOGelenBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
+                            var isOgrenci = item.JuriTipAdi == "Öğrenci";
+                            item.MailParameterDtos.Add(new MailParameterDto
+                            {
+                                Key = "Link",
+                                Value = $"{enstitu.SistemErisimAdresi}/{(isOgrenci ? "TDOBasvurular" : "TDOGelenBasvurular")}/Index?TDOBasvuruID={tdoBasvuruDanisman.TDOBasvuruID}",
+                                IsLink = true
+                            });
                         }
 
 
@@ -1018,9 +1034,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         }
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {
-                            if (item.JuriTipAdi == "Öğrenci")
-                                item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
-                            else item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/TDOGelenBasvurular/Index?TDOBasvuruID=" + tdoBasvuruDanisman.TDOBasvuruID, IsLink = true });
+                            var isOgrenci = item.JuriTipAdi == "Öğrenci";
+                            item.MailParameterDtos.Add(new MailParameterDto
+                            {
+                                Key = "Link",
+                                Value = $"{enstitu.SistemErisimAdresi}/{(isOgrenci ? "TDOBasvurular" : "TDOGelenBasvurular")}/Index?TDOBasvuruID={tdoBasvuruDanisman.TDOBasvuruID}",
+                                IsLink = true
+                            });
                         }
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);

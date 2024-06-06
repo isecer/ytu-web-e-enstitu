@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-               using (var entities = new LubsDbEntities())
+                using (var entities = new LubsDbEntities())
                 {
 
                     var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
@@ -33,8 +33,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         erisimAdresi = erisimAdresiSpl[0] + "//" + erisimAdresiSpl.Skip(2).Take(1).First();
                     else
                         erisimAdresi = "http://" + erisimAdresiSpl.First();
-                    mRowModel.Add(
-                        new MailTableRowDto { Baslik = "Ad Soyad", Aciklama = kModel.Ad + " " + kModel.Soyad });
+                    mRowModel.Add(new MailTableRowDto { Baslik = "Ad Soyad", Aciklama = kModel.Ad + " " + kModel.Soyad });
 
                     if (kModel.BirimID.HasValue)
                     {
@@ -50,29 +49,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                     if (kModel.SicilNo.IsNullOrWhiteSpace() == false)
                         mRowModel.Add(new MailTableRowDto { Baslik = "Sicil No", Aciklama = kModel.SicilNo });
-                    if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false)
-                        mRowModel.Add(new MailTableRowDto { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
+                    //if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false)
+                    //    mRowModel.Add(new MailTableRowDto { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
                     if (kModel.CepTel.IsNullOrWhiteSpace() == false)
                         mRowModel.Add(new MailTableRowDto { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
 
                     mRowModel.Add(new MailTableRowDto { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });
-                    mRowModel.Add(new MailTableRowDto
-                    {
-                        Baslik = "Şifre",
-                        Aciklama = kModel.IsActiveDirectoryUser ? "Email şifreniz ile aynı" : sfr
-                    });
-                    mRowModel.Add(new MailTableRowDto
-                    {
-                        Baslik = "Sistem Erişim Adresi",
-                        Aciklama = "<a href='" + mailBilgi.SistemErisimAdresi + "' target='_blank'>" +
-                                   mailBilgi.SistemErisimAdresi + "</a>"
-                    });
-                    var mtc = new MailTableContentDto
-                    {
-                        AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.",
-                        Detaylar = mRowModel
-                    };
-
+                    mRowModel.Add(new MailTableRowDto { Baslik = "Şifre", Aciklama = kModel.IsActiveDirectoryUser ? "Email şifreniz ile aynı" : sfr });
+                    mRowModel.Add(new MailTableRowDto { Baslik = "Sistem Erişim Adresi", Aciklama = "<a href='" + mailBilgi.SistemErisimAdresi + "' target='_blank'>" + mailBilgi.SistemErisimAdresi + "</a>" });
+                    var mtc = new MailTableContentDto { AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.", Detaylar = mRowModel };
                     var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", mtc);
                     var mmmC = new MailMainContentDto
                     {
@@ -107,7 +92,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-               using (var entities = new LubsDbEntities())
+                using (var entities = new LubsDbEntities())
                 {
                     var kul = entities.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
                     var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kul.EnstituKod);

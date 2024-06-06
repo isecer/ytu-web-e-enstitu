@@ -30,6 +30,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.Aciklama.IsNullOrWhiteSpace()) filteredMailsQuery = filteredMailsQuery.Where(p => p.Aciklama.Contains(model.Aciklama));
             if (model.IsEkVar == true) filteredMailsQuery = filteredMailsQuery.Where(p => p.GonderilenMailEkleris.Any());
             if (!model.Konu.IsNullOrWhiteSpace()) filteredMailsQuery = filteredMailsQuery.Where(p => p.Konu.Contains(model.Konu));
+           
             if (!model.EnstituKod.IsNullOrWhiteSpace()) filteredMailsQuery = filteredMailsQuery.Where(p => p.EnstituKod == model.EnstituKod);
             if (model.Tarih.HasValue)
             {

@@ -1563,6 +1563,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 { 
                     FileHelper.Delete(tezDosyasi.TezDosyaYolu);
                     tezDosyasi.RowID = Guid.NewGuid();
+                    tezDosyasi.SiraNo = siraNo;
                     tezDosyasi.TezDosyaAdi = tezSablonDosyasi.FileName.GetFileName();
                     tezDosyasi.TezDosyaYolu = FileHelper.SaveMezuniyetTezSablonDosya(tezSablonDosyasi);
                     tezDosyasi.YuklemeTarihi = DateTime.Now;
