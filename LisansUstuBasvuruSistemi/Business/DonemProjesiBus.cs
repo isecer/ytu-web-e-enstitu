@@ -278,7 +278,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     var donemProjesi = entities.DonemProjesis.First(p => p.UniqueID == id && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
                     var ogrenimTip = entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == donemProjesi.OgrenimTipKod);
-                    model.UniqueID = donemProjesi.UniqueID;
+                    model.UniqueId = donemProjesi.UniqueID;
                     model.BasvuruTarihi = donemProjesi.BasvuruTarihi;
                     model.KullaniciID = donemProjesi.KullaniciID;
                     model.AdSoyad = donemProjesi.Kullanicilar.Ad + " " + donemProjesi.Kullanicilar.Soyad;
@@ -525,7 +525,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var donemProjesi = entities.DonemProjesis.FirstOrDefault(p => p.EnstituKod == model.EnstituKod
                                                                                          && p.KullaniciID == model.KullaniciID
-                                                                                         && (p.UniqueID == model.UniqueID || (p.OgrenciNo == kullanici.OgrenciNo && p.ProgramKod == kullanici.ProgramKod && p.OgrenimTipKod == kullanici.OgrenimTipKod)));
+                                                                                         && (p.UniqueID == model.UniqueId || (p.OgrenciNo == kullanici.OgrenciNo && p.ProgramKod == kullanici.ProgramKod && p.OgrenimTipKod == kullanici.OgrenimTipKod)));
 
                 if (donemProjesi != null)
                 {

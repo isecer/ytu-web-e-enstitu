@@ -201,7 +201,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         {
             return json;
             // JSON'u biçimlendirilmiş bir şekilde geri döndürme. şimdilik kullanılmıyor
-            return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json), Formatting.Indented);
+           // return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json), Formatting.Indented);
         }
     }
 }

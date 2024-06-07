@@ -63,34 +63,34 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.TezDosyasiYuklendigindeIlgiliSorumluyaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
 
-                 
+
                 //Yüklenen tezin ait olduğu programda yetkisi olanlar öncelikli, sonrasında hiç program yetkisi olmayanlar öncelikli, sonrasında count sayısına göre öncelikli, sonrasında random atama. Program yetkisi var ve gelen programda yetkisi yoksa hiç sıralamaya dahil edilmeyecek.
                 var groupToplamAtamaList =
                     (from kul in entities.Kullanicilars.Where(p =>
                             p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif &&
                             p.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
-                        join mez in entities.MezuniyetBasvurularis.Where(p =>
-                                p.TezKontrolKullaniciID.HasValue &&
-                                p.MezuniyetSureci.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
-                            on kul.KullaniciID equals mez.TezKontrolKullaniciID into defMez
-                        from mezBas in defMez.DefaultIfEmpty()
-                        group new { kul.KullaniciID, mezBas.MezuniyetSurecID, IsAtandi = mezBas != null } by new
-                        {
-                            kul.KullaniciID,
-                            kul.KullaniciAdi,
-                            ProgramIcinYetkiliInx = isTezDosyasiIlgiliSorumluyaAta
-                                ? kul.KullaniciProgramlaris.Any(a => a.ProgramKod == basvuru.ProgramKod) ? 0 :
-                                !kul.KullaniciProgramlaris.Any() ? 1 : -1
-                                : 1
-                        }
+                     join mez in entities.MezuniyetBasvurularis.Where(p =>
+                             p.TezKontrolKullaniciID.HasValue &&
+                             p.MezuniyetSureci.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
+                         on kul.KullaniciID equals mez.TezKontrolKullaniciID into defMez
+                     from mezBas in defMez.DefaultIfEmpty()
+                     group new { kul.KullaniciID, mezBas.MezuniyetSurecID, IsAtandi = mezBas != null } by new
+                     {
+                         kul.KullaniciID,
+                         kul.KullaniciAdi,
+                         ProgramIcinYetkiliInx = isTezDosyasiIlgiliSorumluyaAta
+                             ? kul.KullaniciProgramlaris.Any(a => a.ProgramKod == basvuru.ProgramKod) ? 0 :
+                             !kul.KullaniciProgramlaris.Any() ? 1 : -1
+                             : 1
+                     }
                         into g1
-                        select new
-                        {
-                            g1.Key.KullaniciID,
-                            g1.Key.KullaniciAdi,
-                            g1.Key.ProgramIcinYetkiliInx,
-                            ToplamAtamaCount = g1.Count(c => c.IsAtandi)
-                        }).Where(p => p.ProgramIcinYetkiliInx >= 0)
+                     select new
+                     {
+                         g1.Key.KullaniciID,
+                         g1.Key.KullaniciAdi,
+                         g1.Key.ProgramIcinYetkiliInx,
+                         ToplamAtamaCount = g1.Count(c => c.IsAtandi)
+                     }).Where(p => p.ProgramIcinYetkiliInx >= 0)
                     .OrderBy(o => o.ProgramIcinYetkiliInx)
                     .ThenBy(o => o.ToplamAtamaCount)
                     .ThenBy(t => Guid.NewGuid()).ToList();
@@ -536,7 +536,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 model.MezuniyetSinavDurumID = basvuru.MezuniyetSinavDurumID;
                 model.TezKontrolKullaniciID = basvuru.TezKontrolKullaniciID;
-
                 model.RowID = basvuru.RowID;
                 if (model.TezKontrolKullaniciID != null)
                 {
@@ -569,14 +568,21 @@ namespace LisansUstuBasvuruSistemi.Business
                     YuklemeTarihi = s.YuklemeTarihi,
                     OnayTarihi = s.OnayTarihi,
                     OnayYapanID = s.OnayYapanID,
-                }).ToList();
+                }).OrderByDescending(o => o.YuklemeTarihi).ToList();
                 var onayYapanIDs = model.MezuniyetBasvurulariTezDosyalariDtos.Where(p => p.OnayYapanID.HasValue).Select(s => s.OnayYapanID).ToList();
-                var kuls = entities.Kullanicilars.Where(p => onayYapanIDs.Contains(p.KullaniciID)).ToList();
-                foreach (var item in model.MezuniyetBasvurulariTezDosyalariDtos.Where(p => p.OnayYapanID.HasValue))
+                var tezDosyasiOnayYapanYetkililer = entities.Kullanicilars.Where(p => onayYapanIDs.Contains(p.KullaniciID)).ToList();
+                var siraNo = model.MezuniyetBasvurulariTezDosyalariDtos.Count;
+                foreach (var item in model.MezuniyetBasvurulariTezDosyalariDtos)
                 {
-                    var kul = kuls.First(p => p.KullaniciID == item.OnayYapanID);
-                    item.UserKey = kul.UserKey;
-                    item.OnayYapanTezKontrolYetkiliAdSoyad = kul.Ad + " " + kul.Soyad;
+                    if (item.OnayYapanID.HasValue)
+                    {
+                        var kul = tezDosyasiOnayYapanYetkililer.First(p => p.KullaniciID == item.OnayYapanID);
+                        item.UserKey = kul.UserKey;
+                        item.OnayYapanTezKontrolYetkiliAdSoyad = kul.Ad + " " + kul.Soyad;
+                    }
+                    item.SiraNo = siraNo;
+
+                    siraNo--;
 
                 }
                 model.TezDanismanID = basvuru.TezDanismanID;

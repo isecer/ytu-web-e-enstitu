@@ -64,7 +64,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         OgrenciNo = donemProjesi.OgrenciNo,
                         EMail = ogrenci.EMail,
                         OgrenimTipAdi = ogrenimTipleri.OgrenimTipAdi,
-                        AnabilimDaliID = programlar.AnabilimDaliID,
+                        AnabilimDaliId = programlar.AnabilimDaliID,
                         ProgramAdi = programlar.ProgramAdi,
                         AnabilimDaliAdi = programlar.AnabilimDallari.AnabilimDaliAdi,
                         DonemAdi = sonBasvuru == null ? "Başvuru Yapılmadı" : (sonBasvuru.BasvuruYil + " / " + (sonBasvuru.BasvuruYil + 1) + " " + (sonBasvuru.BasvuruDonemID == 1 ? "Güz" : "Bahar")),
@@ -102,14 +102,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         } : null,
                         AkademikDonemID = (sonBasvuru.BasvuruYil + "" + sonBasvuru.BasvuruDonemID),
                         KullaniciID = donemProjesi.KullaniciID,
-                        TezDanismanID = sonBasvuru.TezDanismanID,
+                        TezDanismanId = sonBasvuru.TezDanismanID,
                         OnayYapmayanJuriEmails = sonBasvuru.DonemProjesiJurileris.Where(p => isDegerlendirmeSurecinde && p.IsLinkGonderildi == true && !p.DonemProjesiJuriOnayDurumID.HasValue).Select(ss => ss.EMail).ToList()
                     };
             q = q.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
             var q2 = q;
             if (!model.AkademikDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.AkademikDonemID == model.AkademikDonemID);
 
-            if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
+            if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliId == model.AnabilimDaliID);
 
             if (model.DonemProjesiDurumID.HasValue)
             {
@@ -136,7 +136,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.IsFiltered = !Equals(q, q2);
             if (DonemProjesiBus.IsProjeYurutucusu())
             {
-                q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
+                q = q.Where(p => p.TezDanismanId == UserIdentity.Current.Id);
                 q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.DonemProjesiDurumID).ThenByDescending(o => o.BasvuruTarihi);
             }
             else
@@ -179,7 +179,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     s.EMail,
                     s.AnabilimDaliAdi,
                     s.ProgramAdi,
-                    s.TezDanismanID,
+                    TezDanismanID = s.TezDanismanId,
                     s.DonemAdi,
                     s.DonemProjesiDurumAdi,
                     EnstituBasvuruOnayDurumu = s.SonBasvuruDurum.DonemProjesiEnstituOnayDurumID.HasValue ? s.SonBasvuruDurum.EnstituOnayDurumAdi : "İşlem Bekliyor",
@@ -239,7 +239,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
 
             ViewBag.filteredOgrenciIds = model.IsFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
-            ViewBag.filteredDanismanIds = model.IsFiltered ? q.Where(p => p.TezDanismanID > 0).Select(s => s.TezDanismanID.Value).Distinct().ToList() : new List<int>();
+            ViewBag.filteredDanismanIds = model.IsFiltered ? q.Where(p => p.TezDanismanId > 0).Select(s => s.TezDanismanId.Value).Distinct().ToList() : new List<int>();
 
             if (model.IsFiltered && isDegerlendirmeSurecinde)
             {

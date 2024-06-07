@@ -903,8 +903,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             Session["UserIdentity"] = ui;
             UserIdentity.SetCurrent();
 
-
-            return RedirectToAction("index","home",new { ekd });
+            return Redirect(Url.Action("Index", "Home", new { ekd })); 
         }
 
         protected override void Dispose(bool disposing)

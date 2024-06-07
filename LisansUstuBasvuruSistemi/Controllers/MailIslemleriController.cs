@@ -27,18 +27,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var filteredMailsQuery = _entities.GonderilenMaillers.Where(p => p.Silindi == false && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
 
-            if (!model.Aciklama.IsNullOrWhiteSpace()) filteredMailsQuery = filteredMailsQuery.Where(p => p.Aciklama.Contains(model.Aciklama));
-            if (model.IsEkVar == true) filteredMailsQuery = filteredMailsQuery.Where(p => p.GonderilenMailEkleris.Any());
-            if (!model.Konu.IsNullOrWhiteSpace()) filteredMailsQuery = filteredMailsQuery.Where(p => p.Konu.Contains(model.Konu));
-           
-            if (!model.EnstituKod.IsNullOrWhiteSpace()) filteredMailsQuery = filteredMailsQuery.Where(p => p.EnstituKod == model.EnstituKod);
+            if (model.IsEkVar == true)
+            {
+                filteredMailsQuery = filteredMailsQuery.Where(p => p.GonderilenMailEkleris.Any());
+            }
+
+            if (!model.Konu.IsNullOrWhiteSpace())
+            {
+                var searchTerm = "\"" + model.Konu + "\""; 
+                string query = $"SELECT * FROM {nameof(GonderilenMailler)} WHERE (CONTAINS({nameof(GonderilenMailler.Aciklama)}, @p0) or CONTAINS({nameof(GonderilenMailler.AciklamaHtml)}, @p0)) AND {nameof(GonderilenMailler.Silindi)} = 0";
+                var filteredMailIds = _entities.GonderilenMaillers.SqlQuery(query, searchTerm, searchTerm).Select(s => s.GonderilenMailID).ToList();
+                filteredMailsQuery = filteredMailsQuery.Where(p => filteredMailIds.Contains(p.GonderilenMailID));
+            }
+
+            if (!model.EnstituKod.IsNullOrWhiteSpace())
+            {
+                filteredMailsQuery = filteredMailsQuery.Where(p => p.EnstituKod == model.EnstituKod);
+            }
+
             if (model.Tarih.HasValue)
             {
                 var trih = model.Tarih.Value.TodateToShortDate();
                 filteredMailsQuery = filteredMailsQuery.Where(p => p.Tarih == trih);
-
             }
-
 
             var q = from s in filteredMailsQuery
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
@@ -52,13 +63,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.Konu,
                         MailGonderen = k.Ad + " " + k.Soyad,
                         s.Gonderildi,
-                        s.HataMesaji
-
+                        s.HataMesaji,
+                        s.IslemYapanID
                     };
 
-            if (!model.MailGonderen.IsNullOrWhiteSpace()) q = q.Where(p => p.MailGonderen.Contains(model.MailGonderen));
+            if (!model.MailGonderen.IsNullOrWhiteSpace())
+            {
+                q = q.Where(p => p.MailGonderen.Contains(model.MailGonderen));
+            }
+
             model.RowCount = q.Count();
+
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Tarih);
+
             model.MailGondermeDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrMailGondermeDto
             {
                 GonderilenMailID = s.GonderilenMailID,
@@ -70,18 +87,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 HataMesaji = s.HataMesaji
 
             }).ToList();
+
             var gonderilenMailIds = model.MailGondermeDtos.Select(s => s.GonderilenMailID).ToList();
+
             var gonderilenMailEks = _entities.GonderilenMaillers
                 .Where(p => gonderilenMailIds.Contains(p.GonderilenMailID))
-                .Select(s => new { s.GonderilenMailID, s.GonderilenMailEkleris.Count }).ToList();
+                .Select(s => new { s.GonderilenMailID, EkSayisi = s.GonderilenMailEkleris.Count })
+                .ToList();
+
             foreach (var itemMail in model.MailGondermeDtos)
             {
-                itemMail.EkSayisi = gonderilenMailEks.Where(f => f.GonderilenMailID == itemMail.GonderilenMailID).Select(s=>s.Count).FirstOrDefault();
+                itemMail.EkSayisi = gonderilenMailEks.Where(f => f.GonderilenMailID == itemMail.GonderilenMailID).Select(s => s.EkSayisi).FirstOrDefault();
             }
+
             ViewBag.IsEkVar = new SelectList(GonderilenMaillerBus.GetCmbMailEkKontrol(true), "Value", "Caption", model.IsEkVar);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+
             return View(model);
         }
+
         public ActionResult MailDetay(int gonderilenMailId)
         {
 

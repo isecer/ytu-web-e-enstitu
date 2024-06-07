@@ -76,7 +76,7 @@
                                         <td>
                                             <table style="width:100%;table-layout:fixed;">
                                                 <tr>
-                                                    <td>@Model.Ad @Model.Soyad (@Model.OgrenciNo)</td>
+                                                    <td>@Model.Ad @Model.Soyad (@Model.OgrenciNo) </td>
                                                     <td width="220px;" style="text-align:right;">
                                                         Başvuru Tarihi: @Model.BasvuruTarihi.ToString()
                                                     </td>
@@ -223,7 +223,7 @@
     <script>
 
     $(function () {
-         
+
         $('.openFl').click(function (itmx) {
             var FPath = $(this).attr("FPath");
             var FName = $(this).attr("FName");

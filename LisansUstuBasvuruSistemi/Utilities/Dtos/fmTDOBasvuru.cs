@@ -38,7 +38,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     }
     public class FrTdoBasvuruDto : TDOBasvuru
     {
-        public DateTime? BasvuruTarihi { get; set; } 
+        public new DateTime? BasvuruTarihi { get; set; } 
         public int? TezDanismanID { get; set; }
         public string EnstituAdi { get; set; }
         public string OgrenimTipAdi { get; set; }

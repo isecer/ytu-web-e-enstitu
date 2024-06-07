@@ -12,7 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public IHtmlString BasvuruDurumHtml { get; set; }
         public bool IsDelete { get; set; }
         public bool GelenBasvuru { get; set; }
-        public bool SonucGirisSureciAktif { get; set; }
+        public bool SonucGirisSureciAktif { get; set; } 
         public bool IsYerli { get; set; }
         public string EnstituAdi { get; set; }
         public int SelectedTabIndex { get; set; }

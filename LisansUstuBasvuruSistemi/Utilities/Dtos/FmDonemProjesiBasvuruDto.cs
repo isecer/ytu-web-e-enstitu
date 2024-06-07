@@ -31,7 +31,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EnstituKod { get; set; }
         public string DonemAdi { get; set; }
         public string DonemProjesiDurumAdi { get; set; }
-        public int? TezDanismanID { get; set; }
+        public int? TezDanismanId { get; set; }
         public string ResimAdi { get; set; }
         public Guid UserKey { get; set; }
         public string TcKimlikNo { get; set; }
@@ -40,7 +40,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EMail { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string ProgramAdi { get; set; }
-        public int AnabilimDaliID { get; set; }
+        public int AnabilimDaliId { get; set; }
         public string AnabilimDaliAdi { get; set; }
         public string EnstituOnayDurumAdi { get; set; }
         public bool IsYeniBasvuruYapilabilir { get; set; }

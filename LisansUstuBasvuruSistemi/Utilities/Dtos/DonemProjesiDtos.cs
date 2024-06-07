@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
     public class KmDonemProjesiDto : DonemProjesi
     {
-        public Guid? UniqueID { get; set; }
+        public Guid? UniqueId { get; set; }
         public string AdSoyad { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string ProgramAdi { get; set; }
@@ -54,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DurumColor { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
         public Guid? ShowBasvuruUniqueId { get; set; }
-        public List<DonemProjesiBasvuruDto> DonemProjesiBasvurus { get; set; } 
+        public new List<DonemProjesiBasvuruDto> DonemProjesiBasvurus { get; set; } 
     }
     public class DonemProjesiBasvuruDto : DonemProjesiBasvuru
     {

@@ -83,7 +83,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                     return lineNumberStr;
                 }
             }
-            catch (Exception e)
+            catch 
             {
                 // ignored
             }

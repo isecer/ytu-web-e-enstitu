@@ -159,36 +159,24 @@
                                 var isBelgeVar = onayBekleyen != null;
                                 var isOnaylandi = isBelgeVar && onayBekleyen.IsOnaylandiOrDuzeltme.HasValue;
                                 var colorKb = !isBelgeVar ? "#353333" : "#2f8c8d";
-                                if (bezCiltForm == null && !isTdYuklemeKapali)
+                                if (bezCiltForm == null && !isTdYuklemeKapali && !isBelgeVar)
                                 {
                                     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8pt;padding:6px 10px;min-height:30px;">
                                         <b>Tez kontrolü için tezinizin pdf formatındaki kopyasını buraya yükleyiniz</b><br />
                                         <div class="input-group">
                                             <table style="width:100%;table-layout:fixed;">
                                                 <tr>
-                                                    @if (isBelgeVar)
-                                                    {
-                                                        <td width="35">
-                                                            <span class="input-group-addon openFl" id="BelgeIcon_@Model.MezuniyetBasvurulariID" FPath="@Url.CustomUrlContent(onayBekleyen.TezDosyaYolu)" FName="@onayBekleyen.TezDosyaAdi" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control openFl" id="BelgeAdi_@Model.MezuniyetBasvurulariID" FPath="@Url.CustomUrlContent(onayBekleyen.TezDosyaYolu)" FName="@onayBekleyen.TezDosyaAdi" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@onayBekleyen.TezDosyaAdi">
-                                                        </td>
-                                                    }
-                                                    else
-                                                    {
-                                                        <td width="35">
-                                                            <span class="input-group-addon" id="BelgeIcon_@Model.MezuniyetBasvurulariID" style="background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" id="BelgeAdi_@Model.MezuniyetBasvurulariID" style="cursor:default;color:@colorKb;" readonly="readonly" value="@("Belge Seçilmedi")">
-                                                        </td>
-                                                    }
-                                                    <td width="104" style="padding:1px;" class="@(isOnaylandi ? "hide" : "")">
+                                                    <td width="35">
+                                                        <span class="input-group-addon" id="BelgeIcon_@Model.MezuniyetBasvurulariID" style="background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" id="BelgeAdi_@Model.MezuniyetBasvurulariID" style="cursor:default;color:@colorKb;" readonly="readonly" value="@("Belge Seçilmedi")">
+                                                    </td>
+                                                    <td width="104" style="padding:1px;">
                                                         <span class="input-group-addon" id="DosyaSec_@Model.MezuniyetBasvurulariID" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@Model.MezuniyetBasvurulariID').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
                                                     </td>
                                                     <td width="120" style="padding:1px;">
-                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@Model.MezuniyetBasvurulariID" onclick="BasvuruBelgeKaydet('@frmId',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(isBelgeVar ? "Değiştir" : "Kaydet")</span>
+                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@Model.MezuniyetBasvurulariID" onclick="TezDosyasiKaydet('@frmId',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(isBelgeVar ? "Değiştir" : "Kaydet")</span>
                                                     </td>
 
                                                 </tr>
@@ -213,10 +201,11 @@
                                             <th width="125" title="Kontrol Sayısı / Dosya Yükleme Tarihi">Kontrol No</th>
                                             <th>Tez Dosyası</th>
                                             <th width="180">Onay Durum</th>
+                                            <th width="40"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var itemTd in Model.MezuniyetBasvurulariTezDosyalariDtos.OrderByDescending(o => o.SiraNo))
+                                        @foreach (var itemTd in Model.MezuniyetBasvurulariTezDosyalariDtos)
                                         {
                                             inx++;
                                             var showRow = inx == 1;
@@ -250,9 +239,15 @@
                                                         </a>
                                                     }
                                                 </td>
+                                                <td>
+                                                    @if (!isTdYuklemeKapali && !itemTd.IsOnaylandiOrDuzeltme.HasValue)
+                                                    {
+                                                        <a href="javascript:void(0)" onclick="TezDosyasiSil(this,@Model.MezuniyetBasvurulariID,'@itemTd.RowID','@itemTd.YuklemeTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash"></i> Sil</a>
+                                                    }
+                                                </td>
                                             </tr>
                                             <tr class="MainRow2 cls-Td_@itemTd.MezuniyetBasvurulariTezDosyaID" style="@(showRow?"":"display:none;")">
-                                                <td id="cls-Td_@itemTd.MezuniyetBasvurulariTezDosyaID" colspan="4" style="padding: 1px 1px 0px 50px;">
+                                                <td id="cls-Td_@itemTd.MezuniyetBasvurulariTezDosyaID" colspan="5" style="padding: 1px 1px 0px 50px;">
                                                     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;min-height:20px;">
                                                         <table style="width:100%;">
                                                             <tbody>
@@ -295,7 +290,7 @@
                                                                                                 <input type="text" name="SonTekKaynakOrani" maxlength="3" value="@Model.SonTekKaynakOrani" class="form-control" style="color:black;" />
                                                                                             </td>
                                                                                         </tr>
-                                                                                    } 
+                                                                                    }
                                                                                     @if (Model.IsToplamKaynakOraniGirisiYapilacak && yetki && showRow && Model.IsDelete == false)
                                                                                     {
                                                                                         <tr class="intihalRwBasvuruTk_@itemTd.MezuniyetBasvurulariTezDosyaID @(itemTd.IsOnaylandiOrDuzeltme == true ? "" : "hide")">
@@ -404,7 +399,7 @@
 </div>
 
 <script>
-    function BasvuruBelgeKaydet(frmID, bID) {
+    function TezDosyasiKaydet(frmID, bID) {
         var pnlx = $('#bsvrDet_' + bID);
         PanelRefresh(pnlx, false);
 
@@ -422,6 +417,42 @@
             }
 
         }).submit();
+    }
+    function TezDosyasiSil(sndr, bID, rowId, tarih) {
+        Swal.fire({
+            text: tarih + " tarihli tez kontrolü için yüklenilen dosyayı silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Tez Dosyasını Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("TezDosyasiSil", "Mezuniyet")',
+                        data: { rowId },
+                        success: function (result) {
+                            GetDetailx(bID);
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        }
+                    });
+
+                });
+            }
+        });
     }
     function ChangeFile(sndr, mBasvuruID) {
         var _BelgeIconID = '#BelgeIcon_' + mBasvuruID;
@@ -461,7 +492,7 @@
 
         }
     }
-    function TKayitDurumChange(sndr, mezuniyetBasvurulariTezDosyaID) { 
+    function TKayitDurumChange(sndr, mezuniyetBasvurulariTezDosyaID) {
         if ($(sndr).val() != '') { $('#TdAciklama_' + mezuniyetBasvurulariTezDosyaID).removeClass('hide'); }
         else { $('#TdAciklama_' + mezuniyetBasvurulariTezDosyaID).addClass('hide'); }
         if ($(sndr).val() == 'true') { $('.intihalRwBasvuruTk_' + mezuniyetBasvurulariTezDosyaID).removeClass('hide'); }
@@ -474,9 +505,9 @@
             success: function (result) {
 
                 ShowMmMessage(result.Messages, 'Tamam');
-                if (result.IsSuccess) {  
+                if (result.IsSuccess) {
                     GetDetailx(MezuniyetBasvurulariID);
-                } 
+                }
                 PanelRefresh(_panel, true);
 
             },

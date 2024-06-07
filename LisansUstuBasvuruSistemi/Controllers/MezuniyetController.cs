@@ -14,6 +14,7 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
+using System.Xml;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -1508,7 +1509,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (mezuniyetBasvurusu.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
             {
                 mMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
-            } 
+            }
             else if (mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true))
             {
                 mMessage.Messages.Add("Onaylanmış bir tez dosyanız bulunmaktadır. Yeni tez dosyası yüklenemez!");
@@ -1529,7 +1530,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Yükleyeceğiniz dosya adı en fazla 1024 karakter uzunluğunda olmalıdır.");
             }
-            else 
+            else
             {
                 if (tezDosyasi != null && tezDosyasi.IsOnaylandiOrDuzeltme.HasValue)
                 {
@@ -1540,7 +1541,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("Yükleyeceğiniz belge 'PDF' türünde olmalıdır.");
                 }
             }
-          
+
             if (mMessage.Messages.Count == 0)
             {
                 var siraNo = mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any() ? mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Max(m => m.SiraNo) + 1 : 1;
@@ -1560,7 +1561,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     });
                 }
                 else
-                { 
+                {
                     FileHelper.Delete(tezDosyasi.TezDosyaYolu);
                     tezDosyasi.RowID = Guid.NewGuid();
                     tezDosyasi.SiraNo = siraNo;
@@ -1589,7 +1590,65 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Messages = strView
             }.ToJsonResult();
         }
+        [Authorize]
+        public ActionResult TezDosyasiSil(Guid rowId)
+        {
+            var mMessage = new MmMessage
+            {
+                Title = "Tez Dosyası Silme İşlemi",
+                MessageType = MsgTypeEnum.Warning
+            };
+            var tezDosyasi = _entities.MezuniyetBasvurulariTezDosyalaris.FirstOrDefault(f => f.RowID == rowId);
+            if (tezDosyasi == null)
+            {
+                mMessage.Messages.Add("Silmek istediğiniz tez dosyası sistemde bulunamadı!");
+            }
+            
+            else
+            {
+                var mezuniyetBasvurusu = tezDosyasi.MezuniyetBasvurulari;
+                var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
 
+                if (!kayitYetki && mezuniyetBasvurusu.KullaniciID != UserIdentity.Current.Id)
+                {
+                    mMessage.Messages.Add("Bu tez dosyasını silmeye yetkili değilsiniz.");
+                }
+                else if (mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true))
+                {
+                    mMessage.Messages.Add("Tez kontrol süreci tamamlandığından tez dosyasını silemezsiniz.");
+                }
+                else if (tezDosyasi.IsOnaylandiOrDuzeltme.HasValue)
+                {
+                    mMessage.Messages.Add("Tez dosyası işlem gördüğünden silme işlemi yapamazsınız.");
+                }
+
+            }
+            if (!mMessage.Messages.Any())
+            {
+                try
+                {
+                    _entities.MezuniyetBasvurulariTezDosyalaris.Remove(tezDosyasi);
+                    _entities.SaveChanges();
+                    FileHelper.Delete(tezDosyasi.TezDosyaYolu);
+                    mMessage.IsSuccess = true;
+                    mMessage.Messages.Add(tezDosyasi.YuklemeTarihi.ToFormatDateAndTime() + " tarihli tez dosyası silindi!");
+                    LogIslemleri.LogEkle("MezuniyetBasvurulariTezDosyalari", LogCrudType.Delete, tezDosyasi.ToJson());
+
+                }
+                catch (Exception ex)
+                {
+                    mMessage.MessageType = MsgTypeEnum.Error; 
+                    mMessage.Messages.Add("Silmek istediğiniz tez dosyası silinemedi!");
+                    mMessage.Title = "Hata";
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                }
+            }
+            return Json(new
+            {
+                mMessage.IsSuccess,
+                messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage)
+            }, "application/json", JsonRequestBehavior.AllowGet);
+        }
         [AllowAnonymous]
         public ActionResult SinavDegerlendir(Guid? uniqueId, bool? isTezBasligiDegisti, string yeniTezBaslikTr, string yeniTezBaslikEn, bool? isTezSanayiVeIsBirligiKapsamindaGerceklesti, bool? isYokDrBursiyeriVar, string yokDrOncelikliAlan, int? mezuniyetSinavDurumId, string aciklama)
         {
@@ -2334,5 +2393,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return new { messageModel.IsSuccess, MessageView = strView }.ToJsonResult();
 
         }
+
+
     }
 }
