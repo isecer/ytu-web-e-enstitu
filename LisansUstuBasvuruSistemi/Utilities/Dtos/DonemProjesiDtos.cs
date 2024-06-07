@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
     public class KmDonemProjesiDto : DonemProjesi
     {
-        public Guid? UniqueId { get; set; }
+        public Guid? UniqueID { get; set; }
         public string AdSoyad { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string ProgramAdi { get; set; }

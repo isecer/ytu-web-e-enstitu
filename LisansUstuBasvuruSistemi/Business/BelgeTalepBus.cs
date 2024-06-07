@@ -143,12 +143,12 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else if (belge.BelgeDurumID == BelgeTalepDurumEnum.Verildi)
                 {
-                    html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToString("dd-MM-yyyy HH:mm:ss") + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde Verildi</span>";
+                    html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToFormatDateAndTime() + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde Verildi</span>";
 
                 }
                 else
                 {
-                    html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToString("dd-MM-yyyy HH:mm:ss") + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde " + islemTipListeAdi + "</span>";
+                    html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToFormatDateAndTime() + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde " + islemTipListeAdi + "</span>";
                 }
                 mdl.Caption = html;
                 return mdl;

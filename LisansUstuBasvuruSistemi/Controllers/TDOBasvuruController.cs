@@ -103,7 +103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 bbModel.KullaniciTipYetki = false;
-                bbModel.KullaniciTipYetkiYokMsj = "Hesap bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşeden hesap bilgilerinizi düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
+                bbModel.KullaniciTipYetkiYokMsj = "Tez İzleme başvurusu yapabilmek için hesap bilgilerinizde YTÜ Lisansüstü öğrencisi olduğunuza dair bilgilerin eksiksiz olarak doldurulması gerekmektedir. Profilinizi güncellemek ve başvurunuzu yeniden denemek için sağ üst köşedeki 'Hesap bilgilerini düzenle' butonuna tıklayarak 'YTÜ Lisansüstü Öğrencisi Misiniz?' sorusunu cevaplayınız.";
             }
 
 

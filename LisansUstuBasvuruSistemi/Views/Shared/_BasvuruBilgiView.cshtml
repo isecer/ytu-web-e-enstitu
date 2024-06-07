@@ -1,0 +1,88 @@
+﻿@model LisansUstuBasvuruSistemi.Utilities.Dtos.IndexPageInfoDto
+
+<div class="widget widget-default" style="border-top:1px solid lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+    <table style="width:100%;">
+        <tr>
+            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Bilgisi</td>
+        </tr>
+        <tr>
+            <td width="200" style="color:cadetblue">Enstitü</td>
+            <td width="10">:</td>
+            <td>@Model.Enstitü.EnstituAd</td>
+        </tr>
+        <tr>
+            <td>Ad Soyad</td>
+            <td>:</td>
+            <td>@Model.Kullanici.Ad @Model.Kullanici.Soyad</td>
+        </tr>
+        @if (Model.KullaniciTipYetki)
+        {
+            <tr>
+                <td>Öğrenci No / Öğrenim Seviyesi</td>
+                <td>:</td>
+                <td>
+                    @Model.OgrenciNo /  @Model.OgrenimTipAdi
+                </td>
+            </tr>
+            <tr>
+                <td>Anabilim Dalı / Program</td>
+                <td>:</td>
+                <td>
+                    @Model.AnabilimdaliAdi / @Model.ProgramAdi
+                </td>
+            </tr>
+            <tr>
+                <td>Öğrenim Durumu / Kayıt Tarihi</td>
+                <td>:</td>
+                <td>
+                    @Model.OgrenimDurumAdi / @Model.KayitDonemi
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td></td>
+                <td>:</td>
+                <td> @Model.KullaniciTipYetkiYokMsj</td>
+            </tr>
+        }
+
+        @if (Model.SistemBasvuruyaAcik && Model.KullaniciTipYetki && Model.EnstituYetki)
+        {
+
+            <tr>
+                <td></td>
+                <td>:</td>
+                <td>
+                    <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol(@Model.Kullanici.KullaniciID)"><i class="fa fa-plus tooltips"></i>Yeni Başvuru</button>
+                </td>
+            </tr>
+        }
+        else
+        {
+            if (Model.SistemBasvuruyaAcik == false)
+            {
+                <tr>
+                    <td>Not</td>
+                    <td>:</td>
+                    <td>
+                        Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                        <br />
+                        <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                    </td>
+                </tr>
+            }
+            else if (Model.EnstituYetki == false)
+            {
+                <tr>
+                    <td>Not</td>
+                    <td>:</td>
+                    <td>
+                        Seçili enstitü için mezuniyet başvurusu yapamazsınız!
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>

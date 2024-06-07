@@ -271,7 +271,7 @@
                                             </table>
                                         </td>
                                         <td>@item.TalepTipAdi </td>
-                                        <td>@item.TalepTarihi.ToString("dd-MM-yyyy HH:mm:ss")</td>
+                                        <td>@item.TalepTarihi.ToFormatDateAndTime()</td>
                                         <td>
                                             <table style="padding:0px;margin:0px;border:none;table-layout:fixed;">
                                                 <tr>
@@ -279,7 +279,7 @@
                                                     <td>@item.DurumListeAdi </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>@item.IslemTarihi.ToString("dd-MM-yyyy HH:mm:ss")</td>
+                                                    <td>@item.IslemTarihi.ToFormatDateAndTime()</td>
                                                 </tr>
                                             </table>
 
@@ -361,7 +361,7 @@
                                                                             <tr>
                                                                                 <td>Tez Öneri Tarihi</td>
                                                                                 <td>:</td>
-                                                                                <td>@item.DoktoraTezOneriTarihi.Value.ToShortDateString()</td>
+                                                                                <td>@item.DoktoraTezOneriTarihi.Value.ToFormatDate()</td>
                                                                             </tr>
 
                                                                             foreach (var bl in item.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi))

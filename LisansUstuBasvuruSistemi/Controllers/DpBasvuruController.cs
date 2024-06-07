@@ -154,7 +154,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             kModel.KullaniciID = kayitYetki ? kModel.KullaniciID : UserIdentity.Current.Id;
             KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
-            var errprMessages = DonemProjesiBus.DonemProjesiKontrol(kModel.EnstituKod, kModel.UniqueId, null);
+            var errprMessages = DonemProjesiBus.DonemProjesiKontrol(kModel.EnstituKod, kModel.UniqueID, null);
             if (!errprMessages.Any())
             {
                 var uniqueId = DonemProjesiBus.AddOrUpdateDonemProjesi(kModel);

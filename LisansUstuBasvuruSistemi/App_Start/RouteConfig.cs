@@ -10,34 +10,29 @@ namespace LisansUstuBasvuruSistemi
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
-           
-            routes.MapRoute(
-                            name: "Default",
-                            url: "{EKD}/{controller}/{action}/{id}",
-                            defaults: new { EKD = "fbe", controller = "home", action = "index", id = UrlParameter.Optional },
-                            constraints: new { EKD = new EnstituListConstraint() }
-                       );
-
-            //routes.Add("DefaultDil",
-            // new Route("{EKD}/{Culture}/{controller}/{action}/{id}",
-            //                 new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional }),
-            //                 new MyRouteHandler()
-            //     ));
 
             routes.MapRoute(
-                               name: "NotFound",
-                               url: "{EKD}/{controller}/{action}/{id}",
-                               defaults: new { EKD = "fbe", controller = "AppEvent", action = "PageNotFound", id = UrlParameter.Optional }
-                               );  // 404s
+                name: "Default",
+                url: "{EKD}/{controller}/{action}/{id}",
+                defaults: new { EKD = "fbe", controller = "home", action = "index", id = UrlParameter.Optional },
+                constraints: new { EKD = new EnstituListConstraint() }
+            );
 
             routes.MapRoute(
-                                   name: "Error",
-                                   url: "{EKD}/{controller}/{action}/{id}",
-                                   defaults: new { EKD = "fbe", controller = "AppEvent", action = "Error", id = UrlParameter.Optional }
-                              );
+                name: "NotFound",
+                url: "{EKD}/{controller}/{action}/{id}",
+                defaults: new
+                    { EKD = "fbe", controller = "AppEvent", action = "PageNotFound", id = UrlParameter.Optional }
+            );// 404s
 
-            
- 
+            routes.MapRoute(
+                name: "Error",
+                url: "{EKD}/{controller}/{action}/{id}",
+                defaults: new { EKD = "fbe", controller = "AppEvent", action = "Error", id = UrlParameter.Optional }
+            );
+
+
+
 
 
         }

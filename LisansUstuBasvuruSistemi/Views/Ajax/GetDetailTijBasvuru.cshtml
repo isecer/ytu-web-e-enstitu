@@ -712,14 +712,14 @@
                                                                     <td class="CaptionTd" width="10">:</td>
                                                                     <td class="ValueTd">
                                                                         @if (!item.EYKDaOnaylandi.HasValue)
-                                                            {
+                                                                        {
 
                                                                             <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'da onay işlemi Bekleniyor.</span>
                                                                         }
                                                                         else if (item.EYKDaOnaylandi == true)
-                                                        {
-                                                            if (item.IsObsData)
-                                                            {
+                                                                        {
+                                                                            if (item.IsObsData)
+                                                                            {
                                                                                 <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (OBS'de doğrulandı)</span>
 
                                                                             }
@@ -768,7 +768,7 @@
 </div>
 <script>
     $(function () {
-         
+
         $('.tarihB').datetimepicker({
             lang: 'tr',
             timepicker: false,
@@ -821,7 +821,7 @@
             });
         }
         function EykOnayChange(sndr, tijBasvuruOneriUniqueId) {
-        var val = $(sndr).val().toLowerCase(); 
+        var val = $(sndr).val().toLowerCase();
             if (val == 'false') {
                 $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).removeClass("hide");
             }
@@ -859,7 +859,7 @@
             PanelRefresh(_panel, false);
             var sndrId = "";
             var eykDaOnaylanmadiDurumAciklamasi = "";
-            var eykDaOnaylandiOnayTarihi = ""; 
+            var eykDaOnaylandiOnayTarihi = "";
             if (onayTipId == @EykTipEnum.EykDaOnaylandi) {
                 sndrId = '#EykDaOnaylandi_' + tijBasvuruOneriUniqueId;
                 if ($(sndrId).val().toLowerCase() == 'false') eykDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
