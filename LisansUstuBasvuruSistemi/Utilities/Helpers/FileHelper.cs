@@ -14,16 +14,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public static string FileServerUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi.GetAyar();//"http://194.27.98.10:81";
         public static string FileServerBasePath = SistemAyar.DosyaArsiviFizikselKayitYolu.GetAyar();//"D:\\DocumentServer\\lisansustufiles.yildiz.edu.tr";
 
-        private const string MesajDosyaYolu = "/DosyaArsivi/MesajEkleri";
-        private const string MailDosyaYolu = "/DosyaArsivi/MailEkleri";
-        private const string TaleplerDosyaYolu = "/DosyaArsivi/TalepDosyalari";
-        private const string ToSavunmaDosyaYolu = "/DosyaArsivi/ToSavunmaDosyalari";
-        private const string TiAraRaporDosyaYolu = "/DosyaArsivi/TiAraRaporDosyalari";
-        private const string MezuniyetYayinDosyaYolu = "/DosyaArsivi/MezuniyetBasvurulari/YayinDosyalari";
-        private const string MezuniyetTezSablonDosyaYolu = "/DosyaArsivi/MezuniyetBasvurulari/TezSablonDosyalari";
-        private const string DonemProjesiIntihalDosyaYolu = "/DosyaArsivi/DonemProjesi";
-        private const string MailSablonDosyaYolu = "/DosyaArsivi/MailSablonEkleri";
-        private const string DuyuruDosyaYolu = "/DosyaArsivi/DuyuruEkleri";
+        public const string MesajDosyaYolu = "/DosyaArsivi/MesajEkleri";
+        public const string MailDosyaYolu = "/DosyaArsivi/MailEkleri";
+        public const string TaleplerDosyaYolu = "/DosyaArsivi/TalepDosyalari";
+        public const string ToSavunmaDosyaYolu = "/DosyaArsivi/ToSavunmaDosyalari";
+        public const string TiAraRaporDosyaYolu = "/DosyaArsivi/TiAraRaporDosyalari";
+        public const string MezuniyetYayinDosyaYolu = "/DosyaArsivi/MezuniyetBasvurulari/YayinDosyalari";
+        public const string MezuniyetTezSablonDosyaYolu = "/DosyaArsivi/MezuniyetBasvurulari/TezSablonDosyalari";
+        public const string DonemProjesiIntihalDosyaYolu = "/DosyaArsivi/DonemProjesi";
+        public const string MailSablonDosyaYolu = "/DosyaArsivi/MailSablonEkleri";
+        public const string DuyuruDosyaYolu = "/DosyaArsivi/DuyuruEkleri";
 
 
         public static string CustomUrlContentMail(this string path, string sistemErisimAdresi)
@@ -32,6 +32,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         }
         public static string CustomUrlContent(this UrlHelper urlHelper, string contentPath)
         {
+            var ekd = urlHelper.RequestContext.RouteData.Values["EKD"];
             return IsSaveFileServer ? FileServerUrl + contentPath : urlHelper.Content(contentPath);
         }
         public static string FileBaseFullPath(this string contentPath)

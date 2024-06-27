@@ -135,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "YokDrBursiyeriBilgi", Value = tiAraRapor.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + tiAraRapor.YokDrOncelikliAlan + ")" : "Yok" });
                         if (item.SablonParametreleri.Any(a => a == "@DonemAdi"))
                         {
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = tiAraRapor.DonemBaslangicYil + " - " + tiAraRapor.DonemBaslangicYil + 1 + " " + tiAraRapor.Donemler.DonemAdi });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = tiAraRapor.DonemBaslangicYil + " - " + (tiAraRapor.DonemBaslangicYil + 1) + " " + tiAraRapor.Donemler.DonemAdi });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@OncekiMailTarihi"))
                         {
@@ -346,7 +346,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@DonemAdi"))
                         {
 
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = tiAraRapor.DonemBaslangicYil + " - " + tiAraRapor.DonemBaslangicYil + 1 + " " + tiAraRapor.Donemler.DonemAdi });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = tiAraRapor.DonemBaslangicYil + " - " + (tiAraRapor.DonemBaslangicYil + 1) + " " + tiAraRapor.Donemler.DonemAdi });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {

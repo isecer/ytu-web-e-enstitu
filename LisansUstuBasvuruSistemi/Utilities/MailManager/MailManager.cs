@@ -7,7 +7,6 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
 using System.Threading;
-using System.Web;
 using BiskaUtil;
 using HtmlAgilityPack;
 using LisansUstuBasvuruSistemi.Business;
@@ -71,7 +70,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
     #endregion
     public static class MailManager
     {
-        public static long AttachmentMaxFileSize => (25 * 1024 * 1024); //25 MB 
+        public static long AttachmentMaxFileSize => (25 * 1024 * 1024); //25Default MB 
         public static MailContentDetailDto CreateMailContentDetailModel(SablonMailModel mailItem)
         {
             var model = new MailContentDetailDto

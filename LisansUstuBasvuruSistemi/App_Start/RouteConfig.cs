@@ -10,8 +10,14 @@ namespace LisansUstuBasvuruSistemi
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
+            routes.MapMvcAttributeRoutes();
 
-             
+            routes.MapRoute(
+                name: "DosyaArsivi",
+                url: "dosyaarsivi/{*filePath}",
+                defaults: new { controller = "File", action = "Index", filePath = UrlParameter.Optional }
+            );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{EKD}/{controller}/{action}/{id}",
@@ -23,7 +29,7 @@ namespace LisansUstuBasvuruSistemi
                 name: "NotFound",
                 url: "{EKD}/{controller}/{action}/{id}",
                 defaults: new
-                    { EKD = "fbe", controller = "AppEvent", action = "PageNotFound", id = UrlParameter.Optional }
+                { EKD = "fbe", controller = "AppEvent", action = "PageNotFound", id = UrlParameter.Optional }
             );// 404s
 
             routes.MapRoute(
@@ -31,11 +37,6 @@ namespace LisansUstuBasvuruSistemi
                 url: "{EKD}/{controller}/{action}/{id}",
                 defaults: new { EKD = "fbe", controller = "AppEvent", action = "Error", id = UrlParameter.Optional }
             );
-
-
-
-
-
         }
     }
 }

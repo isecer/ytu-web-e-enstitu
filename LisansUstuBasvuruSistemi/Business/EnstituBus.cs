@@ -3,6 +3,7 @@ using System.Linq;
 using BiskaUtil;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -42,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
         public static string GetSelectedEnstitu(string ekd)
-        {
+        { 
             return Enstitulers.First(p => p.EnstituKisaAd.ToLower() == ekd.ToLower()).EnstituKod;
         }
 
