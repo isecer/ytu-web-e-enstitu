@@ -1,4 +1,4 @@
-﻿@using Entities.Entities  
+﻿@using Entities.Entities
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model List<TIAyarlar>
 @{
@@ -92,6 +92,23 @@
                                                                         <option value="@val" @(val == item.AyarDegeri ? "selected='selected'" : "")>@val</option>
                                                                     }
                                                                 </select>
+                                                            }
+                                                            else if (item.InpType == "selectMultiple")
+                                                            {
+                                                                var itms = item.SItems.Split(',');
+                                                                <input type="text" name="AyarDegeri" value="@item.AyarDegeri" style="display: none;" />
+                                                                <select multiple class="form-control select mSelect" change="SetAyarDegeriMultiSelect(this)">
+                                                                    @foreach (var val in itms)
+                                                                    {
+                                                                        <option value="@val" @(item.AyarDegeri.Split(',').Any(a => a == val) ? "selected='selected'" : "")>@val.ToInt()</option>
+                                                                    }
+                                                                </select>
+                                                                <script>
+                                                                    function SetAyarDegeriMultiSelect(sndr) {
+                                                                        $(sndr).prev().val(sndr.val());
+                                                                        alert(sndr.val());
+                                                                    }
+                                                                </script>
                                                             }
 
                                                         </div>

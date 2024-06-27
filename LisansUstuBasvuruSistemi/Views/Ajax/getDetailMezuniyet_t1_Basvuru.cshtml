@@ -15,7 +15,7 @@
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
     var isTezDanisman = Model.TezDanismanID == UserIdentity.Current.Id;
     var sonucGirisSureciAktif = (Model.SonucGirisSureciAktif || kayitYetki);// && Model.MezuniyetJuriOneriFormlaris.All(a => a.EYKYaGonderildi != true);
-
+    var yayinInfos = MezuniyetBus.YayinKontrol(Model.MezuniyetSurecID, Model.KullaniciID, Model.MezuniyetBasvurulariID);
 }
 <div class="tab-pane @(Model.SelectedTabIndex==1?"active":"") " id="@tbName-1">
     <div class="col-md-12">
@@ -259,7 +259,7 @@
                                     <tr class="BasvuruDanismanOnayTaahhutRw_@Model.MezuniyetBasvurulariID @(Model.IsDanismanOnay == true ? "" : "hide")">
                                         <td colspan="3">
                                             <div class="tasks ui-sortable">
-                                                <div class="task-item task-@(Model.IsDanismanOnay.HasValue?"info":"warning")" style="margin-bottom:0px;">
+                                                <div class="task-item task-@(Model.IsDanismanOnay.HasValue ? "info" : "warning")" style="margin-bottom:0px;">
                                                     <div class="task-text ui-sortable-handle" style="padding-bottom: 0px; font-size: 8pt;">
                                                         <b>Taahhüt 1:</b> Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
                                                         <br /><br />
@@ -285,7 +285,7 @@
                                     @if (Model.IsDanismanOnay == false)
                                     {
                                         <tr>
-                                            <td class="CaptionTd" style="font-weight:bold;">@(Model.IsDanismanOnay.Value?"Onay":"Ret") Tarihi</td>
+                                            <td class="CaptionTd" style="font-weight:bold;">@(Model.IsDanismanOnay.Value ? "Onay" : "Ret") Tarihi</td>
                                             <td class="CaptionTd" style="font-weight:bold;">:</td>
                                             <td class="ValueTd">
                                                 @Model.DanismanOnayTarihi.ToFormatDateAndTime()
@@ -319,7 +319,7 @@
                                         <tr>
                                             <td colspan="3">
                                                 <div class="tasks">
-                                                    <div class="task-item task-@(Model.IsDanismanOnay.HasValue?"info":"warning")" style="margin-bottom: 0px; cursor: auto;">
+                                                    <div class="task-item task-@(Model.IsDanismanOnay.HasValue ? "info" : "warning")" style="margin-bottom: 0px; cursor: auto;">
                                                         <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
                                                             <b>Taahhüt 1:</b> Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
                                                             <br /><br /><b>Taahhüt 2:</b> Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
@@ -399,42 +399,51 @@
                     </tr>
                     <tr>
                         <td style="padding-left:10px;text-align:left;" colspan="2">
-                            <table id="yTable" class="table table-hover" style="width:100%;table-layout:fixed;">
-                                <thead>
-                                    <tr class="info">
-                                        <th width="20">#</th>
-                                        <th width="35"></th>
-                                        <th width="150">Yayın Türü</th>
-                                        <th>Yayın Başlığı</th>
-                                        @if (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak)
-                                        {
-                                            <th width="120"></th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model.YayinBilgileri.Count > 0)
-                                    {
-                                        int inx = 0;
-                                        foreach (var item in Model.YayinBilgileri)
-                                        {
-                                            inx++;
-                                            item.RowNum = inx;
-                                            item.DegerlendirmeKolonu = Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak && Model.IsDanismanOnay == true;
-                                            item.DegerlendirmeAktif = sonucGirisSureciAktif && (!isKendiBasvuruSu || Model.GelenBasvuru) && kayitYetki;
-                                            item.sonucGirisSureciAktif = sonucGirisSureciAktif;
-                                            item.IsDataShow = true;
-                                            @Html.Raw(ViewRenderHelper.RenderPartialView("Mezuniyet", "AddRow", item))
-                                        }
-                                    }
-                                    else
+                            @if (yayinInfos.Any())
+                            {
+                                <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                                    @foreach (var item in yayinInfos)
                                     {
                                         <tr>
-                                            <td style="text-align:center;" colspan="@(Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak?"5":"4")">Yayın bilgisi istenmemektedir.</td>
+                                            <td>@item</td>
                                         </tr>
                                     }
-                                </tbody>
-                            </table>
+                                </table>
+                            }
+                            @if (Model.YayinBilgileri.Any())
+                            {
+                                <table id="yTable" class="table table-hover" style="width:100%;table-layout:fixed;">
+                                    <thead>
+                                        
+                                        <tr class="info">
+                                            <th width="20">#</th>
+                                            <th width="35"></th>
+                                            <th width="150">Eklenen Yayın Türü</th>
+                                            <th>Yayın Başlığı</th>
+                                            @if (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak)
+                                            {
+                                                <th width="120"></th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.YayinBilgileri.Count > 0)
+                                        {
+                                            int inx = 0;
+                                            foreach (var item in Model.YayinBilgileri)
+                                            {
+                                                inx++;
+                                                item.RowNum = inx;
+                                                item.DegerlendirmeKolonu = Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak && Model.IsDanismanOnay == true;
+                                                item.DegerlendirmeAktif = sonucGirisSureciAktif && (!isKendiBasvuruSu || Model.GelenBasvuru) && kayitYetki;
+                                                item.sonucGirisSureciAktif = sonucGirisSureciAktif;
+                                                item.IsDataShow = true;
+                                                @Html.Raw(ViewRenderHelper.RenderPartialView("Mezuniyet", "AddRow", item))
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            }
                         </td>
                     </tr>
 

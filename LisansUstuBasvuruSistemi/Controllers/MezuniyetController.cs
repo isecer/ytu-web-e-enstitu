@@ -14,7 +14,6 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
-using System.Xml;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

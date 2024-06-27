@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -34,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             model.AbsolutePath = $"{model.Root}{enst}{(tspl.Count > 0 ? tspl[0] : "home")}/Index".Replace("I", "i").ToLower();
 
             return model;
-        }
+        } 
     }
  
 

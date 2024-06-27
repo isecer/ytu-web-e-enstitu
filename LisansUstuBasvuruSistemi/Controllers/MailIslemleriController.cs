@@ -35,9 +35,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.Konu.IsNullOrWhiteSpace())
             {
                 var searchTerm = "\"" + model.Konu + "\""; 
-                string query = $"SELECT * FROM {nameof(GonderilenMailler)} WHERE (CONTAINS({nameof(GonderilenMailler.Aciklama)}, @p0) or CONTAINS({nameof(GonderilenMailler.AciklamaHtml)}, @p0)) AND {nameof(GonderilenMailler.Silindi)} = 0";
-                var filteredMailIds = _entities.GonderilenMaillers.SqlQuery(query, searchTerm, searchTerm).Select(s => s.GonderilenMailID).ToList();
+                string query = $"SELECT * FROM {nameof(GonderilenMailler)} WHERE CONTAINS({nameof(GonderilenMailler.AciklamaHtml)}, @p0) AND {nameof(GonderilenMailler.Silindi)} = 0";
+                var filteredMailIds = _entities.GonderilenMaillers.SqlQuery(query, searchTerm).Select(s => s.GonderilenMailID).ToList();
                 filteredMailsQuery = filteredMailsQuery.Where(p => filteredMailIds.Contains(p.GonderilenMailID));
+
+
             }
 
             if (!model.EnstituKod.IsNullOrWhiteSpace())

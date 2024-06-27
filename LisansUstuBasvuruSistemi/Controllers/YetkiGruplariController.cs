@@ -13,7 +13,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.YetkiGruplari)]
     public class YetkiGruplariController : Controller
     {
@@ -145,7 +145,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int id)
         {
             var kayit = _entities.YetkiGruplaris.FirstOrDefault(p => p.YetkiGrupID == id);
-            string message = "";
+            string message;
             bool success = true;
             if (kayit != null)
             {
@@ -167,7 +167,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Yetki Grubu sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }
 }

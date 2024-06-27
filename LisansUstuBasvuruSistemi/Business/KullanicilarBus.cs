@@ -316,6 +316,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var rotasYonDegisimLog = SistemAyar.RotasyonuDegisenResimleriLogla.GetAyar().ToBoolean(false);
                 var boyutlandirma = SistemAyar.KullaniciResimKaydiBoyutlandirma.GetAyar().ToBoolean(false);
                 var kaliteOpt = SistemAyar.KullaniciResimKaydiKaliteOpt.GetAyar().ToBoolean(true);
+                
                 var resimAdi = resim.FileName.ToFileNameAddGuid();
                 var resimYolu = Path.Combine(HttpContext.Current.Server.MapPath("~/" + folderName), resimAdi);
 

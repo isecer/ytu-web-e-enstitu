@@ -12,6 +12,7 @@
         public const int OtoMailSinavYerBilgi = 6;
         public const int OtoMailAnketBilgi = 7;
         public const int LisansustuSanalPosOdemeBilgisi = 8;
+
         public const int MezEykTarihiGirildiOgrenciYl = 9;
         public const int MezEykTarihiGirildiOgrenciDoktora = 63;
         public const int MezEykTarihiGirildiDanismanDoktora = 53;
@@ -42,6 +43,7 @@
         public const int MezTezKontrolTezDosyasiBasarili = 74;
         public const int MezTezKontrolTezDosyasiOnaylanmadi = 75;
         public const int MezTezKontrolTezDosyasiYuklendiKontrolYetkilisi = 76;
+        public const int MezBasvurusuTezKontrolYetkilisiAtandi = 77;
 
         public const int MezSinavDegerlendirmeHatirlantmaDanismanDr = 140;
         public const int MezSinavDegerlendirmeHatirlantmaDanismanYl = 141;

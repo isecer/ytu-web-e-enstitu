@@ -380,7 +380,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                var donemBilgi = (tiBasvuruAraRapor?.RaporTarihi ?? DateTime.Now).ToTiAraRaporDonemBilgi();
+                var donemBilgi = (tiBasvuruAraRapor?.RaporTarihi ?? DateTime.Now).ToTiAraRaporDonemBilgi(tiBasvuru.EnstituKod);
 
                 var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
 
@@ -670,7 +670,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 isYeniJo = tiBasvuruAraRapor == null;
                 bool isDegisiklikVar = false;
-                var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToTiAraRaporDonemBilgi();
+                var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToTiAraRaporDonemBilgi(tiBasvuru.EnstituKod);
                 var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.OgrenciKontrol(kul.OgrenciNo) : new StudentControl();
                 var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod).Split(',').Where(p => p.Trim() != "").ToList() : new List<string>();
 
@@ -1228,9 +1228,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Toplantı tarihi bilgisi günümüz tarihten küçük olamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                 }
-                else if (!adminYetki && tiAraRapor.RaporTarihi.ToTiAraRaporDonemBilgi().BitisTarihi.Date < kModel.Tarih.Date)
+                else if (!adminYetki && tiAraRapor.RaporTarihi.ToTiAraRaporDonemBilgi(tiAraRapor.TIBasvuru.EnstituKod).BitisTarihi.Date < kModel.Tarih.Date)
                 {
-                    var donemSonuTarihi = tiAraRapor.RaporTarihi.ToTiAraRaporDonemBilgi().BitisTarihi;
+                    var donemSonuTarihi = tiAraRapor.RaporTarihi.ToTiAraRaporDonemBilgi(tiAraRapor.TIBasvuru.EnstituKod).BitisTarihi;
                     mmMessage.Messages.Add("Toplantı tarihi ara rapor dönem sonu tarihi olan " + donemSonuTarihi.ToLongDateString() + " tarihten büyük olamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                 }

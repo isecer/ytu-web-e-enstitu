@@ -103,7 +103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             var eoY = DateTime.Now.ToAkademikDonemBilgi();
-            model.OgretimYili = eoY.BaslangicYil + "/" + eoY.BitisYil + "/" + eoY.DonemId; 
+            model.OgretimYili = eoY.BaslangicYil + "/" + eoY.BitisYil + "/" + eoY.DonemId;
             if (id > 0)
             {
                 var data = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == id);
@@ -187,7 +187,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                            uzs.SinavUzatmaSinavAlmaSuresiMaxGun,
                                                            tts.TezTeslimSuresiGun
                                                        }).ToList();
-             
+
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
@@ -227,7 +227,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.OgretimYili.IsNullOrWhiteSpace() == false)
             {
                 var oy = kModel.OgretimYili.Split('/').ToList();
-                eOyilBilgi.BaslangicYil = oy[0].ToInt().Value; 
+                eOyilBilgi.BaslangicYil = oy[0].ToInt().Value;
                 eOyilBilgi.DonemId = oy[2].ToInt().Value;
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgretimYili" });
             }
@@ -277,7 +277,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Tek Kaynak İntihal Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
                     }
-                    if (item.ToplamKaynakOraniKriteri.HasValue && (item.ToplamKaynakOraniKriteri <= 0 ||  item.ToplamKaynakOraniKriteri>100))
+                    if (item.ToplamKaynakOraniKriteri.HasValue && (item.ToplamKaynakOraniKriteri <= 0 || item.ToplamKaynakOraniKriteri > 100))
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Topla İntihal Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
                     }
@@ -347,7 +347,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemYapanIP = kModel.IslemYapanIP;
                     _entities.MezuniyetSureciOgrenimTipKriterleris.RemoveRange(data.MezuniyetSureciOgrenimTipKriterleris);
-                    if(!data.MezuniyetSureciOtoMails.Any()) MezuniyetSureciBus.MezuniyetSureciOtoMailOlustur(data.MezuniyetSurecID);
+                    if (!data.MezuniyetSureciOtoMails.Any()) MezuniyetSureciBus.MezuniyetSureciOtoMailOlustur(data.MezuniyetSurecID);
                 }
 
                 _entities.MezuniyetSureciOgrenimTipKriterleris.AddRange(mezuniyetSureciOgrenimTipKriterleri.Select(s => new MezuniyetSureciOgrenimTipKriterleri
@@ -375,7 +375,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }));
                 _entities.SaveChanges();
-                SiraNoVer();
+                SiraNoVer(kModel.EnstituKod);
                 if (isnewOrEdit || (isYonetmelikKopyala.HasValue && isYonetmelikKopyala.Value)) { YonetmelikKopyala(kModel.MezuniyetSurecID, kModel.EnstituKod); }
 
                 return RedirectToAction("Index");
@@ -410,9 +410,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }
-        public void SiraNoVer()
+        public void SiraNoVer(string enstituKod)
         {
-            var surecs = (from s in _entities.MezuniyetSurecis
+            var surecs = (from s in _entities.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod)
                           group new { s.MezuniyetSurecID, s.BaslangicYil, s.BitisYil, s.BaslangicTarihi, s.BitisTarihi } by new { s.BaslangicYil, s.BitisYil, s.DonemID } into g1
                           select new
                           {
@@ -469,7 +469,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(mdl);
         }
 
-         
+
 
         public ActionResult GetMsSubData(int id, int tbInx)
         {
@@ -550,7 +550,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                 MezuniyetYayinTurAdi = yt.MezuniyetYayinTurAdi,
                                                                 IsGecerli = mzs.IsGecerli,
                                                                 IsZorunlu = mzs.IsZorunlu,
-                                                                GrupKodu = mzs.GrupKodu, 
+                                                                GrupKodu = mzs.GrupKodu,
                                                             }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList()
 
                              }).ToList();
@@ -627,15 +627,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var surec = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == id);
             var otoMailData = MezuniyetSureciBus.GetOtoMailData();
             var otoMails = (from surecOtoMail in surec.MezuniyetSureciOtoMails.ToList()
-                join otoMail in otoMailData on surecOtoMail.OtoMailID equals otoMail.OtoMailID
-                select new MezuniyetOtoMailDto
-                {
-                    MezuniyetSurecID = id,
-                    MezuniyetSureciOtoMailID = surecOtoMail.MezuniyetSureciOtoMailID,
-                    OtoMailID = surecOtoMail.OtoMailID,
-                    Aciklama = otoMail.Aciklama,
-                    IsAktif = surecOtoMail.IsAktif
-                }).ToList();
+                            join otoMail in otoMailData on surecOtoMail.OtoMailID equals otoMail.OtoMailID
+                            select new MezuniyetOtoMailDto
+                            {
+                                MezuniyetSurecID = id,
+                                MezuniyetSureciOtoMailID = surecOtoMail.MezuniyetSureciOtoMailID,
+                                OtoMailID = surecOtoMail.OtoMailID,
+                                Aciklama = otoMail.Aciklama,
+                                IsAktif = surecOtoMail.IsAktif
+                            }).ToList();
             ViewBag.OtoMailData = otoMails;
             return View(surec);
         }
@@ -777,7 +777,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MezuniyetYayinTurID = item2.MezuniyetYayinTurID,
                         IsGecerli = item2.IsGecerli,
                         IsZorunlu = item2.IsZorunlu,
-                        GrupKodu = item2.GrupKodu 
+                        GrupKodu = item2.GrupKodu
 
                     });
                 }

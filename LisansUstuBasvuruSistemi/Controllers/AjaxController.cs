@@ -34,6 +34,7 @@ using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
 using LisansUstuBasvuruSistemi.Raporlar.LUB;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
+using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -2267,7 +2268,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetTezkontrolYetkilisi(string term, string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-
             var query = MezuniyetBus.GetAktifTezKontrolSorumlulari(enstituKod).AsQueryable();
             if (!term.IsNullOrWhiteSpace())
             {

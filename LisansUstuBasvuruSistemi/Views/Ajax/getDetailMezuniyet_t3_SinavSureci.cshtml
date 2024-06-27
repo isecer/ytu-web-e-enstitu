@@ -299,7 +299,7 @@
                                                                                                 <td class="CaptionTd" width="140">Salon Talep Durumu</td>
                                                                                                 <td class="CaptionTd" width="10">:</td>
                                                                                                 <td class="ValueTd">
-                                                                                                    @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSrTalebi && (isJuriDegerlendirmeVar ? !isJuriDegerlendirmeBasladi : true) && !isEnstituSonucuGirdi)
+                                                                                                    @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSrTalebi && !isJuriSonucGirildi && !isEnstituSonucuGirdi)
                                                                                                     {
                                                                                                         @Html.DropDownList("SRDurumID", item.SrDurumSelectList.SRDurumID, new { id = "SRDurumID_" + item.SRTalepID, onchange = "DurumKontrol(" + item.SRTalepID + ")", style = "width:120px;" })
                                                                                                         <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="SrDurumKaydet(@Model.MezuniyetBasvurulariID,@item.SRTalepID)"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>

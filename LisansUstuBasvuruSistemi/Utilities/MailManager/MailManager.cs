@@ -267,7 +267,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
         {
 
 
-            var fullPath = fileAttachmentInfo.FilePath.ContentFullPath();
+            var fullPath = fileAttachmentInfo.FilePath.FileBaseFullPath();
             if (File.Exists(fullPath))
             {
                 fileAttachmentInfo.FileName = fileAttachmentInfo.FileName.IsNullOrWhiteSpace() ? Path.GetFileName(fullPath) : fileAttachmentInfo.FileName.ToSetNameFileExtension(Path.GetExtension(fullPath));

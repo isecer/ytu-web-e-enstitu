@@ -484,7 +484,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (!snded) continue;
                         if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
                         if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
-                       
+
                         var kModel = new GonderilenMailler
                         {
                             Tarih = DateTime.Now,
@@ -1053,6 +1053,113 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             return mmMessage;
         }
+        public static MmMessage SendMailMezuniyetTezKontrolYetkilisi(int mezuniyetBasvurulariId)
+        {
+            var mmMessage = new MmMessage();
+            try
+            {
+                using (var entities = new LubsDbEntities())
+                {
+                    var mezuniyetBasvuru = entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var ogrenci = mezuniyetBasvuru.Kullanicilar;
+                    var enstitu = mezuniyetBasvuru.MezuniyetSureci.Enstituler;
+
+                    var mModel = new List<SablonMailModel>();
+
+
+                    var tezKontrolKul = entities.Kullanicilars.FirstOrDefault(f =>
+                        mezuniyetBasvuru.TezKontrolKullaniciID.HasValue && f.YetkiGrupID == 13 &&
+                        f.KullaniciID == mezuniyetBasvuru.TezKontrolKullaniciID);
+                    if (tezKontrolKul != null)
+                    {
+                        mModel.Add(new SablonMailModel
+                        {
+                            AdSoyad = tezKontrolKul.Ad + " " + tezKontrolKul.Soyad,
+                            EMails = new List<MailSendList>
+                                {
+                                    new MailSendList
+                                    {
+                                        EMail = tezKontrolKul.EMail,
+                                        KullaniciId = tezKontrolKul.KullaniciID,
+                                        ToOrBcc = true
+                                    }
+                                },
+                            MailSablonTipId = MailSablonTipiEnum.MezBasvurusuTezKontrolYetkilisiAtandi
+                        });
+
+                    }
+
+
+                    var sablonTipIds = mModel.Select(s => s.MailSablonTipId).ToList();
+                    var sablonlar = entities.MailSablonlaris.Where(p => p.IsAktif && p.EnstituKod == enstitu.EnstituKod && sablonTipIds.Contains(p.MailSablonTipID)).ToList();
+                    foreach (var item in mModel)
+                    {
+                        item.EnstituAdi = enstitu.EnstituAd;
+                        item.WebAdresi = enstitu.WebAdresi;
+
+                        item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId && p.EnstituKod == enstitu.EnstituKod);
+                        if (item.Sablon == null) continue;
+
+                        item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
+                        item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.CustomSplit();
+                        item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
+
+
+                        if (item.SablonParametreleri.Any(a => a == "@EnstituAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "EnstituAdi", Value = item.EnstituAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "WebAdresi", Value = item.WebAdresi, IsLink = true });
+
+                        if (item.SablonParametreleri.Any(a => a == "@AdSoyad"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AdSoyad", Value = item.AdSoyad });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenci.Ad + " " + ogrenci.Soyad });
+                        if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciNo", Value = ogrenci.OgrenciNo });
+                        if (item.SablonParametreleri.Any(a => a == "@AnabilimDaliAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "AnabilimDaliAdi", Value = mezuniyetBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "ProgramAdi", Value = mezuniyetBasvuru.Programlar.ProgramAdi });
+                        if (item.SablonParametreleri.Any(a => a == "@Link"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/MezuniyetGelenBasvurular/Index?sMezuniyetBid=" + mezuniyetBasvuru.MezuniyetBasvurulariID + "&sTabId=1", IsLink = true });
+                        var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
+                        var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
+                        if (!snded) continue;
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
+                        var kModel = new GonderilenMailler
+                        {
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = contentDetailDto.Title,
+                            IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id,
+                            IslemYapanIP = UserIdentity.Ip,
+                            Aciklama = item.Sablon.Sablon ?? "",
+                            AciklamaHtml = contentDetailDto.HtmlContent ?? "",
+                            Gonderildi = true,
+                            GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
+                            GonderilenMailEkleris = item.GetGonderilenMailEkleris
+                        };
+                        entities.GonderilenMaillers.Add(kModel);
+                        entities.SaveChanges();
+                    }
+                    mmMessage.IsSuccess = true;
+                    mmMessage.MessageType = MsgTypeEnum.Success;
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet başvurusu için Tez şablon kontrol yetkilisine mail gönderilirken bir hata oluştu" + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
+                mmMessage.MessageType = MsgTypeEnum.Error;
+                mmMessage.IsSuccess = false;
+            }
+            return mmMessage;
+        }
+
         public static MmMessage SendMailMezuniyetTezSablonKontrol(int mezuniyetBasvurulariTezDosyaId, int sablonTipId, string aciklama = "")
         {
             var mmMessage = new MmMessage();

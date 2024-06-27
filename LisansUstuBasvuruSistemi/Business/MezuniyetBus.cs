@@ -54,14 +54,14 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var basvuru = entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
-                if (!MezuniyetAyar.TezDosyasiYuklendigindeSorumluyaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false)) return;
+                if (!MezuniyetAyar.MezuniyetBasvurusunuTezSorumlusunaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false)) return;
 
                 //Dosya yüklendiğinde Kullanıcı atansa bile varolan kullanıcı yetki grubu ve aktiflik durumunu kontrol et eğer aktif bir tez kontrol yetkilisi var ise yeni kullanıcı atamaya izin verme
                 if (basvuru.TezKontrolKullaniciID.HasValue && entities.Kullanicilars.Any(a => a.KullaniciID == basvuru.TezKontrolKullaniciID && a.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && a.IsAktif)) return;
 
 
 
-                var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.TezDosyasiYuklendigindeIlgiliSorumluyaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
+                var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.MezuniyetBasvurusunuIlgiliTezSorumlusunaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
 
 
                 //Yüklenen tezin ait olduğu programda yetkisi olanlar öncelikli, sonrasında hiç program yetkisi olmayanlar öncelikli, sonrasında count sayısına göre öncelikli, sonrasında random atama. Program yetkisi var ve gelen programda yetkisi yoksa hiç sıralamaya dahil edilmeyecek.
@@ -103,6 +103,8 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                 entities.SaveChanges();
+
+              
             }
         }
 
@@ -451,6 +453,7 @@ namespace LisansUstuBasvuruSistemi.Business
                               from klD in defkl.DefaultIfEmpty()
                               join inx in entities.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
                               from inxD in definx.DefaultIfEmpty()
+                              //join kullanici in entities.Kullanicilars on qs.IslemYapanID equals kullanici.KullaniciID 
                               select new MezuniyetBasvurulariYayinDto
                               {
                                   Yayinlanmis = qs.Yayinlanmis,
@@ -500,8 +503,9 @@ namespace LisansUstuBasvuruSistemi.Business
                                   YayinYilCiltSayiIstensin = s.YayinYilCiltSayiIstensin,
                                   YilCiltSayiSS = qs.YilCiltSayiSS,
                                   IsTarihAraligiIstensin = s.IsTarihAraligiIstensin,
-                                  TarihAraligi = qs.TarihAraligi
-
+                                  TarihAraligi = qs.TarihAraligi,
+                                  //IslemYapan = kullanici.Ad+" "+kullanici.Soyad,
+                                  //IslemTarihi = qs.IslemTarihi
 
                               }).ToList();
 
@@ -674,6 +678,7 @@ namespace LisansUstuBasvuruSistemi.Business
                               from mezuniyetYayinLinkTurKaynakrDefItem in defMezuniyetYayinLinkTurKaynak.DefaultIfEmpty()
                               join mezuniyetYayinIndexTur in entities.MezuniyetYayinIndexTurleris on new { mezuniyetBasvurulariYayin.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)mezuniyetYayinIndexTur.MezuniyetYayinIndexTurID } into defMezuniyetYayinIndexTur
                               from mezuniyetYayinIndexTurDefItem in defMezuniyetYayinIndexTur.DefaultIfEmpty()
+                              // join kullanici in entities.Kullanicilars on mezuniyetBasvurulariYayin.IslemYapanID equals kullanici.KullaniciID
                               select new MezuniyetBasvurulariYayinDto
                               {
                                   MezuniyetYayinTurID = mezuniyetBasvurulariYayin.MezuniyetYayinTurID,
@@ -736,7 +741,10 @@ namespace LisansUstuBasvuruSistemi.Business
                                   YayinYerBilgisiIstensin = mezuniyetSureciYayinTur.YayinYerBilgisiIstensin,
                                   YerBilgisi = mezuniyetBasvurulariYayin.YerBilgisi,
                                   YayinEtkinlikAdiIstensin = mezuniyetSureciYayinTur.YayinEtkinlikAdiIstensin,
-                                  EtkinlikAdi = mezuniyetBasvurulariYayin.EtkinlikAdi
+                                  EtkinlikAdi = mezuniyetBasvurulariYayin.EtkinlikAdi,
+                                  //IslemYapanID = mezuniyetBasvurulariYayin.IslemYapanID,
+                                  //IslemYapan = kullanici.Ad + " " + kullanici.Soyad,
+                                  //IslemTarihi = mezuniyetBasvurulariYayin.IslemTarihi
 
 
                               });
@@ -1080,6 +1088,66 @@ namespace LisansUstuBasvuruSistemi.Business
                 var ots = kriter.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == ogrenimTipKod).ToList();
                 return ots;
             }
+        }
+
+
+        public static List<string> YayinKontrol(int mezuniyetSurecId, int kullaniciId, int mezuniyetBasvurulariId)
+        {
+            var mmMessage = new List<string>();
+            using (var entities = new LubsDbEntities())
+            {
+                var kriter = GetMezuniyetAktifYonetmelik(mezuniyetSurecId, kullaniciId, mezuniyetBasvurulariId);
+                var yturAds = entities.MezuniyetYayinTurleris.ToList();
+                var kul = entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+                var kriterDetay = (from s in kriter.MezuniyetSureciYonetmelikleriOTs
+                        .Where(p => p.OgrenimTipKod == kul.OgrenimTipKod).ToList()
+                                   join yta in yturAds on s.MezuniyetYayinTurID equals yta.MezuniyetYayinTurID
+                                   group new
+                                   {
+                                       s.MezuniyetYayinTurID,
+                                       yta.MezuniyetYayinTurAdi,
+                                       s.OgrenimTipKod,
+                                       s.IsGecerli,
+                                       s.IsZorunlu,
+                                       s.GrupKodu
+                                   } by new { s.IsZorunlu, IsGrup = s.GrupKodu.IsNullOrWhiteSpace() == false, s.GrupKodu }
+                    into g1
+                                   select new
+                                   {
+                                       g1.Key.IsGrup,
+                                       g1.Key.GrupKodu,
+                                       g1.Key.IsZorunlu,
+                                       data = g1.ToList()
+                                   }).ToList();
+                if (kriterDetay.Any(p => p.IsZorunlu) == false)
+                {
+                    mmMessage.Add("Bu mezuniyet başvurusu için herhangi bir yayın bilgisi istenmemektedir.");
+                }
+                else
+                {
+                    var mezuniyetBasvurusu = entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var basvuruEklenenYayinlariTurIds = mezuniyetBasvurusu.MezuniyetBasvurulariYayins.Select(s => s.MezuniyetYayinTurID).ToList();
+                    foreach (var item in kriterDetay.Where(p => p.IsZorunlu))
+                    {
+
+                        if (item.IsGrup)
+                        {
+                            var eklenmesiGerekenYayinTurGrubu = item.data.Select(s => new { s.MezuniyetYayinTurID, s.MezuniyetYayinTurAdi }).ToList();
+
+                            if (!eklenmesiGerekenYayinTurGrubu.Any(a => basvuruEklenenYayinlariTurIds.Contains(a.MezuniyetYayinTurID)))
+                                mmMessage.Add(string.Join(", ", eklenmesiGerekenYayinTurGrubu.Select(s => s.MezuniyetYayinTurAdi)) + " Yayın Türlerinden biri.");
+
+                        }
+                    }
+
+                    if (mmMessage.Any())
+                    {
+                        mmMessage.Insert(0, "Başvuru onaylanmadan önce aşağıdaki yayın bilgileri eklenmelidir.");
+                    }
+                }
+            }
+
+            return mmMessage;
         }
         public static MmMessage YayinKontrol(KmMezuniyetBasvuru kModel)
         {
@@ -1805,6 +1873,12 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MmMessage SendMailMezuniyetSinavSonucu(int srTalepId, int mezuniyetSinavDurumId)
         {
             return MailSenderMezuniyet.SendMailMezuniyetSinavSonucu(srTalepId, mezuniyetSinavDurumId);
+        }
+
+        // tez kontrol yetkilis mail şablonu tekrar düzenlenecek
+        public static MmMessage SendMailMezuniyetTezKontrolYetkilisi(int mezuniyetBasvurulariId)
+        {
+            return MailSenderMezuniyet.SendMailMezuniyetTezKontrolYetkilisi(mezuniyetBasvurulariId);
         }
         public static MmMessage SendMailMezuniyetTezSablonKontrol(int mezuniyetBasvurulariTezDosyaId, int sablonTipId, string aciklama = "")
         {

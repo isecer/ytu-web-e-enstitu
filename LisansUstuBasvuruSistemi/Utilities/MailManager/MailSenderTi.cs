@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-               using (var entities = new LubsDbEntities())
+                using (var entities = new LubsDbEntities())
                 {
 
                     var tiAraRapor = new TIBasvuruAraRapor();
@@ -81,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             AdSoyad = item.AdSoyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, KullaniciId = (item.JuriTipAdi == "TezDanismani" ? tiAraRapor.TezDanismanID : null), ToOrBcc = true } },
                             MailSablonTipId = MailSablonTipiEnum.TiToplantiBilgiKomite,
-                            JuriTipAdi = item.JuriTipAdi 
+                            JuriTipAdi = item.JuriTipAdi
                         }));
                     }
 
@@ -103,7 +103,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId);
 
-                        if (item.Sablon == null) continue; 
+                        if (item.Sablon == null) continue;
 
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
                         item.SablonEkleri.Add(new MailSablonlariEkleri { EkAdi = ogrenci.Ad + " " + ogrenci.Soyad + " " + tiAraRapor.AraRaporSayisi + ". Tez İzleme Çalışma Raporu Dosyası", EkDosyaYolu = tiAraRapor.TICalismaRaporDosyaYolu });
@@ -135,8 +135,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "YokDrBursiyeriBilgi", Value = tiAraRapor.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + tiAraRapor.YokDrOncelikliAlan + ")" : "Yok" });
                         if (item.SablonParametreleri.Any(a => a == "@DonemAdi"))
                         {
-                            var donemBilgi = tiAraRapor.RaporTarihi.ToAkademikDonemBilgi();
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = donemBilgi.DonemAdiLong });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = tiAraRapor.DonemBaslangicYil + " - " + tiAraRapor.DonemBaslangicYil + 1 + " " + tiAraRapor.Donemler.DonemAdi });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@OncekiMailTarihi"))
                         {
@@ -208,7 +207,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
 
                         snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
-                        if (!snded) continue; 
+                        if (!snded) continue;
 
                         if (!item.AdSoyad.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.AdSoyad + ")";
                         if (!item.JuriTipAdi.IsNullOrWhiteSpace()) contentDetailDto.Title += " (" + item.JuriTipAdi + ")";
@@ -228,7 +227,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris,
                             GonderilenMailEkleris = item.GetGonderilenMailEkleris
                         };
-                        entities.GonderilenMaillers.Add(kModel); 
+                        entities.GonderilenMaillers.Add(kModel);
                     }
 
                     if (snded)
@@ -259,7 +258,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-                using (var  entities = new LubsDbEntities())
+                using (var entities = new LubsDbEntities())
                 {
                     var tiAraRapor = entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
                     var juriler = tiAraRapor.TIBasvuruAraRaporKomites.Where(p => (isLinkOrSonuc ? p.JuriTipAdi != "TezDanismani" : p.JuriTipAdi == "TezDanismani") && p.UniqueID == (uniqueId ?? p.UniqueID)).ToList();
@@ -318,7 +317,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.Attachments.AddRange(ekler);
                         }
 
-                        item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);  
+                        item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
                         item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.CustomSplit();
                         item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
 
@@ -346,8 +345,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "YokDrBursiyeriBilgi", Value = tiAraRapor.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + tiAraRapor.YokDrOncelikliAlan + ")" : "Yok" });
                         if (item.SablonParametreleri.Any(a => a == "@DonemAdi"))
                         {
-                            var donemBilgi = tiAraRapor.RaporTarihi.ToAkademikDonemBilgi();
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = donemBilgi.DonemAdiLong });
+
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DonemAdi", Value = tiAraRapor.DonemBaslangicYil + " - " + tiAraRapor.DonemBaslangicYil + 1 + " " + tiAraRapor.Donemler.DonemAdi });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {

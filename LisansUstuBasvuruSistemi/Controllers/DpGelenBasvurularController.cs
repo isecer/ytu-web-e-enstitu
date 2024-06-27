@@ -335,7 +335,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                             donemProjesiBasvuru.EYKYaHazirlandiIslemTarihi <= bitisTarihi
                                                            :
                                                              donemProjesiBasvuru.EYKDaOnaylandi == true &&
-                                                             !donemProjesiBasvuru.EYKYaHazirlandi == true &&
+                                                             donemProjesiBasvuru.EYKYaHazirlandi == true &&
                                                              donemProjesiBasvuru.EYKTarihi >= baslangicTarihi &&
                                                              donemProjesiBasvuru.EYKTarihi <= bitisTarihi)
                                select new DpTutanakDto

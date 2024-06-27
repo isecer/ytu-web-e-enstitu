@@ -44,6 +44,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool YayinYerBilgisiIstensin { get; set; }
 
         public string ProjeTurAdi { get; set; }
+        public string IslemYapan { get; set; } 
+
 
         public List<MezuniyetYayinIndexTurleri> YayinIndexTurleri { get; set; }
 

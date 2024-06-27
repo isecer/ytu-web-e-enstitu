@@ -6,6 +6,7 @@ using LisansUstuBasvuruSistemi.Business;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -25,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         public ActionResult Index(List<string> ayarAdi, List<string> ayarDegeri, List<string> panelToggled, string ekd)
-        {
+        { 
             string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var qSistemAyarAdi = ayarAdi.Select((s, index) => new { inx = index, s }).ToList();
             var qSistemAyarDegeri = ayarDegeri.Select((s, index) => new { inx = index, s }).ToList();

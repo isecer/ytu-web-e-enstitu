@@ -1,4 +1,6 @@
 ﻿using Entities.Entities;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
@@ -24,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string TiSinavPuanGirisKontroluYapilsin = "Sınav puan giriş kontrolü yapılsın";
         public const string TiAraRaporSinaviOnlineYapilabilsin = "Tez izleme ara rapor sınavı online yapılabilsin";
         public const string TiAraRaporSinaviYuzYuzeYapilabilsin = "Tez izleme ara rapor sınavı yüz yüze yapılabilsin";
+        public const string TiAraRaporBaharDonemiAylari = "Ara Rapor başvurusunda Dönem seçimi için belirlenen aylar Bahar dönemi kabul edilecek";
 
         public static void SetAyarTi(string ayarAdi, string ayarDegeri, string enstituKod)
         {
@@ -50,6 +53,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
                 var qq = entities.TIAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
                 return qq != null ? qq.AyarDegeri : varsayilanDeger;
             }
+        }
+        public static List<int> GetBaharDonemiIcinSecilenAyNos(string enstituKod)
+        {
+            var ayNoStr = TiAraRaporBaharDonemiAylari.GetAyarDp(enstituKod);
+            if (ayNoStr.IsNullOrWhiteSpace())
+                return new List<int>();
+            return ayNoStr.Split(',').Select(s => s.Trim().ToInt().Value).ToList();
         }
 
 

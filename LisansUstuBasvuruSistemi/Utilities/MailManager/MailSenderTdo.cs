@@ -170,7 +170,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "YeniDanismanAdSoyad", Value = tdoBasvuruDanisman.TDAdSoyad });
 
                         if (item.SablonParametreleri.Any(a => a == "@TezDili"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce" });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = tdoBasvuruDanisman.IsYeniTezDiliTr ?? tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce" });
 
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "TezBaslikTr", Value = tdoBasvuruDanisman.TezBaslikTr });
@@ -406,7 +406,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@YeniTezBaslikEn"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "YeniTezBaslikEn", Value = tdoBasvuruDanisman.YeniTezBaslikEn });
                         if (item.SablonParametreleri.Any(a => a == "@TezDili"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsYeniTezDiliTr ?? tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
 
                         if (tdoBasvuruDanisman.EYKDaOnaylandi == true && item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
                         {
@@ -436,7 +436,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 Key = "Link",
                                 Value = $"{enstitu.SistemErisimAdresi}/{(isOgrenci ? "TDOBasvurular" : "TDOGelenBasvurular")}/Index?TDOBasvuruID={tdoBasvuruDanisman.TDOBasvuruID}",
                                 IsLink = true
-                            }); 
+                            });
                         }
 
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
@@ -626,7 +626,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@YeniTezBaslikEn"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "YeniTezBaslikEn", Value = tdoBasvuruDanisman.YeniTezBaslikEn });
                         if (item.SablonParametreleri.Any(a => a == "@TezDili"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsYeniTezDiliTr ?? tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
 
                         if (tdoBasvuruDanisman.EYKDaOnaylandi == true && item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
                         {
@@ -816,7 +816,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikEn"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "TezBaslikEn", Value = tdoBasvuruDanisman.TezBaslikEn });
                         if (item.SablonParametreleri.Any(a => a == "@TezDili"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsYeniTezDiliTr ?? tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {
                             var isOgrenci = item.JuriTipAdi == "Öğrenci";
@@ -1022,7 +1022,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikEn"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "TezBaslikEn", Value = tdoBasvuruDanisman.TezBaslikEn });
                         if (item.SablonParametreleri.Any(a => a == "@TezDili"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "TezDili", Value = (tdoBasvuruDanisman.IsYeniTezDiliTr ?? tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce") });
 
                         if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
                         {

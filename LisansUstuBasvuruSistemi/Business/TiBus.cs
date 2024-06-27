@@ -393,7 +393,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var cmbDonems = CmbTiDonemListe(enstituKod);
             if (!cmbDonems.Any())
             {
-                var donem = DateTime.Now.ToTiAraRaporDonemBilgi();
+                var donem = DateTime.Now.ToTiAraRaporDonemBilgi(enstituKod);
                 cmbDonems.Add(new CmbStringDto()
                 {
                     Value = donem.BaslangicYil + "" + donem.DonemId,

@@ -222,7 +222,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace())
             {
                 model.AdSoyad = model.AdSoyad.Trim();
-                q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo.Contains(model.AdSoyad) || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad));
+                q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo.Contains(model.AdSoyad) || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad) || p.ProgramAdi.Contains(model.AdSoyad) || p.AnabilimdaliAdi.Contains(model.AdSoyad));
             }
             if (model.UyrukKod.HasValue) q = q.Where(p => p.UyrukKod == model.UyrukKod);
             var isFiltered = !Equals(q, q2);
@@ -330,8 +330,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage();
 
+            var yayin = _entities.MezuniyetBasvurulariYayins.First(p => p.MezuniyetBasvurulariYayinID == id);
 
-            if (onaylandi.HasValue)
+
+            if (yayin.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID >= MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+            {
+                mmMessage.Messages.Add("Baivuru durumu Enstitü Tarafından Kabul Edildi olan başvurular için Yayın Onay işlemleri yapılamaz. İşlem yapılabilmesi için Başvuru durumu Taslak ya da Öğrenci Başvurusunu Onayladı durumunda olmalıdır.");
+            }
+
+            if (!mmMessage.Messages.Any() && onaylandi.HasValue)
             {
                 if (danismanIsmiVar.HasValue == false)
                 {
@@ -346,7 +353,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (mmMessage.Messages.Count == 0)
             {
-                var yayin = _entities.MezuniyetBasvurulariYayins.First(p => p.MezuniyetBasvurulariYayinID == id);
                 yayin.DanismanIsmiVar = danismanIsmiVar;
                 yayin.TezIcerikUyumuVar = tezIcerikUyumuVar;
                 yayin.Onaylandi = onaylandi;
@@ -562,6 +568,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MezuniyetBus.SendMailBasvuruDanismanOnay(mBasvur.MezuniyetBasvurulariID);
                     }
 
+
+                    // yayın kontrolü için eklenmişti düzeltme yapılacak
+                    //sendMail = sendMail && !mBasvur.TezKontrolKullaniciID.HasValue && mBasvur.IsDanismanOnay == true;
+                    //if (sendMail)
+                    //{
+                    //    MezuniyetBus.TezDosyasiKontrolYetkilisiAta(mBasvur.MezuniyetBasvurulariID);
+                    //    mBasvur = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
+                    //    if (mBasvur.TezKontrolKullaniciID.HasValue)
+                    //    {
+                    //        MezuniyetBus.SendMailMezuniyetTezKontrolYetkilisi(mBasvur.MezuniyetBasvurulariID);
+                    //    }
+                    //}
 
 
                 }
@@ -856,7 +874,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (mmMessage.Messages.Count == 0)
             {
                 try
-                { 
+                {
 
                     if (kModel.IsOnaylandiOrDuzeltme.HasValue) talep.Aciklama = kModel.Aciklama.IsNullOrWhiteSpace() ? null : kModel.Aciklama.Trim();
                     else talep.Aciklama = null;
@@ -888,7 +906,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Tez dosyası kontrolü durum bilgisi kayıt edilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
                     SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
                 }
-            } 
+            }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var strView = mmMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage) : "";
             return new

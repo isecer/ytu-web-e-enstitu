@@ -13,14 +13,49 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                                         new HttpRequest(null, "http://www.lisansustu.yildiz.edu.tr", null),
                                         new HttpResponse(null));
             var context = new HttpContextWrapper(HttpContext.Current) as HttpContextBase;
+
+            return RenderPartialView(context, controllerName, partialView, model);
+            //var routes = new System.Web.Routing.RouteData();
+            //routes.Values.Add("controller", controllerName);
+            //var requestContext = new System.Web.Routing.RequestContext(context, routes);
+            //var requiredString = requestContext.RouteData.GetRequiredString("controller");
+            //var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
+            //var controller = controllerFactory.CreateController(requestContext, requiredString) as ControllerBase;
+            //controller.ControllerContext = new ControllerContext(context, routes, controller);
+
+
+            //using (var sw = new StringWriter())
+            //{
+            //    var viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, partialView);
+            //    var viewContext = new ViewContext(controller.ControllerContext,
+            //        viewResult.View,
+            //        new ViewDataDictionary() { Model = model },
+            //        new TempDataDictionary(),
+            //        sw);
+            //    viewResult.View.Render(viewContext, sw);
+            //    return sw.GetStringBuilder().ToString();
+            //}
+
+        }
+        private static string RenderPartialView(HttpContextBase context, string controllerName, string partialView, object model)
+        {
             var routes = new System.Web.Routing.RouteData();
             routes.Values.Add("controller", controllerName);
+
+            // İstekten gelen RouteData'ları al
+            foreach (var routeData in context.Request.RequestContext.RouteData.Values)
+            {
+                if (!routes.Values.ContainsKey(routeData.Key))
+                {
+                    routes.Values.Add(routeData.Key, routeData.Value);
+                }
+            }
+
             var requestContext = new System.Web.Routing.RequestContext(context, routes);
             var requiredString = requestContext.RouteData.GetRequiredString("controller");
             var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
             var controller = controllerFactory.CreateController(requestContext, requiredString) as ControllerBase;
             controller.ControllerContext = new ControllerContext(context, routes, controller);
-
 
             using (var sw = new StringWriter())
             {
@@ -33,7 +68,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 viewResult.View.Render(viewContext, sw);
                 return sw.GetStringBuilder().ToString();
             }
-
         }
         public static IHtmlString ToRenderPartialViewHtml(this object model, string controllerName, string partialView)
         {

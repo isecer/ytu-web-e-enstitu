@@ -34,11 +34,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         {
             return IsSaveFileServer ? FileServerUrl + contentPath : urlHelper.Content(contentPath);
         }
-        public static string ContentFullPath(this string contentPath)
+        public static string FileBaseFullPath(this string contentPath)
         {
-            return IsSaveFileServer ? FileServerUrl + contentPath : HttpContext.Current.Server.MapPath("~" + contentPath);
+            if (contentPath.Contains("/")) contentPath = contentPath.Replace("/", "\\");
+            return IsSaveFileServer ? FileServerBasePath + contentPath : HttpContext.Current.Server.MapPath("~" + contentPath);
         }
-
         private static void Save(HttpPostedFileBase file, string saveFilePath)
         {
             if (IsSaveFileServer) SaveFileBasePath(file, saveFilePath);
@@ -173,6 +173,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             if (IsSaveFileServer) DeleteFileBasePath(filePath);
             else DeleteFile(filePath);
         }
+
         public static void DeleteFiles(List<string> filePaths)
         {
             if (filePaths == null) return;
