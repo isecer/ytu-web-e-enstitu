@@ -132,6 +132,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                                     EYKDaOnaylandiIslemYapanID = s.EYKDaOnaylandiIslemYapanID,
                                                     EYKDaOnaylandiOnayTarihi = s.EYKDaOnaylandiOnayTarihi,
                                                     EYKDaOnaylanmadiDurumAciklamasi = s.EYKDaOnaylanmadiDurumAciklamasi,
+                                                    Gerekce = s.Gerekce,
                                                     IslemTarihi = s.IslemTarihi,
                                                     IslemYapanID = s.IslemYapanID,
                                                     IslemYapanIP = s.IslemYapanIP,

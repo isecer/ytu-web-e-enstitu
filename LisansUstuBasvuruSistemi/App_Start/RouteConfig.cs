@@ -1,5 +1,4 @@
-﻿using LisansUstuBasvuruSistemi.App_Start;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace LisansUstuBasvuruSistemi
@@ -13,24 +12,23 @@ namespace LisansUstuBasvuruSistemi
             routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
-                name: "DosyaArsivi",
-                url: "dosyaarsivi/{*filePath}",
+                name: "file",
+                url: "file/index",
                 defaults: new { controller = "File", action = "Index", filePath = UrlParameter.Optional }
             );
-
+           
             routes.MapRoute(
                 name: "Default",
                 url: "{EKD}/{controller}/{action}/{id}",
                 defaults: new { EKD = "fbe", controller = "home", action = "index", id = UrlParameter.Optional },
                 constraints: new { EKD = new EnstituListConstraint() }
             );
-
+          
             routes.MapRoute(
                 name: "NotFound",
                 url: "{EKD}/{controller}/{action}/{id}",
-                defaults: new
-                { EKD = "fbe", controller = "AppEvent", action = "PageNotFound", id = UrlParameter.Optional }
-            );// 404s
+                defaults: new { EKD = "fbe", controller = "AppEvent", action = "PageNotFound", id = UrlParameter.Optional }
+            );
 
             routes.MapRoute(
                 name: "Error",

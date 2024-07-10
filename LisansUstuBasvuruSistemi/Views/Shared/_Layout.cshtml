@@ -625,11 +625,11 @@
                                         <div class="registration-footer">
                                             <div class="registration-title"><strong>Şifremi Unuttum</strong>?</div>
                                             @*<div class="pull-left">
-                                                        © @DateTime.Now.Year Enstitü Online Başvuru Sistemi
-                                                    </div>
-                                                    <div class="pull-right">
-                                                       <a href="javascript:void(0);">Contact Us</a>
-                                                </div>*@
+                                                    © @DateTime.Now.Year Enstitü Online Başvuru Sistemi
+                                                </div>
+                                                <div class="pull-right">
+                                                   <a href="javascript:void(0);">Contact Us</a>
+                                            </div>*@
                                         </div>
                                         <div class="registration-body">
                                             <div class="registration-subtitle">Şifrenizi unuttuysanız aşağıdaki mail giriş alanına sisteme kayıt olduğunuz mail adresinizi giriniz ve enter tuşuna basınız. Bu işlemi yaptığınız zaman sistem mail adresinize şifrenizi sıfırlama linki gönderecektir!</div>
@@ -851,7 +851,110 @@
 
             <!-- END PAGE CONTENT -->
         </div>
-         
+        <!-- default with sound -->
+        <div class="message-box animated fadeIn" data-sound="alert" id="message-box-sound-1">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-globe"></span>Alert</div>
+                    <div class="mb-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at tellus sed mauris mollis pellentesque nec a ligula. Quisque ultricies eleifend lacinia. Nunc luctus quam pretium massa semper tincidunt. Praesent vel mollis eros. Fusce erat arcu, feugiat ac dignissim ac, aliquam sed urna. Maecenas scelerisque molestie justo, ut tempor nunc.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <button class="btn btn-info btn-lg pull-right mb-control-close">Got it!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end default with sound -->
+        <!-- danger with sound -->
+        <div class="message-box message-box-danger animated fadeIn" data-sound="fail" id="message-box-sound-2">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-times"></span>DANGER!</div>
+                    <div class="mb-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at tellus sed mauris mollis pellentesque nec a ligula. Quisque ultricies eleifend lacinia. Nunc luctus quam pretium massa semper tincidunt. Praesent vel mollis eros. Fusce erat arcu, feugiat ac dignissim ac, aliquam sed urna. Maecenas scelerisque molestie justo, ut tempor nunc.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <button class="btn btn-default btn-lg pull-right mb-control-close">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end danger with sound -->
+        <!-- success -->
+        <div class="message-box message-box-success animated fadeIn" id="message-box-success">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-check"></span>Success</div>
+                    <div class="mb-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at tellus sed mauris mollis pellentesque nec a ligula. Quisque ultricies eleifend lacinia. Nunc luctus quam pretium massa semper tincidunt. Praesent vel mollis eros. Fusce erat arcu, feugiat ac dignissim ac, aliquam sed urna. Maecenas scelerisque molestie justo, ut tempor nunc.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <button class="btn btn-default btn-lg pull-right mb-control-close">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end success -->
+        <!-- warning -->
+        <div class="message-box message-box-warning animated fadeIn" id="message-box-warning">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-warning"></span>Warning</div>
+                    <div class="mb-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at tellus sed mauris mollis pellentesque nec a ligula. Quisque ultricies eleifend lacinia. Nunc luctus quam pretium massa semper tincidunt. Praesent vel mollis eros. Fusce erat arcu, feugiat ac dignissim ac, aliquam sed urna. Maecenas scelerisque molestie justo, ut tempor nunc.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <button class="btn btn-default btn-lg pull-right mb-control-close">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end danger -->
+        <!-- info -->
+        <div class="message-box message-box-info animated fadeIn" id="message-box-info">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-info"></span>Information</div>
+                    <div class="mb-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at tellus sed mauris mollis pellentesque nec a ligula. Quisque ultricies eleifend lacinia. Nunc luctus quam pretium massa semper tincidunt. Praesent vel mollis eros. Fusce erat arcu, feugiat ac dignissim ac, aliquam sed urna. Maecenas scelerisque molestie justo, ut tempor nunc.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <button class="btn btn-default btn-lg pull-right mb-control-close">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end info -->
+        <!-- danger -->
+        <div class="message-box message-box-danger animated fadeIn" id="message-box-danger">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-times"></span>Danger</div>
+                    <div class="mb-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at tellus sed mauris mollis pellentesque nec a ligula. Quisque ultricies eleifend lacinia. Nunc luctus quam pretium massa semper tincidunt. Praesent vel mollis eros. Fusce erat arcu, feugiat ac dignissim ac, aliquam sed urna. Maecenas scelerisque molestie justo, ut tempor nunc.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <button class="btn btn-default btn-lg pull-right mb-control-close">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end danger -->
+        <!-- default -->
+        <div class="message-box animated fadeIn" id="message-box-default_MSET">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-globe"></span>Some <strong>Title</strong></div>
+                    <div class="mb-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at tellus sed mauris mollis pellentesque nec a ligula. Quisque ultricies eleifend lacinia. Nunc luctus quam pretium massa semper tincidunt. Praesent vel mollis eros. Fusce erat arcu, feugiat ac dignissim ac, aliquam sed urna. Maecenas scelerisque molestie justo, ut tempor nunc.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <button class="btn btn-default btn-lg pull-right mb-control-close">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="MsgsB" style="display: none;">
         </div>
     </div>

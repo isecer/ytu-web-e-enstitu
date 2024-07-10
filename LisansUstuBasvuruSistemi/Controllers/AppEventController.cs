@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -8,17 +9,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
     {
         //
         // GET: /PageNotFound/
-        public ActionResult PageNotFound(string aspxerrorpath, int? errC=null)
+        public ActionResult PageNotFound(string url, int? errC = null)
         {
-            ViewBag.SayfaAdi = aspxerrorpath;
+            ViewBag.SayfaAdi = url;
             ViewBag.ErrC = errC;
             return View();
         }
 
-        public ActionResult Error(string url, int errC,Exception exception)
+        public ActionResult Error(string url, int errC, Exception exception, string exceptionMessage)
         {
             ViewBag.SayfaAdi = url;
             ViewBag.ErrC = errC;
+
+            if (!exceptionMessage.IsNullOrWhiteSpace()) exception = new Exception(exceptionMessage + "\r\n" + url);
             return View(exception);
         }
     }

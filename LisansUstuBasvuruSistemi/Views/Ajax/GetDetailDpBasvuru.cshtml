@@ -226,7 +226,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr class="RwDpDetay_@itemJr.DonemProjesiJuriID @(itemJr.DonemProjesiJuriOnayDurumID==DonemProjesiJuriOnayDurumEnum.Basarili  ? "" : "hide")">
-                                                    <td class="CaptionTd ctWidth" width="220">İntihal Raporu Pdf Dosyası</td>
+                                                    <td class="CaptionTd ctWidth" width="220">Benzerlik Raporu Pdf Dosyası</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td>
                                                         <table style="width:100%;">
@@ -463,7 +463,7 @@ else
                                                     if (!item.IntihalRaporuDosyaYolu.IsNullOrWhiteSpace())
                                                     {
                                                         <tr class="CaptionTd">
-                                                            <td class="CaptionTd">İntihal Raporu Pdf Dosyası</td>
+                                                            <td class="CaptionTd">Benzerlik Raporu Pdf Dosyası</td>
                                                             <td class="CaptionTd" width="10">:</td>
                                                             <td class="ValueTd">
                                                                 <a href="javascript:void(0);" onclick="PopupCenter('@Url.CustomUrlContent(item.IntihalRaporuDosyaYolu)','@item.IntihalRaporuDosyaAdi',800,600);"><i class="fa fa-file-pdf-o" style="color:green;font-size:11pt;"></i> @item.IntihalRaporuDosyaAdi</a>
@@ -862,7 +862,7 @@ else
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr class="RwDpDetay_@itemJr.DonemProjesiJuriID @(itemJr.DonemProjesiJuriOnayDurumID==DonemProjesiJuriOnayDurumEnum.Basarili  ? "" : "hide")">
-                                                                                            <td class="CaptionTd ctWidth" width="220">İntihal Raporu Pdf Dosyası</td>
+                                                                                            <td class="CaptionTd ctWidth" width="220">Benzerlik Raporu Pdf Dosyası</td>
                                                                                             <td class="CaptionTd" width="10">:</td>
                                                                                             <td>
                                                                                                 <table style="width:100%;">
@@ -1024,7 +1024,7 @@ else
                                                         </div>
                                                     }
 
-                                                    if (item.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci)
+                                                    if (item.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci && item.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili)
                                                     {
 
                                                         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">

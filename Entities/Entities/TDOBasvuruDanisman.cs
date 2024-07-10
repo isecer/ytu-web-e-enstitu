@@ -73,6 +73,7 @@ namespace Entities.Entities
         public Nullable<int> EYKDaOnaylandiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKDaOnaylandiOnayTarihi { get; set; }
         public string EYKDaOnaylanmadiDurumAciklamasi { get; set; }
+        public string Gerekce { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

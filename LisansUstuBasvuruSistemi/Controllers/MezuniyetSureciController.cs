@@ -275,11 +275,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (item.TekKaynakOraniKriteri.HasValue && (item.TekKaynakOraniKriteri <= 0 || item.TekKaynakOraniKriteri > 100))
                     {
-                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Tek Kaynak İntihal Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Tek Kaynak Benzerlik Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
                     }
                     if (item.ToplamKaynakOraniKriteri.HasValue && (item.ToplamKaynakOraniKriteri <= 0 || item.ToplamKaynakOraniKriteri > 100))
                     {
-                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Topla İntihal Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Topla Benzerlik Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
                     }
                     if (!item.SinavUzatmaOgrenciTaahhutMaxGun.HasValue || item.SinavUzatmaOgrenciTaahhutMaxGun <= 0)
                     {

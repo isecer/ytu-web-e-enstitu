@@ -5,6 +5,7 @@ using System.Web;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
@@ -13,10 +14,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
     {
         public static IHtmlString GetMenuIHtml(HttpRequestBase request)
         {
+            var urlInfo = request.Url.ToUrlInfo();
             var root = GlobalSistemSetting.GetRoot();
             var absolutePath = request.Url.AbsolutePath.TrimStart('/'); // Başındaki / işaretini kaldırır 
-            var enstituKisaAdi = absolutePath.IndexOf('/') >= 0 ? absolutePath.Substring(0, absolutePath.IndexOf('/')).ToLower() : "fbe";
-            var enstituKod = EnstituBus.GetSelectedEnstitu(enstituKisaAdi); 
+            var enstituKisaAdi = urlInfo.EnstituKisaAd.ToLower();
+            var enstituKod = EnstituBus.GetSelectedEnstitu(urlInfo.EnstituKisaAd); 
             root += (EnstituBus.IsContainsEnstitu(enstituKisaAdi) ? enstituKisaAdi : "fbe") + "/";
              
 

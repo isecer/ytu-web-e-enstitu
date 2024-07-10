@@ -778,6 +778,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var danisman = _entities.Kullanicilars.First(f => f.KullaniciID == tdoBd.TezDanismanID);
                     model.TezDanismanID = tdoBd.TezDanismanID;
                     model.TDAdSoyad = danisman.Ad + " " + danisman.Soyad;
+
+                    model.Gerekce = tdoBd.Gerekce;
                 }
 
                 model.SListSinav = new SelectList(SinavTipleriBus.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
@@ -897,6 +899,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
+                if (kModel.Gerekce.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Gerekçe giriniz.");
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.Gerekce.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "Gerekce" });
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
                 var danisman = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.TezDanismanID);
 
                 kModel.BasvuruTarihi = DateTime.Now;
@@ -973,6 +983,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.TDAnabilimDaliAdi = kModel.TDAnabilimDaliAdi;
                     tdoBasvuruDanis.TDProgramKod = kModel.TDProgramKod;
                     tdoBasvuruDanis.TDProgramAdi = kModel.TDProgramAdi;
+                    tdoBasvuruDanis.Gerekce = kModel.Gerekce;
                     tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi;
                     tdoBasvuruDanis.IslemYapanID = kModel.IslemYapanID;
                     tdoBasvuruDanis.IslemYapanIP = kModel.IslemYapanIP;
@@ -1053,6 +1064,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.TezBaslikTr = tdoBd.TezBaslikTr;
                 model.TezBaslikEn = tdoBd.TezBaslikEn;
                 model.IsYeniTezDiliTr = tdoBd.IsYeniTezDiliTr;
+                model.Gerekce = tdoBd.Gerekce;
                 if (!isNew)
                 {
                     model.TDOBasvuruDanismanID = tdoBd.TDOBasvuruDanismanID;
@@ -1202,6 +1214,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (!mMessage.Messages.Any())
             {
+                if (kModel.Gerekce.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Gerekçe giriniz.");
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.Gerekce.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "Gerekce" });
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
                 kModel.TDODanismanTalepTipID = TdoDanismanTalepTipEnum.TezBasligiDegisikligi;
                 kModel.TezDanismanID = oncekiBasvuru.TezDanismanID;
                 kModel.IsTezDiliTr = isOncekiTezDiliTr;
@@ -1283,9 +1303,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.TDAnabilimDaliAdi = kModel.TDAnabilimDaliAdi;
                     tdoBasvuruDanis.TDProgramKod = kModel.TDProgramKod;
                     tdoBasvuruDanis.TDProgramAdi = kModel.TDProgramAdi;
+                    tdoBasvuruDanis.Gerekce = kModel.Gerekce;
                     tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi;
                     tdoBasvuruDanis.IslemYapanID = kModel.IslemYapanID;
                     tdoBasvuruDanis.IslemYapanIP = kModel.IslemYapanIP;
+
                 }
                 else
                 {
@@ -1363,6 +1385,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
 
+                model.Gerekce = tdoBd.Gerekce;
 
                 model.SListTDoDanismanTalepTip = new SelectList(TdoBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
                 model.SListSinav = new SelectList(SinavTipleriBus.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
@@ -1572,7 +1595,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-
+            if (!mMessage.Messages.Any())
+            {
+                if (kModel.Gerekce.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Gerekçe giriniz.");
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.Gerekce.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "Gerekce" });
+                }
+            }
             if (!mMessage.Messages.Any())
             {
                 kModel.TDODanismanTalepTipID = TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
@@ -1666,6 +1696,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.TDAnabilimDaliAdi = kModel.TDAnabilimDaliAdi;
                     tdoBasvuruDanis.TDProgramKod = kModel.TDProgramKod;
                     tdoBasvuruDanis.TDProgramAdi = kModel.TDProgramAdi;
+                    tdoBasvuruDanis.Gerekce = kModel.Gerekce;
                     tdoBasvuruDanis.IslemTarihi = kModel.IslemTarihi;
                     tdoBasvuruDanis.IslemYapanID = kModel.IslemYapanID;
                     tdoBasvuruDanis.IslemYapanIP = kModel.IslemYapanIP;
@@ -2098,7 +2129,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (eykDaOnaylandi == false)
                 {
 
-                    if (tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi == null || eykDaOnaylanmadiDurumAciklamasi.Trim() != tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi.Trim()) sendMail = true; 
+                    if (tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi == null || eykDaOnaylanmadiDurumAciklamasi.Trim() != tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi.Trim()) sendMail = true;
                     tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
                 }
 

@@ -2541,6 +2541,7 @@
           <Property Name="EYKDaOnaylandiIslemYapanID" Type="int" />
           <Property Name="EYKDaOnaylandiOnayTarihi" Type="datetime" />
           <Property Name="EYKDaOnaylanmadiDurumAciklamasi" Type="nvarchar" MaxLength="512" />
+          <Property Name="Gerekce" Type="nvarchar" MaxLength="1024" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
@@ -13503,6 +13504,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="EYKDaOnaylandiIslemYapanID" Type="Int32" />
           <Property Name="EYKDaOnaylandiOnayTarihi" Type="DateTime" Precision="3" />
           <Property Name="EYKDaOnaylanmadiDurumAciklamasi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="Gerekce" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
@@ -20945,6 +20947,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="Gerekce" ColumnName="Gerekce" />
                 <ScalarProperty Name="EYKDaOnaylanmadiDurumAciklamasi" ColumnName="EYKDaOnaylanmadiDurumAciklamasi" />
                 <ScalarProperty Name="EYKDaOnaylandiOnayTarihi" ColumnName="EYKDaOnaylandiOnayTarihi" />
                 <ScalarProperty Name="EYKDaOnaylandiIslemYapanID" ColumnName="EYKDaOnaylandiIslemYapanID" />

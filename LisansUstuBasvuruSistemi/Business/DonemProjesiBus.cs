@@ -142,7 +142,12 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             var domeStr = string.Join(",", basvuruYapilabilecekDomemNos.Select(s => s + ". Dönem").ToList());
                             controlMessage.Add("Aktif okunan dönem " + domeStr + " dönemlerden biri olması gerekmektedir.");
-                        } 
+                        }
+
+                        if (donemProjesi.IsYeniBasvuruYapilabilir && donemProjesi.DonemProjesiBasvurus.Any(p => p.IsDanismanOnay != false && p.DonemProjesiEnstituOnayDurumID != DonemProjesiEnstituOnayDurumEnum.IptalEdildi && p.DonemProjesi.OgrenciNo == obsStudentInfo.OgrenciInfo.OGR_NO && p.OkuduguDonemNo == obsStudentInfo.OkuduguDonemNo))
+                        {
+                            controlMessage.Add("Aktif okuduğunuz " + obsStudentInfo.OkuduguDonemNo + ". döneminiz için zaten bir başvurunuz bulunmaktadır.");
+                        }
                         if (alimnasiGerekenDersKodlari.Any())
                         {
                             var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(enstituKod);
@@ -155,7 +160,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         }
 
-                        
+
                         if (controlMessage.Count > 0)
                         {
                             errorMessage.Add("Dönem Projesi başvurusu aşağıdaki sebeplerden dolayı başlatılamadı.");
@@ -512,7 +517,12 @@ namespace LisansUstuBasvuruSistemi.Business
                     entities.SaveChanges();
                     return;
                 }
-                donemProjesiBasvuru.DonemProjesi.IsYeniBasvuruYapilabilir = donemProjesiBasvuru.EYKYaGonderildi == false;
+                if (donemProjesiBasvuru.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarisiz || donemProjesiBasvuru.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.BasarisizKatilmadi)
+                {
+                    donemProjesiBasvuru.DonemProjesi.IsYeniBasvuruYapilabilir = true;
+
+                }
+                else donemProjesiBasvuru.DonemProjesi.IsYeniBasvuruYapilabilir = donemProjesiBasvuru.EYKYaGonderildi == false;
                 donemProjesiBasvuru.DonemProjesiDurumID = DonemProjesiDurumEnum.EnstituYonetimKuruluSureci;
                 entities.SaveChanges();
             }
@@ -544,8 +554,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var sonDonemProjesi = donemProjesi.DonemProjesiBasvurus.LastOrDefault();
                     donemProjesi.IsYeniBasvuruYapilabilir = sonDonemProjesi == null ||
-                                                            sonDonemProjesi.DonemProjesiEnstituOnayDurumlari
-                                                                .IsTekrarBasvuruYapabilir ||
+                                                            sonDonemProjesi.DonemProjesiEnstituOnayDurumlari.IsTekrarBasvuruYapabilir ||
                                                             sonDonemProjesi.EYKYaGonderildi == false ||
                                                             sonDonemProjesi.EYKDaOnaylandi == false;
                     entities.SaveChanges();

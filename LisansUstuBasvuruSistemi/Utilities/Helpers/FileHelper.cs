@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -14,6 +15,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public static string FileServerUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi.GetAyar();//"http://194.27.98.10:81";
         public static string FileServerBasePath = SistemAyar.DosyaArsiviFizikselKayitYolu.GetAyar();//"D:\\DocumentServer\\lisansustufiles.yildiz.edu.tr";
 
+        public const string LisansustuBasvuruDosyaYolu = "/DosyaArsivi/LisansustuBasvuru";
         public const string MesajDosyaYolu = "/DosyaArsivi/MesajEkleri";
         public const string MailDosyaYolu = "/DosyaArsivi/MailEkleri";
         public const string TaleplerDosyaYolu = "/DosyaArsivi/TalepDosyalari";
@@ -25,14 +27,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public const string MailSablonDosyaYolu = "/DosyaArsivi/MailSablonEkleri";
         public const string DuyuruDosyaYolu = "/DosyaArsivi/DuyuruEkleri";
 
-
-        public static string CustomUrlContentMail(this string path, string sistemErisimAdresi)
+        private static string CleanUrl(this string url)
         {
-            return IsSaveFileServer ? FileServerUrl + path : sistemErisimAdresi.Replace("/fbe", "").Replace("/sbe", "").Replace("/tet", "") + path;
+            // Nokta karakteri ve belirli özel karakterler için regex deseni
+            string pattern = @"[.*+?^${}()|[\]\\]";
+
+            // Temizlenmiş URL
+            string cleanedUrl = Regex.Replace(url, pattern, string.Empty);
+
+            return cleanedUrl;
+        }
+        public static string CustomUrlContentMail(this string contentPath, string sistemErisimAdresi)
+        {
+            //int lastIndex = contentPath.LastIndexOf('/');
+            //string dosyaAdiUzanti = contentPath.Substring(lastIndex + 1);
+            //string dosyaAdi = Path.GetFileNameWithoutExtension(dosyaAdiUzanti).CleanUrl();
+            //contentPath = contentPath.Substring(0, lastIndex + 1) + dosyaAdi;
+            return IsSaveFileServer ? FileServerUrl + contentPath : sistemErisimAdresi.Replace("/fbe", "").Replace("/sbe", "").Replace("/tet", "") + contentPath;
         }
         public static string CustomUrlContent(this UrlHelper urlHelper, string contentPath)
         {
-            var ekd = urlHelper.RequestContext.RouteData.Values["EKD"];
+            //int lastIndex = contentPath.LastIndexOf('/'); 
+            //string dosyaAdiUzanti = contentPath.Substring(lastIndex + 1); 
+            //string dosyaAdi = Path.GetFileNameWithoutExtension(dosyaAdiUzanti).CleanUrl();
+            //contentPath = contentPath.Substring(0, lastIndex + 1) + dosyaAdi;
             return IsSaveFileServer ? FileServerUrl + contentPath : urlHelper.Content(contentPath);
         }
         public static string FileBaseFullPath(this string contentPath)

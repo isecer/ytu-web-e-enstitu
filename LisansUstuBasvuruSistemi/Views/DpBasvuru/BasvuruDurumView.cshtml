@@ -25,6 +25,11 @@
     }
     else if (Model.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituOnaySureci)
     {
+
+
+
+
+
         if (!Model.DonemProjesiEnstituOnayDurumID.HasValue)
         {
             tabAdi = "Enstitü Başvuru Onay Süreci";
@@ -54,6 +59,7 @@
             durumDetayTitle = Model.EnstituOnayAciklama;
 
         }
+
     }
     else if (Model.DonemProjesiDurumID == DonemProjesiDurumEnum.YurutucuOnaySureci)
     {
@@ -109,59 +115,71 @@
     {
 
 
+        if (Model.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili)
+        {
+            if (!Model.EYKYaGonderildi.HasValue)
+            {
+                tabAdi = "EYK Mezuniyet İşlemleri Süreci";
+                durumAdi = "EYK'ya Gönderimi Bekleniyor";
+                durumIconClass = "fa fa-clock-o";
+                durumColor = "Green";
+                durumDetay = "Süreç devamı için enstitünün sınav sonucunu EYK'ya gönderimi bekleniyor.";
+            }
+            else if (Model.EYKYaGonderildi == true && !Model.EYKYaHazirlandi.HasValue)
+            {
+                tabAdi = "EYK Mezuniyet İşlemleri Süreci";
+                durumAdi = "EYK'ya Gönderimi Onaylandı";
+                durumIconClass = "fa fa-thumbs-o-up";
+                durumColor = "green";
+                durumDetay = "Süreç devamı için enstitünün sınav sonucunu Eyk'ya hazırlaması bekleniyor.";
+            }
+            else if (Model.EYKYaGonderildi == false)
+            {
 
-        if (!Model.EYKYaGonderildi.HasValue)
-        {
-            tabAdi = "EYK Mezuniyet İşlemleri Süreci";
-            durumAdi = "EYK'ya Gönderimi Bekleniyor";
-            durumIconClass = "fa fa-clock-o";
-            durumColor = "Green";
-            durumDetay = "Süreç devamı için enstitünün sınav sonucunu EYK'ya gönderimi bekleniyor.";
-        }
-        else if (Model.EYKYaGonderildi == true && !Model.EYKYaHazirlandi.HasValue)
-        {
-            tabAdi = "EYK Mezuniyet İşlemleri Süreci";
-            durumAdi = "EYK'ya Gönderimi Onaylandı";
-            durumIconClass = "fa fa-thumbs-o-up";
-            durumColor = "green";
-            durumDetay = "Süreç devamı için enstitünün sınav sonucunu Eyk'ya hazırlaması bekleniyor.";
-        }
-        else if (Model.EYKYaGonderildi == false)
-        {
+                tabAdi = "EYK Mezuniyet İşlemleri Süreci";
+                durumAdi = "EYK'ya Gönderimi Onaylanmadı";
+                durumIconClass = "fa fa-thumbs-o-down";
+                durumColor = "maroon";
+                durumDetay = "Süreç enstitü tarafından reddedildi.";
+                durumDetayTitle = Model.EYKYaGonderimDurumAciklamasi;
+            }
+            else if (Model.EYKYaHazirlandi == true && !Model.EYKDaOnaylandi.HasValue)
+            {
 
-            tabAdi = "EYK Mezuniyet İşlemleri Süreci";
-            durumAdi = "EYK'ya Gönderimi Onaylanmadı";
+                tabAdi = "EYK Mezuniyet İşlemleri Süreci";
+                durumAdi = "EYK'ya Hazırlandı";
+                durumIconClass = "fa fa-thumbs-o-up";
+                durumColor = "green";
+                durumDetay = "Sürecin tamamlanması için Enstitünün Eyk'da onay işlemi yapılması bekleniyor.";
+            }
+            else if (Model.EYKDaOnaylandi == true)
+            {
+
+                tabAdi = "EYK Mezuniyet İşlemleri Süreci";
+                durumAdi = "EYK'da Onaylandı";
+                durumIconClass = "fa fa-thumbs-o-up";
+                durumColor = "Green";
+                durumDetay = "Sınav sonucu: " + (Model.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") + " " + Model.DonemProjesiJuriOnayDurumAdi + " " + (Model.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili ? "(Mezun Oldu)" : "");
+                ;
+            }
+            else if (Model.EYKDaOnaylandi == false)
+            {
+                tabAdi = "EYK Mezuniyet İşlemleri Süreci";
+                durumAdi = "EYK'da Onaylanmadı";
+                durumIconClass = "fa fa-thumbs-o-down";
+                durumColor = "maroon";
+                durumDetay = "Sınav sonucu EYK'da onaylanmadı.";
+                durumDetayTitle = Model.EYKDaOnaylanmadiDurumAciklamasi;
+            }
+        }
+        else
+        {
+            var sinavSonucDurumStr = (Model.IsOyBirligiOrCoklugu == true ? "Oy birliği ile " : "Oy çokluğu ile ") + "Başarısız " + (Model.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.BasarisizKatilmadi ? " (Katılmadı)" : "");
+            tabAdi = "Jüri Değerlendirme Süreci";
+            durumColor = "Maroon";
             durumIconClass = "fa fa-thumbs-o-down";
-            durumColor = "maroon";
-            durumDetay = "Süreç enstitü tarafından reddedildi.";
-            durumDetayTitle = Model.EYKYaGonderimDurumAciklamasi;
-        }
-        else if (Model.EYKYaHazirlandi == true && !Model.EYKDaOnaylandi.HasValue)
-        {
-
-            tabAdi = "EYK Mezuniyet İşlemleri Süreci";
-            durumAdi = "EYK'ya Hazırlandı";
-            durumIconClass = "fa fa-thumbs-o-up";
-            durumColor = "green";
-            durumDetay = "Sürecin tamamlanması için Enstitünün Eyk'da onay işlemi yapılması bekleniyor.";
-        }
-        else if (Model.EYKDaOnaylandi == true)
-        {
-
-            tabAdi = "EYK Mezuniyet İşlemleri Süreci";
-            durumAdi = "EYK'da Onaylandı";
-            durumIconClass = "fa fa-thumbs-o-up";
-            durumColor = "Green";
-            durumDetay = "Sınav sonucu: "+(Model.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") + " " + Model.DonemProjesiJuriOnayDurumAdi + " " + (Model.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili ? "(Mezun Oldu)" : ""); ;
-        }
-        else if (Model.EYKDaOnaylandi == false)
-        {
-            tabAdi = "EYK Mezuniyet İşlemleri Süreci";
-            durumAdi = "EYK'da Onaylanmadı";
-            durumIconClass = "fa fa-thumbs-o-down";
-            durumColor = "maroon";
-            durumDetay = "Sınav sonucu EYK'da onaylanmadı.";
-            durumDetayTitle = Model.EYKDaOnaylanmadiDurumAciklamasi;
+            durumAdi = sinavSonucDurumStr;
+            durumDetay = "Değerlendirme işlemi tamamlandı! Sınav Sonucu: " + sinavSonucDurumStr;
         }
     }
 

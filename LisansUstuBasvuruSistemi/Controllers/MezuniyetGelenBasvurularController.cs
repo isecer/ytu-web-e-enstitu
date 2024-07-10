@@ -201,9 +201,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (model.MezuniyetSinavDurumID.HasValue)
             {
-                q = model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.SonucGirilmedi
-                    ? q.Where(p => !p.SrTalebi.MezuniyetSinavDurumID.HasValue || p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value)
-                    : q.Where(p => p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value);
+                if (model.MezuniyetSinavDurumID == -50)
+                {
+                    q = q.Where(p => p.SrTalebi != null && p.SrTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
+                }
+                else
+                {
+                    q = model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.SonucGirilmedi
+                        ? q.Where(p => !p.SrTalebi.MezuniyetSinavDurumID.HasValue || p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value)
+                        : q.Where(p => p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value);
+                }
+
             }
 
             if (model.TezKontrolKullaniciId.HasValue) q = q.Where(p => p.TezKontrolKullaniciID == model.TezKontrolKullaniciId);
@@ -448,17 +456,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (ogrenimTipKrt.TekKaynakOrani.HasValue)
                     {
                         if (!tekKaynakOrani.HasValue)
-                            mmMessage.Messages.Add("Tek Kaynak İntihal Oranı bilgisi giriniz.");
+                            mmMessage.Messages.Add("Tek Kaynak Benzerlik Oranı bilgisi giriniz.");
 
                         else if (tekKaynakOrani.Value > ogrenimTipKrt.TekKaynakOrani.Value || tekKaynakOrani.Value < 0)
-                            mmMessage.Messages.Add($"En fazla Tek Kaynak İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
+                            mmMessage.Messages.Add($"En fazla Tek Kaynak Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
                     }
                     if (!mmMessage.Messages.Any() && ogrenimTipKrt.ToplamKaynakOrani.HasValue)
                     {
                         if (!toplamKaynakOrani.HasValue)
-                            mmMessage.Messages.Add("Toplam İntihal Oranı bilgisi giriniz.");
+                            mmMessage.Messages.Add("Toplam Benzerlik Oranı bilgisi giriniz.");
                         else if (toplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || toplamKaynakOrani.Value < 0)
-                            mmMessage.Messages.Add($"Toplam İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
+                            mmMessage.Messages.Add($"Toplam Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
                     }
                 }
 
@@ -863,12 +871,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (sonTekKaynakOrani.HasValue)
                 {
                     if (sonTekKaynakOrani.Value > ogrenimTipKrt.TekKaynakOrani.Value || sonTekKaynakOrani.Value < 0)
-                        mmMessage.Messages.Add($"En fazla Tek Kaynak İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
+                        mmMessage.Messages.Add($"En fazla Tek Kaynak Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
                 }
                 if (!mmMessage.Messages.Any() && ogrenimTipKrt.ToplamKaynakOrani.HasValue)
                 {
                     if (sonToplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || sonToplamKaynakOrani.Value < 0)
-                        mmMessage.Messages.Add($"Toplam İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
+                        mmMessage.Messages.Add($"Toplam Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
                 }
             }
             if (mmMessage.Messages.Count == 0)
@@ -951,17 +959,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (ogrenimTipKrt.TekKaynakOrani.HasValue)
                     {
                         if (!sonTekKaynakOrani.HasValue)
-                            mmMessage.Messages.Add("Tek Kaynak İntihal Oranı bilgisi giriniz.");
+                            mmMessage.Messages.Add("Tek Kaynak Benzerlik Oranı bilgisi giriniz.");
 
                         else if (sonTekKaynakOrani.Value > ogrenimTipKrt.TekKaynakOrani.Value || sonTekKaynakOrani.Value < 0)
-                            mmMessage.Messages.Add($"En fazla Tek Kaynak İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
+                            mmMessage.Messages.Add($"En fazla Tek Kaynak Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
                     }
                     if (!mmMessage.Messages.Any() && ogrenimTipKrt.ToplamKaynakOrani.HasValue)
                     {
                         if (!sonToplamKaynakOrani.HasValue)
-                            mmMessage.Messages.Add("Toplam İntihal Oranı bilgisi giriniz.");
+                            mmMessage.Messages.Add("Toplam Benzerlik Oranı bilgisi giriniz.");
                         else if (sonToplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || sonToplamKaynakOrani.Value < 0)
-                            mmMessage.Messages.Add($"Toplam İntihal Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
+                            mmMessage.Messages.Add($"Toplam Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
                     }
 
                     if (!mmMessage.Messages.Any() && tarih.HasValue == false)

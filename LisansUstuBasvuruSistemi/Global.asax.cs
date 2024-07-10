@@ -16,6 +16,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using LisansUstuBasvuruSistemi.Utilities.ApplicationTasks;
+using LisansUstuBasvuruSistemi.Controllers;
 
 namespace LisansUstuBasvuruSistemi
 {
@@ -125,7 +126,7 @@ namespace LisansUstuBasvuruSistemi
 
                 var errCode = HttpContext.Current.Response.StatusCode;
                 IController errorController;
-                if (errCode == HttpDurumKodEnum.NotFound || errCode == HttpDurumKodEnum.Unauthorized)
+                if (errCode == HttpDurumKodEnum.NotFound || errCode == HttpDurumKodEnum.Unauthorized || (exception.Message.Contains("The controller for path") && exception.Message.Contains("was not found or does not implement IController")))
                 {
                     var url = HttpContext.Current.Request.Url;
                     routeData.Values.Add("url", url);
@@ -155,6 +156,9 @@ namespace LisansUstuBasvuruSistemi
                 }
             }
         }
+    
+
+
 
 
 

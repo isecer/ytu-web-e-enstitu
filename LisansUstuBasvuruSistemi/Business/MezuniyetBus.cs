@@ -104,7 +104,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 entities.SaveChanges();
 
-              
+
             }
         }
 
@@ -187,7 +187,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod))
                         {
-                            mMessage.Messages.Add("Başvurunun ait olduğu enstitü yetkiniz bulunmamaktadır.");
+                            mMessage.Messages.Add("Başvurunun ait olduğu enstitü için yetkiniz bulunmamaktadır.");
                             return mMessage;
                         }
 
@@ -304,6 +304,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         p.OgrenimTipKod == kul.OgrenimTipKod);
 
                     var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
+
 
                     //düzenlenecek max dönem kriterleri süreç e eklenebilecek ve bu kriteri açanlar başvuru yapamayacak 
                     //if (kul.KayitTarihi > MezuniyetDonemKontrolKriterBasTar && kul.OkuduguDonemNo.Value < 4)
@@ -453,7 +454,7 @@ namespace LisansUstuBasvuruSistemi.Business
                               from klD in defkl.DefaultIfEmpty()
                               join inx in entities.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
                               from inxD in definx.DefaultIfEmpty()
-                              //join kullanici in entities.Kullanicilars on qs.IslemYapanID equals kullanici.KullaniciID 
+                                  //join kullanici in entities.Kullanicilars on qs.IslemYapanID equals kullanici.KullaniciID 
                               select new MezuniyetBasvurulariYayinDto
                               {
                                   Yayinlanmis = qs.Yayinlanmis,
@@ -678,7 +679,7 @@ namespace LisansUstuBasvuruSistemi.Business
                               from mezuniyetYayinLinkTurKaynakrDefItem in defMezuniyetYayinLinkTurKaynak.DefaultIfEmpty()
                               join mezuniyetYayinIndexTur in entities.MezuniyetYayinIndexTurleris on new { mezuniyetBasvurulariYayin.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)mezuniyetYayinIndexTur.MezuniyetYayinIndexTurID } into defMezuniyetYayinIndexTur
                               from mezuniyetYayinIndexTurDefItem in defMezuniyetYayinIndexTur.DefaultIfEmpty()
-                              // join kullanici in entities.Kullanicilars on mezuniyetBasvurulariYayin.IslemYapanID equals kullanici.KullaniciID
+                                  // join kullanici in entities.Kullanicilars on mezuniyetBasvurulariYayin.IslemYapanID equals kullanici.KullaniciID
                               select new MezuniyetBasvurulariYayinDto
                               {
                                   MezuniyetYayinTurID = mezuniyetBasvurulariYayin.MezuniyetYayinTurID,
@@ -1322,8 +1323,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                         sonSurecOgrenimTipi?.AktifDonemAgnoKriteri ?? 0,
                                                   AktifDonemAktsKriteri = surecOgrenimTipi?.AktifDonemAktsKriteri ??
                                                                         sonSurecOgrenimTipi?.AktifDonemAktsKriteri ?? 0,
-                                                  TekKaynakOrani = surecOgrenimTipi.TekKaynakOrani ?? sonSurecOgrenimTipi?.TekKaynakOrani,
-                                                  ToplamKaynakOrani = surecOgrenimTipi.ToplamKaynakOrani ?? sonSurecOgrenimTipi.ToplamKaynakOrani,
+                                                  TekKaynakOrani = surecOgrenimTipi.TekKaynakOrani ?? (mezuniyetSurecId > 0 ? null : sonSurecOgrenimTipi?.TekKaynakOrani),
+                                                  ToplamKaynakOrani = surecOgrenimTipi.ToplamKaynakOrani ?? (mezuniyetSurecId > 0 ? null : sonSurecOgrenimTipi.ToplamKaynakOrani),
                                                   SinavUzatmaOgrenciTaahhutMaxGun = surecOgrenimTipi?.SinavUzatmaOgrenciTaahhutMaxGun ??
                                                                                       sonSurecOgrenimTipi?.SinavUzatmaOgrenciTaahhutMaxGun ?? 0,
                                                   SinavUzatmaSinavAlmaSuresiMaxGun = surecOgrenimTipi?.SinavUzatmaSinavAlmaSuresiMaxGun ??
@@ -1711,6 +1712,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetSinavDurumID, Caption = item.MezuniyetSinavDurumAdi });
                 }
+                dct.Add(new CmbIntDto { Value = -50, Caption = "Sınav Durumu Başarılı Olanlar" });
             }
             return dct;
         }

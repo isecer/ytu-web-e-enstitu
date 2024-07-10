@@ -4828,8 +4828,6 @@
     <Folder Include="Content\js\plugins\fileinput\fileinput\" />
     <Folder Include="Content\js\plugins\slidingmenu\" />
     <Folder Include="Images\KullaniciResimleri\" />
-    <Folder Include="Views\Filex\" />
-    <Folder Include="Views\File\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

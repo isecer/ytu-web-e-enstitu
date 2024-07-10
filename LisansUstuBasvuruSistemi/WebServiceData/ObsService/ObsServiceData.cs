@@ -15,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
     {
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
-        public StudentControl GetObsStudentControl(string tcOrOgrenciNo)
+        public StudentControl GetObsStudentControl(string tcOrOgrenciNo, string donemId = null)
         {
             var model = new StudentControl();
             try
@@ -52,13 +52,13 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
                             model.OkuduguDonemNo = ogrenci.OKUDUGU_DNM_YENIKANUN.ToIntObj() ?? 0;
                             model.OgrenciInfo = ogrenci;
-                            model.OgrenciInfo.OGRENIMSEVIYE_ID = model.OgrenciInfo.OGRENIMSEVIYE_ID.ToOgrenimTipKod().ToStrObj(); 
+                            model.OgrenciInfo.OGRENIMSEVIYE_ID = model.OgrenciInfo.OGRENIMSEVIYE_ID.ToOgrenimTipKod().ToStrObj();
                             //enstitü ayarlaması 4 basamaklı olan obs enstitü kodu 3 basamaklı lubs enstitü koduna çevir
                             if (model.OgrenciInfo.ENSTITU_ID.Length > 3)
                                 model.OgrenciInfo.ENSTITU_ID = model.OgrenciInfo.ENSTITU_ID.Remove(0, 1);
 
 
-                            var ogrenciDersler = service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null, null);
+                            var ogrenciDersler = service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null, donemId);
 
                             if (ogrenciDersler[0].Sucess)
                             {

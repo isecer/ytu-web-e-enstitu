@@ -43,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
         public static string GetSelectedEnstitu(string ekd)
-        { 
+        {  
             return Enstitulers.First(p => p.EnstituKisaAd.ToLower() == ekd.ToLower()).EnstituKod;
         }
 

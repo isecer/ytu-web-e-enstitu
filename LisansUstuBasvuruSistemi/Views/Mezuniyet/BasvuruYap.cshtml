@@ -156,12 +156,7 @@
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        @(Model.IsTezDiliTr.HasValue?(Model.IsTezDiliTr.Value?"Türkçe":"İngilizce"):"-----")
-                                                        @*<select class="form-control">
-                                                                <option></option>
-                                                                <option value="true" @(Model.IsTezDiliTr == true ? "selected" : "")>Türkçe</option>
-                                                                <option value="false" @(Model.IsTezDiliTr == false ? "selected" : "")>İngilizce</option>
-                                                            </select>*@
+                                                        @(Model.IsTezDiliTr.HasValue?(Model.IsTezDiliTr.Value?"Türkçe":"İngilizce"):"-----") 
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

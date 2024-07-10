@@ -48,7 +48,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.IsOgrenimSeviyeYetki = kullanici.OgrenimTipKod == OgrenimTipi.TezsizYuksekLisans;
 
 
-                model.IsAktifOgrenimBasvuruVar = _entities.DonemProjesis.Any(a => a.KullaniciID == kullanici.KullaniciID && a.OgrenciNo == kullanici.OgrenciNo && a.ProgramKod==kullanici.ProgramKod);
+                model.IsAktifOgrenimBasvuruVar = _entities.DonemProjesis.Any(a => a.KullaniciID == kullanici.KullaniciID && a.OgrenciNo == kullanici.OgrenciNo && a.ProgramKod == kullanici.ProgramKod);
                 if (model.IsOgrenimSeviyeYetki)
                 {
                     KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
@@ -162,7 +162,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, errprMessages.ToArray());
             return RedirectToAction("Index");
-        } 
+        }
         public ActionResult Sil(Guid? uniqueId)
         {
 
@@ -196,7 +196,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess,
                 messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage)
             }, "application/json", JsonRequestBehavior.AllowGet);
-        } 
+        }
         public ActionResult GetDonemProjesiBasvuruFormu(Guid donemProjesiUniqueId, Guid? donemProjesiBasvuruUniqueId)
         {
 
@@ -205,10 +205,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var donemProjesi = _entities.DonemProjesis.First(p => p.UniqueID == donemProjesiUniqueId);
             var donemProjesiBasvuru = donemProjesi.DonemProjesiBasvurus.FirstOrDefault(p => p.UniqueID == donemProjesiBasvuruUniqueId);
             KullanicilarBus.OgrenciBilgisiGuncelleObs(donemProjesi.KullaniciID);
+            var donemProjesiKontrolMessages = DonemProjesiBus.DonemProjesiKontrol(donemProjesi.EnstituKod, donemProjesi.UniqueID, donemProjesiBasvuru?.UniqueID);
 
+            if (donemProjesiKontrolMessages.Any())
+            {
+                mMessage.Messages.AddRange(donemProjesiKontrolMessages);
+            }
             var model = donemProjesiBasvuru ?? new DonemProjesiBasvuru { DonemProjesiID = donemProjesi.DonemProjesiID };
             var view = ViewRenderHelper.RenderPartialView("DpBasvuru", "DonemProjesiBasvuruFormu", model);
-            mMessage.IsSuccess = true;
+            mMessage.IsSuccess = !mMessage.Messages.Any();
             if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
 
@@ -355,6 +360,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 DonemProjesiEnstituOnayDurumID = s.DonemProjesiEnstituOnayDurumID,
                 EnstituOnayAciklama = s.EnstituOnayAciklama,
                 DonemProjesiDurumID = s.DonemProjesiDurumID,
+                DonemProjesiJuriOnayDurumAdi = s.DonemProjesiJuriOnayDurumID.HasValue ? s.DonemProjesiJuriOnayDurumlari.JuriOnayDurumAdi : "",
                 DonemProjesiJuriOnayDurumID = s.DonemProjesiJuriOnayDurumID,
                 IsJuriOlusturuldu = s.DonemProjesiJurileris.Any(),
                 IsSrTalebiYapildi = s.SRTalepleris.Any()
@@ -933,7 +939,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.Messages.Add("Jüri/Sınav oluşturma sürecinde bulunmayan bir başvuru için. Toplantı oluşturma/düzenleme işlemi yapılamaz.");
                     }
 
-                    if (donemProjesiBasvuru.DonemProjesiDurumID == DonemProjesiDurumEnum.SinavDegerlendirmeSureci && donemProjesiBasvuru.DonemProjesiJurileris.Any(a=>a.DonemProjesiJuriOnayDurumID.HasValue))
+                    if (donemProjesiBasvuru.DonemProjesiDurumID == DonemProjesiDurumEnum.SinavDegerlendirmeSureci && donemProjesiBasvuru.DonemProjesiJurileris.Any(a => a.DonemProjesiJuriOnayDurumID.HasValue))
                     {
                         mmMessage.Messages.Add("Değerlendirme süreci başlamış bir sınav bilgisi düzeltilemez. Düzeltme işlemi için enstitü ile görüşünüz.");
                     }
@@ -1443,7 +1449,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (onayTipId == EykTipEnum.EykYaGonderildi)
                 {
-                    if (donemProjesiBasvuru.EYKYaHazirlandi.HasValue)
+                    if (donemProjesiBasvuru.DonemProjesiJuriOnayDurumID != DonemProjesiJuriOnayDurumEnum.Basarili)
+                    {
+                        mmMessage.Messages.Add("EYK ya gönderim işlemi yapılabilmesi için öğrencinin sınavdan başarılı olması gerekmetekdir.");
+                    }
+                    else if (donemProjesiBasvuru.EYKYaHazirlandi.HasValue)
                     {
                         mmMessage.Messages.Add("EYK ya hazırlama işlemi yapılan bir Dönem projesi Eyk'ya gönderim işlemi gerçekleştirilemez!");
                     }

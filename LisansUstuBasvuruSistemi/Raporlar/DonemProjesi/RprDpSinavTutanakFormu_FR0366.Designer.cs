@@ -2384,7 +2384,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.DonemProjesi
             this.xrTableCell17.StylePriority.UseBorders = false;
             this.xrTableCell17.StylePriority.UseFont = false;
             this.xrTableCell17.StylePriority.UseTextAlignment = false;
-            this.xrTableCell17.Text = "C. İntihal Bilgileri";
+            this.xrTableCell17.Text = "C. Benzerlik Bilgileri";
             this.xrTableCell17.TextAlignment = DevExpress.XtraPrinting.TextAlignment.BottomCenter;
             this.xrTableCell17.Weight = 1D;
             // 

@@ -553,7 +553,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.Sablon == null) continue;
 
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
-                        if (!donemProjesiBasvuru.IntihalRaporuDosyaYolu.IsNullOrWhiteSpace()) item.SablonEkleri.Add(new MailSablonlariEkleri { EkAdi = ogrenci.Ad + " " + ogrenci.Soyad + " - İntihal Raporu Pdf Dosyası ", EkDosyaYolu = donemProjesiBasvuru.IntihalRaporuDosyaYolu });
+                        if (!donemProjesiBasvuru.IntihalRaporuDosyaYolu.IsNullOrWhiteSpace()) item.SablonEkleri.Add(new MailSablonlariEkleri { EkAdi = ogrenci.Ad + " " + ogrenci.Soyad + " - Benzerlik Raporu Pdf Dosyası ", EkDosyaYolu = donemProjesiBasvuru.IntihalRaporuDosyaYolu });
                         item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.CustomSplit();
                         item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
 

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Routing;
-using Entities.Entities;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Business;
 
-namespace LisansUstuBasvuruSistemi.App_Start
+namespace LisansUstuBasvuruSistemi
 {
     public class RouteSet
     {
@@ -21,9 +17,9 @@ namespace LisansUstuBasvuruSistemi.App_Start
     {
         public EnstituListConstraint(params string[] values)
         {
-            //var Enstitulers = Management.GetEnstituler();
-            //values = Enstitulers.Where(p => p.IsAktif).Select(s => s.EnstituKisaAd.ToLower()).ToArray();
-            values = new List<string> { "fbe", "sbe", "tet" }.ToArray();
+            var enstitulers = EnstituBus.GetEnstituler();
+            values = enstitulers.Where(p => p.IsAktif).Select(s => s.EnstituKisaAd.ToLower()).ToArray();
+           // values = new List<string> { "fbe", "sbe", "tet" }.ToArray();
             this._values = values;
         }
 

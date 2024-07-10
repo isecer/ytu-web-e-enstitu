@@ -182,9 +182,9 @@
                                         {
                                             <span style="color:maroon;font-size:10pt;" aria-hidden="true">Eş Danışman Önerisi Yok.</span>
                                         }
-                                        else  
+                                        else
                                         {
-                                           @item.EsDanismanBilgi.ToBasvuruDurumViewEs()
+                                            @item.EsDanismanBilgi.ToBasvuruDurumViewEs()
                                         }
 
                                     </td>
@@ -279,9 +279,23 @@
                                                         <td class="ValueTd">@item.YeniTezBaslikEn</td>
                                                     </tr>
                                                 }
+
                                             </table>
                                         </div>
 
+                                        @if (!item.Gerekce.IsNullOrWhiteSpace())
+                                        {
+                                            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
+                                                <table style="width:100%;">
+
+                                                    <tr>
+                                                        <td class="CaptionTd" width="200">Gerekçe</td>
+                                                        <td class="CaptionTd" width="10">:</td>
+                                                        <td class="ValueTd">@item.Gerekce</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        }
                                         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                             <table style="width: 100%;">
                                                 @if (Model.AktifTDOBasvuruDanismanID == item.TDOBasvuruDanismanID && item.EYKDaOnaylandi == true)
@@ -1380,7 +1394,7 @@
         PanelRefresh(_panel, false);
 
         var DanismanOnayladi = $('#VarolanDanismanOnayladi_' + id).val();
-        var DanismanOnaylanmadiAciklama = $('#VarolanDanismanOnaylanmadiAciklama_' + id).val(); 
+        var DanismanOnaylanmadiAciklama = $('#VarolanDanismanOnaylanmadiAciklama_' + id).val();
 
         var model = {
             TDOBasvuruDanismanID: id,
@@ -1416,7 +1430,7 @@
         PanelRefresh(_panel, false);
         var EYKYaGonderildi = $('#EYKYaGonderildi_' + id).val();
         var EYKYaGonderimDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + id).val();
-        
+
         var model = {
             TDOBasvuruDanismanID: id,
             EYKYaGonderildi: EYKYaGonderildi,

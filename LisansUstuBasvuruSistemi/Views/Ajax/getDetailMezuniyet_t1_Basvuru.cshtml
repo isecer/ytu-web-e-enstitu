@@ -88,7 +88,7 @@
                                     if ((Model.IsTekKaynakOraniGirisiYapilacak || Model.IsToplamKaynakOraniGirisiYapilacak) && (Model.TekKaynakOrani.HasValue || Model.SonTekKaynakOrani.HasValue || Model.ToplamKaynakOrani.HasValue || Model.SonToplamKaynakOrani.HasValue))
                                     {
                                         <tr>
-                                            <td class="CaptionTd">Tez İntihal Oranları</td>
+                                            <td class="CaptionTd">Tez Benzerlik Oranları</td>
                                             <td class="CaptionTd">:</td>
                                             <td class="ValueTd">
                                                 <table class="table table-hover" style="margin:0px;">
@@ -106,7 +106,7 @@
                                                     @if (Model.IsTekKaynakOraniGirisiYapilacak && (Model.TekKaynakOrani.HasValue || Model.SonTekKaynakOrani.HasValue))
                                                     {
                                                         <tr>
-                                                            <td>Tek Kaynak İntihal Oranı</td>
+                                                            <td>Tek Kaynak Benzerlik Oranı</td>
                                                             @if (Model.TekKaynakOrani.HasValue)
                                                             {
                                                                 <td>%@Model.TekKaynakOrani</td>
@@ -122,7 +122,7 @@
                                                     @if (Model.IsToplamKaynakOraniGirisiYapilacak && (Model.ToplamKaynakOrani.HasValue || Model.SonToplamKaynakOrani.HasValue))
                                                     {
                                                         <tr>
-                                                            <td>Toplam İntihal Oranı</td>
+                                                            <td>Toplam Benzerlik Oranı</td>
                                                             @if (Model.ToplamKaynakOrani.HasValue)
                                                             {
                                                                 <td>%@Model.ToplamKaynakOrani</td>
@@ -462,7 +462,7 @@
                         <td style="padding-left:10px;text-align:left;">
                             <table style="width:100%;">
                                 <tr>
-                                    <td class="CaptionTd" width="170">Başvuru Durumu</td>
+                                    <td class="CaptionTd" width="185">Başvuru Durumu</td>
                                     <td class="CaptionTd">:</td>
                                     <td class="ValueTd">
                                         @if (sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)
@@ -478,7 +478,7 @@
                                 @if (Model.IsTekKaynakOraniGirisiYapilacak && sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)
                                 {
                                     <tr class="intihalRwBasvuru_@Model.MezuniyetBasvurulariID @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi ? "" : "hide")">
-                                        <td class="CaptionTd">Tek Kaynak İntihal Oranı %</td>
+                                        <td class="CaptionTd">Tek Kaynak Benzerlik Oranı %</td>
                                         <td class="CaptionTd">:</td>
                                         <td class="ValueTd">
                                             <input type="text" id="TekKaynakOrani_@Model.MezuniyetBasvurulariID" maxlength="3" value="@Model.TekKaynakOrani" class="form-control" style="color:black;" />
@@ -488,7 +488,7 @@
                                 @if (Model.IsToplamKaynakOraniGirisiYapilacak && sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)
                                 {
                                     <tr class="intihalRwBasvuru_@Model.MezuniyetBasvurulariID @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi ? "" : "hide")">
-                                        <td class="CaptionTd">Toplam İntihal Oranı %</td>
+                                        <td class="CaptionTd">Toplam Benzerlik Oranı %</td>
                                         <td class="CaptionTd">:</td>
                                         <td class="ValueTd">
                                             <input type="text" id="ToplamKaynakOrani_@Model.MezuniyetBasvurulariID" maxlength="3" value="@Model.ToplamKaynakOrani" class="form-control" style="color:black;" />

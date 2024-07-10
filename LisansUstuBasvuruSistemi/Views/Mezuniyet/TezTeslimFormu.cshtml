@@ -1,7 +1,10 @@
-﻿@using Entities.Entities 
+﻿@using Entities.Entities
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model MezuniyetBasvurulariTezTeslimFormlari
 @{
     Layout = null;
+    var yetkili = RoleNames.SrTalepDuzelt.InRoleCurrent();
 }
 
 @using (Ajax.BeginForm("TezTeslimFormuPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "MezuniyetTezTeslimForm" }))
@@ -15,43 +18,44 @@
                     <div class="form-group">
                         <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
                         <div class="col-md-9 col-xs-10">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <select class="form-control" name="IsTezDiliTr" id="IsTezDiliTr" onchange="tdChange(this)" style="color:black;">
-                                            <option value=""></option>
-                                            <option value="true" @( Model.IsTezDiliTr ? "selected" : "")>Türkçe</option>
-                                            <option value="false" @(!Model.IsTezDiliTr ? "selected" : "")>İngilizce</option>
-                                        </select>
-                                        <script>
-                                            function tdChange(sndr) {
-                                                if ($(sndr).val() == "true") {
-                                                    $('#digerDilGiris').addClass("hide");
-                                                }
-                                                else {
-                                                    $('#digerDilGiris').removeClass("hide");
-                                                }
-                                            }
-                                        </script>
-                                    </td>
-                                    <td width="5"></td>
-                                    <td class="@(Model.MezuniyetBasvurulariTezTeslimFormID<=0 || Model.IsTezDiliTr?"hide":"")" id="digerDilGiris">
-                                        <input type="text" name="TezDili" id="TezDili" maxlength="64" value="@Model.TezDili" class="form-control" />
-                                    </td>
-                                </tr>
-                            </table>
+                            @if (false)
+                            {
+                                <select class="form-control" name="IsTezDiliTr" id="IsTezDiliTr" style="color:black;">
+                                    <option value=""></option>
+                                    <option value="true" @( Model.IsTezDiliTr ? "selected" : "")>Türkçe</option>
+                                    <option value="false" @(!Model.IsTezDiliTr ? "selected" : "")>İngilizce</option>
+                                </select>
+                            }
+                            else
+                            {
+                                @(Model.IsTezDiliTr?"Türkçe":"İngilizce")
+                            }
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (Türkçe)</label>
                         <div class="col-md-9 col-xs-10">
-                            <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="400" value="@Model.TezBaslikTr"   style="color:black;" class="form-control UpperTextTr" />
+                            @if (yetkili)
+                            {
+                                <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="400" value="@Model.TezBaslikTr" style="color:black;" class="form-control UpperTextTr" />
+                            }
+                            else
+                            {
+                                @Model.TezBaslikTr
+                            }
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (İngilizce)</label>
                         <div class="col-md-9 col-xs-10">
-                            <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="400" value="@Model.TezBaslikEn" style="color:black;" class="form-control UpperTextEn" />
+                            @if (yetkili)
+                            {
+                                <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="400" value="@Model.TezBaslikEn" style="color:black;" class="form-control UpperTextEn" />
+                            }
+                            else
+                            {
+                                @Model.TezBaslikEn
+                            }
                         </div>
                     </div>
                     <div class="form-group">

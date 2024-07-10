@@ -276,7 +276,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model = MezuniyetBus.GetMezuniyetBasvuruBilgi(mezuniyetBasvurulariId.Value);
                     model.EnstituKod = enstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(ekd) : enstituKod;
                     model.ResimAdi = kul.ResimAdi;
-                    if (model.IsTezDiliTr != studentInfo.IsTezDiliTr)
+                    studentInfo = KullanicilarBus.OgrenciKontrol(model.OgrenciNo);
+                    if (studentInfo.KayitVar && model.IsTezDiliTr != studentInfo.IsTezDiliTr)
                     {
                         model.IsTezDiliTr = studentInfo.IsTezDiliTr;
                         mmMessage.Messages.Add("Tez dili bilgisi değiştiği gözükmektedir. Bu değişikliğin yansıması için başvurunuzu tekrar kaydedin.");
@@ -1372,9 +1373,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageType = MsgTypeEnum.Warning
             };
 
-            var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent();
+            var yetkili = RoleNames.SrTalepDuzelt.InRoleCurrent();
             var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
-            if (mezuniyetBasvurusu.KullaniciID != UserIdentity.Current.Id && !yetkiliK)
+            if (mezuniyetBasvurusu.KullaniciID != UserIdentity.Current.Id && !yetkili)
             {
                 mmMessage.Messages.Add("Başka bir kullanıcı tez teslim formu oluşturmaya yetkili değilsiniz!");
             }
@@ -1387,27 +1388,31 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Mezuniyet sonuç bilgisi girilildikten sonra Tez teslim formu üzerinde düzeltme işlemi yapılamaz!");
 
             }
-            if (!isTezDiliTr.HasValue)
+
+            if (yetkili)
             {
-                mmMessage.Messages.Add("Tez Dilini Seçiniz.");
+                //if (!isTezDiliTr.HasValue)
+                //{
+                //    mmMessage.Messages.Add("Tez Dilini Seçiniz.");
 
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsTezDiliTr" });
+                //    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsTezDiliTr" });
+                //}
+                if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
+                {
+                    mmMessage.Messages.Add("Tez Başlığını Türkçe Olarak Giriniz.");
+
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezBaslikTr" });
+                }
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezBaslikTr" });
+
+                if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
+                {
+                    mmMessage.Messages.Add("Tez Başlığını İngilizce Olarak Giriniz.");
+
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezBaslikEn" });
+                }
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezBaslikEn" });
             }
-            if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
-            {
-                mmMessage.Messages.Add("Tez Başlığını Türkçe Olarak Giriniz.");
-
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezBaslikTr" });
-            }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezBaslikTr" });
-
-            if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
-            {
-                mmMessage.Messages.Add("Tez Başlığını İngilizce Olarak Giriniz.");
-
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezBaslikEn" });
-            }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezBaslikEn" });
             if (kModel.TezOzetHtml.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Tez Özetini Türkçe Olarak Giriniz.");
@@ -1428,36 +1433,48 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.IslemTarihi = DateTime.Now;
                     kModel.IslemYapanID = UserIdentity.Current.Id;
                     kModel.IslemYapanIP = UserIdentity.Ip;
-
-                    var kKayit = _entities.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
-                    if (kKayit == null)
+                    kModel.IsTezDiliTr = mezuniyetBasvurusu.IsTezDiliTr == true;
+                    var mezuniyetBasvurulariTezTeslimFormu = _entities.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
+                    if (mezuniyetBasvurulariTezTeslimFormu == null)
                     {
+                        if (!yetkili)
+                        {
+                            var jof = mezuniyetBasvurusu.MezuniyetJuriOneriFormlaris.First();
+                            var srTalep = mezuniyetBasvurusu.SRTalepleris.FirstOrDefault(f => f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
+                           
+                            kModel.TezBaslikTr = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikTr : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : mezuniyetBasvurusu.TezBaslikTr);
+                            kModel.TezBaslikEn = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikEn : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mezuniyetBasvurusu.TezBaslikEn);
+
+                        }
                         kModel.RowID = Guid.NewGuid();
                         _entities.MezuniyetBasvurulariTezTeslimFormlaris.Add(kModel);
                     }
                     else
                     {
                         if (
-                           kKayit.IsTezDiliTr != kModel.IsTezDiliTr ||
-                           kKayit.TezDili != kModel.TezDili ||
-                           kKayit.TezBaslikTr != kModel.TezBaslikTr ||
-                           kKayit.TezBaslikEn != kModel.TezBaslikEn ||
-                           kKayit.TezOzet != kModel.TezOzet ||
-                           kKayit.TezOzetHtml != kModel.TezOzetHtml ||
-                           kKayit.TezAbstract != kModel.TezAbstract ||
-                           kKayit.TezAbstractHtml != kModel.TezAbstractHtml
-                          ) kKayit.RowID = Guid.NewGuid();
-                        kKayit.IsTezDiliTr = kModel.IsTezDiliTr;
-                        kKayit.TezDili = kModel.TezDili;
-                        kKayit.TezBaslikTr = kModel.TezBaslikTr;
-                        kKayit.TezBaslikEn = kModel.TezBaslikEn;
-                        kKayit.TezOzet = kModel.TezOzet;
-                        kKayit.TezOzetHtml = kModel.TezOzetHtml;
-                        kKayit.TezAbstract = kModel.TezAbstract;
-                        kKayit.TezAbstractHtml = kModel.TezAbstractHtml;
-                        kKayit.IslemTarihi = kModel.IslemTarihi;
-                        kKayit.IslemYapanID = kModel.IslemYapanID;
-                        kKayit.IslemYapanIP = kModel.IslemYapanIP;
+                           mezuniyetBasvurulariTezTeslimFormu.IsTezDiliTr != kModel.IsTezDiliTr ||
+                           mezuniyetBasvurulariTezTeslimFormu.TezDili != kModel.TezDili ||
+                           mezuniyetBasvurulariTezTeslimFormu.TezBaslikTr != kModel.TezBaslikTr ||
+                           mezuniyetBasvurulariTezTeslimFormu.TezBaslikEn != kModel.TezBaslikEn ||
+                           mezuniyetBasvurulariTezTeslimFormu.TezOzet != kModel.TezOzet ||
+                           mezuniyetBasvurulariTezTeslimFormu.TezOzetHtml != kModel.TezOzetHtml ||
+                           mezuniyetBasvurulariTezTeslimFormu.TezAbstract != kModel.TezAbstract ||
+                           mezuniyetBasvurulariTezTeslimFormu.TezAbstractHtml != kModel.TezAbstractHtml
+                          ) mezuniyetBasvurulariTezTeslimFormu.RowID = Guid.NewGuid();
+                        mezuniyetBasvurulariTezTeslimFormu.IsTezDiliTr = kModel.IsTezDiliTr; 
+                        if (yetkili)
+                        {
+                            mezuniyetBasvurulariTezTeslimFormu.TezBaslikTr = kModel.TezBaslikTr;
+                            mezuniyetBasvurulariTezTeslimFormu.TezBaslikEn = kModel.TezBaslikEn;
+                        }
+
+                        mezuniyetBasvurulariTezTeslimFormu.TezOzet = kModel.TezOzet;
+                        mezuniyetBasvurulariTezTeslimFormu.TezOzetHtml = kModel.TezOzetHtml;
+                        mezuniyetBasvurulariTezTeslimFormu.TezAbstract = kModel.TezAbstract;
+                        mezuniyetBasvurulariTezTeslimFormu.TezAbstractHtml = kModel.TezAbstractHtml;
+                        mezuniyetBasvurulariTezTeslimFormu.IslemTarihi = kModel.IslemTarihi;
+                        mezuniyetBasvurulariTezTeslimFormu.IslemYapanID = kModel.IslemYapanID;
+                        mezuniyetBasvurulariTezTeslimFormu.IslemYapanIP = kModel.IslemYapanIP;
                     }
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
@@ -1602,7 +1619,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Silmek istediğiniz tez dosyası sistemde bulunamadı!");
             }
-            
+
             else
             {
                 var mezuniyetBasvurusu = tezDosyasi.MezuniyetBasvurulari;
@@ -1636,7 +1653,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    mMessage.MessageType = MsgTypeEnum.Error; 
+                    mMessage.MessageType = MsgTypeEnum.Error;
                     mMessage.Messages.Add("Silmek istediğiniz tez dosyası silinemedi!");
                     mMessage.Title = "Hata";
                     SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
@@ -2380,8 +2397,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, basvuru.ToJson());
                     messageModel.IsSuccess = true;
-                    messageModel.Messages.Add(
-                        $"Öğrenci başvurusuna ait danışman bilgisi {basvuru.TezDanismanAdi} olarak güncellendi.");
+                    messageModel.Messages.Add($"Öğrenci başvurusuna ait danışman bilgisi {basvuru.TezDanismanAdi} olarak güncellendi.");
                 }
                 else
                 {

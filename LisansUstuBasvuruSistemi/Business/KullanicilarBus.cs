@@ -20,8 +20,8 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class KullanicilarBus
     {
- 
-        public static StudentControl OgrenciKontrol(string tcOrOgrenciNo = null)
+
+        public static StudentControl OgrenciKontrol(string tcOrOgrenciNo = null, string donemId = "")
         {
             var obsData = new ObsServiceData();
             //if (donemId == null)
@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Business
             //    var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
             //    donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
             //} 
-            return obsData.GetObsStudentControl(tcOrOgrenciNo);
+            return obsData.GetObsStudentControl(tcOrOgrenciNo,donemId);
         }
 
         public static StudentControl OgrenciBilgisiGuncelleObs(Guid userKey)
@@ -47,7 +47,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
         private static StudentControl OgrenciBilgisiGuncelleObs(List<int> kullaniciId, Guid? userKey)
-        { 
+        {
             var kayitBilgi = new StudentControl();
             using (var entities = new LubsDbEntities())
             {
@@ -316,7 +316,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var rotasYonDegisimLog = SistemAyar.RotasyonuDegisenResimleriLogla.GetAyar().ToBoolean(false);
                 var boyutlandirma = SistemAyar.KullaniciResimKaydiBoyutlandirma.GetAyar().ToBoolean(false);
                 var kaliteOpt = SistemAyar.KullaniciResimKaydiKaliteOpt.GetAyar().ToBoolean(true);
-                
+
                 var resimAdi = resim.FileName.ToFileNameAddGuid();
                 var resimYolu = Path.Combine(HttpContext.Current.Server.MapPath("~/" + folderName), resimAdi);
 

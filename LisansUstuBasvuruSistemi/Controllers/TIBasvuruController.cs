@@ -62,7 +62,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 bbModel.KayitDonemi = kul.KayitYilBaslangic + "/" + (kul.KayitYilBaslangic + 1);
                             }
                             if (kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + kul.KayitTarihi.ToFormatDate();
-                            model.AktifOgrenimIcinBasvuruVar = _entities.TIBasvurus.Any(a => a.KullaniciID == kul.KullaniciID && a.OgrenciNo == kul.OgrenciNo && a.ProgramKod==kul.ProgramKod);
+                            model.AktifOgrenimIcinBasvuruVar = _entities.TIBasvurus.Any(a => a.KullaniciID == kul.KullaniciID && a.OgrenciNo == kul.OgrenciNo && a.ProgramKod == kul.ProgramKod);
                         }
                         else
                         {
@@ -360,7 +360,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Komite üyelerine değerlendirme linki gönderildikten sonra rapor bilgisinde değişiklik yapamazsınız. ");
             }
-            else if (tiBasvuruAraRapor==null && TiAyar.TiBasvurusuAcikmi.GetAyarTi(tiBasvuru.EnstituKod).ToBoolean() == false)
+            else if (tiBasvuruAraRapor == null && TiAyar.TiBasvurusuAcikmi.GetAyarTi(tiBasvuru.EnstituKod).ToBoolean() == false)
             {
                 mMessage.Messages.Add("Ara rapor giriş işelmemleri kapalıdır. ");
             }
@@ -381,8 +381,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 var donemBilgi = (tiBasvuruAraRapor?.RaporTarihi ?? DateTime.Now).ToTiAraRaporDonemBilgi(tiBasvuru.EnstituKod);
-
-                var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
+                var donemId =   donemBilgi.BaslangicTarihi.Year.ToString() + donemBilgi.DonemId;
+                var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo, donemId);
 
                 if (ogrenciInfo.Hata)
                 {
@@ -671,7 +671,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 isYeniJo = tiBasvuruAraRapor == null;
                 bool isDegisiklikVar = false;
                 var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToTiAraRaporDonemBilgi(tiBasvuru.EnstituKod);
-                var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.OgrenciKontrol(kul.OgrenciNo) : new StudentControl();
+                var obsDonemId = donemBilgi.BaslangicTarihi.Year.ToString() + donemBilgi.DonemId;
+                var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.OgrenciKontrol(kul.OgrenciNo, obsDonemId) : new StudentControl();
                 var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod).Split(',').Where(p => p.Trim() != "").ToList() : new List<string>();
 
                 if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemId))
@@ -909,7 +910,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else kModel.SelectedTabId = errSelectedTabId;
 
                     if (mMessage.Messages.Count == 0 && saveData)
-                    {  
+                    {
                         try
                         {
                             tiBasvuruAraRapor = isYeniJo ? new TIBasvuruAraRapor() : tiBasvuruAraRapor;
@@ -1035,8 +1036,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             tiBasvuruAraRapor.IslemYapanIP = UserIdentity.Ip;
 
                             if (kModel.Dosya != null)
-                            {  
-                                FileHelper.Delete(tiBasvuruAraRapor.TICalismaRaporDosyaYolu); 
+                            {
+                                FileHelper.Delete(tiBasvuruAraRapor.TICalismaRaporDosyaYolu);
                                 tiBasvuruAraRapor.TICalismaRaporDosyaAdi = kModel.Dosya.FileName.GetFileName();
                                 tiBasvuruAraRapor.TICalismaRaporDosyaYolu = FileHelper.SaveTiAraRaporDosya(kModel.Dosya);
                             }
@@ -1076,7 +1077,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                         }
                         catch (Exception ex)
-                        { 
+                        {
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
                             SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
