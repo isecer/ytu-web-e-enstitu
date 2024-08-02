@@ -1351,9 +1351,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var jof = mBasvuru.MezuniyetJuriOneriFormlaris.First();
                 var srTalep = mBasvuru.SRTalepleris.FirstOrDefault(f => f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
                 model.MezuniyetBasvurulariID = mezuniyetBasvurulariId;
+
+                var uzatmaDegisenTezBaslikTr = "";
+                var uzatmaDegisenTezBaslikEn = "";
+
+
+                var birOncekiSrTalepUzatma = mBasvuru.SRTalepleris.Where(p => p.MezuniyetBasvurulariID == mBasvuru.MezuniyetBasvurulariID && p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma &&
+                                                                              p.SRTalepID < srTalep.SRTalepID).OrderByDescending(o => o.SRTalepID).Select(su =>
+                    new { su.IsTezBasligiDegisti, su.YeniTezBaslikTr, su.YeniTezBaslikEn }).FirstOrDefault();
+                if (birOncekiSrTalepUzatma != null && birOncekiSrTalepUzatma.IsTezBasligiDegisti == true)
+                {
+                    uzatmaDegisenTezBaslikTr = birOncekiSrTalepUzatma.YeniTezBaslikTr;
+                    uzatmaDegisenTezBaslikEn = birOncekiSrTalepUzatma.YeniTezBaslikEn;
+                }
+
                 model.IsTezDiliTr = mBasvuru.IsTezDiliTr == true;
-                model.TezBaslikTr = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikTr : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : mBasvuru.TezBaslikTr);
-                model.TezBaslikEn = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikEn : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mBasvuru.TezBaslikEn);
+                model.TezBaslikTr = uzatmaDegisenTezBaslikTr.IsNullOrWhiteSpace() ? (srTalep.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : mBasvuru.TezBaslikTr) : uzatmaDegisenTezBaslikTr;
+                model.TezBaslikEn = uzatmaDegisenTezBaslikEn.IsNullOrWhiteSpace() ? (srTalep.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mBasvuru.TezBaslikEn) : uzatmaDegisenTezBaslikEn; 
                 model.TezOzet = mBasvuru.TezOzet;
                 model.TezOzetHtml = mBasvuru.TezOzet;
                 model.TezAbstract = mBasvuru.TezAbstract;

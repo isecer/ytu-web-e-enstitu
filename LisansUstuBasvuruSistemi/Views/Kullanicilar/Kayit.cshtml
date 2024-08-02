@@ -234,6 +234,27 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-md-2 col-xs-2 control-label">İzin Bilgileri</label>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="panel panel-default form-horizontal">
+                                <div class="panel-body form-group-separated">
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-4 control-label  padding-top-0 padding-bottom-0">İzin Başlangıç Tarihi</label>
+                                        <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                            <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.IzinBaslamaTarihi.ToFormatDateInput()" name="IzinBaslamaTarihi" id="IzinBaslamaTarihi">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">İzin Bitiş Tarihi</label>
+                                        <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                            <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.IzinBitisTarihi.ToFormatDateInput()" name="IzinBitisTarihi" id="IzinBitisTarihi">
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-md-2 col-xs-2 control-label">Kullanıcı Bilgileri</label>
                         <div class="col-md-10 col-xs-10">
                             <div class="panel panel-default form-horizontal">
@@ -309,6 +330,17 @@
 <script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 
 <script>
+    $('#IzinBaslamaTarihi').datetimepicker({
+        lang: 'tr',
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+    $('#IzinBitisTarihi').datetimepicker({
+        lang: 'tr',
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+
     $('#kulSbmtFrm').find('input').each(function (ix, inx) {
         $(inx).attr('autocomplete', 'off');
     })

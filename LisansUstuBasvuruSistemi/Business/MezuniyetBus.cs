@@ -56,6 +56,9 @@ namespace LisansUstuBasvuruSistemi.Business
                 var basvuru = entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                 if (!MezuniyetAyar.MezuniyetBasvurusunuTezSorumlusunaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false)) return;
 
+
+
+
                 //Dosya yüklendiğinde Kullanıcı atansa bile varolan kullanıcı yetki grubu ve aktiflik durumunu kontrol et eğer aktif bir tez kontrol yetkilisi var ise yeni kullanıcı atamaya izin verme
                 if (basvuru.TezKontrolKullaniciID.HasValue && entities.Kullanicilars.Any(a => a.KullaniciID == basvuru.TezKontrolKullaniciID && a.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && a.IsAktif)) return;
 
@@ -63,27 +66,35 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.MezuniyetBasvurusunuIlgiliTezSorumlusunaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
 
+                var isTezSorumluAtamaHesaplamasiDonemselYap = MezuniyetAyar.TezSorumluAtamaHesaplamasiDonemselYap.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
+                var nowDate = DateTime.Now;
 
                 //Yüklenen tezin ait olduğu programda yetkisi olanlar öncelikli, sonrasında hiç program yetkisi olmayanlar öncelikli, sonrasında count sayısına göre öncelikli, sonrasında random atama. Program yetkisi var ve gelen programda yetkisi yoksa hiç sıralamaya dahil edilmeyecek.
                 var groupToplamAtamaList =
                     (from kul in entities.Kullanicilars.Where(p =>
-                            p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif &&
-                            p.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
+                            p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif && (!p.IzinBaslamaTarihi.HasValue || p.IzinBaslamaTarihi > nowDate || p.IzinBitisTarihi < nowDate)
+                            && p.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
                      join mez in entities.MezuniyetBasvurularis.Where(p =>
                              p.TezKontrolKullaniciID.HasValue &&
                              p.MezuniyetSureci.EnstituKod == basvuru.MezuniyetSureci.EnstituKod)
                          on kul.KullaniciID equals mez.TezKontrolKullaniciID into defMez
                      from mezBas in defMez.DefaultIfEmpty()
+                     where mezBas.MezuniyetSurecID == (isTezSorumluAtamaHesaplamasiDonemselYap ? basvuru.MezuniyetSurecID : mezBas.MezuniyetSurecID)
                      group new { kul.KullaniciID, mezBas.MezuniyetSurecID, IsAtandi = mezBas != null } by new
                      {
                          kul.KullaniciID,
                          kul.KullaniciAdi,
                          ProgramIcinYetkiliInx = isTezDosyasiIlgiliSorumluyaAta
-                             ? kul.KullaniciProgramlaris.Any(a => a.ProgramKod == basvuru.ProgramKod) ? 0 :
-                             !kul.KullaniciProgramlaris.Any() ? 1 : -1
-                             : 1
+                             ? (kul.KullaniciProgramlaris.Any(a => a.ProgramKod == basvuru.ProgramKod)
+                                 ? 0
+                                 : (!kul.KullaniciProgramlaris.Any()
+                                     ? 1
+                                     : -1)
+                               )
+                               : 1
+
                      }
-                        into g1
+            into g1
                      select new
                      {
                          g1.Key.KullaniciID,
@@ -837,8 +848,23 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                    YokDrOncelikliAlan = s.YokDrOncelikliAlan
 
                                                                }).OrderByDescending(o => o.SRTalepID).ToList();
+
+
+
+
                 foreach (var item in model.MezuniyetSrModel.SalonRezervasyonlari)
                 {
+
+                    var birOncekiSrTalepUzatma = model.MezuniyetSrModel.SalonRezervasyonlari
+                        .Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma &&
+                                    p.SRTalepID < item.SRTalepID).OrderByDescending(o => o.SRTalepID).Select(su =>
+                            new { su.IsTezBasligiDegisti, su.YeniTezBaslikTr, su.YeniTezBaslikEn }).FirstOrDefault();
+                    if (birOncekiSrTalepUzatma != null && birOncekiSrTalepUzatma.IsTezBasligiDegisti == true)
+                    {
+                        item.TezBaslikTr = birOncekiSrTalepUzatma.YeniTezBaslikTr;
+                        item.TezBaslikEn = birOncekiSrTalepUzatma.YeniTezBaslikEn;
+                    }
+
                     var haricSinavDurumId = new List<int>();
                     if (model.MezuniyetSrModel.SalonRezervasyonlari.Any(a => a.SRTalepID < item.SRTalepID && a.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma))
                         haricSinavDurumId.Add(MezuniyetSinavDurumEnum.Uzatma);
@@ -1323,8 +1349,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                         sonSurecOgrenimTipi?.AktifDonemAgnoKriteri ?? 0,
                                                   AktifDonemAktsKriteri = surecOgrenimTipi?.AktifDonemAktsKriteri ??
                                                                         sonSurecOgrenimTipi?.AktifDonemAktsKriteri ?? 0,
-                                                  TekKaynakOrani = surecOgrenimTipi.TekKaynakOrani ?? (mezuniyetSurecId > 0 ? null : sonSurecOgrenimTipi?.TekKaynakOrani),
-                                                  ToplamKaynakOrani = surecOgrenimTipi.ToplamKaynakOrani ?? (mezuniyetSurecId > 0 ? null : sonSurecOgrenimTipi.ToplamKaynakOrani),
+                                                  TekKaynakOrani = surecOgrenimTipi?.TekKaynakOrani ?? (mezuniyetSurecId > 0 ? null : sonSurecOgrenimTipi?.TekKaynakOrani),
+                                                  ToplamKaynakOrani = surecOgrenimTipi?.ToplamKaynakOrani ?? (mezuniyetSurecId > 0 ? null : sonSurecOgrenimTipi.ToplamKaynakOrani),
                                                   SinavUzatmaOgrenciTaahhutMaxGun = surecOgrenimTipi?.SinavUzatmaOgrenciTaahhutMaxGun ??
                                                                                       sonSurecOgrenimTipi?.SinavUzatmaOgrenciTaahhutMaxGun ?? 0,
                                                   SinavUzatmaSinavAlmaSuresiMaxGun = surecOgrenimTipi?.SinavUzatmaSinavAlmaSuresiMaxGun ??
@@ -1712,7 +1738,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetSinavDurumID, Caption = item.MezuniyetSinavDurumAdi });
                 }
-                dct.Add(new CmbIntDto { Value = -50, Caption = "Sınav Durumu Başarılı Olanlar" });
             }
             return dct;
         }
@@ -1730,8 +1755,8 @@ namespace LisansUstuBasvuruSistemi.Business
             var dct = new List<CmbBoolDto>();
             if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
             dct.Add(new CmbBoolDto { Value = null, Caption = "Sonuç Girilmedi" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Mezun Oldu" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Mezun Olamadı" });
+            dct.Add(new CmbBoolDto { Value = true, Caption = "Ciltli Son Tez Teslimini Yapmıştır" });
+            dct.Add(new CmbBoolDto { Value = false, Caption = "Ciltli Son Tez Teslimini Yapmamıştır" });
 
             return dct;
         }
@@ -1740,8 +1765,8 @@ namespace LisansUstuBasvuruSistemi.Business
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = -1, Caption = "" });
             dct.Add(new CmbIntDto { Value = null, Caption = "Sonuç Girilmedi" });
-            dct.Add(new CmbIntDto { Value = 1, Caption = "Mezun Oldu" });
-            dct.Add(new CmbIntDto { Value = 0, Caption = "Mezun Olamadı" });
+            dct.Add(new CmbIntDto { Value = 1, Caption = "Ciltli Son Tez Teslimini Yapmıştır" });
+            dct.Add(new CmbIntDto { Value = 0, Caption = "Ciltli Son Tez Teslimini Yapmamıştır" });
             return dct;
         }
         public static List<CmbIntDto> GetCmbMezuniyetSurecYayinTurleri(int mezuniyetSurecId, int kullaniciId, int mezuniyetBasvurulariId, bool bosSecimVar = false)

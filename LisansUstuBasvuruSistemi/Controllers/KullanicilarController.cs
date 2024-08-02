@@ -401,6 +401,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SicilNo" });
 
+
+            if (kModel.IzinBaslamaTarihi.HasValue || kModel.IzinBitisTarihi.HasValue)
+            {
+                if (!kModel.IzinBaslamaTarihi.HasValue)
+                {
+                    mmMessage.Messages.Add("İzin Başlangıç Tarihi giriniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IzinBaslamaTarihi" });
+                }
+                if (!kModel.IzinBitisTarihi.HasValue)
+                {
+                    mmMessage.Messages.Add("İzin Bitiş Tarihi giriniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IzinBitisTarihi" });
+                }
+
+                if (kModel.IzinBaslamaTarihi > kModel.IzinBitisTarihi)
+                {
+                    mmMessage.Messages.Add("İzin Başlangıç Tarihi, İzin Bitiş Tarihinden büyük olamaz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IzinBaslamaTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IzinBitisTarihi" });
+                }
+            }
+
             if (kModel.KullaniciAdi.IsNullOrWhiteSpace())
             {
 
@@ -648,6 +670,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kullanici.UnvanID = kModel.UnvanID;
                     kullanici.SicilNo = kModel.SicilNo;
                     kullanici.ABDKoordinatoru = kModel.ABDKoordinatoru;
+
+                    kullanici.IzinBaslamaTarihi = kModel.IzinBaslamaTarihi;
+                    kullanici.IzinBitisTarihi = kModel.IzinBitisTarihi;
 
                     kullanici.KullaniciAdi = kModel.KullaniciAdi;
                     if (!kModel.Sifre.IsNullOrWhiteSpace())

@@ -31,9 +31,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 cell100_2000YokBursiyeriAltAlan.Text = srTalebi.IsYokDrBursiyeriVar == true ? srTalebi.YokDrOncelikliAlan : "";
 
 
-                cellTezDili.Text = mBasvuru.IsTezDiliTr == true ? "Türkçe" : "English";
-                cellTezBaslikTr.Text = joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikTr : mBasvuru.TezBaslikTr;
-                cellTezBaslikEn.Text = joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikEn : mBasvuru.TezBaslikEn;
                 if (srTalebi.IsOnline)
                 {
                     cellToplantiYeri.Text = "Online";
@@ -44,6 +41,25 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 }
                 cellToplantiTarihi.Text = srTalebi.Tarih.ToFormatDate();
                 cellToplantiSaati.Text = $"{srTalebi.BasSaat:hh\\:mm}";
+
+
+                var uzatmaDegisenTezBaslikTr = "";
+                var uzatmaDegisenTezBaslikEn = "";
+
+
+                var birOncekiSrTalepUzatma = entities.SRTalepleris.Where(p => p.MezuniyetBasvurulariID == srTalebi.MezuniyetBasvurulariID && p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma &&
+                    p.SRTalepID < srTalebi.SRTalepID).OrderByDescending(o => o.SRTalepID).Select(su =>
+                    new { su.IsTezBasligiDegisti, su.YeniTezBaslikTr, su.YeniTezBaslikEn }).FirstOrDefault();
+                if (birOncekiSrTalepUzatma != null && birOncekiSrTalepUzatma.IsTezBasligiDegisti == true)
+                {
+                    uzatmaDegisenTezBaslikTr = birOncekiSrTalepUzatma.YeniTezBaslikTr;
+                    uzatmaDegisenTezBaslikEn = birOncekiSrTalepUzatma.YeniTezBaslikEn;
+                }
+
+
+                cellTezDili.Text = mBasvuru.IsTezDiliTr == true ? "Türkçe" : "English";
+                cellTezBaslikTr.Text = uzatmaDegisenTezBaslikTr.IsNullOrWhiteSpace() ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikTr : mBasvuru.TezBaslikTr) : uzatmaDegisenTezBaslikTr;
+                cellTezBaslikEn.Text = uzatmaDegisenTezBaslikEn.IsNullOrWhiteSpace() ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikEn : mBasvuru.TezBaslikEn) : uzatmaDegisenTezBaslikEn;
 
 
                 if (srTalebi.IsTezBasligiDegisti == true)

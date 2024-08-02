@@ -10,6 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string MezuniyetBasvurusuAcikmi = "Mezuniyet Başvurusu Açık";
         public const string MezuniyetBasvurusunuTezSorumlusunaAta = "Mezuniyet Basvurusunu Tez Sorumlusuna Ata";
         public const string MezuniyetBasvurusunuIlgiliTezSorumlusunaAta = "Mezuniyet Basvurusunu İlgili Tez Sorumlusuna Ata";
+        public const string TezSorumluAtamaHesaplamasiDonemselYap = "Tez Sorumlusu Atama Hesaplaması Dönemsel Yapılsın";
         public const string YeniMezuniyetBasvurusundaMailGonder = "Yeni Mezuniyet Başvurusunda Mail Gönder";
 
         public static void SetAyarMz(string ayarAdi, string ayarDegeri, string enstituKod)

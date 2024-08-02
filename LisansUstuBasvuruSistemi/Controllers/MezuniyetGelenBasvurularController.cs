@@ -15,6 +15,7 @@ using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using static DevExpress.Utils.Drawing.Helpers.NativeMethods;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -290,7 +291,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      s.MezuniyetSinavDurumAdi,
                                      UzatmaTarihi = s.SrTalebi != null && s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ? s.SrTalebi.Tarih.AddDays(s.UzatmaSuresiGun).ToFormatDate() : "",
                                      TezTeslimSonTarih = s.SrTalebi != null && s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? (s.TezTeslimSonTarih ?? s.SrTalebi.Tarih.AddDays(s.MezuniyetSuresiGun).Date).ToString("dd.MM.yyy") : "",
-                                     MezuniyetDurumu = s.IsMezunOldu.HasValue ? (s.IsMezunOldu.Value ? "Mezun Oldu" : "Mezun Olamadı") : "İşlem Bekliyor",
+                                     MezuniyetDurumu = s.IsMezunOldu.HasValue ? (s.IsMezunOldu.Value ? "Ciltli Son Tez Teslimini Yapmıştır" : "Ciltli Son Tez Teslimini Yapmamıştır") : "İşlem Bekliyor",
                                      MezuniyetTarihi = s.IsMezunOldu == true ? s.MezuniyetTarihi.Value.ToFormatDate() : "",
                                  }).ToList();
                 gv.DataBind();
@@ -318,7 +319,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.SRDurumID = new SelectList(srDurms, "Value", "Caption", model.SRDurumID);
             ViewBag.TDDurumID = new SelectList(MezuniyetBus.GetCmbTezDurumListe(true), "Value", "Caption", model.TDDurumID);
             ViewBag.IsTezDiliTr = new SelectList(MezuniyetBus.GetCmbTezDili(true), "Value", "Caption", model.IsTezDiliTr);
-            ViewBag.MezuniyetSinavDurumID = new SelectList(MezuniyetBus.GetCmbMzSinavDurumListe(true), "Value", "Caption", model.MezuniyetSinavDurumID);
+            var cmbSinavDurumListe = MezuniyetBus.GetCmbMzSinavDurumListe(true);
+            cmbSinavDurumListe.Add(new CmbIntDto { Value = -50, Caption = "Sınav Durumu Başarılı Olanlar" });
+            ViewBag.MezuniyetSinavDurumID = new SelectList(cmbSinavDurumListe, "Value", "Caption", model.MezuniyetSinavDurumID);
             ViewBag.TezKontrolKullaniciId = new SelectList(MezuniyetBus.GetCmbAktifTezKontrolSorumlulari(enstituKod, true), "Value", "Caption", model.TezKontrolKullaniciId);
             ViewBag.TeslimFormDurumu = new SelectList(MezuniyetBus.GetCmbTeslimFormDurumu(true), "Value", "Caption", model.TeslimFormDurumu);
             ViewBag.MezuniyetDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetDurumId(true), "Value", "Caption", model.MezuniyetDurumID);

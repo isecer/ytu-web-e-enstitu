@@ -117,6 +117,8 @@ namespace Entities.Entities
         public Nullable<int> KayitYilBaslangic { get; set; }
         public Nullable<int> KayitDonemID { get; set; }
         public Nullable<int> DanismanID { get; set; }
+        public Nullable<System.DateTime> IzinBaslamaTarihi { get; set; }
+        public Nullable<System.DateTime> IzinBitisTarihi { get; set; }
         public bool FixedHeader { get; set; }
         public bool FixedSidebar { get; set; }
         public bool ScrollSidebar { get; set; }

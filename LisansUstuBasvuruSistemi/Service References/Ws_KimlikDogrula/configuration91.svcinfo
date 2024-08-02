@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="ZxZF5gp2bCsubWWpF1vYi0hoev0=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="fm5ErISmVLE6VSE+3/pdlDwuhq70e6Tkj4gKlKih0vM=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="KPSPublicV2Soap">
+    <bindingConfiguration bindingType="basicHttpBinding" name="KPSPublicV2Soap1">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>KPSPublicV2Soap</serializedValue>
+          <serializedValue>KPSPublicV2Soap1</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -110,10 +110,10 @@
         </property>
       </properties>
     </bindingConfiguration>
-    <bindingConfiguration bindingType="basicHttpBinding" name="KPSPublicV2Soap1">
+    <bindingConfiguration bindingType="basicHttpBinding" name="KPSPublicV2Soap2">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>KPSPublicV2Soap1</serializedValue>
+          <serializedValue>KPSPublicV2Soap2</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -221,7 +221,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="KPSPublicV2Soap" contract="Ws_KimlikDogrula.KPSPublicV2Soap" bindingType="basicHttpBinding" address="https://tckimlik.nvi.gov.tr/Service/KPSPublicV2.asmx" bindingConfiguration="KPSPublicV2Soap">
+    <endpoint name="KPSPublicV2Soap1" contract="Ws_KimlikDogrula.KPSPublicV2Soap" bindingType="basicHttpBinding" address="https://tckimlik.nvi.gov.tr/Service/KPSPublicV2.asmx" bindingConfiguration="KPSPublicV2Soap1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>https://tckimlik.nvi.gov.tr/Service/KPSPublicV2.asmx</serializedValue>
@@ -233,7 +233,7 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>KPSPublicV2Soap</serializedValue>
+          <serializedValue>KPSPublicV2Soap1</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>Ws_KimlikDogrula.KPSPublicV2Soap</serializedValue>
@@ -296,7 +296,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>KPSPublicV2Soap</serializedValue>
+          <serializedValue>KPSPublicV2Soap1</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
