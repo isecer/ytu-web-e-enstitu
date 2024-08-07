@@ -5,6 +5,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model TiBasvuruDetayDto
 @{
      
@@ -581,7 +582,7 @@
                                                         {
                                                             var isKomiteTezDanismani = itemJr.JuriTipAdi == "TezDanismani";
                                                             var openRow = (isDanismani && isKomiteTezDanismani);
-                                                            var openDegerlendirme = inxRw == 1 && srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.IsBasarili.HasValue) || degerlendirmeDuzeltmeYetki);
+                                                            var openDegerlendirme = (inxRw == 1|| Model.IsGecmisDegerlendirilebilsin) && srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.IsBasarili.HasValue) || degerlendirmeDuzeltmeYetki);
                                                             var sendLink = inxRw == 1 && srTalebiYapildi && (isDanismani && !isKomiteTezDanismani && item.TIBasvuruAraRaporKomites.Count != item.TIBasvuruAraRaporKomites.Count(c => c.IsBasarili.HasValue) || (degerlendirmeDuzeltmeYetki));
 
                                                             <tr>

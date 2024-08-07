@@ -19,6 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string TezOneriIkinciSavunmaHakkiAyKriter = "ilk başvuru için 2. Savunma kaç ay içinde yapılmalı";
 
         public const string TiBasvurusuAcikmi = "Ara rapor başvuru alımı açık";
+        public const string TiGecmisAraRaporBasvurulariDegerlendirilebilsin = "Geçmiş ara rapor başvuruları değerlendirilebilsin";
 
         public const string TiSonDonemKayitOlunmasiGerekenDersKodlari = "Son dönem kayıt olunması gereken ders kodları";
         public const string TiUyelerMinSinavPuan = "Üyeler için dil sınavı kabulü min puan";

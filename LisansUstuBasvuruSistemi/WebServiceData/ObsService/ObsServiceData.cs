@@ -361,8 +361,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                         }
                     }
                 }
-
-                var jsonText = programs.ToJson();
+                 
 
             }
         }

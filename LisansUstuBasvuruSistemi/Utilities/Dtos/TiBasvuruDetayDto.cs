@@ -24,6 +24,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DurumClassName { get; set; }
         public string DurumColor { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
+
+        public bool IsGecmisDegerlendirilebilsin { get; set; }
         public List<TiBasvuruAraRaporDto> TIBasvuruAraRaporList { get; set; }
     }
     public class TiBasvuruAraRaporDto : TIBasvuruAraRapor
