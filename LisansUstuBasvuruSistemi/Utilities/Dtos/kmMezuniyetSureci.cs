@@ -26,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<int?> ToplamKaynakOraniKriteri { get; set; } = new List<int?>();
         public List<int?> TekKaynakOraniKriteri { get; set; } = new List<int?>();
         public List<int?> SinavKacGunSonraAlabilir { get; set; } = new List<int?>();
+        public List<int?> SinavEnGecKacGunSonraAlabilir { get; set; } = new List<int?>(); 
         public List<int?> SinavUzatmaOgrenciTaahhutMaxGun { get; set; } = new List<int?>();
         public List<int?> SinavUzatmaSinavAlmaSuresiMaxGun { get; set; } = new List<int?>();
         public List<int?> TezTeslimSuresiGun { get; set; } = new List<int?>();

@@ -4,6 +4,7 @@
 @{
     Layout = null;
     var tezDiliTr = Model.IsYeniTezDiliTr.HasValue ? Model.IsYeniTezDiliTr == false : Model.IsTezDiliTr == false;
+
 }
 @using (Ajax.BeginForm("TdoDilBaslikDegisiklikFormuPost", "TdoBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
 {
@@ -54,14 +55,14 @@
                     <td class="CaptionTd">Yeni Tez Başlığı Türkçe</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control UpperTextTr" style="color:black;" />
+                        <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" maxlength="@Model.TezBaslikKarakterMaxUzunluk" value="@Model.YeniTezBaslikTr" class="form-control UpperTextTr" style="color:black;" />
                     </td>
                 </tr>
                 <tr>
                     <td class="CaptionTd">Yeni Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control UpperTextEn" style="color:black;" />
+                        <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" maxlength="@Model.TezBaslikKarakterMaxUzunluk" value="@Model.YeniTezBaslikEn" class="form-control UpperTextEn" style="color:black;" />
                     </td>
                 </tr>
             </tbody>
@@ -105,17 +106,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-top: 15px; margin-bottom:8px;padding:6px 10px;min-height:60px;">
-            <table style="width:100%;">
-                <tr>
-                    <td class="CaptionTd" width="140">Gerekçe</td>
-                    <td class="CaptionTd" width="10">:</td>
-                    <td class="ValueTd form-group">
-                        <textarea class="form-control" name="Gerekce" id="Gerekce" maxlength="1024" autocomplete="off" style="min-height:100px;">@Model.Gerekce</textarea>
-                    </td>
-                </tr>
-            </table>
-        </div>
+       
     </div>
 
 }

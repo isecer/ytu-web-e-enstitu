@@ -113,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                                     TDOgrenciSayisiDR = s.TDOgrenciSayisiDR,
                                                     TDOgrenciSayisiYL = s.TDOgrenciSayisiYL,
                                                     TDTezSayisiDR = s.TDTezSayisiDR,
-                                                    TDTezSayisiYL = s.TDTezSayisiYL,
+                                                    TDTezSayisiYL = s.TDTezSayisiYL, 
                                                     DanismanOnayladi = s.DanismanOnayladi,
                                                     DanismanOnayTarihi = s.DanismanOnayTarihi,
                                                     DanismanOnaylanmadiAciklama = s.DanismanOnaylanmadiAciklama,
@@ -125,6 +125,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                                                     EYKYaHazirlandi = s.EYKYaHazirlandi,
+                                                    EYKYaHazirlandiAciklamasi = s.EYKYaHazirlandiAciklamasi,
                                                     EYKYaHazirlandiIslemTarihi = s.EYKYaHazirlandiIslemTarihi,
                                                     EYKYaHazirlandiIslemYapanID = s.EYKYaHazirlandiIslemYapanID,
 

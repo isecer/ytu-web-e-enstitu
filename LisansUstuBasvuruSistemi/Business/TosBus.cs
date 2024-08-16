@@ -135,7 +135,26 @@ namespace LisansUstuBasvuruSistemi.Business
                     return 3;
                 }
                 if (sonBasvuru?.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi) return 1;
-                if (sonBasvuru?.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme) return sonBasvuru.SavunmaNo;
+                if (sonBasvuru?.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
+                {
+                    //var sonTos = toBasvuru.ToBasvuruSavunmas
+                    //       .First(p => p.ToBasvuruSavunmaID == sonBasvuru.ToBasvuruSavunmaID);
+                    //var sonTosSr = sonTos.SRTalepleris.First();
+
+                    // var tezOneriIlkSavunmaHakkiAyKriter =
+                    //    TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                    //var tezOneriIkinciSavunmaHakkiAyKriter =
+                    //    TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                    //var tezOneriToplamSavunmaHakkiAyKriter =
+                    //    tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
+                    //var ilkOneriBitisTarihi = toBasvuru.IlkOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
+                    //var ikinciOneriBitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
+
+                    //if (toBasvuru.IsBasvuruKriterMuaf || kontrolTarih.Date <= ilkOneriBitisTarihi.Date) return 1;
+                    //if (kontrolTarih.Date <= ikinciOneriBitisTarihi) return 2;
+                    //return 3;
+                    return sonBasvuru.SavunmaNo;
+                }
                 return (sonBasvuru?.SavunmaNo ?? 0) + 1;
 
             }
@@ -195,7 +214,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     a.ToBasvuruSavunmaID > sonBasvuru.ToBasvuruSavunmaID && a.SRTalepleris.Any());
                 if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
                 {
-                    kontrolTarih = (kontrolTarih ?? sonBasvuru.SRTalepleris.First().Tarih).Date;
+                    kontrolTarih = DateTime.Now;
                     var tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter =
                         TiAyar.TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
                     var duzeltmeAlinanSinav = sonBasvuru.SRTalepleris.First();

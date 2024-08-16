@@ -72,7 +72,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     let srT = s.SRTalepleris.OrderByDescending(os => os.SRTalepID).FirstOrDefault()
                     let td = s.MezuniyetBasvurulariTezDosyalaris.OrderByDescending(os => os.MezuniyetBasvurulariTezDosyaID)
                         .FirstOrDefault()
-
+                 
                     where bs.Enstituler.EnstituKisaAd.Contains(ekd) &&
                           s.MezuniyetBasvurulariID == (model.SMezuniyetBID ?? s.MezuniyetBasvurulariID)
                     select new FrMezuniyetBasvurulari
@@ -117,6 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         TezKontrolKullaniciID = s.TezKontrolKullaniciID,
                         TeslimFormDurumu = srT != null && s.MezuniyetBasvurulariTezTeslimFormlaris.Any(),
                         IsOnaylandiOrDuzeltme = td != null ? td.IsOnaylandiOrDuzeltme : null,
+                        TezDosyasiIlkKezKontrolBekliyor = td != null && !td.IsOnaylandiOrDuzeltme.HasValue && s.MezuniyetBasvurulariTezDosyalaris.Count==1,
                         MezuniyetBasvurulariTezDosyasi = td,
                         UzatmaSuresiGun = mOt.SinavUzatmaSinavAlmaSuresiMaxGun,
                         MezuniyetSuresiGun = mOt.SinavUzatmaSinavAlmaSuresiMaxGun,
@@ -192,12 +193,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (model.TDDurumID.HasValue)
             {
-                if (model.TDDurumID == 2)
-                    q = q.Where(p => p.MezuniyetBasvurulariTezDosyasi != null && !p.IsOnaylandiOrDuzeltme.HasValue && !p.IsMezunOldu.HasValue && p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi);
-                else
+                if (model.TDDurumID == TezKontrolDurumEnum.IlkKezKontrolBekleyenler)
                 {
-                    var isOnaylandiOrDuzeltme = (model.TDDurumID == 1);
-                    q = q.Where(p => p.IsOnaylandiOrDuzeltme == isOnaylandiOrDuzeltme && !p.IsMezunOldu.HasValue && p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi);
+                    q = q.Where(p => p.TezDosyasiIlkKezKontrolBekliyor == true);
+                }
+                else if (model.TDDurumID == TezKontrolDurumEnum.IslemBekleyenler) // işlem bekliyor
+                    q = q.Where(p => p.MezuniyetBasvurulariTezDosyasi != null && !p.IsOnaylandiOrDuzeltme.HasValue && !p.IsMezunOldu.HasValue && p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi);
+                else if (model.TDDurumID == TezKontrolDurumEnum.Onaylananlar)
+                {
+                    q = q.Where(p => p.IsOnaylandiOrDuzeltme == true);
+                }
+                else if (model.TDDurumID == TezKontrolDurumEnum.DuzeltmeTalepEdildi)
+                {
+                    q = q.Where(p => p.IsOnaylandiOrDuzeltme == false);
+
                 }
             }
             if (model.MezuniyetSinavDurumID.HasValue)

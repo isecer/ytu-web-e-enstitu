@@ -1588,6 +1588,7 @@
           <Property Name="ToplamKaynakOrani" Type="int" />
           <Property Name="TekKaynakOrani" Type="int" />
           <Property Name="SinavKacGunSonraAlabilir" Type="int" Nullable="false" />
+          <Property Name="SinavEnGecKacGunSonraAlabilir" Type="int" Nullable="false" />
           <Property Name="SinavUzatmaOgrenciTaahhutMaxGun" Type="int" Nullable="false" />
           <Property Name="SinavUzatmaSinavAlmaSuresiMaxGun" Type="int" Nullable="false" />
           <Property Name="TezTeslimSuresiGun" Type="int" Nullable="false" />
@@ -2537,6 +2538,7 @@
           <Property Name="EYKYaGonderildiIslemTarihi" Type="datetime" />
           <Property Name="EYKYaGonderimDurumAciklamasi" Type="nvarchar" MaxLength="512" />
           <Property Name="EYKYaHazirlandi" Type="bit" />
+          <Property Name="EYKYaHazirlandiAciklamasi" Type="nvarchar" MaxLength="512" />
           <Property Name="EYKYaHazirlandiIslemYapanID" Type="int" />
           <Property Name="EYKYaHazirlandiIslemTarihi" Type="datetime" />
           <Property Name="EYKDaOnaylandi" Type="bit" />
@@ -9071,6 +9073,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="YetkiGruplaris" EntityType="LubsDbModel.YetkiGruplari" />
           <EntitySet Name="YetkiGrupRolleris" EntityType="LubsDbModel.YetkiGrupRolleri" />
           <EntitySet Name="ZamanTipleris" EntityType="LubsDbModel.ZamanTipleri" />
+          <EntitySet Name="vW_ProgramBasvuruSonucSayisal" EntityType="LubsDbModel.vW_ProgramBasvuruSonucSayisal" />
           <AssociationSet Name="FK_BasvurularTercihleri_AlanTipleri" Association="LubsDbModel.FK_BasvurularTercihleri_AlanTipleri">
             <End Role="AlanTipleri" EntitySet="AlanTipleris" />
             <End Role="BasvurularTercihleri" EntitySet="BasvurularTercihleris" />
@@ -10407,7 +10410,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Menuler" EntitySet="Menulers" />
             <End Role="Roller" EntitySet="Rollers" />
           </AssociationSet>
-          <EntitySet Name="vW_ProgramBasvuruSonucSayisal" EntityType="LubsDbModel.vW_ProgramBasvuruSonucSayisal" />
         </EntityContainer>
         <EntityType Name="AlanTipleri">
           <Key>
@@ -12364,6 +12366,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="ToplamKaynakOrani" Type="Int32" />
           <Property Name="TekKaynakOrani" Type="Int32" />
           <Property Name="SinavKacGunSonraAlabilir" Type="Int32" Nullable="false" />
+          <Property Name="SinavEnGecKacGunSonraAlabilir" Type="Int32" Nullable="false" />
           <Property Name="SinavUzatmaOgrenciTaahhutMaxGun" Type="Int32" Nullable="false" />
           <Property Name="SinavUzatmaSinavAlmaSuresiMaxGun" Type="Int32" Nullable="false" />
           <Property Name="TezTeslimSuresiGun" Type="Int32" Nullable="false" />
@@ -13502,6 +13505,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="EYKYaGonderildiIslemTarihi" Type="DateTime" Precision="3" />
           <Property Name="EYKYaGonderimDurumAciklamasi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="EYKYaHazirlandi" Type="Boolean" />
+          <Property Name="EYKYaHazirlandiAciklamasi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="EYKYaHazirlandiIslemYapanID" Type="Int32" />
           <Property Name="EYKYaHazirlandiIslemTarihi" Type="DateTime" Precision="3" />
           <Property Name="EYKDaOnaylandi" Type="Boolean" />
@@ -14160,6 +14164,36 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="ZamanTipID" Type="Int32" Nullable="false" />
           <Property Name="ZamanTipAdi" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BasvuruSurecOtoMails" Relationship="LubsDbModel.FK_BasvuruSurecOtoMail_ZamanTipleri" FromRole="ZamanTipleri" ToRole="BasvuruSurecOtoMail" />
+        </EntityType>
+        <EntityType Name="vW_ProgramBasvuruSonucSayisal">
+          <Key>
+            <PropertyRef Name="BasvuruSurecID" />
+            <PropertyRef Name="MulakatSurecineGirecek" />
+            <PropertyRef Name="OgrenimTipKod" />
+            <PropertyRef Name="OgrenimTipAdi" />
+            <PropertyRef Name="AnabilimDaliKod" />
+            <PropertyRef Name="ProgramKod" />
+            <PropertyRef Name="ProgramAdi" />
+          </Key>
+          <Property Name="BasvuruSurecID" Type="Int32" Nullable="false" />
+          <Property Name="MulakatSurecineGirecek" Type="Boolean" Nullable="false" />
+          <Property Name="OgrenimTipKod" Type="Int32" Nullable="false" />
+          <Property Name="OgrenimTipAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="AnabilimDaliKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="AnabilimDaliAdi" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ProgramAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="AlanIciKota" Type="Int32" />
+          <Property Name="AIKayitCount" Type="Int32" />
+          <Property Name="AIAsilCount" Type="Int32" />
+          <Property Name="AIYedekCount" Type="Int32" />
+          <Property Name="AIKazanamayanCount" Type="Int32" />
+          <Property Name="AlanDisiKota" Type="Int32" />
+          <Property Name="ADKayitCount" Type="Int32" />
+          <Property Name="ADAsilCount" Type="Int32" />
+          <Property Name="ADYedekCount" Type="Int32" />
+          <Property Name="ADKazanamayanCount" Type="Int32" />
+          <Property Name="ToplamBasvuru" Type="Int32" />
         </EntityType>
         <Association Name="FK_BasvurularTercihleri_AlanTipleri">
           <End Type="LubsDbModel.AlanTipleri" Role="AlanTipleri" Multiplicity="1" />
@@ -18287,36 +18321,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <End Type="LubsDbModel.Menuler" Role="Menuler" Multiplicity="*" />
           <End Type="LubsDbModel.Roller" Role="Roller" Multiplicity="*" />
         </Association>
-        <EntityType Name="vW_ProgramBasvuruSonucSayisal">
-          <Key>
-            <PropertyRef Name="BasvuruSurecID" />
-            <PropertyRef Name="MulakatSurecineGirecek" />
-            <PropertyRef Name="OgrenimTipKod" />
-            <PropertyRef Name="OgrenimTipAdi" />
-            <PropertyRef Name="AnabilimDaliKod" />
-            <PropertyRef Name="ProgramKod" />
-            <PropertyRef Name="ProgramAdi" />
-          </Key>
-          <Property Name="BasvuruSurecID" Type="Int32" Nullable="false" />
-          <Property Name="MulakatSurecineGirecek" Type="Boolean" Nullable="false" />
-          <Property Name="OgrenimTipKod" Type="Int32" Nullable="false" />
-          <Property Name="OgrenimTipAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="AnabilimDaliKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="AnabilimDaliAdi" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ProgramAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="AlanIciKota" Type="Int32" />
-          <Property Name="AIKayitCount" Type="Int32" />
-          <Property Name="AIAsilCount" Type="Int32" />
-          <Property Name="AIYedekCount" Type="Int32" />
-          <Property Name="AIKazanamayanCount" Type="Int32" />
-          <Property Name="AlanDisiKota" Type="Int32" />
-          <Property Name="ADKayitCount" Type="Int32" />
-          <Property Name="ADAsilCount" Type="Int32" />
-          <Property Name="ADYedekCount" Type="Int32" />
-          <Property Name="ADKazanamayanCount" Type="Int32" />
-          <Property Name="ToplamBasvuru" Type="Int32" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -19973,6 +19977,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="TezTeslimSuresiGun" ColumnName="TezTeslimSuresiGun" />
                 <ScalarProperty Name="SinavUzatmaSinavAlmaSuresiMaxGun" ColumnName="SinavUzatmaSinavAlmaSuresiMaxGun" />
                 <ScalarProperty Name="SinavUzatmaOgrenciTaahhutMaxGun" ColumnName="SinavUzatmaOgrenciTaahhutMaxGun" />
+                <ScalarProperty Name="SinavEnGecKacGunSonraAlabilir" ColumnName="SinavEnGecKacGunSonraAlabilir" />
                 <ScalarProperty Name="SinavKacGunSonraAlabilir" ColumnName="SinavKacGunSonraAlabilir" />
                 <ScalarProperty Name="TekKaynakOrani" ColumnName="TekKaynakOrani" />
                 <ScalarProperty Name="ToplamKaynakOrani" ColumnName="ToplamKaynakOrani" />
@@ -20960,6 +20965,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="EYKDaOnaylandi" ColumnName="EYKDaOnaylandi" />
                 <ScalarProperty Name="EYKYaHazirlandiIslemTarihi" ColumnName="EYKYaHazirlandiIslemTarihi" />
                 <ScalarProperty Name="EYKYaHazirlandiIslemYapanID" ColumnName="EYKYaHazirlandiIslemYapanID" />
+                <ScalarProperty Name="EYKYaHazirlandiAciklamasi" ColumnName="EYKYaHazirlandiAciklamasi" />
                 <ScalarProperty Name="EYKYaHazirlandi" ColumnName="EYKYaHazirlandi" />
                 <ScalarProperty Name="EYKYaGonderimDurumAciklamasi" ColumnName="EYKYaGonderimDurumAciklamasi" />
                 <ScalarProperty Name="EYKYaGonderildiIslemTarihi" ColumnName="EYKYaGonderildiIslemTarihi" />
@@ -21595,22 +21601,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="KullaniciRolleri" TypeName="LubsDbModel.KullaniciRolleri" StoreEntitySet="KullaniciRolleri">
-            <EndProperty Name="Roller">
-              <ScalarProperty Name="RolID" ColumnName="RolID" />
-            </EndProperty>
-            <EndProperty Name="Kullanicilar">
-              <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="MenuRollleri" TypeName="LubsDbModel.MenuRollleri" StoreEntitySet="MenuRollleri">
-            <EndProperty Name="Roller">
-              <ScalarProperty Name="RolID" ColumnName="RolID" />
-            </EndProperty>
-            <EndProperty Name="Menuler">
-              <ScalarProperty Name="MenuID" ColumnName="MenuID" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="vW_ProgramBasvuruSonucSayisal">
             <EntityTypeMapping TypeName="LubsDbModel.vW_ProgramBasvuruSonucSayisal">
               <MappingFragment StoreEntitySet="vW_ProgramBasvuruSonucSayisal">
@@ -21636,6 +21626,22 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="KullaniciRolleri" TypeName="LubsDbModel.KullaniciRolleri" StoreEntitySet="KullaniciRolleri">
+            <EndProperty Name="Roller">
+              <ScalarProperty Name="RolID" ColumnName="RolID" />
+            </EndProperty>
+            <EndProperty Name="Kullanicilar">
+              <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="MenuRollleri" TypeName="LubsDbModel.MenuRollleri" StoreEntitySet="MenuRollleri">
+            <EndProperty Name="Roller">
+              <ScalarProperty Name="RolID" ColumnName="RolID" />
+            </EndProperty>
+            <EndProperty Name="Menuler">
+              <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

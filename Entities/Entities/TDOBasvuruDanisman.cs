@@ -67,6 +67,7 @@ namespace Entities.Entities
         public Nullable<System.DateTime> EYKYaGonderildiIslemTarihi { get; set; }
         public string EYKYaGonderimDurumAciklamasi { get; set; }
         public Nullable<bool> EYKYaHazirlandi { get; set; }
+        public string EYKYaHazirlandiAciklamasi { get; set; }
         public Nullable<int> EYKYaHazirlandiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKYaHazirlandiIslemTarihi { get; set; }
         public Nullable<bool> EYKDaOnaylandi { get; set; }

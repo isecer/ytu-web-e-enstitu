@@ -1114,6 +1114,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (mezuniyetBasvurusu.EYKTarihi != null)
                 {
                     var srBaslangicTarihi = mezuniyetBasvurusu.EYKTarihi.Value.AddDays(mezuniyetSureciOgrenimTip.SinavKacGunSonraAlabilir);
+                    var srBitTarihi = mezuniyetBasvurusu.EYKTarihi.Value.AddDays(mezuniyetSureciOgrenimTip.SinavEnGecKacGunSonraAlabilir);
                     if (kModel.IsSalonSecilsin)
                     {
                         if (kModel.SRSalonID <= 0 || !kModel.SRSalonID.HasValue)
@@ -1130,6 +1131,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else if (kModel.Tarih.Date < srBaslangicTarihi.Date)
                         {
                             mmMessage.Messages.Add("Sınav tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
+                        }
+                        else if (kModel.Tarih.Date > srBitTarihi.Date)
+                        {
+                            mmMessage.Messages.Add("Sınav tarihi " + srBitTarihi.Date.ToFormatDate() + " tarihinden büyük olamaz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
                         if (kModel.BasSaat == TimeSpan.MinValue || kModel.BitSaat == TimeSpan.MinValue)
@@ -1154,6 +1160,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else if (kModel.Tarih.Date < srBaslangicTarihi.Date)
                         {
                             mmMessage.Messages.Add("Sınav tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
+                        }
+                        else if (kModel.Tarih.Date > srBitTarihi.Date)
+                        {
+                            mmMessage.Messages.Add("Sınav tarihi " + srBitTarihi.Date.ToFormatDate() + " tarihinden büyük olamaz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
                     }
@@ -1556,9 +1567,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Yükleyeceğiniz dosya boyutu en fazla 20MB olmalıdır.");
             }
-            else if (tezSablonDosyasi.FileName.Length > 1024)
+            else if (tezSablonDosyasi.FileName.Length > 100)
             {
-                mMessage.Messages.Add("Yükleyeceğiniz dosya adı en fazla 1024 karakter uzunluğunda olmalıdır.");
+                mMessage.Messages.Add("Yükleyeceğiniz dosya adı en fazla 100 karakter uzunluğunda olmalıdır.");
             }
             else
             {

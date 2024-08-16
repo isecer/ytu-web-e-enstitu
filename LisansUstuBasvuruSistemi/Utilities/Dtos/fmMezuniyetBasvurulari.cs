@@ -74,6 +74,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public SRTalepleri SrTalebi { get; set; }
         public int MyProperty { get; set; }
         public bool? IsOnaylandiOrDuzeltme { get; set; }
+        public bool? TezDosyasiIlkKezKontrolBekliyor { get; set; }
         public MezuniyetBasvurulariTezDosyalari MezuniyetBasvurulariTezDosyasi { get; set; }
         public string FormNo { get; set; }
         public MezuniyetJuriOneriFormlari MezuniyetJuriOneriFormu { get; set; }

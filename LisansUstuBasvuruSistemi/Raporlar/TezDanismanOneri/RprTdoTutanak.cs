@@ -8,10 +8,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 {
     public partial class RprTdoTutanak : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprTdoTutanak()
+        public RprTdoTutanak(string ogrenciNos = "")
         {
             InitializeComponent();
-           
+            ReportFooterOgrenciNo.Visible = ogrenciNos != "";
+            cellOgrenciNos.Text = ogrenciNos;
+
         }
     }
 }

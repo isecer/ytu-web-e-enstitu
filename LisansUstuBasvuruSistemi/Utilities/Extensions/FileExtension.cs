@@ -55,6 +55,39 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             name += "_" + Guid.NewGuid().ToString().Substring(0, 8) + extension;
             return name;
         }
+
+        //public static string RemoveMaxCharacterFilePath(this string fullPath)
+        //{
+        //    const int maxPathLength = 260;
+           
+        //    if (fullPath.Length > maxPathLength)
+        //    {
+        //        string folderPath = Path.GetDirectoryName(fullPath);
+        //        string fileName = Path.GetFileName(fullPath);
+        //        string fileExtension = Path.GetExtension(fileName);
+        //        int excessLength = fullPath.Length - maxPathLength;
+
+        //        // Son '_' karakterinden önceki kısmı bul
+        //        int lastUnderscoreIndex = fileName.LastIndexOf('_');
+        //        if (lastUnderscoreIndex == -1)
+        //        {
+        //            lastUnderscoreIndex = fileName.Length - fileExtension.Length;
+        //        }
+
+        //        string nameToShorten = fileName.Substring(0, lastUnderscoreIndex);
+        //        string remainingPart = fileName.Substring(lastUnderscoreIndex);
+
+        //        // Dosya adını kısalt
+        //        if (nameToShorten.Length > excessLength)
+        //        {
+        //            nameToShorten = nameToShorten.Substring(0, nameToShorten.Length - excessLength);
+        //            fileName = nameToShorten + remainingPart;
+        //            fullPath = Path.Combine(folderPath, fileName);
+        //        }
+        //    }
+
+        //    return fullPath;
+        //}
         private static readonly char[] AllowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_. ğüşıöçĞÜŞİÖÇ".ToCharArray();
 
         // Dosya adını temizleyen metod

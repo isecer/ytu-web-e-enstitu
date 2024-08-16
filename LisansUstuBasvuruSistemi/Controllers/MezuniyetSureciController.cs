@@ -147,6 +147,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var sinavUzatmaSinavAlmaSuresiMaxGun = kModel.SinavUzatmaSinavAlmaSuresiMaxGun.Select((s, inx) => new { Inx = inx, SinavUzatmaSinavAlmaSuresiMaxGun = s }).ToList();
             var tezTeslimSuresiGun = kModel.TezTeslimSuresiGun.Select((s, inx) => new { Inx = inx, TezTeslimSuresiGun = s }).ToList();
             var sinavKacGunSonraAlabilir = kModel.SinavKacGunSonraAlabilir.Select((s, inx) => new { Inx = inx, SinavKacGunSonraAlabilir = s }).ToList();
+            var sinavEnGecKacGunSonraAlabilir = kModel.SinavEnGecKacGunSonraAlabilir.Select((s, inx) => new { Inx = inx, SinavEnGecKacGunSonraAlabilir = s }).ToList();
 
             var ogrenimTipleriLngs = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod).ToList();
             var mezuniyetSureciOgrenimTipKriterleri = (from kr in mezuniyetSureciOgrenimTipKriterId
@@ -165,6 +166,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                        join uzs in sinavUzatmaSinavAlmaSuresiMaxGun on kr.Inx equals uzs.Inx
                                                        join tts in tezTeslimSuresiGun on kr.Inx equals tts.Inx
                                                        join srg in sinavKacGunSonraAlabilir on kr.Inx equals srg.Inx
+                                                       join srmg in sinavEnGecKacGunSonraAlabilir on kr.Inx equals srmg.Inx
                                                        join otl in ogrenimTipleriLngs on ot.OgrenimTipID equals otl.OgrenimTipID
                                                        select new
                                                        {
@@ -183,6 +185,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                            tpko.ToplamKaynakOraniKriteri,
                                                            tkko.TekKaynakOraniKriteri,
                                                            srg.SinavKacGunSonraAlabilir,
+                                                           srmg.SinavEnGecKacGunSonraAlabilir,
                                                            uzt.SinavUzatmaOgrenciTaahhutMaxGun,
                                                            uzs.SinavUzatmaSinavAlmaSuresiMaxGun,
                                                            tts.TezTeslimSuresiGun
@@ -297,6 +300,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için S.R.G bilgisi 0 dan büyük olmalı.");
                     }
+                    if (!item.SinavEnGecKacGunSonraAlabilir.HasValue || item.SinavEnGecKacGunSonraAlabilir <= 0)
+                    {
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için S.R.S.G bilgisi 0 dan büyük olmalı.");
+                    }
                 }
             }
 
@@ -368,6 +375,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     SinavUzatmaSinavAlmaSuresiMaxGun = s.SinavUzatmaSinavAlmaSuresiMaxGun.Value,
                     TezTeslimSuresiGun = s.TezTeslimSuresiGun.Value,
                     SinavKacGunSonraAlabilir = s.SinavKacGunSonraAlabilir.Value,
+                    SinavEnGecKacGunSonraAlabilir = s.SinavEnGecKacGunSonraAlabilir.Value,
                     IslemTarihi = DateTime.Now,
                     IslemYapanID = UserIdentity.Current.Id,
                     IslemYapanIP = UserIdentity.Ip
@@ -398,6 +406,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.SinavUzatmaSinavAlmaSuresiMaxGun = sItem.SinavUzatmaSinavAlmaSuresiMaxGun ?? 0;
                 item.TezTeslimSuresiGun = sItem.TezTeslimSuresiGun ?? 0;
                 item.SinavKacGunSonraAlabilir = sItem.SinavKacGunSonraAlabilir ?? 0;
+                item.SinavEnGecKacGunSonraAlabilir = sItem.SinavEnGecKacGunSonraAlabilir ?? 0;
                 item.AktifDonemEtikNotKriteri = sItem.AktifDonemEtikNotKriteri;
                 item.AktifDonemSeminerNotKriteri = sItem.AktifDonemSeminerNotKriteri;
                 item.ToplamKaynakOrani = sItem.ToplamKaynakOraniKriteri;

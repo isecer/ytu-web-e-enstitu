@@ -13,6 +13,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int DegisiklikTipID { get; set; }
         public int TDODanismanTalepTipID { get; set; }
         public string Aciklama { get; set; }
+        public string OgrenciNo { get; set; }
         public string OgrenciBilgi { get; set; }
         public string DanismanAdSoyad { get; set; }
         public string TezDili { get; set; }
@@ -22,6 +23,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string YeniTezDili { get; set; }
         public string YeniTezBaslikTr { get; set; }
         public string YeniTezBaslikEn { get; set; }
+        public string EYKYaHazirlandiAciklamasi { get; set; }
     }
 
     

@@ -369,6 +369,13 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     }
 
+                    var ogrenciTezIzlemeBasariliSayi =
+                        ogrenciBilgi.OgrenciTez.tezizlemebilgileri.Count(a => a.TEZ_IZL_DURUM == "Başarılı");
+                    if (ogrenciTezIzlemeBasariliSayi < 3)
+                    {
+                        subMessages.Add("En az 3 başarılı tez izleme raporunuzun bulunması gerekmektedir. Mevcut başarılı tez izleme rapor sayınız :"+ ogrenciTezIzlemeBasariliSayi);
+
+                    }
                     if (subMessages.Any())
                     {
                         mMessage.Messages.Add("Mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
@@ -1359,6 +1366,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                          sonSurecOgrenimTipi?.TezTeslimSuresiGun ?? 0,
                                                   SinavKacGunSonraAlabilir = surecOgrenimTipi?.SinavKacGunSonraAlabilir ??
                                                                                   sonSurecOgrenimTipi?.SinavKacGunSonraAlabilir ?? 0,
+                                                  SinavEnGecKacGunSonraAlabilir = surecOgrenimTipi?.SinavEnGecKacGunSonraAlabilir ??
+                                                                             sonSurecOgrenimTipi?.SinavEnGecKacGunSonraAlabilir ?? 0,
 
 
                                               }).ToList();
@@ -1396,6 +1405,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 ogrenimTip.TekKaynakOrani = secilenOgrenimTipi.TekKaynakOrani;
                                 ogrenimTip.ToplamKaynakOrani = secilenOgrenimTipi.ToplamKaynakOrani;
                                 ogrenimTip.SinavKacGunSonraAlabilir = secilenOgrenimTipi.SinavKacGunSonraAlabilir;
+                                ogrenimTip.SinavEnGecKacGunSonraAlabilir = secilenOgrenimTipi.SinavEnGecKacGunSonraAlabilir;
                                 ogrenimTip.SinavUzatmaOgrenciTaahhutMaxGun = secilenOgrenimTipi.SinavUzatmaOgrenciTaahhutMaxGun;
                                 ogrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun = secilenOgrenimTipi.SinavUzatmaSinavAlmaSuresiMaxGun;
                                 ogrenimTip.TezTeslimSuresiGun = secilenOgrenimTipi.TezTeslimSuresiGun;
@@ -1869,9 +1879,10 @@ namespace LisansUstuBasvuruSistemi.Business
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
 
-            dct.Add(new CmbIntDto { Value = 2, Caption = "İşlem Bekleyenler" });
-            dct.Add(new CmbIntDto { Value = 0, Caption = "Düzeltme Talep Edildi" });
-            dct.Add(new CmbIntDto { Value = 1, Caption = "Onaylananlar" });
+            dct.Add(new CmbIntDto { Value = TezKontrolDurumEnum.IlkKezKontrolBekleyenler, Caption = "İlk Kez Kontrol Bekleyenler" });
+            dct.Add(new CmbIntDto { Value = TezKontrolDurumEnum.IslemBekleyenler, Caption = "İşlem Bekleyenler" });
+            dct.Add(new CmbIntDto { Value = TezKontrolDurumEnum.DuzeltmeTalepEdildi, Caption = "Düzeltme Talep Edildi" });
+            dct.Add(new CmbIntDto { Value = TezKontrolDurumEnum.Onaylananlar, Caption = "Onaylananlar" });
 
             return dct;
 

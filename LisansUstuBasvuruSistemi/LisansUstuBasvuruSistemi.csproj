@@ -451,6 +451,7 @@
     <Compile Include="Utilities\Dtos\MIndexBilgi.cs" />
     <Compile Include="Utilities\Dtos\MmMessage.cs" />
     <Compile Include="Utilities\Dtos\MSurecDetay.cs" />
+    <Compile Include="Utilities\Enums\TezKontrolDurumEnum.cs" />
     <Compile Include="Utilities\Enums\DonemProjesiEnums.cs" />
     <Compile Include="Utilities\Enums\EykTipEnum.cs" />
     <Compile Include="Utilities\Enums\MezuniyetEnums.cs" />
@@ -482,7 +483,7 @@
     <Compile Include="Utilities\Dtos\KmYeterlikBasvuruDto.cs" />
     <Compile Include="Utilities\Enums\AkademikDonemEnum.cs" />
     <Compile Include="Utilities\Enums\LuBasvuruEnums.cs" />
-    <Compile Include="Utilities\Enums\BelgeTalepEnums.cs" />
+    <Compile Include="Utilities\Enums\BelgeTalepEnum.cs" />
     <Compile Include="Utilities\Enums\DuyuruPopupTipiEnum.cs" />
     <Compile Include="Utilities\Enums\EnstituKodlariEnum.cs" />
     <Compile Include="Utilities\Enums\HttpDurumKodEnum.cs" />

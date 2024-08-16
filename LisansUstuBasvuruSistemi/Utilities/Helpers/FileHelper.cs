@@ -12,7 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     {
 
         public static bool IsSaveFileServer = SistemAyar.DosyalarSecilenKonumaArsivlensin.GetAyar().ToBoolean(false); //true;
-        public static string FileServerUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi.GetAyar();//"http://194.27.98.10:81";
+        public static string FileServerUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi.GetAyar(); 
         public static string FileServerBasePath = SistemAyar.DosyaArsiviFizikselKayitYolu.GetAyar();//"D:\\DocumentServer\\lisansustufiles.yildiz.edu.tr";
 
         public const string LisansustuBasvuruDosyaYolu = "/DosyaArsivi/LisansustuBasvuru";
@@ -87,6 +87,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             string dosyaYolu = saveFilePath.Replace("/", "\\");
             string combinedPath = FileServerBasePath + dosyaYolu;
 
+           //   combinedPath = combinedPath.RemoveMaxCharacterFilePath();
             // Dosyanın bulunduğu klasör yolu
             string folderPath = Path.GetDirectoryName(combinedPath);
 

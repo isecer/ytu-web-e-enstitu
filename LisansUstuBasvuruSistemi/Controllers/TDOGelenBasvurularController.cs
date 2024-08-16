@@ -282,6 +282,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var enstitu = EnstituBus.GetEnstitu(enstituKod);
             var baslangicTarihi = basTar.ToDate().Value;
             var bitisTarihi = bitTar.ToDate().Value.AddDays(1).AddMilliseconds(-1);
             string raporAdi;
@@ -304,33 +305,73 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 var gv = new GridView();
-                var dataEsList = qes.ToList().Select((s, inx) => new
+                var data = qes.ToList().Select((s, inx) => new
                 {
                     SiraNo = inx + 1,
                     EsDanismanOnerisi_EsDanısmanDegisikligi = s.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Önerisi",
-                    EykYaGonderimTarihi = s.EYKYaGonderildiIslemTarihi,
-                    EYKTarihi = s.EYKDaOnaylandiOnayTarihi,
                     s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
                     OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Kullanicilar.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Kullanicilar.Soyad,
                     OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
                     YL_DR = s.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
                     DanismanAdSoyad = s.TDAdSoyad.IsNullOrWhiteSpace() ? s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad : (s.TDUnvanAdi + " " + s.TDAdSoyad),
-                    DanismanAnabilimDali = s.TDAdSoyad.IsNullOrWhiteSpace() ? s.TDOBasvuruDanisman.TDAnabilimDaliAdi : s.TDAnabilimDaliAdi,
                     EsDanismanOncekiAdSoyad = s.OncekiEsDanismanAdi,
                     EsDanismanAdSoyad = s.UnvanAdi + " " + s.AdSoyad,
                     EsDanismanKurumAdi = s.UniversiteAdi
 
                 }
                  ).ToList();
-                gv.DataSource = dataEsList;
+                //gv.DataSource = dataEsList;
+                //gv.DataBind();
+                //raporAdi = $"{(enstituOnayDurumId == 3 ? "EYKda ONAYLANAN" : "EYKya GÖNDERİLEN")} TEZ EŞ DANIŞMAN ATAMALARI ENSTİTÜ YÖNETİM KURULU.xls";
+                //Response.ContentType = "application/ms-excel";
+                //Response.ContentEncoding = System.Text.Encoding.UTF8;
+                //Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
+                //var stringWriter = new StringWriter();
+                //var htw = new HtmlTextWriter(stringWriter);
+                //gv.RenderControl(htw);
+                //return File(System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString()), Response.ContentType, raporAdi);
+
+
+                gv.AutoGenerateColumns = false; // Sütunları manuel olarak tanımlamak için gerekli
+
+                // Sütunları tanımlayın ve başlıklarını belirleyin
+                gv.Columns.Add(new BoundField { DataField = "SiraNo", HeaderText = "Sıra No" });
+                gv.Columns.Add(new BoundField { DataField = "EsDanismanOnerisi_EsDanısmanDegisikligi", HeaderText = "Eş Danışman Önerisi / Değişikliği" });
+                gv.Columns.Add(new BoundField { DataField = "OgrenciNo", HeaderText = "Öğrenci No" });
+                gv.Columns.Add(new BoundField { DataField = "OgrenciAdSoyad", HeaderText = "Öğrenci Ad Soyad" });
+                gv.Columns.Add(new BoundField { DataField = "OgrenciAnabilimDali", HeaderText = "Öğrenci Anabilim Dalı" });
+                gv.Columns.Add(new BoundField { DataField = "YL_DR", HeaderText = "YL_DR" });
+                gv.Columns.Add(new BoundField { DataField = "DanismanAdSoyad", HeaderText = "Danışman Ad Soyad" });
+                gv.Columns.Add(new BoundField { DataField = "EsDanismanOncekiAdSoyad", HeaderText = "Önceki Eş Danışman Ad Soyad" });
+                gv.Columns.Add(new BoundField { DataField = "EsDanismanAdSoyad", HeaderText = "Eş Danışman Ad Soyad" });
+                gv.Columns.Add(new BoundField { DataField = "EsDanismanKurumAdi", HeaderText = "Eş Danışman Kurum Adı" });
+
+                gv.DataSource = data;
                 gv.DataBind();
+
                 raporAdi = $"{(enstituOnayDurumId == 3 ? "EYKda ONAYLANAN" : "EYKya GÖNDERİLEN")} TEZ EŞ DANIŞMAN ATAMALARI ENSTİTÜ YÖNETİM KURULU.xls";
                 Response.ContentType = "application/ms-excel";
                 Response.ContentEncoding = System.Text.Encoding.UTF8;
                 Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
+
                 var stringWriter = new StringWriter();
                 var htw = new HtmlTextWriter(stringWriter);
+
+                var title =
+                    $"YTÜ-{enstitu.EnstituAd.ToUpper()} <br>EŞ DANIŞMAN ATAMALARI<br>..../.. GÜN VE SAYILI ENSTİTÜ YÖNETİM KURULU  <br>(EK-..)";
+
+                // HTML formatında başlık ekleyin
+                htw.Write("<table>");
+                htw.Write("<tr>");
+                htw.Write("<td colspan='10' style='font-weight: bold; text-align: center;'>");
+                htw.Write(title);
+                htw.Write("</td>");
+                htw.Write("</tr>");
+                htw.Write("</table>");
+
+                // GridView'i oluşturun
                 gv.RenderControl(htw);
+
                 return File(System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString()), Response.ContentType, raporAdi);
             }
 
@@ -398,6 +439,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanisman.EYKYaGonderildi,
                     tdoBasvuruDanisman.EYKYaGonderildiIslemTarihi,
                     tdoBasvuruDanisman.EYKYaHazirlandi,
+                    tdoBasvuruDanisman.EYKYaHazirlandiAciklamasi,
                     tdoBasvuruDanisman.EYKYaHazirlandiIslemTarihi,
                     tdoBasvuruDanisman.EYKDaOnaylandi,
                     tdoBasvuruDanisman.EYKDaOnaylandiOnayTarihi,
@@ -426,31 +468,60 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var data = qds.ToList().Select((s, inx) => new
                 {
                     SiraNo = inx + 1,
-                    s.TalepTipAdi,
-                    EYKTarihi = s.EYKDaOnaylandi == true ? s.EYKDaOnaylandiOnayTarihi : null,
                     s.OgrenciNo,
                     s.OgrenciAdSoyad,
                     OgrenciAnabilimdaliProgram = s.AnabilimDaliAdi + " / " + s.ProgramAdi,
                     s.OgrenimTipAdi,
                     s.DanismanAdSoyad,
-                    s.DanismanAnabilimDali,
                     s.TezBaslikTr,
                     s.TezBaslikEn,
                     s.TezDili,
-                    s.DanismanYukYlDrSayi,
-                    s.MezunSayisi
+                    s.TalepTipAdi
                 }).ToList();
+
                 var gv = new GridView();
+                gv.AutoGenerateColumns = false; // Sütunları manuel olarak tanımlamak için gerekli
+
+                // Sütunları tanımlayın ve başlıklarını belirleyin
+                gv.Columns.Add(new BoundField { DataField = "SiraNo", HeaderText = "Sıra No" });
+                gv.Columns.Add(new BoundField { DataField = "OgrenciNo", HeaderText = "Öğrenci No" });
+                gv.Columns.Add(new BoundField { DataField = "OgrenciAdSoyad", HeaderText = "Öğrenci Ad Soyad" });
+                gv.Columns.Add(new BoundField { DataField = "OgrenciAnabilimdaliProgram", HeaderText = "Öğrenci Anabilim Dalı / Program" });
+                gv.Columns.Add(new BoundField { DataField = "OgrenimTipAdi", HeaderText = "YL_DR" });
+                gv.Columns.Add(new BoundField { DataField = "DanismanAdSoyad", HeaderText = "Danışman Ad Soyad" });
+                gv.Columns.Add(new BoundField { DataField = "TezBaslikTr", HeaderText = "Tez Başlığı Türkçe" });
+                gv.Columns.Add(new BoundField { DataField = "TezBaslikEn", HeaderText = "Tez Başlığı İngilizce" });
+                gv.Columns.Add(new BoundField { DataField = "TezDili", HeaderText = "Tez Dili" });
+                gv.Columns.Add(new BoundField { DataField = "TalepTipAdi", HeaderText = "Talep Tipi" });
+
                 gv.DataSource = data;
                 gv.DataBind();
+
                 raporAdi = $"{(enstituOnayDurumId == 2 ? "EykYa HAZIRLANAN" : (enstituOnayDurumId == 3 ? "EYKda ONAYLANAN" : "EYKya GÖNDERİLEN"))} TEZ DANIŞMAN ATAMALARI ENSTİTÜ YÖNETİM KURULU.xls";
                 Response.ContentType = "application/ms-excel";
                 Response.ContentEncoding = System.Text.Encoding.UTF8;
                 Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
+
                 var stringWriter = new StringWriter();
                 var htw = new HtmlTextWriter(stringWriter);
+
+                var title =
+                    $"YTÜ-{enstitu.EnstituAd.ToUpper()} <br>TEZ DANIŞMAN ATAMALARI<br>..../.. GÜN VE SAYILI ENSTİTÜ YÖNETİM KURULU  <br>(EK-..)";
+
+                // HTML formatında başlık ekleyin
+                htw.Write("<table>");
+                htw.Write("<tr>");
+                htw.Write("<td colspan='10' style='font-weight: bold; text-align: center;'>");
+                htw.Write(title);
+                htw.Write("</td>");
+                htw.Write("</tr>");
+                htw.Write("</table>");
+
+                // GridView'i oluşturun
                 gv.RenderControl(htw);
+
                 return File(System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString()), Response.ContentType, raporAdi);
+
             }
 
 
@@ -460,6 +531,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var raporListData = new List<RprTdoEykDto>();
             var raporRowNum = 0;
             var talepTipi = isDegisiklikOrYeniOneri.HasValue ? (isDegisiklikOrYeniOneri.Value ? "DEĞİŞİKLİKLERİ" : "DANIŞMAN ÖNERİLERİ") : "DANIŞMAN ÖNERİLERİ VE DEĞİŞİKLİKLERİ";
+
+
             foreach (var item in raporData)
             {
                 raporRowNum++;
@@ -468,6 +541,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var row = new RprTdoEykDto
                 {
                     SiraNo = raporRowNum + 1,
+                    OgrenciNo = item.OgrenciNo,
                     OgrenciBilgi = item.OgrenciNo + " " + item.OgrenciAdSoyad +
                                    " (" + item.AnabilimDaliAdi + " / " +
                                    item.ProgramAdi + ")",
@@ -479,7 +553,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     TezBaslikEn = item.TezBaslikEn.Replace("i", "ı").ToUpper(),
                     YeniTezDili = item.IsYeniTezDiliTr.HasValue ? (item.IsYeniTezDiliTr.Value ? "Türkçe" : "İngilizce") : "",
                     YeniTezBaslikTr = (item.YeniTezBaslikTr ?? "").ToUpper(),
-                    YeniTezBaslikEn = (item.YeniTezBaslikEn ?? "").Replace("i", "ı").ToUpper()
+                    YeniTezBaslikEn = (item.YeniTezBaslikEn ?? "").Replace("i", "ı").ToUpper(),
+                    EYKYaHazirlandiAciklamasi = item.EYKYaHazirlandiAciklamasi
                 };
                 switch (item.TDODanismanTalepTipID)
                 {
@@ -525,8 +600,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 raporListData.Add(row);
             }
+            var exportWordOrExcel = tutanakTipId == 2;
 
-            var rpr = new RprTdoTutanak();
+            var strOgrenciNos = "";
+            if (!exportWordOrExcel)
+            {
+                var ogrenciNos = raporListData.Select(s => s.OgrenciNo).Distinct().Where(p => !p.IsNullOrWhiteSpace()).ToList();
+                strOgrenciNos = string.Join(" ", ogrenciNos);
+            }
+
+            var rpr = new RprTdoTutanak(strOgrenciNos);
             rpr.DataSource = raporListData;
             rpr.CreateDocument();
             var displayName = $"{(enstituOnayDurumId == 2 ? "EykYa HAZIRLANAN" : (enstituOnayDurumId == 3 ? "EYKda ONAYLANAN" : "EYKya GÖNDERİLEN"))} Tez_dil_konu_danışman öneri ve değişiklikleri Tutanağı";
@@ -539,7 +622,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 html = sr.ReadToEnd();
             }
 
-            var exportWordOrExcel = tutanakTipId == 2;
             return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), displayName + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
 
 

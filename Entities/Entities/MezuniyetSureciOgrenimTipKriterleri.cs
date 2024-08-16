@@ -28,6 +28,7 @@ namespace Entities.Entities
         public Nullable<int> ToplamKaynakOrani { get; set; }
         public Nullable<int> TekKaynakOrani { get; set; }
         public int SinavKacGunSonraAlabilir { get; set; }
+        public int SinavEnGecKacGunSonraAlabilir { get; set; }
         public int SinavUzatmaOgrenciTaahhutMaxGun { get; set; }
         public int SinavUzatmaSinavAlmaSuresiMaxGun { get; set; }
         public int TezTeslimSuresiGun { get; set; }
