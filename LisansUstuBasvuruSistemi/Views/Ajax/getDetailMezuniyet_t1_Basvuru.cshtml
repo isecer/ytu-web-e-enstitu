@@ -420,10 +420,10 @@
                                             <th width="35"></th>
                                             <th width="150">Eklenen Yayın Türü</th>
                                             <th>Yayın Başlığı</th>
-                                            @if (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak)
+                                            @if (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak && Model.IsDanismanOnay == true)
                                             {
                                                 <th width="120"></th>
-                                            }
+                                            } 
                                         </tr>
                                     </thead>
                                     <tbody>

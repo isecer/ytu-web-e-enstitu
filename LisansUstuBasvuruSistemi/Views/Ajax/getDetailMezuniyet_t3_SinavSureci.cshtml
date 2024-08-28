@@ -887,6 +887,7 @@
                                                                         {
                                                                             var showKayitOgrenci = (isOgrenci || kayitYetki) && !item.IsDanismanUzatmaSonrasiOnay.HasValue && item.IsSonSrTalebi;
                                                                             var showTahhutSonTarih = kayitYetki && item.IsSonSrTalebi && !item.IsOgrenciUzatmaSonrasiOnay.HasValue;
+                                                                            var showUzatmaSonrasiSonTarih = kayitYetki && item.IsSonSrTalebi;
                                                                             <br />
 
                                                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
@@ -932,6 +933,49 @@
                                                                                                                 }
                                                                                                             });
                                                                                                         }
+
+                                                                                                </script>
+
+                                                                                            }
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd" width="140">Sınav Son Tarih</td>
+                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            @if (!showUzatmaSonrasiSonTarih)
+                                                                                            {
+                                                                                                <span>
+                                                                                                    Uzatma alınan sınav sonrası yeni sınav alma işlemi <b>@item.UzatmaSonSrTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.
+                                                                                                    <br />
+                                                                                                </span>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+
+                                                                                                <input class="form-control form-control-inline input-medium date-pickerx" id="UzatmaSonSinavTarih_@item.SRTalepID" style="max-width:90px;height:22px;float:left;@(item.UzatmaSonrasiYeniSinavTalebiSonTarih.HasValue ? "color:green;" : "")" autocomplete="off" size="10" type="text" value="@item.UzatmaSonSrTarih.ToFormatDateInput()">
+                                                                                                <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="UzatmaSonrasiSonSinavTarihKayit('@item.SRTalepID');"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
+                                                                                                <script>
+                                                                                                 function UzatmaSonrasiSonSinavTarihKayit(id) {
+                                                                                                     var val = $('#UzatmaSonSinavTarih_' + id).val();
+                                                                                                     var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
+                                                                                                     PanelRefresh(_panel, false);
+                                                                                                     $.ajax({
+                                                                                                         url: '@Url.Action("UzatmaSonrasiSonSinavTarihiKaydet", "MezuniyetGelenBasvurular")',
+                                                                                                         data: { 'id': id, 'sonSinavTarih': val },
+                                                                                                         success: function (result) {
+                                                                                                             PanelRefresh(_panel, true);
+                                                                                                             toastr[result.IsSuccess ? "success" : "error"](result.MmMessage.Messages.join('<br/>'), result.MmMessage.Title);
+                                                                                                             if (result.IsSuccess) {
+                                                                                                                 GetDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                             }
+                                                                                                         },
+                                                                                                         error: function (err) {
+                                                                                                             PanelRefresh(_panel, true);
+                                                                                                             alert(err.responseText);
+                                                                                                         }
+                                                                                                     });
+                                                                                                 }
 
                                                                                                 </script>
 
@@ -1001,56 +1045,13 @@
                                                                             if (item.IsOgrenciUzatmaSonrasiOnay == true)
                                                                             {
                                                                                 var showKayitDanisman = (isDanismani || kayitYetki) && item.IsSonSrTalebi;
-                                                                                var showUzatmaSonrasiSonTarih = kayitYetki && item.IsSonSrTalebi;
                                                                                 <br />
                                                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
                                                                                     <table style="width:100%;">
                                                                                         <tr>
                                                                                             <td colspan="3" style="font-weight:bold;font-size:9pt; border-bottom:1px solid;"><i class="fa fa-check-square fa-lg" aria-hidden="true"></i> Danışman Tez Kontrol Taahhütü</td>
                                                                                         </tr>
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd" width="140">Sınav Son Tarih</td>
-                                                                                            <td class="CaptionTd" width="10">:</td>
-                                                                                            <td class="ValueTd">
-                                                                                                @if (!showUzatmaSonrasiSonTarih)
-                                                                                                {
-                                                                                                    <span>
-                                                                                                        Uzatma alınan sınav sonrası yeni sınav alma işlemi <b>@item.UzatmaSonSrTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.
-                                                                                                        <br />
-                                                                                                    </span>
-                                                                                                }
-                                                                                                else
-                                                                                                {
 
-                                                                                                    <input class="form-control form-control-inline input-medium date-pickerx" id="UzatmaSonSinavTarih_@item.SRTalepID" style="max-width:90px;height:22px;float:left;@(item.UzatmaSonrasiYeniSinavTalebiSonTarih.HasValue?"color:green;":"")" autocomplete="off" size="10" type="text" value="@item.UzatmaSonSrTarih.ToFormatDateInput()">
-                                                                                                    <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="UzatmaSonrasiSonSinavTarihKayit('@item.SRTalepID');"><i class="fa fa-save" aria-hidden="true"></i>  Kaydet</span>
-                                                                                                    <script>
-                                                                                                        function UzatmaSonrasiSonSinavTarihKayit(id) {
-                                                                                                            var val = $('#UzatmaSonSinavTarih_' + id).val();
-                                                                                                            var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
-                                                                                                            PanelRefresh(_panel, false);
-                                                                                                            $.ajax({
-                                                                                                                url: '@Url.Action("UzatmaSonrasiSonSinavTarihiKaydet", "MezuniyetGelenBasvurular")',
-                                                                                                                data: { 'id': id, 'sonSinavTarih': val },
-                                                                                                                success: function (result) {
-                                                                                                                    PanelRefresh(_panel, true);
-                                                                                                                    toastr[result.IsSuccess ? "success" : "error"](result.MmMessage.Messages.join('<br/>'), result.MmMessage.Title);
-                                                                                                                     if (result.IsSuccess) {
-                                                                                                                        GetDetailx(@Model.MezuniyetBasvurulariID);
-                                                                                                                    }
-                                                                                                                },
-                                                                                                                error: function (err) {
-                                                                                                                    PanelRefresh(_panel, true);
-                                                                                                                    alert(err.responseText);
-                                                                                                                }
-                                                                                                            });
-                                                                                                        }
-
-                                                                                                    </script>
-
-                                                                                                }
-                                                                                            </td>
-                                                                                        </tr>
                                                                                         @if (showKayitDanisman)
                                                                                         {
                                                                                             <tr class="UzatmaDanismanOnayTaahhutRw_@item.SRTalepID @(item.IsDanismanUzatmaSonrasiOnay == true ? "" : "hide")">

@@ -1113,76 +1113,60 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (mezuniyetBasvurusu.EYKTarihi != null)
                 {
-                    var srBaslangicTarihi = mezuniyetBasvurusu.EYKTarihi.Value.AddDays(mezuniyetSureciOgrenimTip.SinavKacGunSonraAlabilir);
-                    var srBitTarihi = mezuniyetBasvurusu.EYKTarihi.Value.AddDays(mezuniyetSureciOgrenimTip.SinavEnGecKacGunSonraAlabilir);
-                    if (kModel.IsSalonSecilsin)
+
+                    if (kModel.IsSalonSecilsin ? (kModel.SRSalonID <= 0 || !kModel.SRSalonID.HasValue) : kModel.SalonAdi.IsNullOrWhiteSpace())
                     {
-                        if (kModel.SRSalonID <= 0 || !kModel.SRSalonID.HasValue)
+                        mmMessage.Messages.Add(kModel.IsSalonSecilsin ? "Salon seçimi yapınız." : "Salon Adı Giriniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = kModel.IsSalonSecilsin ? "SRSalonID" : "SalonAdi" });
+                    }
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = kModel.IsSalonSecilsin ? "SRSalonID" : "SalonAdi" });
+                    if (kModel.Tarih == DateTime.MinValue)
+                    {
+                        mmMessage.Messages.Add("Sınav tarihi seçimi yapınız!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
+                    }
+                    else if (!kModel.IsSalonSecilsin && kModel.Tarih.Hour == 0)
+                    {
+                        mmMessage.Messages.Add("Lütfen belirtilen güne ait uygun saat seçiniz!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
+                    }
+
+                    if (!mmMessage.Messages.Any() && !surecKayitYetki)
+                    {
+                        var srBaslangicTarihi = mezuniyetBasvurusu.EYKTarihi.Value.AddDays(mezuniyetSureciOgrenimTip.SinavKacGunSonraAlabilir);
+                        var srBitTarihi = mezuniyetBasvurusu.EYKTarihi.Value.AddDays(mezuniyetSureciOgrenimTip.SinavEnGecKacGunSonraAlabilir);
+
+                        var uzatmaAlinanSrTalebi = mezuniyetBasvurusu.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && p.SRDurumID == SrTalepDurumEnum.Onaylandı).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
+
+                        if (uzatmaAlinanSrTalebi != null)
                         {
-                            mmMessage.Messages.Add("Salon seçimi yapınız!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SRSalonID" });
+
+                            srBaslangicTarihi = uzatmaAlinanSrTalebi.UzatmaSonrasiOgrenciTaahhutSonTarih ??
+                                                uzatmaAlinanSrTalebi.Tarih.AddDays(mezuniyetSureciOgrenimTip
+                                                    .SinavUzatmaOgrenciTaahhutMaxGun);
+                            srBaslangicTarihi = srBaslangicTarihi.AddDays(mezuniyetSureciOgrenimTip.SinavKacGunSonraAlabilir);
+                            srBitTarihi = uzatmaAlinanSrTalebi.UzatmaSonrasiYeniSinavTalebiSonTarih ?? uzatmaAlinanSrTalebi.Tarih.AddDays(mezuniyetSureciOgrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun);
+
                         }
-                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "SRSalonID" });
-                        if (kModel.Tarih == DateTime.MinValue)
+
+                        if (kModel.Tarih.Date < srBaslangicTarihi.Date)
                         {
-                            mmMessage.Messages.Add("Sınav tarihi seçimi yapınız!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
-                        }
-                        else if (kModel.Tarih.Date < srBaslangicTarihi.Date)
-                        {
-                            mmMessage.Messages.Add("Sınav tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
+                            if (uzatmaAlinanSrTalebi != null)
+                                mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası '" + srBaslangicTarihi.ToFormatDate() + "' tarihinden önce yeni sınav oluşturamazsınız.");
+                            else mmMessage.Messages.Add("Sınav tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
                         else if (kModel.Tarih.Date > srBitTarihi.Date)
                         {
-                            mmMessage.Messages.Add("Sınav tarihi " + srBitTarihi.Date.ToFormatDate() + " tarihinden büyük olamaz!");
+                            if (uzatmaAlinanSrTalebi != null)
+                                mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası son sınav tarihi olan '" + srBitTarihi.ToFormatDate() + "' tarihini aştığınız için yeni sınav oluşturamazsınız.");
+                            else mmMessage.Messages.Add("Sınav tarihi " + srBitTarihi.Date.ToFormatDate() + " tarihinden büyük olamaz!");
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
-                        if (kModel.BasSaat == TimeSpan.MinValue || kModel.BitSaat == TimeSpan.MinValue)
-                        {
-                            mmMessage.Messages.Add("Lütfen belirtilen güne ait uygun saat seçiniz!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
-                        }
-                    }
-                    else
-                    {
-                        if (kModel.SalonAdi.IsNullOrWhiteSpace())
-                        {
-                            mmMessage.Messages.Add("Salon Adı Giriniz");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SalonAdi" });
-                        }
-                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Nothing, PropertyName = "SalonAdi" });
-                        if (kModel.Tarih == DateTime.MinValue)
-                        {
-                            mmMessage.Messages.Add("Sınav tarihi seçimi yapınız!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
-                        }
-                        else if (kModel.Tarih.Date < srBaslangicTarihi.Date)
-                        {
-                            mmMessage.Messages.Add("Sınav tarihi " + srBaslangicTarihi.Date.ToFormatDate() + " tarihinden küçük olamaz!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
-                        }
-                        else if (kModel.Tarih.Date > srBitTarihi.Date)
-                        {
-                            mmMessage.Messages.Add("Sınav tarihi " + srBitTarihi.Date.ToFormatDate() + " tarihinden büyük olamaz!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
-                        }
+
+
                     }
                 }
-
-                if (mmMessage.Messages.Count == 0 && !surecKayitYetki)
-                {
-                    var uzatmaAlinanSrTalebi = mezuniyetBasvurusu.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && p.SRDurumID == SrTalepDurumEnum.Onaylandı).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
-                    if (uzatmaAlinanSrTalebi != null)
-                    {
-                        var uzatmaSonSrAlmaTarihi = uzatmaAlinanSrTalebi.UzatmaSonrasiYeniSinavTalebiSonTarih ?? uzatmaAlinanSrTalebi.Tarih.AddDays(mezuniyetSureciOgrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun);
-                        if (kModel.Tarih > uzatmaSonSrAlmaTarihi)
-                        {
-                            mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası son sınav tarihi olan '" + uzatmaSonSrAlmaTarihi.ToFormatDate() + "' tarihini aştığınız için yeni sınav oluşturamazsınız.");
-                        }
-                    }
-                }
-
                 if (mmMessage.Messages.Count == 0 && kModel.IsSalonSecilsin)
                 {
                     if (kModel.SRSalonID != null)
@@ -1378,7 +1362,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 model.IsTezDiliTr = mBasvuru.IsTezDiliTr == true;
                 model.TezBaslikTr = uzatmaDegisenTezBaslikTr.IsNullOrWhiteSpace() ? (srTalep.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : mBasvuru.TezBaslikTr) : uzatmaDegisenTezBaslikTr;
-                model.TezBaslikEn = uzatmaDegisenTezBaslikEn.IsNullOrWhiteSpace() ? (srTalep.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mBasvuru.TezBaslikEn) : uzatmaDegisenTezBaslikEn; 
+                model.TezBaslikEn = uzatmaDegisenTezBaslikEn.IsNullOrWhiteSpace() ? (srTalep.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mBasvuru.TezBaslikEn) : uzatmaDegisenTezBaslikEn;
                 model.TezOzet = mBasvuru.TezOzet;
                 model.TezOzetHtml = mBasvuru.TezOzet;
                 model.TezAbstract = mBasvuru.TezAbstract;
@@ -1466,7 +1450,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             var jof = mezuniyetBasvurusu.MezuniyetJuriOneriFormlaris.First();
                             var srTalep = mezuniyetBasvurusu.SRTalepleris.FirstOrDefault(f => f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
-                           
+
                             kModel.TezBaslikTr = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikTr : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : mezuniyetBasvurusu.TezBaslikTr);
                             kModel.TezBaslikEn = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikEn : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mezuniyetBasvurusu.TezBaslikEn);
 
@@ -1486,7 +1470,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                            mezuniyetBasvurulariTezTeslimFormu.TezAbstract != kModel.TezAbstract ||
                            mezuniyetBasvurulariTezTeslimFormu.TezAbstractHtml != kModel.TezAbstractHtml
                           ) mezuniyetBasvurulariTezTeslimFormu.RowID = Guid.NewGuid();
-                        mezuniyetBasvurulariTezTeslimFormu.IsTezDiliTr = kModel.IsTezDiliTr; 
+                        mezuniyetBasvurulariTezTeslimFormu.IsTezDiliTr = kModel.IsTezDiliTr;
                         if (yetkili)
                         {
                             mezuniyetBasvurulariTezTeslimFormu.TezBaslikTr = kModel.TezBaslikTr;

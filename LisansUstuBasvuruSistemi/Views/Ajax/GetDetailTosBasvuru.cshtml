@@ -241,13 +241,13 @@
                                                     <td class="ValueTd">
                                                         @if (showDegerlendirme)
                                                         {
-                                                            var birOncekiDegerlendirme = Model.ToBasvuruSavunmaList.FirstOrDefault(f => f.ToBasvuruSavunmaID < item.ToBasvuruSavunmaID);
+                                                            var birOncekiDegerlendirmelerdeDuzeltmeVar = Model.ToBasvuruSavunmaList.Any(f => f.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme && f.ToBasvuruSavunmaID < item.ToBasvuruSavunmaID);
 
                                                             <select style="width:150px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.UniqueID').removeClass('hide'); }else{$('.RwJAck_@itemJr.UniqueID').addClass('hide');}" id="ToBasvuruSavunmaDurumID_@itemJr.UniqueID">
                                                                 <option></option>
                                                                 <option value="1" @(itemJr.ToBasvuruSavunmaDurumID == 1 ? "selected" : "")>Kabul Edildi</option>
                                                                 <option value="2" @(itemJr.ToBasvuruSavunmaDurumID == 2 ? "selected" : "")>Ret Edildi</option>
-                                                                @if (birOncekiDegerlendirme?.ToBasvuruSavunmaDurumID != ToBasvuruSavunmaDurumuEnum.Duzeltme || itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
+                                                                @if (!birOncekiDegerlendirmelerdeDuzeltmeVar || itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
                                                                 {
                                                                     <option value="3" @(itemJr.ToBasvuruSavunmaDurumID == 3 ? "selected" : "")>Düzeltme Yapılsın</option>
                                                                 }
@@ -877,13 +877,13 @@
                                                                                     <td class="ValueTd">
                                                                                         @if (openDegerlendirme)
                                                                                         {
-                                                                                            var birOncekiDegerlendirme = Model.ToBasvuruSavunmaList.FirstOrDefault(f => f.ToBasvuruSavunmaID < item.ToBasvuruSavunmaID);
+                                                                                            var birOncekiDegerlendirmelerdeDuzeltmeVar = Model.ToBasvuruSavunmaList.Any(f => f.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme && f.ToBasvuruSavunmaID < item.ToBasvuruSavunmaID);
 
                                                                                             <select style="width:150px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.UniqueID').removeClass('hide'); }else{$('.RwJAck_@itemJr.UniqueID').addClass('hide');}" id="ToBasvuruSavunmaDurumID_@itemJr.UniqueID">
                                                                                                 <option></option>
                                                                                                 <option value="1" @(itemJr.ToBasvuruSavunmaDurumID == 1 ? "selected" : "")>Kabul Edildi</option>
                                                                                                 <option value="2" @(itemJr.ToBasvuruSavunmaDurumID == 2 ? "selected" : "")>Ret Edildi</option>
-                                                                                                @if (birOncekiDegerlendirme?.ToBasvuruSavunmaDurumID != ToBasvuruSavunmaDurumuEnum.Duzeltme || itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
+                                                                                                @if (!birOncekiDegerlendirmelerdeDuzeltmeVar || itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
                                                                                                 {
                                                                                                     <option value="3" @(itemJr.ToBasvuruSavunmaDurumID == 3 ? "selected" : "")>Düzeltme Yapılsın</option>
                                                                                                 }
@@ -1026,7 +1026,7 @@
 <script>
 
     $(function () {
-        $('.switch_@Model.UniqueID')['bootstrapSwitch'](); 
+        $('.switch_@Model.UniqueID')['bootstrapSwitch']();
         $(".popover-dismiss").popover({ trigger: 'hover', html: true });
 
     })

@@ -258,7 +258,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 if (!tosUniqueId.HasValue)
-                {
+                { 
                     mMessage.Messages.AddRange(TosBus.TosKalanHakSavunmaBaslangicTarihKriter(toUniqueId).MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message));
                 }
                 if (mMessage.Messages.Count == 0)

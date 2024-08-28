@@ -948,7 +948,7 @@
                                                                             <td>@(itemE.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Öneri")</td>
                                                                             <td>@itemE.UnvanAdi @itemE.AdSoyad</td>
                                                                             <td>
-                                                                                @if ((tdoEykdaOnayYetkisi || tdoEykyaGonderimYetkisi) && (!itemE.EYKYaGonderildi.HasValue))
+                                                                                @if ((tdoEykdaOnayYetkisi || tdoEykyaGonderimYetkisi || item.TezDanismanID == UserIdentity.Current.Id) && (!itemE.EYKYaGonderildi.HasValue))
                                                                                 {
                                                                                     <span class="label label-info" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID,@itemE.TDOBasvuruDanismanID,@itemE.TDOBasvuruEsDanismanID);"><i class="fa fa-edit"></i> Düzelt</span>
                                                                                     <span class="label label-danger" style="cursor: pointer;" onclick="DetayEsDanismanSil(@item.TDOBasvuruID,'@itemE.UniqueID','@itemE.BasvuruTarihi.ToFormatDateAndTime()')"><i class="fa fa-trash-o"></i> Sil</span>

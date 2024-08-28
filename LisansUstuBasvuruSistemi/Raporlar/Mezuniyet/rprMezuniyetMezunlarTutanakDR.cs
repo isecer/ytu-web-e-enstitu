@@ -2,9 +2,11 @@
 {
     public partial class RprMezuniyetMezunlarTutanakDr : DevExpress.XtraReports.UI.XtraReport
     {
-        public RprMezuniyetMezunlarTutanakDr()
+        public RprMezuniyetMezunlarTutanakDr(string ogrenciNos = "")
         {
             InitializeComponent();
+            ReportFooterOgrenciNo.Visible = ogrenciNos != "";
+            cellOgrenciNos.Text = ogrenciNos;
         }
 
     }

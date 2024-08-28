@@ -13,7 +13,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
 
             var model = new CmbIntDto();
-           using (var entities = new LubsDbEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var enstituKods = UserBus.GetUserEnstituKods(UserIdentity.Current.Id);
                 var qListe = entities.Mesajlars.Where(p => enstituKods.Contains(p.EnstituKod) && p.EnstituKod == enstituKod && p.UstMesajID.HasValue == false && !p.IsAktif && p.Silindi == false).OrderByDescending(o => (o.Mesajlar1.Any() ? o.Mesajlar1.Select(s => s.Tarih).Max() : o.Tarih)).AsQueryable();
@@ -62,7 +62,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-           using (var entities = new LubsDbEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var qdata = entities.MesajKategorileris.AsQueryable();
                 if (isAktif.HasValue) qdata = qdata.Where(p => p.IsAktif == isAktif.Value);
@@ -70,7 +70,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var data = qdata.OrderBy(o => o.KategoriAdi).ToList();
                 foreach (var item in data)
                 {
-                    dct.Add(new CmbIntDto { Value = item.MesajKategoriID, Caption = item.Enstituler.EnstituKisaAd + " / " + item.KategoriAdi });
+                    dct.Add(new CmbIntDto { Value = item.MesajKategoriID, Caption =   item.KategoriAdi });
                 }
             }
             return dct;
@@ -81,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-           using (var entities = new LubsDbEntities())
+            using (var entities = new LubsDbEntities())
             {
                 var qdata = entities.Mesajlars.AsQueryable();
                 if (enstituKod.IsNullOrWhiteSpace() == false) qdata = qdata.Where(p => p.MesajKategorileri.EnstituKod == enstituKod);

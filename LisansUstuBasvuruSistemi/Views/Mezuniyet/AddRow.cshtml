@@ -6,6 +6,7 @@
 @{
 
     Layout = null;
+    var colspan = 4 + (Model.DegerlendirmeKolonu ? 1 : 0) + (Model.IsDataShow ? 0 : 1);
 }
 
 <tr>
@@ -46,7 +47,7 @@
 
 </tr>
 <tr class="cls-@Model.guID clsDetay" style="@(Model.MezuniyetBasvurulariYayinID!=Model.ShowDetayYayinID?"display:none;":"")">
-    <td id="cls-@Model.guID" colspan="@(Model.DegerlendirmeKolonu?"5":"4")" style="padding: 1px 1px 2px 65px;">
+    <td id="cls-@Model.guID" colspan="@colspan" style="padding: 1px 1px 2px 65px;">
         <div class="panel panel-info" style="margin:0px;">
 
             <div class="panel panel-primary" style="margin: 0px; padding: 0px;">

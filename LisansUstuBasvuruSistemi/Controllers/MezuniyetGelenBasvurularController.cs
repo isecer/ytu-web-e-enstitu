@@ -2424,6 +2424,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var baslikTr = sinav.IsTezBasligiDegisti != true ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikTr : joForm.MezuniyetBasvurulari.TezBaslikTr) : sinav.YeniTezBaslikTr;
                         var baslikEn = sinav.IsTezBasligiDegisti != true ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikEn : joForm.MezuniyetBasvurulari.TezBaslikEn) : sinav.YeniTezBaslikEn;
                         var tezBaslik = joForm.MezuniyetBasvurulari.IsTezDiliTr == true ? baslikTr : baslikEn;
+                        row.OgrenciNo = itemO.OgrenciNo;
                         row.Konu = itemO.Ad + " " + itemO.Soyad + " 'DOKTORA DERECESİ' alması Hk.";
                         row.Aciklama1 = "Enstitümüz " + abdl.AnabilimDaliAdi + " Anabilim Dalı " + prgl.ProgramAdi + " doktora programı öğrencisi <b>" + itemO.OgrenciNo + "</b> no’lu <b>" + itemO.Ad + " " + itemO.Soyad + ";</b> "
                                         + "21/12/2016 gün ve  29925 sayılı Resmi Gazete’de yayımlanarak yürürlüğe giren 'YTÜ Lisansüstü Eğitim - Öğretim Yönetmeliği’nin 24.maddesi uyarınca, "
@@ -2434,7 +2435,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             + "<b>'DOKTORA DERECESİ'</b> verildiğini bildiren jüri ortak raporunun <b>" + raporTarihi.ToDate().Value.ToFormatDate() + "</b> tarihi itibariyle onanmasına ve Üniversite Senatosu'na sunulmak üzere Rektörlüğe arzına </b>oybirliğiyle</b> karar verildi.";
                         model.Add(row);
                     }
-                    RprMezuniyetMezunlarTutanakDr rpr = new RprMezuniyetMezunlarTutanakDr();
+                    var strOgrenciNos = "";
+                    if (!exportWordOrExcel)
+                    {
+                        var ogrenciNos = data.Select(s => s.OgrenciNo).Distinct().Where(p => !p.IsNullOrWhiteSpace()).ToList();
+                        strOgrenciNos = string.Join(" ", ogrenciNos);
+                    }
+                    RprMezuniyetMezunlarTutanakDr rpr = new RprMezuniyetMezunlarTutanakDr(strOgrenciNos);
                     rpr.DataSource = model;
                     rpr.CreateDocument();
                     raporAdi = "Doktora Mezuniyet Tutanağı";
@@ -2478,6 +2485,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             danismanBilgi = sinav.SRTaleplerJuris.First().JuriAdi.ToUpper();
                         }
+                        row.OgrenciNo = itemO.OgrenciNo;
                         row.DanismanAdSoyad = danismanBilgi;
                         row.TezKonusu = tezSonBilgi.IsTezDiliTr ? tezSonBilgi.TezBaslikTr : tezSonBilgi.TezBaslikEn;
                         row.SavunmaTarihi = sinav.Tarih.ToFormatDate();
@@ -2486,7 +2494,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.Data.Add(row);
 
                     }
-                    RprMezuniyetMezunlarTutanakYL rpr = new RprMezuniyetMezunlarTutanakYL();
+                    var strOgrenciNos = "";
+                    if (!exportWordOrExcel)
+                    {
+                        var ogrenciNos = data.Select(s => s.OgrenciNo).Distinct().Where(p => !p.IsNullOrWhiteSpace()).ToList();
+                        strOgrenciNos = string.Join(" ", ogrenciNos);
+                    }
+                    RprMezuniyetMezunlarTutanakYL rpr = new RprMezuniyetMezunlarTutanakYL(strOgrenciNos);
                     rpr.DataSource = model;
                     rpr.CreateDocument();
                     raporAdi = "Yüksek Lisans Mezuniyet Tutanağı";
