@@ -12,6 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 
         public const string DonemProjesiDersKodu = "Dönem Projesi Ders Kodu";
         public const string DonemProjesiBasvuruAlimiAcik = "Dönem Projesi başvurusu açık";
+        public const string DonemProjesiEykOgrenciDogrulamaAcik = "EYK işlemlerinde öğrenci doğrulaması açık";
         public const string OgrencininBasvuruYapabilecegiDonemler = "Öğrencinin başvuru yapabileceği dönemler";
         public const string DonemSecimiIcinBelirlenenAylarBaharDonemi = "Dönem seçimi için belirlenen aylar Bahar dönemi kabul edilecek";
         public const string OgrencininBasvuruDonemindeAlmasiGerekenDersKodlari = "Başvuru döneminde öğrencinin OBS'de alması gereken dersler";

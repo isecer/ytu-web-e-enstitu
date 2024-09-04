@@ -1474,53 +1474,59 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     // eyk yada eykya gönderimi onay işlemi gördü yada yeni onay durumu onaylanmadı değil ise öğrencinin aktiflik durumunu kontrol et
                     if (donemProjesiBasvuruAktifEykTipId.HasValue || onaylandi != false)
                     {
-                        var obsStudentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(donemProjesi.KullaniciID);
 
-                        if (!obsStudentInfo.KayitVar)
+
+                        var eykOgrenciKontroluYap = DonemProjesiAyar.DonemProjesiEykOgrenciDogrulamaAcik.GetAyarDp(donemProjesi.EnstituKod).ToBooleanObj() ?? false;
+                        if (eykOgrenciKontroluYap)
                         {
-                            mmMessage.Messages.Add(
-                                "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
-                        }
-                        else if (donemProjesi.OgrenciNo != obsStudentInfo.OgrenciInfo.OGR_NO)
-                        {
-                            mmMessage.Messages.Add(
-                                "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir. Onay işlemi yapılamaz.");
-                        }
+                            var obsStudentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(donemProjesi.KullaniciID);
 
-
-                        if (!mmMessage.Messages.Any() && onayTipId == EykTipEnum.EykYaGonderildi && onaylandi == true && !_entities.DonemProjesiMuafOgrencilers.Any(a => a.KullaniciID == donemProjesi.KullaniciID && a.OgrenciNo == donemProjesi.OgrenciNo))
-                        {
-
-                            var kontrolEdilecekMinDersNotlari = DonemProjesiAyar.GetKontrolEdilecekMinDersNotlari(donemProjesi.EnstituKod);
-                            if (kontrolEdilecekMinDersNotlari.Any())
+                            if (!obsStudentInfo.KayitVar)
                             {
-                                var ogrenciDonemDersleris = obsStudentInfo.TumDonemDersNotlari;
+                                mmMessage.Messages.Add(
+                                    "Öğrenci OBS sisteminde aktif öğrenci olarak gözükmemektedir. Onay işlemi yapılamaz.");
+                            }
+                            else if (donemProjesi.OgrenciNo != obsStudentInfo.OgrenciInfo.OGR_NO)
+                            {
+                                mmMessage.Messages.Add(
+                                    "Ana başvurunuzdaki öğrenci numarası ile güncel öğrenci numarası uyuşmuyor. Öğrencinin kaydı silinip farklı bir programa kaydolmuş olabilir ya da numarası değişmiş olabilir. Onay işlemi yapılamaz.");
+                            }
 
 
-                                var filtrelenenOgrenciDersler = ogrenciDonemDersleris.Where(p => kontrolEdilecekMinDersNotlari.Any(a => a.Value == p.DersKoduNum)).ToList();
+                            if (!mmMessage.Messages.Any() && onayTipId == EykTipEnum.EykYaGonderildi && onaylandi == true && !_entities.DonemProjesiMuafOgrencilers.Any(a => a.KullaniciID == donemProjesi.KullaniciID && a.OgrenciNo == donemProjesi.OgrenciNo))
+                            {
 
-                                foreach (var itemDersNot in kontrolEdilecekMinDersNotlari)
+                                var kontrolEdilecekMinDersNotlari = DonemProjesiAyar.GetKontrolEdilecekMinDersNotlari(donemProjesi.EnstituKod);
+                                if (kontrolEdilecekMinDersNotlari.Any())
                                 {
-                                    if (!filtrelenenOgrenciDersler.Any(p => p.DersKoduNum == itemDersNot.Value && HarfNotuHelper.IsHarfNotuBuyukEsit(itemDersNot.Caption, p.DersNotu)))
+                                    var ogrenciDonemDersleris = obsStudentInfo.TumDonemDersNotlari;
+
+
+                                    var filtrelenenOgrenciDersler = ogrenciDonemDersleris.Where(p => kontrolEdilecekMinDersNotlari.Any(a => a.Value == p.DersKoduNum)).ToList();
+
+                                    foreach (var itemDersNot in kontrolEdilecekMinDersNotlari)
                                     {
-                                        mmMessage.Messages.Add("Öğrenci  " + itemDersNot.Value + " kodlu ders için en az '" + itemDersNot.Caption + "'" + " notunu alması gerekmekte.");
+                                        if (!filtrelenenOgrenciDersler.Any(p => p.DersKoduNum == itemDersNot.Value && HarfNotuHelper.IsHarfNotuBuyukEsit(itemDersNot.Caption, p.DersNotu)))
+                                        {
+                                            mmMessage.Messages.Add("Öğrenci  " + itemDersNot.Value + " kodlu ders için en az '" + itemDersNot.Caption + "'" + " notunu alması gerekmekte.");
+                                        }
                                     }
+
+                                    if (mmMessage.Messages.Any())
+                                    {
+                                        mmMessage.Messages.Insert(0, "Ders yükünü tamamlayamayan öğrenci mezuniyet için EYK ya gönderilemez.");
+                                    }
+                                }
+                                var basariliKrediSayisiKriter = DonemProjesiAyar.BasariliKrediSayisi.GetAyarDp(donemProjesi.EnstituKod).ToInt();
+                                if (basariliKrediSayisiKriter.HasValue && obsStudentInfo.AktifDonemDers.ToplamKredi < basariliKrediSayisiKriter.Value)
+                                {
+                                    mmMessage.Messages.Add("Öğrenci toplam kredi sayısı " + basariliKrediSayisiKriter.Value + " krediden büyük ya da eşit olmalıdır. Mevcut kredi: " + obsStudentInfo.AktifDonemDers.ToplamKredi);
+
                                 }
 
                                 if (mmMessage.Messages.Any())
-                                {
-                                    mmMessage.Messages.Insert(0, "Ders yükünü tamamlayamayan öğrenci mezuniyet için EYK ya gönderilemez.");
-                                }
+                                    mmMessage.Messages.Add("OBS den öğrencinin derslerini kontrol ediniz.");
                             }
-                            var basariliKrediSayisiKriter = DonemProjesiAyar.BasariliKrediSayisi.GetAyarDp(donemProjesi.EnstituKod).ToInt();
-                            if (basariliKrediSayisiKriter.HasValue && obsStudentInfo.AktifDonemDers.ToplamKredi < basariliKrediSayisiKriter.Value)
-                            {
-                                mmMessage.Messages.Add("Öğrenci toplam kredi sayısı " + basariliKrediSayisiKriter.Value + " krediden büyük ya da eşit olmalıdır. Mevcut kredi: " + obsStudentInfo.AktifDonemDers.ToplamKredi);
-
-                            }
-
-                            if (mmMessage.Messages.Any())
-                                mmMessage.Messages.Add("OBS den öğrencinin derslerini kontrol ediniz.");
                         }
                     }
 
