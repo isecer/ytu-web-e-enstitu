@@ -1395,7 +1395,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     IsNewOrEdit = false,
                     OgrenciBilgi = itemO.OgrenciNo + " " + itemO.OgrenciAdSoyad + " (" + itemO.AnabilimDaliAdi + " / " + itemO.ProgramAdi + ")",
-                    DanismanAdSoyad = varolanDanismanAdSoyad,
+                    DanismanAdSoyad = itemO.TezDanismanUnvanAdi + " " + itemO.TezDanismanAdSoyad,
                     DanismanUni = "YILDIZ TEKNİK ÜNİVERSTESİ",
                     AsilUye1 = varolanAsilUyeYtuIci.UnvanAdi + " " + varolanAsilUyeYtuIci.AdSoyad,
                     AsilUye1Uni = "YILDIZ TEKNİK ÜNİVERSTESİ",

@@ -235,30 +235,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (toBasvuruSavunma == null && !mMessage.Messages.Any())
                 {
 
-                    var tezOneriToplamSavunmaSavunmaHak = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak
-                        .GetAyarTi(toBasvuru.EnstituKod, "0").ToInt(0);
-                    var basarisizTezOneriSavunmaSayisi = 0;
-                    if (basarisizTezOneriSavunmaSayisi >= tezOneriToplamSavunmaSavunmaHak)
+                    if (TiBus.IsTiAktifAraRaporBasvuruVar(kul.KullaniciID))
                     {
-                        mMessage.Messages.Add("Tez Önerisi Savunması için başarısızlıkla sonuçlanan toplam savunma hakkı sayısını aştığınız için yeni Tez Önerisi Savunması yapamazsınız.");
+                        mMessage.Messages.Add("Aktif bir Ara Rapor başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi içim bu sürecinin tamamlanması gerekmektedir.");
                     }
-                    else
+                    if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                     {
-                        if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
-                        {
-                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
-                        }
-                        //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
-                        //{
-                        //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
-                        //}
+                        mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
                     }
+                    //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                    //{
+                    //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
+                    //}
+
 
                 }
 
 
                 if (!tosUniqueId.HasValue)
-                { 
+                {
                     mMessage.Messages.AddRange(TosBus.TosKalanHakSavunmaBaslangicTarihKriter(toUniqueId).MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message));
                 }
                 if (mMessage.Messages.Count == 0)
@@ -462,25 +457,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (toBasvuruSavunma == null && !mMessage.Messages.Any())
                 {
-
-                    var tezOneriToplamBasarisizSavunmaSavunmaHak = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak
-                        .GetAyarTi(toBasvuru.EnstituKod, "0").ToInt(0);
-                    var basarisizTezOneriSavunmaSayisi = 0;
-                    if (basarisizTezOneriSavunmaSayisi >= tezOneriToplamBasarisizSavunmaSavunmaHak)
+                    if (TiBus.IsTiAktifAraRaporBasvuruVar(kul.KullaniciID))
                     {
-                        mMessage.Messages.Add("Tez Önerisi Savunması için başarısızlıkla sonuçlanan toplam savunma hakkı sayısını aştığınız için yeni Tez Önerisi Savunması yapamazsınız.");
+                        mMessage.Messages.Add("Aktif bir Ara Rapor başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi içim bu sürecinin tamamlanması gerekmektedir.");
                     }
-                    else
+                    if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                     {
-                        if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
-                        {
-                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi içim bu sürecinin tamamlanması gerekmektedir.");
-                        }
-                        //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
-                        //{
-                        //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
-                        //}
+                        mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi içim bu sürecinin tamamlanması gerekmektedir.");
                     }
+                    //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                    //{
+                    //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
+                    //} 
                 }
 
 

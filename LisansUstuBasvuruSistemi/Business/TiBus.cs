@@ -345,7 +345,18 @@ namespace LisansUstuBasvuruSistemi.Business
             return MailSenderTi.SendMailTiDegerlendirmeLink(tiBasvuruAraRaporId, uniqueId, isLinkOrSonuc);
         }
 
-
+        public static bool IsTiAktifAraRaporBasvuruVar(int kullaniciId)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+                var tiBasvuruAraRapor = entities.TIBasvuruAraRapors.Where(p => p.TIBasvuru.KullaniciID == kullaniciId)
+                    .OrderByDescending(o => o.TIBasvuruAraRaporID).FirstOrDefault();
+                var isAktif = true;
+                if (tiBasvuruAraRapor == null) isAktif = false;
+                else if (tiBasvuruAraRapor.TIBasvuruAraRaporDurumID==TiAraRaporDurumuEnum.DegerlendirmeSureciTamamlandi) isAktif = false; 
+                return isAktif;
+            }
+        }
         public static List<CmbIntDto> CmbTiAraRaporDurumListe(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();

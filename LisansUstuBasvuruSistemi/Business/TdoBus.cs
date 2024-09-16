@@ -227,9 +227,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                                        ogrenciBilgiUpdate.DanismanInfo.SOYAD;
                 }
 
-                if (model.TDOBasvuruDanismanList.Any())
+                foreach (var firstRow in model.TDOBasvuruDanismanList)
                 {
-                    var firstRow = model.TDOBasvuruDanismanList.First();
                     firstRow.VarolanDanismanGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
                     firstRow.VarolanDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
                     if (firstRow.VarolanDanismanGozuksun)
@@ -245,6 +244,24 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     firstRow.IsDuzeltSilYapabilir = firstRow.DanismanOnayladi != true && firstRow.VarolanDanismanOnayladi != true;
                 }
+                //if (model.TDOBasvuruDanismanList.Any())
+                //{
+                //    var firstRow = model.TDOBasvuruDanismanList.First();
+                //    firstRow.VarolanDanismanGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
+                //    firstRow.VarolanDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
+                //    if (firstRow.VarolanDanismanGozuksun)
+                //    {
+                //        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
+                //    }
+                //    else
+                //    {
+                //        firstRow.YeniDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
+
+                //    }
+                //    firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi;
+
+                //    firstRow.IsDuzeltSilYapabilir = firstRow.DanismanOnayladi != true && firstRow.VarolanDanismanOnayladi != true;
+                //}
 
 
                 TDOBasvuruEsDanisman lastEsBasvuru = null;
