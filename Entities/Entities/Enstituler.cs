@@ -43,6 +43,7 @@ namespace Entities.Entities
             this.TIBasvurus = new HashSet<TIBasvuru>();
             this.TijBasvurus = new HashSet<TijBasvuru>();
             this.ToBasvurus = new HashSet<ToBasvuru>();
+            this.YaziSablonlaris = new HashSet<YaziSablonlari>();
             this.YeterlikSurecis = new HashSet<YeterlikSureci>();
         }
     
@@ -60,6 +61,12 @@ namespace Entities.Entities
         public string WebAdresi { get; set; }
         public int ToplamKayitKota { get; set; }
         public string TestEmailAddress { get; set; }
+        public Nullable<int> EnstituMudurId { get; set; }
+        public Nullable<int> EnstituMudurVekilId { get; set; }
+        public string Konum { get; set; }
+        public string Adres { get; set; }
+        public string Tel { get; set; }
+        public string EPosta { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
@@ -118,6 +125,8 @@ namespace Entities.Entities
         public virtual ICollection<TijBasvuru> TijBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ToBasvuru> ToBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YaziSablonlari> YaziSablonlaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikSureci> YeterlikSurecis { get; set; }
     }

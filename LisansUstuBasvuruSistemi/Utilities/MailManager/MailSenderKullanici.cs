@@ -55,7 +55,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         mRowModel.Add(new MailTableRowDto { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
 
                     mRowModel.Add(new MailTableRowDto { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });
-                    mRowModel.Add(new MailTableRowDto { Baslik = "Şifre", Aciklama = kModel.IsActiveDirectoryUser ? "Email şifreniz ile aynı" : sfr });
+                    mRowModel.Add(new MailTableRowDto { Baslik = "Şifre", Aciklama = kModel.IsActiveDirectoryUser ? "Kurum Uygulama Şifreniz ile aynı" : sfr });
                     mRowModel.Add(new MailTableRowDto { Baslik = "Sistem Erişim Adresi", Aciklama = "<a href='" + mailBilgi.SistemErisimAdresi + "' target='_blank'>" + mailBilgi.SistemErisimAdresi + "</a>" });
                     var mtc = new MailTableContentDto { AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.", Detaylar = mRowModel };
                     var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", mtc);

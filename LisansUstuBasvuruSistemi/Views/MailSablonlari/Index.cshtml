@@ -51,15 +51,15 @@
                             </tr>
                             @if (Model.RowCount > 0)
                             {
-                                int RowIndex = Model.StartRowIndex;
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.MailSablonlariDtos)
                                 {
-                                    RowIndex++;
+                                    rowIndex++;
                                     <tr>
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.MailSablonlariID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.MailSablonlariID')">

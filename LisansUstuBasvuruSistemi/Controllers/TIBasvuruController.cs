@@ -847,7 +847,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      UnvanAdi = un.UnvanAdi.ToStrObjEmptString(),
                                      UnvanAdiSuccess = !un.UnvanAdi.IsNullOrWhiteSpace(),
                                      EMail = em.EMail.ToStrObjEmptString(),
-                                     EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && !em.EMail.ToIsValidEmail(),
+                                     EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && em.EMail.ToIsValidEmail(),
                                      uni.UniversiteID,
                                      UniversiteIDSuccess = uni.UniversiteID.HasValue,
                                      AnabilimdaliProgramAdi = abd.AnabilimdaliProgramAdi.ToStrObjEmptString(),
@@ -1718,7 +1718,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("E-Posta Giriniz");
             }
-            else if (eMail.ToIsValidEmail())
+            else if (!eMail.ToIsValidEmail())
             {
                 mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("E-Posta Formatı Uygun Değildir.");

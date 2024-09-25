@@ -73,6 +73,7 @@ namespace Entities.Entities
             this.TijBasvuruOneris = new HashSet<TijBasvuruOneri>();
             this.ToBasvurus = new HashSet<ToBasvuru>();
             this.ToBasvuruSavunmas = new HashSet<ToBasvuruSavunma>();
+            this.YaziSablonlaris = new HashSet<YaziSablonlari>();
             this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
             this.YeterlikBasvuruKomitelers = new HashSet<YeterlikBasvuruKomiteler>();
             this.YeterlikSureciKriterMuafOgrencilers = new HashSet<YeterlikSureciKriterMuafOgrenciler>();
@@ -267,6 +268,8 @@ namespace Entities.Entities
         public virtual ICollection<ToBasvuru> ToBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ToBasvuruSavunma> ToBasvuruSavunmas { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YaziSablonlari> YaziSablonlaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

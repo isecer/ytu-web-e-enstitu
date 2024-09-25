@@ -125,7 +125,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (kModel.EMail.ToIsValidEmail())
+                if (!kModel.EMail.ToIsValidEmail())
                 {
                     mmMessage.Messages.Add("EMail Formatı uygun değildir.");
                     mmMessage.MessagesDialog.Add(

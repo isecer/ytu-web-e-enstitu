@@ -21,6 +21,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
              
             var enstitu = _entities.Enstitulers.First(p => p.EnstituKisaAd.Contains(ekd));
+            ViewBag.Konum = enstitu.Konum;
 
             #region duyurular 
             var q = from s in _entities.Duyurulars

@@ -365,6 +365,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 100000, MenuAdi = "Mail Şablonları (Sistem)", MenuCssClass = "fa fa-gear", MenuUrl = "MailSablonlariSistem/Index", SiraNo = 13)]
         [Role(GorunurAdi = "Mail Şablonları (Sistem)", Kategori = "Sistem", Aciklama = "Bu yetki Mail Şablonları Sistem menüsünü Görebilmeyi Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string MailSablonlariSistem = "Mail Şablonları (Sistem)";
+        [Menu(BagliMenuID = 100000, MenuAdi = "Yazı Şablonları", MenuCssClass = "fa fa-gear", MenuUrl = "YaziSablonlari/Index", SiraNo = 14)]
+        [Role(GorunurAdi = "Yazı Şablonları", Kategori = "Sistem", Aciklama = "Bu yetki Yazı Şablonları  menüsünü Görebilmeyi Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
+        public const string YaziSablonlari = "Yazi Şablonları";
         [Menu(BagliMenuID = 100000, MenuAdi = "Mesaj Kategorileri", MenuCssClass = "fa fa-pencil", MenuUrl = "MesajKategorileri/Index", SiraNo = 16)]
         [Role(GorunurAdi = "Mesaj Kategorileri", Kategori = "Sistem", Aciklama = "Bu yetki Mesaj Kategorileri menüsünü Görebilmeyi Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string MesajlarKategorileri = "Mesaj Kategorileri";

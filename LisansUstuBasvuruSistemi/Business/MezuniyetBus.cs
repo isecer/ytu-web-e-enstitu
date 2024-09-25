@@ -1006,7 +1006,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else
                 {
-                    if (kModel.TezEsDanismanEMail.ToIsValidEmail())
+                    if (!kModel.TezEsDanismanEMail.ToIsValidEmail())
                     {
                         mmMessage.Messages.Add("Lütfen Eş danışman E-Posta Adresi bilgisini Uygun Formatta Giriniz.");
                         mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanEMail" });

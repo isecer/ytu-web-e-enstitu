@@ -34,7 +34,6 @@ using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
 using LisansUstuBasvuruSistemi.Raporlar.LUB;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
-using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -1195,7 +1194,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage();
 
-            if (mailAddress.IsNullOrWhiteSpace() || mailAddress.ToIsValidEmail())
+            if (mailAddress.IsNullOrWhiteSpace() || !mailAddress.ToIsValidEmail())
             {
                 mmMessage.IsSuccess = false;
                 mmMessage.Title = "Lütfen doğru bir mail formatı giriniz.";
@@ -1956,7 +1955,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kul.Count == 0)
             {
                 var lst = new List<MailListDto>();
-                if (!term.ToIsValidEmail())
+                if (term.ToIsValidEmail())
                 {
                     lst.Add(new MailListDto { id = term, AdSoyad = term, text = term, Images = "".ToKullaniciResim() });
                 }
@@ -2282,6 +2281,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToList();
 
             return tezKontrolSorumlulari.ToJsonResult();
+        }
+        [Authorize]
+        public ActionResult GetFilteredAkademisyen(string term, string ekd)
+        {
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            return KullanicilarBus.GetFilterAkademisyenJsonResult(term, enstituKod);
         }
         [Authorize]
         public ActionResult GetUniversiteler(string term)
@@ -3087,6 +3092,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     rpr.CreateDocument();
                     rpr.DisplayName = rapor.Kullanicilar.Ad + " " + rapor.Kullanicilar.Soyad + " " + rpr.DisplayName;
                     rprX = rpr;
+                }
+                else if (raporTipi == RaporTipiEnum.YeterlikKomiteAtamaGereklilikFormu)
+                {
+                    var uniqueId = new Guid(Request["UniqueID"]);
+                    var yeterlikBasvuru = _entities.YeterlikBasvurus.First(p => p.UniqueID == uniqueId);
+                    rprX = YeterlikBus.KomiteAtamaBilgilendirmeYazilari(yeterlikBasvuru.YeterlikBasvuruID);
+
+
                 }
                 else if (raporTipi == RaporTipiEnum.TezIzlemeJuriOneriFormu)
                 {

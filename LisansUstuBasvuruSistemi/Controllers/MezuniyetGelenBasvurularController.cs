@@ -1397,7 +1397,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 JuriTipAdi = "TezDanismani",
                                 UnvanAdi = ogrenciInfo.OgrenciInfo.DANISMAN_UNVAN1.ToJuriUnvanAdi(),
                                 AdSoyad = ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper(),
-                                EMail = ogrenciInfo.OgrenciInfo.DANISMAN_EPOSTA1.ToIsValidEmail() ? "" : ogrenciInfo.OgrenciInfo.DANISMAN_EPOSTA1,
+                                EMail = !ogrenciInfo.OgrenciInfo.DANISMAN_EPOSTA1.ToIsValidEmail() ? "" : ogrenciInfo.OgrenciInfo.DANISMAN_EPOSTA1,
                                 UniversiteAdi = "Yıldız Teknik Üniversitesi"
 
                             };
@@ -1422,7 +1422,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 JuriTipAdi = "TikUyesi1",
                                 AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY,
                                 UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN.ToJuriUnvanAdi(),
-                                EMail = obsTik1.TEZ_IZLEME_JURI_EPOSTA.ToIsValidEmail() ? "" : obsTik1.TEZ_IZLEME_JURI_EPOSTA,
+                                EMail = !obsTik1.TEZ_IZLEME_JURI_EPOSTA.ToIsValidEmail() ? "" : obsTik1.TEZ_IZLEME_JURI_EPOSTA,
                                 UniversiteAdi = obsTik1.TEZ_IZLEME_JURI_UNIVER,
                                 AnabilimdaliProgramAdi = obsTik1.TEZ_IZLEME_JURI_ANABLMDAL
                             };
@@ -1437,7 +1437,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 JuriTipAdi = "TikUyesi2",
                                 AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY,
                                 UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN.ToJuriUnvanAdi(),
-                                EMail = obsTik2.TEZ_IZLEME_JURI_EPOSTA.ToIsValidEmail() ? "" : obsTik2.TEZ_IZLEME_JURI_EPOSTA,
+                                EMail = !obsTik2.TEZ_IZLEME_JURI_EPOSTA.ToIsValidEmail() ? "" : obsTik2.TEZ_IZLEME_JURI_EPOSTA,
                                 UniversiteAdi = obsTik2.TEZ_IZLEME_JURI_UNIVER,
                                 AnabilimdaliProgramAdi = obsTik2.TEZ_IZLEME_JURI_ANABLMDAL
                             };
@@ -1568,7 +1568,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      un.UnvanAdi,
                                      UnvanAdiSuccess = !un.UnvanAdi.IsNullOrWhiteSpace(),
                                      em.EMail,
-                                     EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && !em.EMail.ToIsValidEmail(),
+                                     EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && em.EMail.ToIsValidEmail(),
                                      uni.UniversiteAdi,
                                      UniversiteAdiSuccess = !uni.UniversiteAdi.IsNullOrWhiteSpace(),
                                      abd.AnabilimdaliProgramAdi,

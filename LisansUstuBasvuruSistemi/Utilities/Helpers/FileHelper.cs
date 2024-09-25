@@ -25,6 +25,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public const string MezuniyetTezSablonDosyaYolu = "/DosyaArsivi/MezuniyetBasvurulari/TezSablonDosyalari";
         public const string DonemProjesiIntihalDosyaYolu = "/DosyaArsivi/DonemProjesi";
         public const string MailSablonDosyaYolu = "/DosyaArsivi/MailSablonEkleri";
+        public const string YaziSablonDosyaYolu = "/DosyaArsivi/YaziSablonEkleri";
         public const string DuyuruDosyaYolu = "/DosyaArsivi/DuyuruEkleri";
 
         private static string CleanUrl(this string url)
@@ -158,6 +159,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         {
             var dosyaAdi = file.FileName.ToFileNameAddGuid();
             var dosyaYolu = MailSablonDosyaYolu + "/" + dosyaAdi;
+            Save(file, dosyaYolu);
+            return dosyaYolu;
+        }
+        public static string SaveYaziSablonDosya(HttpPostedFileBase file)
+        {
+            var dosyaAdi = file.FileName.ToFileNameAddGuid();
+            var dosyaYolu = YaziSablonDosyaYolu + "/" + dosyaAdi;
             Save(file, dosyaYolu);
             return dosyaYolu;
         }

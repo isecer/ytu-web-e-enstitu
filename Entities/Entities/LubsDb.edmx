@@ -1004,6 +1004,12 @@
           <Property Name="WebAdresi" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="ToplamKayitKota" Type="int" Nullable="false" />
           <Property Name="TestEmailAddress" Type="nvarchar" MaxLength="250" />
+          <Property Name="EnstituMudurId" Type="int" />
+          <Property Name="EnstituMudurVekilId" Type="int" />
+          <Property Name="Konum" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Adres" Type="nvarchar" MaxLength="250" />
+          <Property Name="Tel" Type="nvarchar" MaxLength="50" />
+          <Property Name="EPosta" Type="nvarchar" MaxLength="50" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
@@ -1209,7 +1215,7 @@
           <Property Name="TabloAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="IslemTipi" Type="nvarchar" MaxLength="32" Nullable="false" />
           <Property Name="Aciklama" Type="nvarchar" MaxLength="1024" />
-          <Property Name="TableData" Type="text" Nullable="false" />
+          <Property Name="TableData" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="64" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
@@ -1374,9 +1380,9 @@
           <Property Name="IsTezDiliTr" Type="bit" />
           <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="TezDanismanID" Type="int" />
           <Property Name="ToplamKaynakOrani" Type="int" />
           <Property Name="TekKaynakOrani" Type="int" />
-          <Property Name="TezDanismanID" Type="int" />
           <Property Name="IsDanismanOnay" Type="bit" />
           <Property Name="DanismanOnayTarihi" Type="datetime" />
           <Property Name="DanismanOnayAciklama" Type="nvarchar(max)" />
@@ -2346,16 +2352,6 @@
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
         <EntityType Name="TalepArGorStatuleri">
           <Key>
             <PropertyRef Name="TalepArGorStatuID" />
@@ -2946,6 +2942,38 @@
           <Property Name="WsSinavCekimTipID" Type="int" Nullable="false" />
           <Property Name="WsSinavCekimKod" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="WsSinavCekimAd" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="YaziSablonlari">
+          <Key>
+            <PropertyRef Name="YaziSablonlariID" />
+          </Key>
+          <Property Name="YaziSablonlariID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EnstituKod" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="YaziSablonTipID" Type="int" Nullable="false" />
+          <Property Name="Konu" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Sablon" Type="text" Nullable="false" />
+          <Property Name="SablonHtml" Type="text" Nullable="false" />
+          <Property Name="IsAktif" Type="bit" Nullable="false" />
+          <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
+          <Property Name="IslemYapanID" Type="int" Nullable="false" />
+          <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="YaziSablonlariEkleri">
+          <Key>
+            <PropertyRef Name="YaziSablonlariEkiID" />
+          </Key>
+          <Property Name="YaziSablonlariEkiID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="YaziSablonlariID" Type="int" Nullable="false" />
+          <Property Name="EkAdi" Type="nvarchar" MaxLength="1024" Nullable="false" />
+          <Property Name="EkDosyaYolu" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="YaziSablonTipleri">
+          <Key>
+            <PropertyRef Name="YaziSablonTipID" />
+          </Key>
+          <Property Name="YaziSablonTipID" Type="int" Nullable="false" />
+          <Property Name="SablonTipAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Parametreler" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="YeterlikBasvuru">
           <Key>
@@ -6249,18 +6277,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SRTalepleri_DonemProjesiBasvuru">
-          <End Role="DonemProjesiBasvuru" Type="Self.DonemProjesiBasvuru" Multiplicity="0..1" />
-          <End Role="SRTalepleri" Type="Self.SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DonemProjesiBasvuru">
-              <PropertyRef Name="DonemProjesiBasvuruID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="DonemProjesiBasvuruID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SRTalepleri_Enstituler">
           <End Role="Enstituler" Type="Self.Enstituler" Multiplicity="1" />
           <End Role="SRTalepleri" Type="Self.SRTalepleri" Multiplicity="*" />
@@ -6354,6 +6370,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="SRTalepleri">
               <PropertyRef Name="SRTalepTipID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_TabloyaAdi">
+          <End Role="DonemProjesiBasvuru" Type="Self.DonemProjesiBasvuru" Multiplicity="0..1" />
+          <End Role="SRTalepleri" Type="Self.SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DonemProjesiBasvuru">
+              <PropertyRef Name="DonemProjesiBasvuruID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="DonemProjesiBasvuruID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7109,6 +7137,56 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_YaziSablonlari_Enstituler">
+          <End Role="Enstituler" Type="Self.Enstituler" Multiplicity="1" />
+          <End Role="YaziSablonlari" Type="Self.YaziSablonlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Enstituler">
+              <PropertyRef Name="EnstituKod" />
+            </Principal>
+            <Dependent Role="YaziSablonlari">
+              <PropertyRef Name="EnstituKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_YaziSablonlari_Kullanicilar">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="1" />
+          <End Role="YaziSablonlari" Type="Self.YaziSablonlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="YaziSablonlari">
+              <PropertyRef Name="IslemYapanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_YaziSablonlari_YaziSablonTipleri">
+          <End Role="YaziSablonTipleri" Type="Self.YaziSablonTipleri" Multiplicity="1" />
+          <End Role="YaziSablonlari" Type="Self.YaziSablonlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="YaziSablonTipleri">
+              <PropertyRef Name="YaziSablonTipID" />
+            </Principal>
+            <Dependent Role="YaziSablonlari">
+              <PropertyRef Name="YaziSablonTipID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_YaziSablonlariEkleri_YaziSablonlari">
+          <End Role="YaziSablonlari" Type="Self.YaziSablonlari" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="YaziSablonlariEkleri" Type="Self.YaziSablonlariEkleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="YaziSablonlari">
+              <PropertyRef Name="YaziSablonlariID" />
+            </Principal>
+            <Dependent Role="YaziSablonlariEkleri">
+              <PropertyRef Name="YaziSablonlariID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_YeterlikBasvuru_Donemler">
           <End Role="Donemler" Type="Self.Donemler" Multiplicity="1" />
           <End Role="YeterlikBasvuru" Type="Self.YeterlikBasvuru" Multiplicity="*" />
@@ -7466,7 +7544,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="SRTalepleri" EntityType="Self.SRTalepleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SRTaleplerJuri" EntityType="Self.SRTaleplerJuri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SRTalepTipleri" EntityType="Self.SRTalepTipleri" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TalepArGorStatuleri" EntityType="Self.TalepArGorStatuleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TalepDurumlari" EntityType="Self.TalepDurumlari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TalepGelenTalepBelgeleri" EntityType="Self.TalepGelenTalepBelgeleri" Schema="dbo" store:Type="Tables" />
@@ -7498,6 +7575,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="Uyruklar" EntityType="Self.Uyruklar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WsSinavCekimTipleri" EntityType="Self.WsSinavCekimTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WsSinavCekipTipDetay" EntityType="Self.WsSinavCekipTipDetay" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="YaziSablonlari" EntityType="Self.YaziSablonlari" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="YaziSablonlariEkleri" EntityType="Self.YaziSablonlariEkleri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="YaziSablonTipleri" EntityType="Self.YaziSablonTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="YeterlikBasvuru" EntityType="Self.YeterlikBasvuru" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="YeterlikBasvuruJuriUyeleri" EntityType="Self.YeterlikBasvuruJuriUyeleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="YeterlikBasvuruKomiteler" EntityType="Self.YeterlikBasvuruKomiteler" Schema="dbo" store:Type="Tables" />
@@ -8526,10 +8606,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="SRTalepTipleri" EntitySet="SRTalepTipleri" />
             <End Role="SRSalonTalepTipleri" EntitySet="SRSalonTalepTipleri" />
           </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_DonemProjesiBasvuru" Association="Self.FK_SRTalepleri_DonemProjesiBasvuru">
-            <End Role="DonemProjesiBasvuru" EntitySet="DonemProjesiBasvuru" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleri" />
-          </AssociationSet>
           <AssociationSet Name="FK_SRTalepleri_Enstituler" Association="Self.FK_SRTalepleri_Enstituler">
             <End Role="Enstituler" EntitySet="Enstituler" />
             <End Role="SRTalepleri" EntitySet="SRTalepleri" />
@@ -8560,6 +8636,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_SRTalepleri_SRTalepTipleri" Association="Self.FK_SRTalepleri_SRTalepTipleri">
             <End Role="SRTalepTipleri" EntitySet="SRTalepTipleri" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleri" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_TabloyaAdi" Association="Self.FK_SRTalepleri_TabloyaAdi">
+            <End Role="DonemProjesiBasvuru" EntitySet="DonemProjesiBasvuru" />
             <End Role="SRTalepleri" EntitySet="SRTalepleri" />
           </AssociationSet>
           <AssociationSet Name="FK_SRTalepleri_TIBasvuruAraRapor" Association="Self.FK_SRTalepleri_TIBasvuruAraRapor">
@@ -8810,6 +8890,22 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="YetkiGruplari" EntitySet="YetkiGruplari" />
             <End Role="Unvanlar" EntitySet="Unvanlar" />
           </AssociationSet>
+          <AssociationSet Name="FK_YaziSablonlari_Enstituler" Association="Self.FK_YaziSablonlari_Enstituler">
+            <End Role="Enstituler" EntitySet="Enstituler" />
+            <End Role="YaziSablonlari" EntitySet="YaziSablonlari" />
+          </AssociationSet>
+          <AssociationSet Name="FK_YaziSablonlari_Kullanicilar" Association="Self.FK_YaziSablonlari_Kullanicilar">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="YaziSablonlari" EntitySet="YaziSablonlari" />
+          </AssociationSet>
+          <AssociationSet Name="FK_YaziSablonlari_YaziSablonTipleri" Association="Self.FK_YaziSablonlari_YaziSablonTipleri">
+            <End Role="YaziSablonTipleri" EntitySet="YaziSablonTipleri" />
+            <End Role="YaziSablonlari" EntitySet="YaziSablonlari" />
+          </AssociationSet>
+          <AssociationSet Name="FK_YaziSablonlariEkleri_YaziSablonlari" Association="Self.FK_YaziSablonlariEkleri_YaziSablonlari">
+            <End Role="YaziSablonlari" EntitySet="YaziSablonlari" />
+            <End Role="YaziSablonlariEkleri" EntitySet="YaziSablonlariEkleri" />
+          </AssociationSet>
           <AssociationSet Name="FK_YeterlikBasvuru_Donemler" Association="Self.FK_YeterlikBasvuru_Donemler">
             <End Role="Donemler" EntitySet="Donemler" />
             <End Role="YeterlikBasvuru" EntitySet="YeterlikBasvuru" />
@@ -9032,7 +9128,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="SRTalepleris" EntityType="LubsDbModel.SRTalepleri" />
           <EntitySet Name="SRTaleplerJuris" EntityType="LubsDbModel.SRTaleplerJuri" />
           <EntitySet Name="SRTalepTipleris" EntityType="LubsDbModel.SRTalepTipleri" />
-          <EntitySet Name="sysdiagrams" EntityType="LubsDbModel.sysdiagram" />
           <EntitySet Name="TalepArGorStatuleris" EntityType="LubsDbModel.TalepArGorStatuleri" />
           <EntitySet Name="TalepDurumlaris" EntityType="LubsDbModel.TalepDurumlari" />
           <EntitySet Name="TalepGelenTalepBelgeleris" EntityType="LubsDbModel.TalepGelenTalepBelgeleri" />
@@ -9064,6 +9159,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="Uyruklars" EntityType="LubsDbModel.Uyruklar" />
           <EntitySet Name="WsSinavCekimTipleris" EntityType="LubsDbModel.WsSinavCekimTipleri" />
           <EntitySet Name="WsSinavCekipTipDetays" EntityType="LubsDbModel.WsSinavCekipTipDetay" />
+          <EntitySet Name="YaziSablonlaris" EntityType="LubsDbModel.YaziSablonlari" />
+          <EntitySet Name="YaziSablonlariEkleris" EntityType="LubsDbModel.YaziSablonlariEkleri" />
+          <EntitySet Name="YaziSablonTipleris" EntityType="LubsDbModel.YaziSablonTipleri" />
           <EntitySet Name="YeterlikBasvurus" EntityType="LubsDbModel.YeterlikBasvuru" />
           <EntitySet Name="YeterlikBasvuruJuriUyeleris" EntityType="LubsDbModel.YeterlikBasvuruJuriUyeleri" />
           <EntitySet Name="YeterlikBasvuruKomitelers" EntityType="LubsDbModel.YeterlikBasvuruKomiteler" />
@@ -9630,7 +9728,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="DonemProjesiBasvuru" EntitySet="DonemProjesiBasvurus" />
             <End Role="DonemProjesiJurileri" EntitySet="DonemProjesiJurileris" />
           </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_DonemProjesiBasvuru" Association="LubsDbModel.FK_SRTalepleri_DonemProjesiBasvuru">
+          <AssociationSet Name="FK_SRTalepleri_TabloyaAdi" Association="LubsDbModel.FK_SRTalepleri_TabloyaAdi">
             <End Role="DonemProjesiBasvuru" EntitySet="DonemProjesiBasvurus" />
             <End Role="SRTalepleri" EntitySet="SRTalepleris" />
           </AssociationSet>
@@ -9741,6 +9839,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_ToBasvuru_Enstituler" Association="LubsDbModel.FK_ToBasvuru_Enstituler">
             <End Role="Enstituler" EntitySet="Enstitulers" />
             <End Role="ToBasvuru" EntitySet="ToBasvurus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_YaziSablonlari_Enstituler" Association="LubsDbModel.FK_YaziSablonlari_Enstituler">
+            <End Role="Enstituler" EntitySet="Enstitulers" />
+            <End Role="YaziSablonlari" EntitySet="YaziSablonlaris" />
           </AssociationSet>
           <AssociationSet Name="FK_YeterlikSureci_Enstituler" Association="LubsDbModel.FK_YeterlikSureci_Enstituler">
             <End Role="Enstituler" EntitySet="Enstitulers" />
@@ -9937,6 +10039,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_ToBasvuruSavunma_Kullanicilar" Association="LubsDbModel.FK_ToBasvuruSavunma_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="ToBasvuruSavunma" EntitySet="ToBasvuruSavunmas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_YaziSablonlari_Kullanicilar" Association="LubsDbModel.FK_YaziSablonlari_Kullanicilar">
+            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
+            <End Role="YaziSablonlari" EntitySet="YaziSablonlaris" />
           </AssociationSet>
           <AssociationSet Name="FK_YeterlikBasvuru_Kullanicilar" Association="LubsDbModel.FK_YeterlikBasvuru_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
@@ -10377,6 +10483,14 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_Unvanlar_YetkiGruplari" Association="LubsDbModel.FK_Unvanlar_YetkiGruplari">
             <End Role="YetkiGruplari" EntitySet="YetkiGruplaris" />
             <End Role="Unvanlar" EntitySet="Unvanlars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_YaziSablonlari_YaziSablonTipleri" Association="LubsDbModel.FK_YaziSablonlari_YaziSablonTipleri">
+            <End Role="YaziSablonTipleri" EntitySet="YaziSablonTipleris" />
+            <End Role="YaziSablonlari" EntitySet="YaziSablonlaris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_YaziSablonlariEkleri_YaziSablonlari" Association="LubsDbModel.FK_YaziSablonlariEkleri_YaziSablonlari">
+            <End Role="YaziSablonlari" EntitySet="YaziSablonlaris" />
+            <End Role="YaziSablonlariEkleri" EntitySet="YaziSablonlariEkleris" />
           </AssociationSet>
           <AssociationSet Name="FK_YeterlikBasvuru_YeterlikSureci" Association="LubsDbModel.FK_YeterlikBasvuru_YeterlikSureci">
             <End Role="YeterlikSureci" EntitySet="YeterlikSurecis" />
@@ -11482,7 +11596,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="DonemProjesiJuriOnayDurumlari" Relationship="LubsDbModel.FK_DonemProjesiBasvuru_DonemProjesiJuriOnayDurumlari" FromRole="DonemProjesiBasvuru" ToRole="DonemProjesiJuriOnayDurumlari" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_DonemProjesiBasvuru_Kullanicilar" FromRole="DonemProjesiBasvuru" ToRole="Kullanicilar" />
           <NavigationProperty Name="DonemProjesiJurileris" Relationship="LubsDbModel.FK_DonemProjesiJurileri_DonemProjesiBasvuru" FromRole="DonemProjesiBasvuru" ToRole="DonemProjesiJurileri" />
-          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_DonemProjesiBasvuru" FromRole="DonemProjesiBasvuru" ToRole="SRTalepleri" />
+          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_TabloyaAdi" FromRole="DonemProjesiBasvuru" ToRole="SRTalepleri" />
         </EntityType>
         <EntityType Name="DonemProjesiDurumlari">
           <Key>
@@ -11619,6 +11733,12 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="WebAdresi" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="ToplamKayitKota" Type="Int32" Nullable="false" />
           <Property Name="TestEmailAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="EnstituMudurId" Type="Int32" />
+          <Property Name="EnstituMudurVekilId" Type="Int32" />
+          <Property Name="Konum" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Adres" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Tel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EPosta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsAktif" Type="Boolean" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
@@ -11650,6 +11770,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="TIBasvurus" Relationship="LubsDbModel.FK_TIBasvuru_Enstituler" FromRole="Enstituler" ToRole="TIBasvuru" />
           <NavigationProperty Name="TijBasvurus" Relationship="LubsDbModel.FK_TijBasvuru_Enstituler" FromRole="Enstituler" ToRole="TijBasvuru" />
           <NavigationProperty Name="ToBasvurus" Relationship="LubsDbModel.FK_ToBasvuru_Enstituler" FromRole="Enstituler" ToRole="ToBasvuru" />
+          <NavigationProperty Name="YaziSablonlaris" Relationship="LubsDbModel.FK_YaziSablonlari_Enstituler" FromRole="Enstituler" ToRole="YaziSablonlari" />
           <NavigationProperty Name="YeterlikSurecis" Relationship="LubsDbModel.FK_YeterlikSureci_Enstituler" FromRole="Enstituler" ToRole="YeterlikSureci" />
         </EntityType>
         <EntityType Name="GonderilenMailEkleri">
@@ -11878,6 +11999,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="TijBasvuruOneris" Relationship="LubsDbModel.FK_TijBasvuruOneri_Kullanicilar" FromRole="Kullanicilar" ToRole="TijBasvuruOneri" />
           <NavigationProperty Name="ToBasvurus" Relationship="LubsDbModel.FK_ToBasvuru_Kullanicilar" FromRole="Kullanicilar" ToRole="ToBasvuru" />
           <NavigationProperty Name="ToBasvuruSavunmas" Relationship="LubsDbModel.FK_ToBasvuruSavunma_Kullanicilar" FromRole="Kullanicilar" ToRole="ToBasvuruSavunma" />
+          <NavigationProperty Name="YaziSablonlaris" Relationship="LubsDbModel.FK_YaziSablonlari_Kullanicilar" FromRole="Kullanicilar" ToRole="YaziSablonlari" />
           <NavigationProperty Name="YeterlikBasvurus" Relationship="LubsDbModel.FK_YeterlikBasvuru_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikBasvuru" />
           <NavigationProperty Name="YeterlikBasvuruKomitelers" Relationship="LubsDbModel.FK_YeterlikBasvuruKomiteler_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikBasvuruKomiteler" />
           <NavigationProperty Name="YeterlikSureciKriterMuafOgrencilers" Relationship="LubsDbModel.FK_YeterlikSureciKriterMuafOgrenciler_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikSureciKriterMuafOgrenciler" />
@@ -11938,7 +12060,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="TabloAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="IslemTipi" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
           <Property Name="Aciklama" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
-          <Property Name="TableData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TableData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
@@ -12114,9 +12236,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IsTezDiliTr" Type="Boolean" />
           <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="TezDanismanID" Type="Int32" />
           <Property Name="ToplamKaynakOrani" Type="Int32" />
           <Property Name="TekKaynakOrani" Type="Int32" />
-          <Property Name="TezDanismanID" Type="Int32" />
           <Property Name="IsDanismanOnay" Type="Boolean" />
           <Property Name="DanismanOnayTarihi" Type="DateTime" Precision="3" />
           <Property Name="DanismanOnayAciklama" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -13234,7 +13356,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DonemProjesiBasvuru" Relationship="LubsDbModel.FK_SRTalepleri_DonemProjesiBasvuru" FromRole="SRTalepleri" ToRole="DonemProjesiBasvuru" />
+          <NavigationProperty Name="DonemProjesiBasvuru" Relationship="LubsDbModel.FK_SRTalepleri_TabloyaAdi" FromRole="SRTalepleri" ToRole="DonemProjesiBasvuru" />
           <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_SRTalepleri_Enstituler" FromRole="SRTalepleri" ToRole="Enstituler" />
           <NavigationProperty Name="HaftaGunleri" Relationship="LubsDbModel.FK_SRTalepleri_HaftaGunleri" FromRole="SRTalepleri" ToRole="HaftaGunleri" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_SRTalepleri_Kullanicilar" FromRole="SRTalepleri" ToRole="Kullanicilar" />
@@ -13291,16 +13413,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="SROzelTanimlars" Relationship="LubsDbModel.FK_SROzelTanimlar_SRTalepTipleri" FromRole="SRTalepTipleri" ToRole="SROzelTanimlar" />
           <NavigationProperty Name="SRSalonTalepTipleris" Relationship="LubsDbModel.FK_SRSalonTalepTipleri_SRTalepTipleri" FromRole="SRTalepTipleri" ToRole="SRSalonTalepTipleri" />
           <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_SRTalepTipleri" FromRole="SRTalepTipleri" ToRole="SRTalepleri" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="TalepArGorStatuleri">
           <Key>
@@ -13979,6 +14091,44 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="WsSinavCekimTipID" Type="Int32" Nullable="false" />
           <Property Name="WsSinavCekimKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="WsSinavCekimAd" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="YaziSablonlari">
+          <Key>
+            <PropertyRef Name="YaziSablonlariID" />
+          </Key>
+          <Property Name="YaziSablonlariID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EnstituKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="YaziSablonTipID" Type="Int32" Nullable="false" />
+          <Property Name="Konu" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Sablon" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="SablonHtml" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IsAktif" Type="Boolean" Nullable="false" />
+          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
+          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_YaziSablonlari_Enstituler" FromRole="YaziSablonlari" ToRole="Enstituler" />
+          <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_YaziSablonlari_Kullanicilar" FromRole="YaziSablonlari" ToRole="Kullanicilar" />
+          <NavigationProperty Name="YaziSablonTipleri" Relationship="LubsDbModel.FK_YaziSablonlari_YaziSablonTipleri" FromRole="YaziSablonlari" ToRole="YaziSablonTipleri" />
+          <NavigationProperty Name="YaziSablonlariEkleris" Relationship="LubsDbModel.FK_YaziSablonlariEkleri_YaziSablonlari" FromRole="YaziSablonlari" ToRole="YaziSablonlariEkleri" />
+        </EntityType>
+        <EntityType Name="YaziSablonlariEkleri">
+          <Key>
+            <PropertyRef Name="YaziSablonlariEkiID" />
+          </Key>
+          <Property Name="YaziSablonlariEkiID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="YaziSablonlariID" Type="Int32" Nullable="false" />
+          <Property Name="EkAdi" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="EkDosyaYolu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="YaziSablonlari" Relationship="LubsDbModel.FK_YaziSablonlariEkleri_YaziSablonlari" FromRole="YaziSablonlariEkleri" ToRole="YaziSablonlari" />
+        </EntityType>
+        <EntityType Name="YaziSablonTipleri">
+          <Key>
+            <PropertyRef Name="YaziSablonTipID" />
+          </Key>
+          <Property Name="YaziSablonTipID" Type="Int32" Nullable="false" />
+          <Property Name="SablonTipAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Parametreler" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="YaziSablonlaris" Relationship="LubsDbModel.FK_YaziSablonlari_YaziSablonTipleri" FromRole="YaziSablonTipleri" ToRole="YaziSablonlari" />
         </EntityType>
         <EntityType Name="YeterlikBasvuru">
           <Key>
@@ -15921,7 +16071,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SRTalepleri_DonemProjesiBasvuru">
+        <Association Name="FK_SRTalepleri_TabloyaAdi">
           <End Type="LubsDbModel.DonemProjesiBasvuru" Role="DonemProjesiBasvuru" Multiplicity="0..1" />
           <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
           <ReferentialConstraint>
@@ -16257,6 +16407,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               <PropertyRef Name="EnstituKod" />
             </Principal>
             <Dependent Role="ToBasvuru">
+              <PropertyRef Name="EnstituKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_YaziSablonlari_Enstituler">
+          <End Type="LubsDbModel.Enstituler" Role="Enstituler" Multiplicity="1" />
+          <End Type="LubsDbModel.YaziSablonlari" Role="YaziSablonlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Enstituler">
+              <PropertyRef Name="EnstituKod" />
+            </Principal>
+            <Dependent Role="YaziSablonlari">
               <PropertyRef Name="EnstituKod" />
             </Dependent>
           </ReferentialConstraint>
@@ -16856,6 +17018,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="ToBasvuruSavunma">
               <PropertyRef Name="TezDanismanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_YaziSablonlari_Kullanicilar">
+          <End Type="LubsDbModel.Kullanicilar" Role="Kullanicilar" Multiplicity="1" />
+          <End Type="LubsDbModel.YaziSablonlari" Role="YaziSablonlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="YaziSablonlari">
+              <PropertyRef Name="IslemYapanID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -18231,6 +18405,32 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_YaziSablonlari_YaziSablonTipleri">
+          <End Type="LubsDbModel.YaziSablonTipleri" Role="YaziSablonTipleri" Multiplicity="1" />
+          <End Type="LubsDbModel.YaziSablonlari" Role="YaziSablonlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="YaziSablonTipleri">
+              <PropertyRef Name="YaziSablonTipID" />
+            </Principal>
+            <Dependent Role="YaziSablonlari">
+              <PropertyRef Name="YaziSablonTipID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_YaziSablonlariEkleri_YaziSablonlari">
+          <End Type="LubsDbModel.YaziSablonlari" Role="YaziSablonlari" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="LubsDbModel.YaziSablonlariEkleri" Role="YaziSablonlariEkleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="YaziSablonlari">
+              <PropertyRef Name="YaziSablonlariID" />
+            </Principal>
+            <Dependent Role="YaziSablonlariEkleri">
+              <PropertyRef Name="YaziSablonlariID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_YeterlikBasvuru_YeterlikSureci">
           <End Type="LubsDbModel.YeterlikSureci" Role="YeterlikSureci" Multiplicity="1" />
           <End Type="LubsDbModel.YeterlikBasvuru" Role="YeterlikBasvuru" Multiplicity="*" />
@@ -19377,6 +19577,12 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
+                <ScalarProperty Name="EPosta" ColumnName="EPosta" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Adres" ColumnName="Adres" />
+                <ScalarProperty Name="Konum" ColumnName="Konum" />
+                <ScalarProperty Name="EnstituMudurVekilId" ColumnName="EnstituMudurVekilId" />
+                <ScalarProperty Name="EnstituMudurId" ColumnName="EnstituMudurId" />
                 <ScalarProperty Name="TestEmailAddress" ColumnName="TestEmailAddress" />
                 <ScalarProperty Name="ToplamKayitKota" ColumnName="ToplamKayitKota" />
                 <ScalarProperty Name="WebAdresi" ColumnName="WebAdresi" />
@@ -19770,9 +19976,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="DanismanOnayAciklama" ColumnName="DanismanOnayAciklama" />
                 <ScalarProperty Name="DanismanOnayTarihi" ColumnName="DanismanOnayTarihi" />
                 <ScalarProperty Name="IsDanismanOnay" ColumnName="IsDanismanOnay" />
-                <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />
                 <ScalarProperty Name="TekKaynakOrani" ColumnName="TekKaynakOrani" />
                 <ScalarProperty Name="ToplamKaynakOrani" ColumnName="ToplamKaynakOrani" />
+                <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />
                 <ScalarProperty Name="TezBaslikEn" ColumnName="TezBaslikEn" />
                 <ScalarProperty Name="TezBaslikTr" ColumnName="TezBaslikTr" />
                 <ScalarProperty Name="IsTezDiliTr" ColumnName="IsTezDiliTr" />
@@ -20801,17 +21007,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="LubsDbModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="definition" ColumnName="definition" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="name" ColumnName="name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TalepArGorStatuleris">
             <EntityTypeMapping TypeName="LubsDbModel.TalepArGorStatuleri">
               <MappingFragment StoreEntitySet="TalepArGorStatuleri">
@@ -21429,6 +21624,41 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="WsSinavCekimKod" ColumnName="WsSinavCekimKod" />
                 <ScalarProperty Name="WsSinavCekimTipID" ColumnName="WsSinavCekimTipID" />
                 <ScalarProperty Name="WsSinavCekipTipDetayID" ColumnName="WsSinavCekipTipDetayID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="YaziSablonlaris">
+            <EntityTypeMapping TypeName="LubsDbModel.YaziSablonlari">
+              <MappingFragment StoreEntitySet="YaziSablonlari">
+                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
+                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
+                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
+                <ScalarProperty Name="SablonHtml" ColumnName="SablonHtml" />
+                <ScalarProperty Name="Sablon" ColumnName="Sablon" />
+                <ScalarProperty Name="Konu" ColumnName="Konu" />
+                <ScalarProperty Name="YaziSablonTipID" ColumnName="YaziSablonTipID" />
+                <ScalarProperty Name="EnstituKod" ColumnName="EnstituKod" />
+                <ScalarProperty Name="YaziSablonlariID" ColumnName="YaziSablonlariID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="YaziSablonlariEkleris">
+            <EntityTypeMapping TypeName="LubsDbModel.YaziSablonlariEkleri">
+              <MappingFragment StoreEntitySet="YaziSablonlariEkleri">
+                <ScalarProperty Name="EkDosyaYolu" ColumnName="EkDosyaYolu" />
+                <ScalarProperty Name="EkAdi" ColumnName="EkAdi" />
+                <ScalarProperty Name="YaziSablonlariID" ColumnName="YaziSablonlariID" />
+                <ScalarProperty Name="YaziSablonlariEkiID" ColumnName="YaziSablonlariEkiID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="YaziSablonTipleris">
+            <EntityTypeMapping TypeName="LubsDbModel.YaziSablonTipleri">
+              <MappingFragment StoreEntitySet="YaziSablonTipleri">
+                <ScalarProperty Name="Parametreler" ColumnName="Parametreler" />
+                <ScalarProperty Name="SablonTipAdi" ColumnName="SablonTipAdi" />
+                <ScalarProperty Name="YaziSablonTipID" ColumnName="YaziSablonTipID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

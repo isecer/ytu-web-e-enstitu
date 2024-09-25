@@ -29,8 +29,7 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
-
-
+             
             SistemBilgilendirmeBus.SistemBilgisiKaydet("Application_Start()", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
            
             RollerBus.UpdateRoles();
@@ -38,8 +37,7 @@ namespace LisansUstuBasvuruSistemi
 
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
-            MenulerBus.Menulers = MenulerBus.GetAllMenu();
-
+            MenulerBus.Menulers = MenulerBus.GetAllMenu(); 
 
             MailTaskRunner.Start();
             ObsStudentControlTaskRunner.Start();
@@ -47,7 +45,7 @@ namespace LisansUstuBasvuruSistemi
             ScriptPermissionManager.GlobalInstance = new ScriptPermissionManager(ExecutionMode.Unrestricted);
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Disabled;
             DevExpress.XtraReports.Web.ASPxWebDocumentViewer.StaticInitialize();
-
+     
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
                     | SecurityProtocolType.Tls11

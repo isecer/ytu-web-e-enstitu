@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
+using DevExpress.XtraReports.UI;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -16,10 +18,10 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class YeterlikBus
     {
-       
 
 
-     
+
+
         public static int? GetYeterlikAktifSurecId(string enstituKod, int? yeterlikSurecId = null)
         {
             using (var entities = new LubsDbEntities())
@@ -356,6 +358,74 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MmMessage SendMailSinavJuriLink(Guid basvuruUniqueId, bool isYaziliOrSozlu = true, Guid? uniqueId = null)
         {
             return MailSenderYeterlik.SendMailSinavJuriLink(basvuruUniqueId, isYaziliOrSozlu, uniqueId);
+        }
+
+
+        public static XtraReport KomiteAtamaBilgilendirmeYazilari(int yeterlikBasvuruId)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+                var sablonTipIds = new List<int>
+                    {
+                        YaziSablonTipiEnum.YeterlikKomiteAtamaYazisiAbd,
+                        YaziSablonTipiEnum.YeterlikKomiteAtamaYazisiDanisman
+                };
+
+                var yeterlikBasvuru = entities.YeterlikBasvurus.First(p => p.YeterlikBasvuruID == yeterlikBasvuruId);
+                var enstitu = yeterlikBasvuru.YeterlikSureci.Enstituler;
+                var sablonlar = entities.YaziSablonlaris.Where(p => sablonTipIds.Contains(p.YaziSablonTipID) && p.EnstituKod == enstitu.EnstituKod && p.IsAktif).ToList();
+                var anabilimDaliAdi = yeterlikBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.IlkHarfiBuyut();
+                var programAdi = yeterlikBasvuru.Programlar.ProgramAdi.IlkHarfiBuyut();
+                var ogrenciNo = yeterlikBasvuru.OgrenciNo;
+                var ogrenciAdSoyad = (yeterlikBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + yeterlikBasvuru.Kullanicilar.Soyad.ToUpper();
+                var isEnstituMururOrVekil = !enstitu.EnstituMudurVekilId.HasValue;
+                var mudurId = isEnstituMururOrVekil ? enstitu.EnstituMudurId : enstitu.EnstituMudurVekilId;
+                var mudurAdi = "";
+                var mudurUnvanAdi = "";
+                if (mudurId.HasValue)
+                {
+                    var mudur = entities.Kullanicilars.First(f => f.KullaniciID == mudurId);
+                    mudurUnvanAdi = mudur.Unvanlar.UnvanAdi.IlkHarfiBuyut();
+                    mudurAdi = mudur.Ad.IlkHarfiBuyut() + " " + mudur.Soyad.ToUpper();
+                }
+
+                var teslimSonTarih = yeterlikBasvuru.SozluSinavTarihi.Value.AddMonths(1).ToFormatDate();
+                var danisman = entities.Kullanicilars.First(f => f.KullaniciID == yeterlikBasvuru.TezDanismanID);
+                var parameters = new List<MailParameterDto>
+                    {
+                        new MailParameterDto { Key = "YeterlikSozluSinavTarihi", Value = yeterlikBasvuru.SozluSinavTarihi.ToFormatDate() },
+                        new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDaliAdi },
+                        new MailParameterDto { Key = "ProgramAdi", Value = programAdi },
+                        new MailParameterDto { Key = "OgrenciNo", Value = ogrenciNo },
+                        new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad },
+                        new MailParameterDto { Key = "DanismanUnvan", Value = danisman.Unvanlar.UnvanAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanAdSoyad", Value = danisman.Ad.IlkHarfiBuyut()+" "+danisman.Soyad.ToUpper() },
+                        new MailParameterDto { Key = "EnstituMudurUnvan", Value = mudurUnvanAdi },
+                        new MailParameterDto { Key = "EnstituMudurAdi", Value = mudurAdi },
+                        new MailParameterDto { Key = "EnstituMudurTitle", Value = isEnstituMururOrVekil ? "Enstitü Müdürü" : "Enstitü Müdür V." },
+                        new MailParameterDto { Key = "BilgiYazisiTeslimSonTarih", Value = teslimSonTarih }
+                    };
+                var sablonInx = 0;
+                XtraReport rprX = null;
+                foreach (var sablon in sablonlar)
+                {
+                    var html = ValueReplaceExtension.ProcessHtmlContent(sablon.SablonHtml, parameters);
+                    if (sablonInx == 0)
+                    {
+                        rprX = new RprYaziSablonOlusturucu(enstitu, html, sablon.Konu);
+                        rprX.CreateDocument();
+                    }
+                    else
+                    {
+                        var rapor = new RprYaziSablonOlusturucu(enstitu, html, sablon.Konu);
+                        rapor.CreateDocument();
+                        rprX.Pages.AddRange(rapor.Pages);
+                    }
+                    sablonInx++;
+                }
+                return rprX;
+
+            }
         }
 
 

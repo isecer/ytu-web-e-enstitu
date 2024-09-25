@@ -569,7 +569,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      un.UnvanAdi,
                                      UnvanAdiSuccess = !un.UnvanAdi.IsNullOrWhiteSpace(),
                                      em.EMail,
-                                     EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && !em.EMail.ToIsValidEmail(),
+                                     EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && em.EMail.ToIsValidEmail(),
                                      abd.AnabilimdaliAdi,
                                      AnabilimdaliAdiSuccess = !abd.AnabilimdaliAdi.IsNullOrWhiteSpace(),
 
@@ -1104,7 +1104,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("E-Posta Giriniz");
             }
-            else if (eMail.ToIsValidEmail())
+            else if (!eMail.ToIsValidEmail())
             {
                 mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("E-Posta Formatı Uygun Değildir.");

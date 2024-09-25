@@ -12,12 +12,13 @@ namespace Entities.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class sysdiagram
+    public partial class YaziSablonlariEkleri
     {
-        public string name { get; set; }
-        public int principal_id { get; set; }
-        public int diagram_id { get; set; }
-        public Nullable<int> version { get; set; }
-        public byte[] definition { get; set; }
+        public int YaziSablonlariEkiID { get; set; }
+        public int YaziSablonlariID { get; set; }
+        public string EkAdi { get; set; }
+        public string EkDosyaYolu { get; set; }
+    
+        public virtual YaziSablonlari YaziSablonlari { get; set; }
     }
 }

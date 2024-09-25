@@ -48,9 +48,9 @@ namespace Entities.Entities
         public Nullable<bool> IsTezDiliTr { get; set; }
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
+        public Nullable<int> TezDanismanID { get; set; }
         public Nullable<int> ToplamKaynakOrani { get; set; }
         public Nullable<int> TekKaynakOrani { get; set; }
-        public Nullable<int> TezDanismanID { get; set; }
         public Nullable<bool> IsDanismanOnay { get; set; }
         public Nullable<System.DateTime> DanismanOnayTarihi { get; set; }
         public string DanismanOnayAciklama { get; set; }

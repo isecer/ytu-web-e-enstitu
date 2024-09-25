@@ -523,9 +523,6 @@
     <Compile Include="Entities\SRTalepTipleri.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\sysdiagram.cs">
-      <DependentUpon>LubsDb.tt</DependentUpon>
-    </Compile>
     <Compile Include="Entities\TalepArGorStatuleri.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
@@ -620,6 +617,15 @@
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\WsSinavCekipTipDetay.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\YaziSablonlari.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\YaziSablonlariEkleri.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\YaziSablonTipleri.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\YeterlikBasvuru.cs">

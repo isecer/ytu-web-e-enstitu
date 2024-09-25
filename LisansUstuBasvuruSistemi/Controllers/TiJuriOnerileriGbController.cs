@@ -676,7 +676,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      un.UnvanAdi,
                                      UnvanAdiSuccess = !un.UnvanAdi.IsNullOrWhiteSpace(),
                                      em.EMail,
-                                     EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && !em.EMail.ToIsValidEmail(),
+                                     EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && em.EMail.ToIsValidEmail(),
                                      uni.UniversiteID,
                                      UniversiteIDSuccess = uni.UniversiteID.HasValue,
                                      abd.AnabilimdaliAdi,
