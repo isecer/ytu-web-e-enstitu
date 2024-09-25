@@ -8,6 +8,7 @@
     Layout = null;
     var isDanismani = UserIdentity.Current.Id == Model.TezDanismanID;
     var isYetkili = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
+    var raporYetkisi = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
     var isSozluNotuIstensin = Model.IsYaziliSinavBasarili == true && Model.IsSozluSinavinaKatildi == true;
     var juriler = Model.YeterlikBasvuruJuriUyeleris.Where(p => p.IsSecilenJuri).ToList();
     var tumJuriOnayladi = juriler.All(a => a.IsSonucOnaylandi.HasValue);
@@ -197,11 +198,23 @@
                                     <td class="CaptionTd">Sınav Sonuç Formu</td>
                                     <td class="CaptionTd">:</td>
                                     <td class="ValueTd">
-                                        <a href="javascript:void(0);" onclick="YeniDialogBB('FR-1227 Doktora Yeterlik Sınav Değerlendirme Sonuç Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&IsPdfStream=true&RaporTipi=@RaporTipiEnum.YeterlikDoktoraSinavSonucFormu&UniqueID=@Model.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                        <a href="javascript:void(0);" onclick="YeniDialogBB('FR-1227 Doktora Yeterlik Sınav Değerlendirme Sonuç Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.YeterlikDoktoraSinavSonucFormu&UniqueID=@Model.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
                                             <i class="fa fa-file-pdf-o"></i> FR-1227 Doktora Yeterlik Sınav Değerlendirme Sonuç Formunu İndir
                                         </a>
                                     </td>
                                 </tr>
+                                @if (Model.IsGenelSonucBasarili == true && (isYetkili || raporYetkisi))
+                                {
+                                    <tr>
+                                        <td class="CaptionTd">Bilgi Yazıları</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            <a href="javascript:void(0);" onclick="YeniDialogBB('Komite Atama Gereklilik Formu Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.YeterlikKomiteAtamaGereklilikFormu&UniqueID=@Model.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                <i class="fa fa-file-pdf-o"></i> Komite Atama Gereklilik Formu Yazılarını İndir
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -280,7 +293,7 @@
                                     $.ajax({
                                         url: '@Url.Action("JuriDegisiklikPost", "Yeterlik")',
                                         data: { uniqueId, EMailOrJuriDegisiklik, EMail, YeniJuriUniqueID },
-                                        success: function (result) { 
+                                        success: function (result) {
                                             if (result.IsSuccess) {
                                                 GetDetail(id);
                                                 $('.modal-header').find('button').first().click();
@@ -293,7 +306,7 @@
                                                 padding: '2em'
                                             });
                                         },
-                                        complete: function (result) {  
+                                        complete: function (result) {
                                             PanelRefresh(pnlx, true);
                                         }
                                     });

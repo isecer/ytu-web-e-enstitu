@@ -1,9 +1,9 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
-@model  FmMailSablonlariDto
+@model  FmYaziSablonlariDto
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -17,11 +17,11 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i> Şablon Listesi</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Mail Şablonu Ekle</span></li>
+                        <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Yazı Şablonu Ekle</span></li>
 
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
-                        <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>
-                        <li><span class="label label-danger label-form">P:@IndexModel.Pasif</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
+                        <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
+                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -31,10 +31,9 @@
                             <tr>
                                 <th width="75"></th>
                                 <th class="sirala" field="EnstituAdi" width="150">Enstitü Adı</th>
-                                <th class="sirala" field="SablonAdi">Mail Konusu</th>
-                                <th class="sirala" field="EkSayisi" width="45">Ek.S.</th>
-                                <th class="sirala" field="IsAktif" width="45">Durum</th>
-                                <th width="40"> </th>
+                                <th class="sirala" field="Konu">Yazı Konusu</th>
+                                <th class="sirala" field="IsAktif" width="65">Durum</th>
+                                <th width="80"> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,15 +43,14 @@
                                     @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
                                 <th>
-                                    <input name="SablonAdi" type="text" value="@Model.SablonAdi" class="form-control" />
+                                    <input name="Konu" type="text" value="@Model.Konu" class="form-control" />
                                 </th>
-                                <th></th>
                                 <th></th>
                             </tr>
                             @if (Model.RowCount > 0)
                             {
                                 int rowIndex = Model.StartRowIndex;
-                                foreach (var item in Model.MailSablonlariDtos)
+                                foreach (var item in Model.YaziSablonlariDtos)
                                 {
                                     rowIndex++;
                                     <tr>
@@ -62,7 +60,7 @@
                                                     <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.MailSablonlariID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.MailSablonlariID')">
+                                                            <li id="iShow_@item.YaziSablonlariID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.YaziSablonlariID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
@@ -71,22 +69,22 @@
                                             </table>
                                         </td>
                                         <td>@item.EnstituAdi</td>
-                                        <td id="tdMad_@item.MailSablonlariID">@item.SablonTipAdi <br />Şablon Adı: @item.SablonAdi</td>
-                                        <td>
-                                            <span class="label label-@(item.EkSayisi>0 ? "success" : "danger")">@item.EkSayisi</span>
-                                        </td>
-
-                                        <td id="tdIa_@item.MailSablonlariID" style="text-align:center;">
+                                        <td id="tdMad_@item.YaziSablonlariID">@item.SablonTipAdi <br />Konu: @item.Konu</td>
+                                        <td id="tdIa_@item.YaziSablonlariID" style="text-align:center;">
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Kayit", "MailSablonlariSistem", new { id = item.MailSablonlariID })"><i class="fa fa-edit  tooltips" title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.MailSablonlariID')"><i class="fa fa-trash-o tooltips" title="Sil"></i></a>
+                                            <a href="@Url.Action("Kayit", "YaziSablonlari", new { id = item.YaziSablonlariID })"><i class="fa fa-edit fa-lg  tooltips" title="Düzelt"></i></a>
+                                            <a href="javascript:void(0);" onclick="YeniDialogBB('@item.Konu','@Url.Action("ShowYazi", "YaziSablonlari")?id=@item.YaziSablonlariID' , 'auto', 'modal-dialog modal-lg' )">
+                                                <i class="fa fa-eye fa-lg tooltips" title="Önizleme"></i>
+                                            </a>
+                                            <a href="@Url.Action("Kayit", "YaziSablonlari", new { id = item.YaziSablonlariID,isKopya=true })"><i class="fa fa-copy  fa-lg  tooltips" title="Kopya Aç"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.YaziSablonlariID')"><i class="fa fa-trash-o  fa-lg tooltips" title="Sil"></i></a>
                                         </td>
                                     </tr>
-                                    <tr class="cls-@item.MailSablonlariID" style="display:none">
-                                        <td id="cls-@item.MailSablonlariID" colspan="7" style="padding: 1px 1px 2px 75px;">
-                                            <div class="panel panel-success">
+                                    <tr class="cls-@item.YaziSablonlariID" style="display:none">
+                                        <td id="cls-@item.YaziSablonlariID" colspan="7" style="padding: 1px 1px 2px 75px;">
+                                            <div  class="panel panel-success">
 
                                                 <div class="panel-body" style="padding: 0px;">
                                                     <div class="panel panel-primary form-horizontal" style="margin-bottom: 0px;">
@@ -100,18 +98,9 @@
                                                                     </div>
 
                                                                 }
-                                                                @if (item.GonderilecekEkEpostalar.IsNullOrWhiteSpace() == false)
-                                                                {
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 control-label">Gönderilecek Ek Email Adresleri</label>
-                                                                        <div class="col-md-9">
-                                                                            @Html.Raw(item.GonderilecekEkEpostalar.Replace(",", "<br />"))
-                                                                        </div>
-                                                                    </div>
-                                                                }
                                                                 <div class="form-group">
-                                                                    <label class="col-md-3 control-label">Mail Konusu</label>
-                                                                    <div class="col-md-9">@item.SablonAdi</div>
+                                                                    <label class="col-md-3 control-label">Yazı Konusu</label>
+                                                                    <div class="col-md-9">@item.Konu</div>
                                                                 </div>
 
                                                                 <div class="form-group">
@@ -119,36 +108,6 @@
                                                                         <div class="panel panel-primary" style="margin:0px;padding:0px;">
                                                                             <div class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
                                                                                 @Html.Raw(item.SablonHtml)
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-md-3 col-xs-4 control-label">Ekler <img src="/Images/Attachment.png" style="height: 16px;"></label>
-                                                                    <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 250px; overflow: auto;">
-                                                                        <div class="panel panel-warning" style="margin:0px;padding:0px;">
-                                                                            <div class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
-                                                                                <div class="scrolkikko" style="max-height: 210px; width:100%; overflow:hidden;">
-                                                                                    <table style="width: 100%; table-layout: fixed;">
-                                                                                        @if (item.EkSayisi > 0)
-                                                                                        {
-                                                                                            foreach (var item2 in item.MailSablonlariEkleris.Select((s, inx) => new { inx, s }))
-                                                                                            {
-                                                                                                <tr>
-                                                                                                    <td style="width: 25px;">@(item2.inx + 1))</td>
-                                                                                                    <td class="name"><a href="@Url.CustomUrlContent(item2.s.EkDosyaYolu)" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item2.s.EkAdi</a></td>
-                                                                                                </tr>
-                                                                                            }
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            <tr>
-                                                                                                <td colspan="2">Ek Yok</td>
-                                                                                            </tr>
-                                                                                        }
-
-                                                                                    </table>
-                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -197,11 +156,11 @@
     function SilmeOnay(sndr, id) {
         var gMesaj = $("#tdMad_" + id).html();
         bootbox.dialog({
-            message:   gMesaj + " <br/> Seçilen Sistem Şablonunu Silmek İstiyor Musunuz?",
-            title: "Sistem Şablonu Silme İşlemi",
+            message:   gMesaj + " <br/> Seçilen Yazı Şablonunu Silmek İstiyor Musunuz?",
+            title: "Yazı Şablonu Silme İşlemi",
             buttons: {
                 success: {
-                    label: "Sistem Şablonunu Sil",
+                    label: "Yazı Şablonunu Sil",
                     className: "btn-danger",
                     callback: function () {
                         Sil(sndr, id);
@@ -218,7 +177,7 @@
     }
     function Sil(sndr, id) {
         $.ajax({
-            url: '@Url.Action("Sil", "MailSablonlariSistem")',
+            url: '@Url.Action("Sil", "YaziSablonlari")',
             data: { id: id },
             success: function (result) {
                 toastr[result.success ? "success" : "error"](result.message, "Sistem Şablonu Silme İşlemi")

@@ -440,7 +440,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 EMail = email.s.IsNullOrWhiteSpace() ? "" : email.s.Trim(),
                                 IsYtuIciOrDisi = juritip.s.Contains("YtuIci") || juritip.s == "TezDanismani",
                                 IsAsilOrYedek = isAsil.s,
-                                isSuccess = !ad.s.IsNullOrWhiteSpace() && uni.s.HasValue && !abd.s.IsNullOrWhiteSpace() && !unvan.s.IsNullOrWhiteSpace() && !(email.s ?? "").Trim().ToIsValidEmail()
+                                isSuccess = !ad.s.IsNullOrWhiteSpace() && uni.s.HasValue && !abd.s.IsNullOrWhiteSpace() && !unvan.s.IsNullOrWhiteSpace() && (email.s ?? "").Trim().ToIsValidEmail()
                             }).ToList();
 
             foreach (var item in juriData)
@@ -481,7 +481,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.AnabilimDaliAdi.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "AnabilimDali" });
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.AdSoyad.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "AdSoyad" });
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.UnvanAdi.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "UnvanAdi" });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.EMail.ToIsValidEmail() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "EMail" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = item.EMail.ToIsValidEmail() ? MsgTypeEnum.Success : MsgTypeEnum.Error, PropertyName = item.JuriTipAdi + "EMail" });
 
             }
             if (mMessage.Messages.Count > 0)
@@ -1163,7 +1163,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             mMessage.Messages.Add("Jüriye ait e-posta bilgisi boş bırakılamaz.");
                         }
-                        if (kModel.EMail.ToIsValidEmail())
+                        if (!kModel.EMail.ToIsValidEmail())
                         {
                             mMessage.Messages.Add("E-posta bilgisi uygun formatta değil.");
                         }

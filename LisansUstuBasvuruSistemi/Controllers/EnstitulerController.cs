@@ -78,9 +78,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
+            if (model.EnstituMudurId.HasValue)
+            {
+                ViewBag.SelectedEnstituMudur =
+                    _entities.Kullanicilars.First(f => f.KullaniciID == model.EnstituMudurId);
+            }
+            if (model.EnstituMudurVekilId.HasValue)
+            {
+                ViewBag.SelectedEnstituMudurVekil =
+                    _entities.Kullanicilars.First(f => f.KullaniciID == model.EnstituMudurVekilId);
+            }
             return View(model);
         }
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Kayit(Enstituler kModel)
         {
             var mmMessage = new MmMessage();
@@ -91,6 +102,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKod" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKod" });
+            if (kModel.EnstituAd.IsNullOrWhiteSpace())
+            {
+                mmMessage.Messages.Add("Enstitü Adı Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituAd" });
+            }
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituAd" });
+            if (kModel.EnstituKisaAd.IsNullOrWhiteSpace())
+            {
+                mmMessage.Messages.Add("Enstitü Kısa Adı Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituKisaAd" });
+            }
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituKisaAd" });
+            if (kModel.SistemErisimAdresi.IsNullOrWhiteSpace())
+            {
+                mmMessage.Messages.Add("Sistem Erişim Adresi Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SistemErisimAdresi" });
+            }
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SistemErisimAdresi" });
             if (kModel.SmtpHost.IsNullOrWhiteSpace())
             {
 
@@ -109,7 +138,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Smtp E-Posta Adresi Giriniz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SmtpMailAdresi" });
             }
-            else if (kModel.SmtpMailAdresi.ToIsValidEmail())
+            else if (!kModel.SmtpMailAdresi.ToIsValidEmail())
             {
                 mmMessage.Messages.Add("Lütfen E-Posta Adresini Doğru Formatta Giriniz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SmtpMailAdresi" });
@@ -127,25 +156,66 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SmtpSifre" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SmtpSifre" });
-            if (kModel.SistemErisimAdresi.IsNullOrWhiteSpace())
-            {
-                mmMessage.Messages.Add("Sistem Erişim Adresi Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SistemErisimAdresi" });
-            }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SistemErisimAdresi" });
 
+            if (!kModel.TestEmailAddress.IsNullOrWhiteSpace() && !kModel.TestEmailAddress.ToIsValidEmail())
+            {
+                mmMessage.Messages.Add("Lütfen Test E-Posta Adresini Doğru Formatta Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TestEmailAddress" });
+            }
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TestEmailAddress" });
+
+
+
+
+
+            if (!kModel.EnstituMudurId.HasValue && !kModel.EnstituMudurVekilId.HasValue)
+            {
+                mmMessage.Messages.Add("Enstitü Müdürü ya da Müdür Vekili Seçiniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituMudurId" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EnstituMudurVekilId" });
+            }
+            else
+            {
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituMudurId" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EnstituMudurVekilId" });
+            }
+
+            if (kModel.Konum.IsNullOrWhiteSpace())
+            {
+                mmMessage.Messages.Add("Google Maps Konum Bilgisi Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Konum" });
+            }
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "Konum" });
+            if (kModel.Adres.IsNullOrWhiteSpace())
+            {
+                mmMessage.Messages.Add("Adres Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Adres" });
+            }
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "Adres" });
+            if (kModel.Tel.IsNullOrWhiteSpace())
+            {
+                mmMessage.Messages.Add("Tel Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tel" });
+            }
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "Tel" });
             if (kModel.WebAdresi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Web Adresi Giriniz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "WebAdresi" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "WebAdresi" });
-            if (!kModel.TestEmailAddress.IsNullOrWhiteSpace() && kModel.TestEmailAddress.ToIsValidEmail())
+
+            if (kModel.EPosta.IsNullOrWhiteSpace())
             {
-                mmMessage.Messages.Add("Lütfen Test E-Posta Adresini Doğru Formatta Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TestEmailAddress" });
+                mmMessage.Messages.Add("Eposta Adresi Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EPosta" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TestEmailAddress" });
+            else if (!kModel.EPosta.ToIsValidEmail())
+            {
+                mmMessage.Messages.Add("Eposta Adresini Uygun Formatta Girilmeli.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EPosta" });
+            }
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "EPosta" });
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
@@ -163,15 +233,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.EnstituKod = kModel.EnstituKod;
                     data.EnstituAd = kModel.EnstituAd;
                     data.EnstituKisaAd = kModel.EnstituKisaAd;
+                    data.SistemErisimAdresi = kModel.SistemErisimAdresi;
                     data.SmtpHost = kModel.SmtpHost;
                     data.SmtpKullaniciAdi = kModel.SmtpKullaniciAdi;
                     data.SmtpMailAdresi = kModel.SmtpMailAdresi;
                     data.SmtpPortAdresi = kModel.SmtpPortAdresi;
                     data.SmtpSSL = kModel.SmtpSSL;
                     data.SmtpSifre = kModel.SmtpSifre;
-                    data.SistemErisimAdresi = kModel.SistemErisimAdresi;
-                    data.WebAdresi = kModel.WebAdresi;
                     data.TestEmailAddress = kModel.TestEmailAddress;
+                    data.EnstituMudurId = kModel.EnstituMudurId;
+                    data.EnstituMudurVekilId = kModel.EnstituMudurVekilId;
+                    data.Konum = kModel.Konum;
+                    data.Adres = kModel.Adres;
+                    data.Tel = kModel.Tel;
+                    data.WebAdresi = kModel.WebAdresi;
+                    data.EPosta = kModel.EPosta;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
@@ -186,7 +262,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
 
-
+            if (kModel.EnstituMudurId.HasValue)
+            {
+                ViewBag.SelectedEnstituMudur =
+                    _entities.Kullanicilars.First(f => f.KullaniciID == kModel.EnstituMudurId);
+            }
+            if (kModel.EnstituMudurVekilId.HasValue)
+            {
+                ViewBag.SelectedEnstituMudurVekil =
+                    _entities.Kullanicilars.First(f => f.KullaniciID == kModel.EnstituMudurVekilId);
+            }
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }

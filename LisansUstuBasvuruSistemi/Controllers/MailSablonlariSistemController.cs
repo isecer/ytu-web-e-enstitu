@@ -54,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     };
 
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
-            if (!model.SablonAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.SablonAdi.Contains(model.SablonAdi) || p.Sablon.Contains(model.SablonAdi));
+            if (!model.SablonAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.SablonTipAdi.Contains(model.SablonAdi) || p.SablonAdi.Contains(model.SablonAdi) || p.Sablon.Contains(model.SablonAdi));
             if (model.MailSablonTipID.HasValue) q = q.Where(p => p.MailSablonTipID == model.MailSablonTipID);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
 
@@ -105,12 +105,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var qDosyaEki = dosyaEki.Select((s, inx) => new { s, inx }).ToList();
             var qSablonEkId = mailSablonlariEkiId.Select((s, inx) => new { s, inx }).ToList();
             var eklenecekDosyalar = (from ekGirilenAd in qDosyaEkAdi
-                             join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
-                             select new { ekGirilenAd.inx, DosyaEkAdi = ekGirilenAd.s, Dosya = eklenenEk.s }).Where(p => p.Dosya != null).ToList();
+                                     join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
+                                     select new { ekGirilenAd.inx, DosyaEkAdi = ekGirilenAd.s, Dosya = eklenenEk.s }).Where(p => p.Dosya != null).ToList();
 
             var varolanDosyalar = (from s in qDosyaEkAdi
-                               join sid in qSablonEkId on s.inx equals sid.inx
-                               select new { s.inx, DosyaEkAdi = s.s, MailSablonlariEkiID = sid.s });
+                                   join sid in qSablonEkId on s.inx equals sid.inx
+                                   select new { s.inx, DosyaEkAdi = s.s, MailSablonlariEkiID = sid.s });
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
@@ -158,7 +158,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     kModel.IsAktif = true;
                     mailSablonu = _entities.MailSablonlaris.Add(kModel);
-                    
+
                 }
                 else
                 {

@@ -513,7 +513,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     messageModel.Messages.Add("E-Posta Bilgisini Giriniz.");
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EMail" });
                 }
-                else if (kModel.EMail.ToIsValidEmail())
+                else if (!kModel.EMail.ToIsValidEmail())
                 {
                     messageModel.Messages.Add("Girilen E-Posta Formatı uygun Değildir.");
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EMail" });

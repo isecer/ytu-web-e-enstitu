@@ -625,11 +625,11 @@
                                         <div class="registration-footer">
                                             <div class="registration-title"><strong>Şifremi Unuttum</strong>?</div>
                                             @*<div class="pull-left">
-                                                    © @DateTime.Now.Year Enstitü Online Başvuru Sistemi
-                                                </div>
-                                                <div class="pull-right">
-                                                   <a href="javascript:void(0);">Contact Us</a>
-                                            </div>*@
+                                                        © @DateTime.Now.Year Enstitü Online Başvuru Sistemi
+                                                    </div>
+                                                    <div class="pull-right">
+                                                       <a href="javascript:void(0);">Contact Us</a>
+                                                </div>*@
                                         </div>
                                         <div class="registration-body">
                                             <div class="registration-subtitle">Şifrenizi unuttuysanız aşağıdaki mail giriş alanına sisteme kayıt olduğunuz mail adresinizi giriniz ve enter tuşuna basınız. Bu işlemi yaptığınız zaman sistem mail adresinize şifrenizi sıfırlama linki gönderecektir!</div>
@@ -1402,29 +1402,13 @@
                 newWindow.focus();
             }
         }
-        function ShowDuyuru(popupSetting) {
-            var buttons = [];
-            if (popupSetting.btnAdi) {
-                buttons.push({
-                    label: '<i class="fa fa-plus tooltips"></i> ' + popupSetting.btnAdi,
-                    className: "btn-success",
-                    callback: function () {
-                        if (popupSetting.redirectUrl)
-                            window.location.href = popupSetting.redirectUrl;
-                        else if (popupSetting.callbackFnc)
-                            popupSetting.callbackFnc(popupSetting.fncparameter);
-                    }
-                });
+        function ShowDuyuru(popupSetting) {  
+
+            // Eğer kullanıcı login değilse veya popupTipId 1 değilse normal davranışı sürdür
+            if (popupSetting.popupTipId !== 1 || true) {
+                performNormalDuyuruFlow();
+                return;
             }
-
-            buttons.push({
-                label: popupSetting.redirectUrl || popupSetting.callbackFnc ? 'Vazgeç' : 'Kapat',
-                className: "btn-primary",
-                callback: function () {
-                    // Vazgeç butonuna tıklandığında yapılacak işlemler
-                }
-            });
-
 
             $.ajax({
                 url: '@Url.Action("GetDuyuruJson", "KDuyurular")',
@@ -1434,24 +1418,85 @@
                 dataType: "json",
                 data: { 'PopupTipID': popupSetting.popupTipId },
                 success: function (result) {
-                    if (result.ShowMessage) {
-                        var mdlx = bootbox.dialog({
-                            title: popupSetting.title,
-                            message: result.HtmlMessage,
-                            buttons: buttons
-                        });
-                    }
-                    else {
-                        if (popupSetting.redirectUrl) window.location.href = popupSetting.redirectUrl;
-                        else if (popupSetting.callbackFnc)
-                            popupSetting.callbackFnc(popupSetting.fncparameter);
+                    if (result.ShowMessage && result.duyuruKey) {
+                        var storageKey = 'duyuru_shown_' + result.duyuruKey;
+                        var duyuruShown = localStorage.getItem(storageKey);
+
+                        // Eğer bu duyuruKey ile daha önce duyuru gösterilmemişse
+                        if (!duyuruShown) {
+                            showDuyuruDialog(result, popupSetting);
+                            // Duyurunun gösterildiğini kaydet
+                            localStorage.setItem(storageKey, 'true');
+                        }
+                    } else {
+                        handleNoDuyuruCase(popupSetting);
                     }
                 },
                 error: function (err) {
                     alert(err.responseText);
-
                 }
             });
+
+            function performNormalDuyuruFlow() {
+                // Önceki normal duyuru akışı
+                $.ajax({
+                    url: '@Url.Action("GetDuyuruJson", "KDuyurular")',
+                    type: 'POST',
+                    enctype: "multipart/form-data",
+                    cache: false,
+                    dataType: "json",
+                    data: { 'PopupTipID': popupSetting.popupTipId },
+                    success: function (result) {
+                        if (result.ShowMessage) {
+                            showDuyuruDialog(result, popupSetting);
+                        } else {
+                            handleNoDuyuruCase(popupSetting);
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                    }
+                });
+            }
+
+            function showDuyuruDialog(result, popupSetting) {
+                var buttons = createButtons(popupSetting);
+                bootbox.dialog({
+                    title: popupSetting.title,
+                    message: result.HtmlMessage,
+                    buttons: buttons
+                });
+            }
+
+            function createButtons(popupSetting) {
+                var buttons = [];
+                if (popupSetting.btnAdi) {
+                    buttons.push({
+                        label: '<i class="fa fa-plus tooltips"></i> ' + popupSetting.btnAdi,
+                        className: "btn-success",
+                        callback: function () {
+                            if (popupSetting.redirectUrl)
+                                window.location.href = popupSetting.redirectUrl;
+                            else if (popupSetting.callbackFnc)
+                                popupSetting.callbackFnc(popupSetting.fncparameter);
+                        }
+                    });
+                }
+                buttons.push({
+                    label: popupSetting.redirectUrl || popupSetting.callbackFnc ? 'Vazgeç' : 'Kapat',
+                    className: "btn-primary",
+                    callback: function () {
+                        // Vazgeç butonuna tıklandığında yapılacak işlemler
+                    }
+                });
+                return buttons;
+            }
+
+            function handleNoDuyuruCase(popupSetting) {
+                if (popupSetting.redirectUrl) window.location.href = popupSetting.redirectUrl;
+                else if (popupSetting.callbackFnc)
+                    popupSetting.callbackFnc(popupSetting.fncparameter);
+            }
         }
 
         var frameLoad = false;
@@ -1833,7 +1878,7 @@
             }
             validateControl(null, mMessage);
 
-        } 
+        }
 
         $(function () {
             $('.scrolkikkox').slimScroll({

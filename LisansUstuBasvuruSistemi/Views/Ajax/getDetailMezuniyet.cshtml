@@ -10,14 +10,14 @@
 
     Layout = null;
     bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID + "_cp" : Model.MezuniyetBasvurulariID.ToString());
     var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true);
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
     var tab2IsVisible = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.MezuniyetJuriOneriFormlaris.Any());
     var tab3IsVisible = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.EykDaOnaylandi == true && Model.EYKTarihi.HasValue && Model.MezuniyetSrModel != null);
     var tab4IsVisible = (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili) || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.MezuniyetBasvurulariTezDosyalariDtos.Any());
-    var tab5IsVisible = (Model.KullaniciID == UserIdentity.Current.Id || kayitYetki) && (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi) && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili && (isTdYuklemeKapali || bezCiltForm != null);
+    var tab5IsVisible = (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi) && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili && (isTdYuklemeKapali || bezCiltForm != null);
 }
 <style>
 

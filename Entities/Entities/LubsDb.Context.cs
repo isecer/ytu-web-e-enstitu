@@ -177,7 +177,6 @@ namespace Entities.Entities
         public virtual DbSet<SRTalepleri> SRTalepleris { get; set; }
         public virtual DbSet<SRTaleplerJuri> SRTaleplerJuris { get; set; }
         public virtual DbSet<SRTalepTipleri> SRTalepTipleris { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TalepArGorStatuleri> TalepArGorStatuleris { get; set; }
         public virtual DbSet<TalepDurumlari> TalepDurumlaris { get; set; }
         public virtual DbSet<TalepGelenTalepBelgeleri> TalepGelenTalepBelgeleris { get; set; }
@@ -209,6 +208,9 @@ namespace Entities.Entities
         public virtual DbSet<Uyruklar> Uyruklars { get; set; }
         public virtual DbSet<WsSinavCekimTipleri> WsSinavCekimTipleris { get; set; }
         public virtual DbSet<WsSinavCekipTipDetay> WsSinavCekipTipDetays { get; set; }
+        public virtual DbSet<YaziSablonlari> YaziSablonlaris { get; set; }
+        public virtual DbSet<YaziSablonlariEkleri> YaziSablonlariEkleris { get; set; }
+        public virtual DbSet<YaziSablonTipleri> YaziSablonTipleris { get; set; }
         public virtual DbSet<YeterlikBasvuru> YeterlikBasvurus { get; set; }
         public virtual DbSet<YeterlikBasvuruJuriUyeleri> YeterlikBasvuruJuriUyeleris { get; set; }
         public virtual DbSet<YeterlikBasvuruKomiteler> YeterlikBasvuruKomitelers { get; set; }

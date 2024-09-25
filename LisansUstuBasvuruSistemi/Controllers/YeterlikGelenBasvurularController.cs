@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using BiskaUtil;
-using DevExpress.XtraRichEdit.Import.OpenXml;
 using LisansUstuBasvuruSistemi.Business;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;

@@ -228,6 +228,7 @@
     <Compile Include="Business\EnstituBus.cs" />
     <Compile Include="Business\GonderilenMaillerBus.cs" />
     <Compile Include="Business\LisansustuBasvuruBus.cs" />
+    <Compile Include="Business\YaziSablonTipleriBus.cs" />
     <Compile Include="Business\MailSablonTipleriBus.cs" />
     <Compile Include="Business\MenulerBus.cs" />
     <Compile Include="Business\MesajlarBus.cs" />
@@ -263,6 +264,7 @@
     <Compile Include="Controllers\DpAyarlarController.cs" />
     <Compile Include="Controllers\DpGelenBasvurularController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\YaziSablonlariController.cs" />
     <Compile Include="Raporlar\DonemProjesi\RprDpSinavTutanakFormuDetay_FR0366.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -287,6 +289,24 @@
     <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.Designer.cs">
       <DependentUpon>RprTezSinavSonucTutanagi_Detay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Raporlar\Genel\RprYaziSablonOlusturucu.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\Genel\RprYaziSablonOlusturucu.Designer.cs">
+      <DependentUpon>RprYaziSablonOlusturucu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Raporlar\Yeterlik\RprYeterlikKomiteAtamaBilgilendirmeFormuAbd.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\Yeterlik\RprYeterlikKomiteAtamaBilgilendirmeFormuAbd.Designer.cs">
+      <DependentUpon>RprYeterlikKomiteAtamaBilgilendirmeFormuAbd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Raporlar\Yeterlik\RprYeterlikKomiteAtamaBilgilendirmeFormuDanisman.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\Yeterlik\RprYeterlikKomiteAtamaBilgilendirmeFormuDanisman.Designer.cs">
+      <DependentUpon>RprYeterlikKomiteAtamaBilgilendirmeFormuDanisman.cs</DependentUpon>
+    </Compile>
     <Compile Include="Service References\Ws_ObsService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -298,6 +318,7 @@
     <Compile Include="Utilities\Dtos\FileAttachmentInfo.cs" />
     <Compile Include="Utilities\Dtos\FmDonemProjesiBasvuruDto.cs" />
     <Compile Include="Utilities\Dtos\FmDonemProjesiMuafOgrenciler.cs" />
+    <Compile Include="Utilities\Dtos\FmYaziSablonlariDto.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariTezDosyalariDto.cs" />
     <Compile Include="Controllers\TdoAyarlarController.cs" />
     <Compile Include="Controllers\TdoBasvuruController.cs" />
@@ -358,11 +379,6 @@
     <Compile Include="Controllers\YgGelenBasvurularController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\TezDanismanOneri\RprTdoTutanak.cs">
       <SubType>Component</SubType>
@@ -451,6 +467,7 @@
     <Compile Include="Utilities\Dtos\MIndexBilgi.cs" />
     <Compile Include="Utilities\Dtos\MmMessage.cs" />
     <Compile Include="Utilities\Dtos\MSurecDetay.cs" />
+    <Compile Include="Utilities\Enums\YaziSablonTipiEnum.cs" />
     <Compile Include="Utilities\Enums\TezKontrolDurumEnum.cs" />
     <Compile Include="Utilities\Enums\DonemProjesiEnums.cs" />
     <Compile Include="Utilities\Enums\EykTipEnum.cs" />
@@ -4467,10 +4484,6 @@
     <Content Include="Content\fontawesome-free-6.4.2-web\webfonts\fa-v4compatibility.ttf" />
     <Content Include="Content\fontawesome-free-6.4.2-web\webfonts\fa-v4compatibility.woff2" />
     <Content Include="LisansUstuBasvuruSistemi.ruleset" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.easyWizard.js" />
@@ -4813,6 +4826,8 @@
     <Content Include="Views\DpGelenBasvurular\GetTutanakRaporu.cshtml" />
     <Content Include="Views\MailIslemleri\MailIstatitik.cshtml" />
     <Content Include="Views\Shared\_BasvuruBilgiView.cshtml" />
+    <Content Include="Views\YaziSablonlari\Index.cshtml" />
+    <Content Include="Views\YaziSablonlari\Kayit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4948,6 +4963,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezOneriSavunma\RprToSavunmaFormu_FR0348.resx">
       <DependentUpon>RprToSavunmaFormu_FR0348.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\Genel\RprYaziSablonOlusturucu.resx">
+      <DependentUpon>RprYaziSablonOlusturucu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\Yeterlik\RprYeterlikKomiteAtamaBilgilendirmeFormuAbd.resx">
+      <DependentUpon>RprYeterlikKomiteAtamaBilgilendirmeFormuAbd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\Yeterlik\RprYeterlikKomiteAtamaBilgilendirmeFormuDanisman.resx">
+      <DependentUpon>RprYeterlikKomiteAtamaBilgilendirmeFormuDanisman.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\Yeterlik\RprDrYeterlikSinavDegerlendirmeFormu_FR1227.resx">
       <DependentUpon>RprDrYeterlikSinavDegerlendirmeFormu_FR1227.cs</DependentUpon>

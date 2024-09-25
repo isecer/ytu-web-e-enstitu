@@ -1,4 +1,4 @@
-﻿@using Entities.Entities 
+﻿@using Entities.Entities
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -34,10 +34,10 @@
                         <div class="tasks">
 
                             @foreach (var item in duyurular)
-                            { 
+                            {
                                 <div class="task-item task-info" style="cursor: auto;">
                                     <div class="task-footer" style="color:green;font-weight:bold;">
-                                        <div class="pull-left"><span class="fa fa-clock-o"></span>  @item.Tarih.ToFormatDateAndTime()<br/>@item.Baslik</div>
+                                        <div class="pull-left"><span class="fa fa-clock-o"></span>  @item.Tarih.ToFormatDateAndTime()<br />@item.Baslik</div>
                                     </div>
                                     <div class="task-text" style="padding-bottom: 0px; ">
                                         @Html.Raw(item.AciklamaHtml)
@@ -73,145 +73,112 @@
         <!-- START SIMPLE DATATABLE -->
         <div class="panel panel-danger">
             <div class="panel-heading padding-0">
-                <h3 class="panel-title"><i class="fa fa-desktop"></i> Ana Sayfa</h3>
+                <h3 class="panel-title"><i class="fa fa-map-marker-alt fa-lg"></i> Konum Bilgisi</h3>
                 <ul class="panel-controls">
                     <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)"><span class="fa fa-refresh"></span></a></li>
                 </ul>
             </div>
             <div class="panel-body">
-                @if (Model.EnstituKod == EnstituKodlariEnum.FenBilimleri)
-                {
-                    <div class="col-md-12">
 
-                        <div class="panel panel-default">
-                            <div class="panel-body panel-body-map">
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6020.048445257558!2d28.891427000000004!3d41.024726!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xab38aa352428d2ba!2zWcSxbGTEsXogVGVrbmlLIMOcbml2ZXJzaXRlc2ksIERhdnV0cGHFn2EgS2FtcMO8c8O8LCBPcnRhIEJhaMOnZQ!5e0!3m2!1str!2sus!4v1503355517050" width="100%" height="400" frameborder="0" style="border:0"></iframe>
-                            </div>
-                            <div class="panel-body">
-                                <h3><span class="fa fa-map-marker"></span> Yıldız Teknik Üniversitesi</h3>
-                                <p>Fen Bilimleri Enstitüsü</p>
-                            </div>
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body panel-body-map">
+                            @Html.Raw(Model.Konum)
+                        </div>
+                        <div class="panel-body">
+                            <h3><span class="fa fa-map-marker"></span> Yıldız Teknik Üniversitesi</h3>
+                            <p>@Model.EnstituAd</p>
                         </div>
                     </div>
-                }
-                else if (Model.EnstituKod == EnstituKodlariEnum.SosyalBilimleri)
-                {
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-body panel-body-map">
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6020.048445257558!2d28.891427000000004!3d41.024726!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xab38aa352428d2ba!2zWcSxbGTEsXogVGVrbmlLIMOcbml2ZXJzaXRlc2ksIERhdnV0cGHFn2EgS2FtcMO8c8O8LCBPcnRhIEJhaMOnZQ!5e0!3m2!1str!2sus!4v1503355517050" width="100%" height="400" frameborder="0" style="border:0"></iframe>
-                            </div>
-                            <div class="panel-body">
-                                <h3><span class="fa fa-map-marker"></span> Yıldız Teknik Üniversitesi</h3>
-                                <p>Sosyal Bilimler Enstitüsü</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-                else if (Model.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri)
-                {
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-body panel-body-map">
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12040.698621030342!2d28.8885383!3d41.0214347!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cabb6d5c652ae5%3A0x2b1b2c9c54108c67!2sYT%C3%9C%20Merkez%20Laboratuvar%C4%B1!5e0!3m2!1str!2str!4v1689847960880!5m2!1str!2str" width="100%" height="400" frameborder="0" style="border:0"></iframe>
-                            </div>
-                            <div class="panel-body">
-                                <h3><span class="fa fa-map-marker"></span> Yıldız Teknik Üniversitesi</h3>
-                                <p>Temiz Enerji Teknolojileri Enstitüsü</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="panel-footer">
+                </div>
 
             </div>
+
+
         </div>
+
+
+        @if (!string.IsNullOrEmpty(mesajGroupId))
+        {
+            <script>
+
+                setTimeout(function () {
+                    mesGonder('@mesajGroupId');
+                }, 1200);
+            </script>
+        }
+        else if (isMesajGonder)
+        {
+            <script>
+                setTimeout(function () {
+                    mesGonder();
+                }, 1200);
+            </script>
+        }
+        @if (anketGiris != null)
+        {
+
+            <script src="~/Content/assets/plugins/bootbox/bootbox.min.js"></script>
+            <script> 
+                setTimeout(getAnket(), 10);
+                function getAnket() {
+                    var _AnketGiris = @Html.Raw(Json.Encode(anketGiris));
+                    var btbxxFS = bootbox.dialog({
+                        message: _AnketGiris,
+                        buttons:
+                        {
+                            success:
+                            {
+                                label: 'Anketi Tamamla',
+                                className: "btn-success",
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    $('#FrmAnket').ajaxForm({
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                //$('#tlpFrm').submit();
+                                            }
+                                            else {
+                                                GetMsg(result);
+                                                return false;
+                                            }
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                        }
+
+                                    });
+                                    $('#FrmAnket').submit();
+                                    return false;
+                                }
+                            }
+                        }
+                    });
+                    $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                }
+
+            </script>
+        }
+        <script>
+            $(function () {
+                var popupSetting = {
+                    title: 'Duyurular',
+                    popupTipId:@DuyuruPopupTipiEnum.AnaSayfa,
+                    btnAdi: '',
+                    redirectUrl: '',
+                    callbackFnc: ''
+                }
+                ShowDuyuru(popupSetting);
+            });
+        </script>
     </div>
 
 
 </div>
-
-
-@if (!string.IsNullOrEmpty(mesajGroupId))
-{
-    <script>
-
-        setTimeout(function () {
-            mesGonder('@mesajGroupId');
-        }, 1200);
-    </script>
-}
-else if (isMesajGonder)
-{
-    <script>
-        setTimeout(function () {
-            mesGonder();
-        }, 1200);
-    </script>
-}
-@if (anketGiris != null)
-{
-
-    <script src="~/Content/assets/plugins/bootbox/bootbox.min.js"></script>
-    <script>
-
-        setTimeout(getAnket(), 10);
-        function getAnket() {
-            var _AnketGiris = @Html.Raw(Json.Encode(anketGiris));
-            var btbxxFS = bootbox.dialog({
-                message: _AnketGiris,
-                buttons:
-                {
-                    success:
-                    {
-                        label: 'Anketi Tamamla',
-                        className: "btn-success",
-                        callback: function (event) {
-                            var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                            PanelRefresh(pnlx, false);
-                            $('#FrmAnket').ajaxForm({
-                                success: function (result) {
-                                    if (result.IsSuccess) {
-                                        var _clsBtn = $('.bootbox-close-button').first();
-                                        $(_clsBtn).click();
-                                        //$('#tlpFrm').submit();
-                                    }
-                                    else {
-                                        GetMsg(result);
-                                        return false;
-                                    }
-                                    PanelRefresh(pnlx, true);
-                                },
-                                complete: function (cmp) {
-                                    PanelRefresh(pnlx, true);
-                                },
-                                error: function (err) {
-                                    PanelRefresh(pnlx, true);
-                                }
-
-                            });
-                            $('#FrmAnket').submit();
-                            return false;
-                        }
-                    }
-                }
-            });
-            $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-        }
-
-    </script>
-}
-<script>
-    $(function ()
-    {
-           var popupSetting = {
-            title:'Duyurular',
-            popupTipId:@DuyuruPopupTipiEnum.AnaSayfa,
-            btnAdi: '',
-            redirectUrl: '',
-            callbackFnc: ''
-        }
-        ShowDuyuru(popupSetting);
-    })
-</script>

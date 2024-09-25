@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Business
             //    var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
             //    donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
             //} 
-            return obsData.GetObsStudentControl(tcOrOgrenciNo,donemId);
+            return obsData.GetObsStudentControl(tcOrOgrenciNo, donemId);
         }
 
         public static StudentControl OgrenciBilgisiGuncelleObs(Guid userKey)
@@ -150,7 +150,34 @@ namespace LisansUstuBasvuruSistemi.Business
                 return ogrenciList.ToJsonResult();
             }
         }
+        public static JsonResult GetFilterAkademisyenJsonResult(string term, string enstituKod)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+                var dataList = entities.Kullanicilars
+                    .Where(p =>   p.IsAktif &&
+                                p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && p.Unvanlar.YetkiGrupID.HasValue &&
+                                ((p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term))
+                                )
+                    .Select(s => new
+                    {
+                        s.KullaniciID,
+                        s.Ad,
+                        s.Soyad,
+                        s.ResimAdi,
+                        s.Unvanlar.UnvanSiraNo,
+                        s.Unvanlar.UnvanAdi
+                    }).OrderBy(o => o.UnvanSiraNo).ThenBy(t=>t.Ad).ThenBy(t=>t.Soyad).Take(15).ToList()
+                    .Select(s => new
+                    {
+                        id = s.KullaniciID,
+                        text = s.UnvanAdi + " " + s.Ad + " " + s.Soyad,
+                        ResimAdi = s.ResimAdi.ToKullaniciResim()
+                    }).ToList();
 
+                return dataList.ToJsonResult();
+            }
+        }
         public static List<CmbIntDto> GetCmbKullaniciTipleri(bool bosSecimVar, bool isHesapOlusturFiltre)
         {
             var dct = new List<CmbIntDto>();
@@ -488,10 +515,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 var danismans = db.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
                     .Select(s => new { s.TcKimlikNo, s.KullaniciID }).ToList();
                 var obsData = new ObsServiceData();
-                int counter = 0;
                 foreach (var kul in kulls)
                 {
-                    counter++;
                     var studentData = obsData.GetObsStudentControlX(kul.TcKimlikNo, null);
 
                     if (!studentData.Any()) continue;

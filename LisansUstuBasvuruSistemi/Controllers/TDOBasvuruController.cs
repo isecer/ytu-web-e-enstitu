@@ -2328,7 +2328,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("EMail bilgisini giriniz.");
                     mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EMail" });
                 }
-                else if (kModel.EMail.ToIsValidEmail())
+                else if (!kModel.EMail.ToIsValidEmail())
                 {
                     mMessage.Messages.Add("Mail formatı uygun değil.");
                     mMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "EMail" });

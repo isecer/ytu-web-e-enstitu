@@ -2152,7 +2152,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("E-Posta giriniz.");
             }
-            else if (eMail.ToIsValidEmail())
+            else if (!eMail.ToIsValidEmail())
             {
                 mMessage.Messages.Add("E-Posta formatı uygun değildir.");
             }
@@ -2212,7 +2212,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("E-Posta giriniz.");
             }
-            else if (eMail.ToIsValidEmail())
+            else if (!eMail.ToIsValidEmail())
             {
                 mMessage.Messages.Add("E-Posta formatı uygun değildir.");
             }

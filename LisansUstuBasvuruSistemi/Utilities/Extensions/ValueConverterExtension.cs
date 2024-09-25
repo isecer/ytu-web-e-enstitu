@@ -7,6 +7,9 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -616,6 +619,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return resultList.ToArray();
         }
 
+
+        public static string SetYaziContentParameters(string htmlContent, List<MailParameterDto> parameterDtos)
+        { 
+            htmlContent = htmlContent.Replace("{{", "{{_removeRw_");
+
+            var contentStrList = htmlContent.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
+
+            foreach (var itemRp in parameterDtos.Where(p => p.Value.IsNullOrWhiteSpace()))
+            {
+                contentStrList = contentStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
+            }
+            htmlContent = string.Join("", contentStrList);
+            foreach (var itemRp in parameterDtos)
+            {
+                itemRp.Value = itemRp.Value ?? "";
+                htmlContent = htmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
+            } 
+            return htmlContent;
+
+        }
 
     }
 }

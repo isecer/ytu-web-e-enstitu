@@ -1,0 +1,274 @@
+﻿@using Entities.Entities
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
+@model YaziSablonlari
+@{
+    var mmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var sablonTip = (YaziSablonTipleri)ViewBag.SablonTipi;
+    var parametreler = sablonTip != null ? sablonTip.Parametreler : "";
+    var key = Guid.NewGuid().ToString();
+
+}
+
+<div class="row">
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" role="form">
+        <input type="text" style="display:none;" id="YaziSablonlariID" name="YaziSablonlariID" value="@Model.YaziSablonlariID" />
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-gear"></i> Sistem Yazı Şablonu Tanımlama İşlemi</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Kayit", Model.YaziSablonlariID)';},600)"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+
+
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Enstitü</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Şablon Tipi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("YaziSablonTipID", null, new { @class = "form-control", style = "padding:0px;", onchange = "getSablonTipBilgi(this);" })
+                                </div>
+                            </div>
+                            <div class="form-group @(parametreler.IsNullOrWhiteSpace()?"hide":"")">
+                                <label class="col-md-3 col-xs-4 control-label">Kullanılabilecek Parametreleri</label>
+                                <div class="col-md-9 col-xs-8" id="_parametre">
+                                    @parametreler
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Yazı Konusu</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="Konu" id="Konu" value="@Model.Konu" class="form-control">
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12">
+                                    <div>
+                                        <textarea id="AciklamaHtml" name="SablonHtml" class="form-control Ckeditor">@Model.SablonHtml</textarea>
+                                        <textarea style="display: none;" id="Aciklama" name="Sablon">@Model.Sablon</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (Model.YaziSablonlariID > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <a class="btn btn-primary pull-right" onclick="sbmtDosyaKontrol()"><i class="fa fa-save"></i>Kaydet</a>
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i>Geri Dön</a>
+                    <a class="btn btn-info pull-right" style="margin-right:5px;" href="javascript:void(0);" onclick="onizle();">
+                        <i class="fa fa-eye"></i> Önizleme
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="~/Content/ckeditor/ckeditor.js"></script> 
+<script>
+    CKEDITOR.replace('AciklamaHtml', {
+        height: 300,
+        width: '100%',
+        toolbarGroups: [
+            { name: 'clipboard', groups: ['clipboard', 'undo'] },
+            { name: 'editing', groups: ['find', 'selection', 'spellchecker'] },
+            { name: 'links' },
+            { name: 'insert' },
+            { name: 'forms' },
+            { name: 'tools' },
+            { name: 'document', groups: ['mode', 'document', 'doctools'] },
+            { name: 'others' },
+            '/',
+            { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+            { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi'] },
+            { name: 'styles' },
+            { name: 'colors' }
+        ],
+        removeButtons: 'Underline,Subscript,Superscript',
+        format_tags: 'p;h1;h2;h3;pre',
+        removeDialogTabs: 'image:advanced;link:advanced',
+        stylesSet: [
+            { name: 'Normal', element: 'p', attributes: { 'class': 'normal-text' } },
+            { name: 'Başlık 1', element: 'h1', attributes: { 'class': 'heading-1' } },
+            { name: 'Başlık 2', element: 'h2', attributes: { 'class': 'heading-2' } },
+            { name: 'Başlık 3', element: 'h3', attributes: { 'class': 'heading-3' } }
+        ],
+        contentsCss: ['/path/to/your/custom-styles.css'],
+        allowedContent: true,
+        pasteFromWordRemoveFontStyles: false,
+        pasteFromWordRemoveStyles: false,
+
+        // Genişletilmiş font boyutu ayarları
+        fontSize_sizes: '7/7pt;7.5/7.5pt;8/8pt;9/9pt;10/10pt;10.5/10.5pt;11/11pt;11.5/11.5pt;12/12pt;13/13pt;14/14pt;15/15pt;16/16pt;18/18pt;20/20pt;22/22pt;24/24pt;26/26pt;28/28pt;36/36pt;48/48pt;72/72pt;',
+        fontSize_defaultLabel: '11pt'
+    });
+
+    // Word'den yapıştırma işlemi için özel işlev
+    CKEDITOR.on('instanceReady', function (event) {
+        event.editor.on('paste', function (evt) {
+            var data = evt.data.dataValue;
+            // Word'den gelen içeriği temizle ve standartlaştır
+            data = data.replace(/<span[^>]*>(.*?)<\/span>/gi, '$1');
+            // Font boyutlarını koruyarak diğer stilleri temizle
+            data = data.replace(/style="([^"]*)"/gi, function (match, styles) {
+                var fontSizeMatch = styles.match(/font-size:\s*(\d+\.?\d*)pt/i);
+                return fontSizeMatch ? 'style="font-size:' + fontSizeMatch[1] + 'pt"' : '';
+            });
+            data = data.replace(/<p[^>]*>/gi, '<p class="normal-text">');
+            evt.data.dataValue = data;
+        });
+    });
+
+    // İçerik alınırken özel sınıfları koru
+    function getEditorContent() {
+        var html = CKEDITOR.instances.AciklamaHtml.getData();
+        return html;
+    }
+
+    // custom-styles.css içeriği (güncellendi)
+    /*
+    .normal-text {
+        font-size: 11pt;
+        line-height: 1.5;
+        font-family: Arial, sans-serif;
+    }
+    
+    .heading-1 {
+        font-size: 20pt;
+        font-weight: bold;
+    }
+    
+    .heading-2 {
+        font-size: 16pt;
+        font-weight: bold;
+    }
+    
+    .heading-3 {
+        font-size: 14pt;
+        font-weight: bold;
+    }
+    */
+</script>
+<script>
+    function onizle() {
+        var key = '@key'
+        var html = CKEDITOR.instances.AciklamaHtml.document.$.body.innerHTML;
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("SaveHtml")',
+            data: { key: key, html: html },
+            success: function (response) {
+                if (response.success) {
+                    var konu = $('#Konu').val();
+                    YeniDialogBB(konu, '@Url.Action("ShowYaziP", "YaziSablonlari")?key=' + key + '&Konu=' + encodeURIComponent(konu), 'auto', 'modal-dialog modal-lg');
+
+                } else {
+                    console.log("Kaydetme hatası: " + response.message);
+                }
+            },
+            error: function (error) {
+                console.log("Bir hata oluştu.");
+            }
+        });
+    }
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
+        validateControl(model);
+    });
+
+    $("form").submit(function (event) {
+        var txt = CKEDITOR.instances.AciklamaHtml.document.getBody().getText();
+        $('#Aciklama').val(txt);
+    });
+
+    function sbmtDosyaKontrol() {
+
+        var saveOk = true;
+        if ($('#YaziSablonTipID').val() == "") {
+            saveOk = false;
+            $('#YaziSablonTipID').parents('div').first().pulsate({
+                color: "#fdbe41",
+                reach: 100,
+                repeat: 3,
+                speed: 400,
+                glow: true
+            });
+        }
+
+        if ($('#Konu').val() == "") {
+            saveOk = false;
+            $('#Konu').parents('div').first().pulsate({
+                color: "#fdbe41",
+                reach: 100,
+                repeat: 3,
+                speed: 400,
+                glow: true
+            });
+        }
+        var txt = CKEDITOR.instances.AciklamaHtml.document.getBody().getText().trim();
+        if (txt == "") {
+            saveOk = false;
+            $('#AciklamaHtml').parents('div').first().pulsate({
+                color: "#fdbe41",
+                reach: 100,
+                repeat: 3,
+                speed: 400,
+                glow: true
+            });
+        }
+        if (saveOk) $('form').submit();
+        else return saveOk;
+
+
+    }
+    function getSablonTipBilgi(sndr) {
+        var sndrVal = $(sndr).val();
+        if (sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("GetSablonTipParametre", "YaziSablonlari")',
+                data: { YaziSablonTipID: sndrVal },
+                success: function (result) {
+                    $('#_parametre').html(result);
+                    if (result != null && result != "") {
+                        $('#_parametre').parent().removeClass("hide");
+                    }
+                    else
+                        $('#_parametre').parent().addClass("hide");
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+        }
+        else {
+            $('#_parametre').parent().addClass("hide");
+        }
+    }
+</script>
+

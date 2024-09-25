@@ -254,7 +254,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (!tosUniqueId.HasValue)
                 {
-                    mMessage.Messages.AddRange(TosBus.TosKalanHakSavunmaBaslangicTarihKriter(toUniqueId).MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message));
+                    mMessage.Messages.AddRange(TosBus.TosDurumInfo(toUniqueId).MmMessage.MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message));
                 }
                 if (mMessage.Messages.Count == 0)
                 {
@@ -538,7 +538,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var isUnvanSuccess = !item.UnvanAdi.IsNullOrWhiteSpace();
                         var isAdSoyadSuccess = !item.AdSoyad.IsNullOrWhiteSpace();
-                        var isEMailSuccess = !item.EMail.IsNullOrWhiteSpace() && !item.EMail.ToIsValidEmail();
+                        var isEMailSuccess = !item.EMail.IsNullOrWhiteSpace() && item.EMail.ToIsValidEmail();
                         var isUniversiteAdiSuccess = !item.UniversiteAdi.IsNullOrWhiteSpace();
                         var isAnabilimdaliAdiSuccess = !item.AnabilimdaliAdi.IsNullOrWhiteSpace();
 
@@ -797,8 +797,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (!mmMessage.Messages.Any())
                 {
-                    var basvuruKiterKontrolMsg = TosBus.TosKalanHakSavunmaBaslangicTarihKriter(toBasvuruSavunma.ToBasvuru.UniqueID, kModel.Tarih)
-                        .MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message).ToList();
+                    var tosDurumInfo= TosBus.TosDurumInfo(toBasvuruSavunma.ToBasvuru.UniqueID, kModel.Tarih);
+                    toBasvuruSavunma.SavunmaNo = tosDurumInfo.SavunmaNo;
+                    var basvuruKiterKontrolMsg = tosDurumInfo.MmMessage.MessagesDialog.Where(p => !p.IsSucces).Select(s => s.Message).ToList();
                     if (basvuruKiterKontrolMsg.Any()) mmMessage.Messages.AddRange(basvuruKiterKontrolMsg);
                 }
 
@@ -810,7 +811,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kModel.IslemYapanID = UserIdentity.Current.Id;
                         kModel.IslemYapanIP = UserIdentity.Ip;
                         var tarih = kModel.Tarih;
-                        toBasvuruSavunma.SavunmaNo = TosBus.TosSavunmaNo(toBasvuruSavunma.ToBasvuru.UniqueID, toBasvuruSavunma.UniqueID, tarih);
+                       
 
 
                         kModel.Tarih = tarih.Date;
@@ -1343,7 +1344,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("E-Posta Giriniz");
             }
-            else if (eMail.ToIsValidEmail())
+            else if (!eMail.ToIsValidEmail())
             {
                 mMessage.MessageType = MsgTypeEnum.Warning;
                 mMessage.Messages.Add("E-Posta Formatı Uygun Değildir.");

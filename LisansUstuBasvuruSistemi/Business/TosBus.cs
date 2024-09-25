@@ -110,59 +110,15 @@ namespace LisansUstuBasvuruSistemi.Business
             return true;
         }
 
-        public static int TosSavunmaNo(Guid toUniqueId, Guid? tosUniqueId, DateTime sinavTarihi)
+
+        public class SavunmaDurumInfo
         {
-            using (var entities = new LubsDbEntities())
-            {
-                var toBasvuru = entities.ToBasvurus.First(p => p.UniqueID == toUniqueId);
-
-                var tosbasvurus = toBasvuru.ToBasvuruSavunmas.Where(p => p.UniqueID != tosUniqueId)
-                    .Select(s => new { s.ToBasvuruSavunmaID, s.SavunmaNo, s.ToBasvuruSavunmaDurumID, savunmaSinaviVar = s.SRTalepleris.Any() }).ToList();
-                var sonBasvuru = tosbasvurus.OrderByDescending(o => o.ToBasvuruSavunmaID).FirstOrDefault();
-                if (!tosbasvurus.Any(a => a.savunmaSinaviVar))
-                {
-                    var tezOneriIlkSavunmaHakkiAyKriter =
-                        TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                    var tezOneriIkinciSavunmaHakkiAyKriter =
-                        TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                    var tezOneriToplamSavunmaHakkiAyKriter =
-                        tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
-                    var ilkOneriBitisTarihi = toBasvuru.IlkOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
-                    var ikinciOneriBitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
-
-                    if (toBasvuru.IsBasvuruKriterMuaf || sinavTarihi.Date <= ilkOneriBitisTarihi.Date) return 1;
-                    if (sinavTarihi.Date <= ikinciOneriBitisTarihi) return 2;
-                    return 3;
-                }
-                if (toBasvuru.IsBasvuruKriterMuaf) return sonBasvuru.SavunmaNo;
-
-                if (sonBasvuru?.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi) return (sonBasvuru?.SavunmaNo ?? 0) + 1;
-                if (sonBasvuru?.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
-                {
-                    //var sonTos = toBasvuru.ToBasvuruSavunmas
-                    //       .First(p => p.ToBasvuruSavunmaID == sonBasvuru.ToBasvuruSavunmaID);
-                    //var sonTosSr = sonTos.SRTalepleris.First();
-
-                    // var tezOneriIlkSavunmaHakkiAyKriter =
-                    //    TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                    //var tezOneriIkinciSavunmaHakkiAyKriter =
-                    //    TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                    //var tezOneriToplamSavunmaHakkiAyKriter =
-                    //    tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
-                    //var ilkOneriBitisTarihi = toBasvuru.IlkOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
-                    //var ikinciOneriBitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
-
-                    //if (toBasvuru.IsBasvuruKriterMuaf || kontrolTarih.Date <= ilkOneriBitisTarihi.Date) return 1;
-                    //if (kontrolTarih.Date <= ikinciOneriBitisTarihi) return 2;
-                    //return 3;
-                    return sonBasvuru.SavunmaNo;
-                }
-                return (sonBasvuru?.SavunmaNo ?? 0) + 1;
-
-            }
+            public int SavunmaNo { get; set; }
+            public MmMessage MmMessage { get; set; }
         }
-        public static MmMessage TosKalanHakSavunmaBaslangicTarihKriter(Guid toUniqueId, DateTime? sinavTarihi = null)
+        public static SavunmaDurumInfo TosDurumInfo(Guid toUniqueId, DateTime? sinavTarihi = null)
         {
+            var savunmaDurumInfo = new SavunmaDurumInfo();
             var msg = new MmMessage();
 
             using (var entities = new LubsDbEntities())
@@ -171,191 +127,167 @@ namespace LisansUstuBasvuruSistemi.Business
                 var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
                 var tezOneriIkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
                 var tezOneriToplamSavunmaHakkiAyKriter = tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
-
-                var maxBasarisizSavunmaNo = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                var tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter = TiAyar.TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
 
                 var toBasvuruSavunmas = toBasvuru.ToBasvuruSavunmas.Where(p => p.ToBasvuruSavunmaDurumID.HasValue).OrderByDescending(o => o.ToBasvuruSavunmaID).ToList();
-
-
-
                 var sonBasvuru = toBasvuruSavunmas.FirstOrDefault();
 
+                sinavTarihi = sinavTarihi ?? DateTime.Now;
 
+                string muafiyetBilgisi = toBasvuru.IsBasvuruKriterMuaf
+                    ? "Öğrenci başvuru kriterlerinden muaf tutulmaktadır. "
+                    : "";
 
                 if (sonBasvuru == null)
                 {
                     var ilkBitisTarihi = toBasvuru.IlkOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
-                    var ikincibitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
+                    var ikinciBitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
 
-
-                    var strDateYeterlikSinav = toBasvuru.YeterlikSozluSinavTarihi.ToFormatDate();
-                    var strDateIlk = ilkBitisTarihi.ToFormatDate();
-                    var strDateIkinci = ikincibitisTarihi.ToFormatDate();
-
-                    sinavTarihi = sinavTarihi ?? DateTime.Now;
-                    var ekMsg = "";
-                    if (toBasvuru.IsBasvuruKriterMuaf)
+                    if (toBasvuru.IsBasvuruKriterMuaf || sinavTarihi <= ilkBitisTarihi)
                     {
-                        ekMsg = "<br/> Not: Öğrenci bu kriterlerden muaf tutulmaktadır.";
-                    }
-                    else if (sinavTarihi > ikincibitisTarihi)
-                    {
-                        ekMsg = "<br/>Süreniz dolduğundan başvuru yapamazsınız.";
-                    }
-
-                    msg.MessagesDialog.Add(new MrMessage
-                    {
-                        IsSucces = toBasvuru.IsBasvuruKriterMuaf || sinavTarihi <= ikincibitisTarihi,
-                        Message = $"1. Savunma hakkı kullanımı için {strDateYeterlikSinav} / {strDateIlk} tarihleri arasında savunma sınavı yapılması gerekir.<br/>" +
-                                  $"2. Savunma hakkı kullanımı için {strDateIlk} / {strDateIkinci} tarihleri arasında savunma sınavı yapılması gerekir." + ekMsg
-                    });
-                    toBasvuru.IlkOneriBitisTarihi = ilkBitisTarihi;
-                    toBasvuru.IkinciOneriBitisTarihi = ikincibitisTarihi;
-                    toBasvuru.RetDuzeltmeBitisTarihi = null;
-                    msg.Table = toBasvuru;
-                    return msg;
-                }
-
-
-                if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi)
-                {
-                    var sonBasvuruSinav = sonBasvuru.SRTalepleris.First();
-
-                    if (!toBasvuru.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaID > sonBasvuru.ToBasvuruSavunmaID))
+                        savunmaDurumInfo.SavunmaNo = 1;
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = true,
-                            Message = $"{sonBasvuruSinav.Tarih.ToFormatDate()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma  Başarılı bir şekilde sonuçlandı ve süreç tamamlandı."
+                            Message = $"{muafiyetBilgisi}1. Savunma hakkı kullanımı için {toBasvuru.YeterlikSozluSinavTarihi.ToFormatDate()} / {ilkBitisTarihi.ToFormatDate()} tarihleri arasında savunma sınavı yapılabilir. Bu, öğrencinin ilk tez öneri savunmasıdır."
                         });
+                    }
+                    else if (sinavTarihi <= ikinciBitisTarihi)
+                    {
+                        savunmaDurumInfo.SavunmaNo = 2;
+                        msg.MessagesDialog.Add(new MrMessage
+                        {
+                            IsSucces = true,
+                            Message = $"2. Savunma hakkı kullanımı için {ilkBitisTarihi.ToFormatDate()} / {ikinciBitisTarihi.ToFormatDate()} tarihleri arasında savunma sınavı yapılabilir. İlk savunma hakkı süresi geçmiştir."
+                        });
+                    }
+                    else
+                    {
+                        savunmaDurumInfo.SavunmaNo = 0;
+                        msg.MessagesDialog.Add(new MrMessage
+                        {
+                            IsSucces = false,
+                            Message = $"Süreniz dolduğundan başvuru yapamazsınız. Yeterlik sözlü sınavınızı {toBasvuru.YeterlikSozluSinavTarihi.ToFormatDate()} tarihinde tamamladınız. " +
+                                      $"1. savunma hakkınız için son başvuru tarihi {ilkBitisTarihi.ToFormatDate()}, " +
+                                      $"2. savunma hakkınız için son başvuru tarihi {ikinciBitisTarihi.ToFormatDate()} idi. " +
+                                      $"Toplam savunma süresi {tezOneriToplamSavunmaHakkiAyKriter} ay olup, bu süre içinde savunma yapılması gerekmekteydi."
+                        });
+                    }
+
+                    toBasvuru.IlkOneriBitisTarihi = ilkBitisTarihi;
+                    toBasvuru.IkinciOneriBitisTarihi = ikinciBitisTarihi;
+                    toBasvuru.RetDuzeltmeBitisTarihi = null;
+                }
+                else if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi)
+                {
+                    savunmaDurumInfo.SavunmaNo = 1;
                     msg.MessagesDialog.Add(new MrMessage
                     {
                         IsSucces = true,
-                        Message = "İstenirse yeni bir Tez öneri savunma başvurusu yapılabilir."
+                        Message = $"{muafiyetBilgisi}{sonBasvuru.SRTalepleris.First().Tarih.ToFormatDate()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma başarılı bir şekilde sonuçlandı. Öğrenci isterse yeni bir tez öneri savunma başvurusu yapabilir. Bu durumda, yeni başvuru 1. savunma olarak değerlendirilecektir."
                     });
+
                     toBasvuru.RetDuzeltmeBitisTarihi = null;
                     toBasvuru.IlkOneriBitisTarihi = null;
                     toBasvuru.IkinciOneriBitisTarihi = null;
-                    entities.SaveChanges();
-                    return msg;
-
                 }
-                var isYeniSinavAlindi = toBasvuru.ToBasvuruSavunmas.Any(a =>
-                    a.ToBasvuruSavunmaID > sonBasvuru.ToBasvuruSavunmaID && a.SRTalepleris.Any());
-                if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi)
+                else if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi)
                 {
                     var sonBasvuruSinav = sonBasvuru.SRTalepleris.First();
-                    sinavTarihi = (sinavTarihi ?? sonBasvuruSinav.Tarih).Date;
                     var retBitisTarihi = (toBasvuru.RetDuzeltmeBitisTarihi ?? sonBasvuruSinav.Tarih.ToGetBitisTarihi(tezOneriIkinciSavunmaHakkiAyKriter)).Date;
 
-                    msg.MessagesDialog.Add(new MrMessage
+                    if (sonBasvuru.SavunmaNo == 1 && (toBasvuru.IsBasvuruKriterMuaf || sinavTarihi <= retBitisTarihi))
                     {
-                        IsSucces = true,
-                        Message = $"{sonBasvuruSinav.Tarih.Date.ToFormatDate()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma sınavı başarısızlıkla sonuçlanmıştır."
-                    });
-
-
-                    if (sonBasvuru.SavunmaNo >= maxBasarisizSavunmaNo)
+                        savunmaDurumInfo.SavunmaNo = 2;
+                        msg.MessagesDialog.Add(new MrMessage
+                        {
+                            IsSucces = true,
+                            Message = $"{muafiyetBilgisi}{sonBasvuruSinav.Tarih.Date.ToFormatDate()} tarihinde yapılan 1. savunma sınavı başarısızlıkla sonuçlanmıştır. 2. savunma hakkınız bulunmaktadır ve bu sınavın {retBitisTarihi.ToFormatDate()} tarihine kadar yapılması gerekmektedir."
+                        });
+                    }
+                    else
                     {
+                        savunmaDurumInfo.SavunmaNo = toBasvuru.IsBasvuruKriterMuaf ? sonBasvuru.SavunmaNo : 0;
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = toBasvuru.IsBasvuruKriterMuaf,
-                            Message = $"{maxBasarisizSavunmaNo}. savunma başarısızlıkla sonuçlandığı için yeni bir tez öneri savunma sınavı yapılamaz."
+                            Message = toBasvuru.IsBasvuruKriterMuaf
+                                ? $"{muafiyetBilgisi}Son savunma başarısızlıkla sonuçlanmıştır, ancak öğrenci kriterlerden muaf olduğu için yeni bir başvuru yapabilir. Savunma numarası {savunmaDurumInfo.SavunmaNo} olarak devam edecektir."
+                                : $"{sonBasvuruSinav.Tarih.Date.ToFormatDate()} tarihinde yapılan 2. savunma başarısızlıkla sonuçlanmıştır. Maalesef başka savunma hakkınız kalmamıştır."
                         });
                     }
-                    else
-                    {
-                        msg.MessagesDialog.Add(new MrMessage
-                        {
-                            IsSucces = toBasvuru.IsBasvuruKriterMuaf || sinavTarihi <= retBitisTarihi,
-                            Message = $"{maxBasarisizSavunmaNo}. savunma sınavının {retBitisTarihi.ToFormatDate()} tarihine kadar yapması gerekmetkedir."
-                        });
 
-                    }
-                    if (toBasvuru.IsBasvuruKriterMuaf)
-                    {
-                        msg.MessagesDialog.Add(new MrMessage
-                        {
-                            IsSucces = true,
-                            Message = "Öğrenci başvuru kriterlerinden muaf tutulduğu için yeni bir başvuru yapabilir."
-                        });
-                    }
                     toBasvuru.RetDuzeltmeBitisTarihi = retBitisTarihi;
                     toBasvuru.IlkOneriBitisTarihi = null;
                     toBasvuru.IkinciOneriBitisTarihi = null;
-                    msg.Table = toBasvuru;
-
-                    return msg;
-
                 }
 
-                if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
+                else if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
                 {
-                    var tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter = TiAyar.TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
                     var duzeltmeAlinanSinav = sonBasvuru.SRTalepleris.First();
                     var duzeltmeBitisTarihi = (toBasvuru.RetDuzeltmeBitisTarihi ?? duzeltmeAlinanSinav.Tarih.ToGetBitisTarihi(tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter)).Date;
 
-
-                    var strDate = duzeltmeBitisTarihi.ToFormatDate();
-
-                    sinavTarihi = sinavTarihi ?? DateTime.Now;
-
                     var isDuzeltmeAktif = sinavTarihi <= duzeltmeBitisTarihi;
-                    var aktifSavunmaNo = sonBasvuru.SavunmaNo;
 
-                    if (!isYeniSinavAlindi && !toBasvuru.IsBasvuruKriterMuaf && !isDuzeltmeAktif)
+                    if (isDuzeltmeAktif || toBasvuru.IsBasvuruKriterMuaf)
                     {
-                        aktifSavunmaNo = 2;
-                    }
-                    if (aktifSavunmaNo == 2)
-                    {
-                        var ikincibitisTarihi = toBasvuru.RetDuzeltmeBitisTarihi ?? duzeltmeBitisTarihi.ToGetBitisTarihi(tezOneriIkinciSavunmaHakkiAyKriter);
-                        var isSonSavunmaNoBasvuruAktif = DateTime.Now <= ikincibitisTarihi;
-                        msg.MessagesDialog.Add(new MrMessage
-                        {
-                            IsSucces = toBasvuru.IsBasvuruKriterMuaf || isSonSavunmaNoBasvuruAktif,
-                            Message = $"{duzeltmeAlinanSinav.Tarih.Date.ToFormatDate()} tarihindeki {sonBasvuru.SavunmaNo}. savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alınmıştır. Düzeltme işlemlerinin yapılıp {strDate} tarihine kadar yeni tez öneri savunma sınavı oluşturulmamıştır."
-                        });
-                        msg.MessagesDialog.Add(new MrMessage
-                        {
-                            IsSucces = toBasvuru.IsBasvuruKriterMuaf || isSonSavunmaNoBasvuruAktif,
-                            Message = isYeniSinavAlindi ?
-                                $"{aktifSavunmaNo}. savunma hakkı kullanımı için {duzeltmeBitisTarihi.ToFormatDate()} tarihi itibari ile {tezOneriIkinciSavunmaHakkiAyKriter} aylık bir süre tanınmıştır ve bu süre zarfında yeni savunma sınavı oluşturuldu." :
-                                $"{aktifSavunmaNo}. savunma hakkı kullanımı için {duzeltmeBitisTarihi.ToFormatDate()} tarihi itibari ile {tezOneriIkinciSavunmaHakkiAyKriter} aylık bir süre tanınmıştır ve {ikincibitisTarihi.ToFormatDate()} tarihine kadar yeni tez öneri savunma yapılması gerekmektedir."
-                        });
-
-                    }
-                    else
-                    {
-                        msg.MessagesDialog.Add(new MrMessage
-                        {
-                            IsSucces = toBasvuru.IsBasvuruKriterMuaf || isDuzeltmeAktif,
-                            Message = isYeniSinavAlindi ?
-                                $"{duzeltmeAlinanSinav.Tarih.Date.ToFormatDate()} tarihindeki {sonBasvuru.SavunmaNo}. savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alındı ve bu süre içinde yeni tez öneri savunma oluşturuldu." :
-                                $"{duzeltmeAlinanSinav.Tarih.Date.ToFormatDate()} tarihindeki {sonBasvuru.SavunmaNo}. savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alınmıştır. Düzeltme işlemlerinin yapılıp {strDate} tarihine kadar yeni tez öneri savunma yapılması gerekmektedir."
-                        });
-                    }
-                    if (toBasvuru.IsBasvuruKriterMuaf)
-                    {
+                        savunmaDurumInfo.SavunmaNo = sonBasvuru.SavunmaNo;
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = true,
-                            Message = "Öğrenci kriterlerinden muaf tutulduğu için yeni bir başvuru yapabilir."
+                            Message = $"{muafiyetBilgisi}{duzeltmeAlinanSinav.Tarih.Date.ToFormatDate()} tarihli {sonBasvuru.SavunmaNo}. savunmadan düzeltme hakkı alındı. " +
+                                      $"Düzeltme son tarihi: {duzeltmeBitisTarihi.ToFormatDate()}. "
+                        });
+                    }
+                    else if (sonBasvuru.SavunmaNo == 1)
+                    {
+                        savunmaDurumInfo.SavunmaNo = 2;
+                        var ikinciBitisTarihi = duzeltmeBitisTarihi.ToGetBitisTarihi(tezOneriIkinciSavunmaHakkiAyKriter);
+                        var isIkinciSavunmaAktif = sinavTarihi <= ikinciBitisTarihi;
+
+                        var message =
+                            $"1. savunma düzeltme süresi {duzeltmeBitisTarihi.ToFormatDate()} tarihinde doldu. ";
+
+
+                        // 2. savunma hakkı doldu mu kontrolü
+                        if (!isIkinciSavunmaAktif)
+                        {
+                            message += $"2. savunma hakkı {ikinciBitisTarihi.ToFormatDate()} tarihinde doldu. Savunma hakkınız kalmadı. ";
+                        }
+                        else
+                        {
+                            message += $"2. savunma son tarihi: {ikinciBitisTarihi.ToFormatDate()}. ";
+                        }
+
+                        msg.MessagesDialog.Add(new MrMessage
+                        {
+                            IsSucces = isIkinciSavunmaAktif,
+                            Message = message
+                        });
+
+                        toBasvuru.IkinciOneriBitisTarihi = ikinciBitisTarihi;
+                    }
+                    else
+                    {
+                        savunmaDurumInfo.SavunmaNo = 0;
+                        msg.MessagesDialog.Add(new MrMessage
+                        {
+                            IsSucces = false,
+                            Message = $"Tüm savunma hakları kullanıldı. Aktif savunma hakkı bulunmamaktadır."
                         });
                     }
 
                     toBasvuru.RetDuzeltmeBitisTarihi = duzeltmeBitisTarihi;
                     toBasvuru.IlkOneriBitisTarihi = null;
-                    toBasvuru.IkinciOneriBitisTarihi = null;
-                    msg.Table = toBasvuru;
-                    //entities.SaveChanges();
-                    return msg;
                 }
 
 
-                return msg;
+                savunmaDurumInfo.MmMessage = msg;
+                entities.SaveChanges();
+                return savunmaDurumInfo;
             }
-
         }
+
 
         public static MmMessage GetTosSilKontrol(Guid toBasvuruSavunmaUniqueId)
         {
@@ -539,17 +471,15 @@ namespace LisansUstuBasvuruSistemi.Business
                                         ).TosBasvuruDurumView().ToString();
                 model.DonemHtmlString = (sonTos ?? new ToBasvuruSavunmaDto()).TosBasvuruDonemView().ToString();
 
+                var sinavTarihi = model.ToBasvuruSavunmaList.FirstOrDefault()?.SRModel?.Tarih;
+                var basvuruKiterKontrol = TosDurumInfo(basvuru.UniqueID, sinavTarihi);
 
-                var basvuruKiterKontrol = TosKalanHakSavunmaBaslangicTarihKriter(basvuru.UniqueID);
 
-
-                if (basvuruKiterKontrol.MessagesDialog.Any())
+                if (basvuruKiterKontrol.MmMessage.MessagesDialog.Any())
                 {
-                    model.SavunmaBasvurusuYapmaSureBilgisiInfo = string.Join("<br/>", basvuruKiterKontrol.MessagesDialog.Select(s => s.Message));
+                    model.SavunmaBasvurusuYapmaSureBilgisiInfo = string.Join("<br/>", basvuruKiterKontrol.MmMessage.MessagesDialog.Select(s => s.Message));
                 }
-                model.IlkOneriBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.IlkOneriBitisTarihi;
-                model.IkinciOneriBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.IkinciOneriBitisTarihi;
-                model.RetDuzeltmeBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.RetDuzeltmeBitisTarihi;
+
             }
             return model;
 

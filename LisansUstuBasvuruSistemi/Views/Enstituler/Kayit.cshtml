@@ -1,116 +1,299 @@
-﻿@using Entities.Entities 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos  
+﻿@using Entities.Entities
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model Enstituler
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    var enstituMudur = (Kullanicilar)ViewBag.SelectedEnstituMudur;
+    var enstituMudurV = (Kullanicilar)ViewBag.SelectedEnstituMudurVekil;
+
+
 }
 <div class="row">
-    <form method="post" class="form-horizontal" id="FrmEnstitu" role="form"> 
+    <form method="post" class="form-horizontal" id="FrmEnstitu" role="form">
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-pencil"></i> @(Model.EnstituKod.IsNullOrWhiteSpace() ? "Yeni Enstitü Tanımlama İşlemi" : "Enstitü Bilgisi Düzenleme İşlemi")</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="panel panel-default form-horizontal">
-                        <div class="panel-body form-group-separated">
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Enstitü Kodu</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="EnstituKod" id="EnstituKod" value="@Model.EnstituKod" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Enstitü Adı</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="EnstituAd" id="EnstituAd" value="@Model.EnstituAd" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Enstitü Kısa Adı</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="EnstituKisaAd" id="EnstituKisaAd" value="@Model.EnstituKisaAd" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Smtp Host Adresi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="SmtpHost" id="SmtpHost" value="@Model.SmtpHost" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Smtp Kullanıcı Adı</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="SmtpKullaniciAdi" id="SmtpKullaniciAdi" value="@Model.SmtpKullaniciAdi" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Smtp Mail Adresi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="SmtpMailAdresi" id="SmtpMailAdresi" value="@Model.SmtpMailAdresi" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Smtp Port</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="SmtpPortAdresi" id="SmtpPortAdresi" value="@Model.SmtpPortAdresi" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">SSL Aktif Mi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="SmtpSSL" class="toggle" @Model.SmtpSSL.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Smtp Mail Şifresi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="password" name="SmtpSifre" id="SmtpSifre" value="@Model.SmtpSifre" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Sistem Erişim Adresi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="SistemErisimAdresi" id="SistemErisimAdresi" value="@Model.SistemErisimAdresi" class="form-control"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Web Adresi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="WebAdresi" id="WebAdresi" value="@Model.WebAdresi" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Test E-Mail Adresi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <span>Bu mail adresi tanımlandığında sistemdeki tüm mail gönderim işlemleri tanımlanan e-posta adresine gidecektir!</span><br/>
-                                    <input type="text" name="TestEmailAddress" id="TestEmailAddress" value="@Model.TestEmailAddress" class="form-control" />
-                                </div>
-                            </div>
-
-                            @if (!Model.EnstituKod.IsNullOrWhiteSpace())
-                            {
+                    <div class="form-group">
+                        <label class="col-md-2 col-xs-2 control-label">Enstitü Bilgileri</label>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="panel panel-default form-horizontal form-group-separated">
                                 <div class="form-group">
-                                    <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                    <label class="col-md-3 col-xs-4 control-label">Enstitü Kodu</label>
                                     <div class="col-md-9 col-xs-8">
-                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
-                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
-                                        </div>
+                                        <input type="text" name="EnstituKod" id="EnstituKod" value="@Model.EnstituKod" class="form-control" />
                                     </div>
-
                                 </div>
-                            }
-
-
-
-
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Enstitü Adı</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="EnstituAd" id="EnstituAd" value="@Model.EnstituAd" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Enstitü Kısa Adı</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="EnstituKisaAd" id="EnstituKisaAd" value="@Model.EnstituKisaAd" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Sistem Erişim Adresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SistemErisimAdresi" id="SistemErisimAdresi" value="@Model.SistemErisimAdresi" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-xs-2 control-label">Enstitü E-Posta Ayarları</label>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="panel panel-default form-horizontal form-group-separated">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Host Adresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SmtpHost" id="SmtpHost" value="@Model.SmtpHost" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Kullanıcı Adı</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SmtpKullaniciAdi" id="SmtpKullaniciAdi" value="@Model.SmtpKullaniciAdi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Mail Adresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SmtpMailAdresi" id="SmtpMailAdresi" value="@Model.SmtpMailAdresi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Port</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SmtpPortAdresi" id="SmtpPortAdresi" value="@Model.SmtpPortAdresi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">SSL Aktif Mi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="SmtpSSL" class="toggle" @Model.SmtpSSL.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Mail Şifresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="password" name="SmtpSifre" id="SmtpSifre" value="@Model.SmtpSifre" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Test e-Posta Adresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <span>Bu e-Posta adresi tanımlandığında sistemdeki tüm mail gönderim işlemleri tanımlanan e-Posta adresine gidecektir!</span><br />
+                                        <input type="text" name="TestEmailAddress" id="TestEmailAddress" value="@Model.TestEmailAddress" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-xs-2 control-label">Enstitü Yönetim Bilgileri</label>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="panel panel-default form-horizontal form-group-separated">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Enstitü Müdürü</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" class="form-control" id="EnstituMudurId" name="EnstituMudurId" style="width: 100%;" />
+                                        <script>
+
+                                            $('#EnstituMudurId').select2({
+                                                tags: true,
+                                                tokenSeparators: [",", " "],
+                                                minimumInputLength: 0,
+                                                maximumSelectionSize: 1,
+                                                multiple: false,
+                                                ajax: {
+                                                    url: '@Url.Action("GetFilteredAkademisyen", "Ajax")',
+                                                    dataType: "json",
+                                                    data: function (term, page) {
+                                                        return {
+                                                            'term': term
+                                                        }
+
+                                                    },
+                                                    results: function (data, page) {
+                                                        return {
+                                                            results: data
+                                                        };
+                                                    }
+                                                },
+                                                formatResult: function (result) {
+                                                    var returnhtml =
+                                                        "<table  style='margin:0px;border-top:none;font-size:8pt;text-align:left;'>" +
+                                                        "<tr>" +
+                                                        "<td width='30'><img src='" + result.ResimAdi + "' style='width:25px;height:25px;cursor:pointer;' class='img-circle img-thumbnail'></td>" +
+                                                        "<td>" + result.text + "</td>" +
+                                                        "</tr>" +
+                                                        "</table>";
+                                                    return returnhtml;
+                                                }
+                                            });
+                                        </script>
+
+                                        @if (Model.EnstituMudurId.HasValue)
+                                        {
+                                            <script>
+                                                setTimeout(function () {
+                                                    var secilen = @Html.Raw(Json.Encode(new { id = Model.EnstituMudurId, text = enstituMudur.Unvanlar.UnvanAdi+" "+enstituMudur.Ad+" "+enstituMudur.Soyad }));
+                                                    $("#EnstituMudurId").select2('data', secilen);
+                                                }, 1200);
+                                            </script>
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <label class="col-md-3 col-xs-4 control-label popover-dismiss " title="Enstitü Müdür Vekili Hk. Bilgi" data-content="Enstitü Müdürü yerine vekalet eden bir yetkili varsa doldurulmalıdır. Vekalet eden yoksa bu kısım boş bırakılmalıdır. ">
+                                        Enstitü Müdür V. <i class="fa fa-info-circle " style="margin:0px;"></i>
+                                    </label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" class="form-control" id="EnstituMudurVekilId" name="EnstituMudurVekilId" style="width: 100%;" />
+                                        <script>
+
+                                            $('#EnstituMudurVekilId').select2({
+                                                tags: true,
+                                                tokenSeparators: [",", " "],
+                                                minimumInputLength: 0,
+                                                maximumSelectionSize: 1,
+                                                multiple: false,
+                                                ajax: {
+                                                    url: '@Url.Action("GetFilteredAkademisyen", "Ajax")',
+                                                    dataType: "json",
+                                                    data: function (term, page) {
+                                                        return {
+                                                            'term': term
+                                                        }
+
+                                                    },
+                                                    results: function (data, page) {
+                                                        return {
+                                                            results: data
+                                                        };
+                                                    }
+                                                },
+                                                formatResult: function (result) {
+                                                    var returnhtml =
+                                                        "<table  style='margin:0px;border-top:none;font-size:8pt;text-align:left;'>" +
+                                                        "<tr>" +
+                                                        "<td width='30'><img src='" + result.ResimAdi + "' style='width:25px;height:25px;cursor:pointer;' class='img-circle img-thumbnail'></td>" +
+                                                        "<td>" + result.text + "</td>" +
+                                                        "</tr>" +
+                                                        "</table>";
+                                                    return returnhtml;
+                                                }
+                                            });
+                                        </script>
+
+                                        @if (Model.EnstituMudurVekilId.HasValue)
+                                        {
+                                            <script>
+                                                setTimeout(function () {
+                                                   var secilen = @Html.Raw(Json.Encode(new { id = Model.EnstituMudurVekilId, text = enstituMudurV.Unvanlar.UnvanAdi+" "+ enstituMudurV.Ad+" "+ enstituMudurV.Soyad }));
+                                                   $("#EnstituMudurVekilId").select2('data', secilen);
+                                                }, 1200);
+                                            </script>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-xs-2 control-label">İletişim Bilgileri</label>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="panel panel-default form-horizontal form-group-separated">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label popover-dismiss"
+                                           title="Konum Bilgisi Hk"
+                                           data-content="Harita bilgisi Google Maps üzerinden alınmalıdır. Google Maps'te konumu bulup 'Paylaş' seçeneğine tıklayın ve 'Harita Yerleştir' kısmındaki iframe kodunun tamamını kopyalayın. Bu kodu buraya yapıştırmalısınız.">
+                                        Konum Bilgisi <i class="fa fa-info-circle" style="margin:0px;"></i>
+                                    </label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <textarea type="text" name="Konum" id="Konum" rows="5" class="form-control">@Model.Konum</textarea>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: right; margin-top: 10px;">
+                                    <button type="button" id="showMapButton" class="btn btn-primary" onclick="updateIframe()">
+                                        <i class="fa fa-map-marker-alt"></i> Haritada Göster
+                                    </button>
+                                </div>
+                                <div id="iframeContainer" style="margin-top: 20px;"></div>
+
+
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Adres</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="Adres" id="Adres" value="@Model.Adres" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Tel</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="Tel" id="Tel" value="@Model.Tel" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Web Adresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="WebAdresi" id="WebAdresi" value="@Model.WebAdresi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">e-Posta</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="EPosta" id="EPosta" value="@Model.EPosta" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    @if (!Model.EnstituKod.IsNullOrWhiteSpace())
+                    {
+                        <div class="form-group">
+                            <label class="col-md-2 col-xs-2 control-label"> </label>
+                            <div class="col-md-10 col-xs-10">
+                                <div class="panel panel-default form-horizontal form-group-separated">
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                        <div class="col-md-9 col-xs-8">
+                                            <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                                <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+
+
+
+
                 </div>
                 <div class="panel-footer">
                     <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i>Geri Dön</a>
@@ -121,11 +304,94 @@
     </form>
 </div>
 <script>
+    function updateIframe() {
+        var textarea = document.getElementById('Konum');
+        var iframeContent = textarea.value.trim();
+
+        // İframe container'ı al
+        var container = document.getElementById('iframeContainer');
+
+        // Önceki iframe'i temizle
+        container.innerHTML = '';
+
+        var iframe = null;
+
+        // İframe içeriği varsa ve uygun formatta ise
+        var srcMatch = iframeContent.match(/src="([^"]*)"/);
+        var styleMatch = iframeContent.match(/style="([^"]*)"/);
+
+        if (srcMatch && srcMatch[1]) {
+            var srcValue = srcMatch[1];
+            iframe = document.createElement('iframe');
+            iframe.src = srcValue;
+            iframe.width = "100%";
+            iframe.height = "400";
+            iframe.style.border = "0";
+
+            // Style niteliklerini kontrol et
+            if (!styleMatch || !styleMatch[1].includes('border:0')) {
+                iframe.style.border = "0";
+            }
+        } else if (iframeContent.startsWith('http://') || iframeContent.startsWith('https://')) {
+            // Eğer yalnızca bir URL varsa, iframe oluştur ve URL'yi ata
+            iframe = document.createElement('iframe');
+            iframe.src = iframeContent;
+            iframe.width = "100%";
+            iframe.height = "400";
+            iframe.style.border = "0";
+        }
+
+        if (iframe) {
+            container.appendChild(iframe);
+
+            // Input değerini uygun iframe formatında güncelle
+            var newIframe = `<iframe src="${iframe.src}" width="${iframe.width}" height="${iframe.height}" style="${iframe.style.cssText}"></iframe>`;
+            textarea.value = newIframe;
+        } else {
+            // Eğer iframe içeriği geçerli değilse
+            if (container.querySelector('iframe')) {
+                // Daha önce gösterilen iframe varsa, onu kaldır
+                container.innerHTML = '';
+            }
+        }
+    }
+
+    document.getElementById('FrmEnstitu').addEventListener('submit', function (event) {
+        var textarea = document.getElementById('Konum');
+        var iframeContent = textarea.value.trim();
+
+        // İframe src ve style niteliklerini kontrol et
+        var srcMatch = iframeContent.match(/src="([^"]*)"/);
+        var styleMatch = iframeContent.match(/style="([^"]*)"/);
+
+        var newSrc = '';
+        var newStyle = 'border:0;';
+
+        if (srcMatch) {
+            newSrc = srcMatch[1];
+        } else if (iframeContent.startsWith('http://') || iframeContent.startsWith('https://')) {
+            newSrc = iframeContent;
+        }
+
+        var newIframe = `<iframe src="${newSrc}" width="100%" height="400" style="${newStyle}"></iframe>`;
+
+        // Textarea içeriğini güncelle
+        textarea.value = newIframe;
+
+        // Geçerli formatta değilse kullanıcıya bilgi ver ve formu gönderme
+        if (!newSrc) {
+            alert("Geçerli bir iframe src değeri veya URL giriniz!");
+            event.preventDefault(); // Formun gönderilmesini durdur
+        }
+    });
+
+
 
     $(function () {
         var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
-    });
 
+        $(".popover-dismiss").popover({ trigger: 'hover', html: true });
+    });
 
 </script>

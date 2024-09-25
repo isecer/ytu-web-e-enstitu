@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
@@ -8,12 +10,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
     {
         public static bool ToIsValidEmail(this string email)
         {
-            var isSuccess = !Regex.IsMatch(email,
-                @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,24}))$",
-                RegexOptions.IgnoreCase);
-            if (!isSuccess) isSuccess = !email.IsAscii();
-            return isSuccess;
+            try
+            {
+                var mailAddress = new MailAddress(email);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
         public static bool ToIsValidateTckn(this string tcKimlikNo)
         {
@@ -86,7 +91,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return donemModel;
         }
 
-
+        public static string IlkHarfiBuyut(this string str)
+        {
+            // Cümlenin her bir kelimesini alıyoruz
+            TextInfo textInfo = new CultureInfo("tr-TR", false).TextInfo;
+            return textInfo.ToTitleCase(str.ToLower());
+        }
         //public static bool IsNullOrEmpty(this string str) => string.IsNullOrEmpty(str);
 
         //public static bool IsNullOrWhiteSpace(this string str) => string.IsNullOrWhiteSpace(str);
