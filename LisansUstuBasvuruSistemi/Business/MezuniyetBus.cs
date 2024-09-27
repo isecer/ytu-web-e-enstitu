@@ -373,7 +373,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         ogrenciBilgi.OgrenciTez.tezizlemebilgileri.Count(a => a.TEZ_IZL_DURUM == "Başarılı");
                     if (ogrenciTezIzlemeBasariliSayi < 3)
                     {
-                        subMessages.Add("En az 3 başarılı tez izleme raporunuzun bulunması gerekmektedir. Mevcut başarılı tez izleme rapor sayınız :"+ ogrenciTezIzlemeBasariliSayi);
+                        subMessages.Add("En az 3 başarılı tez izleme raporunuzun bulunması gerekmektedir. Mevcut başarılı tez izleme rapor sayınız :" + ogrenciTezIzlemeBasariliSayi);
 
                     }
                     if (subMessages.Any())
@@ -841,6 +841,9 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                                                           : DateTime.Now,
 
                                                                    UzatmaSonrasiYeniSinavTalebiSonTarih = s.UzatmaSonrasiYeniSinavTalebiSonTarih,
+                                                                   UzatmaIlkSrTarih = s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && s.IsOgrenciUzatmaSonrasiOnay == true ?
+                                                                       s.UzatmaSonrasiYeniSinavTalebiSonTarih ?? DbFunctions.AddDays(s.OgrenciOnayTarihi, bSurecOtKriter.SinavKacGunSonraAlabilir).Value
+                                                                       : (DateTime?)null,
                                                                    UzatmaSonSrTarih = s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma ?
                                                                                                 s.UzatmaSonrasiYeniSinavTalebiSonTarih ?? DbFunctions.AddDays(s.Tarih, bSurecOtKriter.SinavUzatmaSinavAlmaSuresiMaxGun).Value
                                                                                                 : DateTime.Now,

@@ -377,18 +377,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var anabilimDaliAdi = yeterlikBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.IlkHarfiBuyut();
                 var programAdi = yeterlikBasvuru.Programlar.ProgramAdi.IlkHarfiBuyut();
                 var ogrenciNo = yeterlikBasvuru.OgrenciNo;
-                var ogrenciAdSoyad = (yeterlikBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + yeterlikBasvuru.Kullanicilar.Soyad.ToUpper();
-                var isEnstituMururOrVekil = !enstitu.EnstituMudurVekilId.HasValue;
-                var mudurId = isEnstituMururOrVekil ? enstitu.EnstituMudurId : enstitu.EnstituMudurVekilId;
-                var mudurAdi = "";
-                var mudurUnvanAdi = "";
-                if (mudurId.HasValue)
-                {
-                    var mudur = entities.Kullanicilars.First(f => f.KullaniciID == mudurId);
-                    mudurUnvanAdi = mudur.Unvanlar.UnvanAdi.IlkHarfiBuyut();
-                    mudurAdi = mudur.Ad.IlkHarfiBuyut() + " " + mudur.Soyad.ToUpper();
-                }
-
+                var ogrenciAdSoyad = (yeterlikBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + yeterlikBasvuru.Kullanicilar.Soyad.ToUpper(); 
                 var teslimSonTarih = yeterlikBasvuru.SozluSinavTarihi.Value.AddMonths(1).ToFormatDate();
                 var danisman = entities.Kullanicilars.First(f => f.KullaniciID == yeterlikBasvuru.TezDanismanID);
                 var parameters = new List<MailParameterDto>
@@ -399,10 +388,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         new MailParameterDto { Key = "OgrenciNo", Value = ogrenciNo },
                         new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad },
                         new MailParameterDto { Key = "DanismanUnvan", Value = danisman.Unvanlar.UnvanAdi.IlkHarfiBuyut() },
-                        new MailParameterDto { Key = "DanismanAdSoyad", Value = danisman.Ad.IlkHarfiBuyut()+" "+danisman.Soyad.ToUpper() },
-                        new MailParameterDto { Key = "EnstituMudurUnvan", Value = mudurUnvanAdi },
-                        new MailParameterDto { Key = "EnstituMudurAdi", Value = mudurAdi },
-                        new MailParameterDto { Key = "EnstituMudurTitle", Value = isEnstituMururOrVekil ? "Enstitü Müdürü" : "Enstitü Müdür V." },
+                        new MailParameterDto { Key = "DanismanAdSoyad", Value = danisman.Ad.IlkHarfiBuyut()+" "+danisman.Soyad.ToUpper() }, 
                         new MailParameterDto { Key = "BilgiYazisiTeslimSonTarih", Value = teslimSonTarih }
                     };
                 var sablonInx = 0;

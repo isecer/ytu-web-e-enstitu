@@ -1038,8 +1038,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.SRTalepTipID = 1;
                 model.TalepYapanID = mezuniyetBasvuru.KullaniciID;
                 var ogrenimTipKriterleri = mezuniyetBasvuru.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == mezuniyetBasvuru.OgrenimTipKod);
-                if (mezuniyetBasvuru.EYKTarihi != null)
-                    model.Tarih = mezuniyetBasvuru.EYKTarihi.Value.AddDays(ogrenimTipKriterleri.SinavKacGunSonraAlabilir);
+                var uzatmaAlinanSrTalebi = mezuniyetBasvuru.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && p.SRDurumID == SrTalepDurumEnum.Onaylandı).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
+
+                if (uzatmaAlinanSrTalebi != null)
+                {
+                    var tarih = uzatmaAlinanSrTalebi.OgrenciOnayTarihi ?? uzatmaAlinanSrTalebi.Tarih;
+                    model.Tarih = tarih.AddDays(ogrenimTipKriterleri.SinavKacGunSonraAlabilir);
+                }
+                else model.Tarih = mezuniyetBasvuru.EYKTarihi.Value.AddDays(ogrenimTipKriterleri.SinavKacGunSonraAlabilir);
+
+                if (model.Tarih < DateTime.Now.Date) model.Tarih = DateTime.Now.Date;
+                model.Tarih = model.Tarih.GetFirstWeekday();
             }
             ViewBag.SRSalonID = new SelectList(SrTalepleriBus.GetCmbSalonlar(mezuniyetBasvuru.MezuniyetSureci.EnstituKod, model.SRTalepTipID, true), "Value", "Caption", model.SRSalonID);
             return View(model);
@@ -1141,9 +1150,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (uzatmaAlinanSrTalebi != null)
                         {
 
-                            srBaslangicTarihi = uzatmaAlinanSrTalebi.UzatmaSonrasiOgrenciTaahhutSonTarih ??
-                                                uzatmaAlinanSrTalebi.Tarih.AddDays(mezuniyetSureciOgrenimTip
-                                                    .SinavUzatmaOgrenciTaahhutMaxGun);
+                            srBaslangicTarihi = uzatmaAlinanSrTalebi.OgrenciOnayTarihi ?? uzatmaAlinanSrTalebi.Tarih;
                             srBaslangicTarihi = srBaslangicTarihi.AddDays(mezuniyetSureciOgrenimTip.SinavKacGunSonraAlabilir);
                             srBitTarihi = uzatmaAlinanSrTalebi.UzatmaSonrasiYeniSinavTalebiSonTarih ?? uzatmaAlinanSrTalebi.Tarih.AddDays(mezuniyetSureciOgrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun);
 
@@ -1164,6 +1171,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
                         }
 
+
+                        if (!mmMessage.Messages.Any() && kModel.Tarih.Date < DateTime.Now.Date)
+                        {
+                            mmMessage.Messages.Add("Günümüz tarihinden daha önceki bir tarihe sınav alamazsınız!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "Tarih" });
+                        }
 
                     }
                 }

@@ -97,6 +97,20 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             TextInfo textInfo = new CultureInfo("tr-TR", false).TextInfo;
             return textInfo.ToTitleCase(str.ToLower());
         }
+        public static DateTime GetFirstWeekday(this DateTime date)
+        {
+            // Eğer tarih Cumartesi (6) veya Pazar (0) ise
+            if (date.DayOfWeek == DayOfWeek.Saturday)
+            {
+                // Pazartesiye git
+                return date.AddDays(2);
+            } 
+            return date.DayOfWeek == DayOfWeek.Sunday ?
+                // Pazartesiye git
+                date.AddDays(1) :
+                // Eğer hafta içi bir günse, tarihi olduğu gibi döndür
+                date;
+        }
         //public static bool IsNullOrEmpty(this string str) => string.IsNullOrEmpty(str);
 
         //public static bool IsNullOrWhiteSpace(this string str) => string.IsNullOrWhiteSpace(str);

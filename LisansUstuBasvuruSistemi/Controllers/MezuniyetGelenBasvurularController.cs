@@ -15,7 +15,6 @@ using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using static DevExpress.Utils.Drawing.Helpers.NativeMethods;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

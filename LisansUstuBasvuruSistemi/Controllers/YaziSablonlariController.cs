@@ -13,6 +13,8 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 using System.IO;
 using LisansUstuBasvuruSistemi.Raporlar.Genel;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
+using static DevExpress.XtraPrinting.Native.ExportOptionsPropertiesNames;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -230,7 +232,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var enstitu = _entities.Enstitulers.First(f => f.EnstituKod == enstituKod);
 
             // Key ile saklanan HTML'yi session'dan çekiyoruz
-            var html = HttpContext.Session[key]?.ToString();
+            var html = HttpContext.Session[key]?.ToString(); 
             var rprX = new RprYaziSablonOlusturucu(enstitu, html, konu);
 
 
@@ -246,6 +248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var sablon = _entities.YaziSablonlaris.First(f => f.YaziSablonlariID == id);
             var enstitu = sablon.Enstituler;
+          
             var rprX = new RprYaziSablonOlusturucu(enstitu, sablon.SablonHtml, sablon.Konu);
 
 

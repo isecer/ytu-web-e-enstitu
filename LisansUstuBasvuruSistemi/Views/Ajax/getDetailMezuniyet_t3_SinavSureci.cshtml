@@ -902,8 +902,9 @@
                                                                                         <td class="ValueTd">
                                                                                             @if (!showTahhutSonTarih)
                                                                                             {
+
                                                                                                 <span>
-                                                                                                    Uzatma alınan sınav sonrası tez teslim taahhüt işlemi <b>@item.UzatmaTaahhutSonTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.
+                                                                                                    Tez teslim taahhüt işlemi <b title="Uzatma sonrası sınav tarihine Öğrenci taahhüt için eklenen gün sayısı ile belirlenen tarih">@item.UzatmaTaahhutSonTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.
                                                                                                     <br />
                                                                                                 </span>
                                                                                             }
@@ -943,16 +944,22 @@
                                                                                         <td class="CaptionTd" width="140">Sınav Son Tarih</td>
                                                                                         <td class="CaptionTd" width="10">:</td>
                                                                                         <td class="ValueTd">
-                                                                                            @if (!showUzatmaSonrasiSonTarih)
+                                                                                            @if (item.UzatmaIlkSrTarih.HasValue)
                                                                                             {
-                                                                                                <span>
-                                                                                                    Uzatma alınan sınav sonrası yeni sınav alma işlemi <b>@item.UzatmaSonSrTarih.ToFormatDate()</b> tarihine kadar yapılması gerekmektedir.
+                                                                                                <div>
+                                                                                                    Sınav alma işlemi <b title="Uzatma sonrası Öğrenci taahhüt onay tarihine sınavın kaç gün sonra alınabileceği gün bilgisi eklenen tarih">@item.UzatmaIlkSrTarih.ToFormatDate()</b> ile <b title="Uzatma alınan sınav tarihine son sınav alınabilecek gün bilgisi eklenen tarih">@item.UzatmaSonSrTarih.ToFormatDate()</b> tarihleri arasında yapılabilir.
                                                                                                     <br />
-                                                                                                </span>
+                                                                                                </div>
                                                                                             }
                                                                                             else
                                                                                             {
-
+                                                                                                <div>
+                                                                                                    Sınav alma işlemi <b title="Uzatma alınan sınav tarihine son sınav alınabilecek gün bilgisi eklenen tarih">@item.UzatmaSonSrTarih.ToFormatDate()</b> tarihine kadar yapılabilir.
+                                                                                                    <br />
+                                                                                                </div>
+                                                                                            }
+                                                                                            @if (showUzatmaSonrasiSonTarih)
+                                                                                            {
                                                                                                 <input class="form-control form-control-inline input-medium date-pickerx" id="UzatmaSonSinavTarih_@item.SRTalepID" style="max-width:90px;height:22px;float:left;@(item.UzatmaSonrasiYeniSinavTalebiSonTarih.HasValue ? "color:green;" : "")" autocomplete="off" size="10" type="text" value="@item.UzatmaSonSrTarih.ToFormatDateInput()">
                                                                                                 <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="UzatmaSonrasiSonSinavTarihKayit('@item.SRTalepID');"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
                                                                                                 <script>
@@ -980,6 +987,7 @@
                                                                                                 </script>
 
                                                                                             }
+
                                                                                         </td>
                                                                                     </tr>
                                                                                     @if (showKayitOgrenci)

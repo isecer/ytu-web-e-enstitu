@@ -49,6 +49,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public SrDurumSelectList SrDurumSelectList = new SrDurumSelectList();
         public List<SRTaleplerJuri> JuriBilgi { get; set; }
         public DateTime UzatmaTaahhutSonTarih { get; set; }
+        public DateTime? UzatmaIlkSrTarih { get; set; }
         public DateTime UzatmaSonSrTarih { get; set; }
         public DateTime TezTeslimSonTarih { get; set; }
 
