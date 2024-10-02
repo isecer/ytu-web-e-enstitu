@@ -186,9 +186,12 @@ namespace LisansUstuBasvuruSistemi.Business
                                 errorMessage.Add("Bu Yeterlik süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
 
                             }
-                            else if (entities.YeterlikSurecOgrenimTipleris.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.OgrenimTipKod != kul.OgrenimTipKod) == false)
+                            else if (!entities.YeterlikSurecOgrenimTipleris.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.OgrenimTipKod == kul.OgrenimTipKod))
                             {
-                                errorMessage.Add(ogrenimTipAdi + " Öğrenim seviyesinde okuyan öğrenciler Yeterlik başvurusu yapamazlar");
+                                var ogrenimTipAdis = entities.YeterlikSurecOgrenimTipleris
+                                    .Where(a => a.YeterlikSurecID == yeterlikSurecId.Value)
+                                    .Select(s => s.OgrenimTipleri.OgrenimTipAdi).ToList();
+                                errorMessage.Add(string.Join(",", ogrenimTipAdis) + " Öğrenim seviyesinde okuyan öğrenciler Yeterlik başvurusu yapabilirler");
                             }
                             else if (!entities.YeterlikSureciKriterMuafOgrencilers.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.KullaniciID == kul.KullaniciID))
                             {
@@ -377,7 +380,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var anabilimDaliAdi = yeterlikBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.IlkHarfiBuyut();
                 var programAdi = yeterlikBasvuru.Programlar.ProgramAdi.IlkHarfiBuyut();
                 var ogrenciNo = yeterlikBasvuru.OgrenciNo;
-                var ogrenciAdSoyad = (yeterlikBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + yeterlikBasvuru.Kullanicilar.Soyad.ToUpper(); 
+                var ogrenciAdSoyad = (yeterlikBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + yeterlikBasvuru.Kullanicilar.Soyad.ToUpper();
                 var teslimSonTarih = yeterlikBasvuru.SozluSinavTarihi.Value.AddMonths(1).ToFormatDate();
                 var danisman = entities.Kullanicilars.First(f => f.KullaniciID == yeterlikBasvuru.TezDanismanID);
                 var parameters = new List<MailParameterDto>
@@ -388,7 +391,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         new MailParameterDto { Key = "OgrenciNo", Value = ogrenciNo },
                         new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad },
                         new MailParameterDto { Key = "DanismanUnvan", Value = danisman.Unvanlar.UnvanAdi.IlkHarfiBuyut() },
-                        new MailParameterDto { Key = "DanismanAdSoyad", Value = danisman.Ad.IlkHarfiBuyut()+" "+danisman.Soyad.ToUpper() }, 
+                        new MailParameterDto { Key = "DanismanAdSoyad", Value = danisman.Ad.IlkHarfiBuyut()+" "+danisman.Soyad.ToUpper() },
                         new MailParameterDto { Key = "BilgiYazisiTeslimSonTarih", Value = teslimSonTarih }
                     };
                 var sablonInx = 0;

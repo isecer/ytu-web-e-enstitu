@@ -369,13 +369,19 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     }
 
-                    var ogrenciTezIzlemeBasariliSayi =
-                        ogrenciBilgi.OgrenciTez.tezizlemebilgileri.Count(a => a.TEZ_IZL_DURUM == "Başarılı");
-                    if (ogrenciTezIzlemeBasariliSayi < 3)
+                    if (kul.OgrenimTipKod == OgrenimTipi.Doktra || kul.OgrenimTipKod == OgrenimTipi.ButunlesikDoktora)
                     {
-                        subMessages.Add("En az 3 başarılı tez izleme raporunuzun bulunması gerekmektedir. Mevcut başarılı tez izleme rapor sayınız :" + ogrenciTezIzlemeBasariliSayi);
+                        var ogrenciTezIzlemeBasariliSayi =
+                            ogrenciBilgi.OgrenciTez.tezizlemebilgileri.Count(a => a.TEZ_IZL_DURUM == "Başarılı");
+                        if (ogrenciTezIzlemeBasariliSayi < 3)
+                        {
+                            subMessages.Add(
+                                "En az 3 başarılı tez izleme raporunuzun bulunması gerekmektedir. Mevcut başarılı tez izleme rapor sayınız :" +
+                                ogrenciTezIzlemeBasariliSayi);
 
+                        }
                     }
+
                     if (subMessages.Any())
                     {
                         mMessage.Messages.Add("Mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
