@@ -7,13 +7,17 @@
 @{
     Layout = null;
     var juriOneriFormuKyetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
-    var jofEykyaGonderimYetkisi = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && Model.MezuniyetSrModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
+    var jfEykDaOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent();
+    var jofEykyaGonderimYetkisi = jfEykDaOnayYetki && Model.MezuniyetSrModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
     var jofEykYaHazirlandiYetkisi = RoleNames.MezuniyetGelenBasvurularEykyaHazirlandiYetkisi.InRoleCurrent();
     var jofEykdaOnayYetkisi = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSrModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
     var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+
+    var yaziGormeYetki = jofEykyaGonderimYetkisi || jofEykYaHazirlandiYetkisi || jofEykdaOnayYetkisi;
+    var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID + "_cp" : Model.MezuniyetBasvurulariID.ToString());
 
     var isDoktora = Model.OgrenimTipKod.IsDoktora();
+
 }
 
 <div class="tab-pane @(Model.SelectedTabIndex == 2 ? "active" : "") " id="@tbName-2">
@@ -60,8 +64,72 @@
                                     <tr>
                                         <td class="CaptionTd">Tez Dili</td>
                                         <td class="CaptionTd">:</td>
-                                        <td class="ValueTd">@(Model.IsTezDiliTr.HasValue ? (Model.IsTezDiliTr == true ? "Türkçe" : "İngilizce") : "")</td>
+                                        <td class="ValueTd">
+                                            <table>
+                                                <tr>
+                                                    <td id="tezDiliText_@Model.MezuniyetBasvurulariID" width="90">
+                                                        @(Model.IsTezDiliTr.HasValue ? (Model.IsTezDiliTr == true ? "Türkçe" : "İngilizce") : "")
+                                                    </td>
+                                                    @if (jfEykDaOnayYetki)
+                                                    {
+                                                        <td id="tezDiliDropdown_@Model.MezuniyetBasvurulariID" class="hide" width="90">
+                                                            <select id="tezDiliSelect_@Model.MezuniyetBasvurulariID" class="form-control">
+                                                                <option value="true" @((Model.IsTezDiliTr == true).ToSelected())>Türkçe</option>
+                                                                <option value="false" @((Model.IsTezDiliTr == false).ToSelected())>İngilizce</option>
+                                                            </select>
+                                                        </td>
+                                                        <td width="40" style="text-align:center;">
+                                                            <a href="javascript:void(0)" onclick="editTezDili(@Model.MezuniyetBasvurulariID,'@(Model.IsTezDiliTr.ToStrObjEmptString().ToLower())')" title="Tez Dilini Düzenle" id="editButton_@Model.MezuniyetBasvurulariID" style="font-size: 10pt;"><i class="fa fa-edit fa-lg"></i></a>
+                                                        </td>
+                                                        <td id="saveButtonCell_@Model.MezuniyetBasvurulariID" class="hide" width="20" style="text-align:center;">
+                                                            <a href="javascript:void(0)" onclick="saveTezDili(@Model.MezuniyetBasvurulariID)" title="Tez Dilini Kaydet" id="saveButton_@Model.MezuniyetBasvurulariID" style="font-size: 10pt;"><i class="fa fa-save fa-lg"></i></a>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            </table>
+
+                                            @if (jfEykDaOnayYetki)
+                                            {
+                                                <script>
+                                                function editTezDili(id,isDefaultDilTr) {
+                                                    const textElement = document.getElementById(`tezDiliText_${id}`);
+                                                    const dropdownElement = document.getElementById(`tezDiliDropdown_${id}`);
+                                                    const saveButtonCell = document.getElementById(`saveButtonCell_${id}`);
+
+                                                    textElement.classList.toggle("hide");
+                                                    dropdownElement.classList.toggle("hide");
+                                                    saveButtonCell.classList.toggle("hide");
+                                                    if (isDefaultDilTr) {
+                                                        const selectElement = document.getElementById(`tezDiliSelect_${id}`);
+                                                        selectElement.value = isDefaultDilTr;
+                                                    }
+
+                                                }
+
+                                                function saveTezDili(id) {
+                                                    const selectElement = document.getElementById(`tezDiliSelect_${id}`);
+                                                    const selectedValue = selectElement.value;
+                                                    $.ajax({
+                                                        url: '@Url.Action("TezDiliKaydet", "MezuniyetGelenBasvurular")',
+                                                        data: { 'id': id, 'isTezDiliTr': selectedValue },
+                                                        success: function (result) {
+                                                            GetMsg(result.MmMessage);
+                                                            if (result.IsSuccess) {
+                                                                GetDetailx(id);
+                                                            }
+                                                        },
+                                                        error: function (err) {
+                                                            alert(err.responseText);
+                                                        }
+                                                    });
+
+                                                }
+                                                </script>
+                                            }
+                                        </td>
                                     </tr>
+
+
                                     <tr>
                                         <td class="CaptionTd" style="font-weight:bold;">Tez Başlığı Türkçe</td>
                                         <td class="CaptionTd" style="font-weight:bold;">:</td>
@@ -446,6 +514,12 @@
                                                                     <option value="false" @(juriOneriFormu.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(juriOneriFormu.EYKYaGonderildiIslemTarihi.HasValue ? "(" + juriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                 </select>
                                                             </td>
+                                                            @if (!juriOneriFormu.EYKYaHazirlandi.HasValue)
+                                                            {
+                                                                <td class="form-group @(Model.EykYaGonderildi==true?"":"hide") EYKYaGonderildiSayi_@juriOneriFormu.MezuniyetJuriOneriFormID">
+                                                                    <input type="text" class="form-control" style="width: 60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="EYKSayisiG_@juriOneriFormu.MezuniyetBasvurulariID" value="@Model.EYKSayisi" />
+                                                                </td>
+                                                            }
                                                             <td>
                                                                 <label class="btn btn-primary btn-sm" onclick="EykYaGonder(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                             </td>
@@ -507,11 +581,17 @@
                                                         <table>
                                                             <tr>
                                                                 <td>
-                                                                    <select class="form-control" id="EYKyaHazirlandi_@juriOneriFormu.MezuniyetJuriOneriFormID">
+                                                                    <select class="form-control" id="EYKyaHazirlandi_@juriOneriFormu.MezuniyetJuriOneriFormID" onchange="EykYaHazirChange(@juriOneriFormu.MezuniyetJuriOneriFormID)">
                                                                         <option @(!juriOneriFormu.EYKYaHazirlandi.HasValue ? "selected" : "")></option>
                                                                         <option value="true" @(juriOneriFormu.EYKYaHazirlandi == true ? "selected" : "")>EYK'ya Hazırlandı @(juriOneriFormu.EYKYaHazirlandiIslemTarihi.HasValue ? "(" + juriOneriFormu.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                     </select>
                                                                 </td>
+                                                                @if (!juriOneriFormu.EYKDaOnaylandi.HasValue)
+                                                                {
+                                                                    <td class="form-group @(juriOneriFormu.EYKYaHazirlandi==true ? "" : "hide") EYKYaHazirSayi_@juriOneriFormu.MezuniyetJuriOneriFormID">
+                                                                        <input type="text" class="form-control" style="width:60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="EYKSayisiH_@juriOneriFormu.MezuniyetBasvurulariID" value="@Model.EYKSayisi" />
+                                                                    </td>
+                                                                }
                                                                 <td>
                                                                     <label class="btn btn-primary btn-sm" onclick="EykYaHazirla(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                 </td>
@@ -566,6 +646,9 @@
                                                                     <input type="text" class="form-control tarihB date-pickerx" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihi_@juriOneriFormu.MezuniyetJuriOneriFormID" value="@Model.EYKTarihi.ToFormatDateInput()" />
 
                                                                 </td>
+                                                                <td class="form-group @(Model.EykDaOnaylandi.HasValue ? "" : "hide") EYKDaOnaySayi_@juriOneriFormu.MezuniyetJuriOneriFormID">
+                                                                    <input type="text" class="form-control" style="width: 60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="EYKSayisiO_@juriOneriFormu.MezuniyetJuriOneriFormID" value="@Model.EYKSayisi" />
+                                                                </td>
                                                                 <td>
                                                                     <label class="btn btn-primary btn-sm" onclick="EykDaOnay(@juriOneriFormu.MezuniyetJuriOneriFormID,@Model.MezuniyetBasvurulariID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                 </td>
@@ -619,8 +702,29 @@
 
                                             }
                                         }
+
+                                        @if (juriOneriFormu.EYKDaOnaylandi == true && yaziGormeYetki)
+                                        {
+                                            <tr>
+                                                <td class="CaptionTd">Bilgi Yazıları</td>
+                                                <td class="CaptionTd">:</td>
+                                                <td class="ValueTd">
+                                                    @if (Model.EYKSayisi.IsNullOrWhiteSpace())
+                                                    {
+                                                        <span> <i class="fa fa-warning fa-lg"></i> Savunma Sınavı Jürisi Atanmıştır yazılarının oluşturulabilmesi için EYK Sayısı girilmelidir.</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="javascript:void(0);" onclick="YeniDialogBB('Savunma Sınavı Jürisi Atanmıştır Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetEykSavunmaJurisiAtanmistirYazisi&Id=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                                            <i class="fa fa-file-pdf-o fa-lg"></i> Savunma Sınavı Jürisi Atanmıştır Yazılarını İndir
+                                                        </a>
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        }
                                     </table>
-                                </div> 
+                                </div>
                             }
 
                         </td>

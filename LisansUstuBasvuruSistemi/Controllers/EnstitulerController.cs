@@ -219,6 +219,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
+                kModel.TezBaslikIllegalCharacter = kModel.TezBaslikIllegalCharacter ?? "";
+                kModel.TezBaslikIllegalCharacter = string.Join(",", kModel.TezBaslikIllegalCharacter.Split(',')
+                    .Where(p => !p.IsNullOrWhiteSpace()).Select(s => s.Trim()).Distinct().ToList());
                 var data = _entities.Enstitulers.FirstOrDefault(p => p.EnstituKod == kModel.EnstituKod);
                 if (data == null)
                 {
@@ -248,6 +251,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.Tel = kModel.Tel;
                     data.WebAdresi = kModel.WebAdresi;
                     data.EPosta = kModel.EPosta;
+                    data.TezBaslikIllegalCharacter = kModel.TezBaslikIllegalCharacter;
+                    data.TezBaslikMaxLength = kModel.TezBaslikMaxLength;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;

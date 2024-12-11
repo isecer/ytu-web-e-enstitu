@@ -100,6 +100,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                                     SinavPuani = s.SinavPuani,
                                                     SinavYili = s.SinavYili,
                                                     VarolanTezDanismanID = s.VarolanTezDanismanID,
+                                                    VarolanTDAdSoyad = s.VarolanTDAdSoyad,
+                                                    VarolanTDUnvanAdi = s.VarolanTDUnvanAdi,
                                                     VarolanTezDanismaniUserKey = varolanTdUserkey,
                                                     VarolanDanismanOnayladi = s.VarolanDanismanOnayladi,
                                                     VarolanDanismanOnayTarihi = s.VarolanDanismanOnayTarihi,
@@ -113,7 +115,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                                     TDOgrenciSayisiDR = s.TDOgrenciSayisiDR,
                                                     TDOgrenciSayisiYL = s.TDOgrenciSayisiYL,
                                                     TDTezSayisiDR = s.TDTezSayisiDR,
-                                                    TDTezSayisiYL = s.TDTezSayisiYL, 
+                                                    TDTezSayisiYL = s.TDTezSayisiYL,
                                                     DanismanOnayladi = s.DanismanOnayladi,
                                                     DanismanOnayTarihi = s.DanismanOnayTarihi,
                                                     DanismanOnaylanmadiAciklama = s.DanismanOnaylanmadiAciklama,
@@ -156,24 +158,36 @@ namespace LisansUstuBasvuruSistemi.Business
                     inx++;
                     if (item.VarolanTezDanismanID.HasValue)
                     {
-                        var kul = kulls.First(p => p.KullaniciID == item.VarolanTezDanismanID);
-                        item.VarolanDanismanAd = kul.Unvanlar.UnvanAdi + " " + kul.Ad + " " + kul.Soyad;
+                        if (item.VarolanTDAdSoyad.IsNullOrWhiteSpace())
+                        {
+                            var kul = kulls.First(p => p.KullaniciID == item.VarolanTezDanismanID);
+                            item.VarolanDanismanAd = kul.Unvanlar?.UnvanAdi + " " + kul.Ad + " " + kul.Soyad;
+                        }
+                        else
+                        {
+                            item.VarolanDanismanAd = item.VarolanTDUnvanAdi + " " + item.VarolanTDAdSoyad;
+                        }
                     }
 
                     if (inx == 1)
                     {
                         item.IsYeniEsDanismanOneriOrDegisiklik = item.TDOBasvuruEsDanismen.All(ae => ae.EYKDaOnaylandi != true);
-                        if (item.IsYeniEsDanismanOneriOrDegisiklik)
-                        {
-                            item.TdoEsBasvurusuYapabilir = (item.EsDanismanBilgi == null ||
-                                                            item.EsDanismanBilgi.EYKYaGonderildi == false ||
-                                                            item.EsDanismanBilgi.EYKDaOnaylandi == false);
-                        }
-                        else
-                        {
-                            item.TdoEsBasvurusuYapabilir = item.EsDanismanBilgi == null || (item.EsDanismanBilgi.EYKYaGonderildi == false ||
-                                item.EsDanismanBilgi.EYKDaOnaylandi.HasValue);
-                        }
+                        item.TdoEsBasvurusuYapabilir = (item.EsDanismanBilgi == null ||
+                                                        item.EsDanismanBilgi.EYKYaGonderildi == false ||
+                                                        item.EsDanismanBilgi.EYKDaOnaylandi == false ||
+                                                        item.EsDanismanBilgi.EYKDaOnaylandi == true);
+                        //if (item.IsYeniEsDanismanOneriOrDegisiklik)
+                        //{
+                        //    item.TdoEsBasvurusuYapabilir = (item.EsDanismanBilgi == null ||
+                        //                                    item.EsDanismanBilgi.EYKYaGonderildi == false ||
+                        //                                    item.EsDanismanBilgi.EYKDaOnaylandi == false ||
+                        //                                    item.EsDanismanBilgi.EYKDaOnaylandi==true);
+                        //}
+                        //else
+                        //{
+                        //    item.TdoEsBasvurusuYapabilir = item.EsDanismanBilgi == null || (item.EsDanismanBilgi.EYKYaGonderildi == false ||
+                        //        item.EsDanismanBilgi.EYKDaOnaylandi.HasValue);
+                        //}
                         // obs de öğrenci numarası aktif gözüküyor ise baivuru yapabilsin
                         if (item.TdoEsBasvurusuYapabilir) item.TdoEsBasvurusuYapabilir = model.IsObsOgrenciNoAktif;
 
@@ -736,6 +750,10 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             return MailSenderTdo.SendMailTdoEykOnay(tdoBasvuruDanismanId, isOnayOrRed);
         }
+        public static MmMessage SendMailTdoEykYaGonderimRet(int tdoBasvuruDanismanId)
+        {
+            return MailSenderTdo.SendMailTdoEykYaGonderimRet(tdoBasvuruDanismanId);
+        }
         public static MmMessage SendMailTdoEsBilgisi(int tdoBasvuruEsDanismanId)
         {
             return MailSenderTdo.SendMailTdoEsBilgisi(tdoBasvuruEsDanismanId);
@@ -812,7 +830,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.EYKYaGonderildi.HasValue
                     ? new TdoBasvuruDurumSortDto { IsOnayOrRed = model.EYKYaGonderildi.Value, DurumAciklama = model.EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı." : "EYK'ya Gönderimi Onaylanmadı." }
                     : new TdoBasvuruDurumSortDto { DurumAciklama = "EYK'ya Gönderim Onayı Bekleniyor." }
-            }; 
+            };
             var activeDurum = modelData.Any(a => a.IsOnayOrRed.HasValue) ? modelData.First(p => p.IsOnayOrRed.HasValue) : modelData.Last();
             var htmlString = $"<span style=\"color:{activeDurum.DurumColor};\" aria-hidden=\"true\">" +
                              $"<i class=\"{activeDurum.DurumClass}\" style=\"font-size:12pt;\" aria-hidden=\"true\"></i> {activeDurum.DurumAciklama}</span>";

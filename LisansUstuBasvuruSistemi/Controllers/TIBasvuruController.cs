@@ -392,7 +392,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var sondonemKayitolmasiGerekenDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod);
 
-                    var kayitYapilacakDersKodlaris = !tiBasvuruAraRaporId.HasValue ? sondonemKayitolmasiGerekenDersKodlari.Split(',').Where(p => p.Trim() != "").ToList() : new List<string>();
+                    var kayitYapilacakDersKodlaris = !tiBasvuruAraRaporId.HasValue ? sondonemKayitolmasiGerekenDersKodlari.Split(',').Where(p => p.Trim() != "").ToList().Select(s=>s.Trim()).ToList() : new List<string>();
                     if (kayitYapilacakDersKodlaris.Any() && kayitYapilacakDersKodlaris.Count(p => ogrenciInfo.AktifDonemDers.DersKodNums.Any(a => a == p)) != kayitYapilacakDersKodlaris.Count)
                     {
                         mMessage.Messages.Add("Tez izleme raporunu başlatabilmeniz için " + donemBilgi.DonemAdiLong + " döneminde " + sondonemKayitolmasiGerekenDersKodlari + " kodlu derslere kayıt olmanız gerekmektedir.");
@@ -673,7 +673,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToTiAraRaporDonemBilgi(tiBasvuru.EnstituKod);
                 var obsDonemId = donemBilgi.BaslangicTarihi.Year.ToString() + donemBilgi.DonemId;
                 var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.OgrenciKontrol(kul.OgrenciNo, obsDonemId) : new StudentControl();
-                var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod).Split(',').Where(p => p.Trim() != "").ToList() : new List<string>();
+                var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod).Split(',').Where(p => p.Trim() != "").Select(s => s.Trim()).ToList() : new List<string>();
 
                 if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemId))
                 {

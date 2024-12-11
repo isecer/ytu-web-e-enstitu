@@ -119,7 +119,7 @@
                                     @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                                     {
                                         <tr class="@(Model.EYKTarihi.HasValue ? "success" : "danger")">
-                                            <td>EYK Tarihi</td>
+                                            <td>EYK Tarihi / Sayısı</td>
                                             <td>:</td>
                                             <td>
                                                 <table>
@@ -130,6 +130,7 @@
                                                         <td id="eykInp_@Model.MezuniyetBasvurulariID" class="hide">
                                                             <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.EYKTarihi == null ? "" : Model.EYKTarihi.ToFormatDateInput())" id="InpEyk_@Model.MezuniyetBasvurulariID">
                                                         </td>
+
                                                         @if (kayitYetki)
                                                         {
                                                             <td width="25" style="text-align:right;font-size:10pt;">
@@ -175,6 +176,61 @@
                                                                         }
                                                                     });
                                                                 }
+
+                                                                </script>
+                                                            </td>
+
+
+
+                                                        }
+                                                        <td id="eykSLbl_@Model.MezuniyetBasvurulariID" style="padding-left:5px;">
+                                                            @(!Model.EYKSayisi.IsNullOrWhiteSpace() ? "Eyk Sayısı: "+Model.EYKSayisi : "EYK Sayısı Girilmedi")
+                                                        </td>
+                                                        <td id="eykSInp_@Model.MezuniyetBasvurulariID" class="hide">
+                                                            <input type="text" class="form-control" style="width: 60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" value="@Model.EYKSayisi" id="InpEykS_@Model.MezuniyetBasvurulariID" />
+                                                        </td>
+                                                        @if (kayitYetki)
+                                                        {
+                                                            <td width="25" style="text-align:right;font-size:10pt;">
+                                                                <a href="javascript:void(0)" onclick="ShowEykSayisi(@Model.MezuniyetBasvurulariID,this)"><i class="fa fa-edit fa-lg" title="EYK Tarihini Düzenle"></i></a>
+                                                                <script>
+
+                                                                    function ShowEykSayisi(id, sndr) {
+                                                                        if ($('#eykSLbl_' + id).hasClass('hide')) {
+                                                                            $('#eykSLbl_' + id).removeClass('hide');
+                                                                            $('#eykSInp_' + id).addClass('hide');
+                                                                            $('#eykSSv_' + id).addClass('hide');
+
+                                                                        }
+                                                                        else {
+                                                                            $('#eykSLbl_' + id).addClass('hide');
+                                                                            $('#eykSInp_' + id).removeClass('hide');
+                                                                            $('#eykSSv_' + id).removeClass('hide');
+                                                                        }
+                                                                    }
+
+                                                                </script>
+                                                            </td>
+                                                            <td id="eykSSv_@Model.MezuniyetBasvurulariID" width="25" style="text-align:right;font-size:10pt;" class="hide">
+                                                                <a href="javascript:void(0)" onclick="SaveEykSayisi(@Model.MezuniyetBasvurulariID,this)"><i class="fa fa-save fa-lg" title="EYK Sayısı Kaydet"></i></a>
+                                                                <script>
+
+                                                                    function SaveEykSayisi(id, sndr) {
+                                                                        var val = $('#InpEykS_' + id).val();
+                                                                        $.ajax({
+                                                                            url: '@Url.Action("EykSayisiKaydet", "MezuniyetGelenBasvurular")',
+                                                                            data: { 'id': id, 'EYKSayisi': val },
+                                                                            success: function (result) {
+                                                                                GetMsg(result.MmMessage);
+                                                                                if (result.IsSuccess) {
+                                                                                    GetDetailx(id);
+                                                                                }
+                                                                            },
+                                                                            error: function (err) {
+                                                                                alert(err.responseText);
+                                                                            }
+                                                                        });
+                                                                    }
 
                                                                 </script>
                                                             </td>

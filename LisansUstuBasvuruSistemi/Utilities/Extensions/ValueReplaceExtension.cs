@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text.RegularExpressions; 
 
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
@@ -77,8 +77,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
 
         public static string ProcessHtmlContent(string htmlContent, List<MailParameterDto> parameterDtos)
-        {
-            // First, remove unused parameters
+        { 
+          
             var processedContent = RemoveUnusedParameters(htmlContent, parameterDtos);
 
             // Then, replace the remaining parameters

@@ -47,7 +47,9 @@
                                     <input name="SablonAdi" type="text" value="@Model.SablonAdi" class="form-control" />
                                 </th>
                                 <th></th>
-                                <th></th>
+                                <th>
+                                    @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
                             </tr>
                             @if (Model.RowCount > 0)
                             {

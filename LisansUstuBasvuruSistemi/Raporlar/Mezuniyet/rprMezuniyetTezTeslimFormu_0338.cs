@@ -15,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         {
             InitializeComponent();
 
-            using (var  entities = new LubsDbEntities())
+            using (var entities = new LubsDbEntities())
             {
 
                 //4   tr Ulusal Makale 
@@ -61,27 +61,36 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     var srTalebi = mBasvuru.SRTalepleris.First(p => p.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma);
                     cellTezDili.Text = mBasvuru.IsTezDiliTr == true ? "Türkçe" : "English";
 
-                    var tezBasligi = "";
-                    var tezBasligiCeviri = "";
+                    var srBirOncekiSinavTezBaslikDegisikligi = mBasvuru.SRTalepleris.FirstOrDefault(p =>
+                        p.SRTalepID < srTalebi.SRTalepID && p.SRDurumID == SrTalepDurumEnum.Onaylandı && p.IsTezBasligiDegisti == true);
 
+
+
+                    var tezBaslikTr = "";
+                    var tezBaslikEn = "";
                     if (srTalebi.IsTezBasligiDegisti == true)
                     {
-                        tezBasligi = mBasvuru.IsTezDiliTr == true ? srTalebi.YeniTezBaslikTr : srTalebi.YeniTezBaslikEn;
-                        tezBasligiCeviri = mBasvuru.IsTezDiliTr == false ? srTalebi.YeniTezBaslikTr : srTalebi.YeniTezBaslikEn;
+                        tezBaslikTr = srTalebi.YeniTezBaslikTr;
+                        tezBaslikEn = srTalebi.YeniTezBaslikEn;
+                    }
+                    if (srBirOncekiSinavTezBaslikDegisikligi != null)
+                    {
+                        tezBaslikTr = srBirOncekiSinavTezBaslikDegisikligi.YeniTezBaslikTr;
+                        tezBaslikEn = srBirOncekiSinavTezBaslikDegisikligi.YeniTezBaslikEn;
                     }
                     else if (joForm.IsTezBasligiDegisti == true)
                     {
-                        tezBasligi = mBasvuru.IsTezDiliTr == true ? joForm.YeniTezBaslikTr : joForm.YeniTezBaslikEn;
-                        tezBasligiCeviri = mBasvuru.IsTezDiliTr == false ? joForm.YeniTezBaslikTr : joForm.YeniTezBaslikEn;
+                        tezBaslikTr = joForm.YeniTezBaslikTr;
+                        tezBaslikEn = joForm.YeniTezBaslikEn;
                     }
                     else
                     {
-                        tezBasligi = mBasvuru.IsTezDiliTr == true ? mBasvuru.TezBaslikTr : mBasvuru.TezBaslikEn;
-                        tezBasligiCeviri = mBasvuru.IsTezDiliTr == false ? mBasvuru.TezBaslikEn : mBasvuru.TezBaslikTr;
+                        tezBaslikTr = mBasvuru.TezBaslikTr;
+                        tezBaslikEn = mBasvuru.TezBaslikEn;
                     }
 
-                    cellTezBaslikTr.Text = tezBasligi;
-                    cellTezBaslikEn.Text = tezBasligiCeviri;
+                    cellTezBaslikTr.Text = tezBaslikTr;
+                    cellTezBaslikEn.Text = tezBaslikEn;
                     cellImzaOgrenciTarih.Text = srTalebi.OgrenciOnayTarihi.ToFormatDateAndTime();
                     cellImzaDanismanTarih.Text = srTalebi.DanismanOnayTarihi.ToFormatDateAndTime();
                 }

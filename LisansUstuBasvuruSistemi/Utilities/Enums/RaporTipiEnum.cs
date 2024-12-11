@@ -33,6 +33,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const byte MezuniyetTezKontrolFormu = 22;
 
         public const byte MezuniyetTezTeslimFormu = 23;
+        public const byte MezuniyetEykSavunmaJurisiAtanmistirYazisi = 24;
+        public const byte MezuniyetDrSinavBilgilendirmeYazilari = 25;
+        public const byte MezuniyetIkinciTezTeslimTaahhutOnayYazilari = 26;
 
 
 
@@ -48,9 +51,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 
         public const byte TezIzlemeJuriOneriFormu = 60;
         public const byte TezIzlemeJuriDegisiklikFormu = 61;
+        public const byte TezIzlemeKomiteAtamaBilgilendirmeYazilari = 62;
+        public const byte TezIzlemeKomiteAtamaToIkinciSavunmaBilgilendirmeYazilari = 63;
 
 
-        public const byte TezOneriSavunmaFormu = 70;
+        public const byte TezOneriSavunmaFormu = 70; 
+        public const byte TezOneriSavunmaAraRaporIstemiFormu = 71;
 
         public const byte DonemProjesiSinaviDegerlendirmeFormu = 80;
 

@@ -1198,15 +1198,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 var toBasvuru = _entities.ToBasvurus.First(f => f.UniqueID == toUniqueId);
-                if (!ilkOneriBitisTarihi.HasValue || !ikinciOneriBitisTarihi.HasValue)
-                {
-                    mMessage.Messages.Add("<span style='color:maroon;'>1. savunma bitiş ve 2. savunma bitiş tarihleri boş bırakılamaz.</span>");
-                }
-                else if (ilkOneriBitisTarihi.Value <= toBasvuru.YeterlikSozluSinavTarihi)
+                //if (!ilkOneriBitisTarihi.HasValue || !ikinciOneriBitisTarihi.HasValue)
+                //{
+                //    mMessage.Messages.Add("<span style='color:maroon;'>1. savunma bitiş ve 2. savunma bitiş tarihleri boş bırakılamaz.</span>");
+                //}
+                //else 
+                if (ilkOneriBitisTarihi.HasValue && ilkOneriBitisTarihi.Value <= toBasvuru.YeterlikSozluSinavTarihi)
                 {
                     mMessage.Messages.Add("<span style='color:maroon;'>1. savunma bitiş tarihi Yeterlik başarı tarihinden büyük olmalı.</span>");
                 }
-                else if (ilkOneriBitisTarihi.Value >= ikinciOneriBitisTarihi)
+                else if (ilkOneriBitisTarihi.HasValue && ilkOneriBitisTarihi.Value >= ikinciOneriBitisTarihi)
                 {
                     mMessage.Messages.Add("<span style='color:maroon;'>1. savunma bitiş tarihi 2. savunma bitiş tarihinden büyük olmalı.</span>");
                 }

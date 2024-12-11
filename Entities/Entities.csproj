@@ -523,6 +523,9 @@
     <Compile Include="Entities\SRTalepTipleri.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\sysdiagram.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TalepArGorStatuleri.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>

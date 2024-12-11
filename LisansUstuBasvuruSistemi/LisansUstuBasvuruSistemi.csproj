@@ -474,6 +474,7 @@
     <Compile Include="Utilities\Enums\MezuniyetEnums.cs" />
     <Compile Include="Utilities\Helpers\FileHelper.cs" />
     <Compile Include="Utilities\Helpers\HarfNotuHelper.cs" />
+    <Compile Include="Utilities\Helpers\HtmlManipulator.cs" />
     <Compile Include="Utilities\MailManager\MailSenderDp.cs" />
     <Compile Include="Utilities\MenuAndRoles\MenuGenerator.cs" />
     <Compile Include="Utilities\SystemSetting\GlobalSistemSetting.cs" />
@@ -4495,6 +4496,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\printThis.js" />
+    <Content Include="Scripts\specialCharacterBlocker.js" />
     <Content Include="Service References\LdapService\LisansUstuBasvuruSistemi.LdapService.LoginResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
 using Entities.Entities;
+using Newtonsoft.Json;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
@@ -99,9 +100,32 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
 
         public int? IlkSavunmaHakkiAyKriter { get; set; }
-        public int? IkinciSavunmaHakkiAyKriter { get; set; } 
+        public int? IkinciSavunmaHakkiAyKriter { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
         public List<ToBasvuruSavunmaDto> ToBasvuruSavunmaList { get; set; }
+
+        public int? TezBaslikMaxLength { get; set; }
+        public string TezBaslikIllegalCharacter { get; set; }
+
+        public string GenerateSpecialCharacterBlockerScript()
+        {
+            var tezBaslikIllegalCharacter =
+                string.IsNullOrEmpty(TezBaslikIllegalCharacter) ? "" : TezBaslikIllegalCharacter;
+            var encodedTChrctr =
+                JsonConvert.SerializeObject(tezBaslikIllegalCharacter); // illegal karakterleri JSON formatına çevir
+            var maxLength = TezBaslikMaxLength.HasValue ? TezBaslikMaxLength.ToString() : "null";
+            return $@"
+                        <script> 
+                                var tChrctr = {encodedTChrctr};  // C# tarafında oluşturulan JSON verisi
+                                var mTLength = {maxLength};  // TezBaşlıkMaxLength değeri
+
+                                var invalidTChars = tChrctr ? tChrctr.split(',') : [];
+
+                                new SpecialCharacterBlocker('tCharacterBlock', invalidTChars, mTLength);
+                             
+                        </script>
+                        ";
+        }
     }
     public class ToBasvuruSavunmaDto : ToBasvuruSavunma
     {

@@ -29,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? OgrenimTipKod { get; set; }
         public bool? IsTezDiliTr { get; set; }
         public string ProgramKod { get; set; }
+        public int? AnabilimDaliID { get; set; }
         public string AnabilimDaliKod { get; set; }
         public int? SRDurumID { get; set; }
         public int? MezuniyetSinavDurumID { get; set; }
@@ -47,6 +48,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EnstituAdi { get; set; }
         public string MezuniyetSurecAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
+        public int AnabilimDaliId { get; set; }
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; } 
         public int SurecBaslangicYil { get; set; }

@@ -13,8 +13,6 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 using System.IO;
 using LisansUstuBasvuruSistemi.Raporlar.Genel;
-using LisansUstuBasvuruSistemi.Utilities.MailManager;
-using static DevExpress.XtraPrinting.Native.ExportOptionsPropertiesNames;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -61,14 +59,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi
             {
-                Toplam = model.RowCount
+                Toplam = model.RowCount,
+                Aktif = q.Count(c => c.IsAktif),
+                Pasif = q.Count(c => !c.IsAktif),
             };
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort)
                 : q.OrderBy(o => o.EnstituAdi).ThenBy(t => t.SablonTipAdi);
             model.YaziSablonlariDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.IndexModel = indexModel;
+
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.YaziSablonTipID = new SelectList(YaziSablonTipleriBus.GetCmbYaziSablonTipleri(true, true), "Value", "Caption", model.YaziSablonTipID);
+            ViewBag.YaziSablonTipID = new SelectList(YaziSablonTipleriBus.GetCmbYaziSablonTipleri("", true, null), "Value", "Caption", model.YaziSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -91,7 +92,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var sEnstituKod = enstKods.Count == 1 ? enstKods.First() : EnstituBus.GetSelectedEnstitu(ekd);
             ViewBag.SablonTipi = _entities.YaziSablonTipleris.FirstOrDefault(p => p.YaziSablonTipID == model.YaziSablonTipID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
-            ViewBag.YaziSablonTipID = new SelectList(YaziSablonTipleriBus.GetCmbYaziSablonTipleri(true, true, model.YaziSablonlariID <= 0), "Value", "Caption", model.YaziSablonTipID);
+            ViewBag.YaziSablonTipID = new SelectList(YaziSablonTipleriBus.GetCmbYaziSablonTipleri(sEnstituKod, true, model.YaziSablonlariID <= 0), "Value", "Caption", model.YaziSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -144,7 +145,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
                 kModel.Sablon = kModel.Sablon ?? "";
-
+                kModel.SablonFooter = HtmlManipulator.ConvertHtmlToPlainText(kModel.SablonFooter).Trim();
+                kModel.SablonFooterHtml = HtmlManipulator.ConvertHtmlToPlainText(kModel.SablonFooterHtml).Trim() == "" ? "" : kModel.SablonFooterHtml;
                 if (kModel.YaziSablonlariID <= 0)
                 {
                     kModel.IsAktif = true;
@@ -159,6 +161,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     yaziSablonu.Konu = kModel.Konu;
                     yaziSablonu.Sablon = kModel.Sablon;
                     yaziSablonu.SablonHtml = kModel.SablonHtml;
+                    yaziSablonu.SablonFooter = kModel.SablonFooter;
+                    yaziSablonu.SablonFooterHtml = kModel.SablonFooterHtml;
                     yaziSablonu.YaziSablonTipID = kModel.YaziSablonTipID;
                     yaziSablonu.IsAktif = kModel.IsAktif;
                     yaziSablonu.IslemTarihi = DateTime.Now;
@@ -176,7 +180,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = mmMessage;
             ViewBag.SablonTipi = _entities.YaziSablonTipleris.FirstOrDefault(p => p.YaziSablonTipID == kModel.YaziSablonTipID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.YaziSablonTipID = new SelectList(YaziSablonTipleriBus.GetCmbYaziSablonTipleri(true, true, kModel.YaziSablonlariID <= 0), "Value", "Caption", kModel.YaziSablonTipID);
+            ViewBag.YaziSablonTipID = new SelectList(YaziSablonTipleriBus.GetCmbYaziSablonTipleri(kModel.EnstituKod, true, kModel.YaziSablonlariID <= 0), "Value", "Caption", kModel.YaziSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }
@@ -215,12 +219,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [ValidateInput(false)] // HTML içeriğini doğrulama hatalarını önlemek için kullanılır.
-        public ActionResult SaveHtml(string key, string html)
+        public ActionResult SaveHtml(string key, string html, string footerHtml)
         {
             if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(html))
             {
                 // HTML verisini Session'a kaydet
                 Session[key] = html;
+                Session[key + "footer"] = footerHtml;
                 return Json(new { success = true, message = "HTML başarıyla kaydedildi." });
             }
 
@@ -232,8 +237,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var enstitu = _entities.Enstitulers.First(f => f.EnstituKod == enstituKod);
 
             // Key ile saklanan HTML'yi session'dan çekiyoruz
-            var html = HttpContext.Session[key]?.ToString(); 
-            var rprX = new RprYaziSablonOlusturucu(enstitu, html, konu);
+            var html = HttpContext.Session[key]?.ToString();
+            var footerHtml = HttpContext.Session[key + "footer"]?.ToString();
+            var rprX = new RprYaziSablonOlusturucu(enstitu, html, footerHtml, konu);
 
 
             var memoryStream = new MemoryStream();
@@ -248,8 +254,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var sablon = _entities.YaziSablonlaris.First(f => f.YaziSablonlariID == id);
             var enstitu = sablon.Enstituler;
-          
-            var rprX = new RprYaziSablonOlusturucu(enstitu, sablon.SablonHtml, sablon.Konu);
+
+            var rprX = new RprYaziSablonOlusturucu(enstitu, sablon.SablonHtml, sablon.SablonFooterHtml, sablon.Konu);
 
 
 

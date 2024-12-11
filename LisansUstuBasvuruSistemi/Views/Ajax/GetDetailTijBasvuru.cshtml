@@ -16,7 +16,7 @@
     var tiJuriOnerileriEykYaHazirlandi = RoleNames.TiJuriOnerileriEykyaHazirlandiYetkisi.InRoleCurrent();
     var tiJuriOnerileriEykDaOnay = RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent();
     var formOlusturmaYetki = RoleNames.TiJuriOnerileriOgrenciAdina.InRole() || isOgrenci;
-
+    var yaziGormeYetki = tiJuriOnerileriEykYaGonre || tiJuriOnerileriEykYaHazirlandi || tiJuriOnerileriEykDaOnay;
 }
 <style>
 
@@ -556,6 +556,12 @@
                                                                                     <option value="false" @(item.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(item.EYKYaGonderildi == false && item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                                 </select>
                                                                             </td>
+                                                                            @if (!item.EYKYaHazirlandi.HasValue)
+                                                                            {
+                                                                                <td class="form-group @(item.EYKYaGonderildi==true?"":"hide")" id="EYKYaGonderildiSayi_@item.UniqueID">
+                                                                                    <input type="text" class="form-control" style="width: 60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="EYKSayisiG_@item.UniqueID" value="@item.EYKSayisi" />
+                                                                                </td>
+                                                                            }
                                                                             <td>
                                                                                 <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID ','@item.UniqueID', @EykTipEnum.EykYaGonderildi)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                             </td>
@@ -624,17 +630,24 @@
                                                                         <table>
                                                                             <tr>
                                                                                 <td>
-                                                                                    <select class="form-control" id="EykYaHazirlandi_@item.UniqueID">
+                                                                                    <select class="form-control" id="EykYaHazirlandi_@item.UniqueID" onchange="EykHazirChange('@item.UniqueID')">
                                                                                         <option @(!item.EYKYaHazirlandi.HasValue ? "selected" : "")></option>
                                                                                         <option value="true" @(item.EYKYaHazirlandi == true ? "selected" : "")>EYK'ya Hazırlandı @(item.EYKYaHazirlandi==true && item.EYKYaHazirlandiIslemTarihi.HasValue ? "(" + item.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
                                                                                     </select>
                                                                                 </td>
+                                                                                @if (!item.EYKDaOnaylandi.HasValue)
+                                                                                {
+                                                                                    <td class="form-group @(item.EYKYaHazirlandi==true?"":"hide")" id="EYKYaHazirlandiSayi_@item.UniqueID">
+                                                                                        <input type="text" class="form-control" style="width:60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="EYKSayisiH_@item.UniqueID" value="@item.EYKSayisi" />
+                                                                                    </td>
+                                                                                }
                                                                                 <td>
                                                                                     <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID', '@item.UniqueID',@EykTipEnum.EykYaHazirlandi);"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                 </td>
                                                                             </tr>
                                                                         </table>
                                                                     </td>
+
                                                                 </tr>
 
                                                             }
@@ -686,8 +699,11 @@
                                                                                         <option value="false" @(item.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(item.EYKDaOnaylandi == false && item.EYKDaOnaylandiIslemTarihi.HasValue ? "(" + item.EYKDaOnaylandiIslemTarihi.ToFormatDate() + ")" : "")</option>
                                                                                     </select>
                                                                                 </td>
-                                                                                <td class="form-group">
-                                                                                    <input type="text" class="form-control tarihB @(item.EYKDaOnaylandi.HasValue?"":"hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKTarihi_@item.UniqueID" value="@item.EYKTarihi.ToFormatDateInput()" />
+                                                                                <td class="form-group  @(item.EYKDaOnaylandi.HasValue?"":"hide")" id="EYKTarihiTd_@item.UniqueID">
+                                                                                    <input type="text" class="form-control tarihB" style="width:100px;" placeholder="EYK Tarihi" id="EYKTarihi_@item.UniqueID" value="@item.EYKTarihi.ToFormatDateInput()" />
+                                                                                </td>
+                                                                                <td class="form-group  @(item.EYKDaOnaylandi==true?"":"hide")" id="EYKSayisiOnayTd_@item.UniqueID">
+                                                                                    <input type="text" class="form-control" style="width: 60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="EYKSayisiO_@item.UniqueID" value="@item.EYKSayisi" />
                                                                                 </td>
                                                                                 <td>
                                                                                     <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID', '@item.UniqueID',@EykTipEnum.EykDaOnaylandi);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</label>
@@ -747,6 +763,36 @@
                                                                 }
 
                                                             }
+                                                        }
+                                                        @if (item.TijFormTipID == TijFormTipiEnum.YeniForm && item.EYKDaOnaylandi == true && yaziGormeYetki)
+                                                        {
+                                                            <tr>
+                                                                <td class="CaptionTd">Bilgi Yazıları</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">
+                                                                    @if (item.EYKSayisi.IsNullOrWhiteSpace())
+                                                                    {
+                                                                        <span> <i class="fa fa-warning fa-lg"></i> Tez İzleme Komite Atama Bilgilendirme yazılarının oluşturulabilmesi için EYK Sayısı girilmelidir.</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (Model.TosAktifSavunmaNo.HasValue && Model.TosAktifSavunmaNo != 1)
+                                                                        {
+                                                                            <a href="javascript:void(0);" onclick="YeniDialogBB('Tez İzleme Komite Atama Tez Öneri 2.Savunma Bilgilendirme Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezIzlemeKomiteAtamaToIkinciSavunmaBilgilendirmeYazilari&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                <i class="fa fa-file-pdf-o fa-lg"></i> Tez İzleme Komite Atama Tez Öneri 2.Savunma Bilgilendirme Yazılarını İndir
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="javascript:void(0);" onclick="YeniDialogBB('Tez İzleme Komite Atama Bilgilendirme Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezIzlemeKomiteAtamaBilgilendirmeYazilari&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                <i class="fa fa-file-pdf-o fa-lg"></i> Tez İzleme Komite Atama Bilgilendirme Yazılarını İndir
+                                                                            </a>
+                                                                        }
+
+                                                                    }
+
+                                                                </td>
+                                                            </tr>
                                                         }
                                                     </table>
                                                 </div>
@@ -820,109 +866,140 @@
                 }
             });
         }
-        function EykOnayChange(sndr, tijBasvuruOneriUniqueId) {
+    function EykOnayChange(sndr, tijBasvuruOneriUniqueId) { 
         var val = $(sndr).val().toLowerCase();
-            if (val == 'false') {
-                $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).removeClass("hide");
-            }
-            else {
-                $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).addClass("hide");
-            }
-            if (val == '') {
-
-                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).addClass("hide");
-
-            }
-            else {
-                var eykTarih = $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val();
-                if (eykTarih == "") {
-                    var today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, day = today.getDate();
-                    if (month < 10) month = "0" + month;
-                    if (day < 10) day = "0" + day;
-                    var formattedDate = year + "-" + month + "-" + day;
-                    $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val(formattedDate);
-                }
-                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).removeClass("hide");
-            }
+        debugger
+        if (val == 'false') {
+            $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).removeClass("hide");
+            $('#EYKSayisiOnayTd_' + tijBasvuruOneriUniqueId).addClass("hide");
         }
-        function EykYaOnayChange(id) {
-            var val = $('#EykYaGonderildi_' + id).val().toLowerCase();
-            if (val == 'false') {
-                $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
-            }
-            else {
-                $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
-            }
+        else {
+            $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).addClass("hide");
+            $('#EYKSayisiOnayTd_' + tijBasvuruOneriUniqueId).removeClass("hide");
         }
-        function JoFormDurumKayit(basvuruUniqueId, tijBasvuruOneriUniqueId, onayTipId) {
-            var _panel = $('#bsvrDet_' + basvuruUniqueId);
-            PanelRefresh(_panel, false);
-            var sndrId = "";
-            var eykDaOnaylanmadiDurumAciklamasi = "";
-            var eykDaOnaylandiOnayTarihi = "";
-            if (onayTipId == @EykTipEnum.EykDaOnaylandi) {
-                sndrId = '#EykDaOnaylandi_' + tijBasvuruOneriUniqueId;
-                if ($(sndrId).val().toLowerCase() == 'false') eykDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
-                eykDaOnaylandiOnayTarihi = $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val();
-            }
-            else if (onayTipId == @EykTipEnum.EykYaHazirlandi) sndrId = '#EykYaHazirlandi_' + tijBasvuruOneriUniqueId;
-            else if (onayTipId == @EykTipEnum.EykYaGonderildi) {
-                sndrId = '#EykYaGonderildi_' + tijBasvuruOneriUniqueId;
-                if ($(sndrId).val().toLowerCase() == 'false') eykDaOnaylanmadiDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
-            }
-            var onaylandi = $(sndrId).val().toLowerCase();
-            $.ajax({
-                url: '@Url.Action("JuriOneriFormuOnayDurumKayit", "TiJuriOnerileriGb")',
-                data: {
-                    tijBasvuruOneriUniqueId,
-                    onayTipId,
-                    'Onaylandi': onaylandi,
-                    'Aciklama': eykDaOnaylanmadiDurumAciklamasi,
-                    'OnayTarihi': eykDaOnaylandiOnayTarihi
-                },
-                success: function (result) {
-                    PanelRefresh(_panel, true);
-                    if (result.IsSuccess) {
-                        toastr["success"](result.mmMessage.Messages[0], result.mmMessage.Title);
-                        GetDetail(basvuruUniqueId);
+        if (val == '') {
+            $('#EYKTarihi_' + tijBasvuruOneriUniqueId).addClass("hide");
+            $('#EYKSayisiOnayTd_' + tijBasvuruOneriUniqueId).addClass("hide");
 
-                    }
-                    else ShowMmMessage(result.Messages, 'Tamam');
-
-                },
-                error: function (err) {
-                    PanelRefresh(_panel, true);
-                    alert(err.responseText);
-
-                }
-            });
         }
-        function SetAsilOrYedek(sndr, tijBasvuruUniqueId, tijBasvuruOneriJuriId) {
-            var _panel = $('#bsvrDet_' + tijBasvuruUniqueId);
-            PanelRefresh(_panel, false);
-            var $sndr = $(sndr);
-            var SenderVal = $sndr.val().toLowerCase();
-            $.ajax({
-                url: '@Url.Action("JuriAsilYedekDurumKayit", "TiJuriOnerileriGb")',
-                data: {
-                    'tijBasvuruOneriJuriId': tijBasvuruOneriJuriId,
-                    'IsAsil': SenderVal,
-                },
-                success: function (result) {
-                    PanelRefresh(_panel, true);
-                    if (!result.IsSuccess) {
-                        GetDetail(tijBasvuruUniqueId);
-                        ShowMmMessage(result.Messages, 'Tamam');
-                    }
+        else {
+            var eykTarih = $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val();
+            if (eykTarih == "") {
+                var today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, day = today.getDate();
+                if (month < 10) month = "0" + month;
+                if (day < 10) day = "0" + day;
+                var formattedDate = year + "-" + month + "-" + day;
+                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val(formattedDate);
+            }
+            $('#EYKTarihiTd_' + tijBasvuruOneriUniqueId).removeClass("hide");
+        }
+    }
 
-                },
-                error: function (err) {
-                    PanelRefresh(_panel, true);
-                    alert(err.responseText);
+    function EykYaOnayChange(id) {
+        var val = $('#EykYaGonderildi_' + id).val().toLowerCase();
+        if (val == 'false') {
+            $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
+        }
+        else {
+            $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
+        }
+        if (val == 'true') {
+            $('#EYKYaGonderildiSayi_' + id).removeClass('hide');
+        }
+        else {
+            $('#EYKYaGonderildiSayi_' + id).addClass('hide');
+        }
+    }
+
+    function EykHazirChange(id) { 
+        var val = $('#EykYaHazirlandi_' + id).val().toLowerCase();
+        if (val == 'true') { 
+            $('#EYKYaHazirlandiSayi_' + id).removeClass('hide');
+        }
+        else {
+            $('#EYKYaHazirlandiSayi_' + id).addClass('hide');
+        }
+    }
+    function JoFormDurumKayit(basvuruUniqueId, tijBasvuruOneriUniqueId, onayTipId) {
+        var _panel = $('#bsvrDet_' + basvuruUniqueId);
+        PanelRefresh(_panel, false);
+        var sndrId = "";
+        var eykDaOnaylanmadiDurumAciklamasi = "";
+        var eykDaOnaylandiOnayTarihi = "";
+        var eykDaOnaylandiOnaySayisi = "";
+        var onaySayisiInp = 'EYKSayisi';
+        if (onayTipId == @EykTipEnum.EykDaOnaylandi) {
+            onaySayisiInp += "O";
+            sndrId = '#EykDaOnaylandi_' + tijBasvuruOneriUniqueId;
+            if ($(sndrId).val().toLowerCase() == 'false') eykDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
+            eykDaOnaylandiOnayTarihi = $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val();
+        }
+        else if (onayTipId == @EykTipEnum.EykYaHazirlandi) {
+            sndrId = '#EykYaHazirlandi_' + tijBasvuruOneriUniqueId;
+            onaySayisiInp += "H";
+        }
+        else if (onayTipId == @EykTipEnum.EykYaGonderildi) {
+            sndrId = '#EykYaGonderildi_' + tijBasvuruOneriUniqueId;
+            if ($(sndrId).val().toLowerCase() == 'false') eykDaOnaylanmadiDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
+            onaySayisiInp += "G";
+        }
+        var onaylandi = $(sndrId).val().toLowerCase();
+        if (onaylandi) {
+            eykDaOnaylandiOnaySayisi = $('#' + onaySayisiInp + '_' + tijBasvuruOneriUniqueId).val();
+        }
+        $.ajax({
+            url: '@Url.Action("JuriOneriFormuOnayDurumKayit", "TiJuriOnerileriGb")',
+            data: {
+                tijBasvuruOneriUniqueId,
+                onayTipId,
+                'Onaylandi': onaylandi,
+                'Aciklama': eykDaOnaylanmadiDurumAciklamasi,
+                'OnayTarihi': eykDaOnaylandiOnayTarihi,
+                'OnaySayisi': eykDaOnaylandiOnaySayisi
+            },
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                if (result.IsSuccess) {
+                    toastr["success"](result.mmMessage.Messages[0], result.mmMessage.Title);
+                    GetDetail(basvuruUniqueId);
 
                 }
-            });
-        }
+                else ShowMmMessage(result.Messages, 'Tamam');
+
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+
+            }
+        });
+    }
+    function SetAsilOrYedek(sndr, tijBasvuruUniqueId, tijBasvuruOneriJuriId) {
+        var _panel = $('#bsvrDet_' + tijBasvuruUniqueId);
+        PanelRefresh(_panel, false);
+        var $sndr = $(sndr);
+        var SenderVal = $sndr.val().toLowerCase();
+        $.ajax({
+            url: '@Url.Action("JuriAsilYedekDurumKayit", "TiJuriOnerileriGb")',
+            data: {
+                'tijBasvuruOneriJuriId': tijBasvuruOneriJuriId,
+                'IsAsil': SenderVal,
+            },
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                if (!result.IsSuccess) {
+                    GetDetail(tijBasvuruUniqueId);
+                    ShowMmMessage(result.Messages, 'Tamam');
+                }
+
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+
+            }
+        });
+    }
 </script>
 <script>
     $(function () {

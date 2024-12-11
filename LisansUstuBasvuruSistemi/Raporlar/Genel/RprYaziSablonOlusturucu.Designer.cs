@@ -59,9 +59,12 @@
             this.xrTableCell13 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell14 = new DevExpress.XtraReports.UI.XRTableCell();
             this.cellEposta = new DevExpress.XtraReports.UI.XRTableCell();
+            this.ReportFooter = new DevExpress.XtraReports.UI.ReportFooterBand();
+            this.richFooterHtml = new DevExpress.XtraReports.UI.XRRichText();
             ((System.ComponentModel.ISupportInitialize)(this.richContent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.richFooterHtml)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -425,12 +428,35 @@
             this.cellEposta.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.cellEposta.Weight = 3.1846153470552885D;
             // 
+            // ReportFooter
+            // 
+            this.ReportFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.richFooterHtml});
+            this.ReportFooter.HeightF = 21.06571F;
+            this.ReportFooter.Name = "ReportFooter";
+            this.ReportFooter.PrintAtBottom = true;
+            // 
+            // richFooterHtml
+            // 
+            this.richFooterHtml.Borders = DevExpress.XtraPrinting.BorderSide.None;
+            this.richFooterHtml.CanShrink = true;
+            this.richFooterHtml.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Italic);
+            this.richFooterHtml.LocationFloat = new DevExpress.Utils.PointFloat(2.1945F, 0F);
+            this.richFooterHtml.Name = "richFooterHtml";
+            this.richFooterHtml.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
+            this.richFooterHtml.SerializableRtfString = resources.GetString("richFooterHtml.SerializableRtfString");
+            this.richFooterHtml.SizeF = new System.Drawing.SizeF(710.8055F, 21.06571F);
+            this.richFooterHtml.StylePriority.UseBorders = false;
+            this.richFooterHtml.StylePriority.UseFont = false;
+            this.richFooterHtml.StylePriority.UsePadding = false;
+            // 
             // RprYaziSablonOlusturucu
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,
             this.TopMargin,
-            this.BottomMargin});
+            this.BottomMargin,
+            this.ReportFooter});
             this.Margins = new DevExpress.Drawing.DXMargins(57F, 57F, 128.625F, 82.39645F);
             this.PageHeight = 1169;
             this.PageWidth = 827;
@@ -439,6 +465,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.richContent)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.richFooterHtml)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -475,5 +502,7 @@
         private DevExpress.XtraReports.UI.XRTableCell cellEposta;
         private DevExpress.XtraReports.UI.XRLine xrLine2;
         private DevExpress.XtraReports.UI.XRRichText richContent;
+        private DevExpress.XtraReports.UI.ReportFooterBand ReportFooter;
+        private DevExpress.XtraReports.UI.XRRichText richFooterHtml;
     }
 }

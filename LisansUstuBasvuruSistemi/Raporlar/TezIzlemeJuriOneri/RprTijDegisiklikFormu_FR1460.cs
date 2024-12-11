@@ -70,7 +70,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 var oncekiTd = entities.Kullanicilars.First(f => f.KullaniciID == oncekibasvuru.TezDanismanID);
                 var varolanTikler = oncekiJuriler.Where(f => !f.IsTezDanismani).ToList();
 
-                cellMevcutUyeTdUnvanAdSoyad.Text = oncekiTd.Unvanlar.UnvanAdi + " " + oncekiTd.Ad + " " + oncekiTd.Soyad;
+                cellMevcutUyeTdUnvanAdSoyad.Text = data.Danisman.Unvanlar.UnvanAdi + " " + data.Danisman.Ad + " " + data.Danisman.Soyad;
                 cellVarolanTik1TrCapt.Text = varolanTikler[0].IsYtuIciJuri ? "YTÜ TİK Üyesi" : "YTU DIŞI TİK Üyesi ";
                 cellVarolanTik1EnCapt.Text = varolanTikler[0].IsYtuIciJuri ? "YTU TMC Member" : "Non-YTU TMC Member";
 

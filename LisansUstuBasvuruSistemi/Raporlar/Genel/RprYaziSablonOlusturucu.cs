@@ -2,6 +2,7 @@
 using System.Linq;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.Genel
@@ -9,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Genel
     public partial class RprYaziSablonOlusturucu : DevExpress.XtraReports.UI.XtraReport
     {
 
-        public RprYaziSablonOlusturucu(Enstituler enstitu, string html, string displayName)
+        public RprYaziSablonOlusturucu(Enstituler enstitu, string html,string footerHtml, string displayName)
         {
             InitializeComponent();
             this.DisplayName = displayName;
@@ -35,6 +36,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Genel
                 html = ValueReplaceExtension.ProcessHtmlContent(html, parameters);
             }
 
+            if (HtmlManipulator.ConvertHtmlToPlainText(footerHtml).Trim() != "")
+            {
+                richFooterHtml.Html = footerHtml;
+            }
+            else ReportFooter.Visible = false;
             lblEnstituBaslik.Text = enstitu.EnstituAd.ToUpper();
             richContent.Html = html;
             richContent.CanGrow = true;
@@ -48,6 +54,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Genel
             cellEposta.Text = enstitu.EPosta;
 
         }
+         
 
 
 

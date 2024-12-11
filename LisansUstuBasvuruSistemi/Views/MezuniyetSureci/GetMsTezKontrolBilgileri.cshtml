@@ -46,7 +46,7 @@
                         </tr>
 
                         int rowIndex = 0;
-                        foreach (var item in Model.AktifMezuniyetSureciTezKontrolBilgiDtos)
+                        foreach (var item in Model.AktifMezuniyetSureciTezKontrolBilgiDtos.OrderByDescending(o=>o.SurecToplamOnay).ThenByDescending(t=>t.GenelToplamOnay))
                         {
                             rowIndex++;
                             <tr>
@@ -90,7 +90,7 @@
                             <th class="warning" style="text-align:center;">Sorumlu Tüm Tez <br />Kontrolleri</th>
                         </tr>
                         var rowIndex = 0;
-                        foreach (var item in Model.PasifMezuniyetSureciTezKontrolBilgiDtos)
+                        foreach (var item in Model.PasifMezuniyetSureciTezKontrolBilgiDtos.OrderByDescending(o => o.SurecToplamOnay).ThenByDescending(t => t.GenelToplamOnay))
                         {
                             rowIndex++;
                             <tr>

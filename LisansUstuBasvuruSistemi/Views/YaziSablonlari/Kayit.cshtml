@@ -56,14 +56,23 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <b>ANA YAZI İÇERİĞİ</b>
                                 <div class="col-md-12 col-xs-12">
                                     <div>
-                                        <textarea id="AciklamaHtml" name="SablonHtml" class="form-control Ckeditor">@Model.SablonHtml</textarea>
-                                        <textarea style="display: none;" id="Aciklama" name="Sablon">@Model.Sablon</textarea>
+                                        <textarea id="SablonHtml" name="SablonHtml" class="form-control Ckeditor">@Model.SablonHtml</textarea>
+                                        <textarea style="display: none;" id="Sablon" name="Sablon">@Model.Sablon</textarea>
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <b>ALT YAZI VARSA BURAYA GİRİNİZ</b>
+                                <div class="col-md-12 col-xs-12">
+                                    <div>
+                                        <textarea id="SablonFooterHtml" name="SablonFooterHtml" class="form-control Ckeditor">@Model.SablonFooterHtml</textarea>
+                                        <textarea style="display: none;" id="SablonFooter" name="SablonFooter">@Model.SablonFooter</textarea>
+                                    </div>
+                                </div>
+                            </div>
                             @if (Model.YaziSablonlariID > 0)
                             {
                                 <div class="form-group">
@@ -90,10 +99,12 @@
         </div>
     </form>
 </div>
-<script src="~/Content/ckeditor/ckeditor.js"></script> 
+<script src="~/Content/ckeditor/ckeditor.js"></script>
 <script>
-    CKEDITOR.replace('AciklamaHtml', {
-        height: 300,
+   // CKEditor yapılandırması için ana fonksiyon
+    function configureCKEditor(elementId, height) {
+    CKEDITOR.replace(elementId, {
+        height: height,
         width: '100%',
         toolbarGroups: [
             { name: 'clipboard', groups: ['clipboard', 'undo'] },
@@ -110,7 +121,7 @@
             { name: 'styles' },
             { name: 'colors' }
         ],
-        removeButtons: 'Underline,Subscript,Superscript',
+        removeButtons: 'Subscript,Superscript',
         format_tags: 'p;h1;h2;h3;pre',
         removeDialogTabs: 'image:advanced;link:advanced',
         stylesSet: [
@@ -119,73 +130,123 @@
             { name: 'Başlık 2', element: 'h2', attributes: { 'class': 'heading-2' } },
             { name: 'Başlık 3', element: 'h3', attributes: { 'class': 'heading-3' } }
         ],
-        contentsCss: ['/path/to/your/custom-styles.css'],
         allowedContent: true,
         pasteFromWordRemoveFontStyles: false,
         pasteFromWordRemoveStyles: false,
-
-        // Genişletilmiş font boyutu ayarları
-        fontSize_sizes: '7/7pt;7.5/7.5pt;8/8pt;9/9pt;10/10pt;10.5/10.5pt;11/11pt;11.5/11.5pt;12/12pt;13/13pt;14/14pt;15/15pt;16/16pt;18/18pt;20/20pt;22/22pt;24/24pt;26/26pt;28/28pt;36/36pt;48/48pt;72/72pt;',
-        fontSize_defaultLabel: '11pt'
+        fontSize_sizes: '7pt;7.5pt;8pt;9pt;10pt;10.5pt;11pt;11.5pt;12pt;13pt;14pt;15pt;16pt;18pt;20pt;22pt;24pt;26pt;28pt;36pt;48pt;72pt',
+        fontSize_defaultLabel: '11pt',
+        on: {
+            instanceReady: function (evt) {
+                var editor = evt.editor;
+                editor.on('change', function () {
+                    var content = editor.getData();
+                    content = content.replace(/font-size:\s*(\d+(?:\.\d+)?)(?!pt)/g, function (match, size) {
+                        return 'font-size: ' + size + 'pt';
+                    });
+                    editor.setData(content, { internal: true });
+                });
+            }
+        }
     });
+}
 
-    // Word'den yapıştırma işlemi için özel işlev
-    CKEDITOR.on('instanceReady', function (event) {
-        event.editor.on('paste', function (evt) {
-            var data = evt.data.dataValue;
-            // Word'den gelen içeriği temizle ve standartlaştır
-            data = data.replace(/<span[^>]*>(.*?)<\/span>/gi, '$1');
-            // Font boyutlarını koruyarak diğer stilleri temizle
-            data = data.replace(/style="([^"]*)"/gi, function (match, styles) {
-                var fontSizeMatch = styles.match(/font-size:\s*(\d+\.?\d*)pt/i);
-                return fontSizeMatch ? 'style="font-size:' + fontSizeMatch[1] + 'pt"' : '';
-            });
-            data = data.replace(/<p[^>]*>/gi, '<p class="normal-text">');
-            evt.data.dataValue = data;
+// Ana içerik ve footer için CKEditor'ü yapılandır
+configureCKEditor('SablonHtml', 300);
+configureCKEditor('SablonFooterHtml', 100);
+
+// Word'den yapıştırma işlemi için özel işlev
+CKEDITOR.on('instanceReady', function (event) {
+    event.editor.on('paste', function (evt) {
+        var data = evt.data.dataValue;
+        data = data.replace(/<span[^>]*>(.*?)<\/span>/gi, '$1');
+        data = data.replace(/style="([^"]*)"/gi, function (match, styles) {
+            var fontSizeMatch = styles.match(/font-size:\s*(\d+\.?\d*)pt/i);
+            return fontSizeMatch ? 'style="font-size:' + fontSizeMatch[1] + 'pt"' : '';
         });
+        data = data.replace(/<p[^>]*>/gi, '<p class="normal-text">');
+        evt.data.dataValue = data;
     });
+});
 
-    // İçerik alınırken özel sınıfları koru
-    function getEditorContent() {
-        var html = CKEDITOR.instances.AciklamaHtml.getData();
-        return html;
+function onizle() {
+    var key = '@key';
+    var html = CKEDITOR.instances.SablonHtml.getData();
+    var footerHtml = CKEDITOR.instances.SablonFooterHtml.getData();
+    $.ajax({
+        type: 'POST',
+        url: '@Url.Action("SaveHtml")',
+        data: { key: key, html: html, footerHtml: footerHtml },
+        success: function (response) {
+            if (response.success) {
+                var konu = $('#Konu').val();
+                YeniDialogBB(konu, '@Url.Action("ShowYaziP", "YaziSablonlari")?key=' + key + '&Konu=' + encodeURIComponent(konu), 'auto', 'modal-dialog modal-lg');
+            } else {
+                console.log("Kaydetme hatası: " + response.message);
+            }
+        },
+        error: function (error) {
+            console.log("Bir hata oluştu.");
+        }
+    });
+}
+
+function sbmtDosyaKontrol() {
+    var saveOk = true;
+    if ($('#YaziSablonTipID').val() == "") {
+        saveOk = false;
+        $('#YaziSablonTipID').parents('div').first().pulsate({
+            color: "#fdbe41",
+            reach: 100,
+            repeat: 3,
+            speed: 400,
+            glow: true
+        });
     }
 
-    // custom-styles.css içeriği (güncellendi)
-    /*
-    .normal-text {
-        font-size: 11pt;
-        line-height: 1.5;
-        font-family: Arial, sans-serif;
+    if ($('#Konu').val() == "") {
+        saveOk = false;
+        $('#Konu').parents('div').first().pulsate({
+            color: "#fdbe41",
+            reach: 100,
+            repeat: 3,
+            speed: 400,
+            glow: true
+        });
     }
-    
-    .heading-1 {
-        font-size: 20pt;
-        font-weight: bold;
+
+    var sablonHtmlText = CKEDITOR.instances.SablonHtml.getData().trim();
+    if (sablonHtmlText == "") {
+        saveOk = false;
+        $('#SablonHtml').parents('div').first().pulsate({
+            color: "#fdbe41",
+            reach: 100,
+            repeat: 3,
+            speed: 400,
+            glow: true
+        });
     }
-    
-    .heading-2 {
-        font-size: 16pt;
-        font-weight: bold;
-    }
-    
-    .heading-3 {
-        font-size: 14pt;
-        font-weight: bold;
-    }
-    */
+
+    if (saveOk) $('form').submit();
+    return saveOk;
+}
+
+// Diğer fonksiyonlar aynı kalabilir
+
 </script>
 <script>
     function onizle() {
         var key = '@key'
-        var html = CKEDITOR.instances.AciklamaHtml.document.$.body.innerHTML;
+        var html = CKEDITOR.instances.SablonHtml.document.$.body.innerHTML;
+        var footerHtml = CKEDITOR.instances.SablonFooterHtml.document.$.body.innerHTML;
         $.ajax({
             type: 'POST',
             url: '@Url.Action("SaveHtml")',
-            data: { key: key, html: html },
+            data: { key: key, html, footerHtml },
             success: function (response) {
                 if (response.success) {
                     var konu = $('#Konu').val();
+                    if (!konu) konu = "";
+                    konu+="Önizleme";
                     YeniDialogBB(konu, '@Url.Action("ShowYaziP", "YaziSablonlari")?key=' + key + '&Konu=' + encodeURIComponent(konu), 'auto', 'modal-dialog modal-lg');
 
                 } else {
@@ -203,8 +264,10 @@
     });
 
     $("form").submit(function (event) {
-        var txt = CKEDITOR.instances.AciklamaHtml.document.getBody().getText();
-        $('#Aciklama').val(txt);
+        var sablonText = CKEDITOR.instances.SablonHtml.document.getBody().getText();
+        $('#Sablon').val(sablonText);
+        var sablonFooterText = CKEDITOR.instances.SablonFooterHtml.document.getBody().getText();
+        $('#SablonFooter').val(sablonFooterText);
     });
 
     function sbmtDosyaKontrol() {
@@ -231,10 +294,10 @@
                 glow: true
             });
         }
-        var txt = CKEDITOR.instances.AciklamaHtml.document.getBody().getText().trim();
+        var txt = CKEDITOR.instances.SablonHtml.document.getBody().getText().trim();
         if (txt == "") {
             saveOk = false;
-            $('#AciklamaHtml').parents('div').first().pulsate({
+            $('#SablonHtml').parents('div').first().pulsate({
                 color: "#fdbe41",
                 reach: 100,
                 repeat: 3,

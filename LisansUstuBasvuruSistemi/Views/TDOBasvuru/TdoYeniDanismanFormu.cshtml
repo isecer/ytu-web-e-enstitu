@@ -29,14 +29,14 @@
                     <td class="CaptionTd">Tez Başlığı Türkçe</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="@Model.TezBaslikKarakterMaxUzunluk" value="@Model.TezBaslikTr" class="form-control UpperTextTr" style="color:black;" />
+                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="@Model.TezBaslikMaxLength" value="@Model.TezBaslikTr" class="form-control UpperTextTr tCharacterBlock" style="color:black;" />
                     </td>
                 </tr>
                 <tr>
                     <td class="CaptionTd">Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="@Model.TezBaslikKarakterMaxUzunluk" value="@Model.TezBaslikEn" class="form-control UpperTextEn" style="color:black;" />
+                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="@Model.TezBaslikMaxLength" value="@Model.TezBaslikEn" class="form-control UpperTextEn tCharacterBlock" style="color:black;" />
                     </td>
                 </tr>
                 <tr class="dilRow">
@@ -111,26 +111,28 @@
                     <td class="ValueTd form-group">
                         @Html.DropDownList("TDProgramKod", Model.SListTdProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
                     </td>
-                </tr> 
+                </tr>
         </table>
     </div>
 
 }
 <script src="~/Scripts/inputTextChangeUpperCase.js"></script>
+@Html.Raw(Model.GenerateSpecialCharacterBlockerScript())
 <script>
+
     TezDiliKontrol();
     function TezDiliKontrol()
     {
         var showDilRow = $('#IsTezDiliTr').val() == "false";
         if (showDilRow) {
-            $('.dilRow').removeClass('hide'); 
+            $('.dilRow').removeClass('hide');
         }
         else
         {
             $('.dilRow').addClass('hide');
         }
     }
-    function SinavTipKontrol(sndr,inp,cls) { 
+    function SinavTipKontrol(sndr,inp,cls) {
         var _panel = $('#bbTdoForm');
         PanelRefresh(_panel, false);
         var sndrVal = $(sndr).val();

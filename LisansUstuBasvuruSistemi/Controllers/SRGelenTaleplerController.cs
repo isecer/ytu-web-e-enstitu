@@ -129,7 +129,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.IndexModel = indexModel;
             ViewBag.SRTalepTipID = new SelectList(SrTalepleriBus.GetCmbSrTalepTipleri(true), "Value", "Caption", model.SRTalepTipID);
             ViewBag.SRSalonID = new SelectList(SrTalepleriBus.GetCmbSalonlar(enstituKod, true), "Value", "Caption", model.SRSalonID);
-            ViewBag.SRDurumID = new SelectList(SrTalepleriBus.GetCmbSrDurumListe(true), "Value", "Caption", model.SRDurumID); 
+            ViewBag.SRDurumID = new SelectList(SrTalepleriBus.GetCmbSrDurumListe(true), "Value", "Caption", model.SRDurumID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             return View(model);
         }
@@ -165,6 +165,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                          OgrenciNo = k.OgrenciNo,
                          TalepYapan = k.Ad + " " + k.Soyad,
                          ResimAdi = k.ResimAdi,
+                         OgrenimTipKod = defOtl != null ? defOtl.OgrenimTipKod : (int?)null,
                          OgrenimTipAdi = defOtl != null ? defOtl.OgrenimTipAdi : "",
                          KullaniciTipAdi = kt.KullaniciTipAdi,
                          SRSalonID = s.SRSalonID,
@@ -188,6 +189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                          IslemTarihi = s.IslemTarihi,
                          IslemYapanID = s.IslemYapanID,
                          IslemYapanIP = s.IslemYapanIP,
+                         SRTalepTipleri = s.SRTalepTipleri,
                          JuriBilgi = s.SRTaleplerJuris.ToList()
                      }).First();
             var srTalepBasvuranInfoDto = new SrTalepBasvuranInfoDto();

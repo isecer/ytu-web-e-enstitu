@@ -19,6 +19,15 @@
         public const int MezEykTarihiGirildiJuriAsilDoktora = 54;
         public const int MezEykTarihiGirildiDanismanYl = 56;
         public const int MezEykTarihiGirildiJuriAsilYl = 57;
+        public const int MezJuriOneriFormuEykDaRetEdildiOgrenciYl = 500;
+        public const int MezJuriOneriFormuEykDaRetEdildiOgrenciDr = 501;
+        public const int MezJuriOneriFormuEykYaGonderimRetEdildiOgrenciYl = 502;
+        public const int MezJuriOneriFormuEykYaGonderimRetEdildiOgrenciDr = 503;
+        public const int MezJuriOneriFormuEykDaRetEdildiDanismanYl = 504;
+        public const int MezJuriOneriFormuEykDaRetEdildiDanismanDr = 505;
+        public const int MezJuriOneriFormuEykYaGonderimRetEdildiDanismanYl = 506;
+        public const int MezJuriOneriFormuEykYaGonderimRetEdildiDanismanDr = 504;
+
         public const int MezSinavYerBilgisiGonderimJuriDoktora = 58;
         public const int MezSinavYerBilgisiGonderimJuriYl = 59;
         public const int MezSinavYerBilgisiOnaylanmadi = 67;
@@ -76,6 +85,7 @@
         public const int TdoDanismanOnerisiEykDaOnaylandiOgrenci = 125;
         public const int TdoDanismanOnerisiEykDaOnaylandiDanisman = 126;
         public const int TdoDanismanOnerisiEykDaReddedildiOgrenciDanisman = 127;
+        public const int TdoDanismanOnerisiEykYaGonderimiReddedildiOgrenciDanisman = 526;
 
         public const int TdoTezBasligiDegisikligiDanisman = 200;
         public const int TdoTezBasligiDegisikligiOgrenci = 201;
@@ -87,6 +97,8 @@
         public const int TdoTezBasligiDegisikligiEykDaOnaylandiOgrenci = 207;
         public const int TdoTezBasligiDegisikligiEykDaRetEdildiDanisman = 208;
         public const int TdoTezBasligiDegisikligiEykDaRetEdildiOgrenci = 209;
+        public const int TdoTezBasligiDegisikligiEykYaGonderimiRetEdildiDanisman = 520;
+        public const int TdoTezBasligiDegisikligiEykYaGonderimiRetEdildiOgrenci = 521;
 
         public const int TdoTezDanismanDegisikligiVarolanDanisman = 210;
         public const int TdoTezDanismanDegisikligiYeniDanisman = 211;
@@ -99,6 +111,8 @@
         public const int TdoTezDanismanDegisikligiEykDaOnaylandiOgrenci = 218;
         public const int TdoTezDanismanDegisikligiEykDaRetEdildiYeniDanisman = 219;
         public const int TdoTezDanismanDegisikligiEykDaRetEdildiOgrenci = 220;
+        public const int TdoTezDanismanDegisikligiEykYaGonderimiRetEdildiYeniDanisman = 522;
+        public const int TdoTezDanismanDegisikligiEykYaGonderimiRetEdildiOgrenci = 523;
 
         public const int TdoTezDanismanVeBaslikDegisikligiVarolanDanisman = 221;
         public const int TdoTezDanismanVeBaslikDegisikligiYeniDanisman = 222;
@@ -111,6 +125,8 @@
         public const int TdoTezDanismanVeBaslikDegisikligiEykDaOnaylandiOgrenci = 229;
         public const int TdoTezDanismanVeBaslikDegisikligiEykDaRetEdildiYeniDanisman = 230;
         public const int TdoTezDanismanVeBaslikDegisikligiEykDaRetEdildiOgrenci = 231;
+        public const int TdoTezDanismanVeBaslikDegisikligiEykYaGonderimiRetEdildiYeniDanisman = 525;
+        public const int TdoTezDanismanVeBaslikDegisikligiEykYaGonderimiRetEdildiOgrenci = 526;
 
         public const int TdoEsDanismanOnerisiYapildiOgrenci = 128;
         public const int TdoEsDanismanOnerisiYapildiDanisman = 129;

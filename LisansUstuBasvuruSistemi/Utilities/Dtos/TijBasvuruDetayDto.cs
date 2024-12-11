@@ -27,6 +27,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public string DurumClassName { get; set; }
         public string DurumColor { get; set; }
+        public int? TosAktifSavunmaNo { get; set; }
         public List<TijBasvuruOneriDetayDto> TijBasvuruOneriList { get; set; }
     }
     public class TijBasvuruOneriDetayDto : TijBasvuruOneri

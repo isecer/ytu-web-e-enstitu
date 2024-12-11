@@ -10,15 +10,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
     {
         public static bool ToIsValidEmail(this string email)
         {
-            try
-            {
-                var mailAddress = new MailAddress(email);
-                return true;
-            }
-            catch (FormatException)
-            {
+            if (string.IsNullOrWhiteSpace(email))
                 return false;
-            }
+
+            // Basit bir e-posta regex paterni
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+            return System.Text.RegularExpressions.Regex.IsMatch(email, pattern);
         }
         public static bool ToIsValidateTckn(this string tcKimlikNo)
         {
@@ -91,12 +89,19 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return donemModel;
         }
 
-        public static string IlkHarfiBuyut(this string str)
+        public static string IlkHarfiBuyut(this string str, bool isEnText = false)
         {
+            if (str.IsNullOrWhiteSpace()) return str;
             // Cümlenin her bir kelimesini alıyoruz
+            if (isEnText)
+            {
+                var text = new CultureInfo("en-US", false).TextInfo.ToTitleCase(str.ToLowerInvariant());
+                return text;
+            }
             TextInfo textInfo = new CultureInfo("tr-TR", false).TextInfo;
             return textInfo.ToTitleCase(str.ToLower());
         }
+
         public static DateTime GetFirstWeekday(this DateTime date)
         {
             // Eğer tarih Cumartesi (6) veya Pazar (0) ise
@@ -104,7 +109,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             {
                 // Pazartesiye git
                 return date.AddDays(2);
-            } 
+            }
             return date.DayOfWeek == DayOfWeek.Sunday ?
                 // Pazartesiye git
                 date.AddDays(1) :

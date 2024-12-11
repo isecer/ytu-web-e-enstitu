@@ -12,6 +12,8 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
+using DevExpress.XtraReports.UI;
+using LisansUstuBasvuruSistemi.Raporlar.Genel;
 
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -56,9 +58,13 @@ namespace LisansUstuBasvuruSistemi.Business
                             yeterlikSozluSinavTarihi = ogrenciYetSozSnvTarih.Value;
 
                         }
-                        if (!yeterlikSozluSinavTarihi.HasValue) return true;
-                        //Yeterlik sözlü sınavı tarihi bulunuyor ise  tez öneri savunmas başvurusu oluşturulabilir
 
+                        if (!yeterlikSozluSinavTarihi.HasValue)
+                        {
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(kul.Ad + " " + kul.Soyad + " Öğrencisi için Tez öneri savunma sınavı başvurusu oluşturulabilmesi için yeterlik sözlü sınav tarihinin OBS sisteminde tanımlı olması gerekmetkedir.", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Hata);
+                            return true;
+                        }
+                        //Yeterlik sözlü sınavı tarihi bulunuyor ise  tez öneri savunmas başvurusu oluşturulabilir 
                         var basvuru = entities.ToBasvurus.FirstOrDefault(f =>
                             f.KullaniciID == kul.KullaniciID && f.EnstituKod == kul.EnstituKod &&
                             (f.ProgramKod == kul.ProgramKod || f.OgrenciNo == kul.OgrenciNo));
@@ -116,7 +122,7 @@ namespace LisansUstuBasvuruSistemi.Business
             public int SavunmaNo { get; set; }
             public MmMessage MmMessage { get; set; }
         }
-        public static SavunmaDurumInfo TosDurumInfo(Guid toUniqueId, DateTime? sinavTarihi = null)
+        public static SavunmaDurumInfo TosDurumInfo(Guid toUniqueId, DateTime? sinavTarihi = null, DateTime? yeterlikSozluSinavTarihi = null)
         {
             var savunmaDurumInfo = new SavunmaDurumInfo();
             var msg = new MmMessage();
@@ -137,11 +143,13 @@ namespace LisansUstuBasvuruSistemi.Business
                 string muafiyetBilgisi = toBasvuru.IsBasvuruKriterMuaf
                     ? "Öğrenci başvuru kriterlerinden muaf tutulmaktadır. "
                     : "";
-
+                yeterlikSozluSinavTarihi = yeterlikSozluSinavTarihi ?? toBasvuru.YeterlikSozluSinavTarihi;
                 if (sonBasvuru == null)
                 {
-                    var ilkBitisTarihi = toBasvuru.IlkOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
-                    var ikinciBitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
+
+                    var ilkBitisTarihi = toBasvuru.IlkOneriBitisTarihi ?? yeterlikSozluSinavTarihi.Value.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter).AddDays(1).AddSeconds(-1);
+                    var ikinciBitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? yeterlikSozluSinavTarihi.Value.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter).AddDays(1).AddSeconds(-1);
+
 
                     if (toBasvuru.IsBasvuruKriterMuaf || sinavTarihi <= ilkBitisTarihi)
                     {
@@ -149,7 +157,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = true,
-                            Message = $"{muafiyetBilgisi}1. Savunma hakkı kullanımı için {toBasvuru.YeterlikSozluSinavTarihi.ToFormatDate()} / {ilkBitisTarihi.ToFormatDate()} tarihleri arasında savunma sınavı yapılabilir. Bu, öğrencinin ilk tez öneri savunmasıdır."
+                            Message = $"{muafiyetBilgisi}1. Savunma hakkı kullanımı için {yeterlikSozluSinavTarihi.Value.ToFormatDate()} / {ilkBitisTarihi.ToFormatDate()} tarihleri arasında savunma sınavı yapılabilir. Bu, öğrencinin ilk tez öneri savunmasıdır."
                         });
                     }
                     else if (sinavTarihi <= ikinciBitisTarihi)
@@ -167,7 +175,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = false,
-                            Message = $"Süreniz dolduğundan başvuru yapamazsınız. Yeterlik sözlü sınavınızı {toBasvuru.YeterlikSozluSinavTarihi.ToFormatDate()} tarihinde tamamladınız. " +
+                            Message = $"Süreniz dolduğundan başvuru yapamazsınız. Yeterlik sözlü sınavınızı {yeterlikSozluSinavTarihi.Value.ToFormatDate()} tarihinde tamamladınız. " +
                                       $"1. savunma hakkınız için son başvuru tarihi {ilkBitisTarihi.ToFormatDate()}, " +
                                       $"2. savunma hakkınız için son başvuru tarihi {ikinciBitisTarihi.ToFormatDate()} idi. " +
                                       $"Toplam savunma süresi {tezOneriToplamSavunmaHakkiAyKriter} ay olup, bu süre içinde savunma yapılması gerekmekteydi."
@@ -283,11 +291,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                 savunmaDurumInfo.MmMessage = msg;
+                toBasvuru.YeterlikSozluSinavTarihi = yeterlikSozluSinavTarihi.Value;
                 entities.SaveChanges();
                 return savunmaDurumInfo;
             }
         }
-
 
         public static MmMessage GetTosSilKontrol(Guid toBasvuruSavunmaUniqueId)
         {
@@ -456,15 +464,10 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.ToplamBasarisizTezOneriSavunmaHak = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak.GetAyarTi(basvuru.EnstituKod).ToInt();
                 model.IlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
                 model.IkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
-
-
-
-
+                model.TezBaslikMaxLength = enstitu.TezBaslikMaxLength;
+                model.TezBaslikIllegalCharacter = enstitu.TezBaslikIllegalCharacter;
 
                 var sonTos = model.ToBasvuruSavunmaList.FirstOrDefault();
-
-
-
 
                 model.DurumHtmlString = (
                                             sonTos != null ? sonTos.DurumModel : new TosDurumDto()
@@ -562,7 +565,7 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 1003, Caption = "Değerlendirme Sürecinde Tamamlananlar" });
             dct.Add(new CmbIntDto { Value = 1, Caption = "Başarılı Olanlar" });
             dct.Add(new CmbIntDto { Value = 2, Caption = "Başarısız Olanlar" });
-            dct.Add(new CmbIntDto { Value = 3, Caption = "Uzatma Alanlar" });
+            dct.Add(new CmbIntDto { Value = 3, Caption = "Düzeltme Alanlar" });
             return dct;
         }
 
@@ -600,8 +603,120 @@ namespace LisansUstuBasvuruSistemi.Business
             }
         }
 
+        public static XtraReport TezOneriAraRaporIstemiYazilari(int toBasvuruSavunmaId)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+                var sablonTipIds = new List<int>
+                    {
+                        YaziSablonTipiEnum.TosDegerlendirmeSonucuAraRaporIstemiYazisiDanisman,
+                        YaziSablonTipiEnum.TosDegerlendirmeSonucuAraRaporIstemiYazisiTikUyeleri
+                };
+
+                var tezOneriBasvuruSavunma = entities.ToBasvuruSavunmas.First(p => p.ToBasvuruSavunmaID == toBasvuruSavunmaId);
+                var tezOneribasvuru = tezOneriBasvuruSavunma.ToBasvuru;
+                var enstitu = tezOneribasvuru.Enstituler;
+                var anabilimDaliAdi = tezOneribasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.IlkHarfiBuyut();
+                var programAdi = tezOneribasvuru.Programlar.ProgramAdi.IlkHarfiBuyut();
+                var ogrenciNo = tezOneribasvuru.OgrenciNo;
+                var ogrenciAdSoyad = (tezOneribasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + tezOneribasvuru.Kullanicilar.Soyad.ToUpper();
+
+                var tiks = tezOneriBasvuruSavunma.ToBasvuruSavunmaKomites.Where(p => !p.IsTezDanismani).ToList();
+                var tezDanisman = tezOneriBasvuruSavunma.ToBasvuruSavunmaKomites.First(p => p.IsTezDanismani);
+
+                var tezBaslik = tezOneriBasvuruSavunma.IsTezDiliTr
+                    ? tezOneriBasvuruSavunma.YeniTezBaslikTr
+                    : tezOneriBasvuruSavunma.YeniTezBaslikEn;
 
 
+                DateTime? sinavTarihi = null;
+                if (tezOneriBasvuruSavunma.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi)
+                {
+                    var sinav = tezOneriBasvuruSavunma.SRTalepleris.First();
+                    sinavTarihi = sinav.Tarih;
+                    sablonTipIds = new List<int> { YaziSablonTipiEnum.TezOneriSavunmaTezOnerisiBasarisizYazisiAbd, YaziSablonTipiEnum.TezOneriSavunmaTezOnerisiBasarisizYazisiDanisman };
+                }
+                else if (tezOneriBasvuruSavunma.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
+                {
+                    var sinav = tezOneriBasvuruSavunma.SRTalepleris.First();
+                    sinavTarihi = sinav.Tarih;
+                    sablonTipIds = new List<int> { YaziSablonTipiEnum.TezOneriSavunmaTezOnerisiDuzeltmeYazisiAbd, YaziSablonTipiEnum.TezOneriSavunmaTezOnerisiDuzeltmeYazisiDanisman };
+                }
+                var sablonlar = entities.YaziSablonlaris.Where(p => sablonTipIds.Contains(p.YaziSablonTipID) && p.EnstituKod == enstitu.EnstituKod && p.IsAktif).ToList();
+
+                var sablonInx = 0;
+                XtraReport rprX = null;
+                var sablonModel = new List<KeyValuePair<YaziSablonlari, ToBasvuruSavunmaKomite>>();
+
+                foreach (var sablonTipId in sablonTipIds)
+                {
+                    var sablon = sablonlar.FirstOrDefault(f => f.YaziSablonTipID == sablonTipId);
+                    if (sablon == null) continue;
+                    if (sablon.YaziSablonTipID == YaziSablonTipiEnum.TezOneriSavunmaTezOnerisiBasarisizYazisiAbd || sablon.YaziSablonTipID == YaziSablonTipiEnum.TezOneriSavunmaTezOnerisiDuzeltmeYazisiAbd)
+                    {
+                        sablonModel.Add(new KeyValuePair<YaziSablonlari, ToBasvuruSavunmaKomite>(sablon, new ToBasvuruSavunmaKomite()));
+                    }
+                    else if (sablon.YaziSablonTipID == YaziSablonTipiEnum.TosDegerlendirmeSonucuAraRaporIstemiYazisiDanisman ||
+                             sablon.YaziSablonTipID == YaziSablonTipiEnum.TezOneriSavunmaTezOnerisiBasarisizYazisiDanisman ||
+                             sablon.YaziSablonTipID == YaziSablonTipiEnum.TezOneriSavunmaTezOnerisiDuzeltmeYazisiDanisman)
+                    {
+                        sablonModel.Add(new KeyValuePair<YaziSablonlari, ToBasvuruSavunmaKomite>(sablon, tezDanisman));
+                    }
+                    else
+                    {
+                        // Diğer sablonlar için asilJuris elemanlarını ekle
+                        tiks.ForEach(item =>
+                            sablonModel.Add(new KeyValuePair<YaziSablonlari, ToBasvuruSavunmaKomite>(sablon, item)));
+                    }
+
+                }
+
+                foreach (var sablon in sablonModel)
+                {
+                    var tik1 = tezOneriBasvuruSavunma.ToBasvuruSavunmaKomites.First(p => p.TikNum == 1);
+                    var tik2 = tezOneriBasvuruSavunma.ToBasvuruSavunmaKomites.First(p => p.TikNum == 2);
+                    var parameters = new List<MailParameterDto>
+                    {
+                        new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDaliAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "ProgramAdi", Value = programAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "OgrenciNo", Value = ogrenciNo },
+                        new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanUnvan", Value = tezDanisman.UnvanAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanAdSoyad", Value = tezDanisman.AdSoyad.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "TezBaslik", Value = tezBaslik.IlkHarfiBuyut(!tezOneriBasvuruSavunma.IsTezDiliTr) },
+                        new MailParameterDto { Key = "TezOneriTarihi", Value = sinavTarihi.ToFormatDate() },
+                        new MailParameterDto { Key = "SeciliTikUyesiUnvan", Value = sablon.Value.UnvanAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "SeciliTikUyesiAdSoyad", Value =  sablon.Value.AdSoyad.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "SeciliTikUyesiUniversite", Value =  sablon.Value.UniversiteAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "TikUyesi1Unvan", Value = tik1.UnvanAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "TikUyesi1AdSoyad", Value = tik1.AdSoyad.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "TikUyesi1Universite", Value = tik1.UniversiteAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "TikUyesi2Unvan", Value =tik2.UnvanAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "TikUyesi2AdSoyad", Value = tik2.AdSoyad.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "TikUyesi2Universite", Value = tik2.UniversiteAdi.IlkHarfiBuyut()},
+                    };
+
+                    var html = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonHtml, parameters);
+                    var htmlFooter = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonFooterHtml, parameters);
+                    if (sablonInx == 0)
+                    {
+                        rprX = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Key.Konu);
+                        rprX.CreateDocument();
+                    }
+                    else
+                    {
+                        var rapor = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Key.Konu);
+                        rapor.CreateDocument();
+                        rprX.Pages.AddRange(rapor.Pages);
+                    }
+
+
+                    sablonInx++;
+                }
+                return rprX;
+
+            }
+        }
 
 
     }

@@ -33,6 +33,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string KullaniciTipAdi { get; set; }
         public string TalepTipAdi { get; set; }
         public bool IsTezSinavi { get; set; }
+        public int? OgrenimTipKod { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string HaftaGunAdi { get; set; }
         public string SDurumAdi { get; set; }

@@ -1,7 +1,10 @@
-﻿using Entities.Entities;
+﻿using DevExpress.XtraReports.UI;
+using Entities.Entities;
+using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -190,6 +193,131 @@ namespace LisansUstuBasvuruSistemi.Business
 
             }
             return mmMessage;
+        }
+
+
+        public static XtraReport MezuniyetSinavSureciDoktoraSinavBilgilendirmeYazilari(int srTalepId)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+
+                var srTalep = entities.SRTalepleris.First(f => f.SRTalepID == srTalepId);
+                var mezuniyetBasvuru = srTalep.MezuniyetBasvurulari;
+
+                var mezuniyetSureci = mezuniyetBasvuru.MezuniyetSureci;
+                var enstitu = mezuniyetSureci.Enstituler;
+                var anabilimDaliAdi = mezuniyetBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.IlkHarfiBuyut();
+                var programAdi = mezuniyetBasvuru.Programlar.ProgramAdi.IlkHarfiBuyut();
+                var ogrenciNo = mezuniyetBasvuru.OgrenciNo;
+                var ogrenciAdSoyad = (mezuniyetBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + mezuniyetBasvuru.Kullanicilar.Soyad.ToUpper();
+
+                var jof = mezuniyetBasvuru.MezuniyetJuriOneriFormlaris.First();
+
+                var tezBasligiDegisenSinav = mezuniyetBasvuru.SRTalepleris.OrderByDescending(o => o.SRTalepID).FirstOrDefault(a =>
+                    a.MezuniyetSinavDurumID != MezuniyetSinavDurumEnum.SonucGirilmedi &&
+                    a.IsTezBasligiDegisti == true);
+
+
+                var baslikTr = tezBasligiDegisenSinav == null ? (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : jof.MezuniyetBasvurulari.TezBaslikTr) : tezBasligiDegisenSinav.YeniTezBaslikTr;
+                var baslikEn = tezBasligiDegisenSinav == null ? (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : jof.MezuniyetBasvurulari.TezBaslikEn) : tezBasligiDegisenSinav.YeniTezBaslikEn;
+                var isTezBaslikTr = jof.MezuniyetBasvurulari.IsTezDiliTr == true;
+                var tezBaslik = isTezBaslikTr ? baslikTr : baslikEn;
+
+
+                var sablonInx = 0;
+                XtraReport rprX = null;
+                var tumJuriler = srTalep.SRTaleplerJuris.OrderBy(o => o.JuriTipAdi.Contains("TezDanismani") ? 1 : 2).ThenBy(t => t.JuriTipAdi.Contains("Tik") ? 1 : 2).ThenBy(t => t.JuriTipAdi.Contains("YtuIci") ? 1 : 2).ThenBy(o => o.JuriTipAdi).ToList();
+
+                var tezDanisman = tumJuriler.First(f => f.JuriTipAdi == "TezDanismani");
+                var juriUyeleri = tumJuriler.Where(p => !p.JuriTipAdi.Contains("TezDanismani")).ToList();
+
+                var sablonTipIds = new List<int>
+                    {
+                        YaziSablonTipiEnum.MezuniyetSinavSureciDrSinavBilgilendirmeYazisiAbd,
+                        YaziSablonTipiEnum.MezuniyetSinavSureciDrSinavBilgilendirmeYazisiDanisman,
+                        YaziSablonTipiEnum.MezuniyetSinavSureciDrSinavBilgilendirmeYazisiTumJuriler
+
+                };
+
+
+                var sablonlar = entities.YaziSablonlaris.Where(p => sablonTipIds.Contains(p.YaziSablonTipID) && p.EnstituKod == enstitu.EnstituKod && p.IsAktif).ToList();
+                var sablonModel = new List<KeyValuePair<YaziSablonlari, SRTaleplerJuri>>();
+
+                // sablonTipIds koleksiyonunu LINQ ile işliyoruz
+                foreach (var sablonTipId in sablonTipIds)
+                {
+                    var sablon = sablonlar.FirstOrDefault(f => f.YaziSablonTipID == sablonTipId);
+                    if (sablon == null) continue;
+                    if (sablon.YaziSablonTipID == YaziSablonTipiEnum.MezuniyetSinavSureciDrSinavBilgilendirmeYazisiDanisman)
+                    {
+                        sablonModel.Add(new KeyValuePair<YaziSablonlari, SRTaleplerJuri>(sablon, tezDanisman));
+                    }
+                    else if (sablon.YaziSablonTipID == YaziSablonTipiEnum.MezuniyetSinavSureciDrSinavBilgilendirmeYazisiTumJuriler)
+                    {
+                        juriUyeleri.ForEach(item => sablonModel.Add(new KeyValuePair<YaziSablonlari, SRTaleplerJuri>(sablon, item)));
+                    }
+                    else sablonModel.Add(new KeyValuePair<YaziSablonlari, SRTaleplerJuri>(sablon, new SRTaleplerJuri()));
+                }
+
+                var salonAdi = srTalep.SRSalonID.HasValue ? srTalep.SRSalonlar.SalonAdi : srTalep.SalonAdi;
+
+                foreach (var sablon in sablonModel)
+                {
+
+                    var parameters = new List<MailParameterDto>
+                    {
+                        new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDaliAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "ProgramAdi", Value = programAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "OgrenciNo", Value = ogrenciNo },
+                        new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanUnvan", Value = tezDanisman.UnvanAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanAdSoyad", Value = tezDanisman.JuriAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik.IlkHarfiBuyut(!isTezBaslikTr) },
+                        new MailParameterDto { Key = "SinavTarihi", Value =srTalep.Tarih.ToFormatDate()+" "+$"{srTalep.BasSaat:hh\\:mm}" + "-" + $"{srTalep.BitSaat:hh\\:mm}" },
+                        new MailParameterDto { Key = "SalonAdi", Value =salonAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "SeciliKomiteUyesiUnvan", Value = sablon.Value.UnvanAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "SeciliKomiteUyesiAdSoyad", Value =  sablon.Value.JuriAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "SeciliKomiteUyesiUniversite", Value =  sablon.Value.UniversiteAdi.IlkHarfiBuyut()}
+                    };
+                    parameters.AddRange(SetParameterJuris(juriUyeleri, "AsilKomiteUyesi"));
+                    var html = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonHtml, parameters);
+                    var htmlFooter = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonFooterHtml, parameters);
+                    if (sablonInx == 0)
+                    {
+                        rprX = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Key.Konu);
+                        rprX.CreateDocument();
+                    }
+                    else
+                    {
+                        var rapor = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Key.Konu);
+                        rapor.CreateDocument();
+                        rprX.Pages.AddRange(rapor.Pages);
+                    }
+
+
+                    sablonInx++;
+                }
+                return rprX;
+
+            }
+        }
+        private static List<MailParameterDto> SetParameterJuris(List<SRTaleplerJuri> juris, string key)
+        {
+            var inx = 0;
+            var parameters = new List<MailParameterDto>();
+            foreach (var itemJuri in juris)
+            {
+
+
+                inx++;
+                parameters.AddRange(new List<MailParameterDto>{
+                    new MailParameterDto { Key = $"{key}{inx}Unvan", Value = itemJuri.UnvanAdi.IlkHarfiBuyut() },
+                    new MailParameterDto { Key = $"{key}{inx}AdSoyad", Value = itemJuri.JuriAdi.IlkHarfiBuyut() },
+                    new MailParameterDto { Key = $"{key}{inx}Universite", Value = itemJuri.UniversiteAdi.IlkHarfiBuyut() },
+                });
+            }
+
+            return parameters;
         }
 
         public static List<CmbIntDto> GetCmbOzelTanimTipleri(bool bosSecimVar = false)

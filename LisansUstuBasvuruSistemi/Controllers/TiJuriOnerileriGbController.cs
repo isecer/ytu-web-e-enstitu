@@ -882,6 +882,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             var donemBilgi = (tijBasvuruOneri.TijBasvuruOneriID > 0 ? tijBasvuru.BasvuruTarihi : DateTime.Now).ToAkademikDonemBilgi();
 
+
+                            bool? danimanOnayladi = null;
+                            DateTime? danismanOnayTarihi = null;
+
+                            if (UserIdentity.Current.IsYetkiliTij && tijBasvuruOneri.TijBasvuruOneriID > 0)
+                            {
+                                danimanOnayladi = tijBasvuruOneri.DanismanOnayladi;
+                                danismanOnayTarihi = tijBasvuruOneri.DanismanOnayTarihi;
+                            }
                             tijBasvuru.TijBasvuruOneris.Add(new TijBasvuruOneri
                             {
                                 UniqueID = uniqueId,
@@ -890,8 +899,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 TijDegisiklikTipID = kModel.TijDegisiklikTipID,
                                 IsObsData = false,
                                 TezDanismanID = tijBasvuruOneri?.TezDanismanID ?? kul.DanismanID,
-                                DanismanOnayTarihi = danismanId.HasValue ? DateTime.Now : (DateTime?)null,
-                                DanismanOnayladi = danismanId.HasValue ? true : (bool?)null,
+                                DanismanOnayTarihi = danismanId.HasValue ? DateTime.Now : danismanOnayTarihi,
+                                DanismanOnayladi = danismanId.HasValue ? true : danimanOnayladi,
                                 BasvuruTarihi = tijBasvuruOneri?.TijBasvuruOneriID > 0 ? tijBasvuruOneri.BasvuruTarihi : DateTime.Now,
                                 DonemBaslangicYil = donemBilgi.BaslangicYil,
                                 DonemID = donemBilgi.DonemId,
@@ -1071,7 +1080,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }.ToJsonResult();
         }
 
-        public ActionResult JuriOneriFormuOnayDurumKayit(Guid tijBasvuruOneriUniqueId, int onayTipId, bool? onaylandi, string aciklama, DateTime? onayTarihi)
+        public ActionResult JuriOneriFormuOnayDurumKayit(Guid tijBasvuruOneriUniqueId, int onayTipId, bool? onaylandi, string aciklama, DateTime? onayTarihi, string onaySayisi)
         {
             var mmMessage = new MmMessage
             {
@@ -1110,7 +1119,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else if (onaylandi == true && !onayTarihi.HasValue)
                     {
                         mmMessage.Messages.Add("EYK'da onay tarihini giriniz!");
-                    }
+                    } 
                     else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
                     {
                         mmMessage.Messages.Add("EYK'da onaylanmama sebebini giriniz!");
@@ -1125,13 +1134,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (tijBasvuruOneri.EYKYaHazirlandi.HasValue)
                     {
                         mmMessage.Messages.Add("EYK ya hazırlama işlemi yapılan bir form da Eyk'ya gönderim işlemi gerçekleştirilemez!");
-                    }
+                    } 
                     else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
                     {
                         mmMessage.Messages.Add("EYK'ya gönderiminin onaylanmama sebebini giriniz!");
                     }
                 }
-
+                if (onaylandi == true && onaySayisi.IsNullOrWhiteSpace())
+                {
+                    mmMessage.Messages.Add("EYK Sayısı giriniz!");
+                }
                 if (mmMessage.Messages.Count == 0 && onayTipId == EykTipEnum.EykDaOnaylandi && onaylandi == true)
                 {
                     var asilKriterCount = tijBasvuruOneri.TijFormTipID == TijFormTipiEnum.YeniForm ? 3 : (tijBasvuruOneri.TijDegisiklikTipID == TijDegisiklikTipiEnum.YtuIciVeDisiDegisiklik ? 2 : 1);
@@ -1179,13 +1191,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         isDegisiklikVar = tijBasvuruOneri.EYKYaGonderildi != onaylandi || aciklama != tijBasvuruOneri.EYKYaGonderimDurumAciklamasi;
                         tijBasvuruOneri.EYKYaGonderimDurumAciklamasi = onaylandi == false ? aciklama : "";
                         tijBasvuruOneri.EYKYaGonderildi = onaylandi;
+                        tijBasvuruOneri.EYKSayisi = onaySayisi;
                         tijBasvuruOneri.EYKYaGonderildiIslemTarihi = DateTime.Now;
                         tijBasvuruOneri.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
                         mmMessage.Messages.Add("Form EYK ya " + (onaylandi.HasValue ? (onaylandi.Value ? "'Gönderildi'" : "'Gönderilmedi'") : "Gönderilmesi bekleniyor") + " şeklinde güncellendi...");
                     }
                     else if (onayTipId == EykTipEnum.EykYaHazirlandi)
                     {
-
+                        tijBasvuruOneri.EYKSayisi = onaySayisi;
                         tijBasvuruOneri.EYKYaHazirlandi = onaylandi;
                         tijBasvuruOneri.EYKYaHazirlandiIslemTarihi = DateTime.Now;
                         tijBasvuruOneri.EYKYaHazirlandiIslemYapanID = UserIdentity.Current.Id;
@@ -1196,7 +1209,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         tijBasvuruOneri.TijBasvuru.IsYeniBasvuruYapilabilir = onaylandi.HasValue;
                         isDegisiklikVar = tijBasvuruOneri.EYKDaOnaylandi != onaylandi || aciklama != tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi || tijBasvuruOneri.EYKTarihi != onayTarihi;
                         tijBasvuruOneri.EYKDaOnaylandi = onaylandi;
-                        if (onaylandi.HasValue) { tijBasvuruOneri.EYKTarihi = onayTarihi; }
+                        if (onaylandi.HasValue)
+                        {
+                            tijBasvuruOneri.EYKTarihi = onayTarihi;
+                            tijBasvuruOneri.EYKSayisi = onaySayisi;
+                        }
                         tijBasvuruOneri.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
                         tijBasvuruOneri.EYKDaOnaylandiIslemTarihi = DateTime.Now;
                         tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi = onaylandi == false ? aciklama : "";
@@ -1298,7 +1315,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                          !tijBasvuruOneri.EYKYaHazirlandi.HasValue &&
                                                          tijBasvuruOneri.EYKYaGonderildiIslemTarihi >= baslangicTarihi &&
                                                          tijBasvuruOneri.EYKYaGonderildiIslemTarihi <= bitisTarihi
-                                                      : 
+                                                      :
                                                         (enstituOnayDurumId == 2 ? tijBasvuruOneri.EYKYaHazirlandi == true &&
                                                                                    !tijBasvuruOneri.EYKDaOnaylandi.HasValue &&
                                                                                    tijBasvuruOneri.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&

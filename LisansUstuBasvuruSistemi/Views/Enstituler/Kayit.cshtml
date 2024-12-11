@@ -51,58 +51,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-2 col-xs-2 control-label">Enstitü E-Posta Ayarları</label>
-                        <div class="col-md-10 col-xs-10">
-                            <div class="panel panel-default form-horizontal form-group-separated">
-                                <div class="form-group">
-                                    <label class="col-md-3 col-xs-4 control-label">Smtp Host Adresi</label>
-                                    <div class="col-md-9 col-xs-8">
-                                        <input type="text" name="SmtpHost" id="SmtpHost" value="@Model.SmtpHost" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-xs-4 control-label">Smtp Kullanıcı Adı</label>
-                                    <div class="col-md-9 col-xs-8">
-                                        <input type="text" name="SmtpKullaniciAdi" id="SmtpKullaniciAdi" value="@Model.SmtpKullaniciAdi" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-xs-4 control-label">Smtp Mail Adresi</label>
-                                    <div class="col-md-9 col-xs-8">
-                                        <input type="text" name="SmtpMailAdresi" id="SmtpMailAdresi" value="@Model.SmtpMailAdresi" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-xs-4 control-label">Smtp Port</label>
-                                    <div class="col-md-9 col-xs-8">
-                                        <input type="text" name="SmtpPortAdresi" id="SmtpPortAdresi" value="@Model.SmtpPortAdresi" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-xs-4 control-label">SSL Aktif Mi</label>
-                                    <div class="col-md-9 col-xs-8">
-                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
-                                            <input type="checkbox" value="true" name="SmtpSSL" class="toggle" @Model.SmtpSSL.ToChecked() />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-xs-4 control-label">Smtp Mail Şifresi</label>
-                                    <div class="col-md-9 col-xs-8">
-                                        <input type="password" name="SmtpSifre" id="SmtpSifre" value="@Model.SmtpSifre" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-xs-4 control-label">Test e-Posta Adresi</label>
-                                    <div class="col-md-9 col-xs-8">
-                                        <span>Bu e-Posta adresi tanımlandığında sistemdeki tüm mail gönderim işlemleri tanımlanan e-Posta adresine gidecektir!</span><br />
-                                        <input type="text" name="TestEmailAddress" id="TestEmailAddress" value="@Model.TestEmailAddress" class="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label class="col-md-2 col-xs-2 control-label">Enstitü Yönetim Bilgileri</label>
                         <div class="col-md-10 col-xs-10">
                             <div class="panel panel-default form-horizontal form-group-separated">
@@ -165,8 +113,7 @@
                                     </label>
                                     <div class="col-md-9 col-xs-8">
                                         <input type="text" class="form-control" id="EnstituMudurVekilId" name="EnstituMudurVekilId" style="width: 100%;" />
-                                        <script>
-
+                                        <script> 
                                             $('#EnstituMudurVekilId').select2({
                                                 tags: true,
                                                 tokenSeparators: [",", " "],
@@ -210,6 +157,143 @@
                                                 }, 1200);
                                             </script>
                                         }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-xs-2 control-label">Enstitü E-Posta Ayarları</label>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="panel panel-default form-horizontal form-group-separated">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Host Adresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SmtpHost" id="SmtpHost" value="@Model.SmtpHost" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Kullanıcı Adı</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SmtpKullaniciAdi" id="SmtpKullaniciAdi" value="@Model.SmtpKullaniciAdi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Mail Adresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SmtpMailAdresi" id="SmtpMailAdresi" value="@Model.SmtpMailAdresi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Port</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="SmtpPortAdresi" id="SmtpPortAdresi" value="@Model.SmtpPortAdresi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">SSL Aktif Mi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="SmtpSSL" class="toggle" @Model.SmtpSSL.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Smtp Mail Şifresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="password" name="SmtpSifre" id="SmtpSifre" value="@Model.SmtpSifre" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Test e-Posta Adresi</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <span>Bu e-Posta adresi tanımlandığında sistemdeki tüm mail gönderim işlemleri tanımlanan e-Posta adresine gidecektir!</span><br />
+                                        <input type="text" name="TestEmailAddress" id="TestEmailAddress" value="@Model.TestEmailAddress" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 col-xs-2 control-label">Tez Başlık Giriş Ayarları</label>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="panel panel-default form-horizontal form-group-separated">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label popover-dismiss " title="Tez Başlığı Karakter Uzunluğu Hk." data-content="Tez başlığı karakter uzunluğu belirlenirse tez başlığı bilgisi (boşluklar dahil) belirlenen karakter uzunluğunu aşamaz.">
+                                        Karakter Uzunluğu <i class="fa fa-info-circle " style="margin:0px;"></i>
+                                    </label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="TezBaslikMaxLength" id="TezBaslikMaxLength" value="@Model.TezBaslikMaxLength" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label popover-dismiss " title="Tez Başlığında İstenmeyen Karakterler Hk." data-content="Tez başlığında istenmeyen karakterler listeden seçilebilir. Seçilen karakterler tez başlığı veri giriş alanlarında kabul edilmeyecek.">
+                                        İstenmeyen Karakterler <i class="fa fa-info-circle " style="margin:0px;"></i>
+                                    </label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <input type="text" name="TezBaslikIllegalCharacter" id="TezBaslikIllegalCharacter" maxlength="150" value="@Html.Raw(Model.TezBaslikIllegalCharacter.ToStrObjEmptString())" class="form-control" />
+                                        <script>
+
+                                            const specialCharacters = SpecialCharacter.getAllSpecialCharacters().map(item => {
+                                                return { char: item.char, name: item.name };
+                                            });
+                                            $(document).ready(function () {
+                                                var $select2 = $('#TezBaslikIllegalCharacter').select2({
+                                                    tags: true,
+                                                    tokenSeparators: [",", " "],
+                                                    multiple: true,
+                                                    placeholder: "Özel karakterleri seçin...",
+                                                    data: specialCharacters.map(function (item) {
+                                                        return { id: item.char, text: item.char + " " + item.name  };
+                                                    }),
+                                                    createTag: function (params) {
+                                                        var term = params.term;
+                                                        if (!term) return null;
+                                                        var matchedItem = specialCharacters.find(function (item) {
+                                                            return item.char === term;
+                                                        });
+                                                        if (matchedItem) {
+                                                            return { id: term, text: term + " " + matchedItem.name , newTag: true };
+                                                        }
+                                                        return null;
+                                                    }
+                                                });
+
+                                                function setModelValue(modelValue) {
+                                                    if (!modelValue) return;
+                                                    var values = modelValue.match(/[^,]+/g) || [];
+                                                    values = values.map(function (item) {
+                                                        return item.trim();
+                                                    }).filter(function (item) {
+                                                        return item !== '';
+                                                    });
+
+                                                    $select2.val(values).trigger('change');
+                                                }
+
+                                                setTimeout(function () {
+                                                    var modelValue = @Html.Raw(Json.Encode(Model.TezBaslikIllegalCharacter.ToStrObjEmptString()));
+                                                    setModelValue(modelValue);
+                                                }, 500);
+                                            });
+
+                                            $(document).ready(function () {
+                                                var $select2 = $('#TezBaslikIllegalCharacter');
+                                                var initialValue = $select2.attr('value');
+
+                                                if (initialValue) {
+                                                    setTimeout(function () {
+                                                        var values = initialValue.match(/[^,]+/g) || [];
+                                                        values = values.map(function (item) {
+                                                            return item.trim();
+                                                        }).filter(Boolean);
+
+                                                        $select2.val(values).trigger('change');
+                                                    }, 500);
+                                                }
+                                            });
+                                        </script>
                                     </div>
                                 </div>
                             </div>

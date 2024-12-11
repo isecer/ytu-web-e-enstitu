@@ -26,6 +26,8 @@ namespace Entities.Entities
         public string Konu { get; set; }
         public string Sablon { get; set; }
         public string SablonHtml { get; set; }
+        public string SablonFooter { get; set; }
+        public string SablonFooterHtml { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }

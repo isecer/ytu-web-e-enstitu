@@ -382,7 +382,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 var ogrenciNo = yeterlikBasvuru.OgrenciNo;
                 var ogrenciAdSoyad = (yeterlikBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + yeterlikBasvuru.Kullanicilar.Soyad.ToUpper();
                 var teslimSonTarih = yeterlikBasvuru.SozluSinavTarihi.Value.AddMonths(1).ToFormatDate();
-                var danisman = entities.Kullanicilars.First(f => f.KullaniciID == yeterlikBasvuru.TezDanismanID);
+
+                var tezDanisman = yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.First(f => f.JuriTipAdi == "TezDanismani");
                 var parameters = new List<MailParameterDto>
                     {
                         new MailParameterDto { Key = "YeterlikSozluSinavTarihi", Value = yeterlikBasvuru.SozluSinavTarihi.ToFormatDate() },
@@ -390,8 +391,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         new MailParameterDto { Key = "ProgramAdi", Value = programAdi },
                         new MailParameterDto { Key = "OgrenciNo", Value = ogrenciNo },
                         new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad },
-                        new MailParameterDto { Key = "DanismanUnvan", Value = danisman.Unvanlar.UnvanAdi.IlkHarfiBuyut() },
-                        new MailParameterDto { Key = "DanismanAdSoyad", Value = danisman.Ad.IlkHarfiBuyut()+" "+danisman.Soyad.ToUpper() },
+                        new MailParameterDto { Key = "DanismanUnvan", Value = tezDanisman.UnvanAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanAdSoyad", Value = tezDanisman.AdSoyad.IlkHarfiBuyut() },
                         new MailParameterDto { Key = "BilgiYazisiTeslimSonTarih", Value = teslimSonTarih }
                     };
                 var sablonInx = 0;
@@ -399,14 +400,15 @@ namespace LisansUstuBasvuruSistemi.Business
                 foreach (var sablon in sablonlar)
                 {
                     var html = ValueReplaceExtension.ProcessHtmlContent(sablon.SablonHtml, parameters);
+                    var htmlFooter = ValueReplaceExtension.ProcessHtmlContent(sablon.SablonFooterHtml, parameters);
                     if (sablonInx == 0)
                     {
-                        rprX = new RprYaziSablonOlusturucu(enstitu, html, sablon.Konu);
+                        rprX = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Konu);
                         rprX.CreateDocument();
                     }
                     else
                     {
-                        var rapor = new RprYaziSablonOlusturucu(enstitu, html, sablon.Konu);
+                        var rapor = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Konu);
                         rapor.CreateDocument();
                         rprX.Pages.AddRange(rapor.Pages);
                     }

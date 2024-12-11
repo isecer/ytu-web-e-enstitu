@@ -2953,6 +2953,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     rprX = rpr;
                 }
+                else if (raporTipi == RaporTipiEnum.MezuniyetEykSavunmaJurisiAtanmistirYazisi)
+                {
+                    var mezuniyetBasvurulariId = Request["ID"].ToIntObj(0); 
+                    rprX = MezuniyetBus.MezuniyetSavunmaJurisiAtanmistirYazilari(mezuniyetBasvurulariId);
+                }
+                else if (raporTipi == RaporTipiEnum.MezuniyetDrSinavBilgilendirmeYazilari)
+                {
+                    var srTalepId = Request["ID"].ToIntObj(0);
+                    rprX = SrTalepleriBus.MezuniyetSinavSureciDoktoraSinavBilgilendirmeYazilari(srTalepId);
+                }
+                else if (raporTipi == RaporTipiEnum.MezuniyetIkinciTezTeslimTaahhutOnayYazilari)
+                {
+                    var srTalepId = Request["ID"].ToIntObj(0);
+                    rprX = MezuniyetBus.MezuniyetIkinciTezTeslimTaahhutOnayYazilari(srTalepId);
+                }
                 else if (raporTipi == RaporTipiEnum.MezuniyetTezTeslimFormu)
                 {
                     var ilkTeslim = Request["IlkTeslim"].ToBooleanObj() ?? false;
@@ -3052,6 +3067,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     rprX = rpr;
                 }
+                else if (raporTipi == RaporTipiEnum.TezOneriSavunmaAraRaporIstemiFormu)
+                {
+                    var uniqueId = new Guid(Request["UniqueID"]);
+                    var rapor = _entities.ToBasvuruSavunmas.First(p => p.UniqueID == uniqueId);
+                    rprX = TosBus.TezOneriAraRaporIstemiYazilari(rapor.ToBasvuruSavunmaID);
+
+
+                }
                 else if (raporTipi == RaporTipiEnum.TezDanismanOneriFormu)
                 {
                     var uniqueId = new Guid(Request["UniqueID"]);
@@ -3125,6 +3148,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 }
+                else if (raporTipi == RaporTipiEnum.TezIzlemeKomiteAtamaBilgilendirmeYazilari)
+                {
+                    var uniqueId = new Guid(Request["UniqueID"]);
+                    var rapor = _entities.TijBasvuruOneris.First(p => p.UniqueID == uniqueId);
+                    rprX = TijBus.TiKomiteAtamaBilgilendirmeYazilari(rapor.TijBasvuruOneriID);
+
+
+                }
+                else if (raporTipi == RaporTipiEnum.TezIzlemeKomiteAtamaToIkinciSavunmaBilgilendirmeYazilari)
+                {
+                    var uniqueId = new Guid(Request["UniqueID"]);
+                    var rapor = _entities.TijBasvuruOneris.First(p => p.UniqueID == uniqueId);
+                    rprX = TijBus.TiKomiteAtamaToIkinciSavunmaBilgilendirmeYazilari(rapor.TijBasvuruOneriID);
+
+
+                }
                 else if (raporTipi == RaporTipiEnum.DonemProjesiSinaviDegerlendirmeFormu)
                 {
                     var uniqueId = new Guid(Request["UniqueID"]);
@@ -3146,7 +3185,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             if (!isPdfStream) return View(rprX);
-
+            if (rprX == null) return null;
             var memoryStream = new MemoryStream();
             rprX.ExportToPdf(memoryStream);
             rprX.ExportOptions.Pdf.Compressed = true;

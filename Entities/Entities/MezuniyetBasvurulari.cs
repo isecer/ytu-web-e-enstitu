@@ -73,6 +73,7 @@ namespace Entities.Entities
         public Nullable<System.DateTime> MezuniyetSinavDurumIslemTarihi { get; set; }
         public Nullable<int> MezuniyetSinavDurumIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKTarihi { get; set; }
+        public string EYKSayisi { get; set; }
         public Nullable<int> TezKontrolKullaniciID { get; set; }
         public Nullable<System.DateTime> TezTeslimSonTarih { get; set; }
         public Nullable<int> SonToplamKaynakOrani { get; set; }

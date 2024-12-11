@@ -177,6 +177,7 @@ namespace Entities.Entities
         public virtual DbSet<SRTalepleri> SRTalepleris { get; set; }
         public virtual DbSet<SRTaleplerJuri> SRTaleplerJuris { get; set; }
         public virtual DbSet<SRTalepTipleri> SRTalepTipleris { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TalepArGorStatuleri> TalepArGorStatuleris { get; set; }
         public virtual DbSet<TalepDurumlari> TalepDurumlaris { get; set; }
         public virtual DbSet<TalepGelenTalepBelgeleri> TalepGelenTalepBelgeleris { get; set; }

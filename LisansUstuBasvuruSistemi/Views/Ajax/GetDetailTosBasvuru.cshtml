@@ -18,6 +18,8 @@
     var degerlendirmeDuzeltmeYetki = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
     var tosSavunmaBitisTarihDuzeltmeYetki = RoleNames.TosSavunmaBitisTarihDuzeltme.InRoleCurrent();
     var formOlusturmaYetki = (degerlendirmeYetki || degerlendirmeDuzeltmeYetki || isDanismani || Model.KullaniciID == UserIdentity.Current.Id);
+    var yetkili = RoleNames.TosGelenBasvuru.InRoleCurrent() && (RoleNames.TosGelenBasvuruKayit.InRoleCurrent() || degerlendirmeDuzeltmeYetki);
+
 
 }
 <style>
@@ -325,7 +327,7 @@
 
                         <table style="width:100%;">
                             <tr>
-                                <td class="CaptionTd" width="160">Ad Soyad</td>
+                                <td class="CaptionTd" width="180">Ad Soyad</td>
                                 <td class="CaptionTd" width="10">:</td>
                                 <td class="ValueTd">
                                     @Model.Ad @Model.Soyad (@Model.OgrenciNo)
@@ -382,7 +384,7 @@
                         <td colspan="2" style="padding-left:10px;text-align:left;">
                             <table>
                                 <tr>
-                                    <td class="CaptionTd" width="160">Savunma Sınavı Bilgi</td>
+                                    <td class="CaptionTd" width="180">Savunma Sınavı Bilgi</td>
                                     <td class="CaptionTd" width="10">:</td>
                                     <td class="ValueTd">
                                         @Html.Raw(Model.SavunmaBasvurusuYapmaSureBilgisiInfo)
@@ -405,7 +407,7 @@
                             <td colspan="2" style="padding-left:10px;text-align:left;">
                                 <table>
                                     <tr>
-                                        <td class="CaptionTd" width="160">
+                                        <td class="CaptionTd" width="180">
                                             Kriterden Muaf Tut
                                             <button style="padding-left:3px;padding-right:2px;" type="button" class="btn btn-info popover-dismiss glow-on-hover" title="Kriterden Muaf Tut nedir?" data-content="@muafContent">
                                                 <i class="fa fa-info-circle fa-lg" style="margin:0px;"></i>
@@ -425,7 +427,7 @@
                                         if (Model.RetDuzeltmeBitisTarihi.HasValue)
                                         {
                                             <tr>
-                                                <td class="CaptionTd" width="160">Ret/Düzeltme Bitiş Tarihi</td>
+                                                <td class="CaptionTd" width="180">Ret/Düzeltme Bitiş Tarihi</td>
                                                 <td class="CaptionTd" width="10">:</td>
                                                 <td class="ValueTd">
                                                     <table>
@@ -447,7 +449,22 @@
                                         else
                                         {
                                             <tr>
-                                                <td class="CaptionTd" width="160">Savunma Bitiş Tarihleri</td>
+                                                <td class="CaptionTd" width="180">
+                                                    Savunma Bitiş Tarihleri
+                                                    <button style="padding-left:3px;padding-right:2px;"
+                                                            type="button"
+                                                            class="btn btn-info popover-dismiss glow-on-hover"
+                                                            title="Savunma Bitiş Tarihleri Hk."
+                                                            data-html="true"
+                                                            data-content="<p>Sistem, yeterlik başarı tarihine dayanarak 1. ve 2. savunma için bitiş tarihlerini otomatik olarak hesaplar.</p>
+                                                                          <p>Öğrencinin savunma numarası, sınav tarihine göre belirlenir. Savunma numaralarının tarih kriterleri, her savunma için belirlenen son tarihleri gösterir. Örneğin, 1. savunma için belirlenen tarih, 1. savunmanın son tarihi olup, bu tarihe kadar sınav yapan öğrenci, 1. savunma olarak değerlendirilir. Aynı durum, 2. savunma için de geçerlidir ve bu tarih kriterine göre değerlendirme yapılır.</p>
+                                                                          <p>Eğer sistemin otomatik olarak belirlediği tarihleri değiştirmek isterseniz, istediğiniz savunma numarasına ait tarihi manuel olarak güncelleyebilirsiniz.
+                                                                          <strong>Ancak, savunma tarihlerini boş bırakarak kaydederseniz, sistem mevcut bilgileri kullanarak bu tarihleri yeniden hesaplar ve kaydeder.</strong></p>
+                                                                          ">
+                                                     <i class="fa fa-info-circle fa-lg" style="margin:0px;"></i>
+                                                     </button>
+
+                                                </td>
                                                 <td class="CaptionTd" width="10">:</td>
                                                 <td class="ValueTd">
                                                     <table style="width:100%;">
@@ -633,7 +650,7 @@
                                                         <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book fa-lg"></i> Tez Bilgileri</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="CaptionTd" width="160">Tez Dili</td>
+                                                        <td class="CaptionTd" width="180">Tez Dili</td>
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">@(item.IsTezDiliTr ? "Türkçe" : "İngilizce")</td>
                                                     </tr>
@@ -848,7 +865,7 @@
                                                                                         <td class="ValueTd">
                                                                                             @if (openDegerlendirme)
                                                                                             {
-                                                                                                <input type="text" name="YeniTezBaslikTr" autocomplete="off" id="YeniTezBaslikTr_@itemJr.UniqueID" maxlength="2048" value="@item.YeniTezBaslikTr" class="form-control UpperTextTr" />
+                                                                                                <input type="text" name="YeniTezBaslikTr" autocomplete="off" id="YeniTezBaslikTr_@itemJr.UniqueID" maxlength="2048" value="@item.YeniTezBaslikTr" class="form-control UpperTextTr tCharacterBlock" />
                                                                                             }
                                                                                             else
                                                                                             {
@@ -862,7 +879,7 @@
                                                                                         <td class="ValueTd">
                                                                                             @if (openDegerlendirme)
                                                                                             {
-                                                                                                <input type="text" name="YeniTezBaslikEn" autocomplete="off" id="YeniTezBaslikEn_@itemJr.UniqueID" maxlength="2048" value="@item.YeniTezBaslikEn" class="form-control UpperTextEn" />
+                                                                                                <input type="text" name="YeniTezBaslikEn" autocomplete="off" id="YeniTezBaslikEn_@itemJr.UniqueID" maxlength="2048" value="@item.YeniTezBaslikEn" class="form-control UpperTextEn tCharacterBlock" />
                                                                                             }
                                                                                             else
                                                                                             {
@@ -993,14 +1010,29 @@
                                                                         <td class="CaptionTd">:</td>
                                                                         <td class="ValueTd">@item.SRModel.SalonAdi</td>
                                                                     </tr>
-                                                                    <tr class="@(item.ToBasvuruSavunmaDurumID.HasValue?( item.ToBasvuruSavunmaDurumID==1?"info":"danger"):"warning")">
+                                                                    <tr class="@(item.ToBasvuruSavunmaDurumID.HasValue?(item.ToBasvuruSavunmaDurumID==ToBasvuruSavunmaDurumuEnum.KabulEdildi?"info":"danger"):"warning")">
                                                                         <td class="CaptionTd">Değerlendirme Sonucu</td>
                                                                         <td class="CaptionTd">:</td>
                                                                         <td class="ValueTd">
                                                                             @item.DurumModel.TosBasvuruDurumView()
                                                                         </td>
                                                                     </tr>
-
+                                                                    @if (yetkili && item.ToBasvuruSavunmaDurumID.HasValue)
+                                                                    {
+                                                                        var yazibaslik = "";
+                                                                        if (item.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi) { yazibaslik = "Ara Rapor İstemi Yazıları"; }
+                                                                        else if (item.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi) { yazibaslik = "Tez Önerisi Başarısız Yazıları"; }
+                                                                        else { yazibaslik = "Tez Önerisi Düzeltme Yazıları"; }
+                                                                        <tr>
+                                                                            <td class="CaptionTd">Bilgi Yazıları</td>
+                                                                            <td class="CaptionTd">:</td>
+                                                                            <td class="ValueTd">
+                                                                                <a href="javascript:void(0);" onclick="YeniDialogBB('@yazibaslik','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezOneriSavunmaAraRaporIstemiFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                    <i class="fa fa-file-pdf-o fa-lg"></i> @(yazibaslik)nı İndir
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
                                                                 </table>
                                                             }
                                                         </td>
@@ -1023,6 +1055,7 @@
     }
 </div>
 <script src="~/Scripts/inputTextChangeUpperCase.js"></script>
+@Html.Raw(Model.GenerateSpecialCharacterBlockerScript())
 <script>
 
     $(function () {

@@ -310,13 +310,25 @@
                                                                                                     }
                                                                                                 </td>
                                                                                             </tr>
+                                                                                            @if (Model.OgrenimTipKod.IsDoktora() && item.SRDurumID == SrTalepDurumEnum.Onaylandı && kayitYetki)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td class="CaptionTd">Bilgi Yazıları</td>
+                                                                                                    <td class="CaptionTd">:</td>
+                                                                                                    <td class="ValueTd">
+                                                                                                        <a href="javascript:void(0);" onclick="YeniDialogBB('Doktora Sınav Bilgileri Bildirme Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetDrSinavBilgilendirmeYazilari&Id=@item.SRTalepID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                            <i class="fa fa-file-pdf-o fa-lg"></i> Doktora Sınav Bilgileri Bildirme Yazılarını İndir
+                                                                                                        </a>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            }
                                                                                             <tr class="@(item.SRDurumID == SrTalepDurumEnum.Reddedildi ? "" : "hide")" id="aciklamabilgi_@item.SRTalepID">
                                                                                                 <td class="CaptionTd">Açıklama</td>
                                                                                                 <td class="CaptionTd">:</td>
                                                                                                 <td class="ValueTd">
                                                                                                     @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSrTalebi)
                                                                                                     {
-                                                                                                        <textarea style="width:100%;resize:vertical;" id="SRDurumAciklamasi_@item.SRTalepID" name="SRDurumAciklamasi_">@item.SRDurumAciklamasi.ToStrObjEmptString().Trim()</textarea>
+                                                                                                        <textarea style="width:100%;resize:vertical;" id="SRDurumAciklamasi_@item.SRTalepID">@item.SRDurumAciklamasi.ToStrObjEmptString().Trim()</textarea>
 
                                                                                                     }
                                                                                                     else
@@ -1046,7 +1058,20 @@
                                                                                             </td>
                                                                                         </tr>
                                                                                     }
+                                                                                    @if (item.IsOgrenciUzatmaSonrasiOnay == true && kayitYetki)
+                                                                                    {
 
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd">Bilgi Yazıları</td>
+                                                                                            <td class="CaptionTd">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                <a href="javascript:void(0);" onclick="YeniDialogBB('İkinci Tez Teslim Taahhüt Onayı Bilgilendirme Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetIkinciTezTeslimTaahhutOnayYazilari&Id=@item.SRTalepID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                    <i class="fa fa-file-pdf-o fa-lg"></i> İkinci Tez Teslim Taahhüt Onayı Bilgilendirme Yazılarını İndir
+                                                                                                </a>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                    }
                                                                                 </table>
 
                                                                             </div>

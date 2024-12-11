@@ -10,8 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
     public static class TdoAyar
     {
 
-        public const string BasvurusuAcikmi = "Başvuru Alımı Açık";
-        public const string TezBaslikKarakterKisitlamaAyar = "Tez Başlığı Karakter Kısıtlaması";
+        public const string BasvurusuAcikmi = "Başvuru Alımı Açık"; 
         public const string DanismanMaxOgrenciKayitKriter = "Danışman YL + DR maksimum kayıtlı öğrenci sayısı";
         public const string DanismanMinSinavPuanKabulKriter = "Danışman için Dil Sınavı kabulü min puan";
 

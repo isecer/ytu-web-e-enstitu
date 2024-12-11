@@ -13,6 +13,7 @@
     var tdoEykdaOnayYetkisi = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
     var tdoFormOlusturmaYetkisi = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
     var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
+    var esDanismanTalepTipIds = new List<int>() { TdoDanismanTalepTipEnum.TezDanismaniOnerisi, TdoDanismanTalepTipEnum.TezDanismaniDegisikligi, TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi };
 
 
 }
@@ -897,7 +898,7 @@
                                                 </div>
                                             }
                                         </div>
-                                        @if (item.EYKDaOnaylandi == true || item.EYKYaGonderildi == false)
+                                        @if (!esDanismanTalepTipIds.Contains(item.TDODanismanTalepTipID) || (item.EYKDaOnaylandi == true || item.EYKYaGonderildi == false))
                                         {
                                             var inxRwE = 0;
                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">

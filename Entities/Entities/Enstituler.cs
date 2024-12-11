@@ -67,6 +67,8 @@ namespace Entities.Entities
         public string Adres { get; set; }
         public string Tel { get; set; }
         public string EPosta { get; set; }
+        public Nullable<int> TezBaslikMaxLength { get; set; }
+        public string TezBaslikIllegalCharacter { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }

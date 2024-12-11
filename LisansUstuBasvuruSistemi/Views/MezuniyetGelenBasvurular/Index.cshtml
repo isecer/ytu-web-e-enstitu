@@ -16,27 +16,38 @@
 }
 
 <div class="row">
-@using (Html.BeginForm("Index", "MezuniyetGelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
-{
+    @using (Html.BeginForm("Index", "MezuniyetGelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
+    {
 
-    <div class="col-md-12">
-        @Html.Hidden("export", false)
-        <!-- START SIMPLE DATATABLE -->
-        <div class="panel panel-info" id="pnlFltr">
-            <div class="panel-heading padding-0">
-                <h3 class="panel-title">
-                    <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
-                </h3>
-                <ul class="panel-controls">
-                    @if (eykOnayYetki && Model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaHazirlandi && Model.SelectedMezuniyetBasvurulariIds.Any())
-                    {
-                        <li>
-                            <a href="javascript:void(0);" class="topluOnay" onclick="TopluEYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
-                            <script>
-
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info" id="pnlFltr">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+                        @if (eykOnayYetki && Model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaHazirlandi && Model.SelectedMezuniyetBasvurulariIds.Any())
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class="topluOnay" onclick="TopluEYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle">
+                                    <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
+                                </a>
+                                <script>
                                     function TopluEYKDaOnay() {
                                         var btbx = bootbox.dialog({
-                                            message: "Listelenen @Model.SelectedMezuniyetBasvurulariIds.Count() adet EYK'ya hazırlanmış ve EYK'da onay işlemi bekleyen</b> Tez Jüri Öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
+                                            message: `
+                                                <p>Listelenen <b>@Model.SelectedMezuniyetBasvurulariIds.Count()</b> adet EYK'ya hazırlanmış ve EYK'da onay işlemi bekleyen Tez Jüri Öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?</p>
+                                                <p>Not: Bu işlem onaylanan başvuru sayısına göre uzun sürebilir.</p>
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <label for="eykDate" style="white-space: nowrap; margin: 0;">EYK Tarihi:</label>
+                                                    <input type="text" id="eykDate" class="form-control tarihEykD date-pickerx" style="width: 150px;"  value="${new Date().toISOString().split('T')[0]}">
+                                                 
+                                                     <label for="eykSayisi" style="white-space: nowrap; margin: 0;">EYK Sayısı:</label>
+                                                     <input type="text" id="eykSayisiP" class="form-control" style="width: 150px;" title="EYK Sayısı (Boş bırakılır ise başvurularda eyk sayı girişleri varsa girilen EYK sayıları değiştirilmez. Eğer Eyk sayısı girilirse tüm onaylanan balvurulara Yeni EYK Sayısı işlenir.)" value="">
+                                                 </div>
+                                            `,
                                             title: "Toplu EYK'da onaylama işlemi",
                                             buttons: {
                                                 success: {
@@ -47,15 +58,23 @@
                                                         var _panel = $(btbx).find('.modal-content');
                                                         PanelRefresh(_panel, false);
                                                         toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı");
+
                                                         var mezuniyetBasvurulariIds = eval('@Html.Raw(Json.Encode(Model.SelectedMezuniyetBasvurulariIds))');
+                                                        var eykDate = $('#eykDate').val(); // Tarih bilgisi alınıyor.
+                                                        var eykSayisiP = $('#eykSayisiP').val(); // Tarih bilgisi alınıyor.
+
                                                         $.ajax({
                                                             url: '@Url.Action("EYKDaOnay", "MezuniyetGelenBasvurular")',
                                                             cache: false,
                                                             type: 'POST',
-                                                            data: { mezuniyetBasvurulariIds },
+                                                            data: {
+                                                                mezuniyetBasvurulariIds: mezuniyetBasvurulariIds,
+                                                                eykTarihi: eykDate,
+                                                                eykSayisi: eykSayisiP
+                                                            },
                                                             success: function (result) {
                                                                 PanelRefresh(_panel, true);
-                                                                toastr["info"](result.Count + " adet başvuru eyk'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
+                                                                toastr["info"](result.Count + " adet başvuru EYK'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
                                                                 $(btbx).find('.close').first().click();
                                                             },
                                                             error: function (err) {
@@ -69,22 +88,29 @@
                                                 danger: {
                                                     label: "Vazgeç",
                                                     className: "btn-primary",
-                                                    callback: function () {
-                                                    }
+                                                    callback: function () {}
                                                 }
                                             }
                                         });
+
+                                        // Tarih alanını datetimepicker ile etkinleştir
+                                        $('.tarihEykD').datetimepicker({
+                                            lang: 'tr',
+                                            timepicker: false,
+                                            format: 'Y-m-d'
+                                        });
                                     }
-
                                 </script>
-                        </li>
+                            </li>
 
-                    }
-                    @if (eykYetki)
-                    {
-                        <li>
-                            <a href="javascript:void(0);" onclick="ShowDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
-                            <script>
+
+
+                        }
+                        @if (eykYetki)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="ShowDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
+                                <script>
                                     function ShowDialogTutanakRpr() {
                                         var _panel = $('#pnlFltr');
 
@@ -160,299 +186,320 @@
 
                                     }
                                 </script>
-                        </li>
-                    }
-                    @if (kYetki && Model.RowCount > 0)
-                    {
-                        <li>
-                            <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
-                        </li>
-
-                    }
-                    @if (kYetki)
-                    {
-                        if (filteredOgrenciIds.Any())
-                        {
-                            <li>
-                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
                             </li>
                         }
-
-                        if (filteredDanismanIds.Any())
+                        @if (kYetki && Model.RowCount > 0)
                         {
                             <li>
-                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
                             </li>
+
                         }
+                        @if (kYetki)
+                        {
+                            if (filteredOgrenciIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                </li>
+                            }
+
+                            if (filteredDanismanIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                </li>
+                            }
 
 
-                    }
-                </ul>
-            </div>
-            <div class="panel-body">
-                <table class="table table-hover" style="width:100%;table-layout:fixed;">
-                    <tr>
-                        <td>
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Akademik Dönem</td>
-                                    <td>@Html.DropDownList("MezuniyetSureci", null, new { @class = "form-control" })</td>
-                                    <td>
-                                        @Html.DropDownList("MezuniyetSurecID", null, new { @class = "form-control" })
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        }
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Akademik Dönem</td>
+                                            <td>@Html.DropDownList("MezuniyetSureci", null, new { @class = "form-control" })</td>
+                                            <td>
+                                                @Html.DropDownList("MezuniyetSurecID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                        </td>
-                        <td style="padding-left:10px;">
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Öğrenim S. / Tez Dili</td>
-                                    <td>
-                                        @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
-                                    </td>
-                                    <td>@Html.DropDownList("IsTezDiliTr", null, new { @class = "form-control" })</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr class="@hideFilterRow">
-                        <td>
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Kayıt Dönemi</td>
-                                    <td>
-                                        @Html.DropDownList("KayitDonemi", null, new { @class = "form-control" })
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Öğrenim S. / Tez Dili</td>
+                                            <td>
+                                                @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
+                                            </td>
+                                            <td>@Html.DropDownList("IsTezDiliTr", null, new { @class = "form-control" })</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr class="@hideFilterRow">
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Kayıt Dönemi</td>
+                                            <td>
+                                                @Html.DropDownList("KayitDonemi", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                        </td>
-                        <td style="padding-left:10px;">
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Jüri Öneri Form Durumu</td>
-                                    <td>
-                                        @Html.DropDownList("JuriOneriFormuDurumuID", null, new { @class = "form-control" })
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr class="@hideFilterRow">
-                        <td>
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Başvuru Durumu</td>
-                                    <td>
-                                        @Html.DropDownList("MezuniyetYayinKontrolDurumID", null, new { @class = "form-control" })
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Anabilim Dalı</td>
+                                            <td>
+                                                @Html.DropDownList("AnabilimDaliID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                        </td>
-                        <td style="padding-left:10px;">
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Salon Rez / Sınav</td>
-                                    <td>
-                                        @Html.DropDownList("SRDurumID", null, new { @class = "form-control" })
-                                    </td>
-                                    <td>
-                                        @Html.DropDownList("MezuniyetSinavDurumID", null, new { @class = "form-control" })
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr class="@hideFilterRow">
-                        <td>
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Tez Kontrol / Yetkili</td>
-                                    <td> @Html.DropDownList("TDDurumID", null, new { @class = "form-control" })</td>
-                                    <td> @Html.DropDownList("TezKontrolKullaniciId", null, new { @class = "form-control" })</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            </td>
+                        </tr>
 
-                        </td>
-                        <td style="padding-left:10px;">
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Tez Teslim Formu Durumu</td>
-                                    <td>
-                                        @Html.DropDownList("TeslimFormDurumu", null, new { @class = "form-control" })
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Mezuniyet Durumu</td>
-                                    <td>
-                                        @Html.DropDownList("MezuniyetDurumID", null, new { @class = "form-control", onchange = "$(this).val()==1?$('.mDurumTarih').removeClass('hide'):$('.mDurumTarih').addClass('hide')" })
-                                    </td>
-                                </tr>
-                                <tr class="mDurumTarih @(Model.MezuniyetDurumID==1?"":"hide")">
-                                    <td width="150">Mezuniyet Tarih Aralığı</td>
-                                    <td>
-                                        <table style="width:100%;table-layout:fixed;">
-                                            <tr>
-                                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" placeholder="Baş:@DateTime.Now.AddMonths(-3).ToFormatDateInput()" value="@Model.MBaslangicTarihi.ToFormatDateInput()" name="MBaslangicTarihi" id="MBaslangicTarihi"></td>
-                                                <td width="5">/</td>
-                                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" placeholder="Bit:@DateTime.Now.ToFormatDateInput()" value="@Model.MBitisTarihi.ToFormatDateInput()" name="MBitisTarihi" id="MBitisTarihi"></td>
-                                            </tr>
-                                        </table>
-                                        <script>
+                        <tr class="@hideFilterRow">
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Başvuru Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("MezuniyetYayinKontrolDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Jüri Öneri Form Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("JuriOneriFormuDurumuID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr class="@hideFilterRow">
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Tez Kontrol / Yetkili</td>
+                                            <td> @Html.DropDownList("TDDurumID", null, new { @class = "form-control" })</td>
+                                            <td> @Html.DropDownList("TezKontrolKullaniciId", null, new { @class = "form-control" })</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Salon Rez / Sınav</td>
+                                            <td>
+                                                @Html.DropDownList("SRDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("MezuniyetSinavDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Mezuniyet Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("MezuniyetDurumID", null, new { @class = "form-control", onchange = "$(this).val()==1?$('.mDurumTarih').removeClass('hide'):$('.mDurumTarih').addClass('hide')" })
+                                            </td>
+                                        </tr>
+                                        <tr class="mDurumTarih @(Model.MezuniyetDurumID==1?"":"hide")">
+                                            <td width="150">Mezuniyet Tarih Aralığı</td>
+                                            <td>
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tr>
+                                                        <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" placeholder="Baş:@DateTime.Now.AddMonths(-3).ToFormatDateInput()" value="@Model.MBaslangicTarihi.ToFormatDateInput()" name="MBaslangicTarihi" id="MBaslangicTarihi"></td>
+                                                        <td width="5">/</td>
+                                                        <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" placeholder="Bit:@DateTime.Now.ToFormatDateInput()" value="@Model.MBitisTarihi.ToFormatDateInput()" name="MBitisTarihi" id="MBitisTarihi"></td>
+                                                    </tr>
+                                                </table>
+                                                <script>
                                                     $('.date-pickerx').datetimepicker({
                                                         timepicker: false,
                                                         format: 'Y-m-d'
                                                     });
                                                 </script>
 
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                        </td>
-                        <td style="padding-left:10px; vertical-align:top;">
-                            <table style="width:100%;table-layout:fixed;">
-                                <tbody>
-                                <tr>
-                                    <td width="150">Aranacak Kelime</td>
-                                    <td>
-
-                                        <table style="width:100%;table-layout:fixed;">
-                                            <tbody>
-                                            <tr>
-                                                <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
-                                                <td width="110">
-                                                    <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="panel panel-danger">
-            <div class="panel-heading padding-0">
-                <h3 class="panel-title"><i class="fa fa-list-alt"></i> Gelen Mezuniyet Başvuruları</h3>
-
-            </div>
-            <div class="panel-body">
-                <table class="table table-hover" style="width:100%;">
-                    <thead>
-                    <tr>
-                        <th width="75">
-                        </th>
-                        <th width="40"></th>
-                        <th class="sirala" field="AdSoyad">Ad Soyad</th>
-                        <th class="sirala" field="BasvuruTarihi" width="80">B. Tarihi</th>
-                        <th>Mezuniyet Durumu</th>
-                        <th width="40"></th>
-                    </tr>
-
-                    </thead>
-                    <tbody>
-
-                    @if (Model.RowCount > 0)
-                    {
-
-                        int rowIndex = Model.StartRowIndex;
-                        foreach (var item in Model.Data)
-                        {
-                            rowIndex++;
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr>
-                                            <td style="width: 30px;">@rowIndex</td>
-                                            <td>
-                                                <ul class="panel-controls">
-                                                    <li id="iShow_@item.MezuniyetBasvurulariID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.MezuniyetBasvurulariID')">
-                                                        <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
-                                                    </li>
-                                                </ul>
                                             </td>
                                         </tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail">
-                                </td>
-                                <td width="240">
-                                    @item.AdSoyad <br /> @item.OgrenciNo
-                                </td>
-                                <td>
-                                    @item.BasvuruTarihi.ToFormatDateAndTime()
-                                </td>
+                                    </tbody>
+                                </table>
 
-                                <td id="MDurum_@item.MezuniyetBasvurulariID">
-                                    @item.ToMezuniyetDurum()
-                                </td>
-                                <td>
-                                    @if (kYetki)
-                                    {
-                                        <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
-                                        <a href="javascript:void(0)" onclick="GetDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
-                                    }
-                                </td>
-                            </tr>
-                            <tr class="cls-@item.MezuniyetBasvurulariID" style="display:none">
-                                <td id="cls-@item.MezuniyetBasvurulariID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
-                            </tr>
+                            </td>
+                            <td style="padding-left:10px; vertical-align:top;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Tez Teslim Formu Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("TeslimFormDurumu", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
 
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="6" style="text-align: center;">
-                                [ Listelenen Kayıt Yok ]
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
-                    }
+                        <tr>
+                            <td>
+                            </td>
+                            <td style="padding-left:10px; vertical-align:top;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Aranacak Kelime</td>
+                                            <td>
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="panel-footer">
-                @Model.ToPagerString()
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-}
-</div> 
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Gelen Mezuniyet Başvuruları</h3>
+
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th width="75">
+                                </th>
+                                <th width="40"></th>
+                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                <th class="sirala" field="BasvuruTarihi" width="80">B. Tarihi</th>
+                                <th>Mezuniyet Durumu</th>
+                                <th width="40"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int rowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    rowIndex++;
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@rowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.MezuniyetBasvurulariID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.MezuniyetBasvurulariID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail">
+                                        </td>
+                                        <td width="240">
+                                            @item.AdSoyad <br /> @item.OgrenciNo
+                                        </td>
+                                        <td>
+                                            @item.BasvuruTarihi.ToFormatDateAndTime()
+                                        </td>
+
+                                        <td id="MDurum_@item.MezuniyetBasvurulariID">
+                                            @item.ToMezuniyetDurum()
+                                        </td>
+                                        <td>
+                                            @if (kYetki)
+                                            {
+                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="GetDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.MezuniyetBasvurulariID" style="display:none">
+                                        <td id="cls-@item.MezuniyetBasvurulariID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
 <div id="msgsB" style="display: none;">
 </div>
 @if (Model.RowCount > 0 && (Model.Data.First().TezDanismanID == UserIdentity.Current.Id || Model.SMezuniyetBID.HasValue))
@@ -486,8 +533,8 @@
         var STabID = "@Model.STabID";
 
         var tID = GetSelectedTabID(tbName);
-        if (STabID != "") tID = STabID; 
-        PanelRefresh(_panel, false); 
+        if (STabID != "") tID = STabID;
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetailMezuniyet", "Ajax")',
             data: { id: id, ShowDetayYayinID: mbyID, tbInx: tID, IsDelete: (Isdelete == true), 'GelenBasvuru': true },
@@ -1049,7 +1096,7 @@
             }
         });
     }
-    function EykYaOnayChange(id) {
+    function EykYaOnayChange(id) { 
         var val = $('#EYKYaGonderildi_' + id).val();
         if (val == 'false') {
             $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
@@ -1057,12 +1104,31 @@
         else {
             $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
         }
+        if (val = 'true') {
+            $('.EYKYaGonderildiSayi_' + id).removeClass('hide');
+
+        }
+        else {
+            $('.EYKYaGonderildiSayi_' + id).addClass('hide');
+        }
     }
-    function EykOnayChange(id) {
+    function EykYaHazirChange(id) {
+        var val = $('#EYKYaHazirlandi_' + id).val();
+       
+        if (val = 'true') {
+            $('.EYKYaHazirSayi_' + id).removeClass('hide');
+
+        }
+        else {
+            $('.EYKYaHazirSayi_' + id).addClass('hide');
+        }
+    }
+    function EykOnayChange(id) { 
         var val = $('#EYKDaOnaylandi_' + id).val();
         if (val == 'false') {
             $('#EYKOnayAciklamaRow_' + id).removeClass('hide');
             $('#EYKOnayEykTarihTd_' + id).addClass('hide');
+            $('.EYKDaOnaySayi_' + id).removeClass('hide');
         }
         else if (val == 'true') {
             $('#EYKOnayAciklamaRow_' + id).addClass('hide');
@@ -1075,21 +1141,31 @@
                 $('#EYKDaOnaylandiOnayTarihi_' + id).val(formattedDate);
             }
             $('#EYKOnayEykTarihTd_' + id).removeClass('hide');
+            $('.EYKDaOnaySayi_' + id).removeClass('hide');
         }
         else if (val == '') {
             $('#EYKOnayAciklamaRow_' + id).addClass('hide');
             $('#EYKOnayEykTarihTd_' + id).addClass('hide');
+            $('.EYKDaOnaySayi_' + id).addClass('hide');
         }
+
+
 
     }
     function EykYaGonder(mezuniyetJuriOneriFormId, mezuniyetBasvurulariId) {
         var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
         PanelRefresh(_panel, false);
-        var eykYaGonderildi = $('#EYKYaGonderildi_' + mezuniyetJuriOneriFormId).val();
+        var eykYaGonderildi = $('#EYKYaGonderildi_' + mezuniyetJuriOneriFormId).val(); 
+        var eykSayisi = "";
+        if (eykYaGonderildi) {
+            eykSayisi = $('#EYKSayisiG_' + mezuniyetBasvurulariId).val();
+
+        }
         var eykYaGonderimDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormId).val();
         var model = {
             mezuniyetJuriOneriFormId,
             eykYaGonderildi,
+            eykSayisi,
             eykYaGonderimDurumAciklamasi
 
         };
@@ -1102,7 +1178,8 @@
             data: model,
             success: function (result) {
                 PanelRefresh(_panel, true);
-                GetDetailx(mezuniyetBasvurulariId);
+                if (result.IsSuccess)
+                    GetDetailx(mezuniyetBasvurulariId);
                 if (result.Messages.length > 0) GetMsg(result);
 
             },
@@ -1117,9 +1194,15 @@
         var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
         PanelRefresh(_panel, false);
         var eykYaHazirlandi = $('#EYKyaHazirlandi_' + mezuniyetJuriOneriFormId).val();
+        var eykSayisi = "";
+        if (eykYaHazirlandi) {
+            eykSayisi = $('#EYKSayisiH_' + mezuniyetBasvurulariId).val();
+
+        }
         var model = {
             mezuniyetJuriOneriFormId,
-            eykYaHazirlandi
+            eykYaHazirlandi,
+            eykSayisi
         };
         $.ajax({
             url: '@Url.Action("EykYaHazirlaPost", "MezuniyetGelenBasvurular")',
@@ -1129,8 +1212,9 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                PanelRefresh(_panel, true);
-                GetDetailx(mezuniyetBasvurulariId);
+                PanelRefresh(_panel, true); 
+                if (result.IsSuccess)
+                    GetDetailx(mezuniyetBasvurulariId);
                 if (result.Messages.length > 0) GetMsg(result);
 
             },
@@ -1147,9 +1231,15 @@
         var eykDaOnaylandi = $('#EYKDaOnaylandi_' + mezuniyetJuriOneriFormId).val();
         var eykDaOnaylandiOnayTarihi = $('#EYKDaOnaylandiOnayTarihi_' + mezuniyetJuriOneriFormId).val();
         var eykDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormId).val();
+        var eykSayisi = "";
+        if (eykDaOnaylandi) {
+            eykSayisi = $('#EYKSayisiO_' + mezuniyetJuriOneriFormId).val();
+
+        }
         var model = {
             mezuniyetJuriOneriFormId,
             eykDaOnaylandi,
+            eykSayisi,
             eykDaOnaylandiOnayTarihi,
             eykDaOnaylanmadiDurumAciklamasi
         }

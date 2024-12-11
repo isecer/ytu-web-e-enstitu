@@ -50,6 +50,7 @@ namespace Entities.Entities
         public Nullable<bool> EYKDaOnaylandi { get; set; }
         public Nullable<int> EYKDaOnaylandiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKTarihi { get; set; }
+        public string EYKSayisi { get; set; }
         public Nullable<System.DateTime> EYKDaOnaylandiIslemTarihi { get; set; }
         public string EYKDaOnaylanmadiDurumAciklamasi { get; set; }
     

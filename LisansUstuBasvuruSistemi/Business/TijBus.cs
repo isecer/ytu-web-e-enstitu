@@ -5,7 +5,9 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
+using DevExpress.XtraReports.UI;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -13,6 +15,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -499,6 +502,21 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var enstitu = entities.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
                 var sonTijBasvuruOneri = basvuru.TijBasvuruOneris.OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault();
+
+                if (sonTijBasvuruOneri != null)
+                {
+                    var yeterlikSozluSinavTarih = sonTijBasvuruOneri.SozluSinavBasariTarihi;
+                    if (basvuru.Kullanicilar.ToBasvurus.All(a => a.OgrenciNo != basvuru.OgrenciNo))
+                    {
+                        TosBus.BasvuruOlustur(basvuru.KullaniciID, yeterlikSozluSinavTarih);
+                    }
+                    else
+                    {
+                        var tosUniqueId = basvuru.Kullanicilar.ToBasvurus.Where(p => p.OgrenciNo == basvuru.OgrenciNo).Select(s => s.UniqueID).FirstOrDefault();
+                        model.TosAktifSavunmaNo = TosBus.TosDurumInfo(tosUniqueId, null, yeterlikSozluSinavTarih).SavunmaNo;
+
+                    }
+                }
                 model.TijBasvuruOneriList = basvuru.TijBasvuruOneris.ToList().Where(p => p.TezDanismanID == (danismanId ?? p.TezDanismanID)).Select(s => new TijBasvuruOneriDetayDto
                 {
                     TijBasvuruOneriID = s.TijBasvuruOneriID,
@@ -538,6 +556,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     EYKDaOnaylandiIslemYapanID = s.EYKDaOnaylandiIslemYapanID,
                     EYKDaOnaylandiIslemTarihi = s.EYKDaOnaylandiIslemTarihi,
                     EYKTarihi = s.EYKTarihi,
+                    EYKSayisi = s.EYKSayisi,
                     EYKDaOnaylanmadiDurumAciklamasi = s.EYKDaOnaylanmadiDurumAciklamasi,
                     TijBasvuruOneriJurilers = s.TijBasvuruOneriJurilers.OrderBy(o => o.IsYeniOrOnceki ? 1 : 2)
                                                                        .ThenBy(t => t.IsTezDanismani ? 1 : 2)
@@ -683,8 +702,238 @@ namespace LisansUstuBasvuruSistemi.Business
             }
         }
 
+        public static XtraReport TiKomiteAtamaBilgilendirmeYazilari(int tijBasvuruOneriId)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+
+                var tijBasvuruOneri = entities.TijBasvuruOneris.First(p => p.TijBasvuruOneriID == tijBasvuruOneriId);
+                var tijBasvuru = tijBasvuruOneri.TijBasvuru;
+                var enstitu = tijBasvuru.Enstituler;
+                var anabilimDaliAdi = tijBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.IlkHarfiBuyut();
+                var programAdi = tijBasvuru.Programlar.ProgramAdi.IlkHarfiBuyut();
+                var ogrenciNo = tijBasvuru.OgrenciNo;
+                var ogrenciAdSoyad = (tijBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + tijBasvuru.Kullanicilar.Soyad.ToUpper();
+                var isTezBaslikTr = tijBasvuruOneri.IsTezDiliTr;
+
+                var tezBaslik = isTezBaslikTr ? tijBasvuruOneri.TezBaslikTr : tijBasvuruOneri.TezBaslikEn;
 
 
+                var sablonInx = 0;
+                XtraReport rprX = null;
+
+
+                var tezDanisman =
+                    tijBasvuruOneri.TijBasvuruOneriJurilers.First(f => f.IsTezDanismani && f.IsAsil == true);
+                var asilJuris = tijBasvuruOneri.TijBasvuruOneriJurilers
+                    .Where(p => !p.IsTezDanismani && p.IsAsil == true).OrderBy(o => o.IsYtuIciJuri ? 1 : 2).ThenBy(o => o.RowNum).ToList();
+
+
+
+
+                var sablonTipIds = new List<int>
+                    {
+                        YaziSablonTipiEnum.TiKomiteAtamaBilgilendirmeYazisiAbd,
+                        YaziSablonTipiEnum.TiKomiteAtamaBilgilendirmeYazisiDanisman,
+                        YaziSablonTipiEnum.TiKomiteAtamaBilgilendirmeYazisiAsilJuriler
+
+                };
+
+
+                var sablonlar = entities.YaziSablonlaris.Where(p => sablonTipIds.Contains(p.YaziSablonTipID) && p.EnstituKod == enstitu.EnstituKod && p.IsAktif).ToList();
+                var sablonModel = new List<KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>>();
+
+                // sablonTipIds koleksiyonunu LINQ ile işliyoruz
+                foreach (var sablonTipId in sablonTipIds)
+                {
+                    var sablon = sablonlar.FirstOrDefault(f => f.YaziSablonTipID == sablonTipId);
+                    if (sablon == null) continue;
+
+                    // Eğer sablon tipi danisman ise sadece tezDanisman ekle
+                    if (sablon.YaziSablonTipID == YaziSablonTipiEnum.TiKomiteAtamaBilgilendirmeYazisiDanisman)
+                    {
+                        sablonModel.Add(new KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>(sablon, tezDanisman));
+                    }
+                    else if (sablon.YaziSablonTipID == YaziSablonTipiEnum.TiKomiteAtamaBilgilendirmeYazisiAsilJuriler)
+                    {
+                        // Diğer sablonlar için asilJuris elemanlarını ekle
+                        asilJuris.ForEach(item =>
+                            sablonModel.Add(new KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>(sablon, item)));
+                    }
+                    else sablonModel.Add(new KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>(sablon, new TijBasvuruOneriJuriler()));
+                }
+                var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(tijBasvuru.EnstituKod).ToInt(0);
+                //var tezOneriIkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(tijBasvuru.EnstituKod).ToInt(0);
+                //var tezOneriToplamSavunmaHakkiAyKriter = tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
+                var tezOneriSavunmaSonTarih = tijBasvuruOneri.SozluSinavBasariTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
+
+                foreach (var sablon in sablonModel)
+                {
+
+                    var parameters = new List<MailParameterDto>
+                    {
+                        new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDaliAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "ProgramAdi", Value = programAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "OgrenciNo", Value = ogrenciNo },
+                        new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanUnvan", Value = tezDanisman.UnvanAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanAdSoyad", Value = tezDanisman.AdSoyad.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "EYKTarihi", Value =tijBasvuruOneri.EYKTarihi.ToFormatDate() },
+                        new MailParameterDto { Key = "EYKSayisi", Value =tijBasvuruOneri.EYKSayisi },
+                        new MailParameterDto { Key = "YeterlikSozluSinavTarihi", Value = tijBasvuruOneri.SozluSinavBasariTarihi.ToFormatDate() },
+                        new MailParameterDto { Key = "TezOneriSavunmaSonTarih", Value =tezOneriSavunmaSonTarih.ToFormatDate() },
+                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik.IlkHarfiBuyut(!isTezBaslikTr) },
+                        new MailParameterDto { Key = "SeciliAsilKomiteUyesiUnvan", Value = sablon.Value.UnvanAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "SeciliAsilKomiteUyesiAdSoyad", Value =  sablon.Value.AdSoyad.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "SeciliAsilKomiteUyesiUniversite", Value =  sablon.Value.UniversiteAdi.IlkHarfiBuyut()}
+                    };
+                    var inx = 0;
+                    foreach (var itemJuri in asilJuris)
+                    {
+                        inx++;
+                        parameters.AddRange(new List<MailParameterDto>{
+                            new MailParameterDto { Key = $"AsilKomiteUyesi{inx}Unvan", Value = itemJuri.UnvanAdi.IlkHarfiBuyut() },
+                            new MailParameterDto { Key = $"AsilKomiteUyesi{inx}AdSoyad", Value = itemJuri.AdSoyad.IlkHarfiBuyut() },
+                            new MailParameterDto { Key = $"AsilKomiteUyesi{inx}Universite", Value = itemJuri.UniversiteAdi.IlkHarfiBuyut() }
+                        });
+                    }
+                    var html = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonHtml, parameters);
+                    var htmlFooter = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonFooterHtml, parameters);
+                    if (sablonInx == 0)
+                    {
+                        rprX = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Key.Konu);
+                        rprX.CreateDocument();
+                    }
+                    else
+                    {
+                        var rapor = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Key.Konu);
+                        rapor.CreateDocument();
+                        rprX.Pages.AddRange(rapor.Pages);
+                    }
+
+
+                    sablonInx++;
+                }
+                return rprX;
+
+            }
+        }
+        public static XtraReport TiKomiteAtamaToIkinciSavunmaBilgilendirmeYazilari(int tijBasvuruOneriId)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+
+                var tijBasvuruOneri = entities.TijBasvuruOneris.First(p => p.TijBasvuruOneriID == tijBasvuruOneriId);
+                var tijBasvuru = tijBasvuruOneri.TijBasvuru;
+                var enstitu = tijBasvuru.Enstituler;
+                var anabilimDaliAdi = tijBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.IlkHarfiBuyut();
+                var programAdi = tijBasvuru.Programlar.ProgramAdi.IlkHarfiBuyut();
+                var ogrenciNo = tijBasvuru.OgrenciNo;
+                var ogrenciAdSoyad = (tijBasvuru.Kullanicilar.Ad).IlkHarfiBuyut() + " " + tijBasvuru.Kullanicilar.Soyad.ToUpper();
+
+                var isTezBaslikTr = tijBasvuruOneri.IsTezDiliTr;
+                var tezBaslik = isTezBaslikTr ? tijBasvuruOneri.TezBaslikTr : tijBasvuruOneri.TezBaslikEn;
+
+
+                var sablonInx = 0;
+                XtraReport rprX = null;
+
+
+                var tezDanisman =
+                    tijBasvuruOneri.TijBasvuruOneriJurilers.First(f => f.IsTezDanismani && f.IsAsil == true);
+                var asilJuris = tijBasvuruOneri.TijBasvuruOneriJurilers
+                    .Where(p => !p.IsTezDanismani && p.IsAsil == true).OrderBy(o => o.IsYtuIciJuri ? 1 : 2).ThenBy(o => o.RowNum).ToList();
+
+
+                var sablonTipIds = new List<int>
+                    {
+                        YaziSablonTipiEnum.TiKomiteAtamaToIkinciSavunmaBilgilendirmeYazisiAbd,
+                        YaziSablonTipiEnum.TiKomiteAtamaToIkinciSavunmaBilgilendirmeYazisiDanisman,
+                        YaziSablonTipiEnum.TiKomiteAtamaToIkinciSavunmaBilgilendirmeYazisiAsilJuriler
+
+                };
+
+
+                var sablonlar = entities.YaziSablonlaris.Where(p => sablonTipIds.Contains(p.YaziSablonTipID) && p.EnstituKod == enstitu.EnstituKod && p.IsAktif).ToList();
+                var sablonModel = new List<KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>>();
+
+                // sablonTipIds koleksiyonunu LINQ ile işliyoruz
+                foreach (var sablonTipId in sablonTipIds)
+                {
+                    var sablon = sablonlar.FirstOrDefault(f => f.YaziSablonTipID == sablonTipId);
+                    if (sablon == null) continue;
+
+                    // Eğer sablon tipi danisman ise sadece tezDanisman ekle
+                    if (sablon.YaziSablonTipID == YaziSablonTipiEnum.TiKomiteAtamaToIkinciSavunmaBilgilendirmeYazisiDanisman)
+                    {
+                        sablonModel.Add(new KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>(sablon, tezDanisman));
+                    }
+                    else if (sablon.YaziSablonTipID == YaziSablonTipiEnum.TiKomiteAtamaToIkinciSavunmaBilgilendirmeYazisiAsilJuriler)
+                    {
+                        // Diğer sablonlar için asilJuris elemanlarını ekle
+                        asilJuris.ForEach(item =>
+                            sablonModel.Add(new KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>(sablon, item)));
+                    }
+                    else sablonModel.Add(new KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>(sablon, new TijBasvuruOneriJuriler()));
+                }
+                var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(tijBasvuru.EnstituKod).ToInt(0);
+                var tezOneriIkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(tijBasvuru.EnstituKod).ToInt(0);
+                var tezOneriToplamSavunmaHakkiAyKriter = tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
+                var tezOneriSavunmaSonTarihSavunmaNo1 = tijBasvuruOneri.SozluSinavBasariTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
+                var tezOneriSavunmaSonTarihSavunmaNo2 = tijBasvuruOneri.SozluSinavBasariTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
+
+                foreach (var sablon in sablonModel)
+                {
+
+                    var parameters = new List<MailParameterDto>
+                    {
+                        new MailParameterDto { Key = "AnabilimDaliAdi", Value = anabilimDaliAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "ProgramAdi", Value = programAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "OgrenciNo", Value = ogrenciNo },
+                        new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanUnvan", Value = tezDanisman.UnvanAdi.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "DanismanAdSoyad", Value = tezDanisman.AdSoyad.IlkHarfiBuyut() },
+                        new MailParameterDto { Key = "EYKTarihi", Value =tijBasvuruOneri.EYKTarihi.ToFormatDate() },
+                        new MailParameterDto { Key = "EYKSayisi", Value =tijBasvuruOneri.EYKSayisi },
+                        new MailParameterDto { Key = "YeterlikSozluSinavTarihi", Value = tijBasvuruOneri.SozluSinavBasariTarihi.ToFormatDate() },
+                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik.IlkHarfiBuyut(!isTezBaslikTr) },
+                        new MailParameterDto { Key = "SonTarihSavunmaNo1", Value =tezOneriSavunmaSonTarihSavunmaNo1.ToFormatDate() },
+                        new MailParameterDto { Key = "SonTarihSavunmaNo2", Value =tezOneriSavunmaSonTarihSavunmaNo2.ToFormatDate() },
+                        new MailParameterDto { Key = "SeciliAsilKomiteUyesiUnvan", Value = sablon.Value.UnvanAdi.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "SeciliAsilKomiteUyesiAdSoyad", Value =  sablon.Value.AdSoyad.IlkHarfiBuyut()},
+                        new MailParameterDto { Key = "SeciliAsilKomiteUyesiUniversite", Value =  sablon.Value.UniversiteAdi.IlkHarfiBuyut()}
+                    };
+                    var inx = 0;
+                    foreach (var itemJuri in asilJuris)
+                    {
+                        inx++;
+                        parameters.AddRange(new List<MailParameterDto>{
+                            new MailParameterDto { Key = $"AsilKomiteUyesi{inx}Unvan", Value = itemJuri.UnvanAdi.IlkHarfiBuyut() },
+                            new MailParameterDto { Key = $"AsilKomiteUyesi{inx}AdSoyad", Value = itemJuri.AdSoyad.IlkHarfiBuyut() },
+                            new MailParameterDto { Key = $"AsilKomiteUyesi{inx}Universite", Value = itemJuri.UniversiteAdi.IlkHarfiBuyut() }
+                        });
+                    }
+                    var html = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonHtml, parameters);
+                    var htmlFooter = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonFooterHtml, parameters);
+                    if (sablonInx == 0)
+                    {
+                        rprX = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Key.Konu);
+                        rprX.CreateDocument();
+                    }
+                    else
+                    {
+                        var rapor = new RprYaziSablonOlusturucu(enstitu, html, htmlFooter, sablon.Key.Konu);
+                        rapor.CreateDocument();
+                        rprX.Pages.AddRange(rapor.Pages);
+                    }
+
+
+                    sablonInx++;
+                }
+                return rprX;
+
+            }
+        }
         public static MmMessage SendMailDanismanOnay(Guid tijBasvuruOneriUniqueId)
         {
             return MailSenderTij.SendMailDanismanOnay(tijBasvuruOneriUniqueId);

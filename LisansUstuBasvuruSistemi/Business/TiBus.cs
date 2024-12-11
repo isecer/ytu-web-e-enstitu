@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
+using DevExpress.XtraReports.UI;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -221,7 +223,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod);
 
-                                var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
+                                var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).Select(s=>s.Trim()).ToList();
 
                                 var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
 
@@ -444,6 +446,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 return anabilimDallaris;
             }
         }
+         
 
     }
 }

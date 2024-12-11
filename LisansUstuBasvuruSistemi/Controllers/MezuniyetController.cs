@@ -1985,9 +1985,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 s.Key.MezuniyetSinavDurumID,
                                 Count = s.Count()
                             }).OrderByDescending(o => o.Count).ToList();
-
-                            srTalebi.JuriSonucMezuniyetSinavDurumID = qGroup.First().MezuniyetSinavDurumID;
+                            var sonucSinavDurumId = qGroup.First().MezuniyetSinavDurumID;
+                            srTalebi.JuriSonucMezuniyetSinavDurumID = sonucSinavDurumId;
                             srTalebi.IsOyBirligiOrCoklugu = qGroup.Count == 1;
+                            srTalebi.MezuniyetSinavDurumID = sonucSinavDurumId;
+                            srTalebi.MezuniyetBasvurulari.MezuniyetSinavDurumID = sonucSinavDurumId;
+                            var basvuruOgrenimTipKodKriter = mezuniyetBasvurusu.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == mezuniyetBasvurusu.OgrenimTipKod);
+                            var tezTeslimSonTarih = srTalebi.Tarih.AddDays(basvuruOgrenimTipKodKriter.TezTeslimSuresiGun);
+                            srTalebi.MezuniyetBasvurulari.TezTeslimSonTarih = tezTeslimSonTarih;
+                            srTalebi.MezuniyetSinavDurumIslemTarihi = DateTime.Now;
+                            srTalebi.MezuniyetBasvurulari.MezuniyetSinavDurumIslemTarihi = DateTime.Now;
+                            srTalebi.MezuniyetSinavDurumIslemYapanID = UserIdentity.Current.Id;
+                            srTalebi.MezuniyetBasvurulari.MezuniyetSinavDurumIslemYapanID = UserIdentity.Current.Id;
                             _entities.SaveChanges();
                             if (sendSonuc)
                             {
@@ -1998,8 +2007,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 {
                                     if (messages.IsSuccess)
                                     {
-                                        mMessage.Messages.Add("Değerlendirme sonucu danışman ve öğrenciye gönderildi.");
-
+                                        mMessage.Messages.Add("Değerlendirme sonucu danışman ve öğrenciye gönderildi."); 
                                     }
                                     else
                                     {
@@ -2010,6 +2018,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 if (messages.IsSuccess)
                                 {
                                     srTalebi.DegerlendirmeSonucMailTarihi = DateTime.Now;
+                                }
+                                if (new List<int> { MezuniyetSinavDurumEnum.Basarili, MezuniyetSinavDurumEnum.Uzatma }.Contains(srTalebi.MezuniyetSinavDurumID.Value))
+                                {
+                                    MezuniyetBus.SendMailMezuniyetSinavSonucu(srTalebi.SRTalepID, srTalebi.MezuniyetSinavDurumID.Value);
+
                                 }
                                 _entities.SaveChanges();
                             }

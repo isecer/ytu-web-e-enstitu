@@ -14,5 +14,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int ButunlesikDoktora = 5;
         public const int BilimselHazirlik = 6;
 
+
+        public bool IsDrOrYl(int ogrenimTipKod)
+        {
+            return ogrenimTipKod == Doktra || ogrenimTipKod == ButunlesikDoktora;
+        }
+
     }
 }

@@ -8,7 +8,6 @@
     Layout = null;
     var color = Model.Color;
     var kRole = RoleNames.SrTalepDuzelt.InRoleCurrent();
-
     var bilgiModel = (SrTalepBasvuranInfoDto)ViewBag.SrTalepBasvuranInfoDto;
 
 
@@ -115,7 +114,18 @@
                                 }
                             </td>
                         </tr>
-
+                        @if (Model.SRTalepTipleri.IsTezSinavi && Model.OgrenimTipKod.IsDoktora() && Model.SRDurumID == SrTalepDurumEnum.Onaylandı && kRole)
+                        {
+                            <tr>
+                                <td class="CaptionTd">Bilgi Yazıları</td>
+                                <td class="CaptionTd">:</td>
+                                <td class="ValueTd">
+                                    <a href="javascript:void(0);" onclick="YeniDialogBB('Doktora Sınav Bilgileri Bildirme Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetDrSinavBilgilendirmeYazilari&Id=@Model.SRTalepID' , 'auto', 'modal-dialog modal-lg' )">
+                                        <i class="fa fa-file-pdf-o fa-lg"></i> Doktora Sınav Bilgileri Bildirme Yazılarını İndir
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                     </table>
                 </td>
 

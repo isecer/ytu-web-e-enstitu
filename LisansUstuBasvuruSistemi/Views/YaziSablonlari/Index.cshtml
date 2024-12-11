@@ -45,6 +45,9 @@
                                 <th>
                                     <input name="Konu" type="text" value="@Model.Konu" class="form-control" />
                                 </th>
+                                <th>
+                                    @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
                                 <th></th>
                             </tr>
                             @if (Model.RowCount > 0)

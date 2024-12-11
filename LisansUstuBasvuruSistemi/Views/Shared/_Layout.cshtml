@@ -6,7 +6,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting 
 @{
     var urlInfo = Request.Url.ToUrlInfo();
 
@@ -29,6 +29,7 @@
     var selectedEnstitu = enstituler.First(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd));
     var isEnstituYetkisiVar = UserIdentity.Current.IsAuthenticated && UserIdentity.Current.EnstituKods.Contains(selectedEnstitu.EnstituKod);
     const string lImage = "/Content/assets/images/ytu_logo_tr.gif";
+ 
 
 }
 
@@ -123,6 +124,7 @@
     <link href="~/Content/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />
     <link href="~/Content/fontawesome-free-6.4.2-web/css/v4-shims.min.css" rel="stylesheet" />
     <link href="~/Content/css/howerBtnStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/specialCharacterBlocker.js"></script>
     <!-- END SCRIPTS -->
     <style>
         .popover {
@@ -1402,7 +1404,7 @@
                 newWindow.focus();
             }
         }
-        function ShowDuyuru(popupSetting) {  
+        function ShowDuyuru(popupSetting) {
 
             // Eğer kullanıcı login değilse veya popupTipId 1 değilse normal davranışı sürdür
             if (popupSetting.popupTipId !== 1 || true) {
@@ -2235,6 +2237,7 @@
             }
         }
     </script>
+     
     @RenderSection("scripts", required: false)
 </body>
 </html>

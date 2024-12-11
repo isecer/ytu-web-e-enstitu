@@ -1,8 +1,13 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
 @{
     Layout = null;
     var openRow = !Model.IsAbdKomitesiJuriyiOnayladi.HasValue || Model.IsDegerlendirme.HasValue;
+    var juriOlusturmaJetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() || Model.TezDanismanID == UserIdentity.Current.Id;
+
 }
 
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
@@ -13,7 +18,7 @@
             <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
                 @if (!Model.DmYeterlikKomites.Any(a => a.IsJuriOnaylandi.HasValue))
                 {
-                    if (!Model.IsDegerlendirme.HasValue)
+                    if (!Model.IsDegerlendirme.HasValue && juriOlusturmaJetki)
                     {
                         if (Model.YeterlikBasvuruJuriUyeleris.Any())
                         {
@@ -43,7 +48,7 @@
                         <tr class="info">
                             <th>Ad Soyad</th>
                             <th>Üniversite</th>
-                            <th>Anabilim Dalı</th> 
+                            <th>Anabilim Dalı</th>
                         </tr>
                         <tbody>
 
@@ -60,7 +65,7 @@
 
                                     <td>
                                         @itemJr.sj.AnabilimDaliAdi
-                                    </td> 
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -71,7 +76,14 @@
                     <br />
                     <table class="table">
                         <tr class="info" style="text-align: center;">
-                            <td>Yeterlik jüri üyeleri henüz oluşturulmadı. Üyeleri oluşturmak için Jüri üyelerini oluştur butonuna tıklayınız.</td>
+                            @if (juriOlusturmaJetki)
+                            {
+                                <td>Yeterlik jüri üyeleri henüz oluşturulmadı. Üyeleri oluşturmak için Jüri üyelerini oluştur butonuna tıklayınız.</td>
+                            }
+                            else
+                            {
+                                <td>Yeterlik jüri üyeleri Tez Danışmanı tarafından henüz oluşturulmadı.</td>
+                            }
                         </tr>
                     </table>
                 }

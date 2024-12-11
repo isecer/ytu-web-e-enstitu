@@ -23,13 +23,13 @@ namespace LisansUstuBasvuruSistemi.Business
 
         }
 
-        public static List<CmbIntDto> GetCmbYaziSablonTipleri(bool? sistemYazii = null, bool bosSecimVar = false, bool? isOlusturulmayanlar = null)
+        public static List<CmbIntDto> GetCmbYaziSablonTipleri(string enstituKod, bool bosSecimVar = false, bool? isOlusturulmayanlar = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var entities = new LubsDbEntities())
             {
-                var data = entities.YaziSablonTipleris.Where(p => !isOlusturulmayanlar.HasValue || !p.YaziSablonlaris.Any() == isOlusturulmayanlar).OrderBy(o => o.SablonTipAdi).ToList();
+                var data = entities.YaziSablonTipleris.Where(p => !isOlusturulmayanlar.HasValue || p.YaziSablonlaris.All(a => a.EnstituKod != enstituKod) == isOlusturulmayanlar).OrderBy(o => o.SablonTipAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.YaziSablonTipID, Caption = item.SablonTipAdi });
