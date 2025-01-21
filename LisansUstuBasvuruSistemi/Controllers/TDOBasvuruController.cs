@@ -437,9 +437,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
                 mMessage.MessageType = MsgTypeEnum.Information;
-                mMessage.IsSuccess = true;
-                model.TezBaslikMaxLength = tdoBas.Enstituler.TezBaslikMaxLength;
-                model.TezBaslikIllegalCharacter = tdoBas.Enstituler.TezBaslikIllegalCharacter;
+                mMessage.IsSuccess = true; 
                 view = ViewRenderHelper.RenderPartialView("TdoBasvuru", "TdoYeniDanismanFormu", model);
 
 
@@ -1095,6 +1093,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     model.TDOBasvuruDanismanID = tdoBd.TDOBasvuruDanismanID;
                 }
+                else
+                {
+                    var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != tdoBasvuruDanismanId).OrderByDescending(o => o.TDOBasvuruDanismanID).FirstOrDefault();
+                    if (oncekiBasvuru != null && (oncekiBasvuru.IsYeniTezDiliTr == false || oncekiBasvuru.IsTezDiliTr == false))
+                    {
+                        model.SinavTipID = oncekiBasvuru.SinavTipID;
+                        model.SinavAdi = oncekiBasvuru.SinavAdi;
+                        model.SinavPuani = oncekiBasvuru.SinavPuani;
+                        model.SinavYili = oncekiBasvuru.SinavYili;
+                    }
+                }
 
 
                 model.SListTDoDanismanTalepTip = new SelectList(TdoBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
@@ -1110,9 +1119,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
             }
             if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
-            model.TezBaslikMaxLength = tdoBas.Enstituler.TezBaslikMaxLength;
-            model.TezBaslikIllegalCharacter = tdoBas.Enstituler.TezBaslikIllegalCharacter;
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage); 
             return new
             {
                 mMessage.IsSuccess,
@@ -1134,8 +1141,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != kModel.TDOBasvuruDanismanID).OrderByDescending(o => o.TDOBasvuruDanismanID).First();
             KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
             if (yenTezDiliDegisecekmi == false) kModel.IsYeniTezDiliTr = null;
-            var isTezDiliTr = yenTezDiliDegisecekmi ? kModel.IsYeniTezDiliTr == true : oncekiBasvuru.IsTezDiliTr;
             var isOncekiTezDiliTr = oncekiBasvuru.IsYeniTezDiliTr ?? oncekiBasvuru.IsTezDiliTr;
+            var isTezDiliTr = yenTezDiliDegisecekmi ? kModel.IsYeniTezDiliTr == true : isOncekiTezDiliTr;
 
 
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
@@ -1425,6 +1432,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.TDProgramKod = tdoBd.TDProgramKod;
 
                 }
+                else
+                {
+                    var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != tdoBasvuruDanismanId).OrderByDescending(o => o.TDOBasvuruDanismanID).FirstOrDefault();
+                    if (oncekiBasvuru != null && (oncekiBasvuru.IsYeniTezDiliTr == false || oncekiBasvuru.IsTezDiliTr == false))
+                    {
+                        model.SinavTipID = oncekiBasvuru.SinavTipID;
+                        model.SinavAdi = oncekiBasvuru.SinavAdi;
+                        model.SinavPuani = oncekiBasvuru.SinavPuani;
+                        model.SinavYili = oncekiBasvuru.SinavYili;
+                    }
+                }
 
 
                 model.SListTDoDanismanTalepTip = new SelectList(TdoBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
@@ -1442,9 +1460,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
             }
             if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
-            model.TezBaslikMaxLength = tdoBas.Enstituler.TezBaslikMaxLength;
-            model.TezBaslikIllegalCharacter = tdoBas.Enstituler.TezBaslikIllegalCharacter;
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage); 
 
             return new
             {
@@ -1467,8 +1483,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != kModel.TDOBasvuruDanismanID).OrderByDescending(o => o.TDOBasvuruDanismanID).First();
             KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
             if (yenTezDiliDegisecekmi == false) kModel.IsYeniTezDiliTr = null;
-            var isTezDiliTr = yenTezDiliDegisecekmi ? kModel.IsYeniTezDiliTr == true : oncekiBasvuru.IsTezDiliTr;
             var isOncekiTezDiliTr = oncekiBasvuru.IsYeniTezDiliTr ?? oncekiBasvuru.IsTezDiliTr;
+            var isTezDiliTr = yenTezDiliDegisecekmi ? kModel.IsYeniTezDiliTr == true : isOncekiTezDiliTr;
 
 
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
@@ -2713,6 +2729,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     tdoBasvuruDanisman.TDOBasvuru.AktifTDOBasvuruDanismanID = tdoBasvuruDanisman.TDOBasvuru.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID != tdoBasvuruDanismanId).OrderByDescending(o => o.TDOBasvuruDanismanID).Select(s => s.TDOBasvuruDanismanID).FirstOrDefault().ToNullIntZero();
+
+                    if (tdoBasvuruDanisman.IsObsData && tdoBasvuruDanisman.TDOBasvuruEsDanismen.All(a => a.IsObsData))
+                    {
+                        _entities.TDOBasvuruEsDanismen.RemoveRange(tdoBasvuruDanisman.TDOBasvuruEsDanismen);
+                    }
                     _entities.TDOBasvuruDanismen.Remove(tdoBasvuruDanisman);
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;

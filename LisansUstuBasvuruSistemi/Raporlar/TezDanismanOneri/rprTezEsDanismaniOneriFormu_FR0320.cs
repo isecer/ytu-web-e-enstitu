@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using BiskaUtil;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -89,7 +88,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 
                 cellEsDanismanAdSoyad.Text = qData.EdUnvanAdi + " " + qData.EdAdSoyad;
                 cellEsDanismanAnabilimDaliAdi.Text = qData.EdAnabilimDaliAdi;
-                cellEsDanismanProgramAdi.Text = qData.ProgramAdi;
+                cellEsDanismanProgramAdi.Text = qData.EdProgramAdi;
                 cellEsDanismanUniversiteAdi.Text = qData.EdUniversiteAdi;
 
                 cellEsGerekce.Text = qData.Gerekce;

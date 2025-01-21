@@ -244,38 +244,22 @@ namespace LisansUstuBasvuruSistemi.Business
                 foreach (var firstRow in model.TDOBasvuruDanismanList)
                 {
                     firstRow.VarolanDanismanGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
-                    firstRow.VarolanDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
+                    firstRow.VarolanDanismanOnayIslemiAcik = ((isDanismanOnayYetki && firstRow.VarolanTezDanismanID == UserIdentity.Current.Id) || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
+                    var danismanOnayYetkiKontrol = ((isDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id) || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
+
                     if (firstRow.VarolanDanismanGozuksun)
                     {
-                        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
+                        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && danismanOnayYetkiKontrol;
                     }
                     else
                     {
-                        firstRow.YeniDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
+                        firstRow.YeniDanismanOnayIslemiAcik = danismanOnayYetkiKontrol;
 
                     }
                     firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi;
 
                     firstRow.IsDuzeltSilYapabilir = firstRow.DanismanOnayladi != true && firstRow.VarolanDanismanOnayladi != true;
-                }
-                //if (model.TDOBasvuruDanismanList.Any())
-                //{
-                //    var firstRow = model.TDOBasvuruDanismanList.First();
-                //    firstRow.VarolanDanismanGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
-                //    firstRow.VarolanDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
-                //    if (firstRow.VarolanDanismanGozuksun)
-                //    {
-                //        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
-                //    }
-                //    else
-                //    {
-                //        firstRow.YeniDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
-
-                //    }
-                //    firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi;
-
-                //    firstRow.IsDuzeltSilYapabilir = firstRow.DanismanOnayladi != true && firstRow.VarolanDanismanOnayladi != true;
-                //}
+                } 
 
 
                 TDOBasvuruEsDanisman lastEsBasvuru = null;
@@ -511,6 +495,38 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         var tDoBasvuru = entities.TDOBasvurus.First(p => p.TDOBasvuruID == tDoBasvuruId);
                         kModel.TDOBasvuruID = tDoBasvuruId;
+                        if (!ogrenciInfo.OgrenciInfo.ES_DANISMAN_ADSOYAD.IsNullOrWhiteSpace())
+                        {
+                            var formKodu2 = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
+                            while (entities.TDOBasvuruEsDanismen.Any(a => a.FormKodu == formKodu2))
+                            {
+                                formKodu2 = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
+                            }
+
+                            kModel.TDOBasvuruEsDanismen = new List<TDOBasvuruEsDanisman>
+                            {
+                                new TDOBasvuruEsDanisman
+                                {
+                                    UniqueID = Guid.NewGuid(),
+                                    IsObsData = true,
+                                    FormKodu = formKodu2,
+                                    IsDegisiklikTalebi = false,
+                                    BasvuruTarihi = DateTime.Now,
+                                    UnvanAdi = ogrenciInfo.OgrenciInfo.ES_DANISMAN_UNVAN,
+                                    AdSoyad = ogrenciInfo.OgrenciInfo.ES_DANISMAN_ADSOYAD,
+                                    UniversiteAdi = "",
+                                    AnabilimDaliAdi = "",
+                                    ProgramAdi = "",
+                                    EMail = "",
+                                    EYKYaGonderildi = true,
+                                    EYKYaHazirlandi = true,
+                                    EYKDaOnaylandi = true,
+                                    IslemTarihi = DateTime.Now,
+                                    IslemYapanID = UserIdentity.Current.Id,
+                                    IslemYapanIP = UserIdentity.Ip
+                                }
+                            };
+                        }
                         var added = entities.TDOBasvuruDanismen.Add(kModel);
                         tDoBasvuru.AktifTDOBasvuruDanismanID = added.TDOBasvuruDanismanID;
 

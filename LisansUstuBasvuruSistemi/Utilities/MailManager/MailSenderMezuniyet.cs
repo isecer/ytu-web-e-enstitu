@@ -1021,7 +1021,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         return new MmMessage()
                         {
                             Messages = new List<string>
-                                { "Rezervasyona ait mezuniyet başvurusu bulunamadığı öğrenci ve jüri üyelerine için mail gönderilemedi!" }
+                                { "Rezervasyona ait mezuniyet başvurusu bulunamadığı için öğrenci ve jüri üyelerne mail gönderilemedi!" }
                         };
                     var juriOneriFormu = mb.MezuniyetJuriOneriFormlaris.First();
 
@@ -1043,7 +1043,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
 
 
-                    var juriler = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.IsAsilOrYedek.HasValue).ToList();
+                    var juriler = talep.SRTaleplerJuris.ToList();
 
                     mModel.Add(new SablonMailModel
                     {
@@ -1058,8 +1058,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         mModel.Add(new SablonMailModel
                         {
                             JuriTipAdi = "Danışman",
-                            AdSoyad = danisman.UnvanAdi + " " + danisman.AdSoyad,
-                            EMails = new List<MailSendList> { new MailSendList { EMail = danisman.EMail, KullaniciId = mb.TezDanismanID, ToOrBcc = true } },
+                            AdSoyad = danisman.UnvanAdi + " " + danisman.JuriAdi,
+                            EMails = new List<MailSendList> { new MailSendList { EMail = danisman.Email, KullaniciId = mb.TezDanismanID, ToOrBcc = true } },
                             MailSablonTipId = juriSablonTipId,
 
                         });
@@ -1075,15 +1075,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     }
                     else
                     {
-                        foreach (var item in juriler.Where(p => p.IsAsilOrYedek == true))
+                        foreach (var item in juriler)
                         {
 
 
                             mModel.Add(new SablonMailModel
                             {
 
-                                AdSoyad = item.AdSoyad,
-                                EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, KullaniciId = item.JuriTipAdi == "TezDanismani" ? mb.TezDanismanID : null, ToOrBcc = true } },
+                                AdSoyad = item.JuriAdi,
+                                EMails = new List<MailSendList> { new MailSendList { EMail = item.Email, KullaniciId = item.JuriTipAdi == "TezDanismani" ? mb.TezDanismanID : null, ToOrBcc = true } },
                                 MailSablonTipId = juriSablonTipId,
                                 JuriTipAdi = item.JuriTipAdi,
                                 UnvanAdi = item.UnvanAdi
@@ -1155,7 +1155,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@IptalAciklamasi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "IptalAciklamasi", Value = talep.SRDurumAciklamasi });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanBilgi"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanBilgi", Value = danisman.UnvanAdi + " " + danisman.AdSoyad });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanBilgi", Value = danisman.UnvanAdi + " " + danisman.JuriAdi });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanUni"))
                         {
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "DanismanUni", Value = danisman.UniversiteAdi });

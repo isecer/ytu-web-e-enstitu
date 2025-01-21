@@ -59,9 +59,39 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 cellOgrenciProgramAdi.Text = data.ProgramAdi;
                 cellOgrenciOgrenimSeviyesi.Text = data.OgrenimTipAdi;
                 cellOgrenciKayitDonemi.Text = data.OgrenciKayitDonemi;
+
+                var mezuniyetBasvuru = sonSr.MezuniyetBasvurulari;
+                var joForm = mezuniyetBasvuru.MezuniyetJuriOneriFormlaris.First(); 
+                var tezBasligiDegisenSinav = mezuniyetBasvuru.SRTalepleris.FirstOrDefault(p =>
+                     p.SRDurumID == SrTalepDurumEnum.Onaylandı && p.IsTezBasligiDegisti == true);
+
+
+
+                var tezBaslikTr = "";
+                var tezBaslikEn = "";
+                 
+                if (tezBasligiDegisenSinav != null)
+                {
+                    tezBaslikTr = tezBasligiDegisenSinav.YeniTezBaslikTr;
+                    tezBaslikEn = tezBasligiDegisenSinav.YeniTezBaslikEn;
+                }
+                else if (joForm.IsTezBasligiDegisti == true)
+                {
+                    tezBaslikTr = joForm.YeniTezBaslikTr;
+                    tezBaslikEn = joForm.YeniTezBaslikEn;
+                }
+                else
+                {
+                    tezBaslikTr = mezuniyetBasvuru.TezBaslikTr;
+                    tezBaslikEn = mezuniyetBasvuru.TezBaslikEn;
+                }
+
+             
+
+
                 cellTezDili.Text = data.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
-                cellTezBaslikTr.Text = data.TezBaslikTr;
-                cellTezBaslikEn.Text = data.TezBaslikEn;
+                cellTezBaslikTr.Text = tezBaslikTr;
+                cellTezBaslikEn.Text = tezBaslikEn;
                 CellTezSavunmaSinavTarihi.Text = sonSr.Tarih.ToFormatDate();
 
                 cellImzaOgrenciAdSoyad.Text = data.AdSoyad;

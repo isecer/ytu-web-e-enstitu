@@ -43,7 +43,7 @@
                                                 <div style="display: flex; align-items: center; gap: 10px;">
                                                     <label for="eykDate" style="white-space: nowrap; margin: 0;">EYK Tarihi:</label>
                                                     <input type="text" id="eykDate" class="form-control tarihEykD date-pickerx" style="width: 150px;"  value="${new Date().toISOString().split('T')[0]}">
-                                                 
+
                                                      <label for="eykSayisi" style="white-space: nowrap; margin: 0;">EYK Sayısı:</label>
                                                      <input type="text" id="eykSayisiP" class="form-control" style="width: 150px;" title="EYK Sayısı (Boş bırakılır ise başvurularda eyk sayı girişleri varsa girilen EYK sayıları değiştirilmez. Eğer Eyk sayısı girilirse tüm onaylanan balvurulara Yeni EYK Sayısı işlenir.)" value="">
                                                  </div>
@@ -583,8 +583,10 @@
         }
         if ($(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.KabulEdildi") {
             $('.intihalRwBasvuru_' + id).removeClass("hide");
+            $('.taahhutRwBasvuru_' + id).removeClass("hide");
         } else {
             $('.intihalRwBasvuru_' + id).addClass("hide");
+            $('.taahhutRwBasvuru_' + id).addClass("hide");
         }
     }
     function BDurumKayit(id) {
@@ -594,7 +596,8 @@
         var mezuniyetYayinKontrolDurumID = $durumInput.val();
         var selectedBasvuruDurumAdi = $durumInput.children("option").filter(":selected").text();
         var mezuniyetYayinKontrolDurumAciklamasi = $('#MezuniyetYayinKontrolDurumAciklamasi_' + id).val();
-
+        const checkbox = document.getElementById(`YayinKontrolKabulTaahhutEdildiChk-${id}`);
+        var yayinKontrolKabulTaahhutEdildi = checkbox.checked;
         var tekKaynakOrani = $('#TekKaynakOrani_' + id).val();
         var toplamKaynakOrani = $('#ToplamKaynakOrani_' + id).val();
         if (mezuniyetYayinKontrolDurumID == "" || mezuniyetYayinKontrolDurumID == null) {
@@ -603,14 +606,24 @@
         }
         else if ((mezuniyetYayinKontrolDurumID == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" || mezuniyetYayinKontrolDurumID == "@MezuniyetYayinKontrolDurumuEnum.KaydiSilindi") && mezuniyetYayinKontrolDurumAciklamasi.trim() == "") {
             successSave = false;
-            message ="Açıklaması giriniz";
+            message = "Açıklaması giriniz";
         }
         else if (mezuniyetYayinKontrolDurumID == "@MezuniyetYayinKontrolDurumuEnum.Taslak") {
             message = "Başvuru taslağa çekilecek fakat varsa eğer danışman onayı, yayın onayı işlemleri geri alınacak.";
         }
         else {
-            message = "Başvuru durumunu " + selectedBasvuruDurumAdi + " olarak değiştirmek istiyor musunuz?";
+            if (mezuniyetYayinKontrolDurumID == "@MezuniyetYayinKontrolDurumuEnum.KabulEdildi" && !yayinKontrolKabulTaahhutEdildi) {
+                successSave = false; message = "Taahhüt metinin onaylayınız.";
+                $('#YayinKontrolKabulTaahhutEdildiContent-' + id).pulsate({
+                    color: "#fdbe41",
+                    reach: 100,
+                    repeat: 10,
+                    speed: 400,
+                    glow: true
+                });
             }
+            else message = "Başvuru durumunu " + selectedBasvuruDurumAdi + " olarak değiştirmek istiyor musunuz?";
+        }
         if (!successSave) {
             swal.fire({
                 text: message,
@@ -641,11 +654,22 @@
                         url: '@Url.Action("DurumKayit", "MezuniyetGelenBasvurular")',
                         type: 'POST',
                         cache: false,
-                        data: { id, mezuniyetYayinKontrolDurumID, tekKaynakOrani, toplamKaynakOrani, mezuniyetYayinKontrolDurumAciklamasi },
+                        data: { id, mezuniyetYayinKontrolDurumID, tekKaynakOrani, toplamKaynakOrani, mezuniyetYayinKontrolDurumAciklamasi, yayinKontrolKabulTaahhutEdildi },
                         success: function (result) {
                             $('.swal2-cancel').first().text("Evet");
                             if (result.success) {
                                 GetDetailx(id);
+                            }
+                            else {
+                                if (result.message == "Taahhüt metnini onaylayınız.") {
+                                    $('#YayinKontrolKabulTaahhutEdildiContent-' + id).pulsate({
+                                        color: "#fdbe41",
+                                        reach: 100,
+                                        repeat: 10,
+                                        speed: 400,
+                                        glow: true
+                                    });
+                                }
                             }
                             swal.close();
                             swal.fire({
@@ -1096,7 +1120,7 @@
             }
         });
     }
-    function EykYaOnayChange(id) { 
+    function EykYaOnayChange(id) {
         var val = $('#EYKYaGonderildi_' + id).val();
         if (val == 'false') {
             $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
@@ -1114,7 +1138,7 @@
     }
     function EykYaHazirChange(id) {
         var val = $('#EYKYaHazirlandi_' + id).val();
-       
+
         if (val = 'true') {
             $('.EYKYaHazirSayi_' + id).removeClass('hide');
 
@@ -1123,7 +1147,7 @@
             $('.EYKYaHazirSayi_' + id).addClass('hide');
         }
     }
-    function EykOnayChange(id) { 
+    function EykOnayChange(id) {
         var val = $('#EYKDaOnaylandi_' + id).val();
         if (val == 'false') {
             $('#EYKOnayAciklamaRow_' + id).removeClass('hide');
@@ -1155,7 +1179,7 @@
     function EykYaGonder(mezuniyetJuriOneriFormId, mezuniyetBasvurulariId) {
         var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
         PanelRefresh(_panel, false);
-        var eykYaGonderildi = $('#EYKYaGonderildi_' + mezuniyetJuriOneriFormId).val(); 
+        var eykYaGonderildi = $('#EYKYaGonderildi_' + mezuniyetJuriOneriFormId).val();
         var eykSayisi = "";
         if (eykYaGonderildi) {
             eykSayisi = $('#EYKSayisiG_' + mezuniyetBasvurulariId).val();
@@ -1212,7 +1236,7 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                PanelRefresh(_panel, true); 
+                PanelRefresh(_panel, true);
                 if (result.IsSuccess)
                     GetDetailx(mezuniyetBasvurulariId);
                 if (result.Messages.length > 0) GetMsg(result);

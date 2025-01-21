@@ -593,14 +593,14 @@
                                                                                                                                             <td class="CaptionTd">Yeni Tez Başlığı Türkçe</td>
                                                                                                                                             <td class="CaptionTd">:</td>
                                                                                                                                             <td class="ValueTd">
-                                                                                                                                                <textarea class="form-control UpperTextTr" style="width:100%;height:40px;resize: vertical;" id="YeniTezBaslikTr_@itemJuri.UniqueID">@item.YeniTezBaslikTr</textarea>
+                                                                                                                                                <textarea class="form-control UpperTextTr tCharacterBlock" style="width:100%;height:40px;resize: vertical;" id="YeniTezBaslikTr_@itemJuri.UniqueID">@item.YeniTezBaslikTr</textarea>
                                                                                                                                             </td>
                                                                                                                                         </tr>
                                                                                                                                         <tr class="@(item.IsTezBasligiDegisti == true ? "" : "hide") RwtezBasliklari_@itemJuri.SRTalepJuriID">
                                                                                                                                             <td class="CaptionTd">Yeni Tez Başlığı İngilizce</td>
                                                                                                                                             <td class="CaptionTd">:</td>
                                                                                                                                             <td class="ValueTd">
-                                                                                                                                                <textarea class="form-control UpperTextEn" style="width:100%;height:40px; resize: vertical;" id="YeniTezBaslikEn_@itemJuri.UniqueID">@item.YeniTezBaslikEn</textarea>
+                                                                                                                                                <textarea class="form-control UpperTextEn tCharacterBlock" style="width:100%;height:40px; resize: vertical;" id="YeniTezBaslikEn_@itemJuri.UniqueID">@item.YeniTezBaslikEn</textarea>
                                                                                                                                             </td>
                                                                                                                                         </tr>
                                                                                                                                         <tr>
@@ -1261,7 +1261,7 @@
 </div>
 <script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script>
-
+    onSpecialCharacterBlockerLoaded();
         function SrJuriDegistir(MBID, UniqueID) {
 
             var _panel = $('#bsvrDet_' + MBID);

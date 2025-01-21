@@ -945,7 +945,7 @@
                                                                                     </li>
                                                                                 </ul>
                                                                             </td>
-                                                                            <td>@itemE.BasvuruTarihi.ToFormatDateAndTime()</td>
+                                                                            <td>@(itemE.IsObsData?"Obs'de Doğrulandı": itemE.BasvuruTarihi.ToFormatDateAndTime())</td>
                                                                             <td>@(itemE.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Öneri")</td>
                                                                             <td>@itemE.UnvanAdi @itemE.AdSoyad</td>
                                                                             <td>
@@ -989,236 +989,242 @@
                                                                                             <td class="CaptionTd" width="10">:</td>
                                                                                             <td class="ValueTd">@itemE.UnvanAdi @itemE.AdSoyad</td>
                                                                                         </tr>
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Çalıştığı Üniversite</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">@itemE.UniversiteAdi</td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Anabilim Dalı / Program</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">@itemE.AnabilimDaliAdi / @itemE.ProgramAdi</td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Eş Danışman EMail</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">@itemE.EMail</td>
-                                                                                        </tr>
+                                                                                        @if (!itemE.IsObsData)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd">Çalıştığı Üniversite</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">@itemE.UniversiteAdi</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd">Anabilim Dalı / Program</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">@itemE.AnabilimDaliAdi / @itemE.ProgramAdi</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd">Eş Danışman EMail</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">@itemE.EMail</td>
+                                                                                            </tr>
 
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Gerekçe</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">@itemE.Gerekce</td>
-                                                                                        </tr>
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd">Gerekçe</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">@itemE.Gerekce</td>
+                                                                                            </tr>
 
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Eş Danışman Öneri Formu</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">
-                                                                                                <a href="javascript:void(0);" onclick="YeniDialogBB('Eş Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezEsDanismanOneriFormu&UniqueID=@itemE.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                                                    <i class="fa fa-print"></i> FR-0320 Eş Danışmanı Öneri Formunu İndir
-                                                                                                </a>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                            <td colspan="3">
-                                                                                                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
-                                                                                                    <table style="width:100%;">
-                                                                                                        <tr>
-                                                                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
-                                                                                                        </tr>
-                                                                                                        @if (tdoEykyaGonderimYetkisi && !itemE.EYKYaHazirlandi.HasValue)
-                                                                                                        {
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd">Eş Danışman Öneri Formu</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    <a href="javascript:void(0);" onclick="YeniDialogBB('Eş Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezEsDanismanOneriFormu&UniqueID=@itemE.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                        <i class="fa fa-print"></i> FR-0320 Eş Danışmanı Öneri Formunu İndir
+                                                                                                    </a>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                        @if (!itemE.IsObsData)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td colspan="3">
+                                                                                                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
+                                                                                                        <table style="width:100%;">
                                                                                                             <tr>
-                                                                                                                <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
-                                                                                                                <td class="CaptionTd" width="10">:</td>
-                                                                                                                <td class="ValueTd">
-                                                                                                                    <table>
-                                                                                                                        <tr>
-                                                                                                                            <td>
-                                                                                                                                <select class="form-control" id="EYKYaGonderildiEs_@itemE.TDOBasvuruEsDanismanID" onchange="EYKYaOnayChangeEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)">
-                                                                                                                                    <option @(!itemE.EYKYaGonderildi.HasValue ? "selected" : "")></option>
-                                                                                                                                    <option value="true" @(itemE.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı</option>
-                                                                                                                                    <option value="false" @(itemE.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı</option>
-                                                                                                                                </select>
-                                                                                                                            </td>
-                                                                                                                            <td>
-                                                                                                                                <label class="btn btn-primary btn-sm" onclick="EYKyaGonderES(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
-                                                                                                                            </td>
-                                                                                                                        </tr>
-                                                                                                                    </table>
-
-                                                                                                                </td>
+                                                                                                                <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
                                                                                                             </tr>
-                                                                                                            <tr id="EYKYaGonderimAciklamaEsRow_@itemE.TDOBasvuruEsDanismanID" class="form-group @(itemE.EYKYaGonderildi == false ? "" : "hide")">
-                                                                                                                <td class="CaptionTd">Onaylanmama Açıklaması</td>
-                                                                                                                <td class="CaptionTd">:</td>
-                                                                                                                <td class="ValueTd">
-                                                                                                                    <textarea class="form-control" style="min-height:60px;" id="EYKYaGonderimOnaylanmadiDurumAciklamasiEs_@itemE.TDOBasvuruEsDanismanID" maxlength="512">@itemE.EYKYaGonderimDurumAciklamasi</textarea>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            <tr>
-                                                                                                                <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
-                                                                                                                <td class="CaptionTd" width="10">:</td>
-                                                                                                                <td class="ValueTd">
-                                                                                                                    @if (!itemE.EYKYaGonderildi.HasValue)
-                                                                                                                    {
-
-                                                                                                                        <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderim Onayı Bekleniyor.</span>
-                                                                                                                    }
-                                                                                                                    else if (itemE.EYKYaGonderildi == true)
-                                                                                                                    {
-
-                                                                                                                        <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı. (@itemE.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
-
-                                                                                                                    }
-                                                                                                                    else
-                                                                                                                    {
-                                                                                                                        <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı. (@itemE.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
-
-                                                                                                                    }
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            if (itemE.EYKYaGonderildi == false && !itemE.EYKYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+                                                                                                            @if (!itemE.IsObsData && tdoEykyaGonderimYetkisi && !itemE.EYKYaHazirlandi.HasValue)
                                                                                                             {
                                                                                                                 <tr>
-                                                                                                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
-                                                                                                                    <td class="CaptionTd">:</td>
-                                                                                                                    <td class="ValueTd">
-                                                                                                                        @itemE.EYKYaGonderimDurumAciklamasi
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            }
-                                                                                                        }
-                                                                                                        @if (itemE.EYKYaGonderildi == true)
-                                                                                                        {
-                                                                                                            if (tdoEykdaOnayYetkisi && !itemE.EYKDaOnaylandi.HasValue && item.TDOBasvuruDanismanID == Model.AktifTDOBasvuruDanismanID)
-                                                                                                            {
-                                                                                                                <tr>
-                                                                                                                    <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
+                                                                                                                    <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
                                                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                                                     <td class="ValueTd">
                                                                                                                         <table>
                                                                                                                             <tr>
                                                                                                                                 <td>
-                                                                                                                                    <select class="form-control" id="EYKyaHazirlandiEs_@itemE.TDOBasvuruEsDanismanID">
-                                                                                                                                        <option @(!itemE.EYKYaHazirlandi.HasValue ? "selected" : "")></option>
-                                                                                                                                        <option value="true" @(itemE.EYKYaHazirlandi == true ? "selected" : "")>EYK'ya Hazırlandı @(itemE.EYKYaHazirlandiIslemTarihi.HasValue ? "(" + itemE.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
+                                                                                                                                    <select class="form-control" id="EYKYaGonderildiEs_@itemE.TDOBasvuruEsDanismanID" onchange="EYKYaOnayChangeEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)">
+                                                                                                                                        <option @(!itemE.EYKYaGonderildi.HasValue ? "selected" : "")></option>
+                                                                                                                                        <option value="true" @(itemE.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı</option>
+                                                                                                                                        <option value="false" @(itemE.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı</option>
                                                                                                                                     </select>
                                                                                                                                 </td>
                                                                                                                                 <td>
-                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKyaHazirlaEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKyaGonderES(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
                                                                                                                                 </td>
                                                                                                                             </tr>
                                                                                                                         </table>
+
                                                                                                                     </td>
                                                                                                                 </tr>
-
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                <tr>
-                                                                                                                    <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
-                                                                                                                    <td class="CaptionTd" width="10">:</td>
-                                                                                                                    <td class="ValueTd">
-                                                                                                                        @if (!itemE.EYKYaHazirlandi.HasValue)
-                                                                                                                        {
-
-                                                                                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlanma İşlemi Bekleniyor.</span>
-                                                                                                                        }
-                                                                                                                        else if (itemE.EYKYaHazirlandi == true)
-                                                                                                                        {
-                                                                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlandı. (@itemE.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime())</span>
-
-                                                                                                                        }
-                                                                                                                    </td>
-                                                                                                                </tr>
-
-
-
-                                                                                                            }
-                                                                                                        }
-
-                                                                                                        @if (itemE.EYKYaHazirlandi == true)
-                                                                                                        {
-                                                                                                            if (tdoEykdaOnayYetkisi && showRowE && item.TDOBasvuruDanismanID == Model.AktifTDOBasvuruDanismanID)
-                                                                                                            {
-                                                                                                                <tr id="EYKdaOnayOnayRowEs_@itemE.TDOBasvuruEsDanismanID" class="@(itemE.EYKYaHazirlandi == true ? "" : "hide")">
-                                                                                                                    <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
-                                                                                                                    <td class="CaptionTd" width="10">:</td>
-                                                                                                                    <td class="ValueTd">
-                                                                                                                        <table>
-                                                                                                                            <tr>
-                                                                                                                                <td>
-                                                                                                                                    <select class="form-control" id="EYKDaOnaylandiES_@itemE.TDOBasvuruEsDanismanID" onchange="EYKOnayChangeES(@itemE.TDOBasvuruEsDanismanID)">
-                                                                                                                                        <option @(!itemE.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
-                                                                                                                                        <option value="true" @(itemE.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı @(itemE.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
-                                                                                                                                        <option value="false" @(itemE.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(itemE.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
-                                                                                                                                    </select>
-                                                                                                                                </td>
-                                                                                                                                <td class="form-group">
-                                                                                                                                    <input type="text" class="form-control tarihB @(itemE.EYKDaOnaylandi == true ? "" : "hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihiEs_@itemE.TDOBasvuruEsDanismanID" value="@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateInput()" />
-
-                                                                                                                                </td>
-                                                                                                                                <td>
-                                                                                                                                    <label class="btn btn-primary btn-sm" onclick="EYKdaOnayES(@itemE.TDOBasvuruEsDanismanID,@item.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
-                                                                                                                                </td>
-                                                                                                                            </tr>
-                                                                                                                        </table>
-                                                                                                                    </td>
-                                                                                                                </tr>
-
-                                                                                                                <tr id="EYKOnayAciklamaRowES_@itemE.TDOBasvuruEsDanismanID" class="form-group @(itemE.EYKDaOnaylandi == false ? "" : "hide")">
+                                                                                                                <tr id="EYKYaGonderimAciklamaEsRow_@itemE.TDOBasvuruEsDanismanID" class="form-group @(itemE.EYKYaGonderildi == false ? "" : "hide")">
                                                                                                                     <td class="CaptionTd">Onaylanmama Açıklaması</td>
                                                                                                                     <td class="CaptionTd">:</td>
                                                                                                                     <td class="ValueTd">
-                                                                                                                        <textarea class="form-control" style="min-height:60px;" id="EYKDaOnaylanmadiDurumAciklamasiES_@itemE.TDOBasvuruEsDanismanID" maxlength="512">@itemE.EYKDaOnaylanmadiDurumAciklamasi</textarea>
+                                                                                                                        <textarea class="form-control" style="min-height:60px;" id="EYKYaGonderimOnaylanmadiDurumAciklamasiEs_@itemE.TDOBasvuruEsDanismanID" maxlength="512">@itemE.EYKYaGonderimDurumAciklamasi</textarea>
                                                                                                                     </td>
                                                                                                                 </tr>
                                                                                                             }
                                                                                                             else
                                                                                                             {
                                                                                                                 <tr>
-                                                                                                                    <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
+                                                                                                                    <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
                                                                                                                     <td class="CaptionTd" width="10">:</td>
                                                                                                                     <td class="ValueTd">
-                                                                                                                        @if (!itemE.EYKDaOnaylandi.HasValue)
+                                                                                                                        @if (!itemE.EYKYaGonderildi.HasValue)
                                                                                                                         {
 
-                                                                                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'da onay işlemi Bekleniyor.</span>
+                                                                                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderim Onayı Bekleniyor.</span>
                                                                                                                         }
-                                                                                                                        else if (itemE.EYKDaOnaylandi == true)
+                                                                                                                        else if (itemE.EYKYaGonderildi == true)
                                                                                                                         {
 
-                                                                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate())</span>
+                                                                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı. (@itemE.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
+
                                                                                                                         }
                                                                                                                         else
                                                                                                                         {
-                                                                                                                            <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı.</span>
+                                                                                                                            <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı. (@itemE.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
 
                                                                                                                         }
                                                                                                                     </td>
                                                                                                                 </tr>
-                                                                                                                if (itemE.EYKDaOnaylandi == false)
+                                                                                                                if (itemE.EYKYaGonderildi == false && !itemE.EYKYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
                                                                                                                 {
                                                                                                                     <tr>
                                                                                                                         <td class="CaptionTd">Onaylanmama Açıklaması</td>
                                                                                                                         <td class="CaptionTd">:</td>
                                                                                                                         <td class="ValueTd">
-                                                                                                                            @itemE.EYKDaOnaylanmadiDurumAciklamasi
+                                                                                                                            @itemE.EYKYaGonderimDurumAciklamasi
                                                                                                                         </td>
                                                                                                                     </tr>
                                                                                                                 }
                                                                                                             }
-                                                                                                        }
-                                                                                                    </table>
-                                                                                                </div>
+                                                                                                            @if (itemE.EYKYaGonderildi == true)
+                                                                                                            {
+                                                                                                                if (tdoEykdaOnayYetkisi && !itemE.EYKDaOnaylandi.HasValue && item.TDOBasvuruDanismanID == Model.AktifTDOBasvuruDanismanID)
+                                                                                                                {
+                                                                                                                    <tr>
+                                                                                                                        <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
+                                                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                                                        <td class="ValueTd">
+                                                                                                                            <table>
+                                                                                                                                <tr>
+                                                                                                                                    <td>
+                                                                                                                                        <select class="form-control" id="EYKyaHazirlandiEs_@itemE.TDOBasvuruEsDanismanID">
+                                                                                                                                            <option @(!itemE.EYKYaHazirlandi.HasValue ? "selected" : "")></option>
+                                                                                                                                            <option value="true" @(itemE.EYKYaHazirlandi == true ? "selected" : "")>EYK'ya Hazırlandı @(itemE.EYKYaHazirlandiIslemTarihi.HasValue ? "(" + itemE.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
+                                                                                                                                        </select>
+                                                                                                                                    </td>
+                                                                                                                                    <td>
+                                                                                                                                        <label class="btn btn-primary btn-sm" onclick="EYKyaHazirlaEs(@itemE.TDOBasvuruEsDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                                                                    </td>
+                                                                                                                                </tr>
+                                                                                                                            </table>
+                                                                                                                        </td>
+                                                                                                                    </tr>
 
-                                                                                            </td>
-                                                                                        </tr>
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    <tr>
+                                                                                                                        <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
+                                                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                                                        <td class="ValueTd">
+                                                                                                                            @if (!itemE.EYKYaHazirlandi.HasValue)
+                                                                                                                            {
+
+                                                                                                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlanma İşlemi Bekleniyor.</span>
+                                                                                                                            }
+                                                                                                                            else if (itemE.EYKYaHazirlandi == true)
+                                                                                                                            {
+                                                                                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlandı. (@itemE.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime())</span>
+
+                                                                                                                            }
+                                                                                                                        </td>
+                                                                                                                    </tr>
+
+
+
+                                                                                                                }
+                                                                                                            }
+
+                                                                                                            @if (itemE.EYKYaHazirlandi == true)
+                                                                                                            {
+                                                                                                                if (tdoEykdaOnayYetkisi && showRowE && item.TDOBasvuruDanismanID == Model.AktifTDOBasvuruDanismanID)
+                                                                                                                {
+                                                                                                                    <tr id="EYKdaOnayOnayRowEs_@itemE.TDOBasvuruEsDanismanID" class="@(itemE.EYKYaHazirlandi == true ? "" : "hide")">
+                                                                                                                        <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
+                                                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                                                        <td class="ValueTd">
+                                                                                                                            <table>
+                                                                                                                                <tr>
+                                                                                                                                    <td>
+                                                                                                                                        <select class="form-control" id="EYKDaOnaylandiES_@itemE.TDOBasvuruEsDanismanID" onchange="EYKOnayChangeES(@itemE.TDOBasvuruEsDanismanID)">
+                                                                                                                                            <option @(!itemE.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
+                                                                                                                                            <option value="true" @(itemE.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı @(itemE.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
+                                                                                                                                            <option value="false" @(itemE.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(itemE.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
+                                                                                                                                        </select>
+                                                                                                                                    </td>
+                                                                                                                                    <td class="form-group">
+                                                                                                                                        <input type="text" class="form-control tarihB @(itemE.EYKDaOnaylandi == true ? "" : "hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihiEs_@itemE.TDOBasvuruEsDanismanID" value="@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateInput()" />
+
+                                                                                                                                    </td>
+                                                                                                                                    <td>
+                                                                                                                                        <label class="btn btn-primary btn-sm" onclick="EYKdaOnayES(@itemE.TDOBasvuruEsDanismanID,@item.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                                                                                                                    </td>
+                                                                                                                                </tr>
+                                                                                                                            </table>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+
+                                                                                                                    <tr id="EYKOnayAciklamaRowES_@itemE.TDOBasvuruEsDanismanID" class="form-group @(itemE.EYKDaOnaylandi == false ? "" : "hide")">
+                                                                                                                        <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                                                                        <td class="CaptionTd">:</td>
+                                                                                                                        <td class="ValueTd">
+                                                                                                                            <textarea class="form-control" style="min-height:60px;" id="EYKDaOnaylanmadiDurumAciklamasiES_@itemE.TDOBasvuruEsDanismanID" maxlength="512">@itemE.EYKDaOnaylanmadiDurumAciklamasi</textarea>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    <tr>
+                                                                                                                        <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
+                                                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                                                        <td class="ValueTd">
+                                                                                                                            @if (!itemE.EYKDaOnaylandi.HasValue)
+                                                                                                                            {
+
+                                                                                                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'da onay işlemi Bekleniyor.</span>
+                                                                                                                            }
+                                                                                                                            else if (itemE.EYKDaOnaylandi == true)
+                                                                                                                            {
+
+                                                                                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate())</span>
+                                                                                                                            }
+                                                                                                                            else
+                                                                                                                            {
+                                                                                                                                <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı.</span>
+
+                                                                                                                            }
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                    if (itemE.EYKDaOnaylandi == false)
+                                                                                                                    {
+                                                                                                                        <tr>
+                                                                                                                            <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                                                                            <td class="CaptionTd">:</td>
+                                                                                                                            <td class="ValueTd">
+                                                                                                                                @itemE.EYKDaOnaylanmadiDurumAciklamasi
+                                                                                                                            </td>
+                                                                                                                        </tr>
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        </table>
+                                                                                                    </div>
+
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        }
                                                                                     </table>
                                                                                 </div>
                                                                             </td>
@@ -1250,12 +1256,11 @@
             </tr>
 
         </table>
-    </div>
-
-
-
+    </div> 
 
 </div>
+
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 @if (Model.IsDanismanHesabiBulunamadi && kayitYetki)
 {
     <script>
@@ -1820,11 +1825,11 @@
                             }
 
                         }
-                    }); 
+                    });
                     if (resultG.Messages.trim() != "") ShowMmMessage(resultG.Messages, 'Tamam');
 
                 }
-                else { 
+                else {
                     ShowMmMessage(resultG.Messages, 'Tamam');
                 }
 

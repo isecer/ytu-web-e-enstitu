@@ -61,10 +61,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     var srTalebi = mBasvuru.SRTalepleris.First(p => p.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma);
                     cellTezDili.Text = mBasvuru.IsTezDiliTr == true ? "Türkçe" : "English";
 
-                    var srBirOncekiSinavTezBaslikDegisikligi = mBasvuru.SRTalepleris.FirstOrDefault(p =>
-                        p.SRTalepID < srTalebi.SRTalepID && p.SRDurumID == SrTalepDurumEnum.Onaylandı && p.IsTezBasligiDegisti == true);
-
-
+                   
 
                     var tezBaslikTr = "";
                     var tezBaslikEn = "";
@@ -72,11 +69,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     {
                         tezBaslikTr = srTalebi.YeniTezBaslikTr;
                         tezBaslikEn = srTalebi.YeniTezBaslikEn;
-                    }
-                    if (srBirOncekiSinavTezBaslikDegisikligi != null)
-                    {
-                        tezBaslikTr = srBirOncekiSinavTezBaslikDegisikligi.YeniTezBaslikTr;
-                        tezBaslikEn = srBirOncekiSinavTezBaslikDegisikligi.YeniTezBaslikEn;
                     }
                     else if (joForm.IsTezBasligiDegisti == true)
                     {

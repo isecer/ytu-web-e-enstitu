@@ -419,9 +419,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             if (tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezBasligiDegisikligi || tdoDanismanTalepTipId == TdoDanismanTalepTipEnum.TezDanismaniOnerisi) retAciklama = tdoBasvuruDanisman.DanismanOnaylanmadiAciklama;
                             else retAciklama = tdoBasvuruDanisman.VarolanDanismanOnaylanmadiAciklama;
 
-                            if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
+                            if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
                             {
-                                item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = retAciklama });
+                                item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = retAciklama });
                             }
                         }
                         if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
@@ -636,9 +636,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             var retAciklama = tdoBasvuruDanisman.EYKDaOnaylanmadiDurumAciklamasi;
 
-                            if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
+                            if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
                             {
-                                item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = retAciklama });
+                                item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = retAciklama });
                             }
                         }
                         if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
@@ -850,9 +850,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                         var retAciklama = tdoBasvuruDanisman.EYKDaOnaylanmadiDurumAciklamasi;
 
-                        if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
+                        if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
                         {
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = retAciklama });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = retAciklama });
                         } 
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
@@ -1227,9 +1227,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "EYKTarihi", Value = esDanisman.EYKDaOnaylandiOnayTarihi.ToFormatDate() });
                         }
-                        if (isOnayOrRed == false && item.SablonParametreleri.Any(a => a == "@RetAciklama"))
+                        if (isOnayOrRed == false && item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
                         {
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = esDanisman.EYKDaOnaylanmadiDurumAciklamasi });
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = esDanisman.EYKDaOnaylanmadiDurumAciklamasi });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@Link"))
                         {

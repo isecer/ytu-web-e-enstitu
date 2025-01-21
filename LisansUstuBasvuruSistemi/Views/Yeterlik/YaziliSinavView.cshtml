@@ -1,13 +1,16 @@
 ﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model DmYeterlikDetayDto
 @{
     Layout = null;
 
     var isOnaylayanVar = Model.YeterlikBasvuruJuriUyeleris.Any(a => a.IsSecilenJuri && a.IsSonucOnaylandi.HasValue);
     var closeContent= (Model.IsSozluSinavOnline.HasValue || isOnaylayanVar) && !Model.IsDegerlendirme.HasValue;
-    var readOly = (Model.IsSozluSinavOnline.HasValue || isOnaylayanVar);
+    var toplantiYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() || Model.TezDanismanID == UserIdentity.Current.Id;
+    var readOly = (Model.IsSozluSinavOnline.HasValue || isOnaylayanVar || !toplantiYetki);
     var yaziliGecerNot = Model?.YeterlikSurecOgrenimTipleri?.YaziliGecerNot;
 
 

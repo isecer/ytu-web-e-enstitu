@@ -16,7 +16,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         {
             var urlInfo = request.Url.ToUrlInfo();
             var root = GlobalSistemSetting.GetRoot();
-            var absolutePath = request.Url.AbsolutePath.TrimStart('/'); // Başındaki / işaretini kaldırır 
             var enstituKisaAdi = urlInfo.EnstituKisaAd.ToLower();
             var enstituKod = EnstituBus.GetSelectedEnstitu(urlInfo.EnstituKisaAd); 
             root += (EnstituBus.IsContainsEnstitu(enstituKisaAdi) ? enstituKisaAdi : "fbe") + "/";

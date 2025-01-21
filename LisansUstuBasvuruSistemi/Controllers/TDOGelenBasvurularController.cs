@@ -96,6 +96,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             q = q.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
             if (!model.AktifDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.AktifDonemID == model.AktifDonemID);
+            if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod);
             if (model.TDODanismanTalepTipID.HasValue) q = q.Where(p => p.TDODanismanTalepTipID == model.TDODanismanTalepTipID);
             if (model.AktifDurumID.HasValue)
             {
@@ -209,6 +210,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.DurumID = new SelectList(TdoBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.DurumID);
             ViewBag.AktifEsDurumID = new SelectList(TdoBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.AktifEsDurumID);
             ViewBag.EsDurumID = new SelectList(TdoBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.EsDurumID);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipKodYuksekLisans(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             return View(model);
         }
 

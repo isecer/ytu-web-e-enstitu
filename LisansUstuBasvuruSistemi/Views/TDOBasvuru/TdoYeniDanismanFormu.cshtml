@@ -29,14 +29,14 @@
                     <td class="CaptionTd">Tez Başlığı Türkçe</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="@Model.TezBaslikMaxLength" value="@Model.TezBaslikTr" class="form-control UpperTextTr tCharacterBlock" style="color:black;" />
+                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off"   value="@Model.TezBaslikTr" class="form-control UpperTextTr tCharacterBlock" style="color:black;" />
                     </td>
                 </tr>
                 <tr>
                     <td class="CaptionTd">Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="@Model.TezBaslikMaxLength" value="@Model.TezBaslikEn" class="form-control UpperTextEn tCharacterBlock" style="color:black;" />
+                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off"  value="@Model.TezBaslikEn" class="form-control UpperTextEn tCharacterBlock" style="color:black;" />
                     </td>
                 </tr>
                 <tr class="dilRow">
@@ -115,11 +115,10 @@
         </table>
     </div>
 
-}
+} 
 <script src="~/Scripts/inputTextChangeUpperCase.js"></script>
-@Html.Raw(Model.GenerateSpecialCharacterBlockerScript())
 <script>
-
+    onSpecialCharacterBlockerLoaded();
     TezDiliKontrol();
     function TezDiliKontrol()
     {

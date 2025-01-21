@@ -25,10 +25,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.ApplicationTasks
         {
             var runTasks = SistemAyar.OtomatikObsOgrenciKontrolServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
             if (!runTasks) return;
-            StartOtoMailsAsync();
+            StartOtoAsync();
         }
 
-        private static async void StartOtoMailsAsync()
+        private static async void StartOtoAsync()
         {
             if (DateTime.Now.Hour == 2)
                 await OgrenciObsKontrol();

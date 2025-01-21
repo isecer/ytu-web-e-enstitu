@@ -1054,10 +1054,9 @@
         </div>
     }
 </div>
-<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
-@Html.Raw(Model.GenerateSpecialCharacterBlockerScript())
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script> 
 <script>
-
+    onSpecialCharacterBlockerLoaded();
     $(function () {
         $('.switch_@Model.UniqueID')['bootstrapSwitch']();
         $(".popover-dismiss").popover({ trigger: 'hover', html: true });

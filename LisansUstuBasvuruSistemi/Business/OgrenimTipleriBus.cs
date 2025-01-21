@@ -73,12 +73,29 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+        public static List<CmbIntDto> CmbAktifOgrenimTipKodYuksekLisans(string enstituKod, bool bosSecimVar = false)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var entities = new LubsDbEntities())
+            {
 
+
+                var data = entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif).OrderBy(o => o.OgrenimTipAdi).ToList();
+                data = data.Where(p => IsYl(p.OgrenimTipKod)).ToList();
+                foreach (var item in data)
+                {
+                    dct.Add(new CmbIntDto { Value = item.OgrenimTipKod, Caption = item.OgrenimTipAdi });
+                }
+            }
+            return dct;
+
+        }
         public static List<int> DoktoraKods()
         {
             return new List<int> { OgrenimTipi.ButunlesikDoktora, OgrenimTipi.SanattaYeterlilik, OgrenimTipi.Doktra };
         }
-
+       
         public static bool IsDoktora(this int ogrenimTipKod)
         {
             return DoktoraKods().Contains(ogrenimTipKod);
@@ -87,5 +104,19 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             return ogrenimTipKod.HasValue && IsDoktora(ogrenimTipKod.Value);
         }
+
+        public static List<int> YuksekLisansKonds()
+        {
+            return new List<int> { OgrenimTipi.ButunlesikDoktora, OgrenimTipi.SanattaYeterlilik, OgrenimTipi.Doktra, OgrenimTipi.TezliYuksekLisans };
+        }
+        public static bool IsYl(this int ogrenimTipKod)
+        {
+            return YuksekLisansKonds().Contains(ogrenimTipKod);
+        }
+        public static bool IsYl(this int? ogrenimTipKod)
+        {
+            return ogrenimTipKod.HasValue && IsDoktora(ogrenimTipKod.Value);
+        }
+
     }
 }

@@ -13,6 +13,7 @@
     Layout = null;
     var resimVar = (bool)ViewBag.ResimVar;
     var kYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
+    var isKendisi = UserIdentity.Current.Id == Model.KullaniciID;
     var kHesabaGecme = RoleNames.KullaniciHesabinaGecmeYetkisi.InRoleCurrent() && UserIdentity.Current.Id != Model.KullaniciID;
     var islemYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
     var eYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
@@ -102,7 +103,7 @@
                                     <td>Ad Soyad</td>
                                     <td>:</td>
                                     <td>
-                                        @Model.Ad @Model.Soyad
+                                      @(Model.UnvanID.HasValue?Model.Unvanlar.UnvanAdi:"") @Model.Ad @Model.Soyad
 
                                     </td>
                                 </tr>
@@ -130,31 +131,37 @@
                                         <td>:</td>
                                         <td>@Model.YetkiGruplari.YetkiGrupAdi @(eYetkiCount > 0 ? "(+ " + eYetkiCount + " Yetki)" : "")  @(UserIdentity.Current.IsAdmin && Model.IsAdmin ? "(Sistem Admini)":"")</td>
                                     </tr>
-                                } 
-                                <tr>
-                                    <td>Son Giriş Tarihi</td>
-                                    <td>:</td>
-                                    <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToFormatDateAndTime() + (UserIdentity.Current.IsAdmin? " ("+Model.LastLogonIP+")":"") : "Henüz Giriş Yapmamış")</td>
-                                </tr>
-                                <tr>
-                                    <td>Oluşturma Tarihi</td>
-                                    <td>:</td>
-                                    <td>@Model.OlusturmaTarihi.ToFormatDateAndTime()</td>
-                                </tr>
-
-                                @if (Model.Aciklama.IsNullOrWhiteSpace() == false)
+                                   
+                                }
+                                @if (isKendisi || kYetki)
                                 {
                                     <tr>
-                                        <td>Açıklama</td>
+                                        <td>Oluşturma Tarihi</td>
                                         <td>:</td>
-                                        <td>@Model.Aciklama</td>
+                                        <td>@Model.OlusturmaTarihi.ToFormatDateAndTime()</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Son Giriş Tarihi</td>
+                                        <td>:</td>
+                                        <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToFormatDateAndTime() + (UserIdentity.Current.IsAdmin ? " (" + Model.LastLogonIP + ")" : "") : "Henüz Giriş Yapmamış")</td>
+                                    </tr>
+                                    
+                                    if (Model.Aciklama.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <tr>
+                                            <td>Açıklama</td>
+                                            <td>:</td>
+                                            <td>@Model.Aciklama</td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>Kullanıcı Aktiflik</td>
+                                        <td>:</td>
+                                        <td>@Model.IsAktif.ToAktifPasif()</td>
                                     </tr>
                                 }
-                                <tr>
-                                    <td>Kullanıcı Aktiflik</td>
-                                    <td>:</td>
-                                    <td>@Model.IsAktif.ToAktifPasif()</td>
-                                </tr>
+
+                             
                             </table>
 
 
@@ -233,12 +240,74 @@
                     </tr>
                     @if (Model.KayitDonemID.HasValue)
                     {
+                        if (kYetki)
+                        {
+                            <tr>
+                                <td>Kayıt Tarihi</td>
+                                <td>:</td>
+                                <td>
+                                    @Model.KayitTarihi.Value.ToFormatDate()
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <td>Kayıt Tarihi</td>
-                            <td>:</td>
-                            <td>@Model.KayitYilBaslangic/@(Model.KayitYilBaslangic + 1) @donem.DonemAdi , @Model.KayitTarihi.Value.ToFormatDate()</td>
-                        </tr>
+                            <tr>
+                                <td>Kayıt Dönemi</td>
+                                <td>:</td>
+                                <td>
+                                    <table style="table-layout:fixed;width:100%;">
+                                        <tr>
+                                            <td>
+                                                @Html.DropDownList("KayitDonem", null, "", new { @class = "form-control", style = "padding:0px;", onchange = "sendDonemData()" })
+                                            </td>
+                                            <td width="240">
+                                                <select class="form-control" id="obsGuncellemeSelect" title="Dönem bilgisinin OBS sisteminden otomatik güncelleme işlemlerinde güncellenip güncellenmeyeceğini belirlenmesini sağlar" onchange="sendDonemData()">
+                                                    <option value="true" @(Model.ObsKayitDonemOtoGuncellemeKapali == true ? "selected" : "")>Obs Dönem Otomatik Güncelleme Kapalı</option>
+                                                    <option value="false" @(Model.ObsKayitDonemOtoGuncellemeKapali != true ? "selected" : "")>Obs Dönem Otomatik Güncelleme Açık</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <script>
+                                        function sendDonemData() { 
+                                            var kayitDonem = document.getElementById("KayitDonem").value; 
+                                            var obsGuncelleme = document.getElementById("obsGuncellemeSelect").value;
+                                             
+                                            $.ajax({
+                                                url: '@Url.Action("KayitDonemAyarSet")', 
+                                                data: {
+                                                    userKey:'@Model.UserKey',
+                                                    kayitDonem: kayitDonem,
+                                                    obsGuncelleme: obsGuncelleme
+                                                },
+                                                success: function (response) {
+                                                    if (response.IsSuccess) {
+                                                        toastr["success"]("Kullanıcı kayıt dönemi bilgisi güncellendi.", "Kullanıcı Kayıt Dönemi Güncelleme İşlemi");
+                                                    }
+                                                    else {
+                                                        toastr["error"]("İşlem yapılırken bir hata oluştu.", "Kullanıcı Kayıt Dönemi Güncelleme İşlemi");
+
+                                                    }
+                                                },
+                                                error: function (error) {
+                                                }
+                                            });
+                                        }
+                                    </script>
+
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>Kayıt Dönemi</td>
+                                <td>:</td>
+                                <td>
+                                    <span>@Model.KayitYilBaslangic/@(Model.KayitYilBaslangic + 1) @donem.DonemAdi , @Model.KayitTarihi.Value.ToFormatDate()</span>
+                                </td>
+                            </tr>
+
+                        }
                     }
                     <tr>
                         <td>

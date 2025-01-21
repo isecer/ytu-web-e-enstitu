@@ -40,7 +40,9 @@
                             <tr>
                                 <th width="75"></th>
                                 <th class="sirala" field="ProgramAdi">Anabilim Dalı / P Adı</th>
-                                <th class="sirala" field="IsAktif" width="60">Durum</th>
+                                
+                                <th class="sirala" field="AbdIsAktif" width="60">Abd Durum</th>
+                                <th class="sirala" field="IsAktif" width="60">Prg Durum</th>
                                 <th width="40"> </th>
                             </tr>
                         </thead>
@@ -50,6 +52,9 @@
                                 <th></th>
                                 <th>
                                     <input name="ProgramAdi" type="text" value="@Model.ProgramAdi" class="form-control" />
+                                </th>
+                                <th>
+                                    @Html.DropDownList("AbdIsAktif", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
                                 <th>
                                     @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
@@ -80,7 +85,9 @@
                                         <td id="tdMad_@item.ProgramKod">
                                             @item.AnabilimDaliAdi <br />@item.ProgramAdi
                                         </td>
-
+                                        <td id="tdIabd_@item.ProgramKod" style="text-align:center;">
+                                            <span class="label label-@(item.AbdIsAktif ? "success" : "danger")">@item.AbdIsAktif.ToAktifPasif()</span>
+                                        </td>
                                         <td id="tdIa_@item.ProgramKod" style="text-align:center;">
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>

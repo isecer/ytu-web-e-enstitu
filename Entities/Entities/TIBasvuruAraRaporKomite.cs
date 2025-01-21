@@ -42,7 +42,7 @@ namespace Entities.Entities
         public Nullable<int> IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        public virtual TIBasvuruAraRapor TIBasvuruAraRapor { get; set; }
         public virtual Universiteler Universiteler { get; set; }
+        public virtual TIBasvuruAraRapor TIBasvuruAraRapor { get; set; }
     }
 }

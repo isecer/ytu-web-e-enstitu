@@ -51,7 +51,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var data2 = data.OrderBy(o => o.AnabilimDaliAdi).ToList();
                 foreach (var item in data2)
                 {
-                    dct.Add(new CmbIntDto { Value = item.AnabilimDaliID, Caption = item.AnabilimDaliAdi });
+                    dct.Add(new CmbIntDto { Value = item.AnabilimDaliID, Caption = item.AnabilimDaliAdi + (item.IsAktif ? "" : " (P)") });
                 }
             }
             return dct;

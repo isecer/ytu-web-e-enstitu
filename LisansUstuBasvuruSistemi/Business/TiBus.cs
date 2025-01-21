@@ -62,12 +62,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     RaporTarihi = s.RaporTarihi,
                     IsTezDiliTr = s.IsTezDiliTr,
                     TezBaslikTr = s.TezBaslikTr,
-                    TezBaslikEn = s.TezBaslikEn,
-                    IsTezDiliDegisecek = s.IsTezDiliDegisecek,
-                    YeniTezDiliTr = s.YeniTezDiliTr,
-                    SinavAdi = s.SinavAdi,
-                    SinavPuani = s.SinavPuani,
-                    SinavYili = s.SinavYili,
+                    TezBaslikEn = s.TezBaslikEn, 
                     IsTezBasligiDegisti = s.IsTezBasligiDegisti,
                     TezBasligiDegisimGerekcesi = s.TezBasligiDegisimGerekcesi,
                     YeniTezBaslikTr = s.YeniTezBaslikTr,
@@ -330,9 +325,9 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return msg;
         }
-        public static bool ToTiUyeFormSuccessRow(this string juriTipAdi, bool tezDiliTr, bool adSoyadSuccess, bool unvanAdiSuccess, bool eMailSuccess, bool universiteIdSuccess, bool isAnabilimdaliProgramAdiSuccess, bool isDilSinaviOrUniversiteSuccess, bool dilSinavAdiSuccess, bool dilPuaniSuccess, bool sinavTarihiSuccess)
+        public static bool ToTiUyeFormSuccessRow(this string juriTipAdi, bool tezDiliTr, bool adSoyadSuccess, bool unvanAdiSuccess, bool eMailSuccess, bool universiteIdSuccess, bool isAnabilimdaliProgramAdiSuccess)
         {
-            var retVal = adSoyadSuccess && unvanAdiSuccess && eMailSuccess && universiteIdSuccess && isAnabilimdaliProgramAdiSuccess && isDilSinaviOrUniversiteSuccess && dilSinavAdiSuccess && dilPuaniSuccess && sinavTarihiSuccess;
+            var retVal = adSoyadSuccess && unvanAdiSuccess && eMailSuccess && universiteIdSuccess && isAnabilimdaliProgramAdiSuccess;
 
             return retVal;
         }

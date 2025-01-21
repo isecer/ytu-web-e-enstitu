@@ -31,6 +31,7 @@ namespace Entities.Entities
         public System.DateTime BasvuruTarihi { get; set; }
         public int MezuniyetYayinKontrolDurumID { get; set; }
         public string MezuniyetYayinKontrolDurumAciklamasi { get; set; }
+        public Nullable<bool> YayinKontrolKabulTaahhutEdildi { get; set; }
         public int KullaniciID { get; set; }
         public Nullable<int> KullaniciTipID { get; set; }
         public string ResimAdi { get; set; }

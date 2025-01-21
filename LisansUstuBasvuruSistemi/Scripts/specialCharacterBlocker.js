@@ -16,7 +16,7 @@
         });
     }
 
-    handleKeyPress(event, input) {
+    handleKeyPress(event, input) { 
         const char = String.fromCharCode(event.which || event.keyCode);
 
         // Geçersiz karakter kontrolü

@@ -27,7 +27,30 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return lst;
         }
+        public static List<CmbStringDto> GetCmbAkademikDonemler(int? seciliYil = null)
+        {
+            var lst = new List<CmbStringDto>();
+            List<CmbIntDto> donems; 
+            using (var entities = new LubsDbEntities())
+            {
+                donems = entities.Donemlers.OrderBy(o => o.DonemID).Select(s => new CmbIntDto { Value = s.DonemID, Caption = s.DonemAdi }).ToList();
+            }
 
+            var hasSeciliYil = false;
+            for (int i = (DateTime.Now.Year); i >= DateTime.Now.Year - 30; i--)
+            {
+                if (i == seciliYil) hasSeciliYil = true;
+                lst.Add(new CmbStringDto { Value = i + "/" + (i + 1) + "/2", Caption = i + "/" + (i + 1) + " " + donems.First(p => p.Value == 2).Caption });
+                lst.Add(new CmbStringDto { Value = i + "/" + (i + 1) + "/1", Caption = i + "/" + (i + 1) + " " + donems.First(p => p.Value == 1).Caption });
+            }
+
+            if (seciliYil.HasValue && !hasSeciliYil)
+            {
+                lst.Insert(0, new CmbStringDto { Value = seciliYil.Value + "/" + (seciliYil + 1) + "/2", Caption = seciliYil.Value + "/" + (seciliYil.Value + 1) + " " + donems.First(p => p.Value == 2).Caption });
+                lst.Insert(0, new CmbStringDto { Value = seciliYil.Value + "/" + (seciliYil + 1) + "/1", Caption = seciliYil.Value + "/" + (seciliYil.Value + 1) + " " + donems.First(p => p.Value == 1).Caption });
+            }
+            return lst;
+        }
         public static CmbStringDto CmbGetAkademikBulundugumuzTarih(DateTime? tarih = null)
         {
             var mdl = new CmbStringDto();

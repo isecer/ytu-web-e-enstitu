@@ -40,9 +40,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EnstituKod = enst.EnstituKod,
                         EnstituAd = enst.EnstituAd,
                         AnabilimDaliKod = e.AnabilimDaliKod,
-                        AnabilimDaliAdi = e.AnabilimDaliAdi,
+                        AnabilimDaliAdi = e.AnabilimDaliAdi +(e.IsAktif?"":" (Pasif)"),
                         ProgramKod = s.ProgramKod,
                         ProgramAdi = slP != null ? slP.ProgramAdi : "",
+                        AbdIsAktif = e.IsAktif,
                         IsAktif = s.IsAktif,
                         IslemTarihi = s.IslemTarihi,
                         IslemYapanID = s.IslemYapanID,
@@ -50,6 +51,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapan = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad
 
                     };
+            if (model.AbdIsAktif.HasValue) q = q.Where(p => p.AbdIsAktif == model.AbdIsAktif);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.ProgramAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.ProgramAdi.Contains(model.ProgramAdi) || p.AnabilimDaliAdi.Contains(model.ProgramAdi) || p.ProgramKod == model.ProgramAdi);
@@ -65,6 +67,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.IndexModel = indexModel;
 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.AbdIsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.AbdIsAktif);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }

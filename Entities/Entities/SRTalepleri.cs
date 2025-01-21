@@ -79,9 +79,9 @@ namespace Entities.Entities
         public virtual SRDurumlari SRDurumlari { get; set; }
         public virtual SRSalonlar SRSalonlar { get; set; }
         public virtual SRTalepTipleri SRTalepTipleri { get; set; }
-        public virtual TIBasvuruAraRapor TIBasvuruAraRapor { get; set; }
         public virtual ToBasvuruSavunma ToBasvuruSavunma { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTaleplerJuri> SRTaleplerJuris { get; set; }
+        public virtual TIBasvuruAraRapor TIBasvuruAraRapor { get; set; }
     }
 }

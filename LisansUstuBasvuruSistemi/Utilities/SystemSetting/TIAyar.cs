@@ -21,10 +21,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string TiBasvurusuAcikmi = "Ara rapor başvuru alımı açık";
         public const string TiGecmisAraRaporBasvurulariDegerlendirilebilsin = "Geçmiş ara rapor başvuruları değerlendirilebilsin";
 
-        public const string TiSonDonemKayitOlunmasiGerekenDersKodlari = "Son dönem kayıt olunması gereken ders kodları";
-        public const string TiUyelerMinSinavPuan = "Üyeler için dil sınavı kabulü min puan";
-        public const string TiOgrenciMinSinavPuan = "Öğrenci için dil sınavı kabulü min puan";
-        public const string TiSinavPuanGirisKontroluYapilsin = "Sınav puan giriş kontrolü yapılsın";
+        public const string TiSonDonemKayitOlunmasiGerekenDersKodlari = "Son dönem kayıt olunması gereken ders kodları"; 
         public const string TiAraRaporSinaviOnlineYapilabilsin = "Tez izleme ara rapor sınavı online yapılabilsin";
         public const string TiAraRaporSinaviYuzYuzeYapilabilsin = "Tez izleme ara rapor sınavı yüz yüze yapılabilsin";
         public const string TiAraRaporBaharDonemiAylari = "Ara Rapor başvurusunda Dönem seçimi için belirlenen aylar Bahar dönemi kabul edilecek";

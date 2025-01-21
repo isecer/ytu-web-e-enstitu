@@ -21,6 +21,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? LYLHerhangiBirindeGecenAlanIci { get; set; }
         public bool? ProgramSecimiEkBilgi { get; set; }
         public bool? IsAlandisiBolumKisitlamasi { get; set; }
+        public bool? AbdIsAktif { get; set; }
         public bool? IsAktif { get; set; }
         public IEnumerable<FrProgramlar> data { get; set; }
 
@@ -31,6 +32,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EnstituAd { get; set; }
         public string AnabilimDaliAdi { get; set; } 
         public string IslemYapan { get; set; }  
+        public bool AbdIsAktif { get; set; }
 
     }
 }

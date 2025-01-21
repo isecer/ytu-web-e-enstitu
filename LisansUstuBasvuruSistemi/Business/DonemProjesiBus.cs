@@ -144,7 +144,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             controlMessage.Add("Aktif okunan dönem " + domeStr + " dönemlerden biri olması gerekmektedir.");
                         }
 
-                        if (donemProjesi.IsYeniBasvuruYapilabilir && donemProjesi.DonemProjesiBasvurus.Any(p => p.IsDanismanOnay != false && p.DonemProjesiEnstituOnayDurumID != DonemProjesiEnstituOnayDurumEnum.IptalEdildi && p.DonemProjesi.OgrenciNo == obsStudentInfo.OgrenciInfo.OGR_NO && p.OkuduguDonemNo == obsStudentInfo.OkuduguDonemNo))
+                        if (donemProjesi!=null && donemProjesi.IsYeniBasvuruYapilabilir && donemProjesi.DonemProjesiBasvurus.Any(p => p.IsDanismanOnay != false && p.DonemProjesiEnstituOnayDurumID != DonemProjesiEnstituOnayDurumEnum.IptalEdildi && p.DonemProjesi.OgrenciNo == obsStudentInfo.OgrenciInfo.OGR_NO && p.OkuduguDonemNo == obsStudentInfo.OkuduguDonemNo))
                         {
                             controlMessage.Add("Aktif okuduğunuz " + obsStudentInfo.OkuduguDonemNo + ". döneminiz için zaten bir başvurunuz bulunmaktadır.");
                         }

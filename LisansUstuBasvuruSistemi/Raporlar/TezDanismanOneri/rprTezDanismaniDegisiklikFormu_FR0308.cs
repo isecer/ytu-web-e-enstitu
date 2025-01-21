@@ -62,7 +62,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                              s.SinavYili,
                              s.SinavPuani,
                              s.DanismanOnayTarihi,
-                             s.VarolanDanismanOnayTarihi
+                             s.VarolanDanismanOnayTarihi,
+                             s.Gerekce
 
                          }).First();
 
@@ -84,7 +85,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 cellTezDili.Text = q.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
                 cellTezBaslikTr.Text = q.TezBaslikTr;
                 cellTezBaslikEn.Text = q.TezBaslikEn;
-
+                cellGerekceTezBaslikDegisim.Text = q.Gerekce;
 
                 if (q.IsYeniTezDiliTr.HasValue ? q.IsYeniTezDiliTr == false : !q.IsTezDiliTr)
                 {

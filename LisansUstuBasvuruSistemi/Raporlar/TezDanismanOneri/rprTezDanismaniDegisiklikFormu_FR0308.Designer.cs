@@ -342,7 +342,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell196 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow158 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell197 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell195 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.cellGerekceTezBaslikDegisim = new DevExpress.XtraReports.UI.XRTableCell();
             this.DetailReport6 = new DevExpress.XtraReports.UI.DetailReportBand();
             this.Detail7 = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable51 = new DevExpress.XtraReports.UI.XRTable();
@@ -4156,7 +4156,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             // 
             this.xrTableRow156.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCell194,
-            this.xrTableCell195});
+            this.cellGerekceTezBaslikDegisim});
             this.xrTableRow156.Name = "xrTableRow156";
             this.xrTableRow156.Weight = 1.4977599578760195D;
             // 
@@ -4232,20 +4232,20 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell197.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopCenter;
             this.xrTableCell197.Weight = 1D;
             // 
-            // xrTableCell195
+            // cellGerekceTezBaslikDegisim
             // 
-            this.xrTableCell195.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
+            this.cellGerekceTezBaslikDegisim.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell195.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
-            this.xrTableCell195.Multiline = true;
-            this.xrTableCell195.Name = "xrTableCell195";
-            this.xrTableCell195.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
-            this.xrTableCell195.StylePriority.UseBorders = false;
-            this.xrTableCell195.StylePriority.UseFont = false;
-            this.xrTableCell195.StylePriority.UsePadding = false;
-            this.xrTableCell195.StylePriority.UseTextAlignment = false;
-            this.xrTableCell195.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell195.Weight = 2.570229685798247D;
+            this.cellGerekceTezBaslikDegisim.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
+            this.cellGerekceTezBaslikDegisim.Multiline = true;
+            this.cellGerekceTezBaslikDegisim.Name = "cellGerekceTezBaslikDegisim";
+            this.cellGerekceTezBaslikDegisim.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
+            this.cellGerekceTezBaslikDegisim.StylePriority.UseBorders = false;
+            this.cellGerekceTezBaslikDegisim.StylePriority.UseFont = false;
+            this.cellGerekceTezBaslikDegisim.StylePriority.UsePadding = false;
+            this.cellGerekceTezBaslikDegisim.StylePriority.UseTextAlignment = false;
+            this.cellGerekceTezBaslikDegisim.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.cellGerekceTezBaslikDegisim.Weight = 2.570229685798247D;
             // 
             // DetailReport6
             // 
@@ -6409,7 +6409,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell196;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow158;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell197;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCell195;
+        private DevExpress.XtraReports.UI.XRTableCell cellGerekceTezBaslikDegisim;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow68;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell8;
         private DevExpress.XtraReports.UI.XRTable xrTable30;

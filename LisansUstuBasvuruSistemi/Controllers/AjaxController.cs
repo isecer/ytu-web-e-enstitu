@@ -34,6 +34,7 @@ using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
 using LisansUstuBasvuruSistemi.Raporlar.LUB;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
+using LisansUstuBasvuruSistemi.Utilities.Logs;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -388,6 +389,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ViewBag.Ogrenciler = ogrenciler;
             }
 
+            var donemKey = "";
+            if (data.KayitYilBaslangic.HasValue)
+            {
+                donemKey = data.KayitYilBaslangic + "/" + (data.KayitYilBaslangic + 1) + "/" + data.KayitDonemID;
+            }
+            ViewBag.KayitDonem = new SelectList(DonemlerBus.GetCmbAkademikDonemler(data.KayitYilBaslangic), "Value", "Caption", donemKey);
             ViewBag.Enstitu = _entities.Enstitulers.First(p => p.EnstituKod == data.EnstituKod);
 
             ViewBag.YtuOgrenimB = _entities.OgrenimTipleris.FirstOrDefault(p => p.EnstituKod == kullanici.EnstituKod && p.OgrenimTipKod == kullanici.OgrenimTipKod);
@@ -395,7 +402,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ViewBag.Danisman = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == data.DanismanID);
             return View(data);
         }
+        [Authorize(Roles = RoleNames.KullanicilarKayit)]
+        public ActionResult KayitDonemAyarSet(Guid userKey, string kayitDonem, bool? obsGuncelleme)
+        {
+            var mmMessage = new MmMessage
+            {
+                Title = "Kayıt Dönem Güncelleme İşlemi"
+            };
+            var kullanici = _entities.Kullanicilars.First(f => f.UserKey == userKey);
 
+            kullanici.KayitYilBaslangic = kayitDonem.Split('/')[0].ToInt();
+            kullanici.KayitDonemID = kayitDonem.Split('/').Last().ToInt();
+            kullanici.ObsKayitDonemOtoGuncellemeKapali = obsGuncelleme;
+            _entities.SaveChanges();
+            mmMessage.Messages.Add("Kullanıcı kayıt dönemi bilgisi güncellendi.");
+            mmMessage.IsSuccess = true;
+            LogIslemleri.LogEkle("Kullanicilar", LogCrudType.Update, kullanici.ToJson());
+
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mmMessage.ToJsonResult();
+        }
 
         public ActionResult GetCaptcha()
         {
@@ -2229,6 +2255,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetYtuOgretimEleman(string term)
         {
             var data = PersisServiceData.GetWsPersisOe(term);
+            foreach (var item in data.Table)
+            {
+                item.AKADEMIKUNVAN = item.AKADEMIKUNVAN.ToJuriUnvanAdi().AddSpacesBetweenTitleAbbreviations();
+            }
             var ytuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == GlobalSistemSetting.UniversiteYtuKod);
             var kul2 = data.Table.Select(s => new
             {
@@ -2236,7 +2266,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 AdSoyad = s.ADSOYAD,
                 text = s.ADSOYAD,
                 BolumAdi = s.BOLUMADI.Replace("BÖLÜMÜ", ""),
-                UnvanAdi = s.AKADEMIKUNVAN.ToJuriUnvanAdi(),
+                UnvanAdi = s.AKADEMIKUNVAN,
                 UniversiteID = ytuUni?.UniversiteID ?? GlobalSistemSetting.UniversiteYtuKod,
                 UniversiteAdi = (ytuUni != null ? ytuUni.Ad : "Yıldız Teknik Üniversitesi").ToUpper(),
                 EMail = s.KURUMMAIL
@@ -2249,13 +2279,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var data = PersisServiceData.GetWsPersisOe(term);
             var ytuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == GlobalSistemSetting.UniversiteYtuKod);
+            foreach (var item in data.Table)
+            {
+                item.AKADEMIKUNVAN = item.AKADEMIKUNVAN.ToJuriUnvanAdi().AddSpacesBetweenTitleAbbreviations();
+            }
             var kul2 = data.Table.Select(s => new
             {
                 id = s.ADSOYAD,
                 AdSoyad = s.ADSOYAD,
                 text = s.ADSOYAD,
                 BolumAdi = s.BOLUMADI.Replace("BÖLÜMÜ", ""),
-                UnvanAdi = s.AKADEMIKUNVAN.ToJuriUnvanAdi(),
+                UnvanAdi = s.AKADEMIKUNVAN,
                 UniversiteID = ytuUni?.UniversiteID ?? GlobalSistemSetting.UniversiteYtuKod,
                 UniversiteAdi = (ytuUni != null ? ytuUni.Ad : "Yıldız Teknik Üniversitesi").ToUpper(),
                 EMail = s.KURUMMAIL
@@ -2955,7 +2989,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (raporTipi == RaporTipiEnum.MezuniyetEykSavunmaJurisiAtanmistirYazisi)
                 {
-                    var mezuniyetBasvurulariId = Request["ID"].ToIntObj(0); 
+                    var mezuniyetBasvurulariId = Request["ID"].ToIntObj(0);
                     rprX = MezuniyetBus.MezuniyetSavunmaJurisiAtanmistirYazilari(mezuniyetBasvurulariId);
                 }
                 else if (raporTipi == RaporTipiEnum.MezuniyetDrSinavBilgilendirmeYazilari)

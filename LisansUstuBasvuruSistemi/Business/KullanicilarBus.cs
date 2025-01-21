@@ -64,16 +64,23 @@ namespace LisansUstuBasvuruSistemi.Business
                         kayitBilgi = OgrenciKontrol(ogrenci.OgrenciNo);
                         if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == ogrenci.OgrenimTipKod)
                         {
-                            ogrenci.KayitDonemID = kayitBilgi.DonemID;
-                            ogrenci.KayitYilBaslangic = kayitBilgi.BaslangicYil;
+                            if (ogrenci.ObsKayitDonemOtoGuncellemeKapali != true)
+                            {
+                                ogrenci.KayitDonemID = kayitBilgi.DonemID;
+                                ogrenci.KayitYilBaslangic = kayitBilgi.BaslangicYil;
+
+                            }
                             ogrenci.KayitTarihi = kayitBilgi.KayitTarihi;
                             if (kayitBilgi.OgrenciInfo != null)
                             {
                                 int? danismanId = null;
-                                if (!kayitBilgi.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace())
+                                if (!kayitBilgi.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace() || !kayitBilgi.OgrenciInfo.OGR_DANISMAN_TC1.IsNullOrWhiteSpace())
                                 {
+                                    var danismanTc = kayitBilgi.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace()
+                                        ? kayitBilgi.OgrenciInfo.OGR_DANISMAN_TC1
+                                        : kayitBilgi.OgrenciInfo.DANISMAN_TC1;
                                     var danisman = entities.Kullanicilars.FirstOrDefault(p =>
-                                        p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
+                                        p.TcKimlikNo == danismanTc);
                                     if (danisman != null)
                                         danismanId = danisman.KullaniciID;
                                     kayitBilgi.IsDanismanHesabiBulunamadi = !ogrenci.DanismanID.HasValue;
@@ -506,79 +513,6 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
 
-
-        public static void OgrenciOgrenimBilgileriniCek()
-        {
-            using (var db = new LubsDbEntities())
-            {
-                var kulls = db.Kullanicilars.Where(p => p.YtuOgrencisi).ToList();
-                var danismans = db.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
-                    .Select(s => new { s.TcKimlikNo, s.KullaniciID }).ToList();
-                var obsData = new ObsServiceData();
-                foreach (var kul in kulls)
-                {
-                    var studentData = obsData.GetObsStudentControlX(kul.TcKimlikNo, null);
-
-                    if (!studentData.Any()) continue;
-                    var selectedOgrenim =
-                        studentData.FirstOrDefault(p => p.OgrenciInfo.OGR_NO == kul.OgrenciNo);
-                    if (selectedOgrenim != null)
-                    {
-                        int? danismanId = selectedOgrenim.DanismanInfo != null
-                            ? danismans
-                                .Where(p => p.TcKimlikNo == selectedOgrenim.OgrenciInfo.DANISMAN_TC1)
-                                .Select(s => s.KullaniciID)
-                                .FirstOrDefault()
-                            : (int?)null;
-                        if (!(danismanId > 0)) danismanId = null;
-                        var kullaniciOgrenim = new KullaniciOgrenimleri
-                        {
-                            OgrenimDurumID = kul.OgrenimDurumID,
-                            OgrenimTipKod = kul.OgrenimTipKod,
-                            ProgramKod = kul.ProgramKod,
-                            OgrenciNo = kul.OgrenciNo,
-                            ObsProgramAdi = selectedOgrenim.OgrenciInfo.PROGRAM_AD,
-                            ObsProgramId = selectedOgrenim.OgrenciInfo.PROGRAM_ID,
-                            DanismanID = danismanId,
-                            KayitDonemID = selectedOgrenim.DonemID,
-                            KayitTarihi = selectedOgrenim.KayitTarihi,
-                            KayitYilBaslangic = selectedOgrenim.BaslangicYil,
-                            IslemTarihi = DateTime.Now,
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
-                        };
-                        kul.KullaniciOgrenimleris.Add(kullaniciOgrenim);
-
-                    }
-                    foreach (var itemDigerOgrenim in studentData.Where(p =>
-                                 p.OgrenciInfo.OGRENIMSEVIYE_ID != kul.OgrenimTipKod.ToString()))
-                    {
-                        int? danismanId1 = itemDigerOgrenim.DanismanInfo != null ? danismans
-                            .Where(p => p.TcKimlikNo == itemDigerOgrenim.OgrenciInfo.DANISMAN_TC1)
-                            .Select(s => s.KullaniciID).FirstOrDefault() : (int?)null;
-                        if (!(danismanId1 > 0)) danismanId1 = null;
-                        var kullaniciOgrenim1 = new KullaniciOgrenimleri
-                        {
-                            OgrenimDurumID = kul.OgrenimDurumID,
-                            OgrenimTipKod = kul.OgrenimTipKod,
-                            ProgramKod = null,
-                            OgrenciNo = kul.OgrenciNo,
-                            ObsProgramAdi = itemDigerOgrenim.OgrenciInfo.PROGRAM_AD,
-                            ObsProgramId = itemDigerOgrenim.OgrenciInfo.PROGRAM_ID,
-                            KayitDonemID = itemDigerOgrenim.DonemID,
-                            KayitTarihi = itemDigerOgrenim.KayitTarihi,
-                            KayitYilBaslangic = itemDigerOgrenim.BaslangicYil,
-                            DanismanID = danismanId1,
-                            IslemTarihi = DateTime.Now,
-                            IslemYapanID = 1,
-                            IslemYapanIP = "::",
-                        };
-                        kul.KullaniciOgrenimleris.Add(kullaniciOgrenim1);
-                    }
-                }
-
-                db.SaveChanges();
-            }
-        }
+         
     }
 }

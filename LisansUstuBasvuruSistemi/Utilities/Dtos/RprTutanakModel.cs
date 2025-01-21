@@ -36,6 +36,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string YedekUye2 { get; set; }
         public string YedekUye2Uni { get; set; }
         public string TezKonusu { get; set; }
+        public string TezDili { get; set; }
 
     }
 }

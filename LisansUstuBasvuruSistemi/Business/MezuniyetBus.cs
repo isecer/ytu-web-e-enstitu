@@ -683,6 +683,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
                 model.MezuniyetYayinKontrolDurumID = basvuru.MezuniyetYayinKontrolDurumID;
                 model.MezuniyetYayinKontrolDurumAciklamasi = basvuru.MezuniyetYayinKontrolDurumAciklamasi;
+                model.YayinKontrolKabulTaahhutEdildi = basvuru.YayinKontrolKabulTaahhutEdildi;
                 model.IslemTarihi = basvuru.IslemTarihi;
                 model.IslemYapanID = basvuru.IslemYapanID;
                 model.IslemYapanIP = basvuru.IslemYapanIP;

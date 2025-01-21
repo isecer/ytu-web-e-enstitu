@@ -379,8 +379,6 @@
 
                 </tbody>
             </table>
-            <script>
-            </script>
 
         </div>
         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
@@ -414,7 +412,7 @@
                             {
                                 <table id="yTable" class="table table-hover" style="width:100%;table-layout:fixed;">
                                     <thead>
-                                        
+
                                         <tr class="info">
                                             <th width="20">#</th>
                                             <th width="35"></th>
@@ -423,7 +421,7 @@
                                             @if (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak && Model.IsDanismanOnay == true)
                                             {
                                                 <th width="120"></th>
-                                            } 
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -492,6 +490,37 @@
                                         <td class="CaptionTd">:</td>
                                         <td class="ValueTd">
                                             <input type="text" id="ToplamKaynakOrani_@Model.MezuniyetBasvurulariID" maxlength="3" value="@Model.ToplamKaynakOrani" class="form-control" style="color:black;" />
+                                        </td>
+                                    </tr>
+                                }
+                                @if (kayitYetki)
+                                {
+                                    <tr class="taahhutRwBasvuru_@Model.MezuniyetBasvurulariID @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi ? "" : "hide")">
+                                        <td class="CaptionTd">Enstitü Yayın Kabul Taahhütü</td>
+                                        <td class="CaptionTd"></td>
+                                        <td class="ValueTd" style="padding-top: 10px; padding-bottom: 10px;">
+                                            <div class="tasks ui-sortable">
+                                                <div class="task-item task-info" id="YayinKontrolKabulTaahhutEdildiContent-@Model.MezuniyetBasvurulariID" style="margin-bottom: 0px; cursor: pointer;" onclick="toggleCheckbox('@Model.MezuniyetBasvurulariID')">
+                                                    <div class="task-text ui-sortable-handle" style="padding-bottom: 0px; font-size: 8pt;">
+                                                        <div class="task-checkbox" style="display: inline-block; margin-right: 10px;">
+                                                            <input type="checkbox" id="YayinKontrolKabulTaahhutEdildiChk-@Model.MezuniyetBasvurulariID" style="transform: scale(1.5);" onclick="event.stopPropagation();" @(Model.YayinKontrolKabulTaahhutEdildi == true ? "checked" : "")>
+                                                        </div>
+                                                        OBS sistemi üzerinden öğrencinin kayıt tarihi ve dönemi kontrol edilerek yayın şartı onaylanmıştır.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                function toggleCheckbox(id) {
+                                                    const checkbox = document.getElementById(`YayinKontrolKabulTaahhutEdildiChk-${id}`);
+                                                    if (checkbox) {
+                                                        checkbox.checked = !checkbox.checked;
+                                                    }
+                                                }
+                                            </script>
+
+
+
                                         </td>
                                     </tr>
                                 }

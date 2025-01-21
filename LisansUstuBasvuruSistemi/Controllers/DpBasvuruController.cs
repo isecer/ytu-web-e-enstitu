@@ -422,7 +422,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            var unvanlar = UnvanlarBus.GetCmbJuriUnvanlar(true);
+            var unvanlar = UnvanlarBus.GetCmbDpUnvanlar(true);
 
 
             var kul = donemProjesiBasvuru.DonemProjesi.Kullanicilar;
@@ -440,48 +440,55 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
 
-            var danisman = _entities.Kullanicilars.First(f => f.KullaniciID == kul.DanismanID.Value);
-
-
-            model.OgrenciAdSoyad = kul.Ad + " " + kul.Soyad + " - " + donemProjesiBasvuru.DonemProjesi.OgrenciNo;
-
-            model.JoFormJuriList = donemProjesiBasvuru.DonemProjesiJurileris.Select(s => new KrDonemProjesiJurileri
+            if (!kul.DanismanID.HasValue)
             {
-                DonemProjesiJuriID = s.DonemProjesiJuriID,
-                DonemProjesiBasvuruID = s.DonemProjesiBasvuruID,
-                RowNum = s.RowNum,
-                IsTezDanismani = s.IsTezDanismani,
-                UnvanAdi = s.UnvanAdi,
-                AdSoyad = s.AdSoyad,
-                EMail = s.EMail,
-                AnabilimdaliAdi = s.AnabilimdaliAdi,
-                SlistUnvanAdi = new SelectList(unvanlar, "Value", "Caption", s.UnvanAdi),
-            }).ToList();
-
-            var joFormDanisman = model.JoFormJuriList.FirstOrDefault(f => f.IsTezDanismani);
-            if (joFormDanisman != null)
-            {
-                joFormDanisman.AdSoyad = danisman.Ad + " " + danisman.Soyad;
-                joFormDanisman.UnvanAdi = danisman.Unvanlar.UnvanAdi.ToJuriUnvanAdi();
-                joFormDanisman.AnabilimdaliAdi = kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
-                joFormDanisman.EMail = danisman.EMail;
-
+                mMessage.Messages.Add("Öğrenci proje yürütücü bilgisi OBS sisteminden alınamadı!");
             }
             else
             {
-                model.JoFormJuriList.Insert(0, new KrDonemProjesiJurileri
-                {
-                    DonemProjesiBasvuruID = donemProjesiBasvuru.DonemProjesiBasvuruID,
-                    RowNum = 1,
-                    IsTezDanismani = true,
-                    UnvanAdi = danisman.Unvanlar.UnvanAdi.ToJuriUnvanAdi(),
-                    AdSoyad = danisman.Ad + " " + danisman.Soyad,
-                    EMail = danisman.EMail,
-                    AnabilimdaliAdi = kul.Programlar.AnabilimDallari.AnabilimDaliAdi,
-                    SlistUnvanAdi = new SelectList(unvanlar, "Value", "Caption", danisman.Unvanlar.UnvanAdi.ToJuriUnvanAdi()),
-                });
-            }
+                var danisman = _entities.Kullanicilars.First(f => f.KullaniciID == kul.DanismanID.Value);
 
+
+                model.OgrenciAdSoyad = kul.Ad + " " + kul.Soyad + " - " + donemProjesiBasvuru.DonemProjesi.OgrenciNo;
+
+                model.JoFormJuriList = donemProjesiBasvuru.DonemProjesiJurileris.Select(s => new KrDonemProjesiJurileri
+                {
+                    DonemProjesiJuriID = s.DonemProjesiJuriID,
+                    DonemProjesiBasvuruID = s.DonemProjesiBasvuruID,
+                    RowNum = s.RowNum,
+                    IsTezDanismani = s.IsTezDanismani,
+                    UnvanAdi = s.UnvanAdi,
+                    AdSoyad = s.AdSoyad,
+                    EMail = s.EMail,
+                    AnabilimdaliAdi = s.AnabilimdaliAdi,
+                    SlistUnvanAdi = new SelectList(unvanlar, "Value", "Caption", s.UnvanAdi),
+                }).ToList();
+
+                var joFormDanisman = model.JoFormJuriList.FirstOrDefault(f => f.IsTezDanismani);
+                if (joFormDanisman != null)
+                {
+                    joFormDanisman.AdSoyad = danisman.Ad + " " + danisman.Soyad;
+                    joFormDanisman.UnvanAdi = danisman.Unvanlar.UnvanAdi.ToJuriUnvanAdi();
+                    joFormDanisman.AnabilimdaliAdi = kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
+                    joFormDanisman.EMail = danisman.EMail;
+
+                }
+                else
+                {
+                    model.JoFormJuriList.Insert(0, new KrDonemProjesiJurileri
+                    {
+                        DonemProjesiBasvuruID = donemProjesiBasvuru.DonemProjesiBasvuruID,
+                        RowNum = 1,
+                        IsTezDanismani = true,
+                        UnvanAdi = danisman.Unvanlar.UnvanAdi.ToJuriUnvanAdi(),
+                        AdSoyad = danisman.Ad + " " + danisman.Soyad,
+                        EMail = danisman.EMail,
+                        AnabilimdaliAdi = kul.Programlar.AnabilimDallari.AnabilimDaliAdi,
+                        SlistUnvanAdi = new SelectList(unvanlar, "Value", "Caption",
+                            danisman.Unvanlar.UnvanAdi.ToJuriUnvanAdi()),
+                    });
+                }
+            }
 
 
             var view = "";

@@ -11,7 +11,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
         {
             InitializeComponent();
 
-            using (var  entities = new LubsDbEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
@@ -19,9 +19,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
                             join sr in entities.SRTalepleris on s.TIBasvuruAraRaporID equals sr.TIBasvuruAraRaporID
                             join mb in entities.TIBasvurus on s.TIBasvuruID equals mb.TIBasvuruID
                             join k in entities.Kullanicilars on mb.KullaniciID equals k.KullaniciID
-                            join e in entities.Enstitulers on mb.EnstituKod equals e.EnstituKod 
-                            join prg in entities.Programlars  on mb.ProgramKod equals prg.ProgramKod
-                            join abd in entities.AnabilimDallaris  on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
+                            join e in entities.Enstitulers on mb.EnstituKod equals e.EnstituKod
+                            join prg in entities.Programlars on mb.ProgramKod equals prg.ProgramKod
+                            join abd in entities.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
                             where s.TIBasvuruAraRaporID == tiBasvuruAraRaporId
                             select new
                             {
@@ -36,11 +36,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
                                 YokDrBursiyeri = s.IsYokDrBursiyeriVar ? "Evet (Yes)" : "Hayır (No)",
                                 YokDrOncelikliAlan = s.IsYokDrBursiyeriVar ? s.YokDrOncelikliAlan : "",
                                 TezDili = s.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)",
-                                s.IsTezDiliDegisecek,
-                                s.YeniTezDiliTr,
-                                s.SinavAdi,
-                                s.SinavPuani,
-                                s.SinavYili,
                                 s.TezBaslikTr,
                                 s.TezBaslikEn,
                                 ToplantiSekli = sr.IsOnline ? "Çevrimiçi\r\n(Online)" : "Yüz yüze\r\n(Face-to-face)",
@@ -61,7 +56,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
                                 s.IsTezBasligiDegisti,
                                 YeniTezBaslikTr = s.IsTezBasligiDegisti ? s.YeniTezBaslikTr : "",
                                 YeniTezBaslikEn = s.IsTezBasligiDegisti ? s.YeniTezBaslikEn : "",
-                                urlAdd = e.SistemErisimAdresi  + "/DosyaKontrol/Index?Kod=" + "TIDF_" + s.TIBasvuruAraRaporID + "_" + s.UniqueID
+                                urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TIDF_" + s.TIBasvuruAraRaporID + "_" + s.UniqueID
                             }).First();
 
                 this.DisplayName = "FR-0307 DOKTORA TEZ İZLEME RAPORU FORMU";
@@ -79,7 +74,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
                 cellTezBasligiTr.Text = data.TezBaslikTr;
                 cellTezBasligiEn.Text = data.TezBaslikEn;
                 cellToplantiSekli.Text = data.ToplantiSekli;
-                cellToplantiTarihi.Text = data.ToplantiTarihi.ToLongDateString() + "\n\r" +$"{data.ToplantiSaati:hh\\:mm}";
+                cellToplantiTarihi.Text = data.ToplantiTarihi.ToLongDateString() + "\n\r" + $"{data.ToplantiSaati:hh\\:mm}";
                 cellToplantiyeri.Text = data.Toplantiyeri;
                 cellTezIzlemeRaporDonemAdi.Text = data.TezIzlemeRaporDonemi;
                 cellTezIzlemeRaporSayisi.Text = data.AraRaporSayisi.ToString();
@@ -107,66 +102,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
                 xrIsAltAlan.Visible = data.IsYokDrBursiyeriVar;
                 xrAltAlanAdi.Visible = data.IsYokDrBursiyeriVar;
                 sbantTezBasligiDegisim.Visible = data.IsTezBasligiDegisti;
-                cellOnay.Text = data.YeniTezDiliTr == false ? "G. ONAY" : "F. ONAY";
+                cellOnay.Text = "G. ONAY";
 
-                if (data.IsTezDiliDegisecek)
-                {
-                    detReportSinav.Visible = data.YeniTezDiliTr == false;
-                    cellYeniTezDili.Text = data.YeniTezDiliTr == true ? "Türkçe (Turkish)" : "İngilizce (English)";
-                    if (data.YeniTezDiliTr == false)
-                    {
-                        detRepImza.PageBreak = PageBreak.BeforeBand;
-                        cellFOnay.Borders = DevExpress.XtraPrinting.BorderSide.All;
-                        cellOgrenciSinavAdiTarihi.Text = data.SinavAdi + " - " + data.SinavYili;
-                        cellOgrenciSinavPuan.Text = data.SinavPuani;
-                        if (data.Danisman.IsDilSinaviOrUniversite == true)
-                        {
-                            cellDanismanSinavAdiTarihi.Text = data.Danisman.DilSinavAdi + " - " + data.Danisman.SinavTarihi;
-                            cellDanismanSinavPuan.Text = data.Danisman.DilPuani;
-                        }
-                        else
-                        {
-                            cellDanismanSinavAdiTarihi.Text = data.Danisman.DilSinavAdi;
-                            cellDanismanSinavPuan.Text = "";
-                        }
 
-                        if (data.TikUyesi1.IsDilSinaviOrUniversite == true)
-                        {
-                            cellTik1SinavAdiTarihi.Text = data.TikUyesi1.DilSinavAdi + " - " + data.TikUyesi1.SinavTarihi;
-                            cellTik1SinavPuan.Text = data.TikUyesi1.DilPuani;
-                        }
-                        else
-                        {
-                            cellTik1SinavAdiTarihi.Text = data.TikUyesi1.DilSinavAdi;
-                            cellTik1SinavPuan.Text = "";
-                        }
-                        if (data.TikUyesi2.IsDilSinaviOrUniversite == true)
-                        {
-                            cellTik2SinavAdiTarihi.Text = data.TikUyesi2.DilSinavAdi + " - " + data.TikUyesi2.SinavTarihi;
-                            cellTik2SinavPuan.Text = data.TikUyesi2.DilPuani;
-                        }
-                        else
-                        {
-                            cellTik2SinavAdiTarihi.Text = data.TikUyesi2.DilSinavAdi;
-                            cellTik2SinavPuan.Text = "";
-                        }
-                    }
-                    else
-                    {
-                        cellDanismanSinavAdiTarihi.Text = "";
-                        cellDanismanSinavPuan.Text = "";
+                detReportSinav.Visible = false;
 
-                        cellTik1SinavAdiTarihi.Text = "";
-                        cellTik1SinavPuan.Text = "";
-
-                        cellTik2SinavAdiTarihi.Text = "";
-                        cellTik2SinavPuan.Text = "";
-                    }
-                }
-                else
-                {
-                    detReportSinav.Visible = false;
-                }
 
                 cellFormKodu.Text = "Form Kodu: " + data.FormKodu;
                 xrQRCode.ImageUrl = data.urlAdd;

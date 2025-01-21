@@ -65,13 +65,13 @@
                     <div class="form-group RwtezBasliklari @(Model.IsTezBasligiDegisti == true ? "" : "hide")">
                         <label class="col-md-3 col-xs-2 control-label">Yeni Tez Başlığı Türkçe</label>
                         <div class="col-md-9 col-xs-10">
-                            <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control UpperTextTr" />
+                            <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control UpperTextTr tCharacterBlock" />
                         </div>
                     </div>
                     <div class="form-group RwtezBasliklari @(Model.IsTezBasligiDegisti == true ? "" : "hide")">
                         <label class="col-md-3 col-xs-2 control-label">Yeni Tez Başlığı İngilizce</label>
                         <div class="col-md-9 col-xs-10">
-                            <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control UpperTextEn" />
+                            <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control UpperTextEn tCharacterBlock" />
                         </div>
                     </div>
 
@@ -638,7 +638,7 @@ else
     </script>
 }
 <script>
-
+    onSpecialCharacterBlockerLoaded();
 
     $(function () {
         $('.upperCase').each(function (ix, inx) {

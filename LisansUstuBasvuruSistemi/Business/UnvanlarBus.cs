@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -8,9 +9,9 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class UnvanlarBus
     {
-        public static List<string> JuriUnvanList = new List<string> { "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" };
-        public static List<string> EsDanismanUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" };
-        public static List<string> DpJuriUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" };
+        public static List<string> JuriUnvanList = new List<string> { "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s=>s.AddSpacesBetweenTitleAbbreviations()).ToList();
+        public static List<string> EsDanismanUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s=>s.AddSpacesBetweenTitleAbbreviations()).ToList();
+        public static List<string> DpJuriUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
         public static string ToJuriUnvanAdi(this string unvanAdi)
         {
             if (unvanAdi.IsNullOrWhiteSpace()) return "";
@@ -28,13 +29,26 @@ namespace LisansUstuBasvuruSistemi.Business
             if (drUnvan.Any(a => a.ToLower() == unvanAdi.ToLower())) return "DR.";
             return ogUyeUnvan.Any(a => a.Contains(unvanAdi)) ? "DR. ÖĞR. ÜYESİ" : unvanAdi.ToUpper();
         }
+        public static string AddSpacesBetweenTitleAbbreviations(this string input)
+        {
+            // Nokta karakterinden sonra harf gelen durumlar için boşluk ekler
+            return Regex.Replace(input, @"\.(?=\p{L})", ". ");
+        }
 
         public static List<CmbStringDto> GetCmbJuriUnvanlar(bool bosSecimVar = false)
         {
             var dct = new List<CmbStringDto>();
+            if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" }); 
+            dct.AddRange(JuriUnvanList.Select(item => new CmbStringDto { Value = item, Caption = item }));
+            return dct;
+
+        }
+        public static List<CmbStringDto> GetCmbDpUnvanlar(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            var unvanList = new List<string> { "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" };
-            dct.AddRange(unvanList.Select(item => new CmbStringDto { Value = item, Caption = item }));
+
+            dct.AddRange(DpJuriUnvanList.Select(item => new CmbStringDto { Value = item, Caption = item }));
             return dct;
 
         }

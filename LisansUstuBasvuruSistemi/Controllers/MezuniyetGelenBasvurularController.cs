@@ -432,7 +432,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
-        public ActionResult DurumKayit(int id, int? mezuniyetYayinKontrolDurumId, int? tekKaynakOrani, int? toplamKaynakOrani, string mezuniyetYayinKontrolDurumAciklamasi)
+        public ActionResult DurumKayit(int id, int? mezuniyetYayinKontrolDurumId, int? tekKaynakOrani, int? toplamKaynakOrani, string mezuniyetYayinKontrolDurumAciklamasi, bool? yayinKontrolKabulTaahhutEdildi)
         {
             var mmMessage = new MmMessage { Title = "Mezuniyet başvurusu durum değişiklik işlemi" };
             var mBasvur = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
@@ -488,6 +488,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else if (toplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || toplamKaynakOrani.Value < 0)
                             mmMessage.Messages.Add($"Toplam Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
                     }
+
+                    if (!mmMessage.Messages.Any() && yayinKontrolKabulTaahhutEdildi != true)
+                    {
+                        mmMessage.Messages.Add("Taahhüt metnini onaylayınız.");
+
+                    }
                 }
 
             }
@@ -513,7 +519,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (ogrenimTipKrt.ToplamKaynakOrani.HasValue) mBasvur.ToplamKaynakOrani = toplamKaynakOrani;
 
                 mBasvur.MezuniyetYayinKontrolDurumID = mezuniyetYayinKontrolDurumId.Value;
-                mBasvur.MezuniyetYayinKontrolDurumAciklamasi = mezuniyetYayinKontrolDurumAciklamasi;
+                mBasvur.MezuniyetYayinKontrolDurumAciklamasi = mezuniyetYayinKontrolDurumId != MezuniyetYayinKontrolDurumuEnum.KabulEdildi ? mezuniyetYayinKontrolDurumAciklamasi : null;
+                mBasvur.YayinKontrolKabulTaahhutEdildi = yayinKontrolKabulTaahhutEdildi;
                 mBasvur.IslemTarihi = DateTime.Now;
                 mBasvur.IslemYapanID = UserIdentity.Current.Id;
                 mBasvur.IslemYapanIP = UserIdentity.Ip;
@@ -2283,7 +2290,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay)]
         [HttpPost]
-        public ActionResult EYKDaOnay(List<int> mezuniyetBasvurulariIds,DateTime? eykTarihi,string eykSayisi)
+        public ActionResult EYKDaOnay(List<int> mezuniyetBasvurulariIds, DateTime? eykTarihi, string eykSayisi)
         {
             mezuniyetBasvurulariIds = mezuniyetBasvurulariIds ?? new List<int>();
             var eykDaOnaylanacakBasvurular = _entities.MezuniyetJuriOneriFormlaris.Where(p =>
@@ -2292,8 +2299,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ).ToList();
             foreach (var item in eykDaOnaylanacakBasvurular)
             {
-                item.EYKDaOnaylandi = true; 
-                item.EYKDaOnaylandiOnayTarihi = DateTime.Now; 
+                item.EYKDaOnaylandi = true;
+                item.EYKDaOnaylandiOnayTarihi = DateTime.Now;
                 item.MezuniyetBasvurulari.EYKTarihi = eykTarihi;
                 if (!eykSayisi.IsNullOrWhiteSpace())
                 {
@@ -2475,6 +2482,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         row.TezKonusu = itemO.IsTezDiliTr == true ? itemO.TezBaslikTr : itemO.TezBaslikEn;
                     }
+
+                    row.TezDili = itemO.IsTezDiliTr == true ? "Türkçe" : "İngilizce";
                     rModel.DetayData.Add(row);
 
                     model.Add(rModel);
@@ -2532,6 +2541,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var baslikTr = tezBasligiDegisenSinav == null ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikTr : joForm.MezuniyetBasvurulari.TezBaslikTr) : tezBasligiDegisenSinav.YeniTezBaslikTr;
                         var baslikEn = tezBasligiDegisenSinav == null ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikEn : joForm.MezuniyetBasvurulari.TezBaslikEn) : tezBasligiDegisenSinav.YeniTezBaslikEn;
                         var tezBaslik = joForm.MezuniyetBasvurulari.IsTezDiliTr == true ? baslikTr : baslikEn;
+
                         row.OgrenciNo = itemO.OgrenciNo;
                         row.Konu = itemO.Ad + " " + itemO.Soyad + " 'DOKTORA DERECESİ' alması Hk.";
                         row.Aciklama1 = "Enstitümüz " + abdl.AnabilimDaliAdi + " Anabilim Dalı " + prgl.ProgramAdi + " doktora programı öğrencisi <b>" + itemO.OgrenciNo + "</b> no’lu <b>" + itemO.Ad + " " + itemO.Soyad + ";</b> "

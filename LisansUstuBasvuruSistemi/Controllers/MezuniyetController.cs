@@ -63,24 +63,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 bbModel.OgrenciNo = kullanici.OgrenciNo;
                 bbModel.KullaniciTipYetki = kullanici.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci;
                 bbModel.EnstituYetki = kullanici.Programlar.AnabilimDallari.EnstituKod == enstituKod;
-                if (kullanici.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci)
-                {
-                    var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
-                    if (kullanici.KayitTarihi != kullKayitB.KayitTarihi)
-                    {
-                        kullanici.KayitYilBaslangic = kullKayitB.BaslangicYil;
-                        kullanici.KayitDonemID = kullKayitB.DonemID;
-                        kullanici.KayitTarihi = kullKayitB.KayitTarihi;
-                        _entities.SaveChanges();
-                    }
-                    if (kullKayitB.KayitVar == false)
-                    {
-                        bbModel.KullaniciTipYetki = false;
-                        bbModel.KullaniciTipYetkiYokMsj = "Öğrenim Bilginiz Doğrulanamdı. Hesap bilgilerinizde bulunan YTÜ Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen";
-                    }
-                    else bbModel.KayitDonemi = kullanici.KayitYilBaslangic + "/" + (kullanici.KayitYilBaslangic + 1) + " " + _entities.Donemlers.First(p => p.DonemID == kullanici.KayitDonemID.Value).DonemAdi + " , " + kullanici.KayitTarihi.ToFormatDate();
 
+                var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
+                if (kullanici.KayitTarihi != kullKayitB.KayitTarihi || kullanici.KayitYilBaslangic != kullKayitB.BaslangicYil || kullanici.KayitDonemID != kullKayitB.DonemID)
+                {
+                    kullanici.KayitYilBaslangic = kullKayitB.BaslangicYil;
+                    kullanici.KayitDonemID = kullKayitB.DonemID;
+                    kullanici.KayitTarihi = kullKayitB.KayitTarihi;
+                    _entities.SaveChanges();
                 }
+                if (kullKayitB.KayitVar == false)
+                {
+                    bbModel.KullaniciTipYetki = false;
+                    bbModel.KullaniciTipYetkiYokMsj = "Öğrenim Bilginiz Doğrulanamdı. Hesap bilgilerinizde bulunan YTÜ Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen";
+                }
+                else bbModel.KayitDonemi = kullanici.KayitYilBaslangic + "/" + (kullanici.KayitYilBaslangic + 1) + " " + _entities.Donemlers.First(p => p.DonemID == kullanici.KayitDonemID.Value).DonemAdi + " , " + kullanici.KayitTarihi.ToFormatDate();
+
+
 
             }
             else
@@ -2007,7 +2006,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 {
                                     if (messages.IsSuccess)
                                     {
-                                        mMessage.Messages.Add("Değerlendirme sonucu danışman ve öğrenciye gönderildi."); 
+                                        mMessage.Messages.Add("Değerlendirme sonucu danışman ve öğrenciye gönderildi.");
                                     }
                                     else
                                     {

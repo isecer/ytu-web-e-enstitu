@@ -8,7 +8,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model TiBasvuruDetayDto
 @{
-     
+
     Layout = null;
 
     var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
@@ -99,7 +99,7 @@
                                                     <td class="ValueTd">
                                                         @if ((isDanismani || degerlendirmeYetki) && Model.TezDanismanID.HasValue)
                                                         {
-                                                            <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a> 
+                                                            <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
                                                         }
                                                         else
                                                         {
@@ -156,12 +156,24 @@
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd">@item.TezBaslikTr</td>
                                                 </tr>
+                                              
+                                                    <tr>
+                                                        <td class="CaptionTd">Tez Başlığı Değişti mi?</td>
+                                                        <td class="CaptionTd">:</td>
+                                                        <td class="ValueTd">@(item.IsTezBasligiDegisti?"Evet":"Hayır")</td>
+                                                    </tr>
+                                                
                                                 @if (item.IsTezBasligiDegisti)
                                                 {
                                                     <tr>
-                                                        <td class="CaptionTd">Yeni Tez Başlığı</td>
+                                                        <td class="CaptionTd">Yeni Tez Başlığı Türkçe</td>
                                                         <td class="CaptionTd">:</td>
                                                         <td class="ValueTd">@item.YeniTezBaslikTr</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="CaptionTd">Yeni Tez Başlığı Çevirisi</td>
+                                                        <td class="CaptionTd">:</td>
+                                                        <td class="ValueTd">@item.YeniTezBaslikEn</td>
                                                     </tr>
                                                 }
                                                 <tr>
@@ -246,6 +258,7 @@
                                                     </tr>
 
                                                 }
+
                                                 <tr>
                                                     <td class="CaptionTd">Tez İzleme Raporunun Değerlendirme Sonucu</td>
                                                     <td class="CaptionTd">:</td>
@@ -372,7 +385,7 @@
                                     <td class="ValueTd">
                                         @if ((isDanismani || degerlendirmeYetki) && Model.TezDanismanID.HasValue)
                                         {
-                                            <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a> 
+                                            <a href="javascript:void(0)" onclick="DetayGor('@Model.TezDanismaniUserKey','#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
                                         }
                                         else
                                         {
@@ -481,36 +494,10 @@
                                                         <td class="ValueTd">@item.TezBaslikEn</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="CaptionTd">Tez Dili Değişecek mi?</td>
+                                                        <td class="CaptionTd">Tez Başlığı Değişti mi?</td>
                                                         <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd">@item.IsTezDiliDegisecek.ToEvetHayir()</td>
+                                                        <td class="ValueTd">@(item.IsTezBasligiDegisti?"Evet":"Hayır")</td>
                                                     </tr>
-                                                    @if (item.IsTezDiliDegisecek)
-                                                    {
-                                                        <tr>
-                                                            <td class="CaptionTd">Yeni Tez Dili</td>
-                                                            <td class="CaptionTd">:</td>
-                                                            <td class="ValueTd">@(item.YeniTezDiliTr == true ? "Türkçe" : "İngilizce")</td>
-                                                        </tr>
-                                                        if (item.YeniTezDiliTr == false)
-                                                        {
-                                                            <tr>
-                                                                <td class="CaptionTd">Dil Sınav Adı</td>
-                                                                <td class="CaptionTd">:</td>
-                                                                <td class="ValueTd">@item.SinavAdi</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="CaptionTd">Dil Sınav Puanı</td>
-                                                                <td class="CaptionTd">:</td>
-                                                                <td class="ValueTd">@item.SinavPuani</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="CaptionTd">Dil Sınav Yılı</td>
-                                                                <td class="CaptionTd">:</td>
-                                                                <td class="ValueTd">@item.SinavYili</td>
-                                                            </tr>
-                                                        }
-                                                    }
 
                                                     @if (item.IsTezBasligiDegisti)
                                                     {
@@ -580,10 +567,10 @@
 
                                                         @foreach (var itemJr in item.TIBasvuruAraRaporKomites.OrderBy(o => o.JuriTipAdi))
                                                         {
-                                                            var isKomiteTezDanismani = itemJr.JuriTipAdi == "TezDanismani";
-                                                            var openRow = (isDanismani && isKomiteTezDanismani);
-                                                            var openDegerlendirme = (inxRw == 1|| Model.IsGecmisDegerlendirilebilsin) && srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.IsBasarili.HasValue) || degerlendirmeDuzeltmeYetki);
-                                                            var sendLink = inxRw == 1 && srTalebiYapildi && (isDanismani && !isKomiteTezDanismani && item.TIBasvuruAraRaporKomites.Count != item.TIBasvuruAraRaporKomites.Count(c => c.IsBasarili.HasValue) || (degerlendirmeDuzeltmeYetki));
+                                                            var isTezDanismani = itemJr.JuriTipAdi == "TezDanismani";
+                                                            var openRow = (isDanismani && isTezDanismani);
+                                                            var openDegerlendirme = (inxRw == 1 || Model.IsGecmisDegerlendirilebilsin) && srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.IsBasarili.HasValue) || degerlendirmeDuzeltmeYetki);
+                                                            var sendLink = inxRw == 1 && srTalebiYapildi && (isDanismani && !isTezDanismani && item.TIBasvuruAraRaporKomites.Count != item.TIBasvuruAraRaporKomites.Count(c => c.IsBasarili.HasValue) || (degerlendirmeDuzeltmeYetki));
 
                                                             <tr>
                                                                 <td>
@@ -597,7 +584,7 @@
                                                                 <td class="clsHide">
                                                                     @itemJr.UnvanAdi
                                                                     <br />
-                                                                    @(isKomiteTezDanismani ? "Tez Danışmanı" : "Tik Üyesi")
+                                                                    @(isTezDanismani ? "Tez Danışmanı" : "Tik Üyesi")
                                                                 </td>
                                                                 <td>
                                                                     @itemJr.AdSoyad
@@ -629,7 +616,7 @@
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (isDanismani && isKomiteTezDanismani)
+                                                                            if (isDanismani && isTezDanismani)
                                                                             {
                                                                                 <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapmanız Bekleniyor.</span>
 
@@ -637,7 +624,7 @@
                                                                             else
                                                                             {
                                                                                 <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
-                                                                                if (!isKomiteTezDanismani && itemJr.IsLinkGonderildi == true)
+                                                                                if (!isTezDanismani && itemJr.IsLinkGonderildi == true)
                                                                                 {
                                                                                     <br /><span style="color:green;font-size:8pt;">@itemJr.LinkGonderimTarihi.Value.ToLongDateString()  @itemJr.LinkGonderimTarihi.Value.ToString("HH:mm")  Tarihinde Değerlendirme Linki Gönderildi.</span>
                                                                                 }
@@ -673,42 +660,7 @@
                                                                                     <td class="CaptionTd">:</td>
                                                                                     <td class="ValueTd">@itemJr.AnabilimdaliProgramAdi</td>
                                                                                 </tr>
-                                                                                @if (item.IsTezDiliDegisecek && item.YeniTezDiliTr == false)
-                                                                                {
-                                                                                    <tr>
-                                                                                        <td class="CaptionTd">Dil Sınavı Türü</td>
-                                                                                        <td class="CaptionTd">:</td>
-                                                                                        <td class="ValueTd">@(itemJr.IsDilSinaviOrUniversite == true ? "Sınav Bilgisi" : "Üniversite Bilgisi")</td>
-                                                                                    </tr>
-                                                                                    if (itemJr.IsDilSinaviOrUniversite == false)
-                                                                                    {
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Üniversite Bilgisi</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">@itemJr.DilSinavAdi</td>
-                                                                                        </tr>
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Dil Sınavı Adı</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">@itemJr.DilSinavAdi</td>
-                                                                                        </tr>
 
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Dil Sınavı Yılı</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">@itemJr.SinavTarihi</td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Dil Sınavı Puanı</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">@itemJr.DilPuani</td>
-                                                                                        </tr>
-                                                                                    }
-
-                                                                                }
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
@@ -738,7 +690,7 @@
                                                                                         }
                                                                                     </td>
                                                                                 </tr>
-                                                                                @if (item.IsYokDrBursiyeriVar && isKomiteTezDanismani)
+                                                                                @if (item.IsYokDrBursiyeriVar && isTezDanismani)
                                                                                 {
 
                                                                                     <tr>
@@ -760,6 +712,46 @@
                                                                                         </td>
                                                                                     </tr>
 
+
+
+                                                                                }
+                                                                                @if (isTezDanismani && openDegerlendirme)
+                                                                                {
+
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd ctWidth">Tez Başlığı Değişecek mi?</td>
+                                                                                        <td class="CaptionTd">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            <select style="width:90px;" id="IsTezBasligiDegisti_@itemJr.UniqueID" onchange="if ($(this).val()=='true') { $('.YeniTez_@itemJr.UniqueID').removeClass('hide'); } else { $('.YeniTez_@itemJr.UniqueID').addClass('hide'); }">
+                                                                                                <option value="true" @(item.IsTezBasligiDegisti == true ? "selected" : "")>Evet</option>
+                                                                                                <option value="false" @(item.IsTezBasligiDegisti == false ? "selected" : "")>Hayır</option>
+                                                                                            </select>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr class="YeniTez_@itemJr.UniqueID @(item.IsTezBasligiDegisti ? "" : "hide")">
+                                                                                        <td class="CaptionTd ctWidth">Yeni Tez Başlığı Türkçe (*)</td>
+                                                                                        <td class="CaptionTd">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            <input type="text" id="YeniTezBaslikTr_@itemJr.UniqueID" autocomplete="off" value="@item.YeniTezBaslikTr" class="form-control UpperTextTr tCharacterBlock" />
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr class="YeniTez_@itemJr.UniqueID @(item.IsTezBasligiDegisti ? "" : "hide")">
+                                                                                        <td class="CaptionTd ctWidth">Yeni Tez Başlığı Çevirisi (*)</td>
+                                                                                        <td class="CaptionTd">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            <input type="text" id="YeniTezBaslikEn_@itemJr.UniqueID" autocomplete="off" value="@item.YeniTezBaslikEn" class="form-control UpperTextEn tCharacterBlock" />
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr class="YeniTez_@itemJr.UniqueID @(item.IsTezBasligiDegisti ? "" : "hide")">
+                                                                                        <td class="CaptionTd ctWidth">Değişim Gerekçesi (*)</td>
+                                                                                        <td class="CaptionTd">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            <input type="text" id="TezBasligiDegisimGerekcesi_@itemJr.UniqueID" autocomplete="off" maxlength="512" value="@item.TezBasligiDegisimGerekcesi" class="form-control" />
+                                                                                        </td>
+                                                                                    </tr>
                                                                                 }
                                                                                 <tr>
                                                                                     <td class="CaptionTd ctWidth">Tez İzleme Raporunun Değerlendirme Sonucu</td>
@@ -804,7 +796,7 @@
 
                                                                                 @if (openDegerlendirme)
                                                                                 {
-                                                                                    if (isDanismani && isKomiteTezDanismani && !itemJr.IsBasarili.HasValue)
+                                                                                    if (isDanismani && isTezDanismani && !itemJr.IsBasarili.HasValue)
                                                                                     {
                                                                                         <tr>
                                                                                             <td colspan="3" class="ValueTd" style="color:maroon;">
@@ -957,4 +949,13 @@
             </table>
         </div>
     }
-</div> 
+</div>
+
+<script>
+    onSpecialCharacterBlockerLoaded();
+    const inputElementsTr = document.querySelectorAll('.UpperTextTr,.UpperTextEn');
+    inputElementsTr.forEach(inputElement => {
+        inputElement.addEventListener('input', convertToTrOrEnUpperCase);
+        convertToTrOrEnUpperCase({ target: inputElement });
+    });
+</script>

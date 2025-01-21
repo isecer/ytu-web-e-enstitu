@@ -16,6 +16,7 @@ namespace Entities.Entities
     {
         public int TDOBasvuruEsDanismanID { get; set; }
         public int TDOBasvuruDanismanID { get; set; }
+        public bool IsObsData { get; set; }
         public System.Guid UniqueID { get; set; }
         public string FormKodu { get; set; }
         public bool IsDegisiklikTalebi { get; set; }

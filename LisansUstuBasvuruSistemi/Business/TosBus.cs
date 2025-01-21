@@ -464,9 +464,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.ToplamBasarisizTezOneriSavunmaHak = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak.GetAyarTi(basvuru.EnstituKod).ToInt();
                 model.IlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
                 model.IkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
-                model.TezBaslikMaxLength = enstitu.TezBaslikMaxLength;
-                model.TezBaslikIllegalCharacter = enstitu.TezBaslikIllegalCharacter;
-
+                
                 var sonTos = model.ToBasvuruSavunmaList.FirstOrDefault();
 
                 model.DurumHtmlString = (

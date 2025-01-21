@@ -104,28 +104,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public Guid? DegerlendirenUniqueID { get; set; }
         public List<ToBasvuruSavunmaDto> ToBasvuruSavunmaList { get; set; }
 
-        public int? TezBaslikMaxLength { get; set; }
-        public string TezBaslikIllegalCharacter { get; set; }
-
-        public string GenerateSpecialCharacterBlockerScript()
-        {
-            var tezBaslikIllegalCharacter =
-                string.IsNullOrEmpty(TezBaslikIllegalCharacter) ? "" : TezBaslikIllegalCharacter;
-            var encodedTChrctr =
-                JsonConvert.SerializeObject(tezBaslikIllegalCharacter); // illegal karakterleri JSON formatına çevir
-            var maxLength = TezBaslikMaxLength.HasValue ? TezBaslikMaxLength.ToString() : "null";
-            return $@"
-                        <script> 
-                                var tChrctr = {encodedTChrctr};  // C# tarafında oluşturulan JSON verisi
-                                var mTLength = {maxLength};  // TezBaşlıkMaxLength değeri
-
-                                var invalidTChars = tChrctr ? tChrctr.split(',') : [];
-
-                                new SpecialCharacterBlocker('tCharacterBlock', invalidTChars, mTLength);
-                             
-                        </script>
-                        ";
-        }
+        
+         
     }
     public class ToBasvuruSavunmaDto : ToBasvuruSavunma
     {

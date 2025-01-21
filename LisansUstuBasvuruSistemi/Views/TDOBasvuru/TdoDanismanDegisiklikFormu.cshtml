@@ -62,11 +62,10 @@
     </div>
 
 
-}
+} 
 <script src="~/Scripts/inputTextChangeUpperCase.js"></script>
-@Html.Raw(Model.GenerateSpecialCharacterBlockerScript())
 <script>
-
+    onSpecialCharacterBlockerLoaded();
     function SinavTipKontrol(sndr,inp,cls) {
 
         var _panel = $('#bbTdoForm');

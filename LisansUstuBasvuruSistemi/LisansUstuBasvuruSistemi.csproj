@@ -847,6 +847,8 @@
     <Content Include="Content\assets\fileupload\UploadHandler.php" />
     <Content Include="Content\assets\images\blog\post_1.jpg" />
     <Content Include="Content\assets\images\blog\post_2.jpg" />
+    <Content Include="Content\assets\images\FbeLogoTop.jpeg" />
+    <Content Include="Content\assets\images\fbe_top_logo.jpg" />
     <Content Include="Content\assets\images\gallery\girls-1.jpg" />
     <Content Include="Content\assets\images\gallery\girls-2.jpg" />
     <Content Include="Content\assets\images\gallery\girls-3.jpg" />
@@ -870,7 +872,10 @@
     <Content Include="Content\assets\images\org\logo.png" />
     <Content Include="Content\assets\images\org\logo_en.gif" />
     <Content Include="Content\assets\images\org\logo_en.png" />
+    <Content Include="Content\assets\images\sbe_top_logo.jpg" />
+    <Content Include="Content\assets\images\tet_top_logo.jpg" />
     <Content Include="Content\assets\images\users\avatar.jpg" />
+    <Content Include="Content\assets\images\EnstituLogoTop-fbe.png" />
     <Content Include="Content\assets\images\users\no-image.jpg" />
     <Content Include="Content\assets\images\users\user.jpg" />
     <Content Include="Content\assets\images\users\user2.jpg" />
@@ -879,6 +884,7 @@
     <Content Include="Content\assets\images\users\user5.jpg" />
     <Content Include="Content\assets\images\users\user6.jpg" />
     <Content Include="Content\assets\images\users\user7.jpg" />
+    <Content Include="Content\assets\images\ytu_logo_new.jpg" />
     <Content Include="Content\assets\images\ytu_logo_en.gif" />
     <Content Include="Content\assets\images\ytu_logo_en.png" />
     <Content Include="Content\assets\images\ytu_logo_tr.gif" />

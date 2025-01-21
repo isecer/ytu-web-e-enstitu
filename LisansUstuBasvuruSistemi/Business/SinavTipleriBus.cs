@@ -128,7 +128,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var data = entities.SinavTipleris.Where(p => p.SinavTipID == sinavTipId).SelectMany(s => s.SinavNotlaris).Select(s => new CmbDoubleDto
                 {
                     Value = s.SinavNotDeger,
-                    Caption = s.SinavNotAdi + " (Yüzlük karşılığı: " + s.SinavNotDeger + ")"
+                    Caption = s.SinavNotAdi + " (Yüzlük sistemde karşılığı: " + s.SinavNotDeger + ")"
                 }).OrderBy(o => o.Value).ToList();
                 dct.AddRange(data);
             }

@@ -37,7 +37,7 @@
                         <div class="col-md-9 col-xs-10">
                             @if (yetkili)
                             {
-                                <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="400" value="@Model.TezBaslikTr" style="color:black;" class="form-control UpperTextTr" />
+                                <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="400" value="@Model.TezBaslikTr" style="color:black;" class="form-control UpperTextTr tCharacterBlock" />
                             }
                             else
                             {
@@ -50,7 +50,7 @@
                         <div class="col-md-9 col-xs-10">
                             @if (yetkili)
                             {
-                                <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="400" value="@Model.TezBaslikEn" style="color:black;" class="form-control UpperTextEn" />
+                                <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="400" value="@Model.TezBaslikEn" style="color:black;" class="form-control UpperTextEn tCharacterBlock" />
                             }
                             else
                             {
@@ -79,6 +79,7 @@
 }
 <script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script>
+    onSpecialCharacterBlockerLoaded();
     $(function () {
         $('.summernotex').summernote({
             height: 120,

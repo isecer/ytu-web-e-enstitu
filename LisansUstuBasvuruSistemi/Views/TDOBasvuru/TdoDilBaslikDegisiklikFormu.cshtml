@@ -3,7 +3,7 @@
 @model KmTdoBasvuruDanisman
 @{
     Layout = null;
-    var tezDiliTr = Model.IsYeniTezDiliTr.HasValue ? Model.IsYeniTezDiliTr == false : Model.IsTezDiliTr == false;
+    var tezDiliTr = Model.IsYeniTezDiliTr.HasValue ? Model.IsYeniTezDiliTr == true : Model.IsTezDiliTr == true;
 
 }
 @using (Ajax.BeginForm("TdoDilBaslikDegisiklikFormuPost", "TdoBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
@@ -55,14 +55,14 @@
                     <td class="CaptionTd">Yeni Tez Başlığı Türkçe</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" maxlength="@Model.TezBaslikMaxLength" value="@Model.YeniTezBaslikTr" class="form-control UpperTextTr tCharacterBlock" style="color:black;" />
+                        <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" value="@Model.YeniTezBaslikTr" class="form-control UpperTextTr tCharacterBlock" style="color:black;" />
                     </td>
                 </tr>
                 <tr>
                     <td class="CaptionTd">Yeni Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" maxlength="@Model.TezBaslikMaxLength" value="@Model.YeniTezBaslikEn" class="form-control UpperTextEn tCharacterBlock" style="color:black;" />
+                        <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" value="@Model.YeniTezBaslikEn" class="form-control UpperTextEn tCharacterBlock" style="color:black;" />
                     </td>
                 </tr>
             </tbody>
@@ -110,10 +110,10 @@
     </div>
 
 }
-<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
-@Html.Raw(Model.GenerateSpecialCharacterBlockerScript())
-<script>
 
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
+<script>
+    onSpecialCharacterBlockerLoaded();
     TezDiliKontrol();
     function SinavTipKontrol(sndr,inp,cls) {
 
@@ -163,7 +163,7 @@
             showDilRow = $('#IsYeniTezDiliTr').val() == "false"
         }
         else {
-            showDilRow = '@Model.IsTezDiliTr' == 'False';
+            showDilRow = '@tezDiliTr' == 'False';
         }
         if (showDilRow) {
             $('.dilRow').removeClass('hide');

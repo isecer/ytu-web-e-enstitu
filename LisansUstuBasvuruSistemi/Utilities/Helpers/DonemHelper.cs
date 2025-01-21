@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -90,7 +89,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             }
             else
             {
-                egitimOgretimDonemDto.BaslangicYil = date.Year;
+                var year = date.Year;
+                //1. ay ve 3. ay dahilinde ise bir önceki yıl dönem başlangıç yılı olmalı
+                if (date.Month >= 1 && date.Month <= 3) year = date.Year - 1;
+                egitimOgretimDonemDto.BaslangicYil = year;
                 egitimOgretimDonemDto.DonemId = AkademikDonemEnum.GuzYariyili;
                 egitimOgretimDonemDto.DonemAdi = "Güz";
             }

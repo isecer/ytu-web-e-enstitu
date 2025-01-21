@@ -21,11 +21,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> UnvanAdi { get; set; }
         public List<string> EMail { get; set; }
         public List<int?> UniversiteId { get; set; }
-        public List<string> AnabilimdaliProgramAdi { get; set; }
-        public List<string> DilSinavAdi { get; set; }
-        public List<string> IsDilSinaviOrUniversite { get; set; }
-        public List<string> DilPuani { get; set; }
-        public List<string> SinavTarihi { get; set; }
+        public List<string> AnabilimdaliProgramAdi { get; set; } 
         public SelectList SListDonemSecim { get; set; }
         public SelectList SListUnvanAdi { get; set; }
         public SelectList SListUniversiteId { get; set; }
@@ -41,10 +37,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             UnvanAdi = new List<string>();
             EMail = new List<string>();
             UniversiteId = new List<int?>();
-            AnabilimdaliProgramAdi = new List<string>();
-            DilSinavAdi = new List<string>();
-            DilPuani = new List<string>();
-            SinavTarihi = new List<string>();
+            AnabilimdaliProgramAdi = new List<string>(); 
             KomiteList = new List<KrTIBasvuruAraRaporKomite>();
         }
     }
