@@ -6,7 +6,7 @@
 @model MezuniyetBasvuruDetayDto
 @{
     Layout = null;
-    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi;
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
     var itemOnaylananSr = Model.MezuniyetSrModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
 
@@ -38,7 +38,7 @@
                                                         <td class="CaptionTd" width="185">Tez Teslim Formu</td>
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">
-                                                            <table style="table-layout:fixed;width:100%;">
+                                                            <table style="width:100%;">
                                                                 <tr>
                                                                     <td>
                                                                         @if (mezuniyetBasvurulariTezTeslimFormu == null)
@@ -106,12 +106,57 @@
 
                                                                     </td>
                                                                     <td width="10">
-                                                                        @if (mezuniyetBasvurulariTezTeslimFormu != null && Model.IsMezunOldu.HasValue == false)
+                                                                        @if (mezuniyetBasvurulariTezTeslimFormu != null && Model.IsMezunOldu.HasValue == false && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                                                                         {
                                                                             <a href="javascript:void(0)" onclick="ShowSRBCiltDialog(@Model.MezuniyetBasvurulariID)"><i class="fa fa-edit fa-lg" title="Tez Teslim Formunu Düzenle"></i></a>
 
                                                                         }
                                                                     </td>
+                                                                    @if (kayitYetki && mezuniyetBasvurulariTezTeslimFormu != null && Model.IsMezunOldu.HasValue == false && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                                                                    {
+                                                                        <td width="10">
+                                                                            <a href="javascript:void(0)" onclick="TezTeslimFormunuSil(@Model.MezuniyetBasvurulariID)"><i class="fa fa-trash fa-lg" title="Tez Teslim Formunu Sil"></i></a>
+                                                                            <script>
+                                                                                function TezTeslimFormunuSil(MezuniyetBasvurulariID) {
+                                                                                    Swal.fire({
+                                                                                        text: "Tez teslim formunu silmek istiyor musunuz?",
+                                                                                        type: 'warning',
+                                                                                        icon: "question",
+                                                                                        showCancelButton: true,
+                                                                                        confirmButtonText: 'Tez Teslim Formunu Sil',
+                                                                                        confirmButtonColor: "maroon",
+                                                                                        cancelButtonText: 'Vazgeç',
+                                                                                        showLoaderOnConfirm: true,
+                                                                                        backdrop: true,
+                                                                                        padding: '2em',
+                                                                                        backdrop: true,
+                                                                                        allowOutsideClick: false,
+                                                                                        preConfirm: function () {
+                                                                                            $('.swal2-cancel').first().text("Siliniyor...");
+                                                                                            return new Promise(function (resolve) {
+                                                                                                $.ajax({
+                                                                                                    url: '@Url.Action("TezTeslimFormuSil", "MezuniyetGelenBasvurular")',
+                                                                                                    data: { MezuniyetBasvurulariID },
+                                                                                                    success: function (result) {
+                                                                                                        GetDetailx(MezuniyetBasvurulariID);
+                                                                                                        swal.fire({
+                                                                                                            html: result.Messages.join('<br/>'),
+                                                                                                            icon: (result.IsSuccess ? "success" : "error"),
+                                                                                                            type: (result.IsSuccess ? "success" : "error"),
+                                                                                                            confirmButtonText: 'tamam',
+                                                                                                            padding: '2em'
+                                                                                                        });
+
+                                                                                                    }
+                                                                                                });
+
+                                                                                            });
+                                                                                        }
+                                                                                    });
+                                                                                }
+                                                                            </script>
+                                                                        </td>
+                                                                    }
                                                                 </tr>
                                                             </table>
                                                         </td>

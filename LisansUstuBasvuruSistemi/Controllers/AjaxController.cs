@@ -1,4 +1,5 @@
 ﻿
+
 using BiskaUtil;
 using CaptchaMvc.HtmlHelpers;
 using DevExpress.XtraReports.UI;
@@ -28,6 +29,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
@@ -35,6 +37,7 @@ using LisansUstuBasvuruSistemi.Raporlar.LUB;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -1256,13 +1259,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (sistemErisimAdresi.Contains("//"))
                             sistemErisimAdresi = wurlAddr[0] + "//" + wurlAddr.Skip(2).Take(1).First();
                         else
-                            sistemErisimAdresi = "http://" + wurlAddr.First();
+                            sistemErisimAdresi = "https://" + wurlAddr.First();
 
                         var mmmC = new MailMainContentDto
                         {
                             EnstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod).EnstituAd,
                             UniversiteAdi = "Yıldız Teknik Üniversitesi",
                             WebAdresi = mailBilgi.WebAdresi,
+                            SistemErisimAdresi = mailBilgi.SistemErisimAdresi,
                             Content = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent",
                                         new MailTableContentDto
                                         {
@@ -1302,6 +1306,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetOts(string enstituKod, bool bosSecimVar = true, int? haricOgreniTipKod = null)
         {
             var cmbmld = OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, bosSecimVar, true, haricOgreniTipKod);
+
+            return cmbmld.ToJsonResult();
+        }
+        public ActionResult GetUnvanlar(int kullaniciTipId)
+        {
+            var isAkademik = kullaniciTipId == KullaniciTipiEnum.AkademikPersonel;
+            var cmbmld = UnvanlarBus.CmbUnvanlar(true, isAkademik);
 
             return cmbmld.ToJsonResult();
         }
@@ -1768,23 +1779,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.BccAlici.IsNullOrWhiteSpace() == false) model.BccAlici.Split(',').ToList().ForEach((itm) => { secilenBccAlicilar.Add(itm); });
             if (model.Aciklama.IsNullOrWhiteSpace() == false)
             {
-                var cevapA = "";
-                var geriDonusLink = "";
+
+
+
+                var originalMessage = "";
+                var replyLink = "";
                 if (model.MesajID.HasValue)
                 {
                     var enstitu = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
                     var mesaj = _entities.Mesajlars.First(p => p.MesajID == model.MesajID.Value);
+                    replyLink = $"{enstitu.SistemErisimAdresi}/Home/Index?MesajGroupID={mesaj.GroupID}";
                     if (mesaj.Mesajlar2 != null) mesaj = mesaj.Mesajlar2;
                     model.MesajID = mesaj.MesajID;
-                    var cevapAdresi = enstitu.SistemErisimAdresi + "/Home/Index?MesajGroupID=" + mesaj.GroupID;
-                    cevapA = "<div style='color:#A9A9A9;'>" + mesaj.AciklamaHtml + "</div>";
-                    geriDonusLink = "<a target='_blank' href='" + cevapAdresi + "' style='color:green;font-size:12pt;'> >> Bu maile sistem üzerinden cevap yazmak için lütfen tıklayınız << </a>";
+                    originalMessage = mesaj.AciklamaHtml;
+
                 }
-                var nAck = "<br/><p><span style='color:red'>Not: Cevaplama İşlemini Lütfen Sistem Üzerinden Yapınız. Bu mail sistem maili olduğundan yazılan cevaplar okunmamaktadır.</span><br/><span style='color:red'>------------------------------<wbr>------------------------------<wbr>------------------------------<wbr>------------------------------<wbr>------------------</span></p> " + cevapA;
+                var emailTemplate = new EmailTemplateModel
+                {
+                    CurrentMessage = model.AciklamaHtml,
+                    ReplyUrl = replyLink,
+                    PreviousMessage = originalMessage
+                };
+                var mtView = ViewRenderHelper.RenderPartialView("Ajax", "MailTemplateView", emailTemplate);
 
-                model.AciklamaHtml += geriDonusLink + nAck;
+
+                model.AciklamaHtml = mtView;
             }
-
             if (model.IsTopluMail && !model.SecilenTopluAlicilar.IsNullOrWhiteSpace())
             {
                 secilenAlicilar.AddRange(model.SecilenTopluAlicilar.Split(',').ToList());
@@ -2206,7 +2226,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var enstitu = item.Sablon.Enstituler;
                         item.EnstituAdi = enstitu.EnstituAd;
                         item.WebAdresi = enstitu.WebAdresi;
-
+                        item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
                         item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.CustomSplit();
                         item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());
                         item.EMails.Add(new MailSendList { EMail = kModel.Email, ToOrBcc = true });
@@ -2240,13 +2260,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize(Roles = RoleNames.Kullanicilar)]
-        public ActionResult ObsOgrenciSorgula(string tc = "")
+        public async Task<ActionResult> ObsOgrenciSorgula(string tc = "", string donemId = "")
         {
             var obsGetData = new ObsServiceData();
             var model = new ObsOgrenciSorgulaModel();
-
-            if (!tc.IsNullOrWhiteSpace()) model = obsGetData.GetOgrenciBilgi(tc, "");
+            if (!tc.IsNullOrWhiteSpace()) model = obsGetData.GetOgrenciBilgi(tc, donemId);
             model.Tc = tc;
+            model.DonemId = donemId;
+            if (model.Ogrenci != null)
+            {
+                var aktifDonem = await ObsRestApiService.GetAktifDonem();
+                if (aktifDonem != null)
+                    model.OgrenciDonemler =
+                        DonemHelper.GetCmbAkademikTarih(model.OgrenciKayitDonem, aktifDonem.DonemId);
+            }
             var view = ViewRenderHelper.RenderPartialView("Ajax", "ObsOgrenciSorgula", model);
             return view.ToJsonResult();
         }

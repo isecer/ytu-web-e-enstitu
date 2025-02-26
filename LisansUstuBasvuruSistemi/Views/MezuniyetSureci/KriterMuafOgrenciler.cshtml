@@ -3,6 +3,29 @@
     Layout = null;
     var ogrenciData = Model.MezuniyetSureciKriterMuafOgrencilers.OrderBy(o => o.Kullanicilar.Ad + " " + o.Kullanicilar.Soyad).ToList();
 }
+
+
+<div class="alert-body mt-3">
+    <p class="mb-2">Seçilen öğrenci başvuru esnasında gerçekleştirilen aşağıdaki kontrollerden muaf tutulacaktır:</p>
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-unstyled">
+                <li><i class="fa fa-check-circle text-warning me-2"></i>Aktif Dönem Kontrolü</li>
+                <li><i class="fa fa-check-circle text-warning me-2"></i>Aktif Dönem Ders Kontrolü</li>
+                <li><i class="fa fa-check-circle text-warning me-2"></i>Aktif Dönem Toplam Kredi</li>
+                <li><i class="fa fa-check-circle text-warning me-2"></i>Aktif Dönem Etik Not</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-unstyled">
+                <li><i class="fa fa-check-circle text-warning me-2"></i>Aktif Dönem Seminer Notu</li>
+                <li><i class="fa fa-check-circle text-warning me-2"></i>Aktif Dönem AGNO</li>
+                <li><i class="fa fa-check-circle text-warning me-2"></i>Aktif Dönem AKTS</li>
+                <li><i class="fa fa-check-circle text-warning me-2"></i>3 Başarılı Tez İzleme Raporu</li>
+            </ul>
+        </div>
+    </div> 
+</div>
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
     <table style="width: 100%;">
         <tr>

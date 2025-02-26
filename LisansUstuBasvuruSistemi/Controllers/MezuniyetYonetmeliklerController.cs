@@ -33,6 +33,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var q = from s in _entities.MezuniyetYonetmelikleris
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join d in _entities.Donemlers on s.DonemID equals d.DonemID
+                    join d2 in _entities.Donemlers on s.DonemIDB equals d2.DonemID into defDb
+                    from db2 in defDb.DefaultIfEmpty()
                     join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                     where enstKods.Contains(e.EnstituKod) && s.EnstituKod == model.EnstituKod
                     select new
@@ -49,6 +51,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.BaslangicYilB,
                         s.BitisYilB,
                         s.DonemIDB,
+                        DonemAdiB = db2 != null ? db2.DonemAdi : "",
                         s.IsAktif,
                         s.IslemTarihi,
                         s.IslemYapanID,
@@ -92,6 +95,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 DonemAdi = s.DonemAdi,
                 BaslangicYilB = s.BaslangicYilB,
                 BitisYilB = s.BitisYilB,
+                DonemAdiB = s.DonemAdiB,
                 DonemIDB = s.DonemIDB,
                 MezuniyetYonetmelikID = s.MezuniyetYonetmelikID,
                 IsAktif = s.IsAktif,
@@ -165,7 +169,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? enstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", model.OgretimYili);
             ViewBag.OgretimYiliB = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", model.OgretimYiliB);
-            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(model.KrMezuniyetYonetmelikOt.Select(s=>s.MezuniyetYayinTurID).Distinct().Count());
+            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(model.KrMezuniyetYonetmelikOt.Select(s => s.MezuniyetYayinTurID).Distinct().Count());
             ViewBag.VeVeya = ComboData.GecCmbVeVeya();
             ViewBag.TarihKriterID = new SelectList(ComboData.GetCmbTarihKriterSecim(false), "Value", "Caption", model.TarihKriterID);
 
@@ -433,7 +437,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYili);
             ViewBag.OgretimYiliB = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYiliB);
-            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(qdata.Select(s=>s.MezuniyetYayinTurID).Distinct().Count());
+            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(qdata.Select(s => s.MezuniyetYayinTurID).Distinct().Count());
             ViewBag.VeVeya = ComboData.GecCmbVeVeya();
             ViewBag.TarihKriterID = new SelectList(ComboData.GetCmbTarihKriterSecim(false), "Value", "Caption");
             ViewBag.MmMessage = mmMessage;

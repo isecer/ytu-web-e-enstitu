@@ -15,6 +15,8 @@ using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -34,9 +36,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (UserIdentity.Current.IsAuthenticated) return RedirectToAction("Index", "Home");
             ViewBag.UserName = "";
-            ViewBag.ReturnUrl = returnUrl;
+            ViewBag.ReturnUrl = returnUrl; 
             return PartialView();
         }
+         
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl, string ekd)
@@ -379,7 +383,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = RoleNames.KullanicilarKayit.InRoleCurrent() ? new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod)
                 : new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, (!kayitYetki)), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true), "Value", "Caption", model.UnvanID);
+            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true,model.KullaniciTipID==KullaniciTipiEnum.AkademikPersonel), "Value", "Caption", model.UnvanID);
             ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", model.BirimID);
             ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.EnstituKod, true), "Value", "Caption", model.OgrenimTipKod);

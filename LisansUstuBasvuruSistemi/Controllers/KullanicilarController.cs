@@ -188,7 +188,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.ResimVar = resimVar;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true), "Value", "Caption", model.UnvanID);
+            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true,model.KullaniciTipID==KullaniciTipiEnum.AkademikPersonel), "Value", "Caption", model.UnvanID);
             ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", model.BirimID);
             ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
 
@@ -731,7 +731,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", kModel.KullaniciTipID);
-            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true), "Value", "Caption", kModel.UnvanID);
+            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true, kModel.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel), "Value", "Caption", kModel.UnvanID);
             ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", kModel.BirimID);
             ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", kModel.CinsiyetID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod, true), "Value", "Caption", kModel.OgrenimTipKod);

@@ -1,4 +1,4 @@
-﻿@using Entities.Entities   
+﻿@using Entities.Entities
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Enums
@@ -62,7 +62,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="widget widget-default cKayitGrup Ku Yer @(Model.KullaniciID>0 && isKurumIci ?"":"hide")" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <div id="personelBilgi" class="widget widget-default cKayitGrup Ku Yer @(Model.KullaniciID>0 && isKurumIci ?"":"hide")" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                 <table style="width:100%;">
                     <tbody>
                         <tr>
@@ -80,7 +80,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td id="lbl_UnvanID">Ünvan</td>
+                                            <td id="lbl_UnvanID">Unvan</td>
                                             <td>:</td>
                                             <td class="form-group">
                                                 @Html.DropDownList("UnvanID", null, new { @class = "form-control" })
@@ -137,7 +137,7 @@
                                                         <td class="form-group">
                                                             <input type="text" name="TcKimlikNo" id="TcKimlikNo" maxlength="11" value="@Model.TcKimlikNo" class="form-control">
                                                         </td>
-                                                    </tr> 
+                                                    </tr>
                                                     <tr class="Yab Ye Ku Kd">
                                                         <td id="lbl_CinsiyetID">Cinsiyet</td>
                                                         <td>:</td>
@@ -145,7 +145,7 @@
                                                             @Html.DropDownList("CinsiyetID", null, new { @class = "form-control" })
                                                         </td>
                                                     </tr>
-                                                   
+
                                                 </tbody>
                                             </table>
                                         </td>
@@ -181,8 +181,8 @@
                                                 </table>
                                             </div>
                                         </td>
-                                    </tr> 
-                                </table> 
+                                    </tr>
+                                </table>
                             </td>
 
                         </tr>
@@ -255,7 +255,7 @@
                         <tr>
                             <td style="padding-left:10px;text-align:left;">
                                 <table style="width:100%;">
-                                    <tbody> 
+                                    <tbody>
                                         <tr class="Yab Yer Ku Kd">
                                             <td id="lbl_CepTel" width="140">Cep Tel</td>
                                             <td width="10">:</td>
@@ -376,7 +376,7 @@
     });
     $.datetimepicker.setLocale('tr');
     $('#frmHesapKayit').find('input').each(function (ix, inx) {
-        $(inx).attr('autocomplete', 'off'); 
+        $(inx).attr('autocomplete', 'off');
     })
     function ogdurumKontrol(sndr) {
         if ($(sndr).val() == '@OgrenimDurumEnum.Mezun')
@@ -433,7 +433,9 @@
                 alert(err.responseText);
             }
         });
-
+        if (ptipID == '@KullaniciTipiEnum.AkademikPersonel' || ptipID == '@KullaniciTipiEnum.IdariPersonel') {
+            getUnvanlar()
+        }
     }
     function basvuruAciklamaKontrol(sndr) {
         var chkD = $(sndr).prop("checked");
@@ -522,7 +524,37 @@
             $('#OgrenimTipKod').empty();
         }
     }
-    function RotateImage(rotate) { 
+    function getUnvanlar() {
+        var kullaniciTipId = $('#frmHesapKayit').find('#KullaniciTipID').val();
+        var selectedUnvanId = '@Model.UnvanID';
+        var _panel = $('#personelBilgi');
+        PanelRefresh(_panel, false);
+        if (kullaniciTipId != null && kullaniciTipId != "") {
+            $.ajax({
+                url: '@Url.Action("GetUnvanlar", "Ajax")',
+                data: { 'kullaniciTipId': kullaniciTipId },
+                success: function (result) {
+                    PanelRefresh(_panel, true);
+                    var opt = "";
+                    for (var i = 0; i < result.length; i++) { 
+                        var isSelected = result[i].Value == selectedUnvanId ? ' selected="selected"' : '';
+                        opt += "<option value='" + result[i].Value + "'" + isSelected + ">" + result[i].Caption + "</option>";
+                    }
+                    $('#UnvanID').empty();
+                    $('#UnvanID').append(opt);
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+                }
+            });
+        }
+        else {
+            PanelRefresh(_panel, true);
+            $('#UnvanID').empty();
+        }
+    }
+    function RotateImage(rotate) {
         var _panel = $('#pImageD');
         PanelRefresh(_panel, false);
         var ResimAdi = $('#ResimAdi').val();
@@ -531,11 +563,11 @@
                 url: '@Url.Action("RotateImage", "Account")',
                 data: { LeftOrRight: rotate, ResimAdi: ResimAdi },
                 type: "POST",
-                success: function (result) { 
+                success: function (result) {
                     PanelRefresh(_panel, true);
                     var src = result.YeniResimYolu + "?time=" + new Date();
                     $('#userMainImage').attr('src', src);
-                    $('.pImageD').first().attr('src', src); 
+                    $('.pImageD').first().attr('src', src);
                 },
                 error: function (err) {
                     alert(err.responseText);
@@ -550,7 +582,7 @@
         let input = document.createElement('input');
         input.type = 'file';
         input.onchange = _this => {
-            let files = Array.from(input.files); 
+            let files = Array.from(input.files);
             if (files.length > 0) {
                 PanelRefresh(_panel, false);
                 var EskiResimAdi = $('#ResimAdi').val();
@@ -569,7 +601,7 @@
                         PanelRefresh(_panel, true);
                         if (result.mMessage.IsSuccess) {
                             var src = result.YeniResimYolu + "?time=" + new Date();
-                            $('.pImageD').first().attr('src', src); 
+                            $('.pImageD').first().attr('src', src);
                             $('#ResimAdi').val(result.YeniResimAdi);
                             $('#userMainImage').attr('src', src);
                             toastr["success"](result.mMessage.Title, result.mMessage.Messages[0]);

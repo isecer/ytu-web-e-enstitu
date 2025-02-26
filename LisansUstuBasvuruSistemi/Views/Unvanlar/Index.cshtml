@@ -29,8 +29,8 @@
                                 <th width="70">Sıra No</th>
                                 <th class="sirala" field="UnvanAdi">Ünvan Adı</th>
                                 <th class="sirala" width="240" field="YetkiGrupID">Yetki Grubu</th>
+                                <th width="70" class="sirala" field="IsAkademik">U.Türü</th>
                                 <th width="70" class="sirala" field="IsAktif">Durum</th>
-
                                 <th width="50">
                                     <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" title="Yeni"><i class="fa fa-plus"></i></a>
                                 </th>
@@ -44,6 +44,9 @@
                                 </th>
                                 <th>
                                     @Html.DropDownList("YetkiGrupID", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
+                                <th>
+                                    @Html.DropDownList("IsAkademik", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
                                 <th>
                                     @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
@@ -77,6 +80,9 @@
                                                 </table>
                                             }
                                         </td>
+                                        <td>
+                                            @(item.data.IsAkademik?"Akademik":"İdari")
+                                        </td>
                                         <td id="tdIa_@item.data.UnvanID" style="text-align:center;">
                                             <span class="label label-@(item.data.IsAktif ? "success" : "danger")">@item.data.IsAktif.ToAktifPasif()</span>
                                         </td>
@@ -93,7 +99,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="5" style="text-align: center;">
+                                    <td colspan="6" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>
@@ -171,7 +177,7 @@
                     $.ajax({
                         url: '@Url.Action("UpdateUnvanYetkiGrubu", "Unvanlar")',
                         data: { unvanId, yetkiGrupId },
-                        success: function (result) { 
+                        success: function (result) {
                             swal.fire({
                                 html: result.message,
                                 icon: (result.IsSuccess ? "success" : "error"),

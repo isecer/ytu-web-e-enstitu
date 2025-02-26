@@ -781,7 +781,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         new MailParameterDto { Key = "EYKSayisi", Value =tijBasvuruOneri.EYKSayisi },
                         new MailParameterDto { Key = "YeterlikSozluSinavTarihi", Value = tijBasvuruOneri.SozluSinavBasariTarihi.ToFormatDate() },
                         new MailParameterDto { Key = "TezOneriSavunmaSonTarih", Value =tezOneriSavunmaSonTarih.ToFormatDate() },
-                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik.IlkHarfiBuyut(!isTezBaslikTr) },
+                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik },
                         new MailParameterDto { Key = "SeciliAsilKomiteUyesiUnvan", Value = sablon.Value.UnvanAdi.IlkHarfiBuyut()},
                         new MailParameterDto { Key = "SeciliAsilKomiteUyesiAdSoyad", Value =  sablon.Value.AdSoyad.IlkHarfiBuyut()},
                         new MailParameterDto { Key = "SeciliAsilKomiteUyesiUniversite", Value =  sablon.Value.UniversiteAdi.IlkHarfiBuyut()}
@@ -895,7 +895,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         new MailParameterDto { Key = "EYKTarihi", Value =tijBasvuruOneri.EYKTarihi.ToFormatDate() },
                         new MailParameterDto { Key = "EYKSayisi", Value =tijBasvuruOneri.EYKSayisi },
                         new MailParameterDto { Key = "YeterlikSozluSinavTarihi", Value = tijBasvuruOneri.SozluSinavBasariTarihi.ToFormatDate() },
-                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik.IlkHarfiBuyut(!isTezBaslikTr) },
+                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik },
                         new MailParameterDto { Key = "SonTarihSavunmaNo1", Value =tezOneriSavunmaSonTarihSavunmaNo1.ToFormatDate() },
                         new MailParameterDto { Key = "SonTarihSavunmaNo2", Value =tezOneriSavunmaSonTarihSavunmaNo2.ToFormatDate() },
                         new MailParameterDto { Key = "SeciliAsilKomiteUyesiUnvan", Value = sablon.Value.UnvanAdi.IlkHarfiBuyut()},

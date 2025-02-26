@@ -62,7 +62,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemData
                 return lst;
             }
         }
-    
+        public static List<CmbBoolDto> GetCmbUnvanTurData(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbBoolDto>();
+            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
+            dct.Add(new CmbBoolDto { Value = true, Caption = "Akademik" });
+            dct.Add(new CmbBoolDto { Value = false, Caption = "İdari" });
+            return dct;
+
+        }
         public static List<CmbBoolDto> GetCmbAktifPasifData(bool bosSecimVar = false)
         {
             var dct = new List<CmbBoolDto>();

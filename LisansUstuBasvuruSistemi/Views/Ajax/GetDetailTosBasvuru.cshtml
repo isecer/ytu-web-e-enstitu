@@ -248,7 +248,7 @@
                                                             <select style="width:150px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.UniqueID').removeClass('hide'); }else{$('.RwJAck_@itemJr.UniqueID').addClass('hide');}" id="ToBasvuruSavunmaDurumID_@itemJr.UniqueID">
                                                                 <option></option>
                                                                 <option value="1" @(itemJr.ToBasvuruSavunmaDurumID == 1 ? "selected" : "")>Kabul Edildi</option>
-                                                                <option value="2" @(itemJr.ToBasvuruSavunmaDurumID == 2 ? "selected" : "")>Ret Edildi</option>
+                                                                <option value="2" @(itemJr.ToBasvuruSavunmaDurumID == 2 ? "selected" : "")>Reddedildi</option>
                                                                 @if (!birOncekiDegerlendirmelerdeDuzeltmeVar || itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
                                                                 {
                                                                     <option value="3" @(itemJr.ToBasvuruSavunmaDurumID == 3 ? "selected" : "")>Düzeltme Yapılsın</option>
@@ -756,7 +756,7 @@
                                                                             }
                                                                             else if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi)
                                                                             {
-                                                                                <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;"></i> Ret Edildi</span>
+                                                                                <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;"></i> Reddedildi</span>
                                                                                 <br />
                                                                                 <span style="font-size:8pt;color:maroon;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                             }
@@ -899,7 +899,7 @@
                                                                                             <select style="width:150px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.UniqueID').removeClass('hide'); }else{$('.RwJAck_@itemJr.UniqueID').addClass('hide');}" id="ToBasvuruSavunmaDurumID_@itemJr.UniqueID">
                                                                                                 <option></option>
                                                                                                 <option value="1" @(itemJr.ToBasvuruSavunmaDurumID == 1 ? "selected" : "")>Kabul Edildi</option>
-                                                                                                <option value="2" @(itemJr.ToBasvuruSavunmaDurumID == 2 ? "selected" : "")>Ret Edildi</option>
+                                                                                                <option value="2" @(itemJr.ToBasvuruSavunmaDurumID == 2 ? "selected" : "")>Reddedildi</option>
                                                                                                 @if (!birOncekiDegerlendirmelerdeDuzeltmeVar || itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
                                                                                                 {
                                                                                                     <option value="3" @(itemJr.ToBasvuruSavunmaDurumID == 3 ? "selected" : "")>Düzeltme Yapılsın</option>
@@ -1181,7 +1181,7 @@
                     'tosUniqueId': tosUniqueId
                 },
                 success: function (resultG) {
-                    PanelRefresh(_panel, true);
+                    PanelRefresh(_panel, true); 
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,

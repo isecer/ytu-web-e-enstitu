@@ -36,6 +36,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const byte MezuniyetEykSavunmaJurisiAtanmistirYazisi = 24;
         public const byte MezuniyetDrSinavBilgilendirmeYazilari = 25;
         public const byte MezuniyetIkinciTezTeslimTaahhutOnayYazilari = 26;
+        public const byte MezuniyetCiltliTezTeslikEkSureTalebiTutanak = 27;
 
 
 

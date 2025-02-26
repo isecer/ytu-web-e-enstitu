@@ -170,7 +170,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.bModel = bbModel;
             return View(model);
         }
- 
+
         public ActionResult BasvuruYap(int? tdoBasvuruId, int? kullaniciId = null, string ekd = "")
         {
             var model = new KmTDOBasvuru();
@@ -240,7 +240,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return View(model);
         }
- 
+
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult BasvuruYap(KmTDOBasvuru kModel, string ekd)
@@ -321,7 +321,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag._MmMessage = mmMessage;
             return View(kModel);
         }
- 
+
         public ActionResult GetProgramlar(int tdAnabilimDaliId)
         {
             var bolm = ProgramlarBus.CmbGetAktifProgramlar(true, tdAnabilimDaliId);
@@ -437,7 +437,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
                 mMessage.MessageType = MsgTypeEnum.Information;
-                mMessage.IsSuccess = true; 
+                mMessage.IsSuccess = true;
                 view = ViewRenderHelper.RenderPartialView("TdoBasvuru", "TdoYeniDanismanFormu", model);
 
 
@@ -708,7 +708,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
             return mMessage.ToJsonResult();
         }
- 
+
         public ActionResult GetTdoDanismanDegisiklikFormu(int tdoBasvuruId, int tdoBasvuruDanismanId)
         {
             var model = new KmTdoBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId };
@@ -764,6 +764,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (!mMessage.Messages.Any())
             {
+                var ogrenciData = KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
+
                 var isNew = tdoBasvuruDanismanId <= 0;
                 if (tdoBasvuruDanismanId <= 0) tdoBasvuruDanismanId = tdoBas.AktifTDOBasvuruDanismanID ?? 0;
                 var tdoBd = tdoBas.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
@@ -780,6 +782,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.TDProgramKod = null;
                     model.TezBaslikTr = tdoBd.TezBaslikTr;
                     model.TezBaslikEn = tdoBd.TezBaslikEn;
+                    if (model.TezBaslikTr.IsNullOrWhiteSpace())
+                    {
+                        model.TezBaslikTr = ogrenciData.OgrenciTez.TEZ_BASLIK;
+                    }
+
+                    if (model.TezBaslikEn.IsNullOrWhiteSpace())
+                    {
+                        model.TezBaslikEn = ogrenciData.OgrenciTez.TEZ_BASLIK_ENG;
+                    }
+
+
                 }
                 else
                 {
@@ -1068,7 +1081,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-           
+
             if (!mMessage.Messages.Any())
             {
                 var isNew = tdoBasvuruDanismanId <= 0;
@@ -1119,7 +1132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
             }
             if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage); 
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
             return new
             {
                 mMessage.IsSuccess,
@@ -1460,7 +1473,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
             }
             if (mMessage.MessageType != MsgTypeEnum.Information) mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage); 
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mMessage);
 
             return new
             {
@@ -2055,7 +2068,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.SaveChanges();
                 LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
                 if (sendMail)
-                { 
+                {
                     TdoBus.SendMailTdoEykYaGonderimRet(tdoBasvuruDanismanId);
                 }
                 mMessage.IsSuccess = true;
@@ -2369,6 +2382,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!ogrenciBilgi.KayitVar)
                 {
                     mMessage.Messages.Add(tdoBasvuruDanismanData.TDOBasvuru.OgrenciNo + " öğrenci numaranıza ait OBS isteminde aktif bir öğrenim bilgisine rastlanmadı. " + ogrenciBilgi.HataMsj);
+                }
+                else if (ogrenciBilgi.DanismanInfo == null && kModel.TDOBasvuruEsDanismanID <= 0)
+                {
+                    mMessage.Messages.Add(tdoBasvuruDanismanData.TDOBasvuru.OgrenciNo + " öğrenci numarasına ait OBS isteminde aktif bir danışman bilgisine rastlanmadı. Eş danışman önerisi yapılabilmesi için OBS sisteminde danışman bilgisinin tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
                 }
             }
             if (!mMessage.Messages.Any())

@@ -1,6 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
@@ -9,15 +8,29 @@
 
 
     Layout = null;
-    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    var isYayinKontrolUygun = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi 
+                              || Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi 
+                              || Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi;
+
+
+    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi;
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID + "_cp" : Model.MezuniyetBasvurulariID.ToString());
     var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true);
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
-    var tab2IsVisible = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.MezuniyetJuriOneriFormlaris.Any());
-    var tab3IsVisible = Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.EykDaOnaylandi == true && Model.EYKTarihi.HasValue && Model.MezuniyetSrModel != null);
-    var tab4IsVisible = (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili) || (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi && Model.MezuniyetBasvurulariTezDosyalariDtos.Any());
-    var tab5IsVisible = (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi) && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili && (isTdYuklemeKapali || bezCiltForm != null);
+ 
+
+    var tab2IsVisible = isYayinKontrolUygun && (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi 
+                                                || Model.MezuniyetJuriOneriFormlaris.Any());
+
+    var tab3IsVisible = isYayinKontrolUygun && Model.EykDaOnaylandi == true && Model.EYKTarihi.HasValue && Model.MezuniyetSrModel != null;
+
+    var tab4IsVisible = isYayinKontrolUygun && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili 
+                        || Model.MezuniyetBasvurulariTezDosyalariDtos.Any();
+
+    var tab5IsVisible = isYayinKontrolUygun && Model.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili 
+                                            && (isTdYuklemeKapali || bezCiltForm != null);
+ 
 }
 <style>
 
@@ -42,21 +55,46 @@
                     <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Başvuru Kabulü</span></a></li>
                     @if (tab2IsVisible)
                     {
-                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-group fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> EYK Süreci</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2" style="margin-right:3px;">
+                            <a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab">
+                                <i class="fa fa-group fa-lg"></i>
+                                <span style="text-align:right;font-size:9pt;margin:0px;"> EYK Süreci</span>
+                            </a>
+                        </li>
                     }
                     @if (tab3IsVisible)
                     {
-                        <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',3)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-edit fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Sınav Süreci</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3" style="margin-right:3px;">
+                            <a onclick="tabchangeSet('@tbName',3)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab">
+                                <i class="fa fa-edit fa-lg"></i>
+                                <span style="text-align:right;font-size:9pt;margin:0px;"> Sınav Süreci</span>
+                            </a>
+                        </li>
                     }
                     @if (tab4IsVisible)
                     {
-                        <li class="@(Model.SelectedTabIndex == 4 ? "active" : "") bnt-@tbName-4" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',4)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-file-text-o fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Tez Kontrol Süreci</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 4 ? "active" : "") bnt-@tbName-4" style="margin-right:3px;">
+                            <a onclick="tabchangeSet('@tbName',4)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab">
+                                <i class="fa fa-file-text-o fa-lg"></i>
+                                <span style="text-align:right;font-size:9pt;margin:0px;"> Tez Kontrol Süreci</span>
+                            </a>
+                        </li>
                     }
                     @if (tab5IsVisible)
                     {
-                        <li class="@(Model.SelectedTabIndex == 5 ? "active" : "") bnt-@tbName-5" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',5)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-graduation-cap fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Mezuniyet Süreci</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 5 ? "active" : "") bnt-@tbName-5" style="margin-right:3px;">
+                            <a onclick="tabchangeSet('@tbName',5)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab">
+                                <i class="fa fa-graduation-cap fa-lg"></i>
+                                <span style="text-align:right;font-size:9pt;margin:0px;"> Mezuniyet Süreci</span>
+                            </a>
+                        </li>
                     }
+
                     <li><a href="javascript:void(0);" onclick="GetDetailx('@Model.MezuniyetBasvurulariID');" title="Detay Sayfasını Yenile"><span class="fa fa-refresh myValueTd"></span></a></li>
+
+                   
+
+                  
 
                 </ul>
 
@@ -87,7 +125,9 @@
                                     <tr>
                                         <td>Öğrenim Seviyesi</td>
                                         <td>:</td>
-                                        <td>@Model.OgrenimTipAdi</td>
+                                        <td>
+                                            @Model.OgrenimTipAdi
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Program</td>
@@ -116,7 +156,7 @@
                                             </table>
                                         </td>
                                     </tr>
-                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi || Model.EYKTarihi.HasValue)
                                     {
                                         <tr class="@(Model.EYKTarihi.HasValue ? "success" : "danger")">
                                             <td>EYK Tarihi / Sayısı</td>

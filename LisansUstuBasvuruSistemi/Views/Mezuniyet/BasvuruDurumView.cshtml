@@ -30,7 +30,7 @@
     {
         tabAdi = "Kayıt Silindi";
         tabIconClass = "fa fa-list-alt fa-lg";
-        durumAdi = "Öğrenci Kaydı Silindi";
+        durumAdi = "Öğrenci kaydı silindi";
         durumIconClass = "fa fa-thumbs-o-down";
         durumColor = "maroon";
         durumDetay = item.MezuniyetYayinKontrolDurumAciklamasi.IsNullOrWhiteSpace() ? "" : (item.MezuniyetYayinKontrolDurumAciklamasi.Substring(0, (item.MezuniyetYayinKontrolDurumAciklamasi.Length > 45 ? 45 : item.MezuniyetYayinKontrolDurumAciklamasi.Length)) + "...");
@@ -41,7 +41,7 @@
     {
         tabAdi = "Yeni Başvuru";
         tabIconClass = "fa fa-list-alt fa-lg";
-        durumAdi = "Başvuru Taslak Durumunda";
+        durumAdi = "Başvuru taslak durumunda";
         durumIconClass = item.DurumClassName;
         durumDetayIconClass = "fa fa-exclamation-triangle";
         durumDetay = "Süreç Devamı İçin Öğrenci Onayı Gerekmekte.";
@@ -57,13 +57,13 @@
             durumAciklama = "Danışman Onay Tarihi: " + item.DanismanOnayTarihi.ToFormatDateAndTime();
             durumColor = "green";
             durumDetayIconClass = "fa fa-clock-o";
-            durumDetay = "EYK Sürecine Geçiş İçin Enstitü Onayı Bekleniyor.";
+            durumDetay = "EYK sürecine geçiş için enstitü onayı beklenmektedir.";
             aciklamaDetay = "Başvuru danışman tarafından " + (item.DanismanOnayTarihi.HasValue ? item.DanismanOnayTarihi.ToFormatDateAndTime() + " tarihinde" : "") + " onaylanmıştır. Mezuniyet işleminin devamı için Enstitünün onaylaması gerekmektedir.";
         }
         else if (item.IsDanismanOnay == false)
         {
 
-            durumAdi = "Danışman Tarafından Ret Edildi";
+            durumAdi = "Danışman Tarafından Reddedildi";
             durumIconClass = "fa fa-thumbs-o-down";
             durumAciklama = "Danışman Ret Tarihi: " + item.DanismanOnayTarihi.ToFormatDateAndTime();
             durumColor = "maroon";
@@ -78,7 +78,7 @@
             durumAdi = "Danışman Onayı Bekleniyor";
             durumIconClass = "fa fa-clock-o";
             durumColor = "green";
-            durumDetay = "Enstüti Başvuru Kabulü Yapabilmesi İçin Danışman Onayı Gerekmekte.";
+            durumDetay = "Enstitü, başvuru kabulü yapabilmek için danışman onayını beklemektedir.";
             durumDetayIconClass = "fa fa-clock-o";
 
         }
@@ -97,7 +97,7 @@
                 durumAdi = "Form Oluşturulmadı";
                 durumIconClass = "fa fa-file-text-o";
                 durumColor = "green";
-                durumDetay = "EYK Süreci Başlangıcı İçin Jüri Öneri Formu Oluşturulmalı.";
+                durumDetay = "EYK süreci başlangıcı için jüri öneri formu oluşturulmalı.";
                 durumDetayIconClass = "fa fa-clock-o";
             }
             else
@@ -113,7 +113,7 @@
                         durumAciklama = "EYK Tarihi: " + item.EYKTarihi.ToFormatDate();
                         durumIconClass = "fa fa-thumbs-o-up";
                         durumColor = "green";
-                        durumDetay = "Öğrenci Tarafından Tez Sınav Talebi Yapılması Bekleniyor.";
+                        durumDetay = "Öğrencinin tez sınav talebinde bulunması bekleniyor.";
                         durumDetayIconClass = "fa fa-clock-o";
 
                     }
@@ -123,7 +123,7 @@
                         durumAciklama = "İşlem Tarihi: " + item.MezuniyetJuriOneriFormu.EYKDaOnaylandiOnayTarihi.ToFormatDateAndTime();
                         durumIconClass = "fa fa-thumbs-o-down";
                         durumColor = "maroon";
-                        durumDetay = "EYK Süreci Devamı İçin Yeni Jüri Öneri Formu Oluşturulmalı.";
+                        durumDetay = "EYK süreci devamı için yeni jüri öneri formu oluşturulmalı.";
                         durumDetayIconClass = "fa fa-clock-o";
                     }
 
@@ -137,9 +137,9 @@
                         durumAciklama = "İşlem Tarihi: " + item.MezuniyetJuriOneriFormu.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime();
                         durumIconClass = "fa fa-thumbs-o-up";
                         durumColor = "green";
-                        durumDetay = "Enstitü Tarafından Jüri Öneri Formu için EYK'Da Onay İşlemi Sonucu Girişi Bekleniyor.";
+                        durumDetay = "Jüri öneri formu için enstitü tarafından EYK'da onay işlemi sonucunun girişi bekleniyor.";
                         durumDetayIconClass = "fa fa-clock-o";
-                        aciklamaDetay = "Jüri Öneri Formu EYK'Ya Hazırlandı. Mezuniyet işleminin devamı için Enstitünün EYK'Da Onay işlemini sisteme girmesi gerekmektedir.";
+                        aciklamaDetay = "Jüri öneri formu EYK'ya hazırlandı. Mezuniyet işleminin devamı için enstitünün EYK'da onay işlemini sisteme girmesi gerekmektedir.";
 
 
 
@@ -153,9 +153,9 @@
                             durumAciklama = "İşlem Tarihi: " + item.MezuniyetJuriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime();
                             durumIconClass = "fa fa-thumbs-o-up";
                             durumColor = "green";
-                            durumDetay = "Enstitü Tarafından Jüri Öneri Formu için EYK'Ya Hazırlanma İşlemi Sonucu Girişi Bekleniyor.";
+                            durumDetay = "Jüri öneri formu için enstitü tarafından EYK'ya hazırlama işlemi sonucu girişi bekleniyor.";
                             durumDetayIconClass = "fa fa-clock-o";
-                            aciklamaDetay = "Jüri Öneri Formu EYK'Ya gönderimi onaylandı. Mezuniyet işleminin devamı için Enstitünün EYK'Ya Hazırlanma işlemini gerçekleştirmesi gerekmektedir.";
+                            aciklamaDetay = "Jüri öneri formu EYK'ya gönderimi onaylandı. Mezuniyet işleminin devamı için enstitünün EYK'ya hazırlama işlemini gerçekleştirmesi gerekmektedir.";
 
                         }
                         else
@@ -164,9 +164,9 @@
                             durumAciklama = "İşlem Tarihi: " + item.MezuniyetJuriOneriFormu.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime();
                             durumIconClass = "fa fa-thumbs-o-down";
                             durumColor = "maroon";
-                            durumDetay = "Jüri Öneri Formu EYK'Ya Gönderimi Onaylanmadı.";
+                            durumDetay = "Jüri öneri formu EYK'ya gönderimi onaylanmadı.";
                             durumDetayIconClass = "fa fa-comments-o";
-                            aciklamaDetay = "Jüri Öneri Formu EYK'Ya gönderim onaylanmadı. Mezuniyet işleminin devamı için Enstitünün EYK'Ya Gönderim onay işlemi yapması gerekmektedir.";
+                            aciklamaDetay = "Jüri öneri formu EYK'ya gönderim onaylanmadı. Mezuniyet işleminin devamı için enstitünün EYK'ya gönderim onay işlemi yapması gerekmektedir.";
 
                         }
                     }
@@ -175,7 +175,7 @@
                         durumAdi = "EYK'Ya Gönderimi Bekleniyor";
                         durumIconClass = "fa fa-clock-o";
                         durumColor = "green";
-                        durumDetay = "Jüri Öneri Formunun Enstitü Tarafından EYK'Ya Gönderimi Bekleniyor";
+                        durumDetay = "Jüri öneri formunun enstitü tarafından EYK'ya gönderimi bekleniyor.";
                         durumDetayIconClass = "fa fa-clock-o";
                     }
                 }
@@ -201,7 +201,7 @@
                     durumAciklama = "Onay Tarihi: " + item.SrTalebi.DanismanOnayTarihi.ToFormatDateAndTime();
                     durumIconClass = "fa fa-calendar";
                     durumColor = "maroon";
-                    durumDetay = "Danışman Tez Kontrol Onayını Yaptı. Öğrenci Yeni Tez Sınavı Talebi Oluşturmalı.";
+                    durumDetay = "Danışman tez kontrol onayını yaptı. Öğrenci, yeni tez sınavı talebi oluşturmalıdır.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
                 else
@@ -210,7 +210,7 @@
                     durumAciklama = "Onay Tarihi: " + item.SrTalebi.DanismanOnayTarihi.ToFormatDateAndTime();
                     durumIconClass = "fa fa-calendar";
                     durumColor = "maroon";
-                    durumDetay = "Danışman Tarafından Tez Teslimi Taahhütünü Ret Edildi.";
+                    durumDetay = "Danışman tarafından tez teslimi taahhüdü reddedildi.";
                     durumDetayIconClass = "fa fa-comments-o";
                     aciklamaDetay = item.DanismanOnayAciklama;
                 }
@@ -223,7 +223,7 @@
                     durumAciklama = "Onay Tarihi: " + item.SrTalebi.OgrenciOnayTarihi.ToFormatDateAndTime();
                     durumIconClass = "fa fa-calendar";
                     durumColor = "maroon";
-                    durumDetay = "Öğrenci Tez Teslim Taahhütü Yaptı. Danışman Tez Kontrol Onayını Yapmalı.";
+                    durumDetay = "Öğrenci tez teslim taahhüdü yaptı. Danışman, tez kontrol onayını yapmalıdır.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
                 else
@@ -232,7 +232,7 @@
                     durumAciklama = "Ret Tarihi: " + item.SrTalebi.OgrenciOnayTarihi.ToFormatDateAndTime();
                     durumIconClass = "fa fa-calendar";
                     durumColor = "maroon";
-                    durumDetay = "Uzatma Talebi Sonrası Öğrenci Tez Teslim Taahhütünü Ret Etti";
+                    durumDetay = "Uzatma talebi sonrası öğrenci tez teslim taahhüdünü reddetti.";
                     durumDetayIconClass = "fa fa-thumbs-o-down";
                 }
             }
@@ -246,11 +246,11 @@
                     durumColor = "maroon";
                     if (Model.SrTalebi.SRTaleplerJuris.Any(a => !a.UnvanAdi.IsNullOrWhiteSpace()))
                     {
-                        durumDetay = "Sınav Sonucunu Enstitü Onayladı. Öğrenci Tez Teslim Taahhütü Yapmalı.";
+                        durumDetay = "Sınav sonucunu enstitü onayladı. Öğrenci, tez teslim taahhüdü yapmalıdır.";
                     }
                     else
                     {
-                        durumDetay = "Sınav Sonucunu Enstitü Onayladı. Öğrenci Yeni Tez Sınavı Talebi Yapmalı.";
+                        durumDetay = "Sınav sonucunu enstitü onayladı. Öğrenci, yeni tez sınavı talebi yapmalıdır.";
                     }
                     durumDetayIconClass = "fa fa-comments-o";
                 }
@@ -259,7 +259,7 @@
                     durumAdi = "Sınav Sonucu Başarılı";
                     durumIconClass = "fa fa-thumbs-o-up";
                     durumColor = "green";
-                    durumDetay = "Sınav Sonucunu Enstitü Onayladı. Öğrenci Tez Kontrolü İçin Dosya Yüklemeli.";
+                    durumDetay = "Sınav sonucunu enstitü onayladı. Öğrenci, tez kontrolü için dosya yüklemelidir.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
                 else if (enstituSinavDurumId == MezuniyetSinavDurumEnum.Basarisiz)
@@ -267,7 +267,7 @@
                     durumAdi = "Sınav Sonucu Başarısız";
                     durumIconClass = "fa fa-thumbs-o-down";
                     durumColor = "maroon";
-                    durumDetay = "Sınav Sonucunu Enstitü Onayladı. Mezuniyet Süreci Başarısızlıkla Sonuçlandı.";
+                    durumDetay = "Sınav sonucunu enstitü onayladı. Mezuniyet süreci başarısızlıkla sonuçlandı.";
                     durumDetayIconClass = "fa fa-comments-o";
                 }
 
@@ -279,7 +279,7 @@
                     durumAdi = "Uzatma Talebi";
                     durumIconClass = "fa fa-calendar";
                     durumColor = "maroon";
-                    durumDetay = "Jüri Sınav Sonucunu Uzatma Olarak Değerlendirdi. Enstitünün Onayı Gerekmekte.";
+                    durumDetay = "Jüri sınav sonucunu uzatma olarak değerlendirdi. Enstitünün onayı gerekmektedir.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
                 else if (juriSinavDurumId == MezuniyetSinavDurumEnum.Basarili)
@@ -287,7 +287,7 @@
                     durumAdi = "Jüri Üyeleri Sınav Sonucunu Başarılı Olarak Değerlendirdi";
                     durumIconClass = "fa fa-thumbs-o-up";
                     durumColor = "green";
-                    durumDetay = "Jüri Sınav Sonucunu Başarılı Olarak Değerlendirdi. Enstitünün Onayı Gerekmekte.";
+                    durumDetay = "Jüri sınav sonucunu başarılı olarak değerlendirdi. Enstitünün onayı gerekmektedir.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
                 else if (juriSinavDurumId == MezuniyetSinavDurumEnum.Basarisiz)
@@ -295,7 +295,7 @@
                     durumAdi = "Jüri Üyeleri Sınav Sonucunu Başarısız Olarak Değerlendirdi";
                     durumIconClass = "fa fa-thumbs-o-down";
                     durumColor = "maroon";
-                    durumDetay = "Jüri Sınav Sonucunu Başarısız Olarak Değerlendirdi. Enstitünün Onayı Gerekmekte.";
+                    durumDetay = "Jüri sınav sonucunu başarısız olarak değerlendirdi. Enstitünün onayı gerekmektedir.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
                 else
@@ -303,7 +303,7 @@
                     durumAdi = "Sınav Talebi Onaylandı";
                     durumIconClass = "fa fa-thumbs-o-up";
                     durumColor = "green";
-                    durumDetay = "Tez Sınav Değerlendirme Süreci Devam Ediyor.";
+                    durumDetay = "Tez sınav değerlendirme süreci devam ediyor.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
             }
@@ -314,7 +314,7 @@
                     durumAdi = "Sınav Talebi Yapıldı";
                     durumIconClass = "fa fa-thumbs-o-up";
                     durumColor = "green";
-                    durumDetay = "Enstitü Tarafından Sınav Talebinin Onaylanması Bekleniyor.";
+                    durumDetay = "Enstitü tarafından sınav talebinin onaylanması bekleniyor.";
                     durumDetayIconClass = "fa fa-comments-o";
                 }
                 else if (item.SrTalebi.SRDurumID == SrTalepDurumEnum.Onaylandı)
@@ -322,7 +322,7 @@
                     durumAdi = "Sınav Talebi Onaylandı";
                     durumIconClass = "fa fa-thumbs-o-up";
                     durumColor = "green";
-                    durumDetay = "Tez Sınav Değerlendirme Süreci Devam Ediyor.";
+                    durumDetay = "Tez sınav değerlendirme süreci devam ediyor.";
                     durumDetayIconClass = "fa fa-clock-o";
 
                 }
@@ -331,7 +331,7 @@
                     durumAdi = "Sınav Talebi Ret Ededildi";
                     durumIconClass = "fa fa-thumbs-o-down";
                     durumColor = "maroon";
-                    durumDetay = "Enstitü Tarafından Sınav Talebi Ret Edildi. Yeni Sınav Talebi Oluşturulması Bekleniyor.";
+                    durumDetay = "Enstitü tarafından sınav talebi reddedildi. Yeni sınav talebi oluşturulması bekleniyor.";
                     durumDetayIconClass = "fa fa-clock-o";
                     aciklamaDetay = "Ret Açıklaması: " + item.SrTalebi.SRDurumAciklamasi;
                 }
@@ -340,7 +340,7 @@
                     durumAdi = "Sınav Talebi İptal Ededildi";
                     durumIconClass = "fa fa-thumbs-o-down";
                     durumColor = "maroon";
-                    durumDetay = "Enstitü Tarafından Sınav Talebi İptal Edildi. Yeni Sınav Talebi Oluşturulması Bekleniyor.";
+                    durumDetay = "Enstitü tarafından sınav talebi iptal edildi. Yeni sınav talebi oluşturulması bekleniyor.";
                     durumDetayIconClass = "fa fa-clock-o";
 
                 }
@@ -358,7 +358,7 @@
                     durumAdi = "Tez Dosyası Onaylandı";
                     durumIconClass = "fa fa-thumbs-o-up";
                     durumColor = "green";
-                    durumDetay = "Enstitü Tarafından Tez Dosyası Onaylandı. Tez Teslim Formu Oluşturulmalı.";
+                    durumDetay = "Enstitü tarafından tez dosyası onaylandı. Tez teslim formu oluşturulmalıdır.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
                 else
@@ -366,7 +366,7 @@
                     durumAdi = "Düzeltme Talep Edildi";
                     durumIconClass = "fa fa-edit";
                     durumColor = "maroon";
-                    durumDetay = "Enstitü Tarafından Tez Düzeltmesi Talep Edildi. Yeni Tez Dosyası Yüklenmeli";
+                    durumDetay = "Enstitü tarafından tez düzeltmesi talep edildi. Yeni tez dosyası yüklenmelidir.";
                     durumDetayIconClass = "fa fa-clock-o";
                 }
             }
@@ -375,7 +375,7 @@
                 durumAdi = "Tez Dosyası Yüklendi";
                 durumIconClass = "fa fa-file-pdf-o";
                 durumColor = "green";
-                durumDetay = "Öğrenci Tez Kontrolü için Dosyayı Yükledi. Enstitü Onayı Bekleniyor";
+                durumDetay = "Öğrenci tez kontrolü için dosyayı yükledi. Enstitü onayı bekleniyor.";
                 durumDetayIconClass = "fa fa-clock-o";
             }
 
@@ -407,7 +407,7 @@
                 durumAdi = "Tez Teslim Formu Oluşturuldu";
                 durumIconClass = "fa fa-graduation-cap";
                 durumColor = "green";
-                durumDetay = "Enstitü Tarafından Tez Teslim Formu Onayı Bekleniyor.";
+                durumDetay = "Enstitü tarafından tez teslim formu onayı bekleniyor.";
                 durumDetayIconClass = "fa fa-clock-o";
             }
         }

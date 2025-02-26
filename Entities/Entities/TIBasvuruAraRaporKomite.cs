@@ -24,10 +24,6 @@ namespace Entities.Entities
         public Nullable<int> UniversiteID { get; set; }
         public string UniversiteAdi { get; set; }
         public string AnabilimdaliProgramAdi { get; set; }
-        public Nullable<bool> IsDilSinaviOrUniversite { get; set; }
-        public string DilSinavAdi { get; set; }
-        public string DilPuani { get; set; }
-        public Nullable<int> SinavTarihi { get; set; }
         public Nullable<bool> IsLinkGonderildi { get; set; }
         public Nullable<System.DateTime> LinkGonderimTarihi { get; set; }
         public Nullable<int> LinkGonderenID { get; set; }
@@ -42,7 +38,7 @@ namespace Entities.Entities
         public Nullable<int> IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        public virtual Universiteler Universiteler { get; set; }
         public virtual TIBasvuruAraRapor TIBasvuruAraRapor { get; set; }
+        public virtual Universiteler Universiteler { get; set; }
     }
 }

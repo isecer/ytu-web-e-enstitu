@@ -1,7 +1,8 @@
-﻿@using Entities.Entities 
+﻿@using Entities.Entities
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model Kullanicilar
@@ -201,7 +202,7 @@
                     <div class="form-group Ku Yer @(!isKurumIci ? "hide" : "")">
                         <label class="col-md-2 col-xs-2 control-label">Personel Bilgileri</label>
                         <div class="col-md-10 col-xs-10">
-                            <div class="panel panel-default form-horizontal">
+                            <div  id="personelBilgi" class="panel panel-default form-horizontal">
                                 <div class="panel-body form-group-separated">
                                     <div class="form-group">
                                         <label class="col-md-2 col-xs-4 control-label  padding-top-0 padding-bottom-0">Birimi</label>
@@ -249,7 +250,7 @@
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                             <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.IzinBitisTarihi.ToFormatDateInput()" name="IzinBitisTarihi" id="IzinBitisTarihi">
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -385,6 +386,9 @@
                 alert(err.responseText);
             }
         });
+        if (ptipID == '@KullaniciTipiEnum.AkademikPersonel' || ptipID == '@KullaniciTipiEnum.IdariPersonel') {
+            getUnvanlar()
+        }
 
     }
 
@@ -403,6 +407,36 @@
             if ($('#BTAciklamasi').text() == "")
                 $('#BTAciklamasi').text("YÖK yönetmeliği geregi 2016/2017 güz donemi itibariyle TİK raporundan 2 defa başarısız olduğunuzdan dolayı herhangi bir belge alamazsınız");
             $('#btAciklama').removeClass("hide");
+        }
+    }
+    function getUnvanlar() {
+        var kullaniciTipId = $('#KullaniciTipID').val();
+        var selectedUnvanId = '@Model.UnvanID';
+        var _panel = $('#personelBilgi');
+        PanelRefresh(_panel, false);
+        if (kullaniciTipId != null && kullaniciTipId != "") {
+            $.ajax({
+                url: '@Url.Action("GetUnvanlar", "Ajax")',
+                data: { 'kullaniciTipId': kullaniciTipId },
+                success: function (result) {
+                    PanelRefresh(_panel, true);
+                    var opt = "";
+                    for (var i = 0; i < result.length; i++) {
+                        var isSelected = result[i].Value == selectedUnvanId ? ' selected="selected"' : '';
+                        opt += "<option value='" + result[i].Value + "'" + isSelected + ">" + result[i].Caption + "</option>";
+                    }
+                    $('#UnvanID').empty();
+                    $('#UnvanID').append(opt);
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+                }
+            });
+        }
+        else {
+            PanelRefresh(_panel, true);
+            $('#UnvanID').empty();
         }
     }
     function rotateImage(rotate) {

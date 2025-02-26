@@ -9,6 +9,7 @@ using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using DevExpress.XtraPrinting.Native;
 
 namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 {
@@ -65,7 +66,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         Content = tableContent,
                         LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png",
                         UniversiteAdi = "Yıldız Tekni Üniversitesi",
-                        WebAdresi = mailBilgi.WebAdresi
+                        WebAdresi = mailBilgi.WebAdresi,
+                        SistemErisimAdresi = mailBilgi.SistemErisimAdresi
                     };
                     var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
                     MailManager.SendMail(enstitu.EnstituKod, "Yeni Kullanıcı Hesabınız Hakkında", htmlMail, kModel.EMail, null);
@@ -114,6 +116,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         EnstituAdi = entities.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod).EnstituAd,
                         UniversiteAdi = "Yıldız Teknik Üniversitesi",
                         WebAdresi = mailBilgi.WebAdresi,
+                        SistemErisimAdresi = mailBilgi.SistemErisimAdresi,
                         Content = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent",
                                     new MailTableContentDto
                                     {

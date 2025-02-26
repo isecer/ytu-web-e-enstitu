@@ -116,6 +116,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                 // Eğer hafta içi bir günse, tarihi olduğu gibi döndür
                 date;
         }
+
         //public static bool IsNullOrEmpty(this string str) => string.IsNullOrEmpty(str);
 
         //public static bool IsNullOrWhiteSpace(this string str) => string.IsNullOrWhiteSpace(str);

@@ -4,7 +4,7 @@
 @model KmMezuniyetSureci
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var isYonetmelikKopyala = (bool?)ViewBag.IsYonetmelikKopyala;
 }
 
@@ -48,12 +48,72 @@
                                     </table>
 
                                 </div>
-                            </div> 
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label">
+                                    Dönem Kontrolü için Obs Dönemi
+
+                                    <button type="button"
+                                            class="btn btn-info btn-sm popover-dismiss glow-on-hover ms-2"
+                                            style="padding: 2px 6px;"
+                                            title="Dönem Kontrolü için OBS Dönemi Seçimi"
+                                            data-placement="right"
+                                            data-container="body"
+                                            data-html="true"
+                                            data-content="
+                                            <div class='popover-content'>
+                                                <p>Mezuniyet başvurusu yapabilmesi için Okuduğu Dönem No kontrolü iki şekilde yapılır:</p>
+                                                <ul class='ps-3 mb-0'>
+                                                    <li><strong>Manuel Dönem:</strong> Seçilen döneme göre kriterler kontrol edilir</li>
+                                                    <li><strong>Aktif Dönem:</strong> OBS'nin aktif dönemi kullanılır</li>
+                                                </ul>
+                                            </div>
+                                        ">
+                                    <i class="fa fa-info-circle" style="font-size: 14px;"></i>
+                                </button>
+                                </label>
+                                <div class="col-md-9 col-xs-7">
+                                    @Html.DropDownList("DonemKontrolObsDonemId", null, "Aktif Dönem",
+                                        new { @class = "form-control" })
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label">
+                                    Ders Kontrolü için Obs Dönemi
+                                    <button type="button"
+                                    class="btn btn-info btn-sm popover-dismiss glow-on-hover ms-2"
+                                    style="padding: 2px 6px;"
+                                    title="Ders Kontrolü için OBS Dönemi Seçimi"
+                                    data-placement="right"
+                                    data-container="body"
+                                    data-html="true"
+                                    data-content="
+                                    <div class='popover-content'>
+                                    <p>Mezuniyet başvurusu yapabilmesi için Son dönem ders kaydı kriter kontrolü iki şekilde yapılır:</p>
+                                    <ul class='ps-3 mb-2'>
+                                    <li><strong>Manuel Dönem:</strong> Seçilen döneme göre kriterler kontrol edilir</li>
+                                    <li><strong>Aktif Dönem:</strong> OBS'nin aktif dönemine göre kontrol yapılır</li>
+                                    </ul> 
+                                    </div>
+                                    ">
+                                    <i class="fa fa-info-circle" style="font-size: 14px;"></i>
+                                    </button>
+                                </label>
+                                <div class="col-md-9 col-xs-7">
+                                    @Html.DropDownList("DersKontrolObsDonemId", null, "Aktif Dönem",
+                                        new { @class = "form-control" })
+                                </div>
+                            </div>
+
+
                             <div class="form-group">
                                 <div class="col-md-12 col-xs-12" id="_otBilgi">
                                     @{Html.RenderPartial("GetOtBilgiM", Model.OgrenimTipModel);}
                                 </div>
-                            </div> 
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-5 control-label">Bezcilt Oluşturulurken İstenen Anket</label>
                                 <div class="col-md-9 col-xs-7">
@@ -92,8 +152,16 @@
         </div>
     </form>
 </div>
-<script>
 
+<script>
+    $(function () {
+        $('.popover-dismiss').popover({
+            placement: 'right',
+            html: true,
+            trigger: 'hover',
+            container: 'body'
+        });
+    }); 
     $(function () {
         $('#BaslangicTarihi').datetimepicker({
             lang: 'tr',
@@ -105,7 +173,7 @@
             timepicker: true,
             format: 'Y-m-d H:i'
         });
-         
+
 
         var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);

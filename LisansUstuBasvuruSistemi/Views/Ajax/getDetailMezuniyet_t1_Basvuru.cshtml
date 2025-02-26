@@ -347,7 +347,7 @@
                                             <td class="CaptionTd">Onay Durumu</td>
                                             <td class="CaptionTd">:</td>
                                             <td class="ValueTd">
-                                                <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Danisman Tarafından Ret Edildi (@Model.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+                                                <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Danisman Tarafından Reddedildi (@Model.DanismanOnayTarihi.ToFormatDateAndTime())</span>
                                             </td>
                                         </tr>
                                     }
@@ -399,14 +399,15 @@
                         <td style="padding-left:10px;text-align:left;" colspan="2">
                             @if (yayinInfos.Any())
                             {
-                                <table class="table table-hover" style="width:100%;table-layout:fixed;">
-                                    @foreach (var item in yayinInfos)
-                                    {
-                                        <tr>
-                                            <td>@item</td>
-                                        </tr>
-                                    }
-                                </table>
+
+                                <div class="tasks">
+                                    <div class="task-item task-info" style="margin-bottom: 0px; cursor: auto;">
+                                        <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                            @Html.Raw(string.Join("<br/>", yayinInfos))
+                                        </div>
+
+                                    </div>
+                                </div>
                             }
                             @if (Model.YayinBilgileri.Any())
                             {
@@ -433,7 +434,7 @@
                                                 inx++;
                                                 item.RowNum = inx;
                                                 item.DegerlendirmeKolonu = Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.Taslak && Model.IsDanismanOnay == true;
-                                                item.DegerlendirmeAktif = sonucGirisSureciAktif && (!isKendiBasvuruSu || Model.GelenBasvuru) && kayitYetki;
+                                                item.DegerlendirmeAktif = sonucGirisSureciAktif && (!isKendiBasvuruSu || Model.GelenBasvuru) && kayitYetki && (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KaydiSilindi);
                                                 item.sonucGirisSureciAktif = sonucGirisSureciAktif;
                                                 item.IsDataShow = true;
                                                 @Html.Raw(ViewRenderHelper.RenderPartialView("Mezuniyet", "AddRow", item))
@@ -530,7 +531,7 @@
                                     <td class="ValueTd">
                                         @if (sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)
                                         {
-                                            <textarea style="width:100%; resize:vertical;" id="MezuniyetYayinKontrolDurumAciklamasi_@Model.MezuniyetBasvurulariID">@Model.MezuniyetYayinKontrolDurumAciklamasi</textarea>
+                                            <textarea style="width:100%; resize:vertical;" maxlength="512" id="MezuniyetYayinKontrolDurumAciklamasi_@Model.MezuniyetBasvurulariID">@Model.MezuniyetYayinKontrolDurumAciklamasi</textarea>
                                         }
                                         else
                                         {

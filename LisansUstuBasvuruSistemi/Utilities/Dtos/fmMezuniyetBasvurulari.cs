@@ -23,7 +23,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string KayitDonemi { get; set; }
         public int? KullaniciTipID { get; set; }
         public int? JuriOneriFormuDurumuID { get; set; }
+        public int? CiltliTezTeslimUzatmaTalepDurumuID { get; set; }
+        public string CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi { get; set; }
         public string AdSoyad { get; set; }
+        public string EykSayisi { get; set; }
         public int? ToplamBasvurulanProgram { get; set; }
         public int? MezuniyetYayinKontrolDurumID { get; set; }
         public int? OgrenimTipKod { get; set; }

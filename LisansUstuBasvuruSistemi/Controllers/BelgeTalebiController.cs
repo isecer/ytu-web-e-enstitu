@@ -382,26 +382,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     //if (kul.OgrenimDurumID != OgrenimDurumEnum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
                     //{
-                        var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
-                        if (ogrenciInfo.Hata)
+                    var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
+                    if (ogrenciInfo.Hata)
+                    {
+                        mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
+                    }
+                    else
+                    {
+                        if (ogrenciInfo.KayitVar)
                         {
-                            mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciInfo.HataMsj);
+                            kul.KayitTarihi = ogrenciInfo.KayitTarihi;
+                            kul.KayitYilBaslangic = ogrenciInfo.BaslangicYil;
+                            kul.KayitDonemID = ogrenciInfo.DonemID;
+                            _entities.SaveChanges();
                         }
                         else
                         {
-                            if (ogrenciInfo.KayitVar)
-                            {
-                                kul.KayitTarihi = ogrenciInfo.KayitTarihi;
-                                kul.KayitYilBaslangic = ogrenciInfo.BaslangicYil;
-                                kul.KayitDonemID = ogrenciInfo.DonemID;
-                                _entities.SaveChanges();
-                            }
-                            else
-                            {
-                                mmMessage.Messages.Add("Öğrenci Bilgileriniz Doğrulanamadı!");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
-                            }
+                            mmMessage.Messages.Add("Öğrenci Bilgileriniz Doğrulanamadı!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
                         }
+                    }
                     //}
 
                 }
@@ -891,12 +891,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             contentBilgi.Detaylar = htmlBigliRow;
-
-            var mmmC = new MailMainContentDto();
+            var hcb = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", contentBilgi);
             var enstitu = _entities.Enstitulers.First(p => p.EnstituKod == enstituKodu);
             var enstituAdi = enstitu.EnstituAd;
-            mmmC.EnstituAdi = enstituAdi;
-            mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
             var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKodu);
             var sistemErisimAdresi = mailBilgi.SistemErisimAdresi;
             var wurlAddr = sistemErisimAdresi.Split('/').ToList();
@@ -904,10 +901,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 sistemErisimAdresi = wurlAddr[0] + "//" + wurlAddr.Skip(2).Take(1).First();
             else
                 sistemErisimAdresi = "http://" + wurlAddr.First();
-            mmmC.LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-            var hcb = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", contentBilgi);
-            mmmC.Content = hcb;
-            mmmC.WebAdresi = enstitu.WebAdresi;
+            var mmmC = new MailMainContentDto
+            {
+                EnstituAdi = enstituAdi,
+                UniversiteAdi = "Yıldız Teknik Üniversitesi",
+                LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png",
+                Content = hcb,
+                WebAdresi = enstitu.WebAdresi,
+                SistemErisimAdresi = mailBilgi.SistemErisimAdresi
+            };
+
             string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
             MailManager.SendMail(mailBilgi.EnstituKod, konu, htmlMail, kModel.Email, null);
         }

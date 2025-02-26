@@ -27,6 +27,12 @@
                                     <input type="text" name="UnvanAdi" id="UnvanAdi" value="@Model.UnvanAdi" class="form-control" />
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Unvan Türü</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("IsAkademik", null, new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div>
                             @if (UserIdentity.Current.IsAdmin)
                             {
                                 <div class="form-group">

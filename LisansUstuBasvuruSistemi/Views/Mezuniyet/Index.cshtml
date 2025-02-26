@@ -1,15 +1,15 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmMezuniyetBasvurulari
-@{ 
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
     var kyetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-    
+
 }
 <div class="row">
     <div class="col-md-12">
@@ -62,7 +62,7 @@
                             <td></td>
                             <td>:</td>
                             <td>
-                                 Mezuniyet başvurusu yapabilmek için hesap bilgilerinizde YTÜ Lisansüstü öğrencisi olduğunuza dair bilgilerin eksiksiz olarak doldurulması gerekmektedir. <a href="javascript:void(0)" onclick="HesapKayit('@UserIdentity.Current.Id')">Hesap bilgilerinizi güncellemek için tıklayınız.</a>
+                                Mezuniyet başvurusu yapabilmek için hesap bilgilerinizde YTÜ Lisansüstü öğrencisi olduğunuza dair bilgilerin eksiksiz olarak doldurulması gerekmektedir. <a href="javascript:void(0)" onclick="HesapKayit('@UserIdentity.Current.Id')">Hesap bilgilerinizi güncellemek için tıklayınız.</a>
                             </td>
                         </tr>
                     }
@@ -74,12 +74,12 @@
                             <td> @bilgiModel.KullaniciTipYetkiYokMsj</td>
                         </tr>
                     }
-                  
+
                 }
 
                 @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.KullaniciTipYetki && bilgiModel.EnstituYetki)
                 {
-                    
+
                     <tr>
                         <td></td>
                         <td>:</td>
@@ -112,7 +112,7 @@
                             </td>
                         </tr>
                     }
-                    
+
 
 
                 }
@@ -242,7 +242,7 @@
             redirectUrl: url,
             callbackFnc: ''
         }
-        ShowDuyuru(popupSetting); 
+        ShowDuyuru(popupSetting);
     }
 
 
@@ -318,14 +318,6 @@
             }
         });
     }
-
-
-
-
-
-    $(function () {
-        
-    });
 
     function ShowSrDialog(MezuniyetBasvurulariID, SRTalepID) {
         $.ajax({
@@ -558,6 +550,8 @@
                 }
             })
         }
+       
+
         function MzDurumKaydet(MezuniyetBasvurulariID) {
             var _IsMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();
             var _MezuniyetTarihi = $('#MezuniyetTarihi_' + MezuniyetBasvurulariID).val();

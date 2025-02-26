@@ -28,10 +28,10 @@ namespace Entities.Entities
         public Nullable<int> ToplamKaynakOrani { get; set; }
         public Nullable<int> TekKaynakOrani { get; set; }
         public int SinavKacGunSonraAlabilir { get; set; }
-        public int SinavEnGecKacGunSonraAlabilir { get; set; }
-        public int SinavUzatmaOgrenciTaahhutMaxGun { get; set; }
-        public int SinavUzatmaSinavAlmaSuresiMaxGun { get; set; }
-        public int TezTeslimSuresiGun { get; set; }
+        public int SinavEnGecKacAySonraAlabilir { get; set; }
+        public int SinavUzatmaOgrenciTaahhutMaxAy { get; set; }
+        public int SinavUzatmaSinavAlmaSuresiMaxAy { get; set; }
+        public int TezTeslimSuresiAy { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

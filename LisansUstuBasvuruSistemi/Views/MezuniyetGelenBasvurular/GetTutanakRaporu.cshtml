@@ -7,63 +7,67 @@
         <div class="panel-body">
             @using (Ajax.BeginForm("GetTutanakRaporuKontrolu", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TutanakRprForm" }))
             {
-            <div class="panel-body form-group-separated">
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Tutanak Türünü</label>
-                    <div class="col-md-9 col-xs-9">
-                        <select id="RaporTipID" name="RaporTipID" class="form-control" onchange="RprTipChange()">
-                            <option value="@RaporTipiEnum.MezuniyetTezJuriTutanakRaporu">Tez Jüri Tutanak Raporu</option>
-                            <option value="@RaporTipiEnum.MezuniyetTutanakRaporu">Mezuniyet Tutanak Raporu</option>
-                        </select>
+                <div class="panel-body form-group-separated">
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Tutanak Türünü</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="RaporTipID" name="RaporTipID" class="form-control" onchange="RprTipChange()">
+                                <option value="@RaporTipiEnum.MezuniyetTezJuriTutanakRaporu">Tez Jüri Tutanak Raporu</option>
+                                <option value="@RaporTipiEnum.MezuniyetTutanakRaporu">Mezuniyet Tutanak Raporu</option>
+                                <option value="@RaporTipiEnum.MezuniyetCiltliTezTeslikEkSureTalebiTutanak">Ciltli Tez Teslimi için Ek Süre Talebi Tutanağı</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Öğrenim Tipleri</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="OgrenimTipKods" name="OgrenimTipKods" class="form-control">
+                                <option selected="selected" value="@OgrenimTipi.Doktra">Doktora</option>
+                                <option value="@OgrenimTipi.TezliYuksekLisans">Tezli Yüksek Lisans</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="DvEnstituOnayDurum">
+                        <label class="col-md-3 col-xs-3 control-label">Enstitü Onay Durum</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="EnstituOnayDurumId" name="EnstituOnayDurumId" class="form-control">
+                                <option value="@EykTipEnum.EykYaGonderildi">Eyk'ya Gönderilenler</option>
+                                <option value="@EykTipEnum.EykYaHazirlandi">Eyk'ya Hazırlananlar</option>
+                                <option selected="selected" value="@EykTipEnum.EykDaOnaylandi">Eyk'da Onaylananlar</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group hide" id="DvCiltliTezOnayDurum">
+                        <label class="col-md-3 col-xs-3 control-label">Ciltli Tez Teslimi Onay Durumu</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="CiltliTezOnayDurumId" name="CiltliTezOnayDurumId" class="form-control">
+                                <option value="1">Danışman Tarafından Onaylananlar</option>
+                                <option value="2">Eyk'da Onaylananlar</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Çıktı Alım Şekli</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="ExportWordOrExcel" name="ExportWordOrExcel" class="form-control">
+                                <option value="true">Word Belgesi</option>
+                                <option value="false">Excel Belgesi</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
+                        <div class="col-md-9 col-xs-9">
+                            <table>
+                                <tr>
+                                    <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BasTar" name="BasTar"> </td>
+                                    <td>/</td>
+                                    <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BitTar" name="BitTar"></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Öğrenim Tipleri</label>
-                    <div class="col-md-9 col-xs-9">
-                        <select id="OgrenimTipKods" name="OgrenimTipKods" class="form-control">
-                            <option selected="selected" value="@OgrenimTipi.Doktra">Doktora</option>
-                            <option value="@OgrenimTipi.TezliYuksekLisans">Tezli Yüksek Lisans</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group" id="DvEnstituOnayDurum">
-                    <label class="col-md-3 col-xs-3 control-label">Enstitü Onay Durum</label>
-                    <div class="col-md-9 col-xs-9">
-                        <select id="EnstituOnayDurumId" name="EnstituOnayDurumId" class="form-control">
-                            <option value="1">Eyk'ya Gönderilenler</option>
-                            <option value="2">Eyk'ya Hazırlananlar</option>
-                            <option selected="selected" value="3">Eyk'da Onaylananlar</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Çıktı Alım Şekli</label>
-                    <div class="col-md-9 col-xs-9">
-                        <select id="ExportWordOrExcel" name="ExportWordOrExcel" class="form-control">
-                            <option selected="selected" value="true">Word Belgesi</option>
-                            <option value="false">Excel Belgesi</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
-                    <div class="col-md-9 col-xs-9">
-                        <table>
-                            <tr>
-                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BasTar" name="BasTar"> </td>
-                                <td>/</td>
-                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BitTar" name="BitTar"></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="form-group hide" id="rprTarihi">
-                    <label class="col-md-3 col-xs-3 control-label">Rapor Tarihi</label>
-                    <div class="col-md-9 col-xs-9">
-                        <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="RaporTarihi" name="RaporTarihi">
-                    </div>
-                </div>
-            </div>
             }
         </div>
     </div>
@@ -71,39 +75,23 @@
 <script>
     function RprTipChange() {
         var _Rtip = $('#RaporTipID').val();
-        var _Otip = $('#OgrenimTipKods').val();
-        
-        if (_Rtip == '@RaporTipiEnum.MezuniyetTutanakRaporu') {
-            if (_Otip == '@OgrenimTipi.Doktra') {
-                $('#rprTarihi').removeClass('hide');
-            }
-            else {
-                $('#rprTarihi').addClass('hide');
-            } 
-            $('#DvEnstituOnayDurum').addClass('hide');
-        }
-        else {
-            $('#DvEnstituOnayDurum').removeClass('hide');
-            $('#rprTarihi').addClass('hide');
-        }
-         
-    }
-    $(function () {
-        $('#BasTar').datetimepicker({
-            lang: 'tr',
-            timepicker: false,
-            format: 'Y-m-d'
-        });
-        $('#BitTar').datetimepicker({
-            lang: 'tr',
-            timepicker: false,
-            format: 'Y-m-d'
-        });
-        $('#RaporTarihi').datetimepicker({
-            lang: 'tr',
-            timepicker: false,
-            format: 'Y-m-d'
-        });
 
-    })
+        if (_Rtip == '@RaporTipiEnum.MezuniyetTutanakRaporu' || _Rtip == '@RaporTipiEnum.MezuniyetTezJuriTutanakRaporu') {
+            $('#DvEnstituOnayDurum').removeClass('hide');
+            $('#DvCiltliTezOnayDurum').addClass('hide');
+            $("#ExportWordOrExcel").html('<option value="true">Word Belgesi</option><option value="false">Excel Belgesi</option>');
+        } else if (_Rtip == '@RaporTipiEnum.MezuniyetCiltliTezTeslikEkSureTalebiTutanak') {
+            $('#DvEnstituOnayDurum').addClass('hide');
+            $('#DvCiltliTezOnayDurum').removeClass('hide');
+            $("#ExportWordOrExcel").html('<option value="false" selected="selected">Excel Belgesi</option>');
+        }
+    }
+
+    $(function () {
+        $('.date-pickerx').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'Y-m-d'
+        });
+    });
 </script>

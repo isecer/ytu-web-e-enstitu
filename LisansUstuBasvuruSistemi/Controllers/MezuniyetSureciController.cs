@@ -6,10 +6,12 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -88,7 +90,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [Authorize(Roles = RoleNames.MezuniyetSureciKayıt)]
-        public ActionResult Kayit(int? id, string dlgid, string ekd)
+        public async Task<ActionResult> Kayit(int? id, string dlgid, string ekd)
         {
             string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var mmMessage = new MmMessage
@@ -114,11 +116,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.BaslangicTarihi = data.BaslangicTarihi;
                 model.BitisTarihi = data.BitisTarihi;
                 model.DonemID = data.DonemID;
+                model.DonemKontrolObsDonemId = data.DonemKontrolObsDonemId;
+                model.DersKontrolObsDonemId = data.DersKontrolObsDonemId;
                 model.IsAktif = data.IsAktif;
                 model.AnketID = data.AnketID;
                 model.OgretimYili = data.BaslangicYil + "/" + data.BitisYil + "/" + data.DonemID;
 
             }
+
+            var obsDonemler = await ObsRestApiService.GetCmbDonemler();
+            ViewBag.DonemKontrolObsDonemId = new SelectList(obsDonemler, "Value", "Caption", model.DonemKontrolObsDonemId);
+            ViewBag.DersKontrolObsDonemId = new SelectList(obsDonemler, "Value", "Caption", model.DersKontrolObsDonemId);
+
+
             model.OgrenimTipModel = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(enstituKod, model.MezuniyetSurecID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? enstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", model.OgretimYili);
@@ -128,7 +138,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.MezuniyetSureciKayıt)]
-        public ActionResult Kayit(KmMezuniyetSureci kModel, bool? isYonetmelikKopyala)
+        public async Task<ActionResult> Kayit(KmMezuniyetSureci kModel, bool? isYonetmelikKopyala)
         {
             var mmMessage = new MmMessage();
             var mezuniyetSureciOgrenimTipKriterId = kModel.MezuniyetSureciOgrenimTipKriterId.Select((s, inx) => new { Inx = inx, MezuniyetSureciOgrenimTipKriterID = s }).ToList();
@@ -143,11 +153,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var aktifDonemAktsKriteri = kModel.AktifDonemAktsKriteri.Select((s, inx) => new { Inx = inx, AktifDonemAktsKriteri = s }).ToList();
             var toplamKaynakOraniKriteri = kModel.ToplamKaynakOraniKriteri.Select((s, inx) => new { Inx = inx, ToplamKaynakOraniKriteri = s }).ToList();
             var tekKaynakOraniKriteri = kModel.TekKaynakOraniKriteri.Select((s, inx) => new { Inx = inx, TekKaynakOraniKriteri = s }).ToList();
-            var sinavUzatmaOgrenciTaahhutMaxGun = kModel.SinavUzatmaOgrenciTaahhutMaxGun.Select((s, inx) => new { Inx = inx, SinavUzatmaOgrenciTaahhutMaxGun = s }).ToList();
-            var sinavUzatmaSinavAlmaSuresiMaxGun = kModel.SinavUzatmaSinavAlmaSuresiMaxGun.Select((s, inx) => new { Inx = inx, SinavUzatmaSinavAlmaSuresiMaxGun = s }).ToList();
-            var tezTeslimSuresiGun = kModel.TezTeslimSuresiGun.Select((s, inx) => new { Inx = inx, TezTeslimSuresiGun = s }).ToList();
+            var sinavUzatmaOgrenciTaahhutMaxAy = kModel.SinavUzatmaOgrenciTaahhutMaxAy.Select((s, inx) => new { Inx = inx, SinavUzatmaOgrenciTaahhutMaxAy = s }).ToList();
+            var sinavUzatmaSinavAlmaSuresiMaxAy = kModel.SinavUzatmaSinavAlmaSuresiMaxAy.Select((s, inx) => new { Inx = inx, SinavUzatmaSinavAlmaSuresiMaxAy = s }).ToList();
+            var tezTeslimSuresiAy = kModel.TezTeslimSuresiAy.Select((s, inx) => new { Inx = inx, TezTeslimSuresiAy = s }).ToList();
             var sinavKacGunSonraAlabilir = kModel.SinavKacGunSonraAlabilir.Select((s, inx) => new { Inx = inx, SinavKacGunSonraAlabilir = s }).ToList();
-            var sinavEnGecKacGunSonraAlabilir = kModel.SinavEnGecKacGunSonraAlabilir.Select((s, inx) => new { Inx = inx, SinavEnGecKacGunSonraAlabilir = s }).ToList();
+            var sinavEnGecKacAySonraAlabilir = kModel.SinavEnGecKacAySonraAlabilir.Select((s, inx) => new { Inx = inx, SinavEnGecKacAySonraAlabilir = s }).ToList();
 
             var ogrenimTipleriLngs = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod).ToList();
             var mezuniyetSureciOgrenimTipKriterleri = (from kr in mezuniyetSureciOgrenimTipKriterId
@@ -162,11 +172,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                        join akts in aktifDonemAktsKriteri on kr.Inx equals akts.Inx
                                                        join tpko in toplamKaynakOraniKriteri on kr.Inx equals tpko.Inx
                                                        join tkko in tekKaynakOraniKriteri on kr.Inx equals tkko.Inx
-                                                       join uzt in sinavUzatmaOgrenciTaahhutMaxGun on kr.Inx equals uzt.Inx
-                                                       join uzs in sinavUzatmaSinavAlmaSuresiMaxGun on kr.Inx equals uzs.Inx
-                                                       join tts in tezTeslimSuresiGun on kr.Inx equals tts.Inx
+                                                       join uzt in sinavUzatmaOgrenciTaahhutMaxAy on kr.Inx equals uzt.Inx
+                                                       join uzs in sinavUzatmaSinavAlmaSuresiMaxAy on kr.Inx equals uzs.Inx
+                                                       join tts in tezTeslimSuresiAy on kr.Inx equals tts.Inx
                                                        join srg in sinavKacGunSonraAlabilir on kr.Inx equals srg.Inx
-                                                       join srmg in sinavEnGecKacGunSonraAlabilir on kr.Inx equals srmg.Inx
+                                                       join srmg in sinavEnGecKacAySonraAlabilir on kr.Inx equals srmg.Inx
                                                        join otl in ogrenimTipleriLngs on ot.OgrenimTipID equals otl.OgrenimTipID
                                                        select new
                                                        {
@@ -185,10 +195,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                            tpko.ToplamKaynakOraniKriteri,
                                                            tkko.TekKaynakOraniKriteri,
                                                            srg.SinavKacGunSonraAlabilir,
-                                                           srmg.SinavEnGecKacGunSonraAlabilir,
-                                                           uzt.SinavUzatmaOgrenciTaahhutMaxGun,
-                                                           uzs.SinavUzatmaSinavAlmaSuresiMaxGun,
-                                                           tts.TezTeslimSuresiGun
+                                                           srmg.SinavEnGecKacAySonraAlabilir,
+                                                           uzt.SinavUzatmaOgrenciTaahhutMaxAy,
+                                                           uzs.SinavUzatmaSinavAlmaSuresiMaxAy,
+                                                           tts.TezTeslimSuresiAy
                                                        }).ToList();
 
             #region Kontrol
@@ -284,15 +294,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Topla Benzerlik Oranı bilgisi 1 ile 100 arasında bir değer olabilir.");
                     }
-                    if (!item.SinavUzatmaOgrenciTaahhutMaxGun.HasValue || item.SinavUzatmaOgrenciTaahhutMaxGun <= 0)
+                    if (!item.SinavUzatmaOgrenciTaahhutMaxAy.HasValue || item.SinavUzatmaOgrenciTaahhutMaxAy <= 0)
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için U.S.T.T bilgisi 0 dan büyük olmalı.");
                     }
-                    if (!item.SinavUzatmaSinavAlmaSuresiMaxGun.HasValue || item.SinavUzatmaSinavAlmaSuresiMaxGun <= 0)
+                    if (!item.SinavUzatmaSinavAlmaSuresiMaxAy.HasValue || item.SinavUzatmaSinavAlmaSuresiMaxAy <= 0)
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için U.S.S.R bilgisi 0 dan büyük olmalı.");
                     }
-                    if (!item.TezTeslimSuresiGun.HasValue || item.TezTeslimSuresiGun <= 0)
+                    if (!item.TezTeslimSuresiAy.HasValue || item.TezTeslimSuresiAy <= 0)
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için T.T.S bilgisi 0 dan büyük olmalı.");
                     }
@@ -300,7 +310,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için S.R.G bilgisi 0 dan büyük olmalı.");
                     }
-                    if (!item.SinavEnGecKacGunSonraAlabilir.HasValue || item.SinavEnGecKacGunSonraAlabilir <= 0)
+                    if (!item.SinavEnGecKacAySonraAlabilir.HasValue || item.SinavEnGecKacAySonraAlabilir <= 0)
                     {
                         mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için S.R.S.G bilgisi 0 dan büyük olmalı.");
                     }
@@ -328,13 +338,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DonemID = kModel.DonemID,
                         BaslangicTarihi = kModel.BaslangicTarihi,
                         BitisTarihi = kModel.BitisTarihi,
+                        DonemKontrolObsDonemId = kModel.DonemKontrolObsDonemId,
+                        DersKontrolObsDonemId = kModel.DersKontrolObsDonemId,
                         AnketID = kModel.AnketID,
                         IsAktif = true,
                         IslemTarihi = kModel.IslemTarihi,
                         IslemYapanID = kModel.IslemYapanID,
                         IslemYapanIP = kModel.IslemYapanIP
                     });
-                    _entities.SaveChanges();
+                    await _entities.SaveChangesAsync();
                     kModel.MezuniyetSurecID = eklenen.MezuniyetSurecID;
                     MezuniyetSureciBus.MezuniyetSureciOtoMailOlustur(eklenen.MezuniyetSurecID);
 
@@ -349,6 +361,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IsAktif = kModel.IsAktif;
                     data.BaslangicTarihi = kModel.BaslangicTarihi;
                     data.BitisTarihi = kModel.BitisTarihi;
+                    data.DonemKontrolObsDonemId = kModel.DonemKontrolObsDonemId;
+                    data.DersKontrolObsDonemId = kModel.DersKontrolObsDonemId;
                     data.AnketID = kModel.AnketID;
                     data.IslemTarihi = DateTime.Now;
                     data.IslemYapanID = kModel.IslemYapanID;
@@ -371,18 +385,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     AktifDonemAktsKriteri = s.AktifDonemAktsKriteri.Value,
                     ToplamKaynakOrani = s.ToplamKaynakOraniKriteri,
                     TekKaynakOrani = s.TekKaynakOraniKriteri,
-                    SinavUzatmaOgrenciTaahhutMaxGun = s.SinavUzatmaOgrenciTaahhutMaxGun.Value,
-                    SinavUzatmaSinavAlmaSuresiMaxGun = s.SinavUzatmaSinavAlmaSuresiMaxGun.Value,
-                    TezTeslimSuresiGun = s.TezTeslimSuresiGun.Value,
+                    SinavUzatmaOgrenciTaahhutMaxAy = s.SinavUzatmaOgrenciTaahhutMaxAy.Value,
+                    SinavUzatmaSinavAlmaSuresiMaxAy = s.SinavUzatmaSinavAlmaSuresiMaxAy.Value,
+                    TezTeslimSuresiAy = s.TezTeslimSuresiAy.Value,
                     SinavKacGunSonraAlabilir = s.SinavKacGunSonraAlabilir.Value,
-                    SinavEnGecKacGunSonraAlabilir = s.SinavEnGecKacGunSonraAlabilir.Value,
+                    SinavEnGecKacAySonraAlabilir = s.SinavEnGecKacAySonraAlabilir.Value,
                     IslemTarihi = DateTime.Now,
                     IslemYapanID = UserIdentity.Current.Id,
                     IslemYapanIP = UserIdentity.Ip
 
 
                 }));
-                _entities.SaveChanges();
+                await _entities.SaveChangesAsync();
                 SiraNoVer(kModel.EnstituKod);
                 if (isnewOrEdit || (isYonetmelikKopyala.HasValue && isYonetmelikKopyala.Value)) { YonetmelikKopyala(kModel.MezuniyetSurecID, kModel.EnstituKod); }
 
@@ -402,17 +416,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.AktifDonemToplamKrediKriteri = sItem.AktifDonemToplamKrediKriteri ?? 0;
                 item.AktifDonemAgnoKriteri = sItem.AktifDonemAgnoKriteri ?? 0;
                 item.AktifDonemAktsKriteri = sItem.AktifDonemAktsKriteri ?? 0;
-                item.SinavUzatmaOgrenciTaahhutMaxGun = sItem.SinavUzatmaOgrenciTaahhutMaxGun ?? 0;
-                item.SinavUzatmaSinavAlmaSuresiMaxGun = sItem.SinavUzatmaSinavAlmaSuresiMaxGun ?? 0;
-                item.TezTeslimSuresiGun = sItem.TezTeslimSuresiGun ?? 0;
+                item.SinavUzatmaOgrenciTaahhutMaxAy = sItem.SinavUzatmaOgrenciTaahhutMaxAy ?? 0;
+                item.SinavUzatmaSinavAlmaSuresiMaxAy = sItem.SinavUzatmaSinavAlmaSuresiMaxAy ?? 0;
+                item.TezTeslimSuresiAy = sItem.TezTeslimSuresiAy ?? 0;
                 item.SinavKacGunSonraAlabilir = sItem.SinavKacGunSonraAlabilir ?? 0;
-                item.SinavEnGecKacGunSonraAlabilir = sItem.SinavEnGecKacGunSonraAlabilir ?? 0;
+                item.SinavEnGecKacAySonraAlabilir = sItem.SinavEnGecKacAySonraAlabilir ?? 0;
                 item.AktifDonemEtikNotKriteri = sItem.AktifDonemEtikNotKriteri;
                 item.AktifDonemSeminerNotKriteri = sItem.AktifDonemSeminerNotKriteri;
                 item.ToplamKaynakOrani = sItem.ToplamKaynakOraniKriteri;
                 item.TekKaynakOrani = sItem.TekKaynakOraniKriteri;
 
             }
+            var obsDonemler = await ObsRestApiService.GetCmbDonemler();
+            ViewBag.DonemKontrolObsDonemId = new SelectList(obsDonemler, "Value", "Caption", kModel.DonemKontrolObsDonemId);
+            ViewBag.DersKontrolObsDonemId = new SelectList(obsDonemler, "Value", "Caption", kModel.DersKontrolObsDonemId);
+
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);

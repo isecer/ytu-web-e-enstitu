@@ -192,6 +192,7 @@ namespace Entities.Entities
         public virtual DbSet<TDODanismanTalepTipleri> TDODanismanTalepTipleris { get; set; }
         public virtual DbSet<TIAyarlar> TIAyarlars { get; set; }
         public virtual DbSet<TIBasvuru> TIBasvurus { get; set; }
+        public virtual DbSet<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
         public virtual DbSet<TIBasvuruAraRaporDurumlari> TIBasvuruAraRaporDurumlaris { get; set; }
         public virtual DbSet<TIBasvuruAraRaporKomite> TIBasvuruAraRaporKomites { get; set; }
         public virtual DbSet<TijBasvuru> TijBasvurus { get; set; }
@@ -221,6 +222,5 @@ namespace Entities.Entities
         public virtual DbSet<YetkiGrupRolleri> YetkiGrupRolleris { get; set; }
         public virtual DbSet<ZamanTipleri> ZamanTipleris { get; set; }
         public virtual DbSet<vW_ProgramBasvuruSonucSayisal> vW_ProgramBasvuruSonucSayisal { get; set; }
-        public virtual DbSet<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
     }
 }

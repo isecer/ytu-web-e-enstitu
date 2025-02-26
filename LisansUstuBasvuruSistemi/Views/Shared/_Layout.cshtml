@@ -18,8 +18,9 @@
     var customNavigation = UserIdentity.Current.Informations.All(p => p.Key != "CustomNavigation") || UserIdentity.Current.Informations["CustomNavigation"].ToBooleanObj().Value;
     var toggledNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "ToggledNavigation") && UserIdentity.Current.Informations["ToggledNavigation"].ToBooleanObj().Value;
     var boxedOrFullWidth = UserIdentity.Current.Informations.All(p => p.Key != "BoxedOrFullWidth") || UserIdentity.Current.Informations["BoxedOrFullWidth"].ToBooleanObj().Value;
-    var themeName = UserIdentity.Current.Informations.Any(p => p.Key == "ThemeName") ? UserIdentity.Current.Informations["ThemeName"].ToString() : "/Content/css/theme-forest.css";
-    var backgroundImage = UserIdentity.Current.Informations.Any(p => p.Key == "BackgroundImage") ? UserIdentity.Current.Informations["BackgroundImage"].ToString() : "wall_2";
+    var themeName = UserIdentity.Current.Informations.Any(p => p.Key == "ThemeName") ? UserIdentity.Current.Informations["ThemeName"].ToString() : "/Content/css/theme-dark.css";
+
+    var backgroundImage = UserIdentity.Current.Informations.Any(p => p.Key == "BackgroundImage") ? UserIdentity.Current.Informations["BackgroundImage"].ToString() : "wall_1";
     if (boxedOrFullWidth)
     {
         fixedHeader = false;
@@ -29,15 +30,14 @@
     var enstituler = EnstituBus.GetEnstituler();
     var selectedEnstitu = enstituler.First(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd));
     var isEnstituYetkisiVar = UserIdentity.Current.IsAuthenticated && UserIdentity.Current.EnstituKods.Contains(selectedEnstitu.EnstituKod);
-    const string lImage = "/Content/assets/images/ytu_logo_new.jpg"; 
+    const string lImage = "/Content/assets/images/Yıldız_Technical_University_Logo.png";
 
 }
 
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <!-- META SECTION -->
-    <title>YTÜ - E-ENSTİTÜ</title>
+    <title>Yıldız Teknik Üniversitesi e-Enstitü</title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1254" />
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-9" />
     <meta http-equiv="Content-Type" content="text/html; charset=x-mac-turkish" />
@@ -48,37 +48,29 @@
 
 
     <link rel="icon" href="@(urlInfo.Root)EbisIco.ico" type="image/x-icon" />
-    <!-- END META SECTION -->
     <script type="text/javascript">
         var root = '@urlInfo.Root';
         var fakeRoot='@urlInfo.FakeRoot';
 
     </script>
 
-    <!-- CSS INCLUDE -->
-    @* <link rel="stylesheet" type="text/css" id="theme" href="~/Content/css/theme-default.css" />*@
     <link rel="stylesheet" type="text/css" id="theme" href="@themeName" />
     <link href="~/Content/assets/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch.css" rel="stylesheet" />
-    <!-- EOF CSS INCLUDE -->
-    <!-- START PLUGINS -->
-    @*<script src="~/Scripts/jquery-1.11.3.min.js"></script>*@
-    <script type="text/javascript" src="~/Content/js/plugins/jquery/jquery.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/js/plugins/jquery/jquery.min.js"></script> 
     <script type="text/javascript" src="~/Content/js/plugins/jquery/jquery-ui.min.js"></script>
 
     <script type="text/javascript" src="~/Content/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
-    @*<script src="~/Content/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>*@
     <script src="~/Content/assets/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 
     <script src="~/Content/assets/plugins/ui-nestable.js"></script>
     <script src="~/Content/assets/plugins/jquery-nestable/jquery.nestable.js"></script>
-    @*<script type="text/javascript" src="~/Content/js/plugins/smartwizard/jquery.smartWizard-2.0.min.js"></script>*@
 
     <script src="~/Scripts/biskaUtil.js"></script>
-    <!-- end default -->
-    <!-- END MESSAGE BOX-->
     <script type="text/javascript" src="~/Content/js/plugins/bootstrap/bootstrap.min.js"></script>
     <script src="~/Content/js/plugins/bootstrap/bootstrap-select.js"></script>
-    <!-- START THIS PAGE PLUGINS-->
+
+
     <script type='text/javascript' src="~/Content/js/plugins/icheck/icheck.min.js"></script>
     <script type="text/javascript" src="~/Content/js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
     <script type="text/javascript" src="~/Content/js/plugins/scrolltotop/scrolltopcontrol.js"></script>
@@ -92,8 +84,7 @@
     <script src="~/Content/assets/plugins/myDatetime/jquery.datetimepicker.full.js"></script>
     <link href="~/Content/js/plugins/clockPicker/bootstrap-clockpicker.min.css" rel="stylesheet" />
     <script src="~/Content/js/plugins/clockPicker/bootstrap-clockpicker.min.js"></script>
-    <script src="~/Scripts/jquery.mask.js"></script>
-    <script type="text/javascript" src="~/Content/js/plugins/moment.min.js"></script>
+      <script type="text/javascript" src="~/Content/js/plugins/moment.min.js"></script>
     <script type="text/javascript" src="~/Content/js/plugins/daterangepicker/daterangepicker.js"></script>
     <script type="text/javascript" src="~/Content/js/plugins/knob/jquery.knob.min.js"></script>
     <script type="text/javascript" src="~/Content/js/plugins/owl/owl.carousel.min.js"></script>
@@ -115,17 +106,12 @@
     <script type="text/javascript" src="~/Content/assets/plugins/select2/select2_locale_tr.js"></script>
     <script src="~/Content/assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
     <link href="~/Content/assets/plugins/sweetalert/sweetalert2.min.css" rel="stylesheet" />
-    @* <script src="https://kit.fontawesome.com/a182ee65d6.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
-        <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-font-face.min.css" media="all">
-        <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
-    *@
 
     <link href="~/Content/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />
     <link href="~/Content/fontawesome-free-6.4.2-web/css/v4-shims.min.css" rel="stylesheet" />
     <link href="~/Content/css/howerBtnStyle.css" rel="stylesheet" />
     <script src="~/Scripts/specialCharacterBlocker.js"></script>
-    <!-- END SCRIPTS -->
+
     <style>
         .popover {
             max-width: 800px;
@@ -138,6 +124,145 @@
                 display: none;
             }
         }
+
+        :root {
+            --logo-width: 200px;
+            --logo-height: 35px;
+            --primary-color: rgba(69, 103, 137, 0.8);
+            --secondary-color: rgba(137, 171, 205, 0.7);
+            --text-color: rgba(255, 255, 255, 0.95);
+            --border-radius: 14px;
+        }
+
+        .logo-container {
+            background: linear-gradient(45deg, rgba(62,84,172,0.2), rgba(111,136,189,0.2) );
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--logo-width);
+            height: var(--logo-height);
+            margin: 0px auto;
+        }
+
+            .logo-container::before {
+                content: '';
+                position: absolute;
+                inset: -50%;
+                background: radial-gradient( circle at center, rgba(255,255,255,0.15) 0%, transparent 50% );
+                animation: waveEffect 15s infinite ease-in-out;
+            }
+
+        @@keyframes waveEffect {
+            0%, 100% {
+                transform: translate(-30%, -30%) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(0%, 0%) rotate(180deg);
+            }
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.8) );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-container:hover {
+            /*transform: translateY(-2px);*/
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+            .logo-container:hover .logo {
+                animation: textGlow 1.5s infinite alternate;
+            }
+
+        @@keyframes textGlow {
+            from {
+                filter: drop-shadow(0 0 2px rgba(255,255,255,0.4));
+            }
+
+            to {
+                filter: drop-shadow(0 0 5px rgba(255,255,255,0.6));
+            }
+        }
+
+        .text-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(175deg, #ffffff 0%, #b5aeae 45%, #8f9499 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s ease;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1), 0 0 15px rgba(11, 100, 175, 0.2);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+            .text-logo::before {
+                content: 'e';
+                position: absolute;
+                top: -8px;
+                left: -15px;
+                font-size: 1.2rem;
+                background: linear-gradient(45deg, #5d9bd3, #0b64af);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                opacity: 0.15;
+                transform: rotate(-15deg);
+                transition: all 0.3s ease;
+            }
+
+            .text-logo::after {
+                content: '';
+                position: absolute;
+                inset: -2px;
+                background: linear-gradient( 45deg, transparent 20%, rgba(255,255,255,0.1) 40%, transparent 60% );
+                filter: blur(2px);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .text-logo:hover {
+                transform: scale(1.02) translateY(-1px);
+                letter-spacing: 1px;
+            }
+
+                .text-logo:hover::before {
+                    transform: rotate(-25deg) scale(1.1);
+                    opacity: 0.25;
+                }
+
+                .text-logo:hover::after {
+                    opacity: 1;
+                    animation: shimmer 2s infinite linear;
+                }
+
+        @@keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .text-logo2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            background: radial-gradient(#545454, #ffffff00);
+        }
     </style>
 </head>
 <body class="@(boxedOrFullWidth?("page-container-boxed "+backgroundImage):"") ">
@@ -148,7 +273,9 @@
             <div class="page-sidebar @(boxedOrFullWidth ? "" : "page-sidebar-fixed") @(fixedSidebar ? "page-sidebar-fixed" : "") @(fixedSidebar && !boxedOrFullWidth ? "scroll mCustomScrollbar _mCS_1 mCS-autoHide" : "")">
                 <ul class="x-navigation  @(customNavigation ? "x-navigation-custom" : "") @(toggledNavigation ? "x-navigation-minimized" : "")">
                     <li class="xn-logo">
-                        <img src="~/Content/assets/images/@(selectedEnstitu.EnstituKisaAd.ToLower())_top_logo.jpg" />
+                        @* <img src="~/Content/assets/images/@(selectedEnstitu.EnstituKisaAd.ToLower())_top_logo.jpg" />*@
+                        <a href="javascript:void(0);" style="background: url('/Content/assets/images/@(selectedEnstitu.EnstituKisaAd.ToLower())_top_logo.png') center center no-repeat; background-size: 220px 50px;cursor:default;"></a>
+                        <a href="javascript:void(0);" class="x-navigation-control"></a>
                     </li>
 
                     <li class="xn-profile">
@@ -161,15 +288,12 @@
                                     <img src="@lImage" style="width:120px;" />
                                 </div>
                                 <ul>
-                                    <li style="cursor: pointer;" class="active">
-                                        <a href="javasscript:void(0); " style="text-align: center; font-size: 11pt; color: #ffd559; padding: 0px;">
-                                            @{
-
-                                                <span>@selectedEnstitu.EnstituAd</span>
-                                            }
-                                        </a>
+                                    <li class="active" style="cursor:default;">
+                                        @{
+                                            <div class="text-logo2">@selectedEnstitu.EnstituAd</div>
+                                        }
                                         <ul class="xn-drop-left xn-drop-white animated zoomIn">
-                                            <li style="padding: 0px; margin: 0px;">
+                                            <li style="padding: 0px; margin: 0px; cursor: pointer; ">
                                                 @foreach (var itm in enstituler.Where(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd) == false))
                                                 {
                                                     <a href="@(urlInfo.Root + itm.EnstituKisaAd.ToLower() +  "/" + urlInfo.LastPath+urlInfo.Query)" style="text-align:center;padding:0px;margin:0px;">
@@ -184,7 +308,9 @@
 
                             <div class="profile-data">
                                 <div class="profile-data-title">
-                                    E-ENSTİTÜ<br />
+                                    <div class="logo-container">
+                                        <div class="logo">e-enstitü</div>
+                                    </div>
                                     <span style="font-size:7.5pt;">© 2015 - @(DateTime.Now.Year) Bilgi İşlem Daire Başkanlığı</span>
                                 </div>
 
@@ -194,7 +320,7 @@
                                 <a href="javascript:void(0);" onclick="mesGonder('')" class="profile-control-right"><span class="fa fa-envelope"></span></a>
                             </div>
                         </div>
-                    </li> 
+                    </li>
                     <li>
                         <a href="@(urlInfo.FakeRoot)Home/Index" menuurl="@(urlInfo.FakeRoot.ToLower() + "home/index")">
                             <span class="fa fa-desktop"></span>
@@ -215,19 +341,19 @@
                     </li>
                     @MenuGenerator.GetMenuIHtml(Request)
 
-                </ul> 
-            </div> 
+                </ul>
+            </div>
             <div class="page-content" style="height:auto;">
-                 
+
                 <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
-                  
+
                     <li style="height: 50px; display: flex; flex-direction: column; justify-content: center;padding-left:5px;">
-                        <span style="font-size: 11pt; color: #ffd559; line-height: 1;">
-                            <i class="fa fa-home"></i> E-ENSTİTÜ
+                        <span style="line-height: 1;">
+                            <div class="text-logo">e-enstitü</div>
                         </span>
                         @if (UserIdentity.Current.IsAuthenticated && !isEnstituYetkisiVar)
                         {
-                            <div style="color: #B64645; font-size: 7.5pt;">Bu Enstitü İçin Yetkiniz Yok!!!</div>
+                            <div style="color: #B64645; font-size: 7.5pt;">Bu Enstitü İçin Yetkiniz Yok!</div>
 
                         }
                         @if (HttpContext.Current != null && HttpContext.Current.Server != null && UserIdentity.Current.IsAdmin)
@@ -263,12 +389,12 @@
                                     <li>
                                         <a href="javascript:void(0);" onclick="OgrenciSorgula();"><span class="fa fa-search"></span> OBS'de öğrenci sorgula</a>
                                         <script type="text/javascript">
-                                            function OgrenciSorgulaView(tc) {
+                                            function OgrenciSorgulaView(tc,donemId) {
                                                 var view = "";
                                                 $.ajax({
                                                     url: '@Url.Action("ObsOgrenciSorgula", "Ajax")',
                                                     async: false,
-                                                    data: { tc: tc },
+                                                    data: { tc, donemId },
                                                     success: function (result) {
                                                         view = result;
                                                     },
@@ -278,8 +404,8 @@
                                                 });
                                                 return view;
                                             }
-                                            function OgrenciSorgula(tc) {
-                                                var view = OgrenciSorgulaView(tc);
+                                            function OgrenciSorgula(tc, donemId) {
+                                                var view = OgrenciSorgulaView(tc, donemId);
                                                 var btbxxFS = bootbox.dialog({
                                                     message: '<div id="obsOgrenciPanel" style="max-height:700px;overflow-x:scroll;">' + view + '</div>',
                                                     title: "Obs Öğrenci Sorgulama",
@@ -358,8 +484,10 @@
                                         }
                                     });
                                 }
-                            </script> 
-                        </li> 
+                            </script>
+                        </li>
+
+
 
                     }
 
@@ -543,7 +671,7 @@
                                                             <div class="input-group-addon" style="border:1px solid;border-color:lightgray;">
                                                                 <span class="fa fa-user"></span>
                                                             </div>
-                                                            <input type="text" id="UserName" tabindex="1" class="form-control" placeholder="Kullanıcı Adı & EMail & Tc Kimlik No" value="" />
+                                                            <input type="text" id="UserName" tabindex="1" class="form-control" placeholder="Kullanıcı Adı / E-Posta / Tc Kimlik No" value="" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group" style="margin:0px;">
@@ -611,7 +739,14 @@
                                                 </div>*@
                                         </div>
                                         <div class="registration-body">
-                                            <div class="registration-subtitle">Şifrenizi unuttuysanız aşağıdaki mail giriş alanına sisteme kayıt olduğunuz mail adresinizi giriniz ve enter tuşuna basınız. Bu işlemi yaptığınız zaman sistem mail adresinize şifrenizi sıfırlama linki gönderecektir!</div>
+                                            <div class="registration-subtitle">
+                                                <div style="margin-bottom: 15px;">
+                                                    <div style="font-size: 13px; color: #666; line-height: 1.4;">
+                                                        <i class="fa fa-info-circle"></i> 
+                                                        Şifrenizi sıfırlamak için kayıtlı e-posta adresinizi yazıp Enter tuşuna basın. Şifre sıfırlama bağlantısı e-posta adresinize gönderilecektir.
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-horizontal">
                                                 <h4>E-Posta Adresiniz:</h4>
                                                 <div class="form-group" style="padding:0px;margin:0px;">
@@ -966,7 +1101,7 @@
 
     <script src="~/Scripts/jquery.form.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122393038-1"></script>
+    @*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-122393038-1"></script>*@
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }

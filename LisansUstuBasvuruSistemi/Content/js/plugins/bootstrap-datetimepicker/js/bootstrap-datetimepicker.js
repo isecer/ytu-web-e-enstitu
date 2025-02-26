@@ -1261,8 +1261,7 @@
 		getDaysInMonth: function (year, month) {
 			return [31, (DPGlobal.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 		},
-		getDefaultFormat: function (type, field) {
-			debugger
+		getDefaultFormat: function (type, field) { 
 			if (type == "standard") {
 				if (field == 'input')
 					return 'dd.mm.yyyy hh:ii';

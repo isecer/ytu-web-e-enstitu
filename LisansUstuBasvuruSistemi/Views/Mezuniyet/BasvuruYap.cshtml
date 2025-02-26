@@ -1,4 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmMezuniyetBasvuru
@@ -23,6 +24,8 @@
             tezBaslikEnReadOnly = !istezBasliklariAyni && !Model.TezBaslikEn.IsNullOrWhiteSpace();
         }
     }
+
+    var yayinInfos = MezuniyetBus.YayinKontrol(Model.MezuniyetSurecID, Model.KullaniciID, Model.MezuniyetBasvurulariID);
 }
 
 <div class="row">
@@ -156,7 +159,7 @@
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        @(Model.IsTezDiliTr.HasValue?(Model.IsTezDiliTr.Value?"Türkçe":"İngilizce"):"-----") 
+                                                        @(Model.IsTezDiliTr.HasValue?(Model.IsTezDiliTr.Value?"Türkçe":"İngilizce"):"-----")
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -244,6 +247,17 @@
                                 </div>
                                 <div data-step="2" class="content" style="display: none;">
                                     <div class="col-md-12">
+                                        @if (yayinInfos.Any())
+                                        {
+                                            <div class="tasks">
+                                                <div class="task-item task-info" style="margin-bottom: 0px; cursor: auto;">
+                                                    <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
+                                                        @Html.Raw(string.Join("<br/>", yayinInfos))
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        }
                                         <div id="yayinPanel" class="panel panel-default form-horizontal">
                                             <div class="panel-heading padding-0">
                                                 <h3 class="panel-title"><i class="fa fa-pencil"></i> Yayın Bilgisi</h3>
@@ -344,7 +358,7 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="form-group chkOnayD @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi? "" : "hide")">
+                                                <div class="form-group chkOnayD @(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi ? "" : "hide")">
                                                     <label class="col-md-3 col-xs-4 control-label">Onay</label>
                                                     <div class="col-md-9 col-xs-8" style="text-align:center;">
                                                         <div class="btn btn-success">
@@ -421,9 +435,9 @@
         'submitButton': true,
         'submitButtonText': kydet,
         'submitButtonClass': 'btn btn-primary pull-right',
-    }); 
+    });
     $(window).on('resize', function () {
-        var wizardWidth = $('#myWizard').width(); 
+        var wizardWidth = $('#myWizard').width();
 
     });
 

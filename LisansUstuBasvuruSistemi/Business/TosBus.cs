@@ -464,7 +464,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.ToplamBasarisizTezOneriSavunmaHak = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak.GetAyarTi(basvuru.EnstituKod).ToInt();
                 model.IlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
                 model.IkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
-                
+
                 var sonTos = model.ToBasvuruSavunmaList.FirstOrDefault();
 
                 model.DurumHtmlString = (
@@ -681,7 +681,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad.IlkHarfiBuyut() },
                         new MailParameterDto { Key = "DanismanUnvan", Value = tezDanisman.UnvanAdi.IlkHarfiBuyut() },
                         new MailParameterDto { Key = "DanismanAdSoyad", Value = tezDanisman.AdSoyad.IlkHarfiBuyut() },
-                        new MailParameterDto { Key = "TezBaslik", Value = tezBaslik.IlkHarfiBuyut(!tezOneriBasvuruSavunma.IsTezDiliTr) },
+                        new MailParameterDto { Key = "TezBaslik", Value = tezBaslik },
                         new MailParameterDto { Key = "TezOneriTarihi", Value = sinavTarihi.ToFormatDate() },
                         new MailParameterDto { Key = "SeciliTikUyesiUnvan", Value = sablon.Value.UnvanAdi.IlkHarfiBuyut()},
                         new MailParameterDto { Key = "SeciliTikUyesiAdSoyad", Value =  sablon.Value.AdSoyad.IlkHarfiBuyut()},

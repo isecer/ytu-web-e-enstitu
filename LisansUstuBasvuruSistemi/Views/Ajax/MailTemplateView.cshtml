@@ -1,0 +1,29 @@
+﻿@model LisansUstuBasvuruSistemi.Utilities.MailManager.EmailTemplateModel
+@{
+    Layout = null;
+}
+<div style="font-family: Arial, sans-serif; line-height: 1.6;">
+    @Html.Raw(Model.CurrentMessage)
+
+    @if (!string.IsNullOrEmpty(Model.ReplyUrl))
+    {
+        <div style="margin: 20px 0;">
+            <a href="@Model.ReplyUrl" target="_blank" style="color: #2563eb;">Yanıtlamak için tıklayınız</a>
+        </div>
+    }
+
+    <div style="margin: 20px 0; color: #dc2626;">
+        Not: Lütfen bu e-postayı yanıtlamayınız. Yanıtınızı sistem üzerinden iletmeniz gerekmektedir.
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.PreviousMessage))
+    {
+        <div style="margin: 20px 0; border-top: 1px solid #ddd; padding-top: 20px;">
+            <div style="color: #666;">Önceki Yazışma:</div>
+            <div style="color: #666; margin-top: 10px;">
+                @Html.Raw(Model.PreviousMessage)
+            </div>
+        </div>
+    }
+     
+</div>

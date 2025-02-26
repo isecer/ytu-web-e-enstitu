@@ -505,7 +505,7 @@ else
                                                                             <select class="form-control" id="enstituOnay_@item.UniqueID" onchange="if ($(this).val() == '1' || (!$(this).val())) { $('#enstituIptalRow_@item.UniqueID').addClass('hide');}else {$('#enstituIptalRow_@item.UniqueID').removeClass('hide');}">
                                                                                 <option></option>
                                                                                 <option value="@DonemProjesiEnstituOnayDurumEnum.KabulEdildi" @(item.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.KabulEdildi ? "selected" : "")>Kabul Edildi</option>
-                                                                                <option value="@DonemProjesiEnstituOnayDurumEnum.RetEdildi" @(item.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.RetEdildi ? "selected" : "")>Ret Edildi (Öğrenci Tekrar Başvuru Yapamaz)</option>
+                                                                                <option value="@DonemProjesiEnstituOnayDurumEnum.RetEdildi" @(item.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.RetEdildi ? "selected" : "")>Reddedildi (Öğrenci Tekrar Başvuru Yapamaz)</option>
                                                                                 <option value="@DonemProjesiEnstituOnayDurumEnum.IptalEdildi" @(item.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.IptalEdildi ? "selected" : "")>İptal Edildi (Öğrenci Tekrar Başvuru Yapabilir)</option>
                                                                             </select>
                                                                         }
@@ -618,7 +618,7 @@ else
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    <span style="color:maroon;" title="İşlem Tarihi: @item.DanismanOnayTarihi.ToFormatDateAndTime()"><i style="font-size:8pt;" class="fa fa-thumbs-o-down"></i> Ret Edildi</span>
+                                                                                    <span style="color:maroon;" title="İşlem Tarihi: @item.DanismanOnayTarihi.ToFormatDateAndTime()"><i style="font-size:8pt;" class="fa fa-thumbs-o-down"></i> Reddedildi</span>
                                                                                 }
                                                                             }
                                                                         </td>

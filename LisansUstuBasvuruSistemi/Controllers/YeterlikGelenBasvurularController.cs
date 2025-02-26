@@ -283,7 +283,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     durumAdi += " Kabul Edildi";
                     break;
                 case ToBasvuruSavunmaDurumuEnum.RetEdildi:
-                    durumAdi += " Ret Edildi";
+                    durumAdi += " Reddedildi";
                     break;
                 case ToBasvuruSavunmaDurumuEnum.Duzeltme:
                     durumAdi += " Düzeltme Talep Edildi";

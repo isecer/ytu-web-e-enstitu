@@ -31,6 +31,7 @@
                                 <th class="sirala" field="TarihKriterAdi">Tarih Kriteri</th>
                                 <th class="sirala" field="OgretimYili">Öğretim Yılı</th>
                                 <th class="sirala" field="OgretimYiliB">Öğretim Yılı B</th>
+                                <th width="60" class="sirala" field="IsAktif">Durum</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,12 +85,13 @@
                                         <td>@item.TarihKriterAdi</td>
                                         <td>@item.BaslangicYil / @item.BitisYil @item.DonemAdi</td>
                                         <td>@(item.TarihKriterID == TarihKriterSecimEnum.SecilenTarihAraligi ? (item.BaslangicYilB + " / " + item.BitisYilB + " " + item.DonemAdiB):"")</td>
+                                        <td><span class="badge badge-@(item.IsAktif ? "success" : "danger")">@(item.IsAktif ? "Aktif" : "Pasif")</span></td>
 
 
 
                                     </tr>
                                     <tr class="cls-ana-@item.MezuniyetYonetmelikID delrw_@item.MezuniyetYonetmelikID" style="display:none;">
-                                        <td id="cls-ana-@item.MezuniyetYonetmelikID" colspan="4"></td>
+                                        <td id="cls-ana-@item.MezuniyetYonetmelikID" colspan="5"></td>
                                     </tr>
 
                                 }
@@ -97,7 +99,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="4" style="text-align: center">
+                                    <td colspan="5" style="text-align: center">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

@@ -84,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     bbModel.KullaniciTipYetki = false;
-                    bbModel.KullaniciTipYetkiYokMsj = "Hesap bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez Öneri Savunma başvurusu yapamazsınız. Sağ üst köşeden hesap bilgilerini düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
+                    bbModel.KullaniciTipYetkiYokMsj = "Hesap bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez Öneri Savunma başvurusu yapamazsınız. Sağ üst köşede porofilinizde bulunan hesap bilgilerini düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
                 }
                 if (bbModel.KullaniciTipYetki)
                 {
@@ -190,6 +190,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (!tosUniqueId.HasValue && toBasvuru.ToBasvuruSavunmas.Any(a => !a.ToBasvuruSavunmaDurumID.HasValue))
             {
                 mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Öneri Savunma başvurusu yapamazsınız. ");
+            }
+            else if (!tosUniqueId.HasValue && !kul.YtuOgrencisi)
+            {
+                mMessage.Messages.Add("Başvuru için bu Hesap Bilginizi düzeltip YTU öğrencisi olduğunuzu belirtiniz.");
             }
             else if (!tosUniqueId.HasValue && !kul.DanismanID.HasValue)
             {

@@ -6,12 +6,31 @@
 (function ($) {
     "use strict";
 
-    $.extend($.fn.select2.defaults, {
-        formatNoMatches: function () { return "Sonuç bulunamadı"; },
-        formatInputTooShort: function (input, min) { var n = min - input.length; return "En az " + n + " karakter daha girmelisiniz"; },
-        formatInputTooLong: function (input, max) { var n = input.length - max; return n + " karakter azaltmalısınız"; },
-        formatSelectionTooBig: function (limit) { return "Sadece " + limit + " seçim yapabilirsiniz"; },
-        formatLoadMore: function (pageNumber) { return "Daha fazla..."; },
-        formatSearching: function () { return "Aranıyor..."; }
-    });
+    // Select2'nin yüklenip yüklenmediğini kontrol edelim
+    if ($.fn.select2) {
+        $.fn.select2.defaults.language = {
+            noResults: function () {
+                return "Sonuç bulunamadı";
+            },
+            inputTooShort: function (args) {
+                var n = args.minimum - args.input.length;
+                return "En az " + n + " karakter daha girmelisiniz";
+            },
+            inputTooLong: function (args) {
+                var n = args.input.length - args.maximum;
+                return n + " karakter azaltmalısınız";
+            },
+            maximumSelected: function (args) {
+                return "Sadece " + args.maximum + " seçim yapabilirsiniz";
+            },
+            loadingMore: function () {
+                return "Daha fazla...";
+            },
+            searching: function () {
+                return "Aranıyor...";
+            }
+        };
+    } else {
+        console.log('Select2 kütüphanesi yüklenmemiş!');
+    }
 })(jQuery);

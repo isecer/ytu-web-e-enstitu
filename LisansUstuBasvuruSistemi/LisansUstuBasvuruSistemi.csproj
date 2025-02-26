@@ -136,6 +136,7 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
       <Private>True</Private>
@@ -479,6 +480,8 @@
     <Compile Include="Utilities\MenuAndRoles\MenuGenerator.cs" />
     <Compile Include="Utilities\SystemSetting\GlobalSistemSetting.cs" />
     <Compile Include="Utilities\SystemSetting\DonemProjesiAyar.cs" />
+    <Compile Include="WebServiceData\ObsRestData\Models\ObsDonemServiceDto.cs" />
+    <Compile Include="WebServiceData\ObsRestData\ObsRestApiService.cs" />
     <Compile Include="WebServiceData\ObsService\ObsData.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDtos\ObsStudentDto.cs" />
     <Compile Include="WebServiceData\ObsService\ObsServiceExtension.cs" />
@@ -835,7 +838,6 @@
     <Compile Include="WebServiceData\PersisService\PersisServiceData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\assets\ajax_fullcalendar.php" />
     <Content Include="Content\assets\filetree\jqueryFileTree.asp" />
     <Content Include="Content\assets\filetree\jqueryFileTree.aspx" />
     <Content Include="Content\assets\filetree\jqueryFileTree.php" />
@@ -847,8 +849,8 @@
     <Content Include="Content\assets\fileupload\UploadHandler.php" />
     <Content Include="Content\assets\images\blog\post_1.jpg" />
     <Content Include="Content\assets\images\blog\post_2.jpg" />
-    <Content Include="Content\assets\images\FbeLogoTop.jpeg" />
     <Content Include="Content\assets\images\fbe_top_logo.jpg" />
+    <Content Include="Content\assets\images\fbe_top_logo.png" />
     <Content Include="Content\assets\images\gallery\girls-1.jpg" />
     <Content Include="Content\assets\images\gallery\girls-2.jpg" />
     <Content Include="Content\assets\images\gallery\girls-3.jpg" />
@@ -873,7 +875,9 @@
     <Content Include="Content\assets\images\org\logo_en.gif" />
     <Content Include="Content\assets\images\org\logo_en.png" />
     <Content Include="Content\assets\images\sbe_top_logo.jpg" />
+    <Content Include="Content\assets\images\sbe_top_logo.png" />
     <Content Include="Content\assets\images\tet_top_logo.jpg" />
+    <Content Include="Content\assets\images\tet_top_logo.png" />
     <Content Include="Content\assets\images\users\avatar.jpg" />
     <Content Include="Content\assets\images\EnstituLogoTop-fbe.png" />
     <Content Include="Content\assets\images\users\no-image.jpg" />
@@ -889,6 +893,7 @@
     <Content Include="Content\assets\images\ytu_logo_en.png" />
     <Content Include="Content\assets\images\ytu_logo_tr.gif" />
     <Content Include="Content\assets\images\ytu_logo_tr.png" />
+    <Content Include="Content\assets\images\Yıldız_Technical_University_Logo.png" />
     <Content Include="Content\assets\plugins\bootbox\bootbox.min.js" />
     <Content Include="Content\assets\plugins\bootstrap-modal\bs3.html" />
     <Content Include="Content\assets\plugins\bootstrap-modal\css\bootstrap-modal-bs3patch.css" />
@@ -1024,7 +1029,6 @@
     <Content Include="Content\assets\plugins\sweetalert\sweetalert2.all.min.js" />
     <Content Include="Content\assets\plugins\sweetalert\sweetalert2.min.css" />
     <Content Include="Content\assets\plugins\ui-nestable.js" />
-    <Content Include="Content\assets\upload.php" />
     <Content Include="Content\assets\uploads\Images\Animal 48.jpg" />
     <Content Include="Content\assets\uploads\Images\Lotus Sport Exige Gt3 01.jpg" />
     <Content Include="Content\assets\uploads\Images\peugeot_908rc-1600x1200.jpg" />
@@ -4491,6 +4495,7 @@
     <Content Include="Content\fontawesome-free-6.4.2-web\webfonts\fa-v4compatibility.ttf" />
     <Content Include="Content\fontawesome-free-6.4.2-web\webfonts\fa-v4compatibility.woff2" />
     <Content Include="LisansUstuBasvuruSistemi.ruleset" />
+    <Content Include="libman.json" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.easyWizard.js" />
@@ -4836,6 +4841,7 @@
     <Content Include="Views\Shared\_BasvuruBilgiView.cshtml" />
     <Content Include="Views\YaziSablonlari\Index.cshtml" />
     <Content Include="Views\YaziSablonlari\Kayit.cshtml" />
+    <Content Include="Views\Ajax\MailTemplateView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4959,6 +4965,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezIzlemeJuriOneri\RprTijOneriFormu_FR0306.resx">
       <DependentUpon>RprTijOneriFormu_FR0306.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormuDetay_FR0307.resx">
       <DependentUpon>RprTiDegerlendirmeFormuDetay_FR0307.cs</DependentUpon>
@@ -5047,7 +5054,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57186</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57354/</IISUrl>
+          <IISUrl>http://localhost:57324/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -848,7 +848,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "EYKTarihi", Value = tdoBasvuruDanisman.EYKDaOnaylandiOnayTarihi.ToFormatDate() });
                         }
 
-                        var retAciklama = tdoBasvuruDanisman.EYKDaOnaylanmadiDurumAciklamasi;
+                        var retAciklama = tdoBasvuruDanisman.EYKYaGonderimDurumAciklamasi;
 
                         if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
                         {

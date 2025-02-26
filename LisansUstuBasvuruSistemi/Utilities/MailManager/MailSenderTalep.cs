@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             var mmMessage = new MmMessage();
             try
             {
-               using (var entities = new LubsDbEntities())
+                using (var entities = new LubsDbEntities())
                 {
 
                     var taleps = (from s in entities.TalepGelenTaleplers
@@ -113,11 +113,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                         contentBilgi.GrupBasligi = "'" + talep.TalepTipAdi + "' talebiniz " + talep.TalepDurumAdi;
                         contentBilgi.Detaylar = htmlBigliRow;
-
-                        var mmmC = new MailMainContentDto();
-                        var enstituAdi = entities.Enstitulers.First(p => p.EnstituKod == enstituKod).EnstituAd;
-                        mmmC.EnstituAdi = enstituAdi;
-                        mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
+                        var hcb = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", contentBilgi);
                         var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKod);
                         var erisimAdresi = mailBilgi.SistemErisimAdresi;
                         var wurlAddr = erisimAdresi.Split('/').ToList();
@@ -125,10 +121,17 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             erisimAdresi = wurlAddr[0] + "//" + wurlAddr.Skip(2).Take(1).First();
                         else
                             erisimAdresi = "http://" + wurlAddr.First();
-                        mmmC.LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-                        var hcb = ViewRenderHelper.RenderPartialView("Ajax", "GetMailTableContent", contentBilgi);
-                        mmmC.Content = hcb;
-                        mmmC.WebAdresi = mailBilgi.WebAdresi;
+                        var enstituAdi = entities.Enstitulers.First(p => p.EnstituKod == enstituKod).EnstituAd;
+                        var mmmC = new MailMainContentDto
+                        {
+                            EnstituAdi = enstituAdi,
+                            UniversiteAdi = "Yıldız Teknik Üniversitesi",
+                            LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png",
+                            Content = hcb,
+                            WebAdresi = mailBilgi.WebAdresi,
+                            SistemErisimAdresi = mailBilgi.SistemErisimAdresi
+                        };
+
                         string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
                         var emailSend = MailManager.SendMail(mailBilgi.EnstituKod, "Talep İşleminiz Hk.", htmlMail, talep.EMail, null);
 

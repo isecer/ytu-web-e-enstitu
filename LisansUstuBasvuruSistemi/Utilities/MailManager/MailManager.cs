@@ -20,12 +20,19 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 {
     #region  MailDtos 
+    public class EmailTemplateModel
+    {
+        public string CurrentMessage { get; set; }
+        public string PreviousMessage { get; set; }
+        public string ReplyUrl { get; set; }
+    }
     public class MailMainContentDto
     {
         public string LogoPath { get; set; }
         public string UniversiteAdi { get; set; }
         public string EnstituAdi { get; set; }
         public string WebAdresi { get; set; }
+        public string SistemErisimAdresi { get; set; }
         public string Content { get; set; }
 
     }
@@ -112,7 +119,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 EnstituAdi = mailItem.EnstituAdi,
                 LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png",
                 Content = model.HtmlContent.Replace("_removeRw_", ""),
-                WebAdresi = mailItem.WebAdresi
+                WebAdresi = mailItem.WebAdresi,
+                SistemErisimAdresi = mailItem.SistemErisimAdresi
             };
             model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
 

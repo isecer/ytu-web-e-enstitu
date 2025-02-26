@@ -14,4 +14,5 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int DonemNo { get; set; }
 
     }
+     
 }

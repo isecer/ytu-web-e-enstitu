@@ -120,12 +120,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IsOnaylandiOrDuzeltme = td != null ? td.IsOnaylandiOrDuzeltme : null,
                         TezDosyasiIlkKezKontrolBekliyor = td != null && !td.IsOnaylandiOrDuzeltme.HasValue && s.MezuniyetBasvurulariTezDosyalaris.Count == 1,
                         MezuniyetBasvurulariTezDosyasi = td,
-                        UzatmaSuresiGun = mOt.SinavUzatmaSinavAlmaSuresiMaxGun,
-                        MezuniyetSuresiGun = mOt.SinavUzatmaSinavAlmaSuresiMaxGun,
+                        UzatmaSuresiGun = mOt.SinavUzatmaSinavAlmaSuresiMaxAy,
+                        MezuniyetSuresiGun = mOt.SinavUzatmaSinavAlmaSuresiMaxAy,
                         EYKTarihi = s.EYKTarihi,
+                        EYKSayisi = s.EYKSayisi,
                         MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Select(sy => sy.MezuniyetYayinTurID).ToList(),
                         FormNo = jOf != null ? jOf.UniqueID : "",
                         MezuniyetJuriOneriFormu = jOf,
+                        CiltliTezTeslimUzatmaTalebi = s.CiltliTezTeslimUzatmaTalebi,
+                        CiltliTezTeslimUzatmaTalebiDanismanOnay = s.CiltliTezTeslimUzatmaTalebiDanismanOnay,
+                        CiltliTezTeslimUzatmaTalebiEykDaOnay = s.CiltliTezTeslimUzatmaTalebiEykDaOnay,
+                        CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi = s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi,
                         TezTeslimSonTarih = s.TezTeslimSonTarih,
                         IsDanismanOnay = s.IsDanismanOnay,
                         DanismanOnayTarihi = s.DanismanOnayTarihi,
@@ -191,6 +196,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             }
+            if (model.CiltliTezTeslimUzatmaTalepDurumuID.HasValue)
+            {
+                q = q.Where(p => p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && p.SRDurumID.HasValue);
+                if (model.CiltliTezTeslimUzatmaTalepDurumuID == MezuniyetTezTeslimUzatmaDurumuEnum.TalepOlusturulmadi) q = q.Where(p => p.CiltliTezTeslimUzatmaTalebi != true && !p.IsMezunOldu.HasValue);
+                else if (model.CiltliTezTeslimUzatmaTalepDurumuID == MezuniyetTezTeslimUzatmaDurumuEnum.TalepOlusturuldu) q = q.Where(p => p.CiltliTezTeslimUzatmaTalebi == true && !p.CiltliTezTeslimUzatmaTalebiDanismanOnay.HasValue);
+                else if (model.CiltliTezTeslimUzatmaTalepDurumuID == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi) q = q.Where(p => p.CiltliTezTeslimUzatmaTalebi == true && p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue && !p.IsMezunOldu.HasValue);
+                else if (model.CiltliTezTeslimUzatmaTalepDurumuID == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnaylamadi) q = q.Where(p => p.CiltliTezTeslimUzatmaTalebi == true && p.CiltliTezTeslimUzatmaTalebiDanismanOnay == false);
+                else if (model.CiltliTezTeslimUzatmaTalepDurumuID == MezuniyetTezTeslimUzatmaDurumuEnum.EykDaOnaylandi) q = q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true);
+                else if (model.CiltliTezTeslimUzatmaTalepDurumuID == MezuniyetTezTeslimUzatmaDurumuEnum.EykDaOnaylanmadi) q = q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && p.CiltliTezTeslimUzatmaTalebiEykDaOnay == false);
+
+
+            }
 
             if (model.SRDurumID.HasValue)
             {
@@ -248,6 +265,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.AdSoyad = model.AdSoyad.Trim();
                 q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo.Contains(model.AdSoyad) || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad) || p.ProgramAdi.Contains(model.AdSoyad) || p.AnabilimdaliAdi.Contains(model.AdSoyad));
             }
+
+            if (!model.EykSayisi.IsNullOrWhiteSpace())
+            {
+                model.EykSayisi = model.EykSayisi.Trim();
+                q = q.Where(p => p.EYKSayisi == model.EykSayisi);
+            }
+            if (!model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi.IsNullOrWhiteSpace())
+            {
+                model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi = model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi.Trim();
+                q = q.Where(p => p.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi == model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi);
+            }
             if (model.UyrukKod.HasValue) q = q.Where(p => p.UyrukKod == model.UyrukKod);
             var isFiltered = !Equals(q, q2);
 
@@ -255,10 +283,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
             else
             {
-                q = model.JuriOneriFormuDurumuID == 2 ? q.OrderBy(o => o.MezuniyetJuriOneriFormu.EYKYaGonderildiIslemTarihi) : q.OrderByDescending(o => o.BasvuruTarihi);
+                q = model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.FormOlusturuldu ? q.OrderBy(o => o.MezuniyetJuriOneriFormu.EYKYaGonderildiIslemTarihi) : q.OrderByDescending(o => o.BasvuruTarihi);
             }
 
             if (model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaHazirlandi) model.SelectedMezuniyetBasvurulariIds = q.Select(s => s.MezuniyetBasvurulariID).ToList();
+            else if (model.CiltliTezTeslimUzatmaTalepDurumuID == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi) model.SelectedMezuniyetBasvurulariIds = q.Select(s => s.MezuniyetBasvurulariID).ToList();
             var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             model.Data = qdata;
             #region export
@@ -329,6 +358,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
             ViewBag.JuriOneriFormuDurumuID = new SelectList(MezuniyetBus.GetCmbJuriOneriFormuDurumu(true), "Value", "Caption", model.JuriOneriFormuDurumuID);
+            ViewBag.CiltliTezTeslimUzatmaTalepDurumuID = new SelectList(MezuniyetBus.GetCmbCiltliTezTeslimUzatmaTalepDurumu(true), "Value", "Caption", model.CiltliTezTeslimUzatmaTalepDurumuID);
             ViewBag.KayitDonemi = new SelectList(MezuniyetBus.GetCmbMezuniyetKayitDonemleri(enstituKod, model.MezuniyetSurecID, true), "Value", "Caption", model.KayitDonemi);
             var srDurms = SrTalepleriBus.GetCmbSrDurumListe(true);
             srDurms.Add(new CmbIntDto() { Value = -1, Caption = "Tüm Rezervasyonlar" });
@@ -597,7 +627,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, mBasvur.ToJson());
                     mmMessage.IsSuccess = true;
-                    mmMessage.Messages.Add(isDanismanOnay.HasValue ? (isDanismanOnay.Value ? "Başvuru Onaylandı." : "Başvuru Ret Edildi.") : "Onaylama İşlemi Geril Alındı.");
+                    mmMessage.Messages.Add(isDanismanOnay.HasValue ? (isDanismanOnay.Value ? "Başvuru Onaylandı." : "Başvuru Reddedildi.") : "Onaylama İşlemi Geril Alındı.");
                     if (sendMail)
                     {
                         MezuniyetBus.SendMailBasvuruDanismanOnay(mBasvur.MezuniyetBasvurulariID);
@@ -654,7 +684,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     var mezuniyetSureciOgrenimTip = srTalep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == srTalep.MezuniyetBasvurulari.OgrenimTipKod);
-                    var uzatmaSonrasiYeniSinavTalebiSonTarih = srTalep.UzatmaSonrasiYeniSinavTalebiSonTarih ?? srTalep.Tarih.AddDays(mezuniyetSureciOgrenimTip.SinavUzatmaSinavAlmaSuresiMaxGun);
+                    var uzatmaSonrasiYeniSinavTalebiSonTarih = srTalep.UzatmaSonrasiYeniSinavTalebiSonTarih ?? srTalep.Tarih.AddMonths(mezuniyetSureciOgrenimTip.SinavUzatmaSinavAlmaSuresiMaxAy);
                     if (onayTarihi > uzatmaSonrasiYeniSinavTalebiSonTarih)
                     {
                         mmMessage.Messages.Add("Mezuniyet sınavı sonucunda uzatma işlemi sonrası yeni sınav alma işemi için son tarihi olan '" + uzatmaSonrasiYeniSinavTalebiSonTarih.ToFormatDate() + "' tarihini aşıldığı için tez kontrol taahhüt onay işlemi yapamazsınız.");
@@ -677,7 +707,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("SRTalebi", LogCrudType.Update, srTalep.ToJson());
                     mmMessage.IsSuccess = true;
-                    mmMessage.Messages.Add(isDanismanUzatmaSonrasiOnay.HasValue ? (isDanismanUzatmaSonrasiOnay.Value ? "Başvuru Onaylandı." : "Başvuru Ret Edildi.") : "Onaylama İşlemi Geril Alındı.");
+                    mmMessage.Messages.Add(isDanismanUzatmaSonrasiOnay.HasValue ? (isDanismanUzatmaSonrasiOnay.Value ? "Başvuru Onaylandı." : "Başvuru Reddedildi.") : "Onaylama İşlemi Geril Alındı.");
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
@@ -769,13 +799,31 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (mezuniyetSinavDurumId == MezuniyetSinavDurumEnum.Basarili)
                 {
-                    var mbOKriters = srTalep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == srTalep.MezuniyetBasvurulari.OgrenimTipKod);
+                    var ogrenimTipi = srTalep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == srTalep.MezuniyetBasvurulari.OgrenimTipKod);
                     var ttEkSureYetki = RoleNames.MezuniyetGelenBasvurularTtEkSure.InRoleCurrent();
 
-                    if (tezTeslimSonTarih.HasValue && !ttEkSureYetki && tezTeslimSonTarih.Value > srTalep.Tarih.AddDays(mbOKriters.TezTeslimSuresiGun))
+                    if (!ttEkSureYetki)
                     {
-                        mmMessage.Messages.Add("Tez teslim son tarih kriteri " + srTalep.Tarih.AddDays(mbOKriters.TezTeslimSuresiGun).ToFormatDate() + " tarihinden daha büyük olamaz!");
+                        if (tezTeslimSonTarih.HasValue && tezTeslimSonTarih.Value > srTalep.Tarih.AddMonths(ogrenimTipi.TezTeslimSuresiAy))
+                        {
+                            mmMessage.Messages.Add("Tez teslim son tarih kriteri " + srTalep.Tarih.AddMonths(ogrenimTipi.TezTeslimSuresiAy).ToFormatDate() + " tarihinden daha büyük olamaz!");
+                        }
                     }
+
+                    var mezuniyet = srTalep.MezuniyetBasvurulari;
+
+                    if (mezuniyet.CiltliTezTeslimUzatmaTalebi == true && mezuniyet.CiltliTezTeslimUzatmaTalebiDanismanOnay != false && mezuniyet.CiltliTezTeslimUzatmaTalebiEykDaOnay != false)
+                    {
+                        var maxTezTeslimSonTarih = srTalep.Tarih.AddMonths(ogrenimTipi.TezTeslimSuresiAy + 1);
+
+                        if (tezTeslimSonTarih < maxTezTeslimSonTarih)
+                        {
+                            mmMessage.Messages.Add("Öğrencinin ciltli tez teslimi için ek süre talebi bulunduğundan, tez teslim son tarihi " + maxTezTeslimSonTarih.Date.ToFormatDate() + " tarihinden önce olamaz.");
+                        }
+
+                    }
+
+
                 }
                 else tezTeslimSonTarih = null;
             }
@@ -977,12 +1025,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
 
-                    //Düzenlenecek 
-                    //var TezTeslimSonTarihi = SonAlinanSr.Tarih.AddDays(talep.MezuniyetSureci.TezTeslimSuresiGun);
-                    //if (Tarih > TezTeslimSonTarihi)
-                    //{
-                    //    mmMessage.Messages.Add("Mezuniyeti onaylanacak öğrencinin mezuniyet tarihi tez teslim tarihinden büyük olamaz! Tez teslim son tarih:" + TezTeslimSonTarihi.ToFormatDate());
-                    //}
                     if (ogrenimTipKrt.TekKaynakOrani.HasValue)
                     {
                         if (!sonTekKaynakOrani.HasValue)
@@ -1185,7 +1227,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var uzatmaOncesiSrTalebi = mb.SRTalepleris.Where(p => p.MezuniyetSinavDurumID != MezuniyetSinavDurumEnum.Uzatma && p.SRDurumID == SrTalepDurumEnum.Onaylandı).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
                 if (uzatmaOncesiSrTalebi != null && (srTalep.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma || srTalep.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && srTalep.SRDurumID == SrTalepDurumEnum.Onaylandı))
                 {
-                    var uzatmaOncesiSrAlabilmeTarihi = uzatmaOncesiSrTalebi.Tarih.AddDays(otBilgiTarihBilgi.SinavUzatmaSinavAlmaSuresiMaxGun);
+                    var uzatmaOncesiSrAlabilmeTarihi = uzatmaOncesiSrTalebi.Tarih.AddMonths(otBilgiTarihBilgi.SinavUzatmaSinavAlmaSuresiMaxAy);
                     if (sinavTarihi.Value.Date > uzatmaOncesiSrAlabilmeTarihi)
                     {
                         mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası salon rezervasyonu işemi son tarihi olan '" + uzatmaOncesiSrAlabilmeTarihi.ToFormatDate() + "' tarihini aşamazsınız.");
@@ -1319,17 +1361,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
             }
-            else if (!tarih.HasValue)
-            {
-                mmMessage.Messages.Add("Tez teslim son tarihi giriniz.");
-            }
+
             if (mmMessage.Messages.Count == 0)
             {
-                mb.TezTeslimSonTarih = tarih.Value;
+                mb.TezTeslimSonTarih = tarih;
 
                 _entities.SaveChanges();
                 LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, mmMessage.Title, mb.ToJson());
-                mmMessage.Messages.Add("Tez Teslim Son Tarih Kriteri Güncellendi");
+                mmMessage.Messages.Add(!tarih.HasValue
+                    ? "Tez teslim son tarihi kaldırıldı. (Sistem otomatik hesaplayacak)"
+                    : "Tez Teslim son Tarih Kriteri Güncellendi");
                 mmMessage.IsSuccess = true;
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
@@ -2163,9 +2204,210 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
 
+        public ActionResult CiltliTezTeslimEkSureTalepPost(int mezuniyetBasvurulariId, bool? ciltliTezTeslimUzatmaTalebi)
+        {
+            var mMessage = new MmMessage
+            {
+                MessageType = MsgTypeEnum.Success,
+                Title = "Ciltli Tez Teslimi Ek Süre Talep İşlemi"
+            };
+            var basvuru = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+            var sinav = basvuru.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
 
+            if (!RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() && basvuru.KullaniciID != UserIdentity.Current.Id)
+            {
+                mMessage.Messages.Add("Ek süre talebi için yetkiniz bulunmamaktadır.");
+            }
+            else if (basvuru.CiltliTezTeslimUzatmaTalebiDanismanOnay.HasValue)
+            {
+                mMessage.Messages.Add("Ciltli tez teslimi için ek süre talebi danışman tarafından onaylandığı için bu işlemde güncelleme yapılamaz.");
+            }
+            else if (basvuru.IsMezunOldu.HasValue)
+            {
+                mMessage.Messages.Add("Mezuniyet işlemi tamamlanmış başvurular için ciltli tez teslimi ek süre talebi yapılamaz.");
+            }
+            else if (sinav == null)
+            {
+                mMessage.Messages.Add("Sınav süreci başarılı bir şekilde tamamlanmadan ciltli tez teslimi için ek süre talebi yapılamaz.");
+            }
+            else if (ciltliTezTeslimUzatmaTalebi == true && basvuru.CiltliTezTeslimUzatmaTalebi != true)
+            {
+                var ogrenimTipi = basvuru.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(f => f.OgrenimTipKod == basvuru.OgrenimTipKod);
+                var maxTezTeslimSonTarih = sinav.Tarih.AddMonths(ogrenimTipi.TezTeslimSuresiAy + 1);
+                if (basvuru.TezTeslimSonTarih.HasValue)
+                {
+                    if (basvuru.TezTeslimSonTarih.Value > maxTezTeslimSonTarih)
+                    {
+                        mMessage.Messages.Add($"Enstitü, tez teslim son tarihini talep edilebilecek maksimum süreden daha ileri bir tarih olan {basvuru.TezTeslimSonTarih.ToFormatDate()} olarak belirlemiştir. Bu nedenle, ciltli tez teslimi için ek süre talep edilemez.");
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
 
+                var sendMail = ciltliTezTeslimUzatmaTalebi != basvuru.CiltliTezTeslimUzatmaTalebi && ciltliTezTeslimUzatmaTalebi == true;
+                basvuru.CiltliTezTeslimUzatmaTalebi = ciltliTezTeslimUzatmaTalebi == true ? true : (bool?)null;
+                basvuru.CiltliTezTeslimUzatmaTalebiTarih = DateTime.Now;
+                basvuru.IslemTarihi = DateTime.Now;
+                basvuru.IslemYapanID = UserIdentity.Current.Id;
+                basvuru.IslemYapanIP = UserIdentity.Ip;
+                _entities.SaveChanges();
+                mMessage.IsSuccess = true;
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, basvuru.ToJson());
+                if (sendMail)
+                {
+                    MezuniyetBus.SendMailCiltliTezTeslimEkSureTalebiYapildi(mezuniyetBasvurulariId);
+                }
+            }
 
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mMessage.ToJsonResult();
+        }
+
+        public ActionResult CiltliTezTeslimEkSureDanismanOnayPost(int mezuniyetBasvurulariId, bool? isOnaylandi, string aciklama)
+        {
+            var mMessage = new MmMessage
+            {
+                MessageType = MsgTypeEnum.Success,
+                Title = "Ciltli Tez Teslimi Ek Süre Talep Onay İşlemi"
+            };
+            var basvuru = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+
+            if (!RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() && basvuru.TezDanismanID != UserIdentity.Current.Id)
+            {
+                mMessage.Messages.Add("Ek süre talep onayı için yetkiniz bulunmamaktadır.");
+            }
+            else if (basvuru.CiltliTezTeslimUzatmaTalebi != true)
+            {
+                mMessage.Messages.Add("Öğrenci tarafından yapılmış bir ciltli tez teslimi ek süre talebi bulunmamaktadır.");
+            }
+            else if (basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue)
+            {
+                mMessage.Messages.Add("Ciltli tez teslimi ek süre talebi, Enstitü tarafından onaylandığı için güncelleme yapılamaz.");
+            }
+            else if (isOnaylandi == false && aciklama.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("Talebi onaylamama sebebini belirtiniz.");
+            }
+            if (!mMessage.Messages.Any())
+            {
+
+                var sendMail = isOnaylandi.HasValue && isOnaylandi != basvuru.CiltliTezTeslimUzatmaTalebiDanismanOnay;
+                basvuru.CiltliTezTeslimUzatmaTalebiDanismanOnay = isOnaylandi;
+                basvuru.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih = DateTime.Now;
+                basvuru.CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama = aciklama;
+                basvuru.IslemTarihi = DateTime.Now;
+                basvuru.IslemYapanID = UserIdentity.Current.Id;
+                basvuru.IslemYapanIP = UserIdentity.Ip;
+                _entities.SaveChanges();
+                mMessage.IsSuccess = true;
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, basvuru.ToJson());
+                if (sendMail)
+                {
+                    MezuniyetBus.SendMailCiltliTezTeslimEkSureTalebiDanismanOnay(mezuniyetBasvurulariId);
+                }
+            }
+
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mMessage.ToJsonResult();
+        }
+
+        public ActionResult CiltliTezTeslimEkSureEykOnayPost(int mezuniyetBasvurulariId, bool? isOnaylandi, DateTime? eykTarihi, string eykSayisi, string aciklama)
+        {
+            var mMessage = new MmMessage
+            {
+                MessageType = MsgTypeEnum.Success,
+                Title = "Ciltli Tez Teslimi Ek Süre EYK Onay İşlemi"
+            };
+            var basvuru = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+
+            if (!RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent())
+            {
+                mMessage.Messages.Add("Ek süre talep onayı için yetkiniz bulunmamaktadır.");
+            }
+            else if (basvuru.CiltliTezTeslimUzatmaTalebiDanismanOnay != true)
+            {
+                mMessage.Messages.Add("Danışman tarafından onaylanmamış ciltli tez teslimi ek süre talebi için EYK onay işlemi yapılamaz.");
+            }
+            else if (isOnaylandi == false && aciklama.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("Talebi onaylamama sebebini belirtiniz.");
+            }
+
+            if (isOnaylandi == true)
+            {
+                if (!eykTarihi.HasValue)
+                {
+                    mMessage.Messages.Add("EYK tarihini giriniz.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = eykSayisi.IsNullOrWhiteSpace() ? MsgTypeEnum.Error : MsgTypeEnum.Success, PropertyName = "CiltliTezTeslimUzatmaEykDaOnayEykTarihi_" + mezuniyetBasvurulariId });
+                if (eykSayisi.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("EYK Sayısı Giriniz.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = eykSayisi.IsNullOrWhiteSpace() ? MsgTypeEnum.Error : MsgTypeEnum.Success, PropertyName = "CiltliTezTeslimUzatmaEykDaOnayEykSayisi_" + mezuniyetBasvurulariId });
+            }
+            if (!mMessage.Messages.Any())
+            {
+
+                var sendMail = isOnaylandi.HasValue && isOnaylandi != basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnay;
+                basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnay = isOnaylandi;
+                basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayTarih = DateTime.Now;
+                basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama = aciklama;
+                if (isOnaylandi == true)
+                {
+                    basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi = eykTarihi.Value.Date;
+                    basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi = eykSayisi;
+                }
+
+                var ogrenimTipi = basvuru.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(f => f.OgrenimTipKod == basvuru.OgrenimTipKod);
+                var sinav = basvuru.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
+                var maxTezTeslimSonTarih = sinav.Tarih.AddMonths(ogrenimTipi.TezTeslimSuresiAy + 1);
+                if (isOnaylandi == true && basvuru.TezTeslimSonTarih.HasValue && basvuru.TezTeslimSonTarih.Value < maxTezTeslimSonTarih)
+                {
+                    basvuru.TezTeslimSonTarih = null;
+                }
+                basvuru.IslemTarihi = DateTime.Now;
+                basvuru.IslemYapanID = UserIdentity.Current.Id;
+                basvuru.IslemYapanIP = UserIdentity.Ip;
+                _entities.SaveChanges();
+                mMessage.IsSuccess = true;
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, basvuru.ToJson());
+                if (sendMail)
+                {
+                    MezuniyetBus.SendMailCiltliTezTeslimEkSureTalebiEYKOnay(mezuniyetBasvurulariId);
+                }
+            }
+
+            mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return mMessage.ToJsonResult();
+        }
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay)]
+        [HttpPost]
+        public ActionResult EYKDaOnayEkSure(List<int> mezuniyetBasvurulariIds, DateTime? eykTarihi, string eykSayisi)
+        {
+            mezuniyetBasvurulariIds = mezuniyetBasvurulariIds ?? new List<int>();
+            var eykDaOnaylanacakBasvurular = _entities.MezuniyetBasvurularis.Where(p =>
+                mezuniyetBasvurulariIds.Contains(p.MezuniyetBasvurulariID) && p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue
+            ).ToList();
+            foreach (var item in eykDaOnaylanacakBasvurular)
+            {
+                item.CiltliTezTeslimUzatmaTalebiEykDaOnay = true;
+                item.CiltliTezTeslimUzatmaTalebiEykDaOnayTarih = DateTime.Now;
+                item.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi = eykTarihi;
+                item.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi = eykSayisi;
+                item.IslemTarihi = DateTime.Now;
+                item.IslemYapanID = UserIdentity.Current.Id;
+                item.IslemYapanIP = UserIdentity.Ip;
+            }
+            _entities.SaveChanges();
+            foreach (var item in eykDaOnaylanacakBasvurular)
+            {
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, item.ToJson());
+                MezuniyetBus.SendMailCiltliTezTeslimEkSureTalebiEYKOnay(item.MezuniyetBasvurulariID);
+            }
+            return new { eykDaOnaylanacakBasvurular.Count }.ToJsonResult();
+        }
 
         public ActionResult SrJuriDegistir(Guid uniqueId)
         {
@@ -2250,6 +2492,57 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return mmMessage.ToJsonResult();
         }
+
+        public ActionResult TezTeslimFormuSil(int mezuniyetBasvurulariId)
+        {
+            var mmMessage = new MmMessage
+            {
+                IsSuccess = false,
+                Title = "Tez Teslim Formu Silme İşlemi",
+                MessageType = MsgTypeEnum.Warning
+            };
+            var yetkili = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+            var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+            var tezTeslimFormu = mezuniyetBasvurusu.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
+            if (mezuniyetBasvurusu.KullaniciID != UserIdentity.Current.Id && !yetkili)
+            {
+                mmMessage.Messages.Add("Başka bir kullanıcı tez teslim formu oluşturmaya yetkili değilsiniz!");
+            }
+            else if (mezuniyetBasvurusu.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+            {
+                mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
+            else if (mezuniyetBasvurusu.IsMezunOldu.HasValue)
+            {
+                mmMessage.Messages.Add("Mezuniyet sonuç bilgisi girilildikten sonra Tez teslim formu üzerinde herhangi bir işlemi yapılamaz!");
+
+            }
+            else if (tezTeslimFormu == null)
+            {
+                mmMessage.Messages.Add("Silinecek herhangi bir tezteslim formu bulunamadı!");
+            }
+
+            if (mmMessage.Messages.Count == 0)
+            {
+                try
+                {
+                    _entities.MezuniyetBasvurulariTezTeslimFormlaris.Remove(tezTeslimFormu);
+                    _entities.SaveChanges();
+                    mmMessage.IsSuccess = true;
+                    mmMessage.Messages.Add("Tez Teslim Formu Silindi.");
+
+                }
+                catch (Exception ex)
+                {
+                    mmMessage.IsSuccess = false;
+                    mmMessage.MessageType = MsgTypeEnum.Error;
+                    mmMessage.Messages.Add("Hata: </br> " + ex.ToExceptionMessage());
+                }
+            }
+            return mmMessage.ToJsonResult();
+
+        }
+
         public ActionResult Sil(int id)
         {
             var mmMessage = MezuniyetBus.MezuniyetBasvurusuSilKontrol(id);
@@ -2385,7 +2678,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         }
-        public ActionResult GetTutanakRaporuExport(int raporTipId, int ogrenimTipKods, int? enstituOnayDurumId, string basTar, string bitTar, string raporTarihi, bool exportWordOrExcel, string ekd)
+        public ActionResult GetTutanakRaporuExport(int raporTipId, int ogrenimTipKods, int? enstituOnayDurumId, int? CiltliTezOnayDurumId, string basTar, string bitTar, string raporTarihi, bool exportWordOrExcel, string ekd)
         {
 
             string html;
@@ -2502,8 +2795,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var sr = new StreamReader(ms);
                     html = sr.ReadToEnd();
                 }
+                return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
+
             }
-            else
+            if (raporTipId == RaporTipiEnum.MezuniyetTutanakRaporu)
             {
                 var data = _entities.MezuniyetBasvurularis.Where(p =>
                         p.MezuniyetSureci.EnstituKod == enstituKod &&
@@ -2632,12 +2927,76 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                 }
+                return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
+
 
             }
-            return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
 
 
+            //raporTipId == RaporTipiEnum.MezuniyetCiltliTezTeslikEkSureTalebiTutanak
+            var q = from s in _entities.MezuniyetBasvurularis
+                    join ms in _entities.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod) on s.MezuniyetSurecID equals ms.MezuniyetSurecID
+                    join ogrenci in _entities.Kullanicilars on s.KullaniciID equals ogrenci.KullaniciID
+                    join mOt in _entities.MezuniyetSureciOgrenimTipKriterleris on new { s.MezuniyetSurecID, s.OgrenimTipKod } equals new { mOt.MezuniyetSurecID, mOt.OgrenimTipKod }
+                    join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
+                    join abl in _entities.AnabilimDallaris on pr.AnabilimDaliID equals abl.AnabilimDaliID
+                    let srT = s.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili).OrderByDescending(os => os.SRTalepID).FirstOrDefault()
+                    where srT != null
+                    select new
+                    {
+                        s.OgrenciNo,
+                        AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
+                        AnabilimdaliAdi = abl.AnabilimDaliAdi,
+                        pr.ProgramAdi,
+                        DanismanAdSoyad = s.TezDanismanUnvani + " " + s.TezDanismanAdi,
+                        BasariliOlunanSinavTarihi = srT.Tarih,
+                        mOt.TezTeslimSuresiAy,
+                        s.CiltliTezTeslimUzatmaTalebiDanismanOnay,
+                        s.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih,
+                        s.CiltliTezTeslimUzatmaTalebiEykDaOnay,
+                        s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi,
+                        s.IsMezunOldu
+                    };
+            q = CiltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi ? q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue) : q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true);
+           
+            
+            var dataExport = q.ToList();
+            return null;
+            //using (var workbook = new XLWorkbook())
+            //{
+            //    var worksheet = workbook.Worksheets.Add("Tutanak Raporu");
+            //    var currentRow = 1;
 
+            //    worksheet.Cell(currentRow, 1).Value = "Öğrenci No";
+            //    worksheet.Cell(currentRow, 2).Value = "Ad Soyad";
+            //    worksheet.Cell(currentRow, 3).Value = "Anabilim Dalı";
+            //    worksheet.Cell(currentRow, 4).Value = "Programı";
+            //    worksheet.Cell(currentRow, 5).Value = "Danışman Ünvanı ve Adı Soyadı";
+            //    worksheet.Cell(currentRow, 6).Value = "Başarılı Olunan Tez Savunma Sınav Tarihi";
+            //    worksheet.Cell(currentRow, 7).Value = "Tez Teslim Tarihi";
+            //    worksheet.Cell(currentRow, 8).Value = "Ek Süre Eklenmiş Olan Son Teslim Tarihi";
+
+
+            //    foreach (var item in dataExport)
+            //    {
+            //        currentRow++;
+            //        worksheet.Cell(currentRow, 1).Value = item.OgrenciNo;
+            //        worksheet.Cell(currentRow, 2).Value = item.AdSoyad;
+            //        worksheet.Cell(currentRow, 3).Value = item.AnabilimdaliAdi;
+            //        worksheet.Cell(currentRow, 4).Value = item.ProgramAdi;
+            //        worksheet.Cell(currentRow, 5).Value = item.DanismanAdSoyad;
+            //        worksheet.Cell(currentRow, 6).Value = item.BasariliOlunanSinavTarihi.ToString("yyyy-MM-dd");
+            //        worksheet.Cell(currentRow, 7).Value = item.BasariliOlunanSinavTarihi.AddMonths(item.TezTeslimSuresiAy).ToString("yyyy-MM-dd");
+            //        worksheet.Cell(currentRow, 8).Value = item.BasariliOlunanSinavTarihi.AddMonths(item.TezTeslimSuresiAy+1).ToString("yyyy-MM-dd");
+            //    }
+
+            //    using (var stream = new MemoryStream())
+            //    {
+            //        workbook.SaveAs(stream);
+            //        var fileName = $"Ek Süre Talebi Tutanak Raporu {DateTime.Now:yyyyMMddHHmmss}.xlsx";
+            //        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            //    }
+            //}
         }
 
 

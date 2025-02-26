@@ -82,8 +82,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProjeYurutucusuUnvanAdi", Value = projeYurutucusu.Unvanlar.UnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@ProjeYurutucusuAdSoyad"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "ProjeYurutucusuAdSoyad", Value = projeYurutucusu.Ad + " " + projeYurutucusu.Soyad });
-
-
+                         
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
 
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
@@ -200,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@Gerekce"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "Gerekce", Value = donemProjesiBasvuru.EnstituOnayAciklama });
 
-
+                         
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
 
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
@@ -276,9 +275,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                     foreach (var item in mModel)
                     {
                         item.EnstituAdi = enstitu.EnstituAd;
-                        item.WebAdresi = enstitu.WebAdresi;
+                        item.WebAdresi = enstitu.WebAdresi; 
                         item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
-
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipId);
 
                         if (item.Sablon == null) continue;
@@ -310,7 +308,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@Aciklama"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "Aciklama", Value = donemProjesiBasvuru.DanismanOnayAciklama });
 
-
+                         
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
 
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
@@ -464,6 +462,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         }
                         #endregion
 
+                        item.SistemErisimAdresi = enstitu.SistemErisimAdresi;
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
 
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);

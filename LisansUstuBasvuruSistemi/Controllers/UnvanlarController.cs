@@ -34,6 +34,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.UnvanAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.UnvanAdi.Contains(model.UnvanAdi));
             if (model.YetkiGrupID.HasValue) q = q.Where(p => p.YetkiGrupID == model.YetkiGrupID.Value);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
+            if (model.IsAkademik.HasValue) q = q.Where(p => p.IsAkademik == model.IsAkademik.Value);
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.UnvanAdi);
             model.data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrUnvanlar
@@ -44,6 +45,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 YetkiGrupID = s.YetkiGrupID,
                 YetkiGrupAdi = s.YetkiGrupID.HasValue ? s.YetkiGruplari.YetkiGrupAdi : "",
                 UnvanUserCount = s.YetkiGrupID.HasValue ? s.Kullanicilars.Count(p => p.KullaniciTipleri.KurumIci) : 0,
+                IsAkademik = s.IsAkademik,
                 IsAktif = s.IsAktif,
                 IslemTarihi = s.IslemTarihi,
                 IslemYapanID = s.IslemYapanID,
@@ -57,6 +59,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Pasif = q.Count(p => !p.IsAktif)
             };
             ViewBag.IndexModel = indexModel;
+            ViewBag.IsAkademik = new SelectList(ComboData.GetCmbUnvanTurData(true), "Value", "Caption", model.IsAkademik);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(true), "Value", "Caption", model.YetkiGrupID);
             return View(model);
@@ -77,6 +80,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(true), "Value", "Caption", model.YetkiGrupID);
+            ViewBag.IsAkademik = new SelectList(ComboData.GetCmbUnvanTurData(true), "Value", "Caption", model.IsAkademik);
             return View(model);
         }
         [HttpPost]
@@ -120,7 +124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     var data = _entities.Unvanlars.First(p => p.UnvanID == kModel.UnvanID);
-                    //data.UnvanSiraNo = kModel.UnvanSiraNo;
+                    data.IsAkademik = kModel.IsAkademik;
                     data.UnvanAdi = kModel.UnvanAdi;
                     if (UserIdentity.Current.IsAdmin) data.YetkiGrupID = kModel.YetkiGrupID;
                     data.IsAktif = kModel.IsAktif;
@@ -135,6 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
 
             ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(true), "Value", "Caption", kModel.YetkiGrupID);
+            ViewBag.IsAkademik = new SelectList(ComboData.GetCmbUnvanTurData(true), "Value", "Caption", kModel.IsAkademik);
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }

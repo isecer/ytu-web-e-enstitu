@@ -43,7 +43,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string GuncellenebilirBasvuruDanismanAdi { get; set; }
         public Guid? TezDanismaniUserKey { get; set; }
         public string TezKontrolYetkilisiAdSoyad { get; set; }
-        public Guid? TezKontrolYetkiliUserKey{ get; set; }
+        public Guid? TezKontrolYetkiliUserKey { get; set; }
+        public DateTime? SelectedTezTeslimSonTarih { get; set; }
+        public DateTime? DefaultTezTeslimSonTarih { get; set; }
+        public DateTime? DefaultMaxTezTeslimSonTarih { get; set; }
+        public DateTime? AktifTezTeslimSonTarih { get; set; }
+
         public MezuniyetBasvurulariYayinDto SelectedYayin { get; set; }
 
 

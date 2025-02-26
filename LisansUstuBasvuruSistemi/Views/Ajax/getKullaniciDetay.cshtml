@@ -141,7 +141,7 @@
                                         <td>@Model.OlusturmaTarihi.ToFormatDateAndTime()</td>
                                     </tr>
                                     <tr>
-                                        <td>Son Giriş Tarihi</td>
+                                        <td>Son Oturum Tarihi</td>
                                         <td>:</td>
                                         <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToFormatDateAndTime() + (UserIdentity.Current.IsAdmin ? " (" + Model.LastLogonIP + ")" : "") : "Henüz Giriş Yapmamış")</td>
                                     </tr>
@@ -414,11 +414,11 @@
     {
         var ogrenciler = (List<Kullanicilar>)ViewBag.Ogrenciler;
 
-        <div class="panel panel-info panel-toggled">
+        <div class="panel panel-info @(kYetki?"panel-toggled":"")">
             <div class="panel-heading padding-0">
                 <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-users fa-lg"></i> Danışmanlığındaki Öğrenciler (@ogrenciler.Count Öğrenci)</h3>
                 <ul class="panel-controls">
-                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down" aria-hidden="true"></span></a></li>
+                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-@(kYetki?"down":"up")" aria-hidden="true"></span></a></li>
                 </ul>
             </div>
             <div class="panel-body padding-0" style="max-height: 270px; overflow: auto;">

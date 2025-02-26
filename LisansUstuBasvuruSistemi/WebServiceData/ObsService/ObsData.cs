@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService.ObsDtos;
 using LisansUstuBasvuruSistemi.Ws_ObsService;
+using Newtonsoft.Json;
 
 namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 {
@@ -228,7 +233,8 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
             }
             return model;
         }
-         
 
+        
+      
     }
 }

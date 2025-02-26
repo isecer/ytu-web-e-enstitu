@@ -123,8 +123,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             {
                 var valStr = obje.ToString().Replace("\\", "\\\\").Replace("\"", @"\""");
                 return valStr;
-            } 
-            if (objectType ==  typeof(IEnumerable))
+            }
+            if (objectType == typeof(IEnumerable))
             {
                 #region enumarable
                 var sb4 = new StringBuilder();
@@ -201,7 +201,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         {
             return json;
             // JSON'u biçimlendirilmiş bir şekilde geri döndürme. şimdilik kullanılmıyor
-           // return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json), Formatting.Indented);
+            // return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json), Formatting.Indented);
+        }
+        public static string ToFormatIndentJson(this string json)
+        {
+            return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json), Formatting.Indented);
         }
     }
 }

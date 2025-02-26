@@ -9,8 +9,8 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class UnvanlarBus
     {
-        public static List<string> JuriUnvanList = new List<string> { "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s=>s.AddSpacesBetweenTitleAbbreviations()).ToList();
-        public static List<string> EsDanismanUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s=>s.AddSpacesBetweenTitleAbbreviations()).ToList();
+        public static List<string> JuriUnvanList = new List<string> { "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
+        public static List<string> EsDanismanUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
         public static List<string> DpJuriUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
         public static string ToJuriUnvanAdi(this string unvanAdi)
         {
@@ -38,7 +38,7 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<CmbStringDto> GetCmbJuriUnvanlar(bool bosSecimVar = false)
         {
             var dct = new List<CmbStringDto>();
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" }); 
+            if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
             dct.AddRange(JuriUnvanList.Select(item => new CmbStringDto { Value = item, Caption = item }));
             return dct;
 
@@ -61,13 +61,13 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
-        public static List<CmbIntDto> CmbUnvanlar(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbUnvanlar(bool bosSecimVar = false, bool? isAkademikOrIdari = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var entities = new LubsDbEntities())
             {
-                var data = entities.Unvanlars.OrderBy(o => o.UnvanAdi).ToList();
+                var data = entities.Unvanlars.Where(p => p.IsAkademik == (isAkademikOrIdari ?? p.IsAkademik)).OrderBy(o => o.UnvanAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.UnvanID, Caption = item.UnvanAdi });

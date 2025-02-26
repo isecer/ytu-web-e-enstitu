@@ -57,29 +57,49 @@ namespace BiskaUtil
         public static FieldInfo[] RoleFields()
         {
             var type = typeof(IRoleName);
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p)).ToArray();
             List<FieldInfo> infos = new List<FieldInfo>();
-            foreach (var typex in types)
+
+            try
             {
-                var fields = typex.GetFields().Where(p => p.IsLiteral);
-                foreach (var field in fields)
+                var types = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(s =>
+                    {
+                        try
+                        {
+                            return s.GetTypes();
+                        }
+                        catch (ReflectionTypeLoadException ex)
+                        {
+                            // Hata veren assembly'yi logla
+                            foreach (var loaderException in ex.LoaderExceptions)
+                            {
+                                Console.WriteLine($"Hata: {loaderException.Message}");
+                            }
+                            return new Type[] { };
+                        }
+                    })
+                    .Where(p => type.IsAssignableFrom(p))
+                    .ToArray();
+
+                foreach (var typex in types)
                 {
-                    var fieldValue = field.GetValue(null);
-                    if (fieldValue != null)
-                        infos.Add(field);
-                    //var attr = field.GetCustomAttributes<MenuAttribute>();
+                    var fields = typex.GetFields().Where(p => p.IsLiteral);
+                    foreach (var field in fields)
+                    {
+                        var fieldValue = field.GetValue(null);
+                        if (fieldValue != null)
+                            infos.Add(field);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Genel Hata: {ex.Message}");
+            }
+
             return infos.ToArray();
-            //var type = typeof(IRoleName);
-            //return AppDomain.CurrentDomain.GetAssemblies()
-            //    .Where(p => type.IsAssignableFrom(p.GetType()))
-            //    .SelectMany(s => s.GetType().GetFields())
-            //    .Where(p => p.IsLiteral)
-            //    .AsEnumerable();
         }
+
         public static IEnumerable<FieldInfo> MenuFields()
         {
             //var type = typeof(IMenu);

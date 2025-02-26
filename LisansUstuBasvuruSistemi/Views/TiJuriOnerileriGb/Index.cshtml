@@ -55,13 +55,13 @@
 
                                                                         PanelRefresh(pnlx, true);
                                                                             if (result.IsSuccess) {
-                                                                                  
+
                                                                                 var _Bastar = $('#BasTar').val();
                                                                                 var _Bittar = $('#BitTar').val();
                                                                                 var _isDegisiklik = $('#isDegisiklik').val();
                                                                                 var _ExportWordOrExcel = $('#exportWordOrExcel').val();
-                                                                                var _EnstituOnayDurumId = $('#EnstituOnayDurumId').val(); 
-                                                                                
+                                                                                var _EnstituOnayDurumId = $('#EnstituOnayDurumId').val();
+
                                                                                 window.location = '@Url.Action("GetTutanakRaporuExport", "TiJuriOnerileriGb")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&ExportWordOrExcel=' + _ExportWordOrExcel + "&isDegisiklik=" + _isDegisiklik + "&enstituOnayDurumId=" + _EnstituOnayDurumId;
 
                                                                             }
@@ -149,7 +149,7 @@
                                         <tr>
                                             <td width="160">Öneri Tipi</td>
                                             <td>
-                                                @Html.DropDownList("TijFormTipID", null, new { @class = "form-control",id="FTijFormTipID" })
+                                                @Html.DropDownList("TijFormTipID", null, new { @class = "form-control", id = "FTijFormTipID" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -201,8 +201,9 @@
                                                     <tbody>
                                                         <tr>
                                                             <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
-                                                            <td width="110">
-                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width: 110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            <td width="60"> <input name="EykSayisi" id="EykSayisi" type="text" value="@Model.EykSayisi" placeholder="EYK Sayısı" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="90">
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width: 90px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -373,7 +374,7 @@
                             }
                         }
                     }
-                }); 
+                });
                 PanelRefresh(_panel, true);
             },
             error: function (err) {
@@ -407,7 +408,7 @@
             url: '@Url.Action("GetDetailTijBasvuru", "Ajax")',
             data: { basvuruUniqueId: basvuruUniqueId},
             success: function (result) {
-                $('#cls-' + basvuruUniqueId).html(result); 
+                $('#cls-' + basvuruUniqueId).html(result);
                 PanelRefresh(_panel, true);
             },
             error: function (err) {
@@ -467,7 +468,7 @@
 }
 @if (tiJuriOnerileriOgrenciAdina)
 {
-<script>
+    <script>
         function GetTiJuriOneriForm(kullaniciId, basvuruUniqueId, basvuruJuriOneriUniqueId,refreshIndex) {
         var _panel = $('#bsvrDet_' + basvuruUniqueId);
             PanelRefresh(_panel, false);
@@ -491,14 +492,14 @@
                                     className: "btn-info btnKaydet",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        PanelRefresh(pnlx, false); 
+                                        PanelRefresh(pnlx, false);
                                         $('#FrmTijOneriFormu').ajaxForm({
                                             success: function (result) {
                                                 PanelRefresh(pnlx, true);
                                                 if (result.mMessage.IsSuccess) {
                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                     $(_clsBtn).click();
-                                                    if (refreshIndex) { 
+                                                    if (refreshIndex) {
                                                         window.location.href = '@Url.Action("Index")?SelectedBasvuruUniqueId=' + basvuruUniqueId;;
                                                     }
                                                     else  GetDetail(basvuruUniqueId);
@@ -506,12 +507,12 @@
                                                 else {
                                                     if (result.selectedJuriNum > 0) {
                                                         ShowContent(result.selectedJuriNum);
-                                                    } 
+                                                    }
                                                     if (result.mMessage.Messages.length > 0) GetMsg(result.mMessage);
                                                     return false;
                                                 }
                                             },
-                                            complete: function (cmp) { 
+                                            complete: function (cmp) {
                                                 PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
@@ -530,7 +531,7 @@
                                     }
                                 }
                             }
-                        }); 
+                        });
                         if (resultG.Messages.trim()!="") ShowMmMessage(resultG.Messages, 'Tamam');
 
                     }
@@ -548,7 +549,7 @@
         }
 
 
-</script>
+    </script>
 }
 
 @if (Model.SelectedBasvuruUniqueId.HasValue)

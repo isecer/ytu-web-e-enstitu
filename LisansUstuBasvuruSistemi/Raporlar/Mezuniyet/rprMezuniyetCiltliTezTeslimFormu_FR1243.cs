@@ -62,8 +62,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
                 var mezuniyetBasvuru = sonSr.MezuniyetBasvurulari;
                 var joForm = mezuniyetBasvuru.MezuniyetJuriOneriFormlaris.First(); 
-                var tezBasligiDegisenSinav = mezuniyetBasvuru.SRTalepleris.FirstOrDefault(p =>
-                     p.SRDurumID == SrTalepDurumEnum.Onaylandı && p.IsTezBasligiDegisti == true);
+                var tezBasligiDegisenSinav = mezuniyetBasvuru.SRTalepleris.FirstOrDefault(p => p.SRDurumID == SrTalepDurumEnum.Onaylandı && p.IsTezBasligiDegisti == true);
 
 
 

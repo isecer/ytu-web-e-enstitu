@@ -5,6 +5,7 @@ using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using static System.String;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -66,7 +67,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return mdl;
         }
-
+     
 
     }
 }

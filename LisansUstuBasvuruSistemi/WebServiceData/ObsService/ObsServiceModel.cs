@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Ws_ObsService;
 
@@ -14,6 +15,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
         public int? BitisYil { get; set; }
         public int? DonemID { get; set; }
         public int OkuduguDonemNo { get; set; }
+        public int HesaplananOkuduguDonemNo { get; set; }
         public DateTime? KayitTarihi { get; set; }
         public bool IsDanismanHesabiBulunamadi { get; set; }
 
@@ -40,7 +42,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
             DersKodNums = new List<string>();
             DersKodus = new List<string>();
         }
-        public int ToplamKredi { get; set; } 
+        public int ToplamKredi { get; set; }
         public int ToplamAkts { get; set; }
         public double Agno { get; set; }
         public string EtikDersNotu { get; set; }
@@ -59,7 +61,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
         public string HocaUnvan { get; set; }
         public string HocaAdi { get; set; }
         public string DersKoduNum { get; set; }
-        public string DersKodu{ get; set; }
+        public string DersKodu { get; set; }
         public string DersAdi { get; set; }
         public string DersNotu { get; set; }
         public string NotDeger { get; set; }
@@ -67,12 +69,16 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
     public class ObsOgrenciSorgulaModel
     {
         public string Tc { get; set; }
-        public Ogrenci Ogrenci { get; set; } 
-        public OgrenciDersNot OgrenciDersNot { get; set; } 
+
+        public string OgrenciKayitDonem { get; set; }
+        public Ogrenci Ogrenci { get; set; }
+        public OgrenciDersNot OgrenciDersNot { get; set; }
         public List<OgrenciDersNot> OgrenciDersNotBilgis { get; set; }
         public OgrenciTez OgrenciTez { get; set; }
         public List<TezIzlJuriBilgileri> OgrenciTezJuri { get; set; }
         public List<OgrenciYeter> OgrenciYeters { get; set; }
+        public List<CmbStringDto> OgrenciDonemler { get; set; } = new List<CmbStringDto>();
+        public string DonemId { get; set; }
     }
 
 

@@ -272,7 +272,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenciAdSoyad.IlkHarfiBuyut() },
                         new MailParameterDto { Key = "DanismanUnvan", Value = tezDanisman.UnvanAdi.IlkHarfiBuyut() },
                         new MailParameterDto { Key = "DanismanAdSoyad", Value = tezDanisman.JuriAdi.IlkHarfiBuyut() },
-                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik.IlkHarfiBuyut(!isTezBaslikTr) },
+                        new MailParameterDto { Key = "TezBaslik", Value =tezBaslik },
                         new MailParameterDto { Key = "SinavTarihi", Value =srTalep.Tarih.ToFormatDate()+" "+$"{srTalep.BasSaat:hh\\:mm}" + "-" + $"{srTalep.BitSaat:hh\\:mm}" },
                         new MailParameterDto { Key = "SalonAdi", Value =salonAdi.IlkHarfiBuyut() },
                         new MailParameterDto { Key = "SeciliKomiteUyesiUnvan", Value = sablon.Value.UnvanAdi.IlkHarfiBuyut()},

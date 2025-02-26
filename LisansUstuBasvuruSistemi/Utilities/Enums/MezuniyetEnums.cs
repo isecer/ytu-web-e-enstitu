@@ -24,6 +24,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int EykDaOnaylanmadi = 10;
 
     }
+    public class MezuniyetTezTeslimUzatmaDurumuEnum
+    {
+        public const int TalepOlusturulmadi = 1;
+        public const int TalepOlusturuldu = 2;
+        public const int DanismanOnayladi = 4;
+        public const int DanismanOnaylamadi = 5; 
+        public const int EykDaOnaylandi = 9;
+        public const int EykDaOnaylanmadi = 10;
+
+    }
     public class MezuniyetSinavDurumEnum
     {
         public const int SonucGirilmedi = 1;

@@ -55,6 +55,16 @@ namespace Entities.Entities
         public Nullable<bool> IsDanismanOnay { get; set; }
         public Nullable<System.DateTime> DanismanOnayTarihi { get; set; }
         public string DanismanOnayAciklama { get; set; }
+        public Nullable<bool> CiltliTezTeslimUzatmaTalebi { get; set; }
+        public Nullable<System.DateTime> CiltliTezTeslimUzatmaTalebiTarih { get; set; }
+        public Nullable<bool> CiltliTezTeslimUzatmaTalebiDanismanOnay { get; set; }
+        public Nullable<System.DateTime> CiltliTezTeslimUzatmaTalebiDanismanOnayTarih { get; set; }
+        public string CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama { get; set; }
+        public Nullable<bool> CiltliTezTeslimUzatmaTalebiEykDaOnay { get; set; }
+        public Nullable<System.DateTime> CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi { get; set; }
+        public string CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi { get; set; }
+        public Nullable<System.DateTime> CiltliTezTeslimUzatmaTalebiEykDaOnayTarih { get; set; }
+        public string CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama { get; set; }
         public string TezTeslimFormKodu { get; set; }
         public Nullable<System.Guid> TezTeslimUniqueID { get; set; }
         public string TezDanismanUnvani { get; set; }

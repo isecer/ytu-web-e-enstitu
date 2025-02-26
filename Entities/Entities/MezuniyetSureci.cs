@@ -31,6 +31,8 @@ namespace Entities.Entities
         public System.DateTime BaslangicTarihi { get; set; }
         public System.DateTime BitisTarihi { get; set; }
         public int SiraNo { get; set; }
+        public string DonemKontrolObsDonemId { get; set; }
+        public string DersKontrolObsDonemId { get; set; }
         public Nullable<int> AnketID { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }

@@ -83,7 +83,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     bbModel.KullaniciTipYetki = false;
-                    bbModel.KullaniciTipYetkiYokMsj = "Hesap bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşeden hesap bilgilerini düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
+                    bbModel.KullaniciTipYetkiYokMsj = "Hesap bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşede porofilinizde bulunan hesap bilgilerini düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
                 }
                 if (bbModel.KullaniciTipYetki)
                 {
@@ -475,11 +475,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", s.UnvanAdi),
                                 AdSoyad = s.AdSoyad.ToUpper().Trim(),
                                 EMail = s.EMail,
-                                UniversiteID = s.UniversiteID,
-                                IsDilSinaviOrUniversite = s.IsDilSinaviOrUniversite,
-                                DilSinavAdi = s.DilSinavAdi,
-                                DilPuani = s.DilPuani,
-                                SinavTarihi = s.SinavTarihi,
+                                UniversiteID = s.UniversiteID, 
                                 SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", s.UniversiteID),
                                 UniversiteAdi = s.UniversiteAdi,
                                 AnabilimdaliProgramAdi = s.AnabilimdaliProgramAdi

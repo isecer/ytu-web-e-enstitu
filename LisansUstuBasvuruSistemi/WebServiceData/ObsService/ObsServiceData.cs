@@ -51,6 +51,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                             }
 
                             model.OkuduguDonemNo = ogrenci.OKUDUGU_DNM_YENIKANUN.ToIntObj() ?? 0;
+                            if (!donemId.IsNullOrWhiteSpace()) model.HesaplananOkuduguDonemNo = (model.BaslangicYil + "" + model.DonemID).GetDonemFark(donemId);
                             model.OgrenciInfo = ogrenci;
                             model.OgrenciInfo.OGRENIMSEVIYE_ID = model.OgrenciInfo.OGRENIMSEVIYE_ID.ToOgrenimTipKod().ToStrObj();
                             //enstitü ayarlaması 4 basamaklı olan obs enstitü kodu 3 basamaklı lubs enstitü koduna çevir
@@ -99,6 +100,9 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                 }
 
                             }
+                            if (model.OgrenciTez == null) model.OgrenciTez = new OgrenciTez();
+                            if (model.OgrenciTez.tezizlemebilgileri == null)
+                                model.OgrenciTez.tezizlemebilgileri = Array.Empty<TezIzlemeBilgileri>();
                             var tezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
                             model.TezIzlJuriBilgileri = tezJuri[0].Sucess ? tezJuri[0].tezIzljuribilgileri.ToList() : new List<TezIzlJuriBilgileri>();
 
@@ -143,7 +147,6 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                     }
                                 }
                             }
-
                             if (!ogrenci.DANISMAN_TC1.IsNullOrWhiteSpace())
                             {
                                 var danismanResult = service.AkademikPersonelBilgiGetir(UserName, Password, null, ogrenci.DANISMAN_TC1);
@@ -269,7 +272,12 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                     {
                         model.Ogrenci = ogrencis[0].ogrenci.OrderBy(p => p.OGRENIMSEVIYE_ID == "4" ? 2 : 1).FirstOrDefault();
+                        if (!model.Ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
+                        {
+                            var parsedDonem = model.Ogrenci.KAYITLI_DONEM.ParseObsDonem();
+                            model.OgrenciKayitDonem = parsedDonem.BaslangicYil + "" + parsedDonem.DonemNo;
 
+                        }
                         var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null, donemId);
                         if (ogrenciDers.Any() && ogrenciDers[0].Sucess)
                         {
@@ -279,7 +287,6 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                         if (ogrenciDersNots.Any() && ogrenciDersNots[0].Sucess)
                         {
                             model.OgrenciDersNotBilgis = ogrenciDersNots[0].ogrencidersnot.ToList();
-                            // model.OgrenciDersNot = ogrenciDersNots[0].ogrencidersnot[0];
                         }
                         var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
                         if (ogrenciTez.Any() && ogrenciTez[0].Sucess)

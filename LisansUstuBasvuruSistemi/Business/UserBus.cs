@@ -196,7 +196,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var sifre = pwd.ComputeHash(GlobalSistemSetting.Tuz);
-                var kullanici = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == kullaniciAdi || p.TcKimlikNo == kullaniciAdi || p.EMail == kullaniciAdi);
+                var kullanici = entities.Kullanicilars.Where(p=>p.IsAktif).FirstOrDefault(p => p.KullaniciAdi == kullaniciAdi || p.TcKimlikNo == kullaniciAdi || p.EMail == kullaniciAdi);
                 if (kullanici != null)
                 {
                     return kullanici.Sifre == sifre ? kullanici : null;

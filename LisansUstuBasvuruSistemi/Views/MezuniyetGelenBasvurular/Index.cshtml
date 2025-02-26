@@ -13,6 +13,9 @@
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
     var hideFilterRow = !kYetki && Model.Data.Select(s => s.TezDanismanID).FirstOrDefault() == UserIdentity.Current.Id ? "hide" : "";
+
+    var isJuriOneri = Model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaHazirlandi;
+    var isCiltliTeslim = Model.CiltliTezTeslimUzatmaTalepDurumuID == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi;
 }
 
 <div class="row">
@@ -28,83 +31,119 @@
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
                     </h3>
                     <ul class="panel-controls">
-                        @if (eykOnayYetki && Model.JuriOneriFormuDurumuID == MezuniyetJofDurumuEnum.EykYaHazirlandi && Model.SelectedMezuniyetBasvurulariIds.Any())
+
+
+                        @if (eykOnayYetki && Model.SelectedMezuniyetBasvurulariIds.Any() && (isJuriOneri || isCiltliTeslim))
                         {
                             <li>
-                                <a href="javascript:void(0);" class="topluOnay" onclick="TopluEYKDaOnay()" title="EYK'ya hazırlanmış olan başvuruları Eyk'da onaylandı olarak güncelle">
-                                    <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i>
+                                <a href="javascript:void(0);" class="topluOnay"
+                                   onclick="TopluEYKDaOnay('@(isJuriOneri ? "juri" : "ciltli")')"
+                                   title="@(isJuriOneri ? "EYK'ya hazırlanmış olan Jüri Öneri formlarını" : "Danışman tarafından onaylanmış olan Ciltli Tez Teslim Uzatma taleplerini") EYK'da onaylandı olarak güncelle">
+                                    <i class="fa fa-thumbs-o-up fa-lg"></i>
                                 </a>
-                                <script>
-                                    function TopluEYKDaOnay() {
-                                        var btbx = bootbox.dialog({
-                                            message: `
-                                                <p>Listelenen <b>@Model.SelectedMezuniyetBasvurulariIds.Count()</b> adet EYK'ya hazırlanmış ve EYK'da onay işlemi bekleyen Tez Jüri Öneri formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?</p>
-                                                <p>Not: Bu işlem onaylanan başvuru sayısına göre uzun sürebilir.</p>
-                                                <div style="display: flex; align-items: center; gap: 10px;">
-                                                    <label for="eykDate" style="white-space: nowrap; margin: 0;">EYK Tarihi:</label>
-                                                    <input type="text" id="eykDate" class="form-control tarihEykD date-pickerx" style="width: 150px;"  value="${new Date().toISOString().split('T')[0]}">
-
-                                                     <label for="eykSayisi" style="white-space: nowrap; margin: 0;">EYK Sayısı:</label>
-                                                     <input type="text" id="eykSayisiP" class="form-control" style="width: 150px;" title="EYK Sayısı (Boş bırakılır ise başvurularda eyk sayı girişleri varsa girilen EYK sayıları değiştirilmez. Eğer Eyk sayısı girilirse tüm onaylanan balvurulara Yeni EYK Sayısı işlenir.)" value="">
-                                                 </div>
-                                            `,
-                                            title: "Toplu EYK'da onaylama işlemi",
-                                            buttons: {
-                                                success: {
-                                                    label: "Onayla",
-                                                    className: "btn-info btnBbOnaylama",
-                                                    callback: function () {
-                                                        $('.btnBbOnaylama').html('Onaylanıyor...');
-                                                        var _panel = $(btbx).find('.modal-content');
-                                                        PanelRefresh(_panel, false);
-                                                        toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'da Onaylama İşlemi Başlatıldı");
-
-                                                        var mezuniyetBasvurulariIds = eval('@Html.Raw(Json.Encode(Model.SelectedMezuniyetBasvurulariIds))');
-                                                        var eykDate = $('#eykDate').val(); // Tarih bilgisi alınıyor.
-                                                        var eykSayisiP = $('#eykSayisiP').val(); // Tarih bilgisi alınıyor.
-
-                                                        $.ajax({
-                                                            url: '@Url.Action("EYKDaOnay", "MezuniyetGelenBasvurular")',
-                                                            cache: false,
-                                                            type: 'POST',
-                                                            data: {
-                                                                mezuniyetBasvurulariIds: mezuniyetBasvurulariIds,
-                                                                eykTarihi: eykDate,
-                                                                eykSayisi: eykSayisiP
-                                                            },
-                                                            success: function (result) {
-                                                                PanelRefresh(_panel, true);
-                                                                toastr["info"](result.Count + " adet başvuru EYK'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
-                                                                $(btbx).find('.close').first().click();
-                                                            },
-                                                            error: function (err) {
-                                                                PanelRefresh(_panel, true);
-                                                                alert(err.responseText);
-                                                            }
-                                                        });
-                                                        return false;
-                                                    }
-                                                },
-                                                danger: {
-                                                    label: "Vazgeç",
-                                                    className: "btn-primary",
-                                                    callback: function () {}
-                                                }
-                                            }
-                                        });
-
-                                        // Tarih alanını datetimepicker ile etkinleştir
-                                        $('.tarihEykD').datetimepicker({
-                                            lang: 'tr',
-                                            timepicker: false,
-                                            format: 'Y-m-d'
-                                        });
-                                    }
-                                </script>
                             </li>
 
+                            <script>
+                                function TopluEYKDaOnay(type) {
+                                    var config = {
+                                        juri: {
+                                            message: "EYK'ya hazırlanmış ve EYK'da onay işlemi bekleyen <b>@Model.SelectedMezuniyetBasvurulariIds.Count</b> adet Tez Jüri Öneri formunu başvurusunu <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?",
+                                            title: "Jüri Öneri Formları - Toplu EYK Onayı",
+                                            url: '@Url.Action("EYKDaOnay", "MezuniyetGelenBasvurular")'
+                                        },
+                                        ciltli: {
+                                            message: "Danışman tarafından onaylanmış ve EYK'da onay işlemi bekleyen <b>@Model.SelectedMezuniyetBasvurulariIds.Count</b> adet Ciltli Tez Teslim Uzatma başvurusunu <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?",
+                                            title: "Ciltli Tez Teslim Uzatma - Toplu EYK Onayı",
+                                            url: '@Url.Action("EYKDaOnayEkSure", "MezuniyetGelenBasvurular")'
+                                        }
+                                    };
 
+                                    var currentConfig = config[type];
 
+                                    var dialog = bootbox.dialog({
+                                        message: `
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="card shadow-sm border-0">
+                                                            <div class="card-body">
+                                                                <p class="text-center">
+                                                                ${currentConfig.message}
+                                                                </p>
+                                                                <div class="alert   text-center">
+                                                                    <i class="fa fa-exclamation-triangle"></i> Bu işlem onaylanan başvuru sayısına göre uzun sürebilir.
+                                                                </div>
+
+                                                                <div class="row g-3">
+                                                                    <div class="col-md-6">
+                                                                        <label for="eykDate" class="form-label fw-bold">EYK Tarihi</label>
+                                                                        <input type="text" id="eykDate" class="form-control tarihEykD"
+                                                                               value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <label for="eykSayisiP" class="form-label fw-bold">EYK Sayısı</label>
+                                                                        <input type="text" id="eykSayisiP" class="form-control"
+                                                                               placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `,
+                                        title: currentConfig.title,
+                                        buttons: {
+                                            confirm: {
+                                                label: "Onayla",
+                                                className: "btn-info onay-btn",
+                                                callback: function () {
+                                                    var btn = $('.onay-btn');
+                                                    var panel = $(dialog).find('.modal-content');
+                                                    btn.html('Onaylanıyor...').prop('disabled', true);
+                                                    PanelRefresh(panel, false);
+
+                                                    toastr.info("Lütfen işlem tamamlanana kadar bekleyiniz.", "Onaylama İşlemi Başlatıldı");
+
+                                                    $.ajax({
+                                                        url: currentConfig.url,
+                                                        type: 'POST',
+                                                        data: {
+                                                            mezuniyetBasvurulariIds: @Html.Raw(Json.Encode(Model.SelectedMezuniyetBasvurulariIds)),
+                                                            eykTarihi: $('#eykDate').val(),
+                                                            eykSayisi: $('#eykSayisiP').val()
+                                                        },
+                                                        success: function (result) {
+                                                            toastr.success(result.Count + " adet başvuru EYK'da onaylandı.", "İşlem Tamamlandı");
+                                                            PanelRefresh(panel, true);
+                                                            return true;
+
+                                                        },
+                                                        error: function (err) {
+                                                            toastr.error("İşlem sırasında hata oluştu: " + err.responseText);
+                                                            btn.html('Onayla').prop('disabled', false);
+                                                            PanelRefresh(panel, false);
+
+                                                        }
+                                                    });
+                                                }
+                                            },
+                                            cancel: {
+                                                label: "Vazgeç",
+                                                className: "btn-secondary"
+                                            }
+                                        }
+                                    });
+
+                                    $('.tarihEykD').datetimepicker({
+                                        lang: 'tr',
+                                        timepicker: false,
+                                        format: 'Y-m-d'
+                                    });
+                                }
+
+                            </script>
                         }
                         @if (eykYetki)
                         {
@@ -235,13 +274,14 @@
                             <td style="padding-left:10px;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
-                                        <tr>
-                                            <td width="150">Öğrenim S. / Tez Dili</td>
-                                            <td>
-                                                @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
-                                            </td>
-                                            <td>@Html.DropDownList("IsTezDiliTr", null, new { @class = "form-control" })</td>
-                                        </tr>
+                                    <tr>
+                                        <td width="150">Jüri Öneri Form Durumu</td>
+                                        <td>
+                                            @Html.DropDownList("JuriOneriFormuDurumuID", null, new { @class = "form-control" })
+                                        </td>
+                                        <td width="60"> <input name="EykSayisi" id="EykSayisi" type="text" value="@Model.EykSayisi" placeholder="EYK Sayısı" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control"/></td>
+
+                                    </tr>
                                     </tbody>
                                 </table>
                             </td>
@@ -263,6 +303,59 @@
                             <td style="padding-left:10px;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
+                                    <tr>
+                                        <td width="150">Salon Rez / Sınav</td>
+                                        <td>
+                                            @Html.DropDownList("SRDurumID", null, new { @class = "form-control" })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("MezuniyetSinavDurumID", null, new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                              
+
+                            </td>
+                        </tr>
+
+                        <tr class="@hideFilterRow">
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Öğrenim S. / Tez Dili</td>
+                                            <td>
+                                                @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
+                                            </td>
+                                            <td>@Html.DropDownList("IsTezDiliTr", null, new { @class = "form-control" })</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Tez Teslim Uzatma Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("CiltliTezTeslimUzatmaTalepDurumuID", null, new { @class = "form-control" })
+                                            </td>
+                                            <td width="60"> <input name="CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi" id="CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi" type="text" value="@Model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi" placeholder="EYK Sayısı" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr class="@hideFilterRow">
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
                                         <tr>
                                             <td width="150">Anabilim Dalı</td>
                                             <td>
@@ -272,11 +365,23 @@
                                     </tbody>
                                 </table>
 
+
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Tez Kontrol / Yetkili</td>
+                                            <td> @Html.DropDownList("TDDurumID", null, new { @class = "form-control" })</td>
+                                            <td> @Html.DropDownList("TezKontrolKullaniciId", null, new { @class = "form-control" })</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
-
-                        <tr class="@hideFilterRow">
+                        <tr>
                             <td>
+
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
@@ -289,43 +394,13 @@
                                 </table>
 
                             </td>
-                            <td style="padding-left:10px;">
+                            <td style="padding-left:10px; vertical-align:top;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="150">Jüri Öneri Form Durumu</td>
+                                            <td width="150">Tez Teslim Formu Durumu</td>
                                             <td>
-                                                @Html.DropDownList("JuriOneriFormuDurumuID", null, new { @class = "form-control" })
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </td>
-                        </tr>
-                        <tr class="@hideFilterRow">
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tbody>
-                                        <tr>
-                                            <td width="150">Tez Kontrol / Yetkili</td>
-                                            <td> @Html.DropDownList("TDDurumID", null, new { @class = "form-control" })</td>
-                                            <td> @Html.DropDownList("TezKontrolKullaniciId", null, new { @class = "form-control" })</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </td>
-                            <td style="padding-left:10px;">
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tbody>
-                                        <tr>
-                                            <td width="150">Salon Rez / Sınav</td>
-                                            <td>
-                                                @Html.DropDownList("SRDurumID", null, new { @class = "form-control" })
-                                            </td>
-                                            <td>
-                                                @Html.DropDownList("MezuniyetSinavDurumID", null, new { @class = "form-control" })
+                                                @Html.DropDownList("TeslimFormDurumu", null, new { @class = "form-control" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -343,7 +418,7 @@
                                                 @Html.DropDownList("MezuniyetDurumID", null, new { @class = "form-control", onchange = "$(this).val()==1?$('.mDurumTarih').removeClass('hide'):$('.mDurumTarih').addClass('hide')" })
                                             </td>
                                         </tr>
-                                        <tr class="mDurumTarih @(Model.MezuniyetDurumID==1?"":"hide")">
+                                        <tr class="mDurumTarih @(Model.MezuniyetDurumID == 1 ? "" : "hide")">
                                             <td width="150">Mezuniyet Tarih Aralığı</td>
                                             <td>
                                                 <table style="width:100%;table-layout:fixed;">
@@ -364,24 +439,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
-                            </td>
-                            <td style="padding-left:10px; vertical-align:top;">
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tbody>
-                                        <tr>
-                                            <td width="150">Tez Teslim Formu Durumu</td>
-                                            <td>
-                                                @Html.DropDownList("TeslimFormDurumu", null, new { @class = "form-control" })
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
                             </td>
                             <td style="padding-left:10px; vertical-align:top;">
                                 <table style="width:100%;table-layout:fixed;">
@@ -394,8 +451,8 @@
                                                     <tbody>
                                                         <tr>
                                                             <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
-                                                            <td width="110">
-                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            <td width="90">
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width:90px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -1047,6 +1104,7 @@
             }
         });
     }
+
 
     function MzDurumKaydet(MezuniyetBasvurulariID) {
         var isMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();

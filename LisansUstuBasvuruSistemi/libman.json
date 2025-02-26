@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery@3.7.1",
+      "destination": "Content/js/plugins/jqueryLatest/"
+    },
+    {
+      "library": "jqueryui@1.14.1",
+      "destination": "Content/js/plugins/jqueryLatest/",
+      "files": [
+        "jquery-ui.min.js",
+        "jquery-ui.js"
+      ]
+    },
+    {
+      "library": "jquery@3.0.0",
+      "destination": "Content/js/plugins/jquery/"
+    }
+  ]
+}

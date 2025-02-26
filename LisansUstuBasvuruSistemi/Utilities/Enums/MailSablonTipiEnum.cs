@@ -67,6 +67,18 @@
         public const int MezBasvuruYapildiDanisman = 150;
         public const int MezBasvuruYapildiOgrenci = 151;
 
+        public const int MezCiltliTezTeslimEkSureTalebiYapildiOgrenciye = 530;
+        public const int MezCiltliTezTeslimEkSureTalebiYapildiDanismana = 531;
+        public const int MezCiltliTezTeslimEkSureTalebiDanismanOnayladiOgrenciye = 532;
+        public const int MezCiltliTezTeslimEkSureTalebiDanismanOnayladiDanismana = 533;
+        public const int MezCiltliTezTeslimEkSureTalebiDanismanReddettiOgrenciye = 534;
+        public const int MezCiltliTezTeslimEkSureTalebiEykDaOnaylandiOgrenciye = 535;
+        public const int MezCiltliTezTeslimEkSureTalebiEykDaOnaylandiDanismana= 536; 
+        public const int MezCiltliTezTeslimEkSureTalebiEykDaReddedildiOgrenciye = 537;
+        public const int MezCiltliTezTeslimEkSureTalebiEykDaReddedildiDanismana = 538;
+
+
+
 
         public const int TiAraRaporBaslatildiOgrenci = 100;
         public const int TiAraRaporBaslatildiDanisman = 101;

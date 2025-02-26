@@ -950,12 +950,7 @@
         </div>
     }
 </div>
-
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script>
-    onSpecialCharacterBlockerLoaded();
-    const inputElementsTr = document.querySelectorAll('.UpperTextTr,.UpperTextEn');
-    inputElementsTr.forEach(inputElement => {
-        inputElement.addEventListener('input', convertToTrOrEnUpperCase);
-        convertToTrOrEnUpperCase({ target: inputElement });
-    });
+    onSpecialCharacterBlockerLoaded(); 
 </script>

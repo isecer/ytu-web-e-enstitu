@@ -95,7 +95,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             FormKodu = ti.FormKodu,
                             KomiteUyeleri = ti.TIBasvuruAraRaporKomites.Select(s2 => s2.AdSoyad).ToList(),
                             RaporDonemID = ti.DonemBaslangicYil + "" + ti.DonemID,
-                            TIBasvuruAraRaporDurumID = ti.TIBasvuruAraRaporDurumID
+                            TIBasvuruAraRaporDurumID = ti.TIBasvuruAraRaporDurumID 
                         }).ToList(),
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : null,
                         IsBasariliOrBasarisiz = ard != null ? ard.IsBasariliOrBasarisiz : null

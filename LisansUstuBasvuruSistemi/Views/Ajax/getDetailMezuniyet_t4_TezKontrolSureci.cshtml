@@ -1,4 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -9,10 +10,10 @@
 
 
     Layout = null;
-    var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-    var tdKayitYetki = kayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
+    var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi;
+    var tdKayitYetki = kayitYetki || (RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent() && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi);
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-    var tezKontrolYetkiliAta = RoleNames.MezuniyetGelenBasvurularTezKontrolYetkiliAtama.InRole();
+    var tezKontrolYetkiliAta = RoleNames.MezuniyetGelenBasvurularTezKontrolYetkiliAtama.InRole() && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi;
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
 
     var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true);
@@ -393,6 +394,213 @@
                 </tbody>
             </table>
         </div>
+        @if ((Model.DefaultMaxTezTeslimSonTarih.HasValue && Model.DefaultMaxTezTeslimSonTarih > Model.TezTeslimSonTarih && Model.DefaultMaxTezTeslimSonTarih > DateTime.Now.Date) || Model.CiltliTezTeslimUzatmaTalebi.HasValue)
+        {
+            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8pt;padding:6px 10px;min-height:30px;">
+                <table style="width:100%;">
+                    <tbody>
+                        <tr>
+                            <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-clock-o fa-lg"></i> Öğrenci Ciltli Tez Teslimi için Ek Süre Talebi</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left:10px;text-align:left;">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td class="CaptionTd" width="220">Not</td>
+                                        <td class="CaptionTd" width="10">:</td>
+                                        <td class="ValueTd">
+                                            <span class="Explanation">
+                                                Ciltli tez teslimi için son teslim tarihi <b>@Model.SelectedTezTeslimSonTarih.ToFormatDate()</b> olarak belirlenmiştir. Ek süre talebinde bulunması ve bu talebin onaylanması halinde, teslim tarihi <b>@Model.DefaultMaxTezTeslimSonTarih.ToFormatDate()</b> tarihine kadar uzatılabilecektir.
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="CaptionTd">Öğrenci Ek Süre Talebi</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            @if (!Model.CiltliTezTeslimUzatmaTalebiDanismanOnay.HasValue && !Model.IsMezunOldu.HasValue && (kayitYetki || Model.KullaniciID == UserIdentity.Current.Id) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                                            {
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <select id="EkSureTalepDurum_@Model.MezuniyetBasvurulariID" class="form-control">
+                                                                <option></option>
+                                                                <option value="true" @(Model.CiltliTezTeslimUzatmaTalebi == true ? "selected" : "")> Ciltli tez teslimi için bir aylık ek süre talep ediyorum</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" class="btn btn-xs btn-primary" onclick="EkSureTalep(@Model.MezuniyetBasvurulariID)"><i class="fa fa-save"></i> Kaydet</a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            }
+                                            else
+                                            {
+
+                                                if (Model.CiltliTezTeslimUzatmaTalebi != true)
+                                                {
+
+                                                    <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Herhangi bir talep işlemi yapılmadı.</span>
+                                                }
+                                                else
+                                                {
+
+                                                    <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-check" style="font-size:12pt;" aria-hidden="true"></i> Ciltli tez teslimi için bir aylık ek süre talep edildi. (@Model.CiltliTezTeslimUzatmaTalebiTarih.ToFormatDate())</span>
+
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                    @if (Model.CiltliTezTeslimUzatmaTalebi == true)
+                                    {
+                                        <tr>
+                                            <td class="CaptionTd">Danışman Talep Onay Durumu</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                @if (!Model.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue && (kayitYetki || Model.TezDanismanID == UserIdentity.Current.Id) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                                                {
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <select id="CiltliTezTeslimUzatmaDanismanOnayDurum_@Model.MezuniyetBasvurulariID" class="form-control" onchange="document.getElementById('CiltliTezTeslimUzatmaTalebiDanismanOnayAciklamaRow_@Model.MezuniyetBasvurulariID').classList.toggle('hide', this.value !== 'false')">
+                                                                    <option value=""></option>
+                                                                    <option value="true" @(Model.CiltliTezTeslimUzatmaTalebiDanismanOnay == true ? "selected" : "")> Talep Onaylandı</option>
+                                                                    <option value="false" @(Model.CiltliTezTeslimUzatmaTalebiDanismanOnay == false ? "selected" : "")> Talep Reddedildi</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <a href="javascript:void(0);" class="btn btn-xs btn-primary" onclick="EkSureTalepDanismanOnay(@Model.MezuniyetBasvurulariID)"><i class="fa fa-save"></i> Kaydet</a>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                }
+                                                else
+                                                {
+                                                    if (!Model.CiltliTezTeslimUzatmaTalebiDanismanOnay.HasValue)
+                                                    {
+
+                                                        <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Danışman Onayı Bekleniyor.</span>
+                                                    }
+                                                    else if (Model.CiltliTezTeslimUzatmaTalebiDanismanOnay == true)
+                                                    {
+
+                                                        <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> Danışman Tarafından Onaylandı. (@Model.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih.ToFormatDate())</span>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i>  Danışman Tarafından Reddedildi. (@Model.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih.ToFormatDate())</span>
+
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr id="CiltliTezTeslimUzatmaTalebiDanismanOnayAciklamaRow_@Model.MezuniyetBasvurulariID" class="@(Model.CiltliTezTeslimUzatmaTalebiDanismanOnay == false ? "" : "hide")">
+                                            <td class="CaptionTd">Danışman Ret Açıklaması</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                @if (!Model.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue && !Model.IsMezunOldu.HasValue && (kayitYetki || Model.TezDanismanID == UserIdentity.Current.Id) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                                                {
+                                                    <textarea placeholder="Onaylanmama Sebebi" id="CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama_@Model.MezuniyetBasvurulariID" maxlength="512" style="min-height:40px;resize:vertical;border:1px solid;" class="form-control">@Model.CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama</textarea>
+                                                }
+                                                else
+                                                {
+                                                    @Model.CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama
+                                                }
+                                            </td>
+                                        </tr>
+                                        if (Model.CiltliTezTeslimUzatmaTalebiDanismanOnay == true)
+                                        {
+                                            <tr>
+                                                <td class="CaptionTd">EYK'da Onay Durumu</td>
+                                                <td class="CaptionTd">:</td>
+                                                <td class="ValueTd">
+
+                                                    @if (kayitYetki && !Model.IsMezunOldu.HasValue)
+                                                    {
+                                                        <table>
+                                                            <tr>
+                                                                <td>
+                                                                    <select id="CiltliTezTeslimUzatmaEykDaOnayDurum_@Model.MezuniyetBasvurulariID" class="form-control" onchange="EykSureTalepOnayChange(@Model.MezuniyetBasvurulariID)">
+                                                                        <option value=""></option>
+                                                                        <option value="true" @(Model.CiltliTezTeslimUzatmaTalebiEykDaOnay == true ? "selected" : "")> Eyk'da onaylandı</option>
+                                                                        <option value="false" @(Model.CiltliTezTeslimUzatmaTalebiEykDaOnay == false ? "selected" : "")> Eyk'da Reddedildi</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td class="form-group @(Model.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue?"":"hide")" id="CiltliTezTeslimUzatmaEykDaOnayEykTarihTd_@Model.MezuniyetBasvurulariID">
+                                                                    <input type="text" class="form-control tarihB date-pickerx" style="width:100px;" placeholder="EYK Tarihi" id="CiltliTezTeslimUzatmaEykDaOnayEykTarihi_@Model.MezuniyetBasvurulariID" value="@Model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi.ToFormatDateInput()" />
+
+                                                                </td>
+                                                                <td class="form-group @(Model.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue ? "" : "hide") CiltliTezTeslimUzatmaEykDaOnayTd_@Model.MezuniyetBasvurulariID">
+                                                                    <input type="text" class="form-control" style="width: 60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="CiltliTezTeslimUzatmaEykDaOnayEykSayisi_@Model.MezuniyetBasvurulariID" value="@Model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi" />
+                                                                </td>
+                                                                <td>
+                                                                    <a href="javascript:void(0);" class="btn btn-xs btn-primary" onclick="EkSureTalepEykOnay(@Model.MezuniyetBasvurulariID)"><i class="fa fa-save"></i> Kaydet</a>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!Model.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue)
+                                                        {
+
+                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Eyk'da Onay Bekleniyor.</span>
+                                                        }
+                                                        else if (Model.CiltliTezTeslimUzatmaTalebiEykDaOnay == true)
+                                                        {
+
+                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> Eyk'da Onaylandı. (EykTarihi: @Model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi.ToFormatDate(), EykSayısı: @Model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi)</span>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> Eyk'dan Reddedildi. (@Model.CiltliTezTeslimUzatmaTalebiEykDaOnayTarih.ToFormatDate())</span>
+
+                                                        }
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr id="CiltliTezTeslimUzatmaEYKOnayAciklamaRow_@Model.MezuniyetBasvurulariID" class="@(Model.CiltliTezTeslimUzatmaTalebiEykDaOnay == false ? "" : "hide")">
+                                                <td class="CaptionTd">Eyk'da Ret Açıklaması</td>
+                                                <td class="CaptionTd">:</td>
+                                                <td class="ValueTd">
+                                                    @if (kayitYetki && !Model.IsMezunOldu.HasValue)
+                                                    {
+                                                        <textarea class="form-control" style="min-height:100px;" id="CiltliTezTeslimUzatmaEYKDaOnaylanmadiDurumAciklamasi_@Model.MezuniyetBasvurulariID" maxlength="512">@Model.CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama</textarea>
+                                                    }
+                                                    else
+                                                    {
+                                                        @Model.CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    @if (Model.CiltliTezTeslimUzatmaTalebiEykDaOnay == true)
+                                    {
+                                        <tr>
+                                            <td class="CaptionTd">Onaylanan Cilti Tez Teslim Son Tarih</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                <span class="Explanation">
+                                                    @Model.AktifTezTeslimSonTarih.ToFormatDate()
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 
 
@@ -521,4 +729,130 @@
         }).submit();
 
     }
+    function EkSureTalep(mezuniyetBasvurulariId) {
+        var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
+        PanelRefresh(_panel, false);
+        var ciltliTezTeslimUzatmaTalebi = $('#EkSureTalepDurum_' + mezuniyetBasvurulariId).val();
+
+        var model = {
+            mezuniyetBasvurulariId,
+            ciltliTezTeslimUzatmaTalebi
+        }
+        $.ajax({
+            url: '@Url.Action("CiltliTezTeslimEkSureTalepPost", "MezuniyetGelenBasvurular")',
+            type: 'POST',
+            cache: false,
+            dataType: "json",
+            data: model,
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                if (result.Messages.length > 0) GetMsg(result);
+               GetDetailx(mezuniyetBasvurulariId);
+
+            },
+            error: function (err) {
+
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+
+    function EkSureTalepDanismanOnay(mezuniyetBasvurulariId) {
+        var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
+        PanelRefresh(_panel, false);
+        var isOnaylandi = $('#CiltliTezTeslimUzatmaDanismanOnayDurum_' + mezuniyetBasvurulariId).val();
+        var aciklanma = $('#CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama_' + mezuniyetBasvurulariId).val();
+
+
+        var model = {
+            mezuniyetBasvurulariId,
+            isOnaylandi,
+            aciklanma
+        }
+        $.ajax({
+            url: '@Url.Action("CiltliTezTeslimEkSureDanismanOnayPost", "MezuniyetGelenBasvurular")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: model,
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                if (result.Messages.length > 0) GetMsg(result);
+                GetDetailx(mezuniyetBasvurulariId);
+
+            },
+            error: function (err) {
+
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+    function EykSureTalepOnayChange(id) { 
+        var val = $('#CiltliTezTeslimUzatmaEykDaOnayDurum_' + id).val();
+        if (val == 'false') {
+            $('#CiltliTezTeslimUzatmaEYKOnayAciklamaRow_' + id).removeClass('hide');
+            $('#CiltliTezTeslimUzatmaEykDaOnayEykTarihTd_' + id).addClass('hide');
+            $('.CiltliTezTeslimUzatmaEykDaOnayTd_' + id).removeClass('hide');
+        }
+        else if (val == 'true') {
+            $('#CiltliTezTeslimUzatmaEYKOnayAciklamaRow_' + id).addClass('hide');
+            var eykTarih = $('#EYKDaOnaylandiOnayTarihi_' + id).val();
+            if (eykTarih == "") {
+                var today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, day = today.getDate();
+                if (month < 10) month = "0" + month;
+                if (day < 10) day = "0" + day;
+                var formattedDate = year + "-" + month + "-" + day;
+                $('#CiltliTezTeslimUzatmaEykDaOnayEykTarihi_' + id).val(formattedDate);
+            }
+            $('#CiltliTezTeslimUzatmaEykDaOnayEykTarihTd_' + id).removeClass('hide');
+            $('.CiltliTezTeslimUzatmaEykDaOnayTd_' + id).removeClass('hide');
+        }
+        else if (val == '') {
+            $('#CiltliTezTeslimUzatmaEYKOnayAciklamaRow_' + id).addClass('hide');
+            $('#CiltliTezTeslimUzatmaEykDaOnayEykTarihTd_' + id).addClass('hide');
+            $('.CiltliTezTeslimUzatmaEykDaOnayTd_' + id).addClass('hide');
+        }
+
+
+
+    }
+    function EkSureTalepEykOnay(mezuniyetBasvurulariId) {
+        var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
+        PanelRefresh(_panel, false);
+        var isOnaylandi = $('#CiltliTezTeslimUzatmaEykDaOnayDurum_' + mezuniyetBasvurulariId).val();
+        var aciklanma = $('#CiltliTezTeslimUzatmaEYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetBasvurulariId).val();
+        var eykTarihi = $('#CiltliTezTeslimUzatmaEykDaOnayEykTarihi_' + mezuniyetBasvurulariId).val(); 
+        var eykSayisi = $('#CiltliTezTeslimUzatmaEykDaOnayEykSayisi_' + mezuniyetBasvurulariId).val();
+     
+        var model = {
+            mezuniyetBasvurulariId,
+            isOnaylandi,
+            eykTarihi,
+            eykSayisi,
+            aciklanma
+        }
+        $.ajax({
+            url: '@Url.Action("CiltliTezTeslimEkSureEykOnayPost", "MezuniyetGelenBasvurular")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: model,
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                if (result.Messages.length > 0) GetMsg(result);
+                GetDetailx(mezuniyetBasvurulariId);
+
+            },
+            error: function (err) {
+
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+
 </script>

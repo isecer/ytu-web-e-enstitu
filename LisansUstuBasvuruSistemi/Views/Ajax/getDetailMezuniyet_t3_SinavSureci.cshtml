@@ -7,7 +7,7 @@
 @model MezuniyetBasvuruDetayDto
 @{
     Layout = null;
-    var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi;
     var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + Model.MezuniyetBasvurulariID.ToString();
 
@@ -1046,7 +1046,7 @@
                                                                                                 }
                                                                                                 else if (item.IsOgrenciUzatmaSonrasiOnay == false)
                                                                                                 {
-                                                                                                    <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Öğrenci Tarafından Ret Edildi (@item.OgrenciOnayTarihi.ToFormatDateAndTime())</span>
+                                                                                                    <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Öğrenci Tarafından Reddedildi (@item.OgrenciOnayTarihi.ToFormatDateAndTime())</span>
 
                                                                                                 }
                                                                                                 else
@@ -1196,7 +1196,7 @@
                                                                                                     }
                                                                                                     else if (item.IsDanismanUzatmaSonrasiOnay == false)
                                                                                                     {
-                                                                                                        <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Danışman Tarafından Ret Edildi (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+                                                                                                        <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Danışman Tarafından Reddedildi (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
 
                                                                                                     }
                                                                                                     else

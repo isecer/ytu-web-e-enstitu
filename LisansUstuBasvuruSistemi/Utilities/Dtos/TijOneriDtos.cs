@@ -20,6 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public  int? TijFormTipID { get; set; }
         public int? KullaniciID { get; set; }
         public string AdSoyad { get; set; }
+        public string EykSayisi { get; set; }
         public IEnumerable<FrTijBasvuru> Data { get; set; }
 
         public FmTijBasvuru()

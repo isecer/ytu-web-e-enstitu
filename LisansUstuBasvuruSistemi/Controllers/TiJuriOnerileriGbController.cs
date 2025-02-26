@@ -59,6 +59,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.TezDanismanID,
                         TezDanismanIds = s.TijBasvuruOneris.Select(sd => sd.TezDanismanID).ToList(),
                         JuriAdis = s.TijBasvuruOneris.SelectMany(s2 => s2.TijBasvuruOneriJurilers.Select(sm => sm.AdSoyad)).ToList(),
+                        EykSayis = s.TijBasvuruOneris.Select(s2 => s2.EYKSayisi).ToList(),
                         SonBasvuru = s.TijBasvuruOneris.Select(s2 => new TijBasvuruOneriDetayDto
                         {
                             TijBasvuruOneriID = s2.TijBasvuruOneriID,
@@ -108,6 +109,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     || p.ProgramAdi.Contains(model.AdSoyad)
                     || p.JuriAdis.Contains(model.AdSoyad)
                     );
+            }
+            if (!model.EykSayisi.IsNullOrWhiteSpace())
+            {
+                isFiltered = true;
+                model.EykSayisi = model.EykSayisi.Trim();
+                q = q.Where(p => p.EykSayis.Contains(model.EykSayisi));
             }
             var tijFormTips = TijBus.CmbTijOneriTipListe(true);
             if (model.TijFormTipID.HasValue)
@@ -993,7 +1000,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("TiJuriOnerileriGb", LogCrudType.Update, tijBasvuruOneri.ToJson());
                     mmMessage.IsSuccess = true;
-                    mmMessage.Messages.Add(isDanismanOnay.HasValue ? (isDanismanOnay.Value ? "Jüri öneri formu Onaylandı." : "Jüri öneri formu Ret Edildi.") : "Onaylama İşlemi Geril Alındı.");
+                    mmMessage.Messages.Add(isDanismanOnay.HasValue ? (isDanismanOnay.Value ? "Jüri öneri formu Onaylandı." : "Jüri öneri formu Reddedildi.") : "Onaylama İşlemi Geril Alındı.");
                     if (sendMail)
                     {
                         var resul = TijBus.SendMailDanismanOnay(tijBasvuruOneri.UniqueID);
@@ -1119,7 +1126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else if (onaylandi == true && !onayTarihi.HasValue)
                     {
                         mmMessage.Messages.Add("EYK'da onay tarihini giriniz!");
-                    } 
+                    }
                     else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
                     {
                         mmMessage.Messages.Add("EYK'da onaylanmama sebebini giriniz!");
@@ -1134,7 +1141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (tijBasvuruOneri.EYKYaHazirlandi.HasValue)
                     {
                         mmMessage.Messages.Add("EYK ya hazırlama işlemi yapılan bir form da Eyk'ya gönderim işlemi gerçekleştirilemez!");
-                    } 
+                    }
                     else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
                     {
                         mmMessage.Messages.Add("EYK'ya gönderiminin onaylanmama sebebini giriniz!");
@@ -1310,22 +1317,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                             ? null
                                             : tijBasvuru.TijBasvuruOneris.Where(p => (p.IsObsData || p.EYKDaOnaylandi == true) && p.TijBasvuruOneriID != tijBasvuruOneri.TijBasvuruOneriID).OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault()
 
-                         where tijBasvuru.EnstituKod == enstituKod &&
+                         where tijBasvuru.EnstituKod == enstituKod && (
                                enstituOnayDurumId == 1 ? tijBasvuruOneri.EYKYaGonderildi == true &&
                                                          !tijBasvuruOneri.EYKYaHazirlandi.HasValue &&
                                                          tijBasvuruOneri.EYKYaGonderildiIslemTarihi >= baslangicTarihi &&
                                                          tijBasvuruOneri.EYKYaGonderildiIslemTarihi <= bitisTarihi
                                                       :
-                                                        (enstituOnayDurumId == 2 ? tijBasvuruOneri.EYKYaHazirlandi == true &&
-                                                                                   !tijBasvuruOneri.EYKDaOnaylandi.HasValue &&
-                                                                                   tijBasvuruOneri.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&
-                                                                                   tijBasvuruOneri.EYKYaHazirlandiIslemTarihi <= bitisTarihi
-                                                                                 :
-                                                                                   tijBasvuruOneri.EYKDaOnaylandi == true &&
-                                                                                   tijBasvuruOneri.EYKYaHazirlandi == true &&
-                                                                                   tijBasvuruOneri.EYKTarihi >= baslangicTarihi &&
-                                                                                   tijBasvuruOneri.EYKTarihi <= bitisTarihi
-                                                                                ) &&
+                                                        enstituOnayDurumId == 2 ? tijBasvuruOneri.EYKYaHazirlandi == true &&
+                                                        !tijBasvuruOneri.EYKDaOnaylandi.HasValue &&
+                                                        tijBasvuruOneri.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&
+                                                        tijBasvuruOneri.EYKYaHazirlandiIslemTarihi <= bitisTarihi
+                                                        :
+                                                        tijBasvuruOneri.EYKDaOnaylandi == true &&
+                                                        tijBasvuruOneri.EYKYaHazirlandi == true &&
+                                                        tijBasvuruOneri.EYKTarihi >= baslangicTarihi &&
+                                                        tijBasvuruOneri.EYKTarihi <= bitisTarihi
+                               ) &&
                                tijBasvuruOneri.TijFormTipleri.IsDegisiklik == isDegisiklik
                          select new
                          {

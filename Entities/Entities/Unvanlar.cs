@@ -24,6 +24,7 @@ namespace Entities.Entities
         public string UnvanAdi { get; set; }
         public int UnvanSiraNo { get; set; }
         public Nullable<int> YetkiGrupID { get; set; }
+        public bool IsAkademik { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
