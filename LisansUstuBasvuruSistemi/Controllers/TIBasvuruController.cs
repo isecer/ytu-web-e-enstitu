@@ -381,7 +381,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 var donemBilgi = (tiBasvuruAraRapor?.RaporTarihi ?? DateTime.Now).ToTiAraRaporDonemBilgi(tiBasvuru.EnstituKod);
-                var donemId = donemBilgi.BaslangicTarihi.Year.ToString() + donemBilgi.DonemId;
+                var donemId = donemBilgi.BaslangicYil.ToString() + donemBilgi.DonemId;
                 var ogrenciInfo = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo, donemId);
 
                 if (ogrenciInfo.Hata)
@@ -662,7 +662,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 isYeniJo = tiBasvuruAraRapor == null;
                 bool isDegisiklikVar = false;
                 var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToTiAraRaporDonemBilgi(tiBasvuru.EnstituKod);
-                var obsDonemId = donemBilgi.BaslangicTarihi.Year.ToString() + donemBilgi.DonemId;
+                var obsDonemId = donemBilgi.BaslangicYil.ToString() + donemBilgi.DonemId;
                 var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.OgrenciKontrol(kul.OgrenciNo, obsDonemId) : new StudentControl();
                 var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod).Split(',').Where(p => p.Trim() != "").Select(s => s.Trim()).ToList() : new List<string>();
 

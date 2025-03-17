@@ -186,8 +186,9 @@
                                                                                 var _Bittar = $('#BitTar').val();
                                                                                 var _RaporTarihi = $('#BitTar').val();
                                                                                 var _ExportWordOrExcel = $('#ExportWordOrExcel').val().toLowerCase();
-                                                                                var enstituOnayDurumId = $('#EnstituOnayDurumId').val();
-                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "MezuniyetGelenbasvurular")?RaporTipID=' + _RtipID + '&OgrenimTipKods=' + otips + '&enstituOnayDurumId=' + enstituOnayDurumId + '&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&ExportWordOrExcel=' + _ExportWordOrExcel;
+                                                                                var enstituOnayDurumId = $('#EnstituOnayDurumId').val(); 
+                                                                                var _CiltliTezOnayDurumId = $('#CiltliTezOnayDurumId').val();
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "MezuniyetGelenbasvurular")?RaporTipID=' + _RtipID + '&OgrenimTipKods=' + otips + '&enstituOnayDurumId=' + enstituOnayDurumId + "&ciltliTezOnayDurumId=" + _CiltliTezOnayDurumId+ '&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&ExportWordOrExcel=' + _ExportWordOrExcel;
 
                                                                             }
                                                                             else {

@@ -1523,16 +1523,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             return mmMessage;
         }
-        public static MmMessage SendMailCiltliTezTeslimEkSureTalebiYapildi(int mezuniyetJuriOneriFormId)
+        public static MmMessage SendMailCiltliTezTeslimEkSureTalebiYapildi(int mezuniyetBasvurulariId)
         {
             var mmMessage = new MmMessage();
             try
             {
                 using (var entities = new LubsDbEntities())
                 {
-                    var juriOneriFormu = entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
-                    var mBasvur = juriOneriFormu.MezuniyetBasvurulari;
-
+                    var mBasvur = entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var juriOneriFormu = mBasvur.MezuniyetJuriOneriFormlaris.First();
                     var enstitu = mBasvur.MezuniyetSureci.Enstituler;
                     var ogrenimTip = entities.OgrenimTipleris.First(f =>
                         f.OgrenimTipKod == mBasvur.OgrenimTipKod && f.EnstituKod == enstitu.EnstituKod);
@@ -1656,23 +1655,22 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
 
 
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Jüri öneri formu EYK'da onay maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
-                mmMessage.Messages.Add("Mezuniyet Jüri öneri formu onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Ciltli Tez Teslim Ek Süre Talebi EYK'da onay maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
+                mmMessage.Messages.Add("Mezuniyet Ciltli Tez Teslim Ek Süre Talebi onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
         }
-        public static MmMessage SendMailCiltliTezTeslimEkSureTalebiDanismanOnay(int mezuniyetJuriOneriFormId)
+        public static MmMessage SendMailCiltliTezTeslimEkSureTalebiDanismanOnay(int mezuniyetBasvurulariId)
         {
             var mmMessage = new MmMessage();
             try
             {
                 using (var entities = new LubsDbEntities())
                 {
-                    var juriOneriFormu = entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
-                    var mBasvur = juriOneriFormu.MezuniyetBasvurulari;
-
+                    var mBasvur = entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var juriOneriFormu = mBasvur.MezuniyetJuriOneriFormlaris.First();
                     var enstitu = mBasvur.MezuniyetSureci.Enstituler;
                     var ogrenimTip = entities.OgrenimTipleris.First(f =>
                         f.OgrenimTipKod == mBasvur.OgrenimTipKod && f.EnstituKod == enstitu.EnstituKod);
@@ -1702,7 +1700,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         }
                     };
                     var danisman = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.First(p => p.IsAsilOrYedek.HasValue && p.JuriTipAdi == "TezDanismani");
-                  
+
                     if (mBasvur.CiltliTezTeslimUzatmaTalebiDanismanOnay == true)
                         mModel.Add(new SablonMailModel
                         {
@@ -1800,24 +1798,23 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
 
 
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Jüri öneri formu EYK'da onay maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
-                mmMessage.Messages.Add("Mezuniyet Jüri öneri formu onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Ciltli Tez Teslim Ek Süre Talebi EYK'da onay maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
+                mmMessage.Messages.Add("Mezuniyet Ciltli Tez Teslim Ek Süre Talebi onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
         }
 
-        public static MmMessage SendMailCiltliTezTeslimEkSureTalebiEYKOnay(int mezuniyetJuriOneriFormId)
+        public static MmMessage SendMailCiltliTezTeslimEkSureTalebiEYKOnay(int mezuniyetBasvurulariId)
         {
             var mmMessage = new MmMessage();
             try
             {
                 using (var entities = new LubsDbEntities())
                 {
-                    var juriOneriFormu = entities.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
-                    var mBasvur = juriOneriFormu.MezuniyetBasvurulari;
-
+                    var mBasvur = entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    var juriOneriFormu = mBasvur.MezuniyetJuriOneriFormlaris.First();
                     var enstitu = mBasvur.MezuniyetSureci.Enstituler;
                     var ogrenimTip = entities.OgrenimTipleris.First(f =>
                         f.OgrenimTipKod == mBasvur.OgrenimTipKod && f.EnstituKod == enstitu.EnstituKod);
@@ -1945,8 +1942,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
 
 
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Jüri öneri formu EYK'da onay maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
-                mmMessage.Messages.Add("Mezuniyet Jüri öneri formu onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Mezuniyet Ciltli Tez Teslim Ek Süre Talebi EYK'da onay maili gönderilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
+                mmMessage.Messages.Add("Mezuniyet Ciltli Tez Teslim Ek Süre Talebi onay sonuç maili gönderilirken bir hata oluştu.</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
                 mmMessage.IsSuccess = false;
             }

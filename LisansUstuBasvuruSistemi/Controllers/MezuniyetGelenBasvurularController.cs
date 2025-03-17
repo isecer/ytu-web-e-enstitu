@@ -15,6 +15,7 @@ using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using OfficeOpenXml;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -2678,7 +2679,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         }
-        public ActionResult GetTutanakRaporuExport(int raporTipId, int ogrenimTipKods, int? enstituOnayDurumId, int? CiltliTezOnayDurumId, string basTar, string bitTar, string raporTarihi, bool exportWordOrExcel, string ekd)
+        public ActionResult GetTutanakRaporuExport(int raporTipId, int ogrenimTipKods, int? enstituOnayDurumId, int? ciltliTezOnayDurumId, string basTar, string bitTar, string raporTarihi, bool exportWordOrExcel, string ekd)
         {
 
             string html;
@@ -2938,12 +2939,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join ms in _entities.MezuniyetSurecis.Where(p => p.EnstituKod == enstituKod) on s.MezuniyetSurecID equals ms.MezuniyetSurecID
                     join ogrenci in _entities.Kullanicilars on s.KullaniciID equals ogrenci.KullaniciID
                     join mOt in _entities.MezuniyetSureciOgrenimTipKriterleris on new { s.MezuniyetSurecID, s.OgrenimTipKod } equals new { mOt.MezuniyetSurecID, mOt.OgrenimTipKod }
+                    join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, ms.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
                     join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
                     join abl in _entities.AnabilimDallaris on pr.AnabilimDaliID equals abl.AnabilimDaliID
                     let srT = s.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili).OrderByDescending(os => os.SRTalepID).FirstOrDefault()
                     where srT != null
                     select new
                     {
+                        o.OgrenimTipAdi,
                         s.OgrenciNo,
                         AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                         AnabilimdaliAdi = abl.AnabilimDaliAdi,
@@ -2952,51 +2955,101 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         BasariliOlunanSinavTarihi = srT.Tarih,
                         mOt.TezTeslimSuresiAy,
                         s.CiltliTezTeslimUzatmaTalebiDanismanOnay,
-                        s.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih,
                         s.CiltliTezTeslimUzatmaTalebiEykDaOnay,
                         s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi,
-                        s.IsMezunOldu
+                        s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi,
+                        s.IsMezunOldu,
+                        FiterTarih = ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi ? s.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih : s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi
                     };
-            q = CiltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi ? q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue) : q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true);
-           
-            
+            q = ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi ? q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue) : q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true);
+
+            q = q.Where(p => p.FiterTarih.HasValue && p.FiterTarih.Value > baslangicTarihi && p.FiterTarih.Value <= bitisTarihi);
+
+
             var dataExport = q.ToList();
-            return null;
-            //using (var workbook = new XLWorkbook())
-            //{
-            //    var worksheet = workbook.Worksheets.Add("Tutanak Raporu");
-            //    var currentRow = 1;
+            using (var package = new ExcelPackage())
+            {
 
-            //    worksheet.Cell(currentRow, 1).Value = "Öğrenci No";
-            //    worksheet.Cell(currentRow, 2).Value = "Ad Soyad";
-            //    worksheet.Cell(currentRow, 3).Value = "Anabilim Dalı";
-            //    worksheet.Cell(currentRow, 4).Value = "Programı";
-            //    worksheet.Cell(currentRow, 5).Value = "Danışman Ünvanı ve Adı Soyadı";
-            //    worksheet.Cell(currentRow, 6).Value = "Başarılı Olunan Tez Savunma Sınav Tarihi";
-            //    worksheet.Cell(currentRow, 7).Value = "Tez Teslim Tarihi";
-            //    worksheet.Cell(currentRow, 8).Value = "Ek Süre Eklenmiş Olan Son Teslim Tarihi";
+                var firstRow = dataExport
+                    .Select(s => new { s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi, s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi })
+                    .FirstOrDefault();
+
+                var enstituAdi = EnstituBus.GetEnstitu(enstituKod)?.EnstituAd ?? "Bilinmeyen Enstitü";
+                var eykTarihi = firstRow?.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi?.ToString("dd.MM.yyyy") ?? "----";
+                var eykSayisi = firstRow?.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi ?? "----";
+
+                var worksheet = package.Workbook.Worksheets.Add("Tutanak Raporu");
+                var currentRow = 1;
+                int totalColumns = 12;
+
+                string ustBaslik = $"YILDIZ TEKNİK ÜNİVERSİTESİ {enstituAdi.ToUpper()}\n" +
+                                  $"CİLTLİ SON TEZ TESLİMİ İÇİN EK SÜRE\n" +
+                                  $"{eykTarihi} / {eykSayisi}";
 
 
-            //    foreach (var item in dataExport)
-            //    {
-            //        currentRow++;
-            //        worksheet.Cell(currentRow, 1).Value = item.OgrenciNo;
-            //        worksheet.Cell(currentRow, 2).Value = item.AdSoyad;
-            //        worksheet.Cell(currentRow, 3).Value = item.AnabilimdaliAdi;
-            //        worksheet.Cell(currentRow, 4).Value = item.ProgramAdi;
-            //        worksheet.Cell(currentRow, 5).Value = item.DanismanAdSoyad;
-            //        worksheet.Cell(currentRow, 6).Value = item.BasariliOlunanSinavTarihi.ToString("yyyy-MM-dd");
-            //        worksheet.Cell(currentRow, 7).Value = item.BasariliOlunanSinavTarihi.AddMonths(item.TezTeslimSuresiAy).ToString("yyyy-MM-dd");
-            //        worksheet.Cell(currentRow, 8).Value = item.BasariliOlunanSinavTarihi.AddMonths(item.TezTeslimSuresiAy+1).ToString("yyyy-MM-dd");
-            //    }
+                worksheet.Cells[currentRow, 1, currentRow, totalColumns].Merge = true;
+                worksheet.Cells[currentRow, 1].Value = ustBaslik;
+                worksheet.Cells[currentRow, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                worksheet.Cells[currentRow, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                worksheet.Cells[currentRow, 1].Style.Font.Bold = true;
+                worksheet.Cells[currentRow, 1].Style.Font.Size = 14;
+                worksheet.Cells[currentRow, 1].Style.WrapText = true;  
+                worksheet.Row(currentRow).Height = 160;
 
-            //    using (var stream = new MemoryStream())
-            //    {
-            //        workbook.SaveAs(stream);
-            //        var fileName = $"Ek Süre Talebi Tutanak Raporu {DateTime.Now:yyyyMMddHHmmss}.xlsx";
-            //        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-            //    }
-            //}
+                // Başlık satırı için boşluk bırak
+                currentRow += 2;
+
+                // Sütun başlıklarını ekleme
+                worksheet.Cells[currentRow, 1].Value = "Öğrenci No";
+                worksheet.Cells[currentRow, 2].Value = "Ad Soyad";
+                worksheet.Cells[currentRow, 3].Value = "Öğrenim Seviyesi";
+                worksheet.Cells[currentRow, 4].Value = "Anabilim Dalı";
+                worksheet.Cells[currentRow, 5].Value = "Programı";
+                worksheet.Cells[currentRow, 6].Value = "Danışman Ünvanı ve Adı Soyadı";
+                worksheet.Cells[currentRow, 7].Value = "Başarılı Olunan Tez Savunma Sınav Tarihi";
+                worksheet.Cells[currentRow, 8].Value = "Tez Teslim Tarihi";
+                worksheet.Cells[currentRow, 9].Value = "Ek Süre Eklenmiş Olan Son Teslim Tarihi";
+                worksheet.Cells[currentRow, 10].Value = "EYK Tarihi";
+                worksheet.Cells[currentRow, 11].Value = "EYK Sayısı";
+
+                using (var range = worksheet.Cells[currentRow, 1, currentRow, totalColumns])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+
+                // Veri satırlarını ekleme
+                foreach (var item in dataExport)
+                {
+                    currentRow++;
+                    worksheet.Cells[currentRow, 1].Value = item.OgrenciNo;
+                    worksheet.Cells[currentRow, 2].Value = item.AdSoyad;
+                    worksheet.Cells[currentRow, 3].Value = item.OgrenimTipAdi;
+                    worksheet.Cells[currentRow, 4].Value = item.AnabilimdaliAdi;
+                    worksheet.Cells[currentRow, 5].Value = item.ProgramAdi;
+                    worksheet.Cells[currentRow, 6].Value = item.DanismanAdSoyad;
+                    worksheet.Cells[currentRow, 7].Value = item.BasariliOlunanSinavTarihi;
+                    worksheet.Cells[currentRow, 7].Style.Numberformat.Format = "dd.MM.yyyy";
+                    worksheet.Cells[currentRow, 8].Value = item.BasariliOlunanSinavTarihi.AddMonths(item.TezTeslimSuresiAy);
+                    worksheet.Cells[currentRow, 8].Style.Numberformat.Format = "dd.MM.yyyy";
+                    worksheet.Cells[currentRow, 9].Value = item.BasariliOlunanSinavTarihi.AddMonths(item.TezTeslimSuresiAy + 1);
+                    worksheet.Cells[currentRow, 9].Style.Numberformat.Format = "dd.MM.yyyy";
+                    worksheet.Cells[currentRow, 10].Value = item.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi;
+                    worksheet.Cells[currentRow, 10].Style.Numberformat.Format = "dd.MM.yyyy";
+                    worksheet.Cells[currentRow, 11].Value = item.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi;
+                }
+
+                worksheet.Cells.AutoFitColumns();
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+
+                var fileName = $"Ek Süre Talebi Tutanak Raporu {basTar} {bitTar}.xlsx";
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+
         }
 
 

@@ -43,7 +43,8 @@
                                         $.ajax({
                                             url: '@Url.Action("GetTutanakRaporu", "DpGelenBasvurular")',
                                             data: {},
-                                            success: function (result) {
+                                            success: function (result) { 
+
                                                 PanelRefresh(_panel, true);
                                                 var btbxxFS = bootbox.dialog({
                                                     message: result,
@@ -58,7 +59,7 @@
                                                                 PanelRefresh(pnlx, false);
                                                                 $('#TutanakRprForm').ajaxForm({
                                                                     success: function (result) {
-
+                                                                      
                                                                         PanelRefresh(pnlx, true);
                                                                         if (result.IsSuccess) {
 
@@ -66,8 +67,8 @@
                                                                             var _Bittar = $('#BitTar').val();
                                                                             var _ExportWordOrExcel = $('#exportWordOrExcel').val();
                                                                             var _EnstituOnayDurumId = $('#EnstituOnayDurumId').val();
-
-                                                                            window.location = '@Url.Action("GetTutanakRaporuExport", "DpGelenBasvurular")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&ExportWordOrExcel=' + _ExportWordOrExcel  + "&enstituOnayDurumId=" + _EnstituOnayDurumId;
+                                                                         
+                                                                            window.location = '@Url.Action("GetTutanakRaporuExport", "DpGelenBasvurular")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&ExportWordOrExcel=' + _ExportWordOrExcel + "&enstituOnayDurumId=" + _EnstituOnayDurumId;
 
                                                                         }
                                                                         else {

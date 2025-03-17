@@ -62,7 +62,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     RaporTarihi = s.RaporTarihi,
                     IsTezDiliTr = s.IsTezDiliTr,
                     TezBaslikTr = s.TezBaslikTr,
-                    TezBaslikEn = s.TezBaslikEn, 
+                    TezBaslikEn = s.TezBaslikEn,
                     IsTezBasligiDegisti = s.IsTezBasligiDegisti,
                     TezBasligiDegisimGerekcesi = s.TezBasligiDegisimGerekcesi,
                     YeniTezBaslikTr = s.YeniTezBaslikTr,
@@ -218,7 +218,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod);
 
-                                var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).Select(s=>s.Trim()).ToList();
+                                var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).Select(s => s.Trim()).ToList();
 
                                 var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
 
@@ -350,7 +350,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     .OrderByDescending(o => o.TIBasvuruAraRaporID).FirstOrDefault();
                 var isAktif = true;
                 if (tiBasvuruAraRapor == null) isAktif = false;
-                else if (tiBasvuruAraRapor.TIBasvuruAraRaporDurumID==TiAraRaporDurumuEnum.DegerlendirmeSureciTamamlandi) isAktif = false; 
+                else if (tiBasvuruAraRapor.TIBasvuruAraRaporDurumID == TiAraRaporDurumuEnum.DegerlendirmeSureciTamamlandi) isAktif = false;
                 return isAktif;
             }
         }
@@ -399,29 +399,18 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static List<CmbStringDto> CmbTiDonemListeBasvuru(string enstituKod, bool bosSecimVar = false)
         {
-            var cmbDonems = CmbTiDonemListe(enstituKod);
-            if (!cmbDonems.Any())
+            var cmbDonems = CmbTiDonemListe(enstituKod, bosSecimVar);
+            var donem = DateTime.Now.ToTiAraRaporDonemBilgi(enstituKod);
+            if (cmbDonems.All(a => a.Value != donem.BaslangicYil + "" + donem.DonemId))
             {
-                var donem = DateTime.Now.ToTiAraRaporDonemBilgi(enstituKod);
-                cmbDonems.Add(new CmbStringDto()
+
+                cmbDonems.Insert(bosSecimVar ? 1 : 0, new CmbStringDto()
                 {
                     Value = donem.BaslangicYil + "" + donem.DonemId,
                     Caption = donem.BaslangicYil + "/" + (donem.BaslangicYil + 1) + " " + donem.DonemAdi
                 });
-                if (bosSecimVar) cmbDonems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
             }
-            using (var entities = new LubsDbEntities())
-            {
-                var donems = entities.TIBasvuruAraRapors.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
-                    .Distinct().OrderByDescending(o => o.DonemBaslangicYil).ThenByDescending(t => t.DonemID).Select(s => new CmbStringDto
-                    {
-                        Value = s.DonemBaslangicYil + "" + s.DonemID,
-                        Caption = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + s.DonemAdi
-
-                    }).ToList();
-                if (bosSecimVar) donems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
-                return donems;
-            }
+            return cmbDonems.ToList();
         }
 
         public static List<CmbIntDto> GetCmbFilterTiAnabilimDallari(string enstituKod, bool bosSecimVar = false)
@@ -441,7 +430,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 return anabilimDallaris;
             }
         }
-         
+
 
     }
 }

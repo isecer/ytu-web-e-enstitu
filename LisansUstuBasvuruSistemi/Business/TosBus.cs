@@ -139,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var sonBasvuru = toBasvuruSavunmas.FirstOrDefault();
 
                 sinavTarihi = sinavTarihi ?? DateTime.Now;
-
+                sinavTarihi = sinavTarihi.Value.Date;
                 string muafiyetBilgisi = toBasvuru.IsBasvuruKriterMuaf
                     ? "Öğrenci başvuru kriterlerinden muaf tutulmaktadır. "
                     : "";

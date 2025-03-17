@@ -259,7 +259,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezBasligiDegisikligi;
 
                     firstRow.IsDuzeltSilYapabilir = firstRow.DanismanOnayladi != true && firstRow.VarolanDanismanOnayladi != true;
-                } 
+                }
 
 
                 TDOBasvuruEsDanisman lastEsBasvuru = null;
@@ -780,6 +780,52 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
 
+        public static SonTezBaslikInfo GetSonTezBaslik(string ogrenciNo)
+        {
+            using (var db = new LubsDbEntities())
+            {
+                var q1 = from s in db.ToBasvuruSavunmas
+                         where s.ToBasvuru.OgrenciNo == ogrenciNo &&
+                               s.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
+                         let sr = db.SRTalepleris.FirstOrDefault(f => f.ToBasvuruSavunmaID == s.ToBasvuruSavunmaID)
+                         select new
+                         {
+                             ModuleName = "Tez Öneri Savunma",
+                             sr.Tarih,
+                             s.IsTezDiliTr,
+                             TezBaslikTr = s.YeniTezBaslikTr,
+                             TezBaslikEn = s.YeniTezBaslikEn
+                         };
+
+                var q2 = from s in db.TIBasvuruAraRapors
+                         where s.TIBasvuru.OgrenciNo == ogrenciNo &&
+                               s.TIBasvuruAraRaporDurumID == TiAraRaporDurumuEnum.DegerlendirmeSureciTamamlandi &&
+                               s.IsBasariliOrBasarisiz == true
+                         let sr = db.SRTalepleris.FirstOrDefault(f => f.TIBasvuruAraRaporID == s.TIBasvuruAraRaporID)
+                         select new
+                         {
+                             ModuleName = "Tez İzleme Ara Rapor",
+                             sr.Tarih,
+                             s.IsTezDiliTr,
+                             TezBaslikTr = s.IsTezBasligiDegisti ? s.YeniTezBaslikTr : s.TezBaslikTr,
+                             TezBaslikEn = s.IsTezBasligiDegisti ? s.YeniTezBaslikEn : s.TezBaslikEn
+                         };
+
+                var result = q1.Concat(q2)
+                    .OrderByDescending(x => x.Tarih)
+                    .FirstOrDefault();
+
+                if (result == null) return null;
+
+                return new SonTezBaslikInfo
+                {
+                    ModuleName = result.ModuleName,
+                    IsTezDiliTr = result.IsTezDiliTr,
+                    TezBaslikTr = result.TezBaslikTr,
+                    TezBaslikEn = result.TezBaslikEn
+                };
+            }
+        }
 
 
         public static IHtmlString ToBasvuruDurumView(this FrTdoBasvuruDto model)
@@ -855,5 +901,14 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
 
+    }
+
+
+    public class SonTezBaslikInfo
+    {
+        public string ModuleName { get; set; }
+        public bool IsTezDiliTr { get; set; }
+        public string TezBaslikTr { get; set; }
+        public string TezBaslikEn { get; set; }
     }
 }

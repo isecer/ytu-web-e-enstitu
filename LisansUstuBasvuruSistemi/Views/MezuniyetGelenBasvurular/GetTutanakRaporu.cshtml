@@ -4,13 +4,12 @@
 }
 <div class="widget widget-default" style="margin:0px;padding:4px;">
     <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;" id="TutanakRprContent">
-        <div class="panel-body">
+        <div class="panel-body form-group-separated">
             @using (Ajax.BeginForm("GetTutanakRaporuKontrolu", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TutanakRprForm" }))
-            {
-                <div class="panel-body form-group-separated">
+            { 
                     <div class="form-group">
-                        <label class="col-md-3 col-xs-3 control-label">Tutanak Türünü</label>
-                        <div class="col-md-9 col-xs-9">
+                        <label class="col-md-4 col-xs-4 control-label">Tutanak Türünü</label>
+                        <div class="col-md-8 col-xs-8">
                             <select id="RaporTipID" name="RaporTipID" class="form-control" onchange="RprTipChange()">
                                 <option value="@RaporTipiEnum.MezuniyetTezJuriTutanakRaporu">Tez Jüri Tutanak Raporu</option>
                                 <option value="@RaporTipiEnum.MezuniyetTutanakRaporu">Mezuniyet Tutanak Raporu</option>
@@ -18,18 +17,18 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-3 col-xs-3 control-label">Öğrenim Tipleri</label>
-                        <div class="col-md-9 col-xs-9">
+                    <div class="form-group hide" id="DvOgrenimTip">
+                        <label class="col-md-4 col-xs-4 control-label">Öğrenim Tipleri</label>
+                        <div class="col-md-8 col-xs-8">
                             <select id="OgrenimTipKods" name="OgrenimTipKods" class="form-control">
                                 <option selected="selected" value="@OgrenimTipi.Doktra">Doktora</option>
                                 <option value="@OgrenimTipi.TezliYuksekLisans">Tezli Yüksek Lisans</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group" id="DvEnstituOnayDurum">
-                        <label class="col-md-3 col-xs-3 control-label">Enstitü Onay Durum</label>
-                        <div class="col-md-9 col-xs-9">
+                    <div class="form-group hide" id="DvEnstituOnayDurum">
+                        <label class="col-md-4 col-xs-4 control-label">Enstitü Onay Durum</label>
+                        <div class="col-md-8 col-xs-8">
                             <select id="EnstituOnayDurumId" name="EnstituOnayDurumId" class="form-control">
                                 <option value="@EykTipEnum.EykYaGonderildi">Eyk'ya Gönderilenler</option>
                                 <option value="@EykTipEnum.EykYaHazirlandi">Eyk'ya Hazırlananlar</option>
@@ -38,17 +37,17 @@
                         </div>
                     </div>
                     <div class="form-group hide" id="DvCiltliTezOnayDurum">
-                        <label class="col-md-3 col-xs-3 control-label">Ciltli Tez Teslimi Onay Durumu</label>
-                        <div class="col-md-9 col-xs-9">
+                        <label class="col-md-4 col-xs-4 control-label">Ciltli Tez Teslimi Onay Durumu</label>
+                        <div class="col-md-8 col-xs-8">
                             <select id="CiltliTezOnayDurumId" name="CiltliTezOnayDurumId" class="form-control">
-                                <option value="1">Danışman Tarafından Onaylananlar</option>
-                                <option value="2">Eyk'da Onaylananlar</option>
+                                <option value="@MezuniyetTezTeslimUzatmaDurumuEnum.EykDaOnaylandi">Eyk'da Onaylananlar</option>
+                                <option value="@MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi">Danışman Tarafından Onaylananlar</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-3 col-xs-3 control-label">Çıktı Alım Şekli</label>
-                        <div class="col-md-9 col-xs-9">
+                        <label class="col-md-4 col-xs-4 control-label">Çıktı Alım Şekli</label>
+                        <div class="col-md-8 col-xs-8">
                             <select id="ExportWordOrExcel" name="ExportWordOrExcel" class="form-control">
                                 <option value="true">Word Belgesi</option>
                                 <option value="false">Excel Belgesi</option>
@@ -56,8 +55,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
-                        <div class="col-md-9 col-xs-9">
+                        <label class="col-md-4 col-xs-4 control-label">Başlangıç / Bitiş Tarihi</label>
+                        <div class="col-md-8 col-xs-8">
                             <table>
                                 <tr>
                                     <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BasTar" name="BasTar"> </td>
@@ -67,24 +66,52 @@
                             </table>
                         </div>
                     </div>
-                </div>
+                    <div class="form-group hide" id="DvRaporTarihi">
+                        <label class="col-md-4 col-xs-4 control-label">Rapor Tarihi</label>
+                        <div class="col-md-8 col-xs-8">
+                            <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="RaporTarihi" name="RaporTarihi">
+                        </div>
+                    </div>
+              
             }
         </div>
     </div>
 </div>
 <script>
+    RprTipChange();
     function RprTipChange() {
         var _Rtip = $('#RaporTipID').val();
+        var selectedValueExportWordOrExcel = $('#ExportWordOrExcel').val();
 
-        if (_Rtip == '@RaporTipiEnum.MezuniyetTutanakRaporu' || _Rtip == '@RaporTipiEnum.MezuniyetTezJuriTutanakRaporu') {
+        if (_Rtip == '@RaporTipiEnum.MezuniyetTezJuriTutanakRaporu') {
+            $('#DvOgrenimTip').removeClass('hide');
             $('#DvEnstituOnayDurum').removeClass('hide');
             $('#DvCiltliTezOnayDurum').addClass('hide');
             $("#ExportWordOrExcel").html('<option value="true">Word Belgesi</option><option value="false">Excel Belgesi</option>');
-        } else if (_Rtip == '@RaporTipiEnum.MezuniyetCiltliTezTeslikEkSureTalebiTutanak') {
+            $('#DvRaporTarihi').addClass('hide');
+        }
+        else if (_Rtip == '@RaporTipiEnum.MezuniyetTutanakRaporu') {
+            $('#DvOgrenimTip').removeClass('hide');
+            $('#DvEnstituOnayDurum').addClass('hide');
+            $('#DvCiltliTezOnayDurum').addClass('hide');
+            $("#ExportWordOrExcel").html('<option value="true">Word Belgesi</option><option value="false">Excel Belgesi</option>');
+            $('#DvRaporTarihi').removeClass('hide');
+        }
+        else if (_Rtip == '@RaporTipiEnum.MezuniyetCiltliTezTeslikEkSureTalebiTutanak') {
+            $('#DvOgrenimTip').addClass('hide');
             $('#DvEnstituOnayDurum').addClass('hide');
             $('#DvCiltliTezOnayDurum').removeClass('hide');
             $("#ExportWordOrExcel").html('<option value="false" selected="selected">Excel Belgesi</option>');
+            $('#DvRaporTarihi').addClass('hide');
         }
+
+        // Eğer seçili değer yeni listede yoksa, ilk öğeyi seç
+        var validValues = $("#ExportWordOrExcel option").map(function () { return this.value; }).get();
+        if (!validValues.includes(selectedValueExportWordOrExcel)) {
+            selectedValueExportWordOrExcel = $("#ExportWordOrExcel option:first").val();
+        }
+
+        $('#ExportWordOrExcel').val(selectedValueExportWordOrExcel);
     }
 
     $(function () {

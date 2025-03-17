@@ -8,26 +8,28 @@
 }
 @using (Ajax.BeginForm("TdoDilBaslikDegisiklikFormuPost", "TdoBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
 {
-    @Html.HiddenFor(p => p.TDOBasvuruID);
-    @Html.HiddenFor(p => p.TDOBasvuruDanismanID);
+    @Html.HiddenFor(p => p.TDOBasvuruID)
+    @Html.HiddenFor(p => p.TDOBasvuruDanismanID)
+    @Html.HiddenFor(p => p.TezBaslikTr)
+    @Html.HiddenFor(p => p.TezBaslikEn)
     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
         <table style="width:100%;">
             <tbody>
                 <tr>
                     <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Tez Bilgileri</td>
                 </tr>
-                <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                <tr>
                     <td class="CaptionTd" width="150">Tez Başlığı Türkçe</td>
                     <td class="CaptionTd" width="10">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" @(Model.TezBaslikTr.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control UpperTextTr tCharacterBlock" style="color:black;" />
+                        <input type="text" autocomplete="off" value="@Model.TezBaslikTr" maxlength="512" readonly="readonly" class="form-control UpperTextTr tCharacterBlock" style="color:black;" />
                     </td>
                 </tr>
-                <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                <tr>
                     <td class="CaptionTd">Tez Başlığı İngilizce</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" @(Model.TezBaslikEn.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control UpperTextEn tCharacterBlock" style="color:black;" />
+                        <input type="text" autocomplete="off" value="@Model.TezBaslikEn" maxlength="512" readonly="readonly" class="form-control UpperTextEn tCharacterBlock" style="color:black;" />
                     </td>
                 </tr>
                 <tr>

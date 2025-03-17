@@ -91,7 +91,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                         model.IsTezDiliTr = tez.TEZ_DILI.ToLower().Contains("türkçe");
                                         model.OgrenciTez = tez;
 
-                                        var sonTezIzlemeBilgiler = tez.tezizlemebilgileri
+                                        var sonTezIzlemeBilgiler = tez.tezizlemebilgileri.Where(p=>p.TEZ_IZL_DURUM!="MUAF")
                                             .OrderByDescending(o => o.TEZ_IZL_SIRA.ToIntObj()).FirstOrDefault();
                                         if (sonTezIzlemeBilgiler != null)
                                             model.SonTezIzlemeBilgileri = sonTezIzlemeBilgiler;
