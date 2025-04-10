@@ -2953,14 +2953,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         pr.ProgramAdi,
                         DanismanAdSoyad = s.TezDanismanUnvani + " " + s.TezDanismanAdi,
                         BasariliOlunanSinavTarihi = srT.Tarih,
-                        mOt.TezTeslimSuresiAy,
+                        mOt.TezTeslimSuresiAy, 
                         s.CiltliTezTeslimUzatmaTalebiDanismanOnay,
+                        s.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih,
                         s.CiltliTezTeslimUzatmaTalebiEykDaOnay,
                         s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi,
                         s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi,
                         s.IsMezunOldu,
                         FiterTarih = ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi ? s.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih : s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi
                     };
+            if (ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi)   
+            {
+                q = q.Where(p =>
+                    p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true &&
+                    !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue &&
+                    p.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih >= baslangicTarihi &&
+                    p.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih <= bitisTarihi);
+            }
+            else
+            {
+                q = q.Where(p =>
+                    p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true &&
+                    p.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi >= baslangicTarihi &&
+                    p.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi <= bitisTarihi);
+            }
             q = ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi ? q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue) : q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true);
 
             q = q.Where(p => p.FiterTarih.HasValue && p.FiterTarih.Value > baslangicTarihi && p.FiterTarih.Value <= bitisTarihi);

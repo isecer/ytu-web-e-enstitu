@@ -14,12 +14,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize]
-    [System.Web.Mvc.OutputCache(NoStore = false, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = false, Duration = 0, VaryByParam = "*")]
     public class KullanicilarController : Controller
     {
         private readonly LubsDbEntities _entities = new LubsDbEntities();
@@ -33,7 +32,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.Kullanicilar)]
         public ActionResult Index(FmKullanicilarDto model, List<string> programKod = null)
         {
-            programKod = programKod ?? new List<string>(); ;
+            programKod = programKod ?? new List<string>();
             var userEnst = UserIdentity.Current.EnstituKods;
             var q = from s in _entities.Kullanicilars
                     join ktl in _entities.KullaniciTipleris on new { s.KullaniciTipID } equals new { ktl.KullaniciTipID }
@@ -77,6 +76,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IslemYapanIP,
                         s.YtuOgrencisi
                     };
+            var q1 = q;
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => (p.Ad + " " + p.Soyad).Contains(model.AdSoyad) || p.EMail.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.TcKimlikNo.Contains(model.AdSoyad) || p.OgrenciNo.Contains(model.AdSoyad));
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
@@ -92,6 +92,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.YetkiGrupID.HasValue)
             {
                 q = q.Where(p => p.YetkiGrupID == model.YetkiGrupID.Value);
+            }
+
+            if (!q1.Equals(q))
+            {
+                ViewBag.filteredKullaniciIds = q.Select(s => s.KullaniciID).ToList();
             }
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi
@@ -146,7 +151,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.BirimID = new SelectList(BirimlerBus.GetBirimlerTreeList(), "BirimID", "BirimAdi", model.BirimID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.IsAdmin = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsAdmin);
-            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(false), "Value", "Caption", model.ProgramKod);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(), "Value", "Caption", model.ProgramKod);
             ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
             ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
@@ -187,8 +192,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             ViewBag.ResimVar = resimVar;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            if (model.OgrenimEnstituKod.IsNullOrWhiteSpace())
+                model.OgrenimEnstituKod = model.EnstituKod;
+            ViewBag.OgrenimEnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.OgrenimEnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true,model.KullaniciTipID==KullaniciTipiEnum.AkademikPersonel), "Value", "Caption", model.UnvanID);
+            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true, model.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel), "Value", "Caption", model.UnvanID);
             ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", model.BirimID);
             ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
 
@@ -208,6 +216,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bool isKurumIci = true;
             bool isYerli = true;
             var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+            var isOgrenci = new List<int> { KullaniciTipiEnum.YerliOgrenci, KullaniciTipiEnum.YabanciOgrenci }.Contains(kModel.KullaniciTipID);
             #region Kontrol
             kModel.KullaniciAdi = kModel.KullaniciAdi != null ? kModel.KullaniciAdi.Trim() : "";
             if (erisimYetki)
@@ -340,8 +349,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "Adres" });
                 }
+
+            if (isOgrenci && !kModel.YtuOgrencisi)
+            {
+                mmMessage.Messages.Add("Seçilen kullanıcı tipi için Ytü öğrencisi olduğunuzu belirtmek zorunludur.");
+                mmMessage.MessagesDialog.Add(new MrMessage
+                {
+                    MessageType = MsgTypeEnum.Warning,
+                    PropertyName = "YtuOgrencisi"
+                });
+            }
             if (kModel.YtuOgrencisi)
             {
+                if (kModel.OgrenimEnstituKod.IsNullOrWhiteSpace())
+                {
+                    mmMessage.Messages.Add("Öğrenci Olduğunuz Enstitüyü Seçiniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage
+                    {
+                        MessageType = MsgTypeEnum.Warning,
+                        PropertyName = "OgrenimEnstituKod"
+                    });
+                }
                 if (kModel.OgrenciNo.IsNullOrWhiteSpace())
                 {
                     mmMessage.Messages.Add("Öğrenci No Giriniz.");
@@ -578,6 +606,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (!kModel.YtuOgrencisi)
                 {
+                    kModel.OgrenimEnstituKod = null;
                     kModel.OgrenciNo = null;
                     kModel.OgrenimTipKod = null;
                     kModel.OgrenimDurumID = null;
@@ -588,7 +617,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
+
                     kModel.OgrenciNo = kModel.OgrenciNo.RemoveNonAlphanumeric();
+                }
+                if (isOgrenci)
+                {
+                    kModel.EnstituKod = kModel.OgrenimEnstituKod;
                 }
                 kModel.TcKimlikNo = kModel.TcKimlikNo.RemoveNonAlphanumeric();
                 var yeniKullanici = kModel.KullaniciID <= 0;
@@ -641,6 +675,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
                     kullanici.EnstituKod = kModel.EnstituKod;
+                    kullanici.OgrenimEnstituKod = kModel.OgrenimEnstituKod;
                     kullanici.KullaniciTipID = kModel.KullaniciTipID;
                     kullanici.Ad = kModel.Ad;
                     bool isYetkiDegisti = false;
@@ -823,7 +858,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var gEnstitu = _entities.KullaniciEnstituYetkileris.Where(p => p.KullaniciID == kullaniciId).AsQueryable();
             if (UserIdentity.Current.IsAdmin == false)
             {
-                gEnstitu.Where(p => eKods.Contains(p.EnstituKod));
+                gEnstitu = gEnstitu.Where(p => eKods.Contains(p.EnstituKod));
             }
             _entities.KullaniciEnstituYetkileris.RemoveRange(gEnstitu.ToList());
             foreach (var item in enstituKods)
@@ -837,7 +872,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     IslemYapanIP = UserIdentity.Ip
                 });
             }
-            if (UserIdentity.Current.Id == kullaniciId) UserIdentity.Current.EnstituKods = enstituKods ?? new List<string>();
+            if (UserIdentity.Current.Id == kullaniciId) UserIdentity.Current.EnstituKods = enstituKods;
             _entities.SaveChanges();
             MessageBox.Show("Yetkiler Kaydedildi", MessageBox.MessageType.Success);
             return RedirectToAction("Index");
@@ -864,7 +899,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 return RedirectToAction("Index");
             }
             programKod = programKod ?? new List<string>();
-            var gEnstitu = UserIdentity.Current.EnstituKods;
             var kProg = _entities.KullaniciProgramlaris.Where(p => p.KullaniciID == kullaniciId && p.Programlar.AnabilimDallari.EnstituKod.Contains(enstituKod)).ToList();
             _entities.KullaniciProgramlaris.RemoveRange(kProg);
             foreach (var item in programKod)
@@ -881,7 +915,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var kayit = _entities.Kullanicilars.Single(p => p.UserKey == userKey);
 
-            string message = "";
+            string message;
             bool success = true;
             if (kayit != null)
             {
@@ -903,7 +937,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Kullanıcı sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [AllowAnonymous]
         public ActionResult SetLogin(Guid userKey, string key = "")

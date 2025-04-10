@@ -17,6 +17,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Collections.Generic;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -349,55 +350,98 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult HesapKayit(int? id, string ekd)
         {
-            var kayitYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
+            bool yetkiliKullanici = RoleNames.KullanicilarKayit.InRoleCurrent();
 
-            var model = new Kullanicilar
+            var kullanici = new Kullanicilar
             {
                 EnstituKod = EnstituBus.GetSelectedEnstitu(ekd),
                 IsAktif = true
             };
 
-            var isKurumIci = true;
-            var isYerli = true;
-            var resimVar = false;
+            Kullanicilar model = kullanici;
+            bool isKurumIci = true;
+            bool isYerli = true;
+            bool resimVar = false;
 
             if (UserIdentity.Current.IsAuthenticated)
             {
-                if (!id.HasValue || id <= 0) id = UserIdentity.Current.Id;
-                if (!kayitYetki && id != UserIdentity.Current.Id) id = UserIdentity.Current.Id;
-
-                var data = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == id);
-                if (data != null)
+                if (id == null || id <= 0)
                 {
-                    isKurumIci = data.KullaniciTipleri.KurumIci;
-                    isYerli = data.KullaniciTipleri.Yerli;
-                    resimVar = data.ResimAdi.IsNullOrWhiteSpace() == false;
-                    data.ResimAdi = data.ResimAdi;
-                    model = data;
+                    id = UserIdentity.Current.Id;
+                }
 
+                if (!yetkiliKullanici && id != UserIdentity.Current.Id)
+                {
+                    id = UserIdentity.Current.Id;
+                }
+
+                var mevcutKullanici = _entities.Kullanicilars.FirstOrDefault(p => (int?)p.KullaniciID == id);
+
+                if (mevcutKullanici != null)
+                {
+                    isKurumIci = mevcutKullanici.KullaniciTipleri.KurumIci;
+                    isYerli = mevcutKullanici.KullaniciTipleri.Yerli;
+                    resimVar = !string.IsNullOrWhiteSpace(mevcutKullanici.ResimAdi);
+                    mevcutKullanici.ResimAdi = mevcutKullanici.ResimAdi;
+                    model = mevcutKullanici;
                 }
 
                 model.Sifre = "";
             }
 
-            ViewBag.EnstituKod = RoleNames.KullanicilarKayit.InRoleCurrent() ? new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod)
+            ViewBag.EnstituKod = yetkiliKullanici
+                ? new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod)
                 : new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, (!kayitYetki)), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true,model.KullaniciTipID==KullaniciTipiEnum.AkademikPersonel), "Value", "Caption", model.UnvanID);
-            ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", model.BirimID);
-            ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
-            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.EnstituKod, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
-            ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
-            ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
 
-            var kulTipi = _entities.KullaniciTipleris.FirstOrDefault(p => p.KullaniciTipID == model.KullaniciTipID);
+            if (string.IsNullOrWhiteSpace(model.OgrenimEnstituKod))
+            {
+                model.OgrenimEnstituKod = model.EnstituKod;
+            }
 
-            ViewBag.KullaniciTipAdi = kulTipi != null ? kulTipi.KullaniciTipAdi : "";
+            ViewBag.OgrenimEnstituKod = yetkiliKullanici
+                ? new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.OgrenimEnstituKod)
+                : new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.OgrenimEnstituKod);
 
+            ViewBag.KullaniciTipID = new SelectList(
+                KullanicilarBus.GetCmbKullaniciTipleri(true, !yetkiliKullanici),
+                "Value", "Caption", model.KullaniciTipID);
+
+            ViewBag.UnvanID = new SelectList(
+                UnvanlarBus.CmbUnvanlar(true, new bool?(model.KullaniciTipID == 2)),
+                "Value", "Caption", model.UnvanID);
+
+            ViewBag.BirimID = new SelectList(
+                BirimlerBus.CmbBirimler(true),
+                "Value", "Caption", model.BirimID);
+
+            ViewBag.CinsiyetID = new SelectList(
+                KullanicilarBus.CmbCinsiyetler(true),
+                "Value", "Caption", model.CinsiyetID);
+
+            
+            ViewBag.OgrenimTipKod = new SelectList(
+                OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.OgrenimEnstituKod, true, true, null),
+                "Value", "Caption", model.OgrenimTipKod);
+
+            ViewBag.ProgramKod = new SelectList(
+                ProgramlarBus.CmbGetAktifProgramlar(model.OgrenimEnstituKod, true, true),
+                "Value", "Caption", model.ProgramKod);
+             
+            ViewBag.OgrenimDurumID = new SelectList(
+                KullanicilarBus.CmbAktifOgrenimDurumu(true, true, null, null, true),
+                "Value", "Caption", model.OgrenimDurumID);
+
+            ViewBag.YetkiGrupID = new SelectList(
+                YetkiGrupBus.CmbYetkiGruplari(false),
+                "Value", "Caption", model.YetkiGrupID);
+
+            var kullaniciTipi = _entities.KullaniciTipleris.FirstOrDefault(p => p.KullaniciTipID == model.KullaniciTipID);
+
+            ViewBag.KullaniciTipAdi = (kullaniciTipi != null) ? kullaniciTipi.KullaniciTipAdi : "";
             ViewBag.IsKurumIci = isKurumIci;
             ViewBag.IsYerli = isYerli;
             ViewBag.ResimVar = resimVar;
+
             return View(model);
         }
         [HttpPost]
@@ -416,6 +460,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
             kModel.KullaniciAdi = kModel.KullaniciAdi != null ? kModel.KullaniciAdi.Trim() : "";
+            var isOgrenci = new List<int> { KullaniciTipiEnum.YerliOgrenci, KullaniciTipiEnum.YabanciOgrenci }.Contains(kModel.KullaniciTipID);
+
             #region Kontrol
             if (erisimYetki)
             {
@@ -560,9 +606,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "SicilNo" });
                     }
                     else messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "SicilNo" });
-
+                if (isOgrenci && !kModel.YtuOgrencisi)
+                {
+                    messageModel.Messages.Add("Seçilen kullanıcı tipi için Ytü öğrencisi olduğunuzu belirtmek zorunludur.");
+                    messageModel.MessagesDialog.Add(new MrMessage
+                    {
+                        MessageType = MsgTypeEnum.Warning,
+                        PropertyName = "YtuOgrencisi"
+                    });
+                }
                 if (kModel.YtuOgrencisi)
                 {
+                    if (kModel.OgrenimEnstituKod.IsNullOrWhiteSpace())
+                    {
+                        messageModel.Messages.Add("Öğrenci Olduğunuz Enstitüyü Seçiniz.");
+                        messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenimEnstituKod" });
+                    }
                     if (kModel.OgrenciNo.IsNullOrWhiteSpace())
                     {
                         messageModel.Messages.Add("Öğrenci No Bilgisini Giriniz.");
@@ -780,8 +839,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     messageModel.Messages.AddRange(sended.Messages);
                 }
             }
-
-
+ 
             if (messageModel.Messages.Count == 0)
             {
                 kModel.IslemYapanID = UserIdentity.Current.Id;
@@ -803,6 +861,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (!kModel.YtuOgrencisi)
                 {
+                    kModel.OgrenimEnstituKod = null;
                     kModel.OgrenciNo = null;
                     kModel.OgrenimTipKod = null;
                     kModel.OgrenimDurumID = null;
@@ -810,6 +869,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.KayitTarihi = null;
                     kModel.KayitYilBaslangic = null;
                     kModel.KayitDonemID = null;
+                }
+                if (isOgrenci)
+                {
+                    kModel.EnstituKod = kModel.OgrenimEnstituKod;
                 }
                 var sifreUnCrypet = kModel.Sifre;
                 var yeniKullanici = kModel.KullaniciID <= 0;
@@ -863,6 +926,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
                     kullanici.EnstituKod = kModel.EnstituKod;
+                    kullanici.OgrenimEnstituKod = kModel.OgrenimEnstituKod;
                     if (erisimYetki) kullanici.YetkiGrupID = kModel.YetkiGrupID;
                     kullanici.KullaniciTipID = kModel.KullaniciTipID;
                     kullanici.Ad = kModel.Ad;

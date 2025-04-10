@@ -78,6 +78,11 @@ namespace Entities.Entities
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
+        public Nullable<int> DegisiklikTipiID { get; set; }
+        public Nullable<int> DegisiklikNedeniID { get; set; }
+        public string ProjeDetay { get; set; }
+        public string VeriTalebiDetay { get; set; }
+        public Nullable<bool> TaahhutOnay { get; set; }
     
         public virtual AnabilimDallari AnabilimDallari { get; set; }
         public virtual Donemler Donemler { get; set; }

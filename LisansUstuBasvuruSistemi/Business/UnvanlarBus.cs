@@ -10,7 +10,6 @@ namespace LisansUstuBasvuruSistemi.Business
     public static class UnvanlarBus
     {
         public static List<string> JuriUnvanList = new List<string> { "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
-        public static List<string> EsDanismanUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
         public static List<string> DpJuriUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
         public static string ToJuriUnvanAdi(this string unvanAdi)
         {
@@ -21,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var drUnvan = new List<string> { "DR." };
             var profUnvan = new List<string> { "PROFESÖR".ToLower(), "PROFESÖR.DR".ToLower(), "PROF.DR.".ToLower(), "Prof.".ToLower() };
             var docUnvan = new List<string> { "DOÇENT".ToLower(), "DOÇ .DR.".ToLower(), "DOÇ.DR.".ToLower(), "DOÇENT.DR".ToLower(), "Doç.".ToLower() };
-            var ogUyeUnvan = new List<string> { "DR.ÖĞR.ÜYE".ToLower(), "DR.ÖĞR.ÜYESİ".ToLower(), "DR.ÖĞRETİM.ÜYE".ToLower(), "DR.ÖĞRETİM.ÜYESİ".ToLower() };
+            var ogUyeUnvan = new List<string> { "DR.ÖĞR.ÜYE".ToLower(), "DR.ÖĞR.ÜYESİ".ToLower(), "DR.ÖĞRETİM.ÜYE".ToLower(), "DR.ÖĞRETİM.ÜYESİ".ToLower(), "Doktor Öğretim Üyesi".ToLower(), "Doktor.Öğretim.Üyesi".ToLower() };
             if (profUnvan.Any(a => a.Contains(unvanAdi))) return "PROF. DR.";
             if (docUnvan.Any(a => a.Contains(unvanAdi))) return "DOÇ. DR.";
             if (arGorUnvan.Any(a => a.Contains(unvanAdi))) return "ARŞ. GÖR. DR.";

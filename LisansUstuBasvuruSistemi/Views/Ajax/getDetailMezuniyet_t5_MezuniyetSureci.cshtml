@@ -166,7 +166,7 @@
                                                         <td class="CaptionTd"></td>
                                                         <td class="CaptionTd">:</td>
                                                         <td class="ValueTd" style="color:maroon;">
-                                                            <i class="fa fa-info-circle fa-lg"></i> @Html.Raw(mezuniyetBasvurulariTezTeslimFormu == null ? "Tez Teslim Formu oluşturup çıktısını <b>" + item.TezTeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır." : "Hazırladığınız Tez Teslim Formunun çıktısını <b>" + item.TezTeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır.")
+                                                            <i class="fa fa-info-circle fa-lg"></i> @Html.Raw(mezuniyetBasvurulariTezTeslimFormu == null ? "Tez Teslim Formu oluşturup çıktısını <b>" + Model.AktifTezTeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır." : "Hazırladığınız Tez Teslim Formunun çıktısını <b>" + Model.AktifTezTeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır.")
                                                         </td>
                                                     </tr>
 

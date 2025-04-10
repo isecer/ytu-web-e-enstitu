@@ -1,105 +1,201 @@
 ﻿using BiskaUtil;
 using Entities.Entities;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using System;
-using System.Linq;
-using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    [Authorize(Roles = RoleNames.MailIslemleri)]
+    [Authorize(Roles = "Mail İşlemleri")]
     public class MailIslemleriController : Controller
     {
-        private readonly LubsDbEntities _entities = new LubsDbEntities();
+        private readonly LubsDbEntities _entities;
+
+        public MailIslemleriController()
+        {
+            _entities = new LubsDbEntities();
+        }
+
         public ActionResult Index()
         {
-            return Index(new FmMailGondermeDto() { PageSize = 15 });
+            FmMailGondermeDto model = new FmMailGondermeDto();
+            model.PageSize = 15;
+            return Index(model);
         }
-        [HttpPost]
-        public ActionResult Index(FmMailGondermeDto model)
-        {
-            var filteredMailsQuery = _entities.GonderilenMaillers.Where(p => p.Silindi == false && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
 
+        [HttpPost]
+        public ActionResult Index2(FmMailGondermeDto model)
+        {
+            // E-posta listesini filtreleme işlemleri
+            var query = _entities.GonderilenMaillers
+                .Where(p => p.Silindi == false && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
+
+            // Ek dosyası olan mailleri filtreleme
             if (model.IsEkVar == true)
             {
-                filteredMailsQuery = filteredMailsQuery.Where(p => p.GonderilenMailEkleris.Any());
+                query = query.Where(p => p.GonderilenMailEkleris.Any());
             }
 
-            if (!model.Konu.IsNullOrWhiteSpace())
+            // Konu filtrelemesi
+            if (!string.IsNullOrWhiteSpace(model.Konu))
             {
-                var searchTerm = "\"" + model.Konu + "\""; 
-                string query = $"SELECT * FROM {nameof(GonderilenMailler)} WHERE CONTAINS({nameof(GonderilenMailler.AciklamaHtml)}, @p0) AND {nameof(GonderilenMailler.Silindi)} = 0";
-                var filteredMailIds = _entities.GonderilenMaillers.SqlQuery(query, searchTerm).Select(s => s.GonderilenMailID).ToList();
-                filteredMailsQuery = filteredMailsQuery.Where(p => filteredMailIds.Contains(p.GonderilenMailID));
+                string searchTerm = string.Concat("\"", model.Konu, "\"");
+                string sql = string.Format("SELECT * FROM {0} WHERE CONTAINS({1}, @p0) AND {2} = 0", "GonderilenMailler", "AciklamaHtml", "Silindi");
 
+                var filteredMailIds = _entities.GonderilenMaillers
+                    .SqlQuery(sql, searchTerm)
+                    .Select(s => s.GonderilenMailID)
+                    .ToList();
 
+                query = query.Where(p => filteredMailIds.Contains(p.GonderilenMailID));
             }
 
-            if (!model.EnstituKod.IsNullOrWhiteSpace())
+            // Enstitü filtrelemesi
+            if (!string.IsNullOrWhiteSpace(model.EnstituKod))
             {
-                filteredMailsQuery = filteredMailsQuery.Where(p => p.EnstituKod == model.EnstituKod);
+                query = query.Where(p => p.EnstituKod == model.EnstituKod);
             }
 
+            // Tarih filtrelemesi
             if (model.Tarih.HasValue)
             {
-                var trih = model.Tarih.Value.TodateToShortDate();
-                filteredMailsQuery = filteredMailsQuery.Where(p => p.Tarih == trih);
+                DateTime shortDate = model.Tarih.Value.TodateToShortDate();
+                query = query.Where(p => p.Tarih == shortDate);
             }
 
-            var q = from s in filteredMailsQuery
-                    join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
-                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    select new
-                    {
-                        s.GonderilenMailID,
-                        s.Tarih,
-                        s.EnstituKod,
-                        e.EnstituAd,
-                        s.Konu,
-                        MailGonderen = k.Ad + " " + k.Soyad,
-                        s.Gonderildi,
-                        s.HataMesaji,
-                        s.IslemYapanID
-                    };
+            // Enstitü ve kullanıcı bilgileriyle joinleme
+            var resultQuery = from mail in query
+                              join enst in _entities.Enstitulers on mail.EnstituKod equals enst.EnstituKod
+                              join kullanici in _entities.Kullanicilars on mail.IslemYapanID equals kullanici.KullaniciID
+                              select new
+                              {
+                                  GonderilenMailID = mail.GonderilenMailID,
+                                  Tarih = mail.Tarih,
+                                  EnstituKod = mail.EnstituKod,
+                                  EnstituAd = enst.EnstituAd,
+                                  Konu = mail.Konu,
+                                  MailGonderen = kullanici.Ad + " " + kullanici.Soyad,
+                                  Gonderildi = mail.Gonderildi,
+                                  HataMesaji = mail.HataMesaji,
+                                  IslemYapanID = mail.IslemYapanID
+                              };
 
-            if (!model.MailGonderen.IsNullOrWhiteSpace())
+            // Gönderen filtrelemesi
+            if (!string.IsNullOrWhiteSpace(model.MailGonderen))
             {
-                q = q.Where(p => p.MailGonderen.Contains(model.MailGonderen));
+                resultQuery = resultQuery.Where(p => p.MailGonderen.Contains(model.MailGonderen));
             }
 
-            model.RowCount = q.Count();
+            // Toplam kayıt sayısını alma
+            model.RowCount = resultQuery.Count();
 
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Tarih);
+            // Sıralama
+            var orderedQuery = string.IsNullOrWhiteSpace(model.Sort)
+                ? resultQuery.OrderByDescending(o => o.Tarih)
+                : resultQuery.OrderBy(model.Sort);
 
-            model.MailGondermeDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrMailGondermeDto
-            {
-                GonderilenMailID = s.GonderilenMailID,
-                Tarih = s.Tarih,
-                EnstituAdi = s.EnstituAd,
-                Konu = s.Konu,
-                MailGonderen = s.MailGonderen,
-                Gonderildi = s.Gonderildi,
-                HataMesaji = s.HataMesaji
+            // Sayfalama ve sonuçları FrMailGondermeDto'ya dönüştürme
+            var mailList = orderedQuery
+                .Skip(model.StartRowIndex)
+                .Take(model.PageSize)
+                .ToList()
+                .Select(s => new FrMailGondermeDto
+                {
+                    GonderilenMailID = s.GonderilenMailID,
+                    Tarih = s.Tarih,
+                    EnstituAdi = s.EnstituAd,
+                    Konu = s.Konu,
+                    MailGonderen = s.MailGonderen,
+                    Gonderildi = s.Gonderildi,
+                    HataMesaji = s.HataMesaji
+                })
+                .ToList();
 
-            }).ToList();
+            model.MailGondermeDtos = mailList;
 
+            // E-posta eklerini ve alıcı sayılarını hesaplama
             var gonderilenMailIds = model.MailGondermeDtos.Select(s => s.GonderilenMailID).ToList();
-
-            var gonderilenMailEks = _entities.GonderilenMaillers
+            var ekSayilari = _entities.GonderilenMaillers
                 .Where(p => gonderilenMailIds.Contains(p.GonderilenMailID))
                 .Select(s => new { s.GonderilenMailID, EkSayisi = s.GonderilenMailEkleris.Count })
                 .ToList();
 
-            foreach (var itemMail in model.MailGondermeDtos)
+            // Her mail için ek sayısını atama
+            foreach (var mail in model.MailGondermeDtos)
             {
-                itemMail.EkSayisi = gonderilenMailEks.Where(f => f.GonderilenMailID == itemMail.GonderilenMailID).Select(s => s.EkSayisi).FirstOrDefault();
+                mail.EkSayisi = ekSayilari
+                    .Where(f => f.GonderilenMailID == mail.GonderilenMailID)
+                    .Select(s => s.EkSayisi)
+                    .FirstOrDefault();
+            }
+
+            // ViewBag'e combo box verilerini ekleme
+            ViewBag.IsEkVar = new SelectList(GonderilenMaillerBus.GetCmbMailEkKontrol(true), "Value", "Caption", model.IsEkVar);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Index(FmMailGondermeDto model)
+        {
+            // Stored procedure kullanarak arama yapma
+            ObjectParameter totalCount = new ObjectParameter("TotalCount", typeof(int));
+
+            List<sp_SearchMailsFullText_Result> results = _entities.sp_SearchMailsFullText(
+                string.Join(",", UserIdentity.Current.EnstituKods),
+                model.IsEkVar,
+                !string.IsNullOrWhiteSpace(model.Konu) ? model.Konu : null,
+                !string.IsNullOrWhiteSpace(model.EnstituKod) ? model.EnstituKod : null,
+                model.Tarih,
+                !string.IsNullOrWhiteSpace(model.MailGonderen) ? model.MailGonderen : null,
+                model.StartRowIndex,
+                model.PageSize,
+                totalCount).ToList();
+
+            model.RowCount = (int)totalCount.Value;
+            model.MailGondermeDtos = results.Select(r => new FrMailGondermeDto
+            {
+                GonderilenMailID = r.GonderilenMailID.Value,
+                Tarih = r.Tarih.Value,
+                EnstituAdi = r.EnstituAd,
+                Konu = r.Konu,
+                MailGonderen = r.MailGonderen,
+                Gonderildi = r.Gonderildi.Value,
+                HataMesaji = r.HataMesaji
+            }).ToList();
+
+            // Ek sayıları ve alıcı sayılarını hesaplama
+            var gonderilenMailIds = model.MailGondermeDtos.Select(s => s.GonderilenMailID).ToList();
+
+            // Mail eklerini hesaplama
+            var ekSayilari = _entities.GonderilenMailEkleris
+                .Where(e => gonderilenMailIds.Contains(e.GonderilenMailID))
+                .GroupBy(e => e.GonderilenMailID)
+                .Select(g => new { GonderilenMailID = g.Key, EkSayisi = g.Count() })
+                .ToDictionary(x => x.GonderilenMailID, x => x.EkSayisi);
+
+            // Mail alıcılarını hesaplama
+            var aliciSayilari = _entities.GonderilenMailKullanicilars
+                .Where(a => gonderilenMailIds.Contains(a.GonderilenMailID))
+                .GroupBy(a => a.GonderilenMailID)
+                .Select(g => new { GonderilenMailID = g.Key, AliciSayisi = g.Count() })
+                .ToDictionary(x => x.GonderilenMailID, x => x.AliciSayisi);
+
+            // Her mail için ek ve alıcı sayılarını atama
+            foreach (var mail in model.MailGondermeDtos)
+            {
+                mail.EkSayisi = ekSayilari.ContainsKey(mail.GonderilenMailID) ? ekSayilari[mail.GonderilenMailID] : 0;
+                mail.KisiSayisi = aliciSayilari.ContainsKey(mail.GonderilenMailID) ? aliciSayilari[mail.GonderilenMailID] : 0;
             }
 
             ViewBag.IsEkVar = new SelectList(GonderilenMaillerBus.GetCmbMailEkKontrol(true), "Value", "Caption", model.IsEkVar);
@@ -110,152 +206,153 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult MailDetay(int gonderilenMailId)
         {
+            // Mail detaylarını getirme
+            var mailDetay = (from mail in _entities.GonderilenMaillers
+                             join enst in _entities.Enstitulers on mail.EnstituKod equals enst.EnstituKod into enstGroup
+                             from enst in enstGroup.DefaultIfEmpty()
+                             join k in _entities.Kullanicilars on mail.IslemYapanID equals k.KullaniciID
+                             where mail.GonderilenMailID == gonderilenMailId
+                             select new FrMailGondermeDto
+                             {
+                                 GonderilenMailID = mail.GonderilenMailID,
+                                 EnstituAdi = enst != null ? enst.EnstituAd : "Sistem",
+                                 Tarih = mail.Tarih,
+                                 Konu = mail.Konu,
+                                 Aciklama = mail.Aciklama,
+                                 AciklamaHtml = mail.AciklamaHtml,
+                                 MailGonderen = k.Ad + " " + k.Soyad,
+                                 UserKey = k.UserKey,
+                                 IslemYapanID = mail.IslemYapanID,
+                                 IslemYapanIP = mail.IslemYapanIP,
+                                 EkSayisi = mail.GonderilenMailEkleris.Count,
+                                 KisiSayisi = mail.GonderilenMailKullanicilars.Count,
+                                 GonderilenMailEkleris = mail.GonderilenMailEkleris.ToList()
+                             }).First();
 
-            var data = (from s in _entities.GonderilenMaillers
-                        join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod into def
-                        from xDef in def.DefaultIfEmpty()
-                        join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                        where s.GonderilenMailID == gonderilenMailId
-                        select new FrMailGondermeDto
-                        {
-                            GonderilenMailID = s.GonderilenMailID,
-                            EnstituAdi = xDef != null ? xDef.EnstituAd : "Sistem",
-                            Tarih = s.Tarih,
-                            Konu = s.Konu,
-                            Aciklama = s.Aciklama,
-                            AciklamaHtml = s.AciklamaHtml,
-                            MailGonderen = k.Ad + " " + k.Soyad,
-                            UserKey = k.UserKey,
-                            IslemYapanID = s.IslemYapanID,
-                            IslemYapanIP = s.IslemYapanIP,
-                            EkSayisi = s.GonderilenMailEkleris.Count,
-                            KisiSayisi = s.GonderilenMailKullanicilars.Count,
-                            GonderilenMailEkleris = s.GonderilenMailEkleris.ToList()
+            // Mail alıcılarını getirme
+            var alicilar = _entities.GonderilenMailKullanicilars
+                .Where(s => s.GonderilenMailID == gonderilenMailId)
+                .OrderBy(s => s.Kullanicilar.Ad)
+                .ThenBy(s => s.Kullanicilar.Soyad)
+                .Select(s => new MailKullaniciBilgi
+                {
+                    AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
+                    Email = s.Email
+                })
+                .ToList();
 
-                        }).First();
-            var dataK = (from s in _entities.GonderilenMailKullanicilars
-                         orderby s.Kullanicilar.Ad, s.Kullanicilar.Soyad
-                         where s.GonderilenMailID == gonderilenMailId
-                         select new MailKullaniciBilgi
-                         {
-                             AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                             Email = s.Email
-                         }).ToList();
-            ViewBag.DataK = dataK;
-            return View(data);
+            ViewBag.DataK = alicilar;
+            return View(mailDetay);
         }
-
-
 
         public ActionResult MailIstatitik()
         {
-            return MailIstatitik(new FmMailIstatistikDto { AyId = DateTime.Now.Month, Yil = DateTime.Now.Year });
+            FmMailIstatistikDto model = new FmMailIstatistikDto();
+            model.AyId = DateTime.Now.Month;
+            model.Yil = DateTime.Now.Year;
+            return MailIstatitik(model);
         }
+
         [HttpPost]
         public ActionResult MailIstatitik(FmMailIstatistikDto model)
         {
-            //var filteredMailsQuery = _entities.GonderilenMaillers.Where(p => p.Tarih.Year == model.Yil);
+            // Mail istatistiklerini getirme
+            var query = _entities.GonderilenMaillers
+                .Where(p => p.Tarih.Year == model.Yil &&
+                           (!model.AyId.HasValue || p.Tarih.Month == model.AyId.Value));
 
-            //if (model.AyId.HasValue) filteredMailsQuery = filteredMailsQuery.Where(p => p.Tarih.Month == model.AyId);
-
-
-            //var q = from gm in filteredMailsQuery
-            //        group new { gm.EnstituKod } by new { gm.Tarih.Year, gm.Tarih.Month, gm.Tarih.Day }
-            //    into g1
-            //        select new
-            //        {
-            //            g1.Key.Year,
-            //            g1.Key.Month,
-            //            g1.Key.Day,
-            //            FbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.FenBilimleri),
-            //            SbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.SosyalBilimleri),
-            //            TetCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri),
-            //            ToplamCount = g1.Count()
-            //        };
-
-            var q = _entities.GonderilenMaillers
-                .Where(p => p.Tarih.Year == model.Yil && (!model.AyId.HasValue || p.Tarih.Month == model.AyId))
-                .Select(s => new { s.EnstituKod, s.Tarih }).ToList().GroupBy(g1 => new { g1.Tarih.Year, g1.Tarih.Month, g1.Tarih.Day }).Select(g1 => new
+            // İstatistikleri hesaplama
+            var stats = query
+                .Select(s => new { s.EnstituKod, s.Tarih })
+                .ToList()
+                .GroupBy(g => new
                 {
-                    g1.Key.Year,
-                    g1.Key.Month,
-                    g1.Key.Day,
-                    FbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.FenBilimleri),
-                    SbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.SosyalBilimleri),
-                    TetCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri),
-                    ToplamCount = g1.Count()
-                }).AsQueryable();
+                    Year = g.Tarih.Year,
+                    Month = g.Tarih.Month,
+                    Day = g.Tarih.Day
+                })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    Day = g.Key.Day,
+                    FbeCount = g.Count(p => p.EnstituKod == "010"),
+                    SbeCount = g.Count(p => p.EnstituKod == "020"),
+                    TetCount = g.Count(p => p.EnstituKod == "030"),
+                    ToplamCount = g.Count()
+                })
+                .AsQueryable();
 
+            model.RowCount = stats.Count();
+            model.ToplamCount = stats.Sum(s => s.ToplamCount);
+            model.FbeCount = stats.Sum(s => s.FbeCount);
+            model.SbeCount = stats.Sum(s => s.SbeCount);
+            model.TetCount = stats.Sum(s => s.TetCount);
 
-            //var q = from gm in _entities.GonderilenMaillers
-            //        where gm.Tarih.Year == model.Yil && (!model.AyId.HasValue || gm.Tarih.Month == model.AyId)
-            //        group gm by new { gm.Tarih.Year, gm.Tarih.Month, gm.Tarih.Day } into g1
-            //        select new
-            //        {
-            //            g1.Key.Year,
-            //            g1.Key.Month,
-            //            g1.Key.Day,
-            //            FbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.FenBilimleri),
-            //            SbeCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.SosyalBilimleri),
-            //            TetCount = g1.Count(p => p.EnstituKod == EnstituKodlariEnum.TemizEnerjiTeknolojileri),
-            //            ToplamCount = g1.Count()
-            //        };
-            model.RowCount = q.Count();
-            model.ToplamCount = q.Sum(s => s.ToplamCount);
-            model.FbeCount = q.Sum(s => s.FbeCount);
-            model.SbeCount = q.Sum(s => s.SbeCount);
-            model.TetCount = q.Sum(s => s.TetCount);
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Year).ThenByDescending(t => t.Month).ThenByDescending(o => o.Day);
-            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList().Select(s => new FrIstatistikDto
-            {
-                Tarih = new DateTime(s.Year, s.Month, s.Day),
-                FbeCount = s.FbeCount,
-                SbeCount = s.SbeCount,
-                TetCount = s.TetCount,
-                ToplamCount = s.ToplamCount,
+            // Sıralama
+            var orderedStats = string.IsNullOrWhiteSpace(model.Sort)
+                ? stats.OrderByDescending(o => o.Year)
+                      .ThenByDescending(t => t.Month)
+                      .ThenByDescending(o => o.Day)
+                : stats.OrderBy(model.Sort);
 
+            // İstatistik verilerini DTO'ya dönüştürme
+            model.Data = orderedStats
+                .Skip(model.StartRowIndex)
+                .Take(model.PageSize)
+                .ToList()
+                .Select(s => new FrIstatistikDto
+                {
+                    Tarih = new DateTime(s.Year, s.Month, s.Day),
+                    FbeCount = s.FbeCount,
+                    SbeCount = s.SbeCount,
+                    TetCount = s.TetCount,
+                    ToplamCount = s.ToplamCount
+                })
+                .ToList();
 
-            }).ToList();
+            // Combo box verilerini getirme
+            var cmbAylar = SrTalepleriBus.GetCmbAylar(true);
+            var gonderilenMailYil = ComboData.GetCmbGonderilenMailYil();
 
-            var aylars = SrTalepleriBus.GetCmbAylar(true);
-            var yillars = ComboData.GetCmbGonderilenMailYil();
-            ViewBag.AyId = new SelectList(aylars, "Value", "Caption", model.AyId);
-            ViewBag.Yil = new SelectList(yillars, "Value", "Caption", model.Yil);
+            ViewBag.AyId = new SelectList(cmbAylar, "Value", "Caption", model.AyId);
+            ViewBag.Yil = new SelectList(gonderilenMailYil, "Value", "Caption", model.Yil);
 
             return View(model);
         }
+
         public ActionResult Sil(int id)
         {
-            var kayit = _entities.GonderilenMaillers.FirstOrDefault(p => p.GonderilenMailID == id);
-            var message = "";
-            var success = true;
-            if (kayit != null)
+            // Maili silme (soft delete)
+            var gonderilenMail = _entities.GonderilenMaillers.FirstOrDefault(p => p.GonderilenMailID == id);
+            string mesaj = "";
+            bool basarili = true;
+
+            if (gonderilenMail != null)
             {
                 try
                 {
-
-                    if (message == "")
+                    if (string.IsNullOrEmpty(mesaj))
                     {
-                        kayit.Silindi = true;
+                        gonderilenMail.Silindi = true;
                         _entities.SaveChanges();
-                        message = "'" + kayit.Konu + "' konulu email Silindi!";
+                        mesaj = string.Concat("'", gonderilenMail.Konu, "' konulu email Silindi!");
                     }
-
                 }
                 catch (Exception ex)
                 {
-                    success = false;
-                    message = "'" + kayit.Konu + "' Konulu Mail Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
+                    basarili = false;
+                    mesaj = string.Concat("'", gonderilenMail.Konu, "' Konulu Mail Silinemedi! <br/> Bilgi:", ex.ToExceptionMessage());
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(mesaj, ex.ToExceptionStackTrace(), (byte)4);
                 }
             }
             else
             {
-                success = false;
-                message = "Silmek istediğiniz mail bilgisi sistemde bulunamadı!";
+                basarili = false;
+                mesaj = "Silmek istediğiniz mail bilgisi sistemde bulunamadı!";
             }
-            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
-        }
 
+            return Json(new { basarili, mesaj }, "application/json", JsonRequestBehavior.AllowGet);
+        }
     }
 }

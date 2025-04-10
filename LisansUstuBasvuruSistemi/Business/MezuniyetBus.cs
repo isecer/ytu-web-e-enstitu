@@ -1139,7 +1139,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         )
 
                 );
-                kriter.MezuniyetSureciYonetmelikleriOTs= kriter.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == ogrenimTipKod)
+                kriter.MezuniyetSureciYonetmelikleriOTs = kriter.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == ogrenimTipKod)
                     .ToList();
                 return kriter;
             }
@@ -1194,7 +1194,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var yturAds = entities.MezuniyetYayinTurleris.ToList();
 
 
-                 
+
                 var kriterDetay = (from s in kriter.MezuniyetSureciYonetmelikleriOTs
                                    join yta in yturAds on s.MezuniyetYayinTurID equals yta.MezuniyetYayinTurID
                                    group new
@@ -1253,7 +1253,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var mmMessage = new MmMessage();
             using (var entities = new LubsDbEntities())
-            { 
+            {
                 var kriter = GetMezuniyetAktifYonetmelik(kModel.MezuniyetSurecID, kModel.KullaniciID, kModel.MezuniyetBasvurulariID);
                 var yturAds = entities.MezuniyetYayinTurleris.ToList();
                 var kriterDetay = (from s in kriter.MezuniyetSureciYonetmelikleriOTs
@@ -2223,9 +2223,9 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
 
             dct.Add(new CmbIntDto { Value = MezuniyetTezTeslimUzatmaDurumuEnum.TalepOlusturulmadi, Caption = "Talep Oluşturulmadı" });
-            dct.Add(new CmbIntDto { Value = MezuniyetTezTeslimUzatmaDurumuEnum.TalepOlusturuldu, Caption = "Talep oluşturuldu" }); 
+            dct.Add(new CmbIntDto { Value = MezuniyetTezTeslimUzatmaDurumuEnum.TalepOlusturuldu, Caption = "Talep oluşturuldu" });
             dct.Add(new CmbIntDto { Value = MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi, Caption = "Danışman Tarafından Onaylandı" });
-            dct.Add(new CmbIntDto { Value = MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnaylamadi, Caption = "Danışman Tarafından Onaylanmadı" }); 
+            dct.Add(new CmbIntDto { Value = MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnaylamadi, Caption = "Danışman Tarafından Onaylanmadı" });
             //dct.Add(new CmbIntDto { Value = 7, Caption = "EYK'ya Hazırlandı" });
             // dct.Add(new CmbIntDto { Value = 8, Caption = "EYK'da Onay Bekliyor" });
             dct.Add(new CmbIntDto { Value = MezuniyetTezTeslimUzatmaDurumuEnum.EykDaOnaylandi, Caption = "EYK'Da Onaylandı" });
@@ -2314,6 +2314,108 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MmMessage SendMailCiltliTezTeslimEkSureTalebiEYKOnay(int mezuniyetBasvurulariId)
         {
             return MailSenderMezuniyet.SendMailCiltliTezTeslimEkSureTalebiEYKOnay(mezuniyetBasvurulariId);
+        }
+
+        public static SonTezBaslikInfo GeSonTezBaslikInfo(int mezuniyetBasvurulariId, bool isTezTeslimFormuVarsaOrdanAl = false)
+        {
+            using (LubsDbEntities entities = new LubsDbEntities())
+            {
+                // Mezuniyet başvurusunu getir
+                var basvuru = entities.MezuniyetBasvurularis.FirstOrDefault(p =>
+                    p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+
+                // Başvuru yoksa null dön
+                if (basvuru == null)
+                {
+                    return null;
+                }
+
+                string yeniTezBaslikTr = null;
+                string yeniTezBaslikEn = null;
+
+                // Tez teslim formundan başlık bilgilerini al (eğer istenirse)
+                if (isTezTeslimFormuVarsaOrdanAl)
+                {
+                    var tezTeslimFormu = basvuru.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
+                    yeniTezBaslikTr = tezTeslimFormu?.TezBaslikTr;
+                    yeniTezBaslikEn = tezTeslimFormu?.TezBaslikEn;
+                }
+
+                // Eğer tez teslim formunda başlık bilgileri varsa, onları kullan
+                if (!string.IsNullOrWhiteSpace(yeniTezBaslikTr) || !string.IsNullOrWhiteSpace(yeniTezBaslikEn))
+                {
+                    return new SonTezBaslikInfo
+                    {
+                        ModuleName = "MezuniyetBasvuru",
+                        IsTezDiliTr = basvuru.IsTezDiliTr == true && basvuru.IsTezDiliTr.HasValue,
+                        TezBaslikTr = yeniTezBaslikTr,
+                        TezBaslikEn = yeniTezBaslikEn
+                    };
+                }
+
+                // Jüri öneri formundan başlık bilgilerini al
+                var juriOneriFormu = basvuru.MezuniyetJuriOneriFormlaris.FirstOrDefault();
+
+                // Sınav talebi bilgilerini al
+                var srTalep = basvuru.SRTalepleris.FirstOrDefault(f =>
+                    f.MezuniyetSinavDurumID == 2 && f.MezuniyetSinavDurumID.HasValue);
+
+                // Türkçe başlık bilgisini belirle
+                string tezBaslikTr = basvuru.TezBaslikTr;
+                string tezBaslikEn = basvuru.TezBaslikEn;
+                if (juriOneriFormu != null && juriOneriFormu.IsTezBasligiDegisti == true)
+                {
+                    tezBaslikTr = juriOneriFormu.YeniTezBaslikTr;
+                    tezBaslikEn = juriOneriFormu.YeniTezBaslikEn;
+                }
+                yeniTezBaslikTr = tezBaslikTr;
+                yeniTezBaslikEn = tezBaslikEn;
+
+                // Sınav talebindeki başlık değişikliği kontrolü
+                if (srTalep != null)
+                {
+                    if (srTalep.IsTezBasligiDegisti == true && srTalep.IsTezBasligiDegisti.HasValue)
+                    {
+                        // Sınav talebinde başlık değişmişse, o başlığı kullan
+                        yeniTezBaslikTr = srTalep.YeniTezBaslikTr;
+                        yeniTezBaslikEn = srTalep.YeniTezBaslikEn;
+                    }
+                    else
+                    {
+                        // Önceki sınav taleplerini kontrol et
+                        var oncekiTalep = basvuru.SRTalepleris
+                            .Where(p =>
+                                p.MezuniyetSinavDurumID == 3 &&
+                                p.MezuniyetSinavDurumID.HasValue &&
+                                p.SRTalepID < srTalep.SRTalepID)
+                            .OrderByDescending(p => p.SRTalepID)
+                            .Select(p => new
+                            {
+                                IsTezBasligiDegisti = p.IsTezBasligiDegisti,
+                                YeniTezBaslikTr = p.YeniTezBaslikTr,
+                                YeniTezBaslikEn = p.YeniTezBaslikEn
+                            })
+                            .FirstOrDefault();
+
+                        bool tezBasligiDegismis = oncekiTalep != null && oncekiTalep.IsTezBasligiDegisti == true;
+
+                        if (tezBasligiDegismis)
+                        {
+                            yeniTezBaslikTr = oncekiTalep.YeniTezBaslikTr;
+                            yeniTezBaslikEn = oncekiTalep.YeniTezBaslikEn;
+                        }
+                    }
+                }
+
+                // Sonuç bilgilerini dön
+                return new SonTezBaslikInfo
+                {
+                    ModuleName = "MezuniyetBasvuru",
+                    IsTezDiliTr = basvuru.IsTezDiliTr == true && basvuru.IsTezDiliTr.HasValue,
+                    TezBaslikTr = yeniTezBaslikTr,
+                    TezBaslikEn = yeniTezBaslikEn
+                };
+            }
         }
     }
 }

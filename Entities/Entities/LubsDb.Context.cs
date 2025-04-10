@@ -12,6 +12,8 @@ namespace Entities.Entities
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class LubsDbEntities : DbContext
     {
@@ -222,5 +224,42 @@ namespace Entities.Entities
         public virtual DbSet<YetkiGrupRolleri> YetkiGrupRolleris { get; set; }
         public virtual DbSet<ZamanTipleri> ZamanTipleris { get; set; }
         public virtual DbSet<vW_ProgramBasvuruSonucSayisal> vW_ProgramBasvuruSonucSayisal { get; set; }
+    
+        public virtual ObjectResult<sp_SearchMailsFullText_Result> sp_SearchMailsFullText(string enstituKodList, Nullable<bool> isEkVar, string konu, string enstituKod, Nullable<System.DateTime> tarih, string mailGonderen, Nullable<int> startRow, Nullable<int> pageSize, ObjectParameter totalCount)
+        {
+            var enstituKodListParameter = enstituKodList != null ?
+                new ObjectParameter("EnstituKodList", enstituKodList) :
+                new ObjectParameter("EnstituKodList", typeof(string));
+    
+            var isEkVarParameter = isEkVar.HasValue ?
+                new ObjectParameter("IsEkVar", isEkVar) :
+                new ObjectParameter("IsEkVar", typeof(bool));
+    
+            var konuParameter = konu != null ?
+                new ObjectParameter("Konu", konu) :
+                new ObjectParameter("Konu", typeof(string));
+    
+            var enstituKodParameter = enstituKod != null ?
+                new ObjectParameter("EnstituKod", enstituKod) :
+                new ObjectParameter("EnstituKod", typeof(string));
+    
+            var tarihParameter = tarih.HasValue ?
+                new ObjectParameter("Tarih", tarih) :
+                new ObjectParameter("Tarih", typeof(System.DateTime));
+    
+            var mailGonderenParameter = mailGonderen != null ?
+                new ObjectParameter("MailGonderen", mailGonderen) :
+                new ObjectParameter("MailGonderen", typeof(string));
+    
+            var startRowParameter = startRow.HasValue ?
+                new ObjectParameter("StartRow", startRow) :
+                new ObjectParameter("StartRow", typeof(int));
+    
+            var pageSizeParameter = pageSize.HasValue ?
+                new ObjectParameter("PageSize", pageSize) :
+                new ObjectParameter("PageSize", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_SearchMailsFullText_Result>("sp_SearchMailsFullText", enstituKodListParameter, isEkVarParameter, konuParameter, enstituKodParameter, tarihParameter, mailGonderenParameter, startRowParameter, pageSizeParameter, totalCount);
+        }
     }
 }

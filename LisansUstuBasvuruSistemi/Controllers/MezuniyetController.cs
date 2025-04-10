@@ -1337,195 +1337,230 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-
         public ActionResult TezTeslimFormu(int mezuniyetBasvurulariId)
         {
-            var yetkiliKullanici = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+            // Kullanıcının "Mezuniyet Gelen Başvurular Kayıt" rolüne sahip olup olmadığını kontrol et
+            bool yetkiliKullanici = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
 
-            var mBasvuru = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId && p.KullaniciID == (yetkiliKullanici ? p.KullaniciID : UserIdentity.Current.Id));
-            var mezuniyetBasvurulariTezTeslimForm = mBasvuru.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
-            var model = new MezuniyetBasvurulariTezTeslimFormlari();
-            if (mezuniyetBasvurulariTezTeslimForm != null)
+            // Mezuniyet başvurusunu veritabanından getir
+            // Yetkili kullanıcı ise herhangi bir başvuruyu, değilse sadece kendi başvurusunu getirebilir
+            var basvuru = _entities.MezuniyetBasvurularis.First(p =>
+                p.MezuniyetBasvurulariID == mezuniyetBasvurulariId &&
+                (yetkiliKullanici || p.KullaniciID == UserIdentity.Current.Id));
+
+            // Mevcut tez teslim formunu kontrol et
+            var mevcutForm = basvuru.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
+
+            // Yeni form oluştur
+            var yeniForm = new MezuniyetBasvurulariTezTeslimFormlari();
+
+            // Eğer mevcut form yoksa
+            if (mevcutForm == null)
             {
-                model.MezuniyetBasvurulariID = mezuniyetBasvurulariId;
-                model.MezuniyetBasvurulariTezTeslimFormID = mezuniyetBasvurulariTezTeslimForm.MezuniyetBasvurulariTezTeslimFormID;
-                model.IsTezDiliTr = mBasvuru.IsTezDiliTr == true;
-                model.TezDili = mezuniyetBasvurulariTezTeslimForm.TezDili;
-                model.TezBaslikTr = mezuniyetBasvurulariTezTeslimForm.TezBaslikTr;
-                model.TezBaslikEn = mezuniyetBasvurulariTezTeslimForm.TezBaslikEn;
-                model.TezOzet = mezuniyetBasvurulariTezTeslimForm.TezOzet;
-                model.TezOzetHtml = mezuniyetBasvurulariTezTeslimForm.TezOzetHtml;
-                model.TezAbstract = mezuniyetBasvurulariTezTeslimForm.TezAbstract;
-                model.TezAbstractHtml = mezuniyetBasvurulariTezTeslimForm.TezAbstractHtml;
+                // Son tez başlık bilgilerini al
+                var sonTezBaslik = MezuniyetBus.GeSonTezBaslikInfo(mezuniyetBasvurulariId);
+
+                // Formu doldur
+                yeniForm.IsTezDiliTr = sonTezBaslik.IsTezDiliTr;
+                yeniForm.TezBaslikTr = sonTezBaslik.TezBaslikTr;
+                yeniForm.TezBaslikEn = sonTezBaslik.TezBaslikEn;
+                yeniForm.TezOzet = basvuru.TezOzet;
+                yeniForm.TezOzetHtml = basvuru.TezOzet;
+                yeniForm.TezAbstract = basvuru.TezAbstract;
+                yeniForm.TezAbstractHtml = basvuru.TezAbstract;
             }
             else
             {
-                var jof = mBasvuru.MezuniyetJuriOneriFormlaris.First();
-                var srTalep = mBasvuru.SRTalepleris.FirstOrDefault(f => f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
-                model.MezuniyetBasvurulariID = mezuniyetBasvurulariId;
-
-                var uzatmaDegisenTezBaslikTr = "";
-                var uzatmaDegisenTezBaslikEn = "";
-
-
-                var birOncekiSrTalepUzatma = mBasvuru.SRTalepleris.Where(p => p.MezuniyetBasvurulariID == mBasvuru.MezuniyetBasvurulariID && p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma &&
-                                                                              p.SRTalepID < srTalep.SRTalepID).OrderByDescending(o => o.SRTalepID).Select(su =>
-                    new { su.IsTezBasligiDegisti, su.YeniTezBaslikTr, su.YeniTezBaslikEn }).FirstOrDefault();
-                if (birOncekiSrTalepUzatma != null && birOncekiSrTalepUzatma.IsTezBasligiDegisti == true)
-                {
-                    uzatmaDegisenTezBaslikTr = birOncekiSrTalepUzatma.YeniTezBaslikTr;
-                    uzatmaDegisenTezBaslikEn = birOncekiSrTalepUzatma.YeniTezBaslikEn;
-                }
-
-                model.IsTezDiliTr = mBasvuru.IsTezDiliTr == true;
-                model.TezBaslikTr = uzatmaDegisenTezBaslikTr.IsNullOrWhiteSpace() ? (srTalep.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : mBasvuru.TezBaslikTr) : uzatmaDegisenTezBaslikTr;
-                model.TezBaslikEn = uzatmaDegisenTezBaslikEn.IsNullOrWhiteSpace() ? (srTalep.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mBasvuru.TezBaslikEn) : uzatmaDegisenTezBaslikEn;
-                model.TezOzet = mBasvuru.TezOzet;
-                model.TezOzetHtml = mBasvuru.TezOzet;
-                model.TezAbstract = mBasvuru.TezAbstract;
-                model.TezAbstractHtml = mBasvuru.TezAbstract;
-
+                // Mevcut form varsa, bilgileri kopyala
+                yeniForm.MezuniyetBasvurulariID = mezuniyetBasvurulariId;
+                yeniForm.MezuniyetBasvurulariTezTeslimFormID = mevcutForm.MezuniyetBasvurulariTezTeslimFormID;
+                yeniForm.IsTezDiliTr = basvuru.IsTezDiliTr == true && basvuru.IsTezDiliTr.HasValue;
+                yeniForm.TezDili = mevcutForm.TezDili;
+                yeniForm.TezBaslikTr = mevcutForm.TezBaslikTr;
+                yeniForm.TezBaslikEn = mevcutForm.TezBaslikEn;
+                yeniForm.TezOzet = mevcutForm.TezOzet;
+                yeniForm.TezOzetHtml = mevcutForm.TezOzetHtml;
+                yeniForm.TezAbstract = mevcutForm.TezAbstract;
+                yeniForm.TezAbstractHtml = mevcutForm.TezAbstractHtml;
             }
-            return View(model);
+
+            return View(yeniForm);
         }
-        [HttpPost]
-        [ValidateInput(false)]
+        [HttpPost, ValidateInput(false)]
         public ActionResult TezTeslimFormuPost(MezuniyetBasvurulariTezTeslimFormlari kModel, bool? isTezDiliTr)
         {
-            var mmMessage = new MmMessage
+            var message = new MmMessage
             {
                 IsSuccess = false,
                 Title = "Tez Teslim Formu Oluşturma İşlemi",
                 MessageType = MsgTypeEnum.Warning
             };
 
-            var yetkili = RoleNames.SrTalepDuzelt.InRoleCurrent();
-            var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
-            if (mezuniyetBasvurusu.KullaniciID != UserIdentity.Current.Id && !yetkili)
-            {
-                mmMessage.Messages.Add("Başka bir kullanıcı tez teslim formu oluşturmaya yetkili değilsiniz!");
-            }
-            else if (mezuniyetBasvurusu.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
-            {
-                mmMessage.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
-            }
-            else if (mezuniyetBasvurusu.IsMezunOldu.HasValue)
-            {
-                mmMessage.Messages.Add("Mezuniyet sonuç bilgisi girilildikten sonra Tez teslim formu üzerinde düzeltme işlemi yapılamaz!");
+            var yetkiliKullanici = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
 
+            var basvuru = _entities.MezuniyetBasvurularis.First(f =>
+                 f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
+
+            if (basvuru.KullaniciID != UserIdentity.Current.Id && !yetkiliKullanici)
+            {
+                message.Messages.Add("Başka bir kullanıcı tez teslim formu oluşturmaya yetkili değilsiniz!");
+            }
+            else if (basvuru.MezuniyetYayinKontrolDurumID != 5)
+            {
+                message.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
+            else if (basvuru.IsMezunOldu != null)
+            {
+                message.Messages.Add("Mezuniyet sonuç bilgisi girilildikten sonra Tez teslim formu üzerinde düzeltme işlemi yapılamaz!");
             }
 
-            if (yetkili)
+            if (yetkiliKullanici)
             {
-                //if (!isTezDiliTr.HasValue)
-                //{
-                //    mmMessage.Messages.Add("Tez Dilini Seçiniz.");
-
-                //    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsTezDiliTr" });
-                //}
-                if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
+                if (!string.IsNullOrWhiteSpace(kModel.TezBaslikTr))
                 {
-                    mmMessage.Messages.Add("Tez Başlığını Türkçe Olarak Giriniz.");
-
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezBaslikTr" });
+                    message.MessagesDialog.Add(new MrMessage
+                    {
+                        MessageType = MsgTypeEnum.Success,
+                        PropertyName = "TezBaslikTr"
+                    });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezBaslikTr" });
-
-                if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
+                else
                 {
-                    mmMessage.Messages.Add("Tez Başlığını İngilizce Olarak Giriniz.");
-
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezBaslikEn" });
+                    message.Messages.Add("Tez Başlığını Türkçe Olarak Giriniz.");
+                    message.MessagesDialog.Add(new MrMessage
+                    {
+                        MessageType = MsgTypeEnum.Warning,
+                        PropertyName = "TezBaslikTr"
+                    });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezBaslikEn" });
+                if (!string.IsNullOrWhiteSpace(kModel.TezBaslikEn))
+                {
+                    message.MessagesDialog.Add(new MrMessage
+                    {
+                        MessageType = MsgTypeEnum.Success,
+                        PropertyName = "TezBaslikEn"
+                    });
+                }
+                else
+                {
+                    message.Messages.Add("Tez Başlığını İngilizce Olarak Giriniz.");
+                    message.MessagesDialog.Add(new MrMessage
+                    {
+                        MessageType = MsgTypeEnum.Warning,
+                        PropertyName = "TezBaslikEn"
+                    });
+                }
             }
-            if (kModel.TezOzetHtml.IsNullOrWhiteSpace())
+            if (!string.IsNullOrWhiteSpace(kModel.TezOzetHtml))
             {
-                mmMessage.Messages.Add("Tez Özetini Türkçe Olarak Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezOzetHtml" });
+                message.MessagesDialog.Add(new MrMessage
+                {
+                    MessageType = MsgTypeEnum.Success,
+                    PropertyName = "TezOzetHtml"
+                });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezOzetHtml" });
-            if (kModel.TezAbstractHtml.IsNullOrWhiteSpace())
+            else
             {
-                mmMessage.Messages.Add("Tez Özetini İngilizce Olarak Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezAbstractHtml" });
+                message.Messages.Add("Tez Özetini Türkçe Olarak Giriniz.");
+                message.MessagesDialog.Add(new MrMessage
+                {
+                    MessageType = MsgTypeEnum.Warning,
+                    PropertyName = "TezOzetHtml"
+                });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TezAbstractHtml" });
-            if (mmMessage.Messages.Count == 0)
-            {
 
+            if (!string.IsNullOrWhiteSpace(kModel.TezAbstractHtml))
+            {
+                message.MessagesDialog.Add(new MrMessage
+                {
+                    MessageType = MsgTypeEnum.Success,
+                    PropertyName = "TezAbstractHtml"
+                });
+            }
+            else
+            {
+                message.Messages.Add("Tez Özetini İngilizce Olarak Giriniz.");
+                message.MessagesDialog.Add(new MrMessage
+                {
+                    MessageType = MsgTypeEnum.Warning,
+                    PropertyName = "TezAbstractHtml"
+                });
+            }
+
+            if (message.Messages.Count == 0)
+            {
                 try
                 {
+                    // İşlem bilgilerini ayarla
                     kModel.IslemTarihi = DateTime.Now;
                     kModel.IslemYapanID = UserIdentity.Current.Id;
                     kModel.IslemYapanIP = UserIdentity.Ip;
-                    kModel.IsTezDiliTr = mezuniyetBasvurusu.IsTezDiliTr == true;
-                    var mezuniyetBasvurulariTezTeslimFormu = _entities.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
-                    if (mezuniyetBasvurulariTezTeslimFormu == null)
+                    kModel.IsTezDiliTr = basvuru.IsTezDiliTr == true && basvuru.IsTezDiliTr.HasValue;
+
+                    var mevcutForm = _entities.MezuniyetBasvurulariTezTeslimFormlaris
+                        .FirstOrDefault(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
+
+                    if (mevcutForm == null)
                     {
-                        if (!yetkili)
+                        if (!yetkiliKullanici)
                         {
-                            var jof = mezuniyetBasvurusu.MezuniyetJuriOneriFormlaris.First();
-                            var srTalep = mezuniyetBasvurusu.SRTalepleris.FirstOrDefault(f => f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
-
-                            kModel.TezBaslikTr = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikTr : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : mezuniyetBasvurusu.TezBaslikTr);
-                            kModel.TezBaslikEn = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikEn : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mezuniyetBasvurusu.TezBaslikEn);
-
+                            var info = MezuniyetBus.GeSonTezBaslikInfo(basvuru.MezuniyetBasvurulariID);
+                            kModel.TezBaslikTr = info.TezBaslikTr;
+                            kModel.TezBaslikEn = info.TezBaslikEn;
                         }
                         kModel.RowID = Guid.NewGuid();
                         _entities.MezuniyetBasvurulariTezTeslimFormlaris.Add(kModel);
                     }
                     else
                     {
-                        if (
-                           mezuniyetBasvurulariTezTeslimFormu.IsTezDiliTr != kModel.IsTezDiliTr ||
-                           mezuniyetBasvurulariTezTeslimFormu.TezDili != kModel.TezDili ||
-                           mezuniyetBasvurulariTezTeslimFormu.TezBaslikTr != kModel.TezBaslikTr ||
-                           mezuniyetBasvurulariTezTeslimFormu.TezBaslikEn != kModel.TezBaslikEn ||
-                           mezuniyetBasvurulariTezTeslimFormu.TezOzet != kModel.TezOzet ||
-                           mezuniyetBasvurulariTezTeslimFormu.TezOzetHtml != kModel.TezOzetHtml ||
-                           mezuniyetBasvurulariTezTeslimFormu.TezAbstract != kModel.TezAbstract ||
-                           mezuniyetBasvurulariTezTeslimFormu.TezAbstractHtml != kModel.TezAbstractHtml
-                          ) mezuniyetBasvurulariTezTeslimFormu.RowID = Guid.NewGuid();
-                        mezuniyetBasvurulariTezTeslimFormu.IsTezDiliTr = kModel.IsTezDiliTr;
-                        if (yetkili)
+                        var degisiklikVar =
+                            mevcutForm.IsTezDiliTr != kModel.IsTezDiliTr ||
+                            mevcutForm.TezDili != kModel.TezDili ||
+                            mevcutForm.TezBaslikTr != kModel.TezBaslikTr ||
+                            mevcutForm.TezBaslikEn != kModel.TezBaslikEn ||
+                            mevcutForm.TezOzet != kModel.TezOzet ||
+                            mevcutForm.TezOzetHtml != kModel.TezOzetHtml ||
+                            mevcutForm.TezAbstract != kModel.TezAbstract ||
+                            mevcutForm.TezAbstractHtml != kModel.TezAbstractHtml;
+
+                        if (degisiklikVar)
                         {
-                            mezuniyetBasvurulariTezTeslimFormu.TezBaslikTr = kModel.TezBaslikTr;
-                            mezuniyetBasvurulariTezTeslimFormu.TezBaslikEn = kModel.TezBaslikEn;
+                            mevcutForm.RowID = Guid.NewGuid();
                         }
 
-                        mezuniyetBasvurulariTezTeslimFormu.TezOzet = kModel.TezOzet;
-                        mezuniyetBasvurulariTezTeslimFormu.TezOzetHtml = kModel.TezOzetHtml;
-                        mezuniyetBasvurulariTezTeslimFormu.TezAbstract = kModel.TezAbstract;
-                        mezuniyetBasvurulariTezTeslimFormu.TezAbstractHtml = kModel.TezAbstractHtml;
-                        mezuniyetBasvurulariTezTeslimFormu.IslemTarihi = kModel.IslemTarihi;
-                        mezuniyetBasvurulariTezTeslimFormu.IslemYapanID = kModel.IslemYapanID;
-                        mezuniyetBasvurulariTezTeslimFormu.IslemYapanIP = kModel.IslemYapanIP;
+                        mevcutForm.IsTezDiliTr = kModel.IsTezDiliTr;
+
+                        if (yetkiliKullanici)
+                        {
+                            mevcutForm.TezBaslikTr = kModel.TezBaslikTr;
+                            mevcutForm.TezBaslikEn = kModel.TezBaslikEn;
+                        }
+
+                        mevcutForm.TezOzet = kModel.TezOzet;
+                        mevcutForm.TezOzetHtml = kModel.TezOzetHtml;
+                        mevcutForm.TezAbstract = kModel.TezAbstract;
+                        mevcutForm.TezAbstractHtml = kModel.TezAbstractHtml;
+                        mevcutForm.IslemTarihi = kModel.IslemTarihi;
+                        mevcutForm.IslemYapanID = kModel.IslemYapanID;
+                        mevcutForm.IslemYapanIP = kModel.IslemYapanIP;
                     }
+
                     _entities.SaveChanges();
-                    mmMessage.IsSuccess = true;
-                    mmMessage.Messages.Add("Tez Teslim Formu Oluşturuldu.");
-                    mmMessage.MessageType = MsgTypeEnum.Success;
-
-
+                    message.IsSuccess = true;
+                    message.Messages.Add("Tez Teslim Formu Oluşturuldu.");
+                    message.MessageType = MsgTypeEnum.Success;
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    mmMessage.IsSuccess = false;
-                    mmMessage.MessageType = MsgTypeEnum.Error;
-                    mmMessage.Messages.Add("Hata: </br> " + ex.ToExceptionMessage());
+                    message.IsSuccess = false;
+                    message.MessageType = MsgTypeEnum.Error;
+                    message.Messages.Add("Hata: </br> " + exception.ToExceptionMessage());
                 }
-
-
-
             }
 
-
-            return mmMessage.ToJsonResult();
+            return message.ToJsonResult();
         }
 
-
-  
 
         [HttpGet]
         public ActionResult AddRow()

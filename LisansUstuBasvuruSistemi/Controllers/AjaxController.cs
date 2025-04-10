@@ -399,7 +399,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             ViewBag.KayitDonem = new SelectList(DonemlerBus.GetCmbAkademikDonemler(data.KayitYilBaslangic), "Value", "Caption", donemKey);
             ViewBag.Enstitu = _entities.Enstitulers.First(p => p.EnstituKod == data.EnstituKod);
-
+            if (kullanici.YtuOgrencisi)
+                ViewBag.OgrenimEnstitu = _entities.Enstitulers.First(p => p.EnstituKod == data.OgrenimEnstituKod);
             ViewBag.YtuOgrenimB = _entities.OgrenimTipleris.FirstOrDefault(p => p.EnstituKod == kullanici.EnstituKod && p.OgrenimTipKod == kullanici.OgrenimTipKod);
             if (data.DanismanID.HasValue)
                 ViewBag.Danisman = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == data.DanismanID);
@@ -1732,36 +1733,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-        [Authorize(Roles = RoleNames.MailGonder)]
-        [ValidateInput(false)]
+        [Authorize(Roles = RoleNames.MailGonder),ValidateInput(false)] 
         public ActionResult MailGonder(KmMailGonder model, string ekd = "")
         {
-
-
             model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-
             var secilenKullaniciIDs = model.SecilenAlicilars.Where(p => p.IsNumber()).Select(s => s.ToInt(0)).ToList();
-            var secilenEmails = model.SecilenAlicilars.Where(p => p.IsNumber() == false).Select(s => new CmbStringDto { Value = s, Caption = s }).ToList();
+            var source = model.SecilenAlicilars.Where(p => !p.IsNumber()).Select(s => new CmbStringDto { Value = s, Caption = s }).ToList();
 
             if (!model.IsTopluMail)
             {
-                if (secilenKullaniciIDs.Any()) model.EMails = _entities.Kullanicilars.Where(p => secilenKullaniciIDs.Contains(p.KullaniciID)).Select(s => new CmbStringDto { Value = (s.KullaniciID + ""), Caption = s.EMail }).ToList();
-                if (secilenEmails.Any()) model.EMails.AddRange(secilenEmails);
+                if (secilenKullaniciIDs.Any())
+                    model.EMails = this._entities.Kullanicilars
+                        .Where(p => secilenKullaniciIDs.Contains(p.KullaniciID))
+                        .Select(s => new CmbStringDto { Value = (s.KullaniciID + ""), Caption = s.EMail })
+                        .ToList();
+
+                if (source.Any())
+                    model.EMails.AddRange(source);
             }
 
             ViewBag.MailSablonlariID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonlari(model.EnstituKod, true, false), "Value", "Caption");
-
             ViewBag.MmMessage = new MmMessage();
-            return View(model);
-        }
 
+            return View(model);
+        } 
 
 
 
         [HttpPost]
-        [ValidateInput(false)]
-        [Authorize(Roles = RoleNames.MailGonder)]
-        public ActionResult MailGonderPost(KmMailGonder model, List<HttpPostedFileBase> dosyaEki, List<string> dosyaEkiAdi, List<string> ekYolu, string ekd)
+        [Authorize(Roles = RoleNames.MailGonder), ValidateInput(false)]
+        public ActionResult MailGonderPost2(KmMailGonder model, List<HttpPostedFileBase> dosyaEki, List<string> dosyaEkiAdi, List<string> ekYolu, string ekd)
         {
             var mmMessage = new MmMessage
             {
@@ -1974,7 +1975,362 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { success = mmMessage.IsSuccess, responseText = strView }, JsonRequestBehavior.AllowGet);
 
         }
+        [HttpPost]
+        [Authorize(Roles = RoleNames.MailGonder), ValidateInput(false)]
+        public ActionResult MailGonderPost(KmMailGonder model, List<HttpPostedFileBase> dosyaEki, List<string> dosyaEkiAdi, List<string> ekYolu, string ekd)
+        {
+            var mesaj = new MmMessage
+            {
+                Title = "Mail gönderme işlemi"
+            };
 
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+
+            // Null kontrolü yapılan listeleri ayarla
+            dosyaEki = dosyaEki ?? new List<HttpPostedFileBase>();
+            dosyaEkiAdi = dosyaEkiAdi ?? new List<string>();
+            ekYolu = ekYolu ?? new List<string>();
+
+            // Alıcıları ve BCC alıcılarını hazırla
+            var secilenAlicilar = new List<string>();
+            var secilenBccAlicilar = new List<string>();
+
+            // Alıcıları ayarla
+            if (!model.Alici.IsNullOrWhiteSpace())
+            {
+                secilenAlicilar.AddRange(model.Alici.Split(',').ToList());
+            }
+
+            // BCC alıcıları ayarla
+            if (!model.BccAlici.IsNullOrWhiteSpace())
+            {
+                secilenBccAlicilar.AddRange(model.BccAlici.Split(',').ToList());
+            }
+
+            // Mesaj içeriğini hazırla
+            if (!model.Aciklama.IsNullOrWhiteSpace())
+            {
+                string oncekiMesaj = "";
+                string cevapUrl = "";
+
+                if (model.MesajID.HasValue)
+                {
+                    var enstitu = _entities.Enstitulers.FirstOrDefault(p => p.EnstituKod == enstituKod);
+                    var mesaj1 = _entities.Mesajlars.FirstOrDefault(p => p.MesajID == model.MesajID.Value);
+
+                    if (enstitu != null && mesaj1 != null)
+                    {
+                        cevapUrl = $"{enstitu.SistemErisimAdresi}/Home/Index?MesajGroupID={mesaj1.GroupID}";
+
+                        if (mesaj1.Mesajlar2 != null)
+                            mesaj1 = mesaj1.Mesajlar2;
+
+                        model.MesajID = mesaj1.MesajID;
+                        oncekiMesaj = mesaj1.AciklamaHtml;
+                    }
+                }
+
+                EmailTemplateModel templateModel = new EmailTemplateModel
+                {
+                    CurrentMessage = model.AciklamaHtml,
+                    ReplyUrl = cevapUrl,
+                    PreviousMessage = oncekiMesaj
+                };
+
+                model.AciklamaHtml = ViewRenderHelper.RenderPartialView("Ajax", "MailTemplateView", templateModel);
+            }
+
+            // Toplu mail kontrolü
+            if (model.IsTopluMail && !model.SecilenTopluAlicilar.IsNullOrWhiteSpace())
+            {
+                secilenBccAlicilar.AddRange(model.SecilenTopluAlicilar.Split(',').ToList());
+            }
+
+            // Dosya ekleri hazırla
+            var dosyaEkleri = dosyaEkiAdi.Select((ad, index) => new { Ad = ad, Index = index })
+                .Join(
+                    dosyaEki.Select((dosya, index) => new { Dosya = dosya, Index = index }),
+                    x => x.Index,
+                    y => y.Index,
+                    (x, y) => new { x.Ad, y.Dosya, x.Index }
+                )
+                .Join(
+                    ekYolu.Select((yol, index) => new { Yol = yol, Index = index }),
+                    z => z.Index,
+                    w => w.Index,
+                    (z, w) => new { z.Ad, z.Dosya, w.Yol, z.Index }
+                ).ToList();
+
+            // Mail gönderme işlemi
+            var gonderilenMail = new GonderilenMailler();
+
+            // Validasyon kontrolleri
+            if (!secilenAlicilar.Any() && !secilenBccAlicilar.Any())
+                mesaj.Messages.Add("Mail Gönderilecek Hiçbir Alıcı Belirlenemedi!");
+
+            if (model.Konu.IsNullOrWhiteSpace())
+                mesaj.Messages.Add("Konu Giriniz.");
+
+            if (model.Aciklama.IsNullOrWhiteSpace() && model.AciklamaHtml.IsNullOrWhiteSpace())
+                mesaj.Messages.Add("İçerik Giriniz.");
+
+            // Mail bilgilerini ayarla
+            gonderilenMail.Tarih = DateTime.Now;
+            gonderilenMail.EnstituKod = enstituKod;
+
+            if (mesaj.Messages.Count == 0)
+            {
+                gonderilenMail.MesajID = model.MesajID;
+                gonderilenMail.IslemTarihi = DateTime.Now;
+                gonderilenMail.Konu = model.Konu;
+                gonderilenMail.IslemYapanID = UserIdentity.Current.Id;
+                gonderilenMail.IslemYapanIP = UserIdentity.Ip;
+                gonderilenMail.Aciklama = model.Aciklama ?? "";
+                gonderilenMail.AciklamaHtml = model.AciklamaHtml ?? "";
+
+                var eklenenGonderilenMail = _entities.GonderilenMaillers.Add(gonderilenMail);
+
+                // Ekler için kayıt
+                eklenenGonderilenMail.GonderilenMailEkleris = dosyaEkleri.Select(x => new GonderilenMailEkleri
+                {
+                    GonderilenMailID = eklenenGonderilenMail.GonderilenMailID,
+                    EkAdi = x.Ad,
+                    EkDosyaYolu = x.Yol
+                }).ToList();
+
+                // Mesaj güncelleme
+                if (model.MesajID.HasValue)
+                {
+                    var mesaj1 = _entities.Mesajlars.FirstOrDefault(p => p.MesajID == model.MesajID.Value);
+                    if (mesaj1 != null)
+                        mesaj1.IsAktif = true;
+                }
+
+                // Kullanıcı mail kayıtları
+                var gonderilenMailKullanicilar = new List<GonderilenMailKullanicilar>();
+                secilenAlicilar = secilenAlicilar.Distinct().ToList();
+
+                if (secilenAlicilar.Count > 0)
+                {
+                    // Sayı olan alıcıları kullanıcı ID'lerine çevir
+                    var kullaniciIDleri = secilenAlicilar.Where(x => x.IsNumber()).Select(x => x.ToInt(0)).ToList();
+                    var emailAdresleri = secilenAlicilar.Where(x => !x.IsNumber()).ToList();
+
+                    // Kullanıcı ID'lerine göre e-posta adresleri
+                    var kullaniciEmailler = new List<object>();
+
+                    // Her seferde 1500 kullanıcıyı sorgula (performans için)
+                    for (int count = 0; count < kullaniciIDleri.Count; count += 1500)
+                    {
+                        var chunk = kullaniciIDleri.Skip(count).Take(1500).ToList();
+                        var kullanicilar = _entities.Kullanicilars
+                            .Where(s => chunk.Contains(s.KullaniciID))
+                            .Select(s => new {
+                                Email = s.EMail,
+                                eklenenGonderilenMail.GonderilenMailID,
+                                s.KullaniciID
+                            })
+                            .ToList();
+
+                        kullaniciEmailler.AddRange(kullanicilar);
+                    }
+
+                    // Kullanıcı e-postaları ekle
+                    gonderilenMailKullanicilar.AddRange(kullaniciEmailler.Select(x => new GonderilenMailKullanicilar
+                    {
+                        Email = ((dynamic)x).Email,
+                        GonderilenMailID = ((dynamic)x).GonderilenMailID,
+                        KullaniciID = ((dynamic)x).KullaniciID
+                    }));
+
+                    // E-posta adreslerini ekle
+                    gonderilenMailKullanicilar.AddRange(emailAdresleri.Select(email => new GonderilenMailKullanicilar
+                    {
+                        Email = email,
+                        GonderilenMailID = eklenenGonderilenMail.GonderilenMailID
+                    }));
+                }
+
+                // BCC alıcılar için
+                var gonderilenMailKullanicilariBcc = new List<GonderilenMailKullanicilar>();
+
+                if (secilenBccAlicilar.Count > 0)
+                {
+                    // Benzer işlem BCC için de yapılır
+                    var kullaniciIDleriBcc = secilenBccAlicilar.Where(x => x.IsNumber()).Select(x => x.ToInt(0)).ToList();
+                    var emailAdresleri = secilenBccAlicilar.Where(x => !x.IsNumber()).ToList();
+
+                    var kullaniciEmailler = new List<object>();
+
+                    for (int count = 0; count < kullaniciIDleriBcc.Count; count += 1500)
+                    {
+                        var chunk = kullaniciIDleriBcc.Skip(count).Take(1500).ToList();
+                        var kullanicilar = _entities.Kullanicilars
+                            .Where(s => chunk.Contains(s.KullaniciID))
+                            .Select(s => new {
+                                Email = s.EMail,
+                                eklenenGonderilenMail.GonderilenMailID,
+                                s.KullaniciID
+                            })
+                            .ToList();
+
+                        kullaniciEmailler.AddRange(kullanicilar);
+                    }
+
+                    gonderilenMailKullanicilariBcc.AddRange(kullaniciEmailler.Select(x => new GonderilenMailKullanicilar
+                    {
+                        Email = ((dynamic)x).Email,
+                        GonderilenMailID = ((dynamic)x).GonderilenMailID,
+                        KullaniciID = ((dynamic)x).KullaniciID 
+                    }));
+
+                    gonderilenMailKullanicilariBcc.AddRange(emailAdresleri.Select(email => new GonderilenMailKullanicilar
+                    {
+                        Email = email,
+                        GonderilenMailID = eklenenGonderilenMail.GonderilenMailID 
+                    }));
+                }
+
+                // Mail gönderildi olarak işaretle
+                eklenenGonderilenMail.Gonderildi = true;
+
+                // Tüm alıcıları birleştir
+                gonderilenMailKullanicilar.AddRange(gonderilenMailKullanicilariBcc);
+                var tumAlicilar = gonderilenMailKullanicilar.Distinct().ToList();
+                eklenenGonderilenMail.GonderilenMailKullanicilars = tumAlicilar;
+
+                // Veritabanı değişikliklerini kaydet
+                _entities.SaveChanges();
+
+                // Mesaj güncelleme
+                if (model.MesajID.HasValue)
+                {
+                    MesajlarBus.MesajUpdate(model.MesajID.Value);
+                }
+
+                // Mail gönderimi
+                var emailListesi = tumAlicilar.Select(x => x.Email).ToList();
+                var mailGonderimListeleri = new Dictionary<int, List<MailSendList>>();
+
+                // 500'er adresten oluşan gruplar oluştur
+                int key = 0;
+                while (emailListesi.Count > 500)
+                {
+                    mailGonderimListeleri.Add(key, emailListesi.Take(500).Select(email => new MailSendList
+                    {
+                        EMail = email 
+                    }).ToList());
+
+                    emailListesi = emailListesi.Skip(500).ToList();
+                    key++;
+                }
+
+                // Kalan e-postaları da ekle
+                mailGonderimListeleri.Add(key + 1, emailListesi.Select(email => new MailSendList
+                {
+                    EMail = email
+                }).ToList());
+
+                // Dosya eklerini hazırla
+                var dosyaEkleriMailIcin = eklenenGonderilenMail.GonderilenMailEkleris
+                    .Select(x => new FileAttachmentInfo
+                    {
+                        FileName = x.EkAdi,
+                        FilePath = x.EkDosyaYolu
+                    })
+                    .ToList()
+                    .GetFileToAttachments();
+
+                int basariliGonderimSayisi = 0;
+                var basarisizMailKullanicilar = new List<GonderilenMailKullanicilar>();
+
+                // Mail gönderme işlemi
+                foreach (var mailGrubu in mailGonderimListeleri)
+                {
+                    Exception hata = MailManager.SendMailRetVal(
+                        enstituKod,
+                        gonderilenMail.Konu,
+                        gonderilenMail.AciklamaHtml,
+                        mailGrubu.Value,
+                        dosyaEkleriMailIcin
+                    );
+
+                    if (hata == null)
+                    {
+                        mesaj.Messages.Add(mailGrubu.Value.Count + " Kişiye Mail gönderildi!");
+                        mesaj.IsSuccess = true;
+                        mesaj.MessageType = MsgTypeEnum.Success;
+                        basariliGonderimSayisi++;
+                    }
+                    else
+                    {
+                        // Başarısız olan e-postaları belirle
+                        var basarisizEmailler = mailGrubu.Value.Select(x => x.EMail).ToList();
+                        var basarisizKullanicilar = _entities.GonderilenMailKullanicilars
+                            .Where(p => p.GonderilenMailID == eklenenGonderilenMail.GonderilenMailID && basarisizEmailler.Contains(p.Email))
+                            .ToList();
+
+                        basarisizMailKullanicilar.AddRange(basarisizKullanicilar);
+
+                        // Hata mesajını kaydet
+                        string hataMesaji = hata.ToExceptionMessage().Replace("\r\n", "<br/>");
+                        mesaj.Messages.Add("Mail gönderilirken bir hata oluştu! <br/>Hata:" + hataMesaji);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(hata.ToExceptionMessage(), hata.ToExceptionStackTrace(), 1);
+                    }
+                }
+
+                // Hiçbir mail gönderilemedi ise kaydı temizle
+                if (basariliGonderimSayisi == 0)
+                {
+                    try
+                    {
+                        _entities.GonderilenMaillers.Remove(eklenenGonderilenMail);
+                        _entities.SaveChanges();
+
+                        // Dosya eklerini temizle
+                        foreach (var dosya in dosyaEkleri)
+                        {
+                            FileHelper.Delete(dosya.Yol);
+                        }
+
+                        mesaj.IsSuccess = false;
+                        mesaj.MessageType = MsgTypeEnum.Error;
+                    }
+                    catch (Exception ex)
+                    {
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), 1);
+                    }
+                }
+                // Bazı mailler gönderilemedi ise onları çıkar
+                else if (basarisizMailKullanicilar.Count > 0)
+                {
+                    try
+                    {
+                        mesaj.Messages.Add(basarisizMailKullanicilar.Count + " kişiye mail gönderilemedi ve listeden çıkarıldı.");
+                        _entities.GonderilenMailKullanicilars.RemoveRange(basarisizMailKullanicilar);
+                        _entities.SaveChanges();
+
+                        mesaj.IsSuccess = true;
+                        mesaj.MessageType = MsgTypeEnum.Warning;
+                    }
+                    catch (Exception ex)
+                    {
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), 1);
+                    }
+                }
+            }
+            else
+            {
+                mesaj.IsSuccess = false;
+                mesaj.MessageType = MsgTypeEnum.Warning;
+            }
+
+            // Mesaj HTML'ini render et
+            string mesajHtml = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mesaj);
+
+            // JSON olarak sonuç döndür
+            return Json(new { mesaj.IsSuccess, Message = mesajHtml }, JsonRequestBehavior.AllowGet);
+        }
 
         [Authorize(Roles = RoleNames.MailGonder)]
         public ActionResult GetTumMailListesi(string term)

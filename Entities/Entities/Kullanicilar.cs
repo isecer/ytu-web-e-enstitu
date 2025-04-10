@@ -144,6 +144,7 @@ namespace Entities.Entities
         public Nullable<int> IslemYapanID { get; set; }
         public Nullable<System.DateTime> IslemTarihi { get; set; }
         public string IslemYapanIP { get; set; }
+        public string OgrenimEnstituKod { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AlesTipleri> AlesTipleris { get; set; }

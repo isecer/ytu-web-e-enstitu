@@ -1126,6 +1126,7 @@
           <Property Name="EMail" Type="nvarchar" MaxLength="250" />
           <Property Name="Adres" Type="nvarchar" MaxLength="250" />
           <Property Name="YtuOgrencisi" Type="bit" Nullable="false" />
+          <Property Name="OgrenimEnstituKod" Type="nvarchar" MaxLength="20" />
           <Property Name="OgrenimDurumID" Type="int" />
           <Property Name="OgrenimTipKod" Type="int" />
           <Property Name="ProgramKod" Type="nvarchar" MaxLength="20" />
@@ -2524,6 +2525,11 @@
           <Property Name="BasvuruTarihi" Type="datetime" Nullable="false" />
           <Property Name="DonemBaslangicYil" Type="int" Nullable="false" />
           <Property Name="DonemID" Type="int" Nullable="false" />
+          <Property Name="DegisiklikTipiID" Type="int" />
+          <Property Name="DegisiklikNedeniID" Type="int" />
+          <Property Name="ProjeDetay" Type="nvarchar" MaxLength="1024" />
+          <Property Name="VeriTalebiDetay" Type="nvarchar" MaxLength="1024" />
+          <Property Name="TaahhutOnay" Type="bit" />
           <Property Name="IsTezDiliTr" Type="bit" Nullable="false" />
           <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="512" />
           <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="512" />
@@ -7412,6 +7418,17 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="sp_SearchMailsFullText" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EnstituKodList" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="IsEkVar" Type="bit" Mode="In" />
+          <Parameter Name="Konu" Type="nvarchar" Mode="In" />
+          <Parameter Name="EnstituKod" Type="nvarchar" Mode="In" />
+          <Parameter Name="Tarih" Type="datetime" Mode="In" />
+          <Parameter Name="MailGonderen" Type="nvarchar" Mode="In" />
+          <Parameter Name="StartRow" Type="int" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="TotalCount" Type="int" Mode="InOut" />
+        </Function>
         <EntityContainer Name="LubsDbModelStoreContainer">
           <EntitySet Name="AlanTipleri" EntityType="Self.AlanTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AlesTipleri" EntityType="Self.AlesTipleri" Schema="dbo" store:Type="Tables" />
@@ -10549,6 +10566,17 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Menuler" EntitySet="Menulers" />
             <End Role="Roller" EntitySet="Rollers" />
           </AssociationSet>
+          <FunctionImport Name="sp_SearchMailsFullText" ReturnType="Collection(LubsDbModel.sp_SearchMailsFullText_Result)">
+            <Parameter Name="EnstituKodList" Mode="In" Type="String" />
+            <Parameter Name="IsEkVar" Mode="In" Type="Boolean" />
+            <Parameter Name="Konu" Mode="In" Type="String" />
+            <Parameter Name="EnstituKod" Mode="In" Type="String" />
+            <Parameter Name="Tarih" Mode="In" Type="DateTime" />
+            <Parameter Name="MailGonderen" Mode="In" Type="String" />
+            <Parameter Name="StartRow" Mode="In" Type="Int32" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="TotalCount" Mode="InOut" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="AlanTipleri">
           <Key>
@@ -12032,6 +12060,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="YeterlikBasvuruKomitelers" Relationship="LubsDbModel.FK_YeterlikBasvuruKomiteler_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikBasvuruKomiteler" />
           <NavigationProperty Name="YeterlikSureciKriterMuafOgrencilers" Relationship="LubsDbModel.FK_YeterlikSureciKriterMuafOgrenciler_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikSureciKriterMuafOgrenciler" />
           <NavigationProperty Name="Rollers" Relationship="LubsDbModel.KullaniciRolleri" FromRole="Kullanicilar" ToRole="Roller" />
+          <Property Name="OgrenimEnstituKod" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="KullaniciOgrenimleri">
           <Key>
@@ -13689,6 +13718,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="TDOBasvuru" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_TDOBasvuru" FromRole="TDOBasvuruDanisman" ToRole="TDOBasvuru" />
           <NavigationProperty Name="TDODanismanTalepTipleri" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_TDODanismanTalepTipleri" FromRole="TDOBasvuruDanisman" ToRole="TDODanismanTalepTipleri" />
           <NavigationProperty Name="TDOBasvuruEsDanismen" Relationship="LubsDbModel.FK_TDOBasvuruEsDanisman_TDOBasvuruDanisman" FromRole="TDOBasvuruDanisman" ToRole="TDOBasvuruEsDanisman" />
+          <Property Name="DegisiklikTipiID" Type="Int32" />
+          <Property Name="DegisiklikNedeniID" Type="Int32" />
+          <Property Name="ProjeDetay" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="VeriTalebiDetay" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="TaahhutOnay" Type="Boolean" />
         </EntityType>
         <EntityType Name="TDOBasvuruEsDanisman">
           <Key>
@@ -18569,6 +18603,16 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <End Type="LubsDbModel.Menuler" Role="Menuler" Multiplicity="*" />
           <End Type="LubsDbModel.Roller" Role="Roller" Multiplicity="*" />
         </Association>
+        <ComplexType Name="sp_SearchMailsFullText_Result">
+          <Property Type="Int32" Name="GonderilenMailID" Nullable="true" />
+          <Property Type="DateTime" Name="Tarih" Nullable="true" Precision="23" />
+          <Property Type="String" Name="EnstituKod" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="EnstituAd" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Konu" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="MailGonderen" Nullable="true" MaxLength="200" />
+          <Property Type="Boolean" Name="Gonderildi" Nullable="true" />
+          <Property Type="String" Name="HataMesaji" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -19735,6 +19779,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySetMapping Name="Kullanicilars">
             <EntityTypeMapping TypeName="LubsDbModel.Kullanicilar">
               <MappingFragment StoreEntitySet="Kullanicilar">
+                <ScalarProperty Name="OgrenimEnstituKod" ColumnName="OgrenimEnstituKod" />
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
@@ -21226,6 +21271,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySetMapping Name="TDOBasvuruDanismen">
             <EntityTypeMapping TypeName="LubsDbModel.TDOBasvuruDanisman">
               <MappingFragment StoreEntitySet="TDOBasvuruDanisman">
+                <ScalarProperty Name="TaahhutOnay" ColumnName="TaahhutOnay" />
+                <ScalarProperty Name="VeriTalebiDetay" ColumnName="VeriTalebiDetay" />
+                <ScalarProperty Name="ProjeDetay" ColumnName="ProjeDetay" />
+                <ScalarProperty Name="DegisiklikNedeniID" ColumnName="DegisiklikNedeniID" />
+                <ScalarProperty Name="DegisiklikTipiID" ColumnName="DegisiklikTipiID" />
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
@@ -21944,6 +21994,20 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               <ScalarProperty Name="MenuID" ColumnName="MenuID" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="sp_SearchMailsFullText" FunctionName="LubsDbModel.Store.sp_SearchMailsFullText">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LubsDbModel.sp_SearchMailsFullText_Result">
+                <ScalarProperty Name="GonderilenMailID" ColumnName="GonderilenMailID" />
+                <ScalarProperty Name="Tarih" ColumnName="Tarih" />
+                <ScalarProperty Name="EnstituKod" ColumnName="EnstituKod" />
+                <ScalarProperty Name="EnstituAd" ColumnName="EnstituAd" />
+                <ScalarProperty Name="Konu" ColumnName="Konu" />
+                <ScalarProperty Name="MailGonderen" ColumnName="MailGonderen" />
+                <ScalarProperty Name="Gonderildi" ColumnName="Gonderildi" />
+                <ScalarProperty Name="HataMesaji" ColumnName="HataMesaji" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -26,22 +26,16 @@
                 <table style="width:100%;">
                     <tbody>
                         <tr>
-                            <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-home fa-lg" aria-hidden="true"></i> Enstitü Seçimi</td>
+                            <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-home fa-lg" aria-hidden="true"></i> Hesap Seçimi</td>
                         </tr>
                         <tr>
                             <td style="padding-left:10px;text-align:left;">
                                 <table style="width:100%;">
                                     <tbody>
+
                                         <tr>
-                                            <td id="lbl_EnstituKod" width="140">Enstitü</td>
+                                            <td width="140" id="lbl_KullaniciTipID">Kullanıcı Tipi</td>
                                             <td width="10">:</td>
-                                            <td class="form-group">
-                                                @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onChange = "getprgData(this)" })
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td id="lbl_KullaniciTipID">Kullanıcı Tipi</td>
-                                            <td>:</td>
                                             <td class="form-group">
                                                 @if (kullaniciYetki || Model.KullaniciID <= 0)
                                                 {
@@ -72,6 +66,13 @@
                             <td style="padding-left:10px;text-align:left;">
                                 <table style="width:100%;">
                                     <tbody>
+                                        <tr>
+                                            <td width="140" id="lbl_EnstituKod">Enstitü</td>
+                                            <td width="10">:</td>
+                                            <td class="form-group">
+                                                @Html.DropDownList("EnstituKod", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td id="lbl_BirimID" width="140">Birim</td>
                                             <td width="10">:</td>
@@ -208,6 +209,13 @@
                                                     <option value="true" @Model.YtuOgrencisi.ToSelected()>Evet</option>
                                                     <option value="false" @((!Model.YtuOgrencisi).ToSelected())>Hayır</option>
                                                 </select>
+                                            </td>
+                                        </tr>
+                                        <tr class="ytuOgrencisi @(Model.YtuOgrencisi?"":"hide")">
+                                            <td id="lbl_OgrenimEnstituKod">Enstitü</td>
+                                            <td>:</td>
+                                            <td class="form-group">
+                                                @Html.DropDownList("OgrenimEnstituKod", null, new { @class = "form-control", onChange = "getprgData(this)" })
                                             </td>
                                         </tr>
                                         <tr class="ytuOgrencisi @(Model.YtuOgrencisi?"":"hide")">
@@ -536,7 +544,7 @@
                 success: function (result) {
                     PanelRefresh(_panel, true);
                     var opt = "";
-                    for (var i = 0; i < result.length; i++) { 
+                    for (var i = 0; i < result.length; i++) {
                         var isSelected = result[i].Value == selectedUnvanId ? ' selected="selected"' : '';
                         opt += "<option value='" + result[i].Value + "'" + isSelected + ">" + result[i].Caption + "</option>";
                     }

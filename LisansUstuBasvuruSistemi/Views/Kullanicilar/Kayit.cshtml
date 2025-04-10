@@ -45,13 +45,7 @@
                         <li><a href="@Url.Action("Kayit", Model.KullaniciID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
                     </ul>
                 </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class="col-md-2 col-xs-2 control-label">Enstitu</label>
-                        <div class="col-md-10 col-xs-10">
-                            @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onChange = "getprgData(this)" })
-                        </div>
-                    </div>
+                <div class="panel-body"> 
                     @if (erisimYetki)
                     {
                         <div class="form-group">
@@ -142,6 +136,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group ytuOgrencisi @(Model.YtuOgrencisi?"":"hide")">
+                                        <label class="col-md-2 col-xs-2 control-label">Enstitu</label>
+                                        <div class="col-md-10 col-xs-10">
+                                            @Html.DropDownList("OgrenimEnstituKod", null, new { @class = "form-control", onChange = "getprgData(this)" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group ytuOgrencisi @(Model.YtuOgrencisi?"":"hide")">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Öğrenci No</label>
                                         <div class="col-md-10 col-xs-8 padding-top-0 padding-bottom-0">
                                             <input type="text" class="form-control" name="OgrenciNo" id="OgrenciNo" maxlength="20" value="@Model.OgrenciNo">
@@ -205,6 +205,12 @@
                             <div  id="personelBilgi" class="panel panel-default form-horizontal">
                                 <div class="panel-body form-group-separated">
                                     <div class="form-group">
+                                        <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Enstitü</label>
+                                        <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                            @Html.DropDownList("EnstituKod", null, new { @class = "form-control" })
+                                        </div>
+                                    </div> 
+                                    <div class="form-group">
                                         <label class="col-md-2 col-xs-4 control-label  padding-top-0 padding-bottom-0">Birimi</label>
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                             @Html.DropDownList("BirimID", null, new { @class = "form-control" })
@@ -226,7 +232,7 @@
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">ABD Koordinatörü</label>
                                         <div class="col-md-10 col-xs-8 padding-top-0 padding-bottom-0">
                                             <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                                <input type="checkbox" value="true" name="ABDKoordinatoru" class="toggle" @Model.ABDKoordinatoru.ToChecked() />
+                                                <input type="checkbox" value="true" name="ABDKoordinatoru" class="toggle" @Model.ABDKoordinatoru.ToChecked()/>
                                             </div>
                                         </div>
                                     </div>

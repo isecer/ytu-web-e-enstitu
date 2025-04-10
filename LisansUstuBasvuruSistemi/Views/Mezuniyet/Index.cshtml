@@ -90,7 +90,18 @@
                 }
                 else
                 {
-                    if (bilgiModel.SistemBasvuruyaAcik == false)
+
+                    if (bilgiModel.EnstituYetki == false)
+                    {
+                        <tr>
+                            <td>Not</td>
+                            <td>:</td>
+                            <td>
+                                Seçili enstitü için mezuniyet başvurusu yapamazsınız!
+                            </td>
+                        </tr>
+                    }
+                    else if (bilgiModel.SistemBasvuruyaAcik == false)
                     {
                         <tr>
                             <td>Not</td>
@@ -99,16 +110,6 @@
                                 Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
                                 <br />
                                 <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
-                            </td>
-                        </tr>
-                    }
-                    else if (bilgiModel.EnstituYetki == false)
-                    {
-                        <tr>
-                            <td>Not</td>
-                            <td>:</td>
-                            <td>
-                                Seçili enstitü için mezuniyet başvurusu yapamazsınız!
                             </td>
                         </tr>
                     }
@@ -151,11 +152,10 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                var rowIndex = Model.StartRowIndex; string trCls = "odd";
+                                var rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.Data)
                                 {
                                     rowIndex++;
-                                    trCls = rowIndex % 2 == 1 ? "" : "even";
                                     <tr>
                                         <td>
                                             <table>
@@ -187,7 +187,7 @@
                                         <td>
                                             @if (item.IsDanismanOnay != true)
                                             {
-                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
+                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit" title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="GetDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" title="Sil"></i></a>
                                             }
                                         </td>
@@ -550,7 +550,7 @@
                 }
             })
         }
-       
+
 
         function MzDurumKaydet(MezuniyetBasvurulariID) {
             var _IsMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();

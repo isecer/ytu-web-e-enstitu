@@ -31,6 +31,7 @@
     var danisman = (Kullanicilar)ViewBag.Danisman;
     var mailGondermeYetki = RoleNames.MailGonder.InRole();
     var danismanOgrencileriGosterilsin = false;
+    var ogrenimEnstitu = (Enstituler)ViewBag.OgrenimEnstitu;
     if (Model.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel)
     {
         danismanOgrencileriGosterilsin = (SistemAyar.DanismanProfilindeOgrencileriniGorsun.GetAyar().ToBoolean(false) && Model.KullaniciID == UserIdentity.Current.Id) || kYetki;
@@ -103,7 +104,7 @@
                                     <td>Ad Soyad</td>
                                     <td>:</td>
                                     <td>
-                                      @(Model.UnvanID.HasValue?Model.Unvanlar.UnvanAdi:"") @Model.Ad @Model.Soyad
+                                        @(Model.UnvanID.HasValue?Model.Unvanlar.UnvanAdi:"") @Model.Ad @Model.Soyad
 
                                     </td>
                                 </tr>
@@ -131,7 +132,7 @@
                                         <td>:</td>
                                         <td>@Model.YetkiGruplari.YetkiGrupAdi @(eYetkiCount > 0 ? "(+ " + eYetkiCount + " Yetki)" : "")  @(UserIdentity.Current.IsAdmin && Model.IsAdmin ? "(Sistem Admini)":"")</td>
                                     </tr>
-                                   
+
                                 }
                                 @if (isKendisi || kYetki)
                                 {
@@ -145,7 +146,7 @@
                                         <td>:</td>
                                         <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToFormatDateAndTime() + (UserIdentity.Current.IsAdmin ? " (" + Model.LastLogonIP + ")" : "") : "Henüz Giriş Yapmamış")</td>
                                     </tr>
-                                    
+
                                     if (Model.Aciklama.IsNullOrWhiteSpace() == false)
                                     {
                                         <tr>
@@ -161,7 +162,7 @@
                                     </tr>
                                 }
 
-                             
+
                             </table>
 
 
@@ -219,6 +220,11 @@
             <div class="panel-body padding-0">
                 <table class="table" style="width:100%;margin:0px;">
                     <tr>
+                        <td width="140">Enstitü</td>
+                        <td width="5">:</td>
+                        <td>@ogrenimEnstitu.EnstituAd</td>
+                    </tr>
+                    <tr>
                         <td width="140">Öğrenci No</td>
                         <td width="5">:</td>
                         <td>@Model.OgrenciNo</td>
@@ -268,12 +274,12 @@
                                         </tr>
                                     </table>
                                     <script>
-                                        function sendDonemData() { 
-                                            var kayitDonem = document.getElementById("KayitDonem").value; 
+                                        function sendDonemData() {
+                                            var kayitDonem = document.getElementById("KayitDonem").value;
                                             var obsGuncelleme = document.getElementById("obsGuncellemeSelect").value;
-                                             
+
                                             $.ajax({
-                                                url: '@Url.Action("KayitDonemAyarSet")', 
+                                                url: '@Url.Action("KayitDonemAyarSet")',
                                                 data: {
                                                     userKey:'@Model.UserKey',
                                                     kayitDonem: kayitDonem,
@@ -318,7 +324,7 @@
                             @if (danisman != null)
                             {
                                 <a href="javascript:void(0)" onclick="DetayGor('@danisman.UserKey')">
-                                    @danisman.Unvanlar.UnvanAdi @danisman.Ad @danisman.Soyad
+                                    @(danisman.Unvanlar?.UnvanAdi) @danisman.Ad @danisman.Soyad
                                 </a>
                             }
                             else
