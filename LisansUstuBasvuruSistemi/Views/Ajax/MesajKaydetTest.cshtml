@@ -1,0 +1,1163 @@
+﻿@using Entities.Entities
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
+@model Mesajlar
+@{
+    var mmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = null;
+    var enstituAdi = (string)ViewBag.EnstituAdi;
+}
+
+<div class="elegant-form">
+    @using (Ajax.BeginForm("MesajKaydetPost", "Ajax", new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "_Form" }))
+    {
+        @Html.Hidden("MesajID", Model.MesajID)
+        @Html.Hidden("GroupID", Model.GroupID) 
+            <div class="panel panel-danger e-form-panel" style="padding-bottom: 0px;" id="pnlMailGonder">
+                <div class="panel-body" style="padding: 0px;">
+                    <div class="panel panel-default form-horizontal" style="margin: 0px;">
+                        <div class="panel-body form-group-separated">
+
+
+                            @if (UserIdentity.Current.IsAuthenticated || Model.MesajID > 0)
+                            {
+                                if (Model.MesajID > 0)
+                                {
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-2 control-label">Enstitü</label>
+                                        <div class="col-md-10 col-xs-10">
+                                            @Html.HiddenFor(p => p.EnstituKod)
+                                            @enstituAdi
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-2 control-label">Enstitü Seçiniz</label>
+                                        <div class="col-md-10 col-xs-10">
+                                            @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onChange = "getMsjKategoris(this)" })
+                                        </div>
+                                    </div>
+                                }
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-2 control-label">Ad Soyad</label>
+                                    <div class="col-md-10 col-xs-10">
+                                        @Model.AdSoyad
+                                        <input type="hidden" name="AdSoyad" id="AdSoyad" value="@Model.AdSoyad" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-2 control-label">Email</label>
+                                    <div class="col-md-10 col-xs-10">
+                                        @Model.Email
+                                        <input type="hidden" name="Email" id="Email" value="@Model.Email" class="form-control">
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                if (Model.MesajID > 0)
+                                {
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-2 control-label">Enstitü</label>
+                                        <div class="col-md-10 col-xs-10">
+                                            @Html.HiddenFor(p => p.EnstituKod)
+                                            @enstituAdi
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-2 control-label">Enstitü Seçiniz</label>
+                                        <div class="col-md-10 col-xs-10">
+                                            @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onChange = "getMsjKategoris(this)" })
+                                        </div>
+                                    </div>
+                                }
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-2 control-label">Ad Soyad</label>
+                                    <div class="col-md-10 col-xs-10">
+                                        <input type="text" name="AdSoyad" id="AdSoyad" value="@Model.AdSoyad" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-2 control-label">Email</label>
+                                    <div class="col-md-10 col-xs-10">
+                                        <input type="text" name="Email" id="Email" value="@Model.Email" class="form-control">
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model.MesajID > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-2 control-label">Kategori Seçiniz</label>
+                                    <div class="col-md-10 col-xs-10">
+                                        @Model.MesajKategorileri.KategoriAdi
+                                        @Html.Hidden("MesajKategoriID", Model.MesajKategoriID)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-2 control-label">Mesaj Konusu</label>
+                                    <div class="col-md-10 col-xs-10">
+                                        @Model.Konu
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-2 control-label">Kategori Seçiniz</label>
+                                    <div class="col-md-10 col-xs-10">
+                                        @Html.DropDownList("MesajKategoriID", null, new { @class = "form-control", id = "mkID", onchange = "getKtNot(this)" })
+                                    </div>
+                                </div>
+                                <div class="form-group hide" id="mkAck">
+                                    <label class="col-md-2 col-xs-2 control-label">Kategori Açıklaması</label>
+                                    <div class="col-md-10 col-xs-10" id="acklmT">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-2 control-label">Mesaj Konusu</label>
+                                    <div class="col-md-10 col-xs-10">
+                                        <input type="text" name="Konu" id="Konu" value="@Model.Konu" class="form-control">
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12" style="padding: 0px;">
+                                    <div>
+                                        <textarea style="height:100%;" id="AciklamaHtml" name="AciklamaHtml" class="form-control">@Model.AciklamaHtml</textarea>
+                                        <textarea style="display: none;" id="Aciklama" name="Aciklama">@Model.Aciklama</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12">
+                                    <div>
+                                        <div class="e-upload-hint">
+                                            <i class="fa fa-cloud-upload-alt"></i>
+                                            Dosyaları <span class="e-upload-trigger" onclick="document.getElementById('file-input').click()">tıklayarak</span> veya buraya sürükleyerek ekleyebilirsiniz
+                                            <input type="file" id="file-input" multiple style="display: none;">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="e-form-panel" id="pnlMailGonder">
+
+                <!-- Form İçeriği -->
+                <div class="e-body">
+                    <!-- Sol Kolon - Temel Bilgiler -->
+                    <div class="e-col">
+                        @if (Model.MesajID > 0)
+                        {
+                            <div class="e-field">
+                                <label>Enstitü</label>
+                                <div class="e-readonly">
+                                    @Html.HiddenFor(p => p.EnstituKod)
+                                    @enstituAdi
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="e-field">
+                                <label>Enstitü</label>
+                                @Html.DropDownList("EnstituKod", null, new { @class = "e-input", onChange = "getMsjKategoris(this)" })
+                            </div>
+                        }
+
+                        @if (UserIdentity.Current.IsAuthenticated || Model.MesajID > 0)
+                        {
+                            <div class="e-field">
+                                <label>Ad Soyad</label>
+                                <div class="e-readonly">
+                                    @Model.AdSoyad
+                                    <input type="hidden" name="AdSoyad" id="AdSoyad" value="@Model.AdSoyad">
+                                </div>
+                            </div>
+                            <div class="e-field">
+                                <label>Email</label>
+                                <div class="e-readonly">
+                                    @Model.Email
+                                    <input type="hidden" name="Email" id="Email" value="@Model.Email">
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="e-field">
+                                <label>Ad Soyad</label>
+                                <input type="text" name="AdSoyad" id="AdSoyad" value="@Model.AdSoyad" class="e-input">
+                            </div>
+                            <div class="e-field">
+                                <label>Email</label>
+                                <input type="email" name="Email" id="Email" value="@Model.Email" class="e-input">
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Sağ Kolon - Kategori ve Konu -->
+                    <div class="e-col">
+                        @if (Model.MesajID > 0)
+                        {
+                            <div class="e-field">
+                                <label>Kategori</label>
+                                <div class="e-readonly">
+                                    @Model.MesajKategorileri.KategoriAdi
+                                    @Html.Hidden("MesajKategoriID", Model.MesajKategoriID)
+                                </div>
+                            </div>
+                            <div class="e-field">
+                                <label>Konu</label>
+                                <div class="e-readonly">
+                                    @Model.Konu
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="e-field">
+                                <label>Kategori</label>
+                                @Html.DropDownList("MesajKategoriID", null, new { @class = "e-input", id = "mkID", onchange = "getKtNot(this)" })
+                            </div>
+                            <div id="mkAck" class="e-note" style="display: none;">
+                                <div id="acklmT"></div>
+                            </div>
+                            <div class="e-field">
+                                <label>Konu</label>
+                                <input type="text" name="Konu" id="Konu" value="@Model.Konu" class="e-input">
+                            </div>
+                        }
+
+                        <div class="e-upload-hint">
+                            <i class="fa fa-cloud-upload-alt"></i>
+                            Dosyaları <span class="e-upload-trigger" onclick="document.getElementById('file-input').click()">tıklayarak</span> veya buraya sürükleyerek ekleyebilirsiniz
+                            <input type="file" id="file-input" multiple style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- İçerik -->
+                <div class="e-editor">
+                    <textarea id="AciklamaHtml" name="AciklamaHtml">@Model.AciklamaHtml</textarea>
+                    <textarea style="display: none;" id="Aciklama" name="Aciklama">@Model.Aciklama</textarea>
+                </div>
+
+                <!-- Ekler -->
+                <div id="e-attachments-container" class="e-attachments" style="display: @(Model.MesajEkleris.Any() ? "block" : "none")">
+                    <div class="e-attachments-header">
+                        <i class="fa fa-paperclip"></i> Ekler (<span id="attachment-count">@Model.MesajEkleris.Count()</span>)
+                    </div>
+                    <div id="attachmentList" class="e-attachments-list">
+                        @foreach (var item in Model.MesajEkleris.Select((s, inx) => new { s, inx }))
+                        {
+                            <div class="e-attachment">
+                                <div class="e-attachment-icon">
+                                    <i class="fa fa-file"></i>
+                                </div>
+                                <div class="e-attachment-details">
+                                    <input type="hidden" name="MesajEkiID" value="@item.s.MesajEkiID" />
+                                    <input type="text" name="EkAdi" value="@item.s.EkAdi" class="e-attachment-name">
+                                    <a href="@Url.CustomUrlContent(item.s.EkDosyaYolu)" target="_blank" class="e-attachment-link">Görüntüle</a>
+                                </div>
+                                <button type="button" class="e-attachment-delete" onclick="EkSil(this)">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div id="notification-container"></div>
+
+        <script src="~/Content/ckeditor/ckeditor.js"></script>
+        <script src="~/Content/ckeditor/showCk.js"></script>
+
+        @if (mmMessage.IsCloseDialog)
+        {
+            <script>
+        setTimeout(function () { window.top.dialogKapat('@mmMessage.DialogID'); }, 2000);
+            </script>
+        }
+        <style>
+            .elegant-form {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                font-size: 13px;
+                color: #333;
+                line-height: 1.5;
+                width: 100%%;
+            }
+
+                .elegant-form * {
+                    box-sizing: border-box;
+                }
+
+            /* Panel */
+            .e-form-panel {
+                background-color: #fff;
+                border-radius: 4px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                min-height: 200px;
+                max-height: calc(100vh - 40px);
+            }
+
+            /* Header */
+            .e-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 16px;
+                background-color: #4a6cf7;
+                color: white;
+            }
+
+            .e-title {
+                font-size: 15px;
+                font-weight: 500;
+            }
+
+            .e-actions {
+                display: flex;
+                gap: 8px;
+            }
+
+            .e-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 12px;
+                border-radius: 4px;
+                font-size: 13px;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.15s;
+            }
+
+            .e-btn-primary {
+                background-color: white;
+                color: #4a6cf7;
+            }
+
+                .e-btn-primary:hover {
+                    background-color: rgba(255,255,255,0.9);
+                }
+
+            .e-btn-close {
+                background-color: rgba(255,255,255,0.15);
+                color: white;
+            }
+
+                .e-btn-close:hover {
+                    background-color: rgba(255,255,255,0.25);
+                }
+
+            /* Body - Form fields layout */
+            .e-body {
+                display: flex;
+                gap: 16px;
+                padding: 16px;
+                background-color: #fafbfd;
+                border-bottom: 1px solid #e5e9f2;
+            }
+
+            .e-col {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            /* Form fields */
+            .e-field {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+                .e-field label {
+                    font-size: 12px;
+                    color: #64748b;
+                    font-weight: 500;
+                }
+
+            .e-input {
+                width: 100%%;
+                padding: 7px 10px;
+                border: 1px solid #e2e8f0;
+                border-radius: 4px;
+                background-color: white;
+                transition: border-color 0.15s, box-shadow 0.15s;
+                font-size: 13px;
+            }
+
+                .e-input:focus {
+                    border-color: #4a6cf7;
+                    box-shadow: 0 0 0 2px rgba(74,108,247,0.1);
+                    outline: none;
+                }
+
+            .e-readonly {
+                padding: 7px 10px;
+                background-color: #f1f5f9;
+                border: 1px solid #e2e8f0;
+                border-radius: 4px;
+                font-size: 13px;
+                color: #475569;
+            }
+
+            /* Note for category */
+            .e-note {
+                padding: 8px 10px;
+                background-color: #f8faff;
+                border-left: 3px solid #4a6cf7;
+                border-radius: 0 4px 4px 0;
+                margin-top: -4px;
+                margin-bottom: 8px;
+                color: #475569;
+                font-size: 12px;
+            }
+
+            /* Upload hint */
+            .e-upload-hint {
+                background-color: #f1f5f9;
+                padding: 8px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                color: #64748b;
+                margin-top: auto;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .e-upload-trigger {
+                color: #4a6cf7;
+                font-weight: 500;
+                cursor: pointer;
+                transition: color 0.15s;
+            }
+
+                .e-upload-trigger:hover {
+                    text-decoration: underline;
+                }
+
+            /* Editor */
+            .e-editor {
+                margin-top: 0;
+                flex: 1;
+                min-height: 200px;
+            }
+
+            /* Overriding CKeditor styles */
+            .cke_chrome {
+                border-color: #e2e8f0 !important;
+                box-shadow: none !important;
+            }
+
+            .cke_top {
+                background: #f8fafc !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+            }
+
+            .cke_bottom {
+                background: #f8fafc !important;
+                border-top: 1px solid #e2e8f0 !important;
+            }
+
+            /* Attachments list */
+            .e-attachments {
+                border-top: 1px solid #e5e9f2;
+                background-color: #fafbfd;
+                max-height: 150px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .e-attachments-header {
+                padding: 10px 16px;
+                font-size: 13px;
+                font-weight: 500;
+                color: #475569;
+                border-bottom: 1px solid #e5e9f2;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+                .e-attachments-header i {
+                    color: #4a6cf7;
+                }
+
+            .e-attachments-list {
+                overflow-y: auto;
+                padding: 10px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .e-attachment {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background-color: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 4px;
+                padding: 8px;
+                width: calc(33.333%% - 8px);
+                transition: background-color 0.15s;
+            }
+
+                .e-attachment:hover {
+                    background-color: #f8faff;
+                }
+
+            .e-attachment-icon {
+                width: 28px;
+                height: 28px;
+                border-radius: 4px;
+                background-color: #4a6cf7;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .e-attachment-details {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .e-attachment-name {
+                width: 100%%;
+                border: none;
+                background-color: transparent;
+                font-size: 12px;
+                color: #334155;
+                padding: 0;
+                margin: 0;
+                outline: none;
+                transition: background-color 0.15s;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+                .e-attachment-name:focus {
+                    background-color: #f1f5f9;
+                    padding: 2px 4px;
+                    border-radius: 3px;
+                }
+
+            .e-attachment-link {
+                font-size: 11px;
+                color: #4a6cf7;
+                text-decoration: none;
+            }
+
+                .e-attachment-link:hover {
+                    text-decoration: underline;
+                }
+
+            .e-attachment-delete {
+                width: 22px;
+                height: 22px;
+                border-radius: 50%%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: none;
+                background-color: transparent;
+                color: #94a3b8;
+                cursor: pointer;
+                transition: all 0.15s;
+            }
+
+                .e-attachment-delete:hover {
+                    background-color: rgba(239, 68, 68, 0.1);
+                    color: #ef4444;
+                }
+
+            /* Drag over styles */
+            .e-drag-over {
+                background-color: rgba(74, 108, 247, 0.05);
+                border: 2px dashed #4a6cf7;
+            }
+
+            /* Notifications */
+            #notification-container {
+                position: fixed;
+                top: 16px;
+                right: 16px;
+                width: 280px;
+                max-width: 90%%;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .e-notification {
+                background-color: white;
+                border-radius: 4px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                padding: 10px 12px;
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                transform: translateX(120%%);
+                transition: transform 0.3s cubic-bezier(0.17, 0.67, 0.24, 0.99);
+            }
+
+                .e-notification.show {
+                    transform: translateX(0);
+                }
+
+            .e-notification-success {
+                border-left: 3px solid #10b981;
+            }
+
+            .e-notification-error {
+                border-left: 3px solid #ef4444;
+            }
+
+            .e-notification-icon {
+                color: #4a6cf7;
+            }
+
+            .e-notification-content {
+                flex: 1;
+            }
+
+            .e-notification-title {
+                font-weight: 600;
+                font-size: 13px;
+                margin-bottom: 2px;
+            }
+
+            .e-notification-message {
+                font-size: 12px;
+                color: #64748b;
+            }
+
+            /* Error states */
+            .e-error {
+                border-color: #ef4444 !important;
+            }
+
+            .e-error-message {
+                font-size: 11px;
+                color: #ef4444;
+                margin-top: 2px;
+            }
+
+            /* Progress bar */
+            .e-progress {
+                height: 3px;
+                width: 100%%;
+                background-color: #e2e8f0;
+                border-radius: 3px;
+                overflow: hidden;
+                margin-top: 4px;
+            }
+
+            .e-progress-bar {
+                height: 100%%;
+                background-color: #4a6cf7;
+                width: 0%%;
+                transition: width 0.3s;
+            }
+
+            /* Loading state */
+            .e-loading::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.5);
+                z-index: 9999;
+            }
+
+            /* Responsive adjustments */
+            @@media (max-width: 768px) {
+                .e-body {
+                    flex-direction: column;
+                }
+
+                .e-attachment {
+                    width: 100%%;
+                }
+            }
+        </style>
+
+        <script>
+    $(function() {
+
+    // Dosya yükleme işlemleri
+    initFileUpload();
+
+    // Sayfa açılışında kategori notu kontrolü
+    setTimeout(function() {
+        getKtNot($('#mkID'));
+    }, 200);
+
+    // Ek sayısını güncelle
+    updateAttachmentCount();
+});
+
+
+
+// Dosya yükleme işlemleri
+function initFileUpload() {
+    const fileInput = document.getElementById('file-input');
+    const formPanel = document.querySelector('.e-form-panel');
+
+    // Dosya seçimi
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            handleFiles(this.files);
+        }
+    });
+
+    // Sürükle bırak olayları
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        formPanel.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Drag olaylarında görsel geri bildirim
+    ['dragenter', 'dragover'].forEach(eventName => {
+        formPanel.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        formPanel.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+        formPanel.classList.add('e-drag-over');
+    }
+
+    function unhighlight() {
+        formPanel.classList.remove('e-drag-over');
+    }
+
+    // Dosya bırakma
+    formPanel.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        if (files.length > 0) {
+            handleFiles(files);
+        }
+    });
+
+    // Ekran görüntüsü yapıştırma
+    document.addEventListener('paste', function(e) {
+        const items = Array.from(e.clipboardData.items)
+            .filter(item => item.type.indexOf('image') !== -1);
+
+        if (items.length === 0) return;
+
+        const item = items[0];
+        const blob = item.getAsFile();
+
+        if (!blob) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.src = e.target.result;
+
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+
+                canvas.toBlob(function(blob) {
+                    const file = new File(
+                        [blob],
+                        "ekran_goruntusu_" + new Date().getTime() + ".png",
+                        { type: "image/png" }
+                    );
+                    handleFiles([file]);
+                }, 'image/png');
+            };
+        };
+        reader.readAsDataURL(blob);
+    });
+}
+
+// Dosyaları işleme ve ekleme
+function handleFiles(files) {
+    Array.from(files).forEach(file => {
+        uploadFile(file);
+    });
+
+    // Ek sayısını güncelle
+    updateAttachmentCount();
+
+    // Ek panelini göster
+    document.getElementById('e-attachments-container').style.display = 'flex';
+}
+
+// Dosya yükleme
+function uploadFile(file) {
+    // Dosya uzantısına göre ikon belirleme
+    const fileIcon = getFileIcon(file.type);
+
+    // Dosya adını temizleme
+    const fileName = file.name.replace(/[^a-zA-Z0-9-_. ]/g, '');
+
+    // Dosya HTML'i
+    const attachmentHTML = `
+        <div class="e-attachment">
+            <div class="e-attachment-icon">
+                <i class="fa ${fileIcon}"></i>
+            </div>
+            <div class="e-attachment-details">
+                <input type="hidden" name="DuyuruDosyaEkID">
+                <input type="text" name="DosyaEkiAdi" value="${fileName}" class="e-attachment-name">
+                <div class="e-progress">
+                    <div class="e-progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            <button type="button" class="e-attachment-delete" onclick="EkSil(this)">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    `;
+
+    // DOM'a ekleme
+    const attachmentList = document.getElementById('attachmentList');
+    if (attachmentList) {
+        attachmentList.insertAdjacentHTML('beforeend', attachmentHTML);
+        const newAttachment = attachmentList.lastElementChild;
+
+        // Dosya girdisi ekleme
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.name = 'DosyaEki';
+        fileInput.style.display = 'none';
+        newAttachment.appendChild(fileInput);
+
+        // Dosyayı form verisine ekle
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+
+        // Yükleme animasyonu
+        simulateUploadProgress(newAttachment);
+    }
+}
+
+// Dosya türüne göre ikon belirleme
+function getFileIcon(fileType) {
+    if (fileType.match('image.*')) return 'fa-file-image';
+    if (fileType.match('video.*')) return 'fa-file-video';
+    if (fileType.match('audio.*')) return 'fa-file-audio';
+    if (fileType.match('text.*')) return 'fa-file-alt';
+    if (fileType.match('application/pdf')) return 'fa-file-pdf';
+    if (fileType.match('application/msword') || fileType.match('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) return 'fa-file-word';
+    if (fileType.match('application/vnd.ms-excel') || fileType.match('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) return 'fa-file-excel';
+    if (fileType.match('application/vnd.ms-powerpoint') || fileType.match('application/vnd.openxmlformats-officedocument.presentationml.presentation')) return 'fa-file-powerpoint';
+    if (fileType.match('application/zip') || fileType.match('application/x-rar-compressed')) return 'fa-file-archive';
+    return 'fa-file';
+}
+
+// Yükleme ilerleme çubuğu simulasyonu
+function simulateUploadProgress(element) {
+    const progressBar = element.querySelector('.e-progress-bar');
+    let width = 0;
+
+    const interval = setInterval(function() {
+        if (width >= 100) {
+            clearInterval(interval);
+            // Yükleme tamamlandıktan sonra progress bar'ı gizle
+            setTimeout(function() {
+                const progressElement = element.querySelector('.e-progress');
+                progressElement.style.display = 'none';
+
+                // Yüklendi link'i ekle
+                const detailsElement = element.querySelector('.e-attachment-details');
+                const linkElement = document.createElement('a');
+                linkElement.className = 'e-attachment-link';
+                linkElement.textContent = 'Görüntüle';
+                linkElement.href = 'javascript:void(0)';
+                detailsElement.appendChild(linkElement);
+            }, 300);
+        } else {
+            width += 5;
+            progressBar.style.width = width + '%';
+        }
+    }, 30);
+}
+
+// Ek sayısını güncelleme
+function updateAttachmentCount() {
+    const attachmentList = document.getElementById('attachmentList');
+    const countElement = document.getElementById('attachment-count');
+
+    if (attachmentList && countElement) {
+        const count = attachmentList.querySelectorAll('.e-attachment').length;
+        countElement.textContent = count;
+    }
+}
+
+// Ek silme
+function EkSil(element) {
+    const attachment = element.closest('.e-attachment');
+
+    // Silme animasyonu
+    attachment.style.opacity = '0';
+    attachment.style.transform = 'scale(0.9)';
+
+    setTimeout(function() {
+        attachment.remove();
+        updateAttachmentCount();
+
+        // Ek yoksa paneli gizle
+        const attachmentList = document.getElementById('attachmentList');
+        if (attachmentList.querySelectorAll('.e-attachment').length === 0) {
+            document.getElementById('e-attachments-container').style.display = 'none';
+        }
+    }, 200);
+}
+
+// Mesaj gönderme
+function mesajGonder() {
+    if (validateForm()) {
+        // CKEditor içeriğini güncelle
+        for (const instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+
+        // Bildirim göster
+        showNotification('success', 'Mesaj Gönderiliyor', 'Lütfen bekleyiniz...');
+
+        // Formu gönder
+        document.getElementById('_Form').submit();
+    }
+}
+
+// Form doğrulama
+function validateForm() {
+    let isValid = true;
+
+    // Önceki hataları temizle
+    clearErrors();
+
+    // Kullanıcı kimlik doğrulaması
+    if (document.getElementById('AdSoyad') && document.getElementById('AdSoyad').type !== 'hidden') {
+        // Ad Soyad kontrolü
+        if (!document.getElementById('AdSoyad').value.trim()) {
+            addError(document.getElementById('AdSoyad'), 'Ad Soyad alanı zorunludur');
+            isValid = false;
+        }
+
+        // Email kontrolü
+        const email = document.getElementById('Email').value.trim();
+        if (!email) {
+            addError(document.getElementById('Email'), 'Email alanı zorunludur');
+            isValid = false;
+        } else if (!validateEmail(email)) {
+            addError(document.getElementById('Email'), 'Geçerli bir email adresi giriniz');
+            isValid = false;
+        }
+    }
+
+    // Kategori kontrolü
+    if (document.getElementById('mkID') && !document.getElementById('mkID').value) {
+        addError(document.getElementById('mkID'), 'Kategori seçimi zorunludur');
+        isValid = false;
+    }
+
+    // Konu kontrolü
+    if (document.getElementById('Konu') && !document.getElementById('Konu').value.trim()) {
+        addError(document.getElementById('Konu'), 'Konu alanı zorunludur');
+        isValid = false;
+    }
+
+    // İçerik kontrolü
+    if (typeof CKEDITOR !== 'undefined') {
+        const content = CKEDITOR.instances.AciklamaHtml.getData().trim();
+        if (!content) {
+            const editor = document.querySelector('.e-editor');
+            addError(editor, 'Mesaj içeriği zorunludur');
+            isValid = false;
+        }
+    }
+
+    // Ek adı kontrolü
+    document.querySelectorAll('.e-attachment-name').forEach(function(input) {
+        if (!input.value.trim()) {
+            input.classList.add('e-error');
+            isValid = false;
+        }
+    });
+
+    // Hata varsa bildirim göster
+    if (!isValid) {
+        showNotification('error', 'Form Hatası', 'Lütfen zorunlu alanları doldurunuz');
+    }
+
+    return isValid;
+}
+
+// Hata ekleme
+function addError(element, message) {
+    element.classList.add('e-error');
+
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'e-error-message';
+    errorMessage.textContent = message;
+
+    element.parentNode.appendChild(errorMessage);
+}
+
+// Hataları temizleme
+function clearErrors() {
+    document.querySelectorAll('.e-error').forEach(function(element) {
+        element.classList.remove('e-error');
+    });
+
+    document.querySelectorAll('.e-error-message').forEach(function(element) {
+        element.remove();
+    });
+}
+
+// Email doğrulama
+function validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+// Kategori seçimi
+function getMsjKategoris(sndr) {
+    const enstituKod = $(sndr).val();
+    const panel = $('#pnlMailGonder');
+
+    panel.addClass('e-loading');
+
+    $.ajax({
+        url: '@Url.Action("GetMsjKategoris", "Ajax")',
+        data: { 'EnstituKod': enstituKod },
+        type: 'POST',
+        dataType: "json",
+        enctype: "multipart/form-data",
+        success: function (result) {
+            $('#mkID').empty();
+
+            for (let i = 0; i < result.length; i++) {
+                const valR = result[i].Value;
+                const _value = valR != null ? valR : "";
+                $('#mkID').append(`<option value="${_value}">${result[i].Caption}</option>`);
+            }
+
+            panel.removeClass('e-loading');
+            getKtNot($('#mkID'));
+        },
+        error: function (err) {
+            showNotification('error', 'Hata', 'Kategori listesi alınamadı');
+            panel.removeClass('e-loading');
+        }
+    });
+}
+
+// Kategori notu getirme
+function getKtNot(sndr) {
+    const kategoriID = $(sndr).val();
+
+    if (!kategoriID) {
+        $('#acklmT').html("");
+        $('#mkAck').hide();
+        return;
+    }
+
+    $('#pnlMailGonder').addClass('e-loading');
+
+    $.ajax({
+        url: '@Url.Action("GetKtNot", "Ajax")',
+        data: { 'MesajKategoriID': kategoriID },
+        type: 'POST',
+        dataType: "json",
+        success: function (result) {
+            if (result.NotBilgisi && result.NotBilgisi.trim()) {
+                $('#acklmT').html(result.NotBilgisi);
+                $('#mkAck').show();
+            } else {
+                $('#acklmT').html("");
+                $('#mkAck').hide();
+            }
+            $('#pnlMailGonder').removeClass('e-loading');
+        },
+        error: function (err) {
+            showNotification('error', 'Hata', 'Kategori notu alınamadı');
+            $('#pnlMailGonder').removeClass('e-loading');
+        }
+    });
+}
+
+    function showNotification(type, title, message) {
+        // Toastr ayarları
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": type === 'success' ? "5000" : "0",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Bildirim türüne göre toastr metodunu çağır
+        switch (type) {
+            case 'success':
+                toastr.success(message, title);
+                break;
+            case 'error':
+                toastr.error(message, title);
+                break;
+            case 'warning':
+                toastr.warning(message, title);
+                break;
+            case 'info':
+                toastr.info(message, title);
+                break;
+            default:
+                toastr.info(message, title);
+        }
+    }
+        </script>
