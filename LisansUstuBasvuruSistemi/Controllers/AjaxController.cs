@@ -2329,7 +2329,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             string mesajHtml = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mesaj);
 
             // JSON olarak sonuç döndür
-            return Json(new { mesaj.IsSuccess, Message = mesajHtml }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = mesaj.IsSuccess, responseText = mesajHtml }, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize(Roles = RoleNames.MailGonder)]

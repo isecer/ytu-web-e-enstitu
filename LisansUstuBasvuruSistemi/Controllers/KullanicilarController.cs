@@ -148,6 +148,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.BirimID = new SelectList(BirimlerBus.GetBirimlerTreeList(), "BirimID", "BirimAdi", model.BirimID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.IsAdmin = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsAdmin);
@@ -765,6 +766,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            if (kModel.OgrenimEnstituKod.IsNullOrWhiteSpace())
+                kModel.OgrenimEnstituKod = kModel.EnstituKod;
+            ViewBag.OgrenimEnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.OgrenimEnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", kModel.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(UnvanlarBus.CmbUnvanlar(true, kModel.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel), "Value", "Caption", kModel.UnvanID);
             ViewBag.BirimID = new SelectList(BirimlerBus.CmbBirimler(true), "Value", "Caption", kModel.BirimID);
