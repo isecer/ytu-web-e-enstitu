@@ -25,13 +25,15 @@ namespace BiskaUtil
         public int YetkiGrupId { get; set; }
         public string NameSurname { get; set; }
         public string Description { get; set; }
-      
-        public string ImagePath { get; set; }  
+
+        public string ImagePath { get; set; }
         public bool IsActiveDirectoryUser { get; set; }
         public bool? IsActiveDirectoryImpersonateWorking { get; set; }
         public string SeciliEnstituKodu { get; set; }
         public List<string> EnstituKods { get; set; }
+        public Dictionary<string, List<string>> EnstituProgramKods { get; set; } = new Dictionary<string, List<string>>();
         private Dictionary<string, object> _informations = new Dictionary<string, object>();
+
         public Dictionary<string, object> Informations
         {
             get => _informations;
@@ -74,9 +76,9 @@ namespace BiskaUtil
                 try
                 {
                     var ip = "";
-                    var forwarderFor = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+                    var forwarderFor = HttpContext.Current?.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
                     if (string.IsNullOrWhiteSpace(forwarderFor) || forwarderFor.ToLower().Contains("unknown"))
-                        ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+                        ip = HttpContext.Current?.Request.ServerVariables["REMOTE_ADDR"];
                     else if (forwarderFor.Contains(","))
                     {
                         ip = forwarderFor.Substring(0, forwarderFor.IndexOf(",", StringComparison.Ordinal));
@@ -86,6 +88,8 @@ namespace BiskaUtil
                         ip = forwarderFor.Substring(0, forwarderFor.IndexOf(";", StringComparison.Ordinal));
                     }
                     else ip = forwarderFor;
+
+                    if (ip == null) return "";
                     var len = ip.Length > 30 ? 30 : ip.Length;
                     return ip.Substring(0, len).Trim();
                 }
@@ -100,7 +104,7 @@ namespace BiskaUtil
         {
             #region Impersonate
 
-            HttpContext.Current.User = this.ToPrincipal(); 
+            HttpContext.Current.User = this.ToPrincipal();
             #endregion
         }
 

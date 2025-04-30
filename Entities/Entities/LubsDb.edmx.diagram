@@ -91,7 +91,6 @@
         <EntityTypeShape EntityType="LubsDbModel.MesajKategorileri" Width="1.5" PointX="10.5" PointY="60.5" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.Mesajlar" Width="1.5" PointX="15.75" PointY="62.5" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetAyarlar" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulari" Width="1.5" PointX="12.75" PointY="48" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezDosyalari" Width="1.5" PointX="15" PointY="43.125" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezTeslimFormlari" Width="1.5" PointX="15" PointY="40" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="18" PointY="50.875" IsExpanded="false" />
@@ -220,7 +219,6 @@
         <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_AnketSoruSecenek" />
         <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_Basvurular" />
         <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_BelgeTalepleri" />
-        <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_MezuniyetBasvurulari" />
         <AssociationConnector Association="LubsDbModel.FK_AnketSoruSecenek_AnketSoru" />
         <AssociationConnector Association="LubsDbModel.FK_Ayarlar_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_BasvuruBelgeTipleri_Kullanicilar" />
@@ -317,7 +315,6 @@
         <AssociationConnector Association="LubsDbModel.FK_BolumEslestir_Programlar" />
         <AssociationConnector Association="LubsDbModel.FK_Kullanicilar_Cinsiyetler" />
         <AssociationConnector Association="LubsDbModel.FK_DonemProjesiBasvuru_Donemler" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Donemler" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureci_Donemler" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetYonetmelikleri_Donemler" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetYonetmelikleri_Donemler1" />
@@ -396,7 +393,6 @@
         <AssociationConnector Association="LubsDbModel.FK_MailSablonlari_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_MesajKategorileri_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_Mesajlar_Kullanicilar" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureci_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetSureciKriterMuafOgrenciler_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetYayinTurleri_Kullanicilar" />
@@ -424,21 +420,11 @@
         <AssociationConnector Association="LubsDbModel.FK_YeterlikBasvuruKomiteler_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_YeterlikSureciKriterMuafOgrenciler_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_KullaniciProgramlari_Programlar" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_KullaniciTipleri" />
         <AssociationConnector Association="LubsDbModel.FK_MailSablonlari_MailSablonTipleri" />
         <AssociationConnector Association="LubsDbModel.FK_MailSablonlariEkleri_MailSablonlari" />
         <AssociationConnector Association="LubsDbModel.FK_MesajEkleri_Mesajlar" />
         <AssociationConnector Association="LubsDbModel.FK_Mesajlar_MesajKategorileri" />
         <AssociationConnector Association="LubsDbModel.FK_Mesajlar_Mesajlar1" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_MezuniyetSureci" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_MezuniyetYayinKontrolDurumlari" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_OgrenimDurumlari" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Programlar" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" />
-        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinBelgeTurleri" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinIndexTurleri" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinLinkTurleri" />
@@ -540,7 +526,21 @@
         <AssociationConnector Association="LubsDbModel.FK_YetkiGrupRolleri_YetkiGruplari" />
         <AssociationConnector Association="LubsDbModel.KullaniciRolleri" />
         <AssociationConnector Association="LubsDbModel.MenuRollleri" />
-      </Diagram>
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulari" Width="1.5" PointX="24" PointY="32.5" />
+        <AssociationConnector Association="LubsDbModel.FK_AnketCevaplari_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Donemler" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Kullanicilar" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_KullaniciTipleri" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_MezuniyetSureci" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_MezuniyetYayinKontrolDurumlari" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_OgrenimDurumlari" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Programlar" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

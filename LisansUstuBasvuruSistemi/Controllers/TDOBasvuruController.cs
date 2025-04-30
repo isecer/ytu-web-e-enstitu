@@ -897,16 +897,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (!mMessage.Messages.Any())
             {
-                if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
-                {
-                    mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
-                }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikTr" });
-                if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
-                {
-                    mMessage.Messages.Add("Varolan Tez başlığını ingilizce olarak giriniz.");
-                }
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikEn" });
+                //if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
+                //{
+                //    mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
+                //}
+                //mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikTr" });
+                //if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
+                //{
+                //    mMessage.Messages.Add("Varolan Tez başlığını ingilizce olarak giriniz.");
+                //}
+                //mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "TezBaslikEn" });
 
 
                 if (kModel.TezDanismanID <= 0)

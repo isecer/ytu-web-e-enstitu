@@ -39,6 +39,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool KtipBasvuruYapabilir { get; set; }
         public string EnstituAdi { get; set; }
         public string KullaniciTipAdi { get; set; }
-        public string YetkiGrupAdi { get; set; }
+        public string YetkiGrupAdi { get; set; } 
     }
 }

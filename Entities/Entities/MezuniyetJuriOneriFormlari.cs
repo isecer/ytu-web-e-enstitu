@@ -42,8 +42,8 @@ namespace Entities.Entities
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        public virtual MezuniyetBasvurulari MezuniyetBasvurulari { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetJuriOneriFormuJurileri> MezuniyetJuriOneriFormuJurileris { get; set; }
+        public virtual MezuniyetBasvurulari MezuniyetBasvurulari { get; set; }
     }
 }

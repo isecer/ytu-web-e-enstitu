@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-using System.Threading;
 using BiskaUtil;
 using HtmlAgilityPack;
 using LisansUstuBasvuruSistemi.Business;
@@ -136,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 if (targetElement == null) return model;
                 var yeniHtml = "<br/><div><strong><u>İlgili Ekler:</u></strong>";
                 foreach (var itemEk in mailItem.SablonEkleri)
-                { 
+                {
                     yeniHtml += "</br><a href='" + itemEk.EkDosyaYolu.CustomUrlContentMail(mailItem.SistemErisimAdresi) + "' target='_blank'>" + itemEk.EkAdi + "<a>";
                 }
                 yeniHtml += "</div></br>";
@@ -188,32 +187,26 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             #region sendMail
             var uid = UserIdentity.Current.Id;
             var uIp = UserIdentity.Ip;
-            new Thread(() =>
+
+
+            using (var entities = new LubsDbEntities())
             {
+                var qeklenen = entities.GonderilenMaillers.First(p => p.GonderilenMailID == gonderilenMailId);
                 try
                 {
-                    using (var entities = new LubsDbEntities())
-                    {
-                        var qeklenen = entities.GonderilenMaillers.First(p => p.GonderilenMailID == gonderilenMailId);
-                        try
-                        {
-                            SendMail(qeklenen.EnstituKod, konu, icerik, eMails, attachs);
-                            qeklenen.Gonderildi = true;
-                            qeklenen.IslemTarihi = DateTime.Now;
-                        }
-                        catch (Exception ex)
-                        {
-                            qeklenen.HataMesaji = ex.ToExceptionMessage();
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, uid, uIp);
-                        }
-                        entities.SaveChanges();
-                    }
+                    SendMail(qeklenen.EnstituKod, konu, icerik, eMails, attachs);
+                    qeklenen.Gonderildi = true;
+                    qeklenen.IslemTarihi = DateTime.Now;
                 }
                 catch (Exception ex)
                 {
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, uid, uIp);
+                    qeklenen.HataMesaji = ex.ToExceptionMessage();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata, uid, uIp);
                 }
-            }).Start();
+                entities.SaveChanges();
+            }
+
+
 
             #endregion
         }
@@ -249,7 +242,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                 ePosta.Subject = konu;
                 ePosta.Body = icerik;
                 ePosta.BodyEncoding = Encoding.UTF8;
-                ePosta.Priority = MailPriority.High;
+                ePosta.Priority = MailPriority.Normal;
                 if (attachs != null)
                     foreach (var item in attachs)
                         ePosta.Attachments.Add(item);

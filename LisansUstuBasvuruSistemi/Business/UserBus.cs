@@ -356,6 +356,28 @@ namespace LisansUstuBasvuruSistemi.Business
 
             }
         }
+        public static Dictionary<string, List<string>> GetUserEnstituProgramKods(int kullaniciId)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+                var kullProg = (from kp in entities.KullaniciProgramlaris.Where(a => a.KullaniciID == kullaniciId)
+                        join s in entities.Programlars on kp.ProgramKod equals s.ProgramKod
+                        join b in entities.AnabilimDallaris on s.AnabilimDaliKod equals b.AnabilimDaliKod
+                        join e in entities.Enstitulers on b.EnstituKod equals e.EnstituKod
+                        select new
+                        {
+                            ProgramKod = s.ProgramKod,
+                            EnstituKod = e.EnstituKod
+                        })
+                    .GroupBy(x => x.EnstituKod)
+                    .ToDictionary(
+                        g => g.Key, // EnstituKod
+                        g => g.Select(x => x.ProgramKod).ToList() // Her enstitüye ait program kodları listesi
+                    );
+
+                return kullProg;
+            }
+        }
         public static UserIdentity GetUserIdentity(string userName)
         {
 
@@ -399,6 +421,7 @@ namespace LisansUstuBasvuruSistemi.Business
             ui.KullaniciTipId = kull.KullaniciTipID;
 
             ui.EnstituKods = UserBus.GetUserEnstituKods(kull.KullaniciID);
+            ui.EnstituProgramKods = UserBus.GetUserEnstituProgramKods(kull.KullaniciID);
             ui.SeciliEnstituKodu = kull.EnstituKod;
 
 

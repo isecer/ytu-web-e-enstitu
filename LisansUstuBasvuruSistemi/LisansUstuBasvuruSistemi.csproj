@@ -436,6 +436,7 @@
     <Compile Include="Utilities\Dtos\DmYeterlikDetayDto.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetSureciTezKontrolBilgiDto.cs" />
     <Compile Include="Utilities\Dtos\ObsDonemDto.cs" />
+    <Compile Include="Utilities\Dtos\ResendMailDtos.cs" />
     <Compile Include="Utilities\Dtos\SrTalepBasvuranInfoDto.cs" />
     <Compile Include="Utilities\Dtos\TijBasvuruDetayDto.cs" />
     <Compile Include="Utilities\Dtos\TijOneriDtos.cs" />

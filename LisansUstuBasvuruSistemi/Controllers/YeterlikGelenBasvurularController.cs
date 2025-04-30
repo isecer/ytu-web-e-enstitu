@@ -118,12 +118,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.BasariliOlanlar) q = q.Where(p => p.IsGenelSonucBasarili == true);
                 else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.BasarisizOlanlar) q = q.Where(p => p.IsGenelSonucBasarili == false);
             }
-            var yeterlikGbKayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
-            var yeterlikAbdJuriOnayDuzeltme = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
-            if (!yeterlikGbKayitYetki && !yeterlikAbdJuriOnayDuzeltme)
+
+            var danismanYetkisi = RoleNames.YeterlikDanismanYetkisi.InRoleCurrent();
+            var programYetkisi = RoleNames.YeterlikProgramYetkisi.InRoleCurrent();
+            var tumOgrenciGormeYetkisi = RoleNames.YeterlikTumBasvurulariGormeYetkisi.InRoleCurrent();
+
+            if (!tumOgrenciGormeYetkisi)
             {
-                q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
-            }
+                var yetkiliProgramlar = new List<string>();
+
+                if (programYetkisi && UserIdentity.Current.EnstituProgramKods.ContainsKey(enstituKod))
+                {
+                    yetkiliProgramlar = UserIdentity.Current.EnstituProgramKods[enstituKod];
+                } 
+                q = q.Where(p =>
+                    (programYetkisi && yetkiliProgramlar.Contains(p.ProgramKod)) ||
+                    (danismanYetkisi && p.TezDanismanID == UserIdentity.Current.Id)
+                );
+            } 
             #region export
             if (export && model.RowCount > 0)
             {

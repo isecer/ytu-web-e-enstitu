@@ -52,6 +52,11 @@ namespace Entities.Entities
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
+        public bool IsTezDiliDegisecek { get; set; }
+        public Nullable<bool> YeniTezDiliTr { get; set; }
+        public string SinavAdi { get; set; }
+        public string SinavPuani { get; set; }
+        public Nullable<int> SinavYili { get; set; }
     
         public virtual Donemler Donemler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }

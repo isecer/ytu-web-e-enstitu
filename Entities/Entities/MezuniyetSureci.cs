@@ -17,10 +17,10 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MezuniyetSureci()
         {
-            this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
             this.MezuniyetSureciKriterMuafOgrencilers = new HashSet<MezuniyetSureciKriterMuafOgrenciler>();
             this.MezuniyetSureciOgrenimTipKriterleris = new HashSet<MezuniyetSureciOgrenimTipKriterleri>();
             this.MezuniyetSureciOtoMails = new HashSet<MezuniyetSureciOtoMail>();
+            this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
         }
     
         public int MezuniyetSurecID { get; set; }
@@ -44,12 +44,12 @@ namespace Entities.Entities
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureciKriterMuafOgrenciler> MezuniyetSureciKriterMuafOgrencilers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureciOgrenimTipKriterleri> MezuniyetSureciOgrenimTipKriterleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureciOtoMail> MezuniyetSureciOtoMails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
     }
 }
