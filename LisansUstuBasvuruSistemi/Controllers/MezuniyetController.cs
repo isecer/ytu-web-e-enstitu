@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bbModel = new IndexPageInfoDto();
             var mezuniyetSurecId = MezuniyetBus.GetMezuniyetAktifSurecId(enstituKod);
             bbModel.AktifSurecID = mezuniyetSurecId ?? 0;
-            bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.GetAyarMz(enstituKod).ToBoolean(false) && mezuniyetSurecId.HasValue;
+            bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.GetAyar(enstituKod).ToBoolean(false) && mezuniyetSurecId.HasValue;
             bbModel.MezuniyetSurec = _entities.MezuniyetSurecis.FirstOrDefault(p => p.MezuniyetSurecID == mezuniyetSurecId.Value);
             if (bbModel.MezuniyetSurec != null)
             {
@@ -512,7 +512,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mBasvuru = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
                     if (!mBasvuru.TezDanismanID.HasValue || mBasvuru.TezDanismanID <= 0 || (mBasvuru.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Taslak && !mBasvuru.IsDanismanOnay.HasValue)) mBasvuru.TezDanismanID = kul.DanismanID;
-                    if (kModel.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi && kModel.MezuniyetYayinKontrolDurumID != mBasvuru.MezuniyetYayinKontrolDurumID && MezuniyetAyar.YeniMezuniyetBasvurusundaMailGonder.GetAyarMz(kModel.EnstituKod).ToBoolean() == true)
+                    if (kModel.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi && kModel.MezuniyetYayinKontrolDurumID != mBasvuru.MezuniyetYayinKontrolDurumID && MezuniyetAyar.YeniMezuniyetBasvurusundaMailGonder.GetAyar(kModel.EnstituKod).ToBoolean() == true)
                     {
                         mBasvuru.BasvuruTarihi = DateTime.Now;
                         sendMail = true;

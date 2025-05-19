@@ -32,6 +32,18 @@ namespace BiskaUtil
         public string SeciliEnstituKodu { get; set; }
         public List<string> EnstituKods { get; set; }
         public Dictionary<string, List<string>> EnstituProgramKods { get; set; } = new Dictionary<string, List<string>>();
+
+        public List<string> SelectedEnstituProgramKod(string enstituKod = null)
+        {
+            var yetkiliProgramlar = new List<string>();
+
+            if (EnstituProgramKods != null && EnstituProgramKods.ContainsKey(enstituKod))
+            {
+                yetkiliProgramlar = Current.EnstituProgramKods[enstituKod];
+            }
+
+            return yetkiliProgramlar;
+        }
         private Dictionary<string, object> _informations = new Dictionary<string, object>();
 
         public Dictionary<string, object> Informations

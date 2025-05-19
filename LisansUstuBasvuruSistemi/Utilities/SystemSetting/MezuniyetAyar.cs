@@ -3,43 +3,38 @@ using System.Linq;
 
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 {
-
     public static class MezuniyetAyar
     {
-
-        public const string MezuniyetBasvurusuAcikmi = "Mezuniyet Başvurusu Açık";
-        public const string MezuniyetBasvurusunuTezSorumlusunaAta = "Mezuniyet Basvurusunu Tez Sorumlusuna Ata";
-        public const string MezuniyetBasvurusunuIlgiliTezSorumlusunaAta = "Mezuniyet Basvurusunu İlgili Tez Sorumlusuna Ata";
-        public const string TezSorumluAtamaHesaplamasiDonemselYap = "Tez Sorumlusu Atama Hesaplaması Dönemsel Yapılsın";
-        public const string YeniMezuniyetBasvurusundaMailGonder = "Yeni Mezuniyet Başvurusunda Mail Gönder";
-
-        public static void SetAyarMz(string ayarAdi, string ayarDegeri, string enstituKod)
+        public class MezuniyetAyarProperty
         {
-            using (var entities = new LubsDbEntities())
-            {
-                var ayar = entities.MezuniyetAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
-                if (ayar != null)
-                {
-                    ayar.AyarDegeri = ayarDegeri;
-                }
-                else
-                {
-                    entities.MezuniyetAyarlars.Add(new MezuniyetAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
+            internal string PropertyValue { get; }
 
-                }
-                entities.SaveChanges();
+            internal MezuniyetAyarProperty(string value)
+            {
+                PropertyValue = value;
             }
 
+            public static implicit operator string(MezuniyetAyarProperty property)
+            {
+                return property.PropertyValue;
+            }
         }
-        public static string GetAyarMz(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
+
+        public static readonly MezuniyetAyarProperty MezuniyetBasvurusuAcikmi = new MezuniyetAyarProperty("Mezuniyet Başvurusu Açık");
+        public static readonly MezuniyetAyarProperty MezuniyetBasvurusunuTezSorumlusunaAta = new MezuniyetAyarProperty("Mezuniyet Basvurusunu Tez Sorumlusuna Ata");
+        public static readonly MezuniyetAyarProperty MezuniyetBasvurusunuIlgiliTezSorumlusunaAta = new MezuniyetAyarProperty("Mezuniyet Basvurusunu İlgili Tez Sorumlusuna Ata");
+        public static readonly MezuniyetAyarProperty TezSorumluAtamaHesaplamasiDonemselYap = new MezuniyetAyarProperty("Tez Sorumlusu Atama Hesaplaması Dönemsel Yapılsın");
+        public static readonly MezuniyetAyarProperty YeniMezuniyetBasvurusundaMailGonder = new MezuniyetAyarProperty("Yeni Mezuniyet Başvurusunda Mail Gönder");
+
+        public static string GetAyar(this MezuniyetAyarProperty ayarProperty, string enstituKodu, string varsayilanDeger = "")
         {
             using (var entities = new LubsDbEntities())
             {
-                var ayar = entities.MezuniyetAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                var ayar = entities.MezuniyetAyarlars
+                    .FirstOrDefault(p => p.AyarAdi == ayarProperty.PropertyValue && p.EnstituKod == enstituKodu);
                 return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
         }
+         
     }
-
-
 }

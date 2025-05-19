@@ -25,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Business
             {
 
                 var basvuru = entities.TIBasvurus.First(p => p.TIBasvuruID == tiBasvuruId);
-                model.IsGecmisDegerlendirilebilsin = TiAyar.TiGecmisAraRaporBasvurulariDegerlendirilebilsin.GetAyarTi(basvuru.EnstituKod)
+                model.IsGecmisDegerlendirilebilsin = TiAyar.TiGecmisAraRaporBasvurulariDegerlendirilebilsin.GetAyar(basvuru.EnstituKod)
                     .ToBooleanObj() ?? false;
                 if (!basvuru.TezDanismanID.HasValue || basvuru.TezDanismanID.Value <= 0)
                 {
@@ -166,7 +166,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     else
                     {
                         var basvuruAcikmi =
-                            TiAyar.TiBasvurusuAcikmi.GetAyarTi(tiBasvuru.EnstituKod, "false").ToBoolean() ?? false;
+                            TiAyar.TiBasvurusuAcikmi.GetAyar(tiBasvuru.EnstituKod, "false").ToBoolean() ?? false;
 
                         if (!UserIdentity.Current.EnstituKods.Contains(tiBasvuru.EnstituKod) && kayitYetki && tiBasvuru.KullaniciID != UserIdentity.Current.Id)
                         {
@@ -191,7 +191,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else
                 {
-                    msg.IsSuccess = TiAyar.TiBasvurusuAcikmi.GetAyarTi(enstituKod, "false").ToBoolean() ?? false;
+                    msg.IsSuccess = TiAyar.TiBasvurusuAcikmi.GetAyar(enstituKod, "false").ToBoolean() ?? false;
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && UserIdentity.Current.IsAdmin == false)
                     {
@@ -216,7 +216,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             }
                             else
                             {
-                                var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod);
+                                var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyar(enstituKod);
 
                                 var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).Select(s => s.Trim()).ToList();
 
@@ -275,7 +275,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                     }
-                    else if (!TiAyar.TiBasvurusuAcikmi.GetAyarTi(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
+                    else if (!TiAyar.TiBasvurusuAcikmi.GetAyar(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");

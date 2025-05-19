@@ -1,45 +1,31 @@
 ﻿using Entities.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 {
-
     public static class TdoAyar
     {
-
-        public const string BasvurusuAcikmi = "Başvuru Alımı Açık"; 
-        public const string DanismanMaxOgrenciKayitKriter = "Danışman YL + DR maksimum kayıtlı öğrenci sayısı";
-        public const string DanismanMinSinavPuanKabulKriter = "Danışman için Dil Sınavı kabulü min puan";
-
-        public static void SetAyarTdo(string ayarAdi, string ayarDegeri, string enstituKod)
+        public class TdoAyarProperty
         {
-            using (var entities = new LubsDbEntities())
+            internal string PropertyValue { get; }
+            internal TdoAyarProperty(string value)
             {
-                var ayar = entities.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
-                if (ayar != null)
-                {
-                    ayar.AyarDegeri = ayarDegeri;
-                }
-                else
-                {
-                    entities.TDOAyarlars.Add(new TDOAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
-
-                }
-                entities.SaveChanges();
+                PropertyValue = value;
             }
+            public static implicit operator string(TdoAyarProperty prop) => prop.PropertyValue;
         }
-        public static string GetAyarTdo(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
+
+        public static readonly TdoAyarProperty BasvurusuAcikmi = new TdoAyarProperty("Başvuru Alımı Açık");
+        public static readonly TdoAyarProperty DanismanMaxOgrenciKayitKriter = new TdoAyarProperty("Danışman YL + DR maksimum kayıtlı öğrenci sayısı");
+        public static readonly TdoAyarProperty DanismanMinSinavPuanKabulKriter = new TdoAyarProperty("Danışman için Dil Sınavı kabulü min puan");
+         
+        public static string GetAyar(this TdoAyarProperty ayarProperty, string enstituKodu, string varsayilanDeger = "")
         {
             using (var entities = new LubsDbEntities())
             {
-                var ayar = entities.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                var ayar = entities.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarProperty.PropertyValue && p.EnstituKod == enstituKodu);
                 return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
         }
     }
-
-
 }

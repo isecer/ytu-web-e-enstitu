@@ -59,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var basvuru = entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
-                if (!MezuniyetAyar.MezuniyetBasvurusunuTezSorumlusunaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false)) return;
+                if (!MezuniyetAyar.MezuniyetBasvurusunuTezSorumlusunaAta.GetAyar(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false)) return;
 
 
 
@@ -69,9 +69,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
 
-                var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.MezuniyetBasvurusunuIlgiliTezSorumlusunaAta.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
+                var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.MezuniyetBasvurusunuIlgiliTezSorumlusunaAta.GetAyar(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
 
-                var isTezSorumluAtamaHesaplamasiDonemselYap = MezuniyetAyar.TezSorumluAtamaHesaplamasiDonemselYap.GetAyarMz(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
+                var isTezSorumluAtamaHesaplamasiDonemselYap = MezuniyetAyar.TezSorumluAtamaHesaplamasiDonemselYap.GetAyar(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
                 var nowDate = DateTime.Now;
 
                 //Yüklenen tezin ait olduğu programda yetkisi olanlar öncelikli, sonrasında hiç program yetkisi olmayanlar öncelikli, sonrasında count sayısına göre öncelikli, sonrasında random atama. Program yetkisi var ve gelen programda yetkisi yoksa hiç sıralamaya dahil edilmeyecek.

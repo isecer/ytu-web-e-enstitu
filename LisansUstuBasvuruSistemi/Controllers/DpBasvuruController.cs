@@ -40,7 +40,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.IsDegerlendirme.HasValue)
             {
                 var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
-                model.IsDonemProjesiBasvurusuAcik = DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyarDp(enstituKod).ToBoolean(false);
+                model.IsDonemProjesiBasvurusuAcik = DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyar(enstituKod).ToBoolean(false);
                 model.AdSoyad = kullanici.Ad + " " + kullanici.Soyad;
                 model.EnstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod).EnstituAd;
                 model.IsYtuOgrencisi = kullanici.YtuOgrencisi && kullanici.OgrenimDurumID == OgrenimDurumEnum.HalenOğrenci;
@@ -524,7 +524,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             int selectedJuriNum = 0;
             bool showSinavKayitForm = false;
-            var isBasvuruAcik = DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyarDp(enstituKod, "false").ToBoolean(false);
+            var isBasvuruAcik = DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyar(enstituKod, "false").ToBoolean(false);
 
 
 
@@ -747,7 +747,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var donemProjesiBasvuru = _entities.DonemProjesiBasvurus.First(p => p.UniqueID == donemProjesiBasvuruUniqueId);
 
-                var durumIds = new List<int> { DonemProjesiEnstituOnayDurumEnum.RetEdildi, DonemProjesiEnstituOnayDurumEnum.IptalEdildi };
+                var durumIds = new List<int> { DonemProjesiEnstituOnayDurumEnum.Reddedildi, DonemProjesiEnstituOnayDurumEnum.IptalEdildi };
                 var sendMail = durumIds.Contains(donemProjesiEnstituOnayDurumId ?? 0) && donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID != donemProjesiEnstituOnayDurumId;
                 donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID = donemProjesiEnstituOnayDurumId;
                 donemProjesiBasvuru.EnstituOnayAciklama = enstituOnayAciklama;
@@ -905,12 +905,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (kModel.IsOnline == true && !DonemProjesiAyar.SinavOnlineYapilabilsin.GetAyarDp(kModel.EnstituKod).ToBoolean(false))
+                if (kModel.IsOnline == true && !DonemProjesiAyar.SinavOnlineYapilabilsin.GetAyar(kModel.EnstituKod).ToBoolean(false))
                 {
                     mmMessage.Messages.Add("Dönem Projesi Sınavı Online olarak yapılamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });
                 }
-                else if (kModel.IsOnline == false && !DonemProjesiAyar.SinavYuzyuzeYapilabilsin.GetAyarDp(kModel.EnstituKod).ToBoolean(false))
+                else if (kModel.IsOnline == false && !DonemProjesiAyar.SinavYuzyuzeYapilabilsin.GetAyar(kModel.EnstituKod).ToBoolean(false))
                 {
                     mmMessage.Messages.Add("Dönem Projesi Sınavı Yüz Yüze olarak yapılamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });
@@ -1208,9 +1208,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (donemProjesiJuriOnayDurumId == DonemProjesiJuriOnayDurumEnum.Basarili)
                             {
                                 var enFazlaTekKaynakOraniKriter = DonemProjesiAyar.EnFazlaTekKaynakOrani
-                                    .GetAyarDp(donemProjesiBasvuru.DonemProjesi.EnstituKod, "0").ToInt();
+                                    .GetAyar(donemProjesiBasvuru.DonemProjesi.EnstituKod, "0").ToInt();
                                 var enFazlaToplamKaynakOraniKriter = DonemProjesiAyar.EnFazlaToplamKaynakOrani
-                                    .GetAyarDp(donemProjesiBasvuru.DonemProjesi.EnstituKod, "0").ToInt();
+                                    .GetAyar(donemProjesiBasvuru.DonemProjesi.EnstituKod, "0").ToInt();
 
                                 if (!tekKaynakOrani.HasValue)
                                     mMessage.Messages.Add(
@@ -1483,7 +1483,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
 
 
-                        var eykOgrenciKontroluYap = DonemProjesiAyar.DonemProjesiEykOgrenciDogrulamaAcik.GetAyarDp(donemProjesi.EnstituKod).ToBooleanObj() ?? false;
+                        var eykOgrenciKontroluYap = DonemProjesiAyar.DonemProjesiEykOgrenciDogrulamaAcik.GetAyar(donemProjesi.EnstituKod).ToBooleanObj() ?? false;
                         if (eykOgrenciKontroluYap)
                         {
                             var obsStudentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(donemProjesi.KullaniciID);
@@ -1524,7 +1524,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                         mmMessage.Messages.Insert(0, "Ders yükünü tamamlayamayan öğrenci mezuniyet için EYK ya gönderilemez.");
                                     }
                                 }
-                                var basariliKrediSayisiKriter = DonemProjesiAyar.BasariliKrediSayisi.GetAyarDp(donemProjesi.EnstituKod).ToInt();
+                                var basariliKrediSayisiKriter = DonemProjesiAyar.BasariliKrediSayisi.GetAyar(donemProjesi.EnstituKod).ToInt();
                                 if (basariliKrediSayisiKriter.HasValue && obsStudentInfo.AktifDonemDers.ToplamKredi < basariliKrediSayisiKriter.Value)
                                 {
                                     mmMessage.Messages.Add("Öğrenci toplam kredi sayısı " + basariliKrediSayisiKriter.Value + " krediden büyük ya da eşit olmalıdır. Mevcut kredi: " + obsStudentInfo.AktifDonemDers.ToplamKredi);

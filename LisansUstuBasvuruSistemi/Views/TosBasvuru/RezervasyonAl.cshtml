@@ -8,8 +8,8 @@
     Layout = null;
 
     var tosDegerlendirmeDuzeltme = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
-    var tosSinavOnlineYapilabilsin = TiAyar.TezOneriSavunmaSinaviOnlineYapilabilsin.GetAyarTi(Model.EnstituKod).ToBoolean(false);
-    var tosSinavYuzYuzeYapilabilsin = TiAyar.TezOneriSavunmaSinaviYuzYuzeYapilabilsin.GetAyarTi(Model.EnstituKod).ToBoolean(false);
+    var tosSinavOnlineYapilabilsin = TiAyar.TezOneriSavunmaSinaviOnlineYapilabilsin.GetAyar(Model.EnstituKod).ToBoolean(false);
+    var tosSinavYuzYuzeYapilabilsin = TiAyar.TezOneriSavunmaSinaviYuzYuzeYapilabilsin.GetAyar(Model.EnstituKod).ToBoolean(false);
 }
 @if (Model.YetkisizErisim)
 {

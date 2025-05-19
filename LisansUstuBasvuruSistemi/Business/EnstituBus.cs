@@ -3,7 +3,6 @@ using System.Linq;
 using BiskaUtil;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -68,6 +67,21 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
 
             var data = Enstitulers.Where(p => enstKods.Contains(p.EnstituKod)).OrderBy(o => o.EnstituAd).ToList();
+            foreach (var item in data)
+            {
+                dct.Add(new CmbStringDto { Value = item.EnstituKod, Caption = item.EnstituAd });
+            }
+
+            return dct;
+
+        }
+        public static List<CmbStringDto> GetCmbEnstituler(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbStringDto>(); 
+
+            if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
+
+            var data = Enstitulers.OrderBy(o => o.EnstituAd).ToList();
             foreach (var item in data)
             {
                 dct.Add(new CmbStringDto { Value = item.EnstituKod, Caption = item.EnstituAd });

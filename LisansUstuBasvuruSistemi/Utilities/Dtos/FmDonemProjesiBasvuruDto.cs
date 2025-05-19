@@ -24,7 +24,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public Guid? ShowBasvuruUniqueId { get; set; }
         public Guid? IsDegerlendirme { get; set; }
         public IEnumerable<FrDonemProjesiBasvuruDto> Data { get; set; }
-
     }
     public class FrDonemProjesiBasvuruDto : DonemProjesiBasvuru
     {

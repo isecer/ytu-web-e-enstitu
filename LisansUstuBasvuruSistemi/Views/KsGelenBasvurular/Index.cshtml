@@ -1,0 +1,476 @@
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model  FmKayitSilmeBasvuruDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var eykOnayYetki = RoleNames.KayitSilmeEykDaOnay.InRoleCurrent();
+    var düzeltmeSilmeYetki = RoleNames.KayitSilmeBasvuruDuzeltmeYetkisi.InRoleCurrent();
+
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "KsGelenBasvurular", FormMethod.Post, new { id = "frmKsBasvurular" }))
+    {
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info" id="pnlFltr">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+
+                        @if (Model.IsFiltered && Model.RowCount > 0)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmKsBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
+                            </li>
+
+                        }
+                        @if (eykOnayYetki && Model.SelectedKayitSilmeBasvurulariIds.Any())
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class="topluOnay"
+                                   onclick="TopluEYKDaOnay()"
+                                   title="EYK'ya hazırlanmış olan Kayıt Silme başvurularını EYK'da onaylandı olarak güncelle">
+                                    <i class="fa fa-thumbs-o-up fa-lg"></i>
+                                </a>
+                            </li>
+
+                            <script>
+                                function TopluEYKDaOnay() {
+                                    var currentConfig = {
+                                        message: "EYK'ya hazırlanmış ve EYK'da onay işlemi bekleyen <b>@Model.SelectedKayitSilmeBasvurulariIds.Count</b> adet Kayıt Silme başvurusunu <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?",
+                                        title: "Kayıt Silme Başvuruları - Toplu EYK Onayı",
+                                        url: '@Url.Action("EYKDaOnay", "KsGelenBasvurular")'
+
+                                    };
+
+
+                                    var dialog = bootbox.dialog({
+                                        message: `
+                                          <div class="container-fluid">
+                                              <div class="row">
+                                                  <div class="col-12">
+                                                      <div class="card shadow-sm border-0">
+                                                          <div class="card-body">
+                                                              <p class="text-center">
+                                                              ${currentConfig.message}
+                                                              </p>
+                                                              <div class="alert   text-center">
+                                                                  <i class="fa fa-exclamation-triangle"></i> Bu işlem onaylanan başvuru sayısına göre uzun sürebilir.
+                                                              </div>
+
+                                                              <div class="row g-3">
+                                                                  <div class="col-md-6">
+                                                                      <label for="eykDate" class="form-label fw-bold">EYK Tarihi</label>
+                                                                      <input type="text" id="eykDate" class="form-control tarihEykD"
+                                                                             value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                                                  </div>
+
+                                                                  <div class="col-md-6">
+                                                                      <label for="eykSayisiP" class="form-label fw-bold">EYK Sayısı</label>
+                                                                      <input type="text" id="eykSayisiP" class="form-control"
+                                                                             placeholder="">
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      `,
+                                        title: currentConfig.title,
+                                        buttons: {
+                                            confirm: {
+                                                label: "Onayla",
+                                                className: "btn-info onay-btn",
+                                                callback: function () {
+                                                    var btn = $('.onay-btn');
+                                                    var panel = $(dialog).find('.modal-content');
+                                                    btn.html('Onaylanıyor...').prop('disabled', true);
+                                                    PanelRefresh(panel, false);
+
+                                                    toastr.info("Lütfen işlem tamamlanana kadar bekleyiniz.", "Onaylama İşlemi Başlatıldı");
+
+                                                    $.ajax({
+                                                        url: currentConfig.url,
+                                                        type: 'POST',
+                                                        data: {
+                                                            KayitSilmeBasvuruIds: @Html.Raw(Json.Encode(Model.SelectedKayitSilmeBasvurulariIds)),
+                                                            eykTarihi: $('#eykDate').val(),
+                                                            eykSayisi: $('#eykSayisiP').val()
+                                                        },
+                                                        success: function (result) {
+                                                            toastr.success(result.Count + " adet başvuru EYK'da onaylandı.", "İşlem Tamamlandı");
+                                                            PanelRefresh(panel, true);
+                                                            return true;
+
+                                                        },
+                                                        error: function (err) {
+                                                            toastr.error("İşlem sırasında hata oluştu: " + err.responseText);
+                                                            btn.html('Onayla').prop('disabled', false);
+                                                            PanelRefresh(panel, false);
+
+                                                        }
+                                                    });
+                                                }
+                                            },
+                                            cancel: {
+                                                label: "Vazgeç",
+                                                className: "btn-secondary"
+                                            }
+                                        }
+                                    });
+
+                                    $('.tarihEykD').datetimepicker({
+                                        lang: 'tr',
+                                        timepicker: false,
+                                        format: 'Y-m-d'
+                                    });
+                                }
+
+                            </script>
+                        }
+                        @if (RoleNames.KayitSilmeEykYaGonder.InRole())
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="ShowDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
+                                <script>
+                              function ShowDialogTutanakRpr() {
+                                  var _panel = $('#pnlFltr');
+
+                                  PanelRefresh(_panel, false);
+                                  $.ajax({
+                                      url: '@Url.Action("GetTutanakRaporu", "KsGelenBasvurular")',
+                                      data: {},
+                                      success: function (result) {
+
+                                          PanelRefresh(_panel, true);
+                                          var btbxxFS = bootbox.dialog({
+                                              message: result,
+                                              title: "<i class='fa fa-bar-chart-o'></i> Tutanak Çıktısı Oluşturma İşlemi",
+                                              buttons: {
+                                                  success: {
+                                                      label: 'Çıktı Al',
+                                                      className: "btn btn-info",
+                                                      callback: function (event) {
+                                                          toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
+                                                          var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                                          PanelRefresh(pnlx, false);
+                                                          $('#TutanakRprForm').ajaxForm({
+                                                              success: function (result) {
+
+                                                                  PanelRefresh(pnlx, true);
+                                                                  if (result.IsSuccess) {
+
+                                                                      var _Bastar = $('#BasTar').val();
+                                                                      var _Bittar = $('#BitTar').val();
+                                                                      var _ExportWordOrExcel = $('#exportWordOrExcel').val();
+                                                                      var _EnstituOnayDurumId = $('#EnstituOnayDurumId').val();
+
+                                                                      window.location = '@Url.Action("GetTutanakRaporuExport", "KsGelenBasvurular")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&ExportWordOrExcel=' + _ExportWordOrExcel + "&enstituOnayDurumId=" + _EnstituOnayDurumId;
+
+                                                                  }
+                                                                  else {
+                                                                      GetMsg(result);
+                                                                  }
+
+
+                                                              },
+                                                              complete: function (cmp) {
+                                                                  PanelRefresh(pnlx, true);
+                                                              },
+                                                              error: function (err) {
+                                                                  PanelRefresh(pnlx, true);
+                                                              }
+
+                                                          });
+                                                          $('#TutanakRprForm').submit();
+                                                          return false;
+                                                      }
+                                                  },
+                                                  danger: {
+                                                      label: 'Kapat',
+                                                      className: "btn-primary",
+                                                      callback: function () {
+                                                      }
+                                                  }
+                                              }
+                                          });
+                                      },
+                                      error: function (err) {
+                                          alert(err.responseText);
+                                          PanelRefresh(_panel, true);
+                                      }
+                                  });
+
+                              }
+                                </script>
+                            </li>
+
+                            if (filteredOgrenciIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                </li>
+                            }
+
+
+
+                        }
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Başvuru Dönemi</td>
+                                            <td>
+                                                @Html.DropDownList("AkademikDonemID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left: 10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Öğrenim Seviyesi</td>
+                                            <td>
+                                                @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Başvuru Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("KayitSilmeDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left: 10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Program</td>
+                                            <td>
+                                                @Html.DropDownList("ProgramKod", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                            </td>
+                            <td style="padding-left: 10px; vertical-align: top;">
+                                <table style="width: 100%; table-layout: fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Aranacak Kelime</td>
+                                            <td>
+
+                                                <table style="width: 100%; table-layout: fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmKsBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#frmKsBasvurular').submit();" class="btn btn-info" style="width: 110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Kayıt Silme Gelen Başvurular</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th width="40"></th>
+                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                <th width="150" class="sirala" field="BasvuruTarihi" width="80">Başvuru Tarihi</th>
+                                <th>Başvuru Durumu</th>
+                                <th width="45"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RowCount > 0)
+                            {
+
+                                var rowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    rowIndex++;
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@rowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <img src="@item.ResimAdi.ToKullaniciResim()" style="width: 40px; height: 40px; cursor: pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail">
+                                        </td>
+                                        <td>
+                                            @item.AdSoyad <br /> @item.OgrenciNo
+                                        </td>
+                                        <td id="KsBasvuruDonem_@item.UniqueID">
+                                            @item.ToKsBasvuruDonemView()
+                                        </td>
+                                        <td id="KsBasvuruDurum_@item.UniqueID">
+                                            @item.ToKsBasvuruDurumView()
+                                        </td>
+                                        <td>
+                                            @if (düzeltmeSilmeYetki)
+                                            {
+                                                <a href="@Url.Action("BasvuruYap", "KsBasvuru", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" title="Sil"></i></a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.UniqueID" style="display: none">
+                                        <td colspan="6" style="padding: 1px 1px 2px 75px;">
+                                            <div class="panel" style="padding:0px;margin:0px;" id="cls-@item.UniqueID"></div>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@if (Model.RowCount > 0)
+{
+    <script>
+      $(function () {
+          ShowDetail('@Model.ShowBasvuruUniqueId');
+      }, 200);
+    </script>
+}
+<script>
+
+    function BasvuruSil(sndr, uniqueId, tarih) {
+        Swal.fire({
+            text: tarih + " tarihli Kayıt Silme başvurusunu silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Kayıt Silme Başvurusunu Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("Sil", "KsBasvuru")',
+                        data: { uniqueId },
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                $(sndr).parents('tr').first().remove();
+                                $(".cls-" + uniqueId).remove();
+                            }
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        }
+                    });
+
+                });
+            }
+        });
+    }
+    function ShowDetail(uniqueId) {
+        var rwID = $('#iShow_' + uniqueId);
+        var cls = 'cls-' + uniqueId;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(uniqueId);
+
+    }
+    function GetDetail(uniqueId) {
+        var panel = $('#cls-' + uniqueId);
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetailKsBasvuru", "Ajax")',
+            data: { uniqueId },
+            success: function (result) {
+                $('#cls-' + uniqueId).html(result);
+                PanelRefresh(panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(panel, true);
+            },
+            complete: function (cmp) {
+                PanelRefresh(panel, true);
+            },
+        });
+    }
+</script>

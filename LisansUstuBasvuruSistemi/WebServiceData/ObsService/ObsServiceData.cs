@@ -131,7 +131,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                     }).ToList();
 
                                 var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(model.OgrenciInfo.ENSTITU_ID);
-                                var donemProjesiDersKodu = DonemProjesiAyar.DonemProjesiDersKodu.GetAyarDp(model.OgrenciInfo.ENSTITU_ID);
+                                var donemProjesiDersKodu = DonemProjesiAyar.DonemProjesiDersKodu.GetAyar(model.OgrenciInfo.ENSTITU_ID);
                                 if (model.OgrenciInfo.OGRENIMSEVIYE_ID == OgrenimTipi.TezsizYuksekLisans.ToString() && !donemProjesiDersKodu.IsNullOrWhiteSpace())
                                 {
                                     //Tezsiz yl için dönem projesi yürütücüsü bulunup danışman olarak atanıyor

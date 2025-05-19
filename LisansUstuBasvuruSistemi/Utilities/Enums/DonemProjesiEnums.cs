@@ -39,7 +39,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
     public class DonemProjesiEnstituOnayDurumEnum
     {
         public const byte KabulEdildi = 1;
-        public const byte RetEdildi = 2;
+        public const byte Reddedildi = 2;
         public const byte IptalEdildi = 3;
     }
     public class DonemProjesiJuriOnayDurumEnum

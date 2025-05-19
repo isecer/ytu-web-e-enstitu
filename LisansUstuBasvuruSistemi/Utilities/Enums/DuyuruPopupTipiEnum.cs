@@ -29,6 +29,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int TiBasvuru = 9;
         public const int MezuniyetBasvuru = 10;
         public const int DonemProjesiBasvuru = 11;
-
+        public const int KayitSilmeBasvuru = 12;
     }
 }

@@ -4,7 +4,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 {
     public class SystemMenu : IMenu
     {
-       
+
         [Menu(MenuID = 65000, MenuAdi = SalonRezervasyonMenuName, MenuCssClass = "fa fa-file-text-o", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 3)]
         public const string SalonRezervasyonMenuName = "Salon Rezervasyonu";
 
@@ -31,6 +31,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 
         [Menu(MenuID = 83600, MenuAdi = DonemProjesiIslemleriMenuName, MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 16)]
         public const string DonemProjesiIslemleriMenuName = "Dönem Projesi İşlemleri";
+
+        [Menu(MenuID = 83800, MenuAdi = KayitSilmeIslemleriMenuName, MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 17)]
+        public const string KayitSilmeIslemleriMenuName = "Kayıt Silme İşlemleri";
+
 
         [Menu(MenuID = 84000, MenuAdi = RaporIslemleriMenuName, MenuCssClass = "fa fa-bar-chart-o", MenuUrl = "", YetkiliEnstituler = "010,020,030", SiraNo = 18)]
         public const string RaporIslemleriMenuName = "Rapor İşlemleri";
@@ -116,7 +120,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 82500, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "Yeterlik/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
         public const string YeterlikBasvuru = "Yeterlik Basvuru";
         [Menu(BagliMenuID = 82500, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YeterlikGelenBasvurular/Index", SiraNo = 4)]
-        [Role(GorunurAdi = "Gelen Başvurular", Kategori = SystemMenu.YeterlikIslemleriMenuName, Aciklama = "Bu yetki Gelen Yeterlik Başvuruları menüsüne Erişim yetkisi sağlar.",SiraNo = 7)]
+        [Role(GorunurAdi = "Gelen Başvurular", Kategori = SystemMenu.YeterlikIslemleriMenuName, Aciklama = "Bu yetki Gelen Yeterlik Başvuruları menüsüne Erişim yetkisi sağlar.", SiraNo = 7)]
         public const string YeterlikGelenBasvurular = "Yeterlik Gelen Başvurular";
 
         [Role(GorunurAdi = "Danışmanı Olunan Öğrenciler Görülsün", Kategori = SystemMenu.YeterlikIslemleriMenuName, Aciklama = "Kullanıcı sadece danışmanı olduğu öğrencilerin başvurularını görebilir.", SiraNo = 8)]
@@ -131,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Role(GorunurAdi = "Başvuru Onay Yetkisi", Kategori = SystemMenu.YeterlikIslemleriMenuName, Aciklama = "Bu yetki Gelen Yeterlik Başvuruları menüsünde Onay yetkisi sağlar.", SiraNo = 15)]
         public const string YeterlikBasvuruOnayYetkisi = "Yeterlik Başvuru Onay Yetkisi";
         [Role(GorunurAdi = "Abd/Jüri Onayı Düzeltme Yetkisi", Kategori = SystemMenu.YeterlikIslemleriMenuName, Aciklama = "Bu yetki Gelen Yeterlik Başvuruları menüsünde Abd veya Jüri üyelerinin değerlendirmelerinde değişiklik yapabilme yetkisi sağlar.", SiraNo = 17)]
-        public const string YeterlikAbdJuriOnayDuzeltme = "Yeterlik Abd/Jüri Onay Düzeltme"; 
+        public const string YeterlikAbdJuriOnayDuzeltme = "Yeterlik Abd/Jüri Onay Düzeltme";
 
 
         [Menu(BagliMenuID = 82500, MenuAdi = "Yeterlik Süreci", MenuCssClass = "fa fa-clock-o", MenuUrl = "YeterlikSureci/Index", SiraNo = 7)]
@@ -271,24 +275,42 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string DonemProjesiSinaviOlusturmaYetkisi = "Dönem Projesi Sınavı Oluşturma Yetkisi";
         [Role(GorunurAdi = "Jüri Değerlendirmesi Düzeltme Yetkisi", Kategori = SystemMenu.DonemProjesiIslemleriMenuName, Aciklama = "Bu yetki Dönem Projesi sınavından sonra değerlendirme işlemlerinin değiştirilebilmesini sağlayan yetkidir. Bu yetki ile toplantı tarihi günümüz tarihi öncesi olsa bile değerlendirme yapılabilir.", SiraNo = 18)]
         public const string DonemProjesiSinavDegerlendirmeDuzeltme = "Dönem Projesi Sınav Degerlendirme Düzeltme";
-
         [Role(GorunurAdi = "Eyk'ya Gönderme Yetkisi", Kategori = SystemMenu.DonemProjesiIslemleriMenuName, Aciklama = "Bu yetki Sınav tamamlandıktan sonra Eyk'ya Gönderim işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 14)]
         public const string DonemProjesiEykYaGonder = "Dönem Projesi Eyk'ya Gönderme Yetkisi";
         [Role(GorunurAdi = "Eyk'ya Hazırlandı Yetkisi", Kategori = SystemMenu.DonemProjesiIslemleriMenuName, Aciklama = "Bu yetki Eyk'ya Gönderim yapıldıktan sonra Eyk'ya Hazırlık işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 16)]
         public const string DonemProjesiEykYaHazirlandi = "Dönem Projesi Eyk'ya Hazırlandı Yetkisi";
         [Role(GorunurAdi = "Eyk'da Onay Yetkisi", Kategori = SystemMenu.DonemProjesiIslemleriMenuName, Aciklama = "Bu yetki Eyk'ya Hazırlık yapıldıktan sonra Eyk'da Onay işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 18)]
         public const string DonemProjesiEykDaOnay = "Dönem Projesi Eyk'da Onay Yetkisi";
-
-
-
         [Menu(BagliMenuID = 83600, MenuAdi = "Kriterden Muaf Öğrenciler", MenuCssClass = "fa fa-group", MenuUrl = "DpKriterdenMuafOgrenciler/Index", SiraNo = 13)]
         [Role(GorunurAdi = "Kriterden Muaf Öğrenciler", Kategori = SystemMenu.DonemProjesiIslemleriMenuName, Aciklama = "Bu yetki Dönem Projesi başvurularında Kriterden Muaf Öğrenciler menüsünü Görme/Ekleme/Silme işlemlerini yapabilmeyi sağlayan yetkidir.", SiraNo = 20)]
         public const string DonemProjesiKriterdenMuafOgrenciler = "Dönem Projesi Kriterden Muaf Öğrenciler";
-
-
         [Menu(BagliMenuID = 83600, MenuAdi = "Dönem Projesi Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "DpAyarlar/Index", SiraNo = 15)]
         [Role(GorunurAdi = "Dönem Projesi Ayarları", Kategori = SystemMenu.DonemProjesiIslemleriMenuName, Aciklama = "Bu yetki Dönem Projesi Ayarları menüsünü Görme/Düzeltme işlemlerini yapabilmeyi sağlayan yetkidir.", SiraNo = 22)]
         public const string DonemProjesiAyarları = "Dönem Projesi Ayarları";
+
+
+        [Menu(BagliMenuID = 83800, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "KsBasvuru/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
+        public const string KayitSilmeBasvuru = "Kayıt Silme Basvuru";
+        [Menu(BagliMenuID = 83800, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "KsGelenBasvurular/Index", SiraNo = 2)]
+        [Role(GorunurAdi = "Gelen Başvurular", Kategori = SystemMenu.KayitSilmeIslemleriMenuName, Aciklama = "Bu yetki Kayıt Silme Gelen Başvurular menüsüne Erişim yetkisi sağlar.", SiraNo = 1)]
+        public const string KayitSilmeGelenBasvurular = "Kayıt Silme Gelen Başvurular";
+        [Role(GorunurAdi = "Başvuru Düzeltme Yetkisi", Kategori = SystemMenu.KayitSilmeIslemleriMenuName, Aciklama = "Bu yetki Kayıt Silme başvurularında düzeltme yapabilmeyi sağlayan yetkidir.", SiraNo = 2)]
+        public const string KayitSilmeBasvuruDuzeltmeYetkisi = "Kayıt Silme Başvuru Düzeltme Yetkisi";
+        [Role(GorunurAdi = "Harç Birimi Başvuru Onay Yetkisi", Kategori = SystemMenu.KayitSilmeIslemleriMenuName, Aciklama = "Bu yetki Gelen Kayıt Silme Başvuruları menüsünde Harç Birimi Başvuru Onay yetkisi sağlar.", SiraNo = 3)]
+        public const string KayitSilmeHarcBirimiBasvuruOnayYetkisi = "Kayıt Silme Harç Birimi Başvuru Onay Yetkisi";
+        [Role(GorunurAdi = "Kütüphane Birimi Başvuru Onay Yetkisi", Kategori = SystemMenu.KayitSilmeIslemleriMenuName, Aciklama = "Bu yetki Gelen Kayıt Silme Başvuruları menüsünde Kütüphane Birimi Başvuru Onay yetkisi sağlar.", SiraNo = 4)]
+        public const string KayitSilmeKutuphaneBirimiBasvuruOnayYetkisi = "Kayıt Silme Kütüphane Birimi Başvuru Onay Yetkisi";
+        [Role(GorunurAdi = "Eyk'ya Gönderme Yetkisi", Kategori = SystemMenu.KayitSilmeIslemleriMenuName, Aciklama = "Bu yetki Sınav tamamlandıktan sonra Eyk'ya Gönderim işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 5)]
+        public const string KayitSilmeEykYaGonder = "Kayıt Silme Eyk'ya Gönderme Yetkisi";
+        [Role(GorunurAdi = "Eyk'ya Hazırlandı Yetkisi", Kategori = SystemMenu.KayitSilmeIslemleriMenuName, Aciklama = "Bu yetki Eyk'ya Gönderim yapıldıktan sonra Eyk'ya Hazırlık işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 6)]
+        public const string KayitSilmeEykYaHazirlandi = "Kayıt Silme Eyk'ya Hazırlandı Yetkisi";
+        [Role(GorunurAdi = "Eyk'da Onay Yetkisi", Kategori = SystemMenu.KayitSilmeIslemleriMenuName, Aciklama = "Bu yetki Eyk'ya Hazırlık yapıldıktan sonra Eyk'da Onay işlemi yapabilmeyi sağlayan yetkidir.", SiraNo = 7)]
+        public const string KayitSilmeEykDaOnay = "Kayıt Silme Eyk'da Onay Yetkisi"; 
+        [Menu(BagliMenuID = 83800, MenuAdi = "Kayıt Silme Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "KsAyarlar/Index", SiraNo = 3)]
+        [Role(GorunurAdi = "Kayıt Silme Ayarları", Kategori = SystemMenu.KayitSilmeIslemleriMenuName, Aciklama = "Bu yetki Kayıt Silme Ayarları menüsünü Görme/Düzeltme işlemlerini yapabilmeyi sağlayan yetkidir.", SiraNo = 8)]
+        public const string KayitSilmeAyarları = "Kayıt Silme Ayarları";
+
+
 
 
         [Menu(BagliMenuID = 84000, MenuAdi = "Lisansüstü Başvuru", MenuCssClass = "fa fa-bar-chart-o", MenuUrl = "RaporlarLUB/Index", SiraNo = 5)]
@@ -302,31 +324,31 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string AnketlerRapor = "Anketler";
 
         [Menu(BagliMenuID = 85000, MenuAdi = "Kullanıcılar", MenuCssClass = "fa fa-list-alt", MenuUrl = "Kullanicilar/Index", SiraNo = 1)]
-        [Role(GorunurAdi = "Kullanıcılar",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Kullanıcılar menüsünü görmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Kullanıcılar", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Kullanıcılar menüsünü görmeyi sağlayan yetkidir.")]
         public const string Kullanicilar = "Kullanıcılar Listesi";
-        [Role(GorunurAdi = "Kullanıcı Hesabına Geçme Yetkisi",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcı detayından kullanıcının hesabına geçebilmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Kullanıcı Hesabına Geçme Yetkisi", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcı detayından kullanıcının hesabına geçebilmeyi sağlayan yetkidir.")]
         public const string KullaniciHesabinaGecmeYetkisi = "Kullanıcı Hesabına Geçme Yetkisi";
-        [Role(GorunurAdi = "Kullanıcılar İşlem Yetkileri",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcının Yetki Grubunu belirleme ve gerekiyorsa ek yetki verme işlemini sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Kullanıcılar İşlem Yetkileri", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcının Yetki Grubunu belirleme ve gerekiyorsa ek yetki verme işlemini sağlayan yetkidir.")]
         public const string KullanicilarIslemYetkileri = "Kullanıcılar İşlem Yetkileri";
-        [Role(GorunurAdi = "Kullanıcılar Enstitü Yetkileri",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcının Enstitü yetkilerini belirlemeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Kullanıcılar Enstitü Yetkileri", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcının Enstitü yetkilerini belirlemeyi sağlayan yetkidir.")]
         public const string KullanicilarEnstituYetkileri = "Kullanıcılar Enstitü Yetkileri";
-        [Role(GorunurAdi = "Kullanıcılar Program Yetkileri",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcının Program yetkilerini düzenlemeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Kullanıcılar Program Yetkileri", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcının Program yetkilerini düzenlemeyi sağlayan yetkidir.")]
         public const string KullanicilarProgramYetkileri = "Kullanıcılar Program Yetkileri";
-        [Role(GorunurAdi = "Kullanıcılar Kayıt",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki yeni bir Kullanıcı oluşturma ya da güncelleme işlemlerini yapabilmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Kullanıcılar Kayıt", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki yeni bir Kullanıcı oluşturma ya da güncelleme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string KullanicilarKayit = "Kullanıcılar Kayıt";
-        [Role(GorunurAdi = "Kullanıcılar Sil",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcıyı silebilmek için gerekli olan yetkidir.")]
+        [Role(GorunurAdi = "Kullanıcılar Sil", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki bir kullanıcıyı silebilmek için gerekli olan yetkidir.")]
         public const string KullanicilarSil = "Kullanıcı Sil";
-        [Role(GorunurAdi = "Online Kullanıcıları Gör",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki online kullanıcıları görebilmek için gerekli olan yetkidir.")]
+        [Role(GorunurAdi = "Online Kullanıcıları Gör", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki online kullanıcıları görebilmek için gerekli olan yetkidir.")]
         public const string KullanicilarOnlineKullanicilar = "Online Kullanıcıları Gör";
 
         [Menu(BagliMenuID = 85000, MenuAdi = "Yetki Grupları", MenuCssClass = "fa fa-list-alt", MenuUrl = "YetkiGruplari/Index", SiraNo = 1)]
-        [Role(GorunurAdi = "Yetki Grupları",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Yetki Grupları menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Yetki Grupları", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Yetki Grupları menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string YetkiGruplari = "Yetki Grupları";
         [Menu(BagliMenuID = 85000, MenuAdi = "Birimler", MenuCssClass = "fa fa-list-alt", MenuUrl = "Birimler/Index", SiraNo = 2)]
-        [Role(GorunurAdi = "Birimler",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Birimler menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Birimler", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Birimler menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string Birimler = "Birimler";
         [Menu(BagliMenuID = 85000, MenuAdi = "Unvanlar", MenuCssClass = "fa fa-list-alt", MenuUrl = "Unvanlar/Index", SiraNo = 3)]
-        [Role(GorunurAdi = "Unvanlar",Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Unvanlar menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
+        [Role(GorunurAdi = "Unvanlar", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Unvanlar menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string Unvanlar = "Ünvanlar";
         [Menu(BagliMenuID = 90000, MenuAdi = "Uyruklar", MenuCssClass = "fa fa-list-alt", MenuUrl = "Uyruklar/Index", SiraNo = 1)]
         [Role(GorunurAdi = "Uyruklar", Kategori = SystemMenu.TanimlamalarMenuName, Aciklama = "Bu yetki Uyruklar menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]

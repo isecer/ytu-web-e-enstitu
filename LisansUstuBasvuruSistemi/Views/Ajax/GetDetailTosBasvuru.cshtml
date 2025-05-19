@@ -754,7 +754,7 @@
                                                                                 <br />
                                                                                 <span style="font-size:8pt;color:green;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                             }
-                                                                            else if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi)
+                                                                            else if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi)
                                                                             {
                                                                                 <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;"></i> Reddedildi</span>
                                                                                 <br />
@@ -1021,7 +1021,7 @@
                                                                     {
                                                                         var yazibaslik = "";
                                                                         if (item.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi) { yazibaslik = "Ara Rapor İstemi Yazıları"; }
-                                                                        else if (item.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi) { yazibaslik = "Tez Önerisi Başarısız Yazıları"; }
+                                                                        else if (item.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi) { yazibaslik = "Tez Önerisi Başarısız Yazıları"; }
                                                                         else { yazibaslik = "Tez Önerisi Düzeltme Yazıları"; }
                                                                         <tr>
                                                                             <td class="CaptionTd">Bilgi Yazıları</td>

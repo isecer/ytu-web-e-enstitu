@@ -51,12 +51,12 @@ namespace Entities.Entities
         public Nullable<int> IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
+        public virtual MezuniyetBasvurulari MezuniyetBasvurulari { get; set; }
         public virtual MezuniyetYayinBelgeTurleri MezuniyetYayinBelgeTurleri { get; set; }
         public virtual MezuniyetYayinIndexTurleri MezuniyetYayinIndexTurleri { get; set; }
         public virtual MezuniyetYayinLinkTurleri MezuniyetYayinLinkTurleri { get; set; }
         public virtual MezuniyetYayinMetinTurleri MezuniyetYayinMetinTurleri { get; set; }
         public virtual MezuniyetYayinProjeTurleri MezuniyetYayinProjeTurleri { get; set; }
         public virtual MezuniyetYayinTurleri MezuniyetYayinTurleri { get; set; }
-        public virtual MezuniyetBasvurulari MezuniyetBasvurulari { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static BelgeTipDetaySaatler GetCmbSelectedSaat(DateTime islemTarihi, int belgeTipId, int ogrenimDurumId, string enstituKod)
         {
-            var rtatilDurum = BelgeTalepAyar.BelgeTalebiResmiTatilDurum.GetAyarBt(enstituKod, "0").ToBoolean() ?? false;
+            var rtatilDurum = BelgeTalepAyar.BelgeTalebiResmiTatilDurum.GetAyar(enstituKod, "0").ToBoolean() ?? false;
             TimeSpan talepZamani = new TimeSpan(islemTarihi.Hour, islemTarihi.Minute, islemTarihi.Second);
             using (var entities = new LubsDbEntities())
             {

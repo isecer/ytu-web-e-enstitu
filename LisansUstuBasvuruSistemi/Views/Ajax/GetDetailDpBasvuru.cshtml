@@ -505,7 +505,7 @@ else
                                                                             <select class="form-control" id="enstituOnay_@item.UniqueID" onchange="if ($(this).val() == '1' || (!$(this).val())) { $('#enstituIptalRow_@item.UniqueID').addClass('hide');}else {$('#enstituIptalRow_@item.UniqueID').removeClass('hide');}">
                                                                                 <option></option>
                                                                                 <option value="@DonemProjesiEnstituOnayDurumEnum.KabulEdildi" @(item.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.KabulEdildi ? "selected" : "")>Kabul Edildi</option>
-                                                                                <option value="@DonemProjesiEnstituOnayDurumEnum.RetEdildi" @(item.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.RetEdildi ? "selected" : "")>Reddedildi (Öğrenci Tekrar Başvuru Yapamaz)</option>
+                                                                                <option value="@DonemProjesiEnstituOnayDurumEnum.Reddedildi" @(item.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.Reddedildi ? "selected" : "")>Reddedildi (Öğrenci Tekrar Başvuru Yapamaz)</option>
                                                                                 <option value="@DonemProjesiEnstituOnayDurumEnum.IptalEdildi" @(item.DonemProjesiEnstituOnayDurumID == DonemProjesiEnstituOnayDurumEnum.IptalEdildi ? "selected" : "")>İptal Edildi (Öğrenci Tekrar Başvuru Yapabilir)</option>
                                                                             </select>
                                                                         }

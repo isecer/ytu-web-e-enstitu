@@ -30,6 +30,11 @@ namespace Entities.Entities
         public System.DateTime BasvuruTarihi { get; set; }
         public int DonemBaslangicYil { get; set; }
         public int DonemID { get; set; }
+        public Nullable<int> DegisiklikTipiID { get; set; }
+        public Nullable<int> DegisiklikNedeniID { get; set; }
+        public string ProjeDetay { get; set; }
+        public string VeriTalebiDetay { get; set; }
+        public Nullable<bool> TaahhutOnay { get; set; }
         public bool IsTezDiliTr { get; set; }
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
@@ -78,11 +83,6 @@ namespace Entities.Entities
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
-        public Nullable<int> DegisiklikTipiID { get; set; }
-        public Nullable<int> DegisiklikNedeniID { get; set; }
-        public string ProjeDetay { get; set; }
-        public string VeriTalebiDetay { get; set; }
-        public Nullable<bool> TaahhutOnay { get; set; }
     
         public virtual AnabilimDallari AnabilimDallari { get; set; }
         public virtual Donemler Donemler { get; set; }

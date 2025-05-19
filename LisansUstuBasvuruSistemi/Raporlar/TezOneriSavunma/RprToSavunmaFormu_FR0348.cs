@@ -84,13 +84,13 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 var strDurumAdiTr =
                     data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                         ? "KABUL EDİLDİ"
-                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
-                            ? "RET EDİLDİ"
+                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi
+                            ? "REDDEDİLDİ"
                             : "DÜZELTME TALEP EDİLDİ");
                 var strDurumAdiEn =
                     data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                         ? "ACCEPTED"
-                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
+                        : (data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi
                             ? "REJECTED"
                             : "REVISION");
 

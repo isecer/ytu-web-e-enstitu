@@ -38,7 +38,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bbModel = new IndexPageInfoDto();
             if (model.IsDegerlendirme == null)
             {
-                bbModel.SistemBasvuruyaAcik = TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyarTi(enstituKod, "false").ToBoolean(false);
+                bbModel.SistemBasvuruyaAcik = TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyar(enstituKod, "false").ToBoolean(false);
 
                 if (model.KullaniciID.HasValue) model.KullaniciID = UserIdentity.Current.Id;
                 model.KullaniciID = model.KullaniciID ?? UserIdentity.Current.Id;
@@ -172,7 +172,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var toBasvuru = _entities.ToBasvurus.First(p => p.UniqueID == toUniqueId);
             var toBasvuruSavunma = toBasvuru.ToBasvuruSavunmas.FirstOrDefault(p => p.UniqueID == tosUniqueId);
             var degerlendirmeYetki = RoleNames.TosDegerlendirmeYap.InRoleCurrent() || toBasvuru.KullaniciID == UserIdentity.Current.Id;
-            var basvuruAlimiAktif = TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyarTi(toBasvuru.EnstituKod, "false").ToBoolean().Value;
+            var basvuruAlimiAktif = TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyar(toBasvuru.EnstituKod, "false").ToBoolean().Value;
             var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(toBasvuru.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == toBasvuru.KullaniciID);
             if (!degerlendirmeYetki)
@@ -420,7 +420,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var toBasvuruSavunma = toBasvuru.ToBasvuruSavunmas.FirstOrDefault(p => p.ToBasvuruSavunmaID == kModel.ToBasvuruSavunmaID);
             var degerlendirmeYetki = RoleNames.TosDegerlendirmeYap.InRoleCurrent() || toBasvuru.KullaniciID == UserIdentity.Current.Id;
             var enstituYetki = RoleNames.TosGelenBasvuruKayit.InRole();
-            var basvuruAlimiAktif = TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyarTi(toBasvuru.EnstituKod, "false")
+            var basvuruAlimiAktif = TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyar(toBasvuru.EnstituKod, "false")
                 .ToBoolean(false);
             var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(toBasvuru.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == toBasvuru.KullaniciID);
@@ -759,13 +759,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 if (kModel.IsOnline == true && !TiAyar.TezOneriSavunmaSinaviOnlineYapilabilsin
-                        .GetAyarTi(toBasvuruSavunma.ToBasvuru.EnstituKod).ToBoolean(false))
+                        .GetAyar(toBasvuruSavunma.ToBasvuru.EnstituKod).ToBoolean(false))
                 {
                     mmMessage.Messages.Add("Tez Öneri Savunma Sınavı Online olarak yapılamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });
                 }
                 else if (kModel.IsOnline == false && !TiAyar.TezOneriSavunmaSinaviYuzYuzeYapilabilsin
-                             .GetAyarTi(toBasvuruSavunma.ToBasvuru.EnstituKod).ToBoolean(false))
+                             .GetAyar(toBasvuruSavunma.ToBasvuru.EnstituKod).ToBoolean(false))
                 {
                     mmMessage.Messages.Add("Tez Öneri Savunma Sınavı Yüz Yüze olarak yapılamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });

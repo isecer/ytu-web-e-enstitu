@@ -557,7 +557,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             {
                                 new MailSendList { EMail = mBasvur.Kullanicilar.EMail, KullaniciId = mBasvur.KullaniciID, ToOrBcc = true }
                             },
-                            MailSablonTipId = mBasvur.OgrenimTipKod.IsDoktora()?MailSablonTipiEnum.MezJuriOneriFormuEykDaRetEdildiOgrenciDr:MailSablonTipiEnum.MezJuriOneriFormuEykDaRetEdildiOgrenciYl
+                            MailSablonTipId = mBasvur.OgrenimTipKod.IsDoktora()?MailSablonTipiEnum.MezJuriOneriFormuEykDaReddedildiOgrenciDr:MailSablonTipiEnum.MezJuriOneriFormuEykDaReddedildiOgrenciYl
                         },
                         new SablonMailModel
                         {
@@ -567,7 +567,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             new MailSendList { EMail = danisman.EMail, KullaniciId =mBasvur.TezDanismanID, ToOrBcc = true }
                         },
-                        MailSablonTipId = mBasvur.OgrenimTipKod.IsDoktora()?MailSablonTipiEnum.MezJuriOneriFormuEykDaRetEdildiDanismanDr:MailSablonTipiEnum.MezJuriOneriFormuEykDaRetEdildiDanismanYl
+                        MailSablonTipId = mBasvur.OgrenimTipKod.IsDoktora()?MailSablonTipiEnum.MezJuriOneriFormuEykDaReddedildiDanismanDr:MailSablonTipiEnum.MezJuriOneriFormuEykDaReddedildiDanismanYl
 
                     }
                     };
@@ -711,7 +711,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             {
                                 new MailSendList { EMail = mBasvur.Kullanicilar.EMail, KullaniciId = mBasvur.KullaniciID, ToOrBcc = true }
                             },
-                            MailSablonTipId = mBasvur.OgrenimTipKod.IsDoktora()?MailSablonTipiEnum.MezJuriOneriFormuEykYaGonderimRetEdildiOgrenciDr:MailSablonTipiEnum.MezJuriOneriFormuEykYaGonderimRetEdildiOgrenciYl
+                            MailSablonTipId = mBasvur.OgrenimTipKod.IsDoktora()?MailSablonTipiEnum.MezJuriOneriFormuEykYaGonderimReddedildiOgrenciDr:MailSablonTipiEnum.MezJuriOneriFormuEykYaGonderimReddedildiOgrenciYl
                         },
                         new SablonMailModel
                         {
@@ -721,7 +721,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         {
                             new MailSendList { EMail = danisman.EMail, KullaniciId =mBasvur.TezDanismanID, ToOrBcc = true }
                         },
-                        MailSablonTipId = mBasvur.OgrenimTipKod.IsDoktora()?MailSablonTipiEnum.MezJuriOneriFormuEykYaGonderimRetEdildiDanismanDr:MailSablonTipiEnum.MezJuriOneriFormuEykYaGonderimRetEdildiDanismanYl
+                        MailSablonTipId = mBasvur.OgrenimTipKod.IsDoktora()?MailSablonTipiEnum.MezJuriOneriFormuEykYaGonderimReddedildiDanismanDr:MailSablonTipiEnum.MezJuriOneriFormuEykYaGonderimReddedildiDanismanYl
 
                     }
                     };

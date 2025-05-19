@@ -34,12 +34,17 @@ namespace Entities.Entities
         public int DonemBaslangicYil { get; set; }
         public int DonemID { get; set; }
         public bool IsTezDiliTr { get; set; }
+        public bool IsTezDiliDegisecek { get; set; }
+        public Nullable<bool> YeniTezDiliTr { get; set; }
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
         public bool IsTezBasligiDegisti { get; set; }
         public string YeniTezBaslikTr { get; set; }
         public string YeniTezBaslikEn { get; set; }
         public string TezBasligiDegisimGerekcesi { get; set; }
+        public string SinavAdi { get; set; }
+        public string SinavPuani { get; set; }
+        public Nullable<int> SinavYili { get; set; }
         public string TICalismaRaporDosyaAdi { get; set; }
         public string TICalismaRaporDosyaYolu { get; set; }
         public bool IsYokDrBursiyeriVar { get; set; }
@@ -52,11 +57,6 @@ namespace Entities.Entities
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
-        public bool IsTezDiliDegisecek { get; set; }
-        public Nullable<bool> YeniTezDiliTr { get; set; }
-        public string SinavAdi { get; set; }
-        public string SinavPuani { get; set; }
-        public Nullable<int> SinavYili { get; set; }
     
         public virtual Donemler Donemler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }

@@ -39,7 +39,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                { new MailSendList { EMail = danisman.EMail,KullaniciId =danisman.KullaniciID, ToOrBcc = true } },
                            MailSablonTipId = tijBasvuruOneri.DanismanOnayladi == true
                                ? MailSablonTipiEnum.TijOneriFormuDanismanTarafindanOnaylandiDanismana
-                               : MailSablonTipiEnum.TijOneriFormuDanismanTarafindanRetEdildiDanismana,
+                               : MailSablonTipiEnum.TijOneriFormuDanismanTarafindanReddedildiDanismana,
                        }
                    };
 
@@ -205,7 +205,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 AdSoyad = danisman.Unvanlar.UnvanAdi + " " + danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList>
                                     { new MailSendList { EMail = danisman.EMail,KullaniciId =danisman.KullaniciID, ToOrBcc = true } },
-                                MailSablonTipId = MailSablonTipiEnum.TijOneriFormuEykyaGonderimiRetEdildiDanismana
+                                MailSablonTipId = MailSablonTipiEnum.TijOneriFormuEykyaGonderimiReddedildiDanismana
                             });
                     }
 

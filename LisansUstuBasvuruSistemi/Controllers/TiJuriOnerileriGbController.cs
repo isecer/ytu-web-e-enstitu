@@ -275,7 +275,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             Guid? basvuruUniqueId = null;
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod).EnstituAd;
-            var isBasvuruAcik = TiAyar.TikOneriAlimiAcik.GetAyarTi(enstituKod, "false").ToBoolean(false);
+            var isBasvuruAcik = TiAyar.TikOneriAlimiAcik.GetAyar(enstituKod, "false").ToBoolean(false);
 
             var mMessage = new MmMessage
             {
@@ -565,7 +565,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             int selectedJuriNum = 0;
             bool isJuriOnerisiVar = true;
-            var isBasvuruAcik = TiAyar.TikOneriAlimiAcik.GetAyarTi(enstituKod, "false").ToBoolean(false);
+            var isBasvuruAcik = TiAyar.TikOneriAlimiAcik.GetAyar(enstituKod, "false").ToBoolean(false);
 
 
 

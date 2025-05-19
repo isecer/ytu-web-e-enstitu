@@ -228,6 +228,7 @@
     <Compile Include="Business\BelgeTalepBus.cs" />
     <Compile Include="Business\BirimlerBus.cs" />
     <Compile Include="Business\DonemlerBus.cs" />
+    <Compile Include="Business\KayitSilmeBus.cs" />
     <Compile Include="Business\DonemProjesiBus.cs" />
     <Compile Include="Business\EnstituBus.cs" />
     <Compile Include="Business\GonderilenMaillerBus.cs" />
@@ -262,12 +263,15 @@
     <Compile Include="Controllers\BelgeTalepAyarController.cs" />
     <Compile Include="Controllers\BelgeTipDetayController.cs" />
     <Compile Include="Controllers\BelgeTipleriController.cs" />
+    <Compile Include="Controllers\KsGelenBasvurularController.cs" />
+    <Compile Include="Controllers\KsBasvuruController.cs" />
     <Compile Include="Controllers\DpBasvuruController.cs" />
     <Compile Include="Controllers\DpKriterdenMuafOgrencilerController.cs" />
     <Compile Include="Controllers\DosyaKontrolController.cs" />
     <Compile Include="Controllers\DpAyarlarController.cs" />
     <Compile Include="Controllers\DpGelenBasvurularController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\KsAyarlarController.cs" />
     <Compile Include="Controllers\YaziSablonlariController.cs" />
     <Compile Include="Raporlar\DonemProjesi\RprDpSinavTutanakFormuDetay_FR0366.cs">
       <SubType>Component</SubType>
@@ -286,6 +290,12 @@
     </Compile>
     <Compile Include="Raporlar\DonemProjesi\RprDpTutanak.Designer.cs">
       <DependentUpon>RprDpTutanak.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Raporlar\KayitSilme\RprKsTutanak.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\KayitSilme\RprKsTutanak.Designer.cs">
+      <DependentUpon>RprKsTutanak.cs</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.cs">
       <SubType>Component</SubType>
@@ -320,6 +330,7 @@
     <Compile Include="Utilities\ApplicationTasks\ObsStudentControlTaskRunner.cs" />
     <Compile Include="Utilities\Dtos\DonemProjesiDtos.cs" />
     <Compile Include="Utilities\Dtos\FileAttachmentInfo.cs" />
+    <Compile Include="Utilities\Dtos\KayitSilmeDtos.cs" />
     <Compile Include="Utilities\Dtos\FmDonemProjesiBasvuruDto.cs" />
     <Compile Include="Utilities\Dtos\FmDonemProjesiMuafOgrenciler.cs" />
     <Compile Include="Utilities\Dtos\FmYaziSablonlariDto.cs" />
@@ -472,6 +483,7 @@
     <Compile Include="Utilities\Dtos\MIndexBilgi.cs" />
     <Compile Include="Utilities\Dtos\MmMessage.cs" />
     <Compile Include="Utilities\Dtos\MSurecDetay.cs" />
+    <Compile Include="Utilities\Enums\KayitSilmeDurumEnums.cs" />
     <Compile Include="Utilities\Enums\YaziSablonTipiEnum.cs" />
     <Compile Include="Utilities\Enums\TezKontrolDurumEnum.cs" />
     <Compile Include="Utilities\Enums\DonemProjesiEnums.cs" />
@@ -480,8 +492,10 @@
     <Compile Include="Utilities\Helpers\FileHelper.cs" />
     <Compile Include="Utilities\Helpers\HarfNotuHelper.cs" />
     <Compile Include="Utilities\Helpers\HtmlManipulator.cs" />
+    <Compile Include="Utilities\MailManager\MailSenderKs.cs" />
     <Compile Include="Utilities\MailManager\MailSenderDp.cs" />
     <Compile Include="Utilities\MenuAndRoles\MenuGenerator.cs" />
+    <Compile Include="Utilities\SystemSetting\KayitSilmeAyar.cs" />
     <Compile Include="Utilities\SystemSetting\GlobalSistemSetting.cs" />
     <Compile Include="Utilities\SystemSetting\DonemProjesiAyar.cs" />
     <Compile Include="WebServiceData\ObsRestData\Models\ObsDonemServiceDto.cs" />
@@ -4846,6 +4860,14 @@
     <Content Include="Views\YaziSablonlari\Index.cshtml" />
     <Content Include="Views\YaziSablonlari\Kayit.cshtml" />
     <Content Include="Views\Ajax\MailTemplateView.cshtml" />
+    <Content Include="Views\KsBasvuru\Index.cshtml" />
+    <Content Include="Views\KsBasvuru\BasvuruYap.cshtml" />
+    <Content Include="Views\KsAyarlar\Index.cshtml" />
+    <Content Include="Views\KsBasvuru\BasvuruDonemView.cshtml" />
+    <Content Include="Views\KsBasvuru\BasvuruDurumView.cshtml" />
+    <Content Include="Views\Ajax\GetDetailKsBasvuru.cshtml" />
+    <Content Include="Views\KsGelenBasvurular\Index.cshtml" />
+    <Content Include="Views\KsGelenBasvurular\GetTutanakRaporu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4867,6 +4889,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\DonemProjesi\RprDpSinavTutanakFormuDetay_FR0366.resx">
       <DependentUpon>RprDpSinavTutanakFormuDetay_FR0366.cs</DependentUpon>
     </EmbeddedResource>
@@ -4881,6 +4904,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\BelgeTalep\RaporBT.resx">
       <DependentUpon>RaporBT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\KayitSilme\RprKsTutanak.resx">
+      <DependentUpon>RprKsTutanak.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\LUB\raporLUB.resx">
       <DependentUpon>raporLUB.cs</DependentUpon>

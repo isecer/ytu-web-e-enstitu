@@ -55,6 +55,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+       
         public static List<CmbIntDto> CmbAktifOgrenimTipIdDoktora(string enstituKod, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();

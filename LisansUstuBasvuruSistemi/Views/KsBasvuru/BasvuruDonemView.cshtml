@@ -1,0 +1,21 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.FrKayitSilmeBasvuruDto
+@{
+    Layout = null;
+
+}
+@{
+
+
+    @(Model.OgretimYiliBaslangic+"/"+(Model.OgretimYiliBaslangic + 1)+" "+Model.DonemAdi)
+    <br />
+    @Model.BasvuruTarihi.ToFormatDateAndTime()
+
+}
+
+
+
+
+
+
+

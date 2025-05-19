@@ -166,6 +166,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     );
 
             }
+            model.RowCount = q.Count();
             #region export
             if (export && model.RowCount > 0)
             {
@@ -232,9 +233,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_DonemProjesiBasvuruListesi_" + DateTime.Now.ToFormatDate() + ".xls");
             }
-            #endregion
-
-            model.RowCount = q.Count();
+            #endregion 
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
 

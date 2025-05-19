@@ -98,6 +98,8 @@ namespace Entities.Entities
         public virtual DbSet<HaftaGunleri> HaftaGunleris { get; set; }
         public virtual DbSet<Kampusler> Kampuslers { get; set; }
         public virtual DbSet<KayitDurumlari> KayitDurumlaris { get; set; }
+        public virtual DbSet<KayitSilmeAyarlar> KayitSilmeAyarlars { get; set; }
+        public virtual DbSet<KayitSilmeDurumlari> KayitSilmeDurumlaris { get; set; }
         public virtual DbSet<KullaniciEnstituYetkileri> KullaniciEnstituYetkileris { get; set; }
         public virtual DbSet<Kullanicilar> Kullanicilars { get; set; }
         public virtual DbSet<KullaniciOgrenimleri> KullaniciOgrenimleris { get; set; }
@@ -113,6 +115,7 @@ namespace Entities.Entities
         public virtual DbSet<MesajKategorileri> MesajKategorileris { get; set; }
         public virtual DbSet<Mesajlar> Mesajlars { get; set; }
         public virtual DbSet<MezuniyetAyarlar> MezuniyetAyarlars { get; set; }
+        public virtual DbSet<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
         public virtual DbSet<MezuniyetBasvurulariTezDosyalari> MezuniyetBasvurulariTezDosyalaris { get; set; }
         public virtual DbSet<MezuniyetBasvurulariTezTeslimFormlari> MezuniyetBasvurulariTezTeslimFormlaris { get; set; }
         public virtual DbSet<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
@@ -223,7 +226,7 @@ namespace Entities.Entities
         public virtual DbSet<YetkiGrupRolleri> YetkiGrupRolleris { get; set; }
         public virtual DbSet<ZamanTipleri> ZamanTipleris { get; set; }
         public virtual DbSet<vW_ProgramBasvuruSonucSayisal> vW_ProgramBasvuruSonucSayisal { get; set; }
-        public virtual DbSet<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
+        public virtual DbSet<KayitSilmeBasvuru> KayitSilmeBasvurus { get; set; }
     
         public virtual ObjectResult<sp_SearchMailsFullText_Result> sp_SearchMailsFullText(string enstituKodList, Nullable<bool> isEkVar, string konu, string enstituKod, Nullable<System.DateTime> tarih, string mailGonderen, Nullable<int> startRow, Nullable<int> pageSize, ObjectParameter totalCount)
         {

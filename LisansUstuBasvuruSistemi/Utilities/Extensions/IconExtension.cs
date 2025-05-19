@@ -17,6 +17,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             else iconString = "<i class='fa fa-thumbs-o-down' style='color:maroon;'></i>";
             return new HtmlString(iconString);
         }
+     
         public static HtmlString ToOnayDurumIconLgHtml(this bool? isOnaylandi)
         {
             string iconString;

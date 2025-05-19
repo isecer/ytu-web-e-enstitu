@@ -12,7 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     {
 
         public static bool IsSaveFileServer = SistemAyar.DosyalarSecilenKonumaArsivlensin.GetAyar().ToBoolean(false); //true;
-        public static string FileServerUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi.GetAyar(); 
+        public static string FileServerUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi.GetAyar();
         public static string FileServerBasePath = SistemAyar.DosyaArsiviFizikselKayitYolu.GetAyar();//"D:\\DocumentServer\\lisansustufiles.yildiz.edu.tr";
 
         public const string LisansustuBasvuruDosyaYolu = "/DosyaArsivi/LisansustuBasvuru";
@@ -24,6 +24,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public const string MezuniyetYayinDosyaYolu = "/DosyaArsivi/MezuniyetBasvurulari/YayinDosyalari";
         public const string MezuniyetTezSablonDosyaYolu = "/DosyaArsivi/MezuniyetBasvurulari/TezSablonDosyalari";
         public const string DonemProjesiIntihalDosyaYolu = "/DosyaArsivi/DonemProjesi";
+        public const string KayitSilmeBasvuruNufusKayitOrnegiDosyaYolu = "/DosyaArsivi/KayitSilmeBasvuru";
         public const string MailSablonDosyaYolu = "/DosyaArsivi/MailSablonEkleri";
         public const string YaziSablonDosyaYolu = "/DosyaArsivi/YaziSablonEkleri";
         public const string DuyuruDosyaYolu = "/DosyaArsivi/DuyuruEkleri";
@@ -88,7 +89,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             string dosyaYolu = saveFilePath.Replace("/", "\\");
             string combinedPath = FileServerBasePath + dosyaYolu;
 
-           //   combinedPath = combinedPath.RemoveMaxCharacterFilePath();
+            //   combinedPath = combinedPath.RemoveMaxCharacterFilePath();
             // Dosyanın bulunduğu klasör yolu
             string folderPath = Path.GetDirectoryName(combinedPath);
 
@@ -155,6 +156,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             Save(file, dosyaYolu);
             return dosyaYolu;
         }
+        public static string SaveKayitSilmeBasvuruNufusKayitOrnegiDosya(HttpPostedFileBase file)
+        {
+            var dosyaAdi = file.FileName.ToFileNameAddGuid();
+            var dosyaYolu = KayitSilmeBasvuruNufusKayitOrnegiDosyaYolu + "/" + dosyaAdi;
+            Save(file, dosyaYolu);
+            return dosyaYolu;
+        }
+
+
         public static string SaveMailSablonDosya(HttpPostedFileBase file)
         {
             var dosyaAdi = file.FileName.ToFileNameAddGuid();

@@ -566,7 +566,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitüde yetkili değilsiniz.");
                         }
-                        else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
+                        else if (!TdoAyar.BasvurusuAcikmi.GetAyar(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
@@ -583,7 +583,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else
                 {
-                    msg.IsSuccess = TdoAyar.BasvurusuAcikmi.GetAyarTdo(enstituKod, "false").ToBoolean().Value;
+                    msg.IsSuccess = TdoAyar.BasvurusuAcikmi.GetAyar(enstituKod, "false").ToBoolean().Value;
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && UserIdentity.Current.IsAdmin == false)
                     {
@@ -645,7 +645,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         var message = "Bu enstitüye ait tez danışman başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi;
                         SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", BilgiTipiEnum.Kritik);
                     }
-                    else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
+                    else if (!TdoAyar.BasvurusuAcikmi.GetAyar(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");

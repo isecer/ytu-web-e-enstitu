@@ -196,7 +196,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var sifre = pwd.ComputeHash(GlobalSistemSetting.Tuz);
-                var kullanici = entities.Kullanicilars.Where(p=>p.IsAktif).FirstOrDefault(p => p.KullaniciAdi == kullaniciAdi || p.TcKimlikNo == kullaniciAdi || p.EMail == kullaniciAdi);
+                var kullanici = entities.Kullanicilars.Where(p => p.IsAktif).FirstOrDefault(p => p.KullaniciAdi == kullaniciAdi || p.TcKimlikNo == kullaniciAdi || p.EMail == kullaniciAdi);
                 if (kullanici != null)
                 {
                     return kullanici.Sifre == sifre ? kullanici : null;
@@ -225,11 +225,11 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     FormsAuthenticationUtil.SignOut();
                     return new Menuler[] { };
-                } 
+                }
                 var allMenus = MenulerBus.GetAllMenu();
                 var kullRollIds = kull.YetkiGruplari.YetkiGrupRolleris.Select(s => s.RolID).ToList();
-                kullRollIds.AddRange(kull.Rollers.Select(s=>s.RolID).ToList());
-                var kullaniciMenuleris = allMenus.Where(p=>p.YetkisizErisim==true || p.Rollers.Any(a=>  kullRollIds.Contains(a.RolID))).OrderBy(o => o.SiraNo).ToList(); 
+                kullRollIds.AddRange(kull.Rollers.Select(s => s.RolID).ToList());
+                var kullaniciMenuleris = allMenus.Where(p => p.YetkisizErisim == true || p.Rollers.Any(a => kullRollIds.Contains(a.RolID))).OrderBy(o => o.SiraNo).ToList();
                 menus.AddRange(kullaniciMenuleris);
                 return menus.ToArray();
             }
@@ -323,6 +323,64 @@ namespace LisansUstuBasvuruSistemi.Business
                     throw new SecurityException("Kullanıcı Tanımlı Değil");
             }
         }
+        public static void AddUserRoles(int kullaniciId, List<string> roleNames)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+                var k = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
+                if (k != null)
+                { 
+                    var rolesToAdd = entities.Rollers.Where(p => roleNames.Contains(p.RolAdi)).ToList();
+                     
+                    bool anyNewRoleAdded = false;
+                    foreach (var role in rolesToAdd)
+                    { 
+                        if (k.Rollers.All(r => r.RolID != role.RolID))
+                        {
+                            k.Rollers.Add(role);
+                            anyNewRoleAdded = true;
+                        }
+                    }
+
+                    // Değişiklik varsa kaydet
+                    if (anyNewRoleAdded)
+                    {
+                        entities.SaveChanges();
+                    }
+                }
+                else
+                    throw new SecurityException("Kullanıcı Tanımlı Değil");
+            }
+        }
+        public static void RemoveUserRoles(int kullaniciId, List<string> roleNames)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+                var k = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
+                if (k != null)
+                { 
+                    var rolIDsToRemove = entities.Rollers
+                        .Where(p => roleNames.Contains(p.RolAdi))
+                        .Select(s => s.RolID)
+                        .ToList();
+                     
+                    bool anyRoleRemoved = false;
+                    var rolesToRemove = k.Rollers.Where(r => rolIDsToRemove.Contains(r.RolID)).ToArray();
+
+                    foreach (var role in rolesToRemove)
+                    {
+                        k.Rollers.Remove(role);
+                        anyRoleRemoved = true;
+                    } 
+                    if (anyRoleRemoved)
+                    {
+                        entities.SaveChanges();
+                    }
+                }
+                else
+                    throw new SecurityException("Kullanıcı Tanımlı Değil");
+            }
+        }
         public static List<Kullanicilar> GetRoluOlanKullanicilar(List<string> rolAdi, string enstituKod = null)
         {
             using (var entities = new LubsDbEntities())
@@ -361,14 +419,14 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var kullProg = (from kp in entities.KullaniciProgramlaris.Where(a => a.KullaniciID == kullaniciId)
-                        join s in entities.Programlars on kp.ProgramKod equals s.ProgramKod
-                        join b in entities.AnabilimDallaris on s.AnabilimDaliKod equals b.AnabilimDaliKod
-                        join e in entities.Enstitulers on b.EnstituKod equals e.EnstituKod
-                        select new
-                        {
-                            ProgramKod = s.ProgramKod,
-                            EnstituKod = e.EnstituKod
-                        })
+                                join s in entities.Programlars on kp.ProgramKod equals s.ProgramKod
+                                join b in entities.AnabilimDallaris on s.AnabilimDaliKod equals b.AnabilimDaliKod
+                                join e in entities.Enstitulers on b.EnstituKod equals e.EnstituKod
+                                select new
+                                {
+                                    s.ProgramKod,
+                                    e.EnstituKod
+                                })
                     .GroupBy(x => x.EnstituKod)
                     .ToDictionary(
                         g => g.Key, // EnstituKod
@@ -406,8 +464,9 @@ namespace LisansUstuBasvuruSistemi.Business
                 IsActiveDirectoryUser = kull.IsActiveDirectoryUser,
 
             };
+            var roles = roller.TumRoller.Select(s => s.RolAdi).ToList();
 
-            ui.Roles.AddRange(roller.TumRoller.Select(s => s.RolAdi).ToArray());
+            ui.Roles.AddRange(roles.Distinct());
             ui.ImagePath = kull.ResimAdi.ToKullaniciResim();
             ui.Informations.Add("FixedHeader", kull.FixedHeader);
             ui.Informations.Add("FixedSidebar", kull.FixedSidebar);

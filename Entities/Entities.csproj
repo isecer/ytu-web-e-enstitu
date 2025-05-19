@@ -265,6 +265,15 @@
     <Compile Include="Entities\KayitDurumlari.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\KayitSilmeAyarlar.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\KayitSilmeBasvuru.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\KayitSilmeDurumlari.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\KullaniciEnstituYetkileri.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>

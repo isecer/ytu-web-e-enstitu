@@ -162,7 +162,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var dataList = entities.Kullanicilars
-                    .Where(p =>   p.IsAktif &&
+                    .Where(p => p.IsAktif &&
                                 p.KullaniciTipID == KullaniciTipiEnum.AkademikPersonel && p.Unvanlar.YetkiGrupID.HasValue &&
                                 ((p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term))
                                 )
@@ -174,7 +174,41 @@ namespace LisansUstuBasvuruSistemi.Business
                         s.ResimAdi,
                         s.Unvanlar.UnvanSiraNo,
                         s.Unvanlar.UnvanAdi
-                    }).OrderBy(o => o.UnvanSiraNo).ThenBy(t=>t.Ad).ThenBy(t=>t.Soyad).Take(15).ToList()
+                    }).OrderBy(o => o.UnvanSiraNo).ThenBy(t => t.Ad).ThenBy(t => t.Soyad).Take(15).ToList()
+                    .Select(s => new
+                    {
+                        id = s.KullaniciID,
+                        text = s.UnvanAdi + " " + s.Ad + " " + s.Soyad,
+                        ResimAdi = s.ResimAdi.ToKullaniciResim()
+                    }).ToList();
+
+                return dataList.ToJsonResult();
+            }
+        }
+        public static JsonResult GetFilterPersonelJsonResult(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return new List<object>().ToJsonResult();  
+            }
+
+            using (var entities = new LubsDbEntities())
+            {
+                var kullaniciTipIds = new List<int> { KullaniciTipiEnum.AkademikPersonel, KullaniciTipiEnum.IdariPersonel };
+                var dataList = entities.Kullanicilars
+                    .Where(p => p.IsAktif &&
+                                kullaniciTipIds.Contains(p.KullaniciTipID)  &&
+                                                ((p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term))
+                    )
+                    .Select(s => new
+                    {
+                        s.KullaniciID,
+                        s.Ad,
+                        s.Soyad,
+                        s.ResimAdi,
+                        s.Unvanlar.UnvanSiraNo,
+                        s.Unvanlar.UnvanAdi
+                    }).OrderBy(o => o.UnvanSiraNo).ThenBy(t => t.Ad).ThenBy(t => t.Soyad).Take(15).ToList()
                     .Select(s => new
                     {
                         id = s.KullaniciID,
@@ -513,6 +547,6 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
 
-         
+
     }
 }

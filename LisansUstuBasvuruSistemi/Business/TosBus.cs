@@ -130,10 +130,10 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var toBasvuru = entities.ToBasvurus.First(p => p.UniqueID == toUniqueId);
-                var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                var tezOneriIkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyar(toBasvuru.EnstituKod).ToInt(0);
+                var tezOneriIkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyar(toBasvuru.EnstituKod).ToInt(0);
                 var tezOneriToplamSavunmaHakkiAyKriter = tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
-                var tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter = TiAyar.TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                var tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter = TiAyar.TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter.GetAyar(toBasvuru.EnstituKod).ToInt(0);
 
                 var toBasvuruSavunmas = toBasvuru.ToBasvuruSavunmas.Where(p => p.ToBasvuruSavunmaDurumID.HasValue).OrderByDescending(o => o.ToBasvuruSavunmaID).ToList();
                 var sonBasvuru = toBasvuruSavunmas.FirstOrDefault();
@@ -199,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     toBasvuru.IlkOneriBitisTarihi = null;
                     toBasvuru.IkinciOneriBitisTarihi = null;
                 }
-                else if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi)
+                else if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi)
                 {
                     var sonBasvuruSinav = sonBasvuru.SRTalepleris.First();
                     var retBitisTarihi = (toBasvuru.RetDuzeltmeBitisTarihi ?? sonBasvuruSinav.Tarih.ToGetBitisTarihi(tezOneriIkinciSavunmaHakkiAyKriter)).Date;
@@ -316,7 +316,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                     }
-                    else if (!isAdmin && !TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyarTi(tezOneriSavunma.ToBasvuru.EnstituKod, "false").ToBoolean(false) && UserIdentity.Current.IsAdmin == false)
+                    else if (!isAdmin && !TiAyar.TezOneriSavunmaBasvuruAlimiAcik.GetAyar(tezOneriSavunma.ToBasvuru.EnstituKod, "false").ToBoolean(false) && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.Messages.Add("Başvuru süreci kapalı olduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
 
@@ -461,9 +461,9 @@ namespace LisansUstuBasvuruSistemi.Business
                                    }).FirstOrDefault()
                     }).OrderByDescending(o => o.SavunmaBasvuruTarihi).ToList();
 
-                model.ToplamBasarisizTezOneriSavunmaHak = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak.GetAyarTi(basvuru.EnstituKod).ToInt();
-                model.IlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
-                model.IkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
+                model.ToplamBasarisizTezOneriSavunmaHak = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak.GetAyar(basvuru.EnstituKod).ToInt();
+                model.IlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyar(basvuru.EnstituKod).ToInt();
+                model.IkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyar(basvuru.EnstituKod).ToInt();
 
                 var sonTos = model.ToBasvuruSavunmaList.FirstOrDefault();
 
@@ -628,7 +628,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                 DateTime? sinavTarihi = null;
-                if (tezOneriBasvuruSavunma.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi)
+                if (tezOneriBasvuruSavunma.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi)
                 {
                     var sinav = tezOneriBasvuruSavunma.SRTalepleris.First();
                     sinavTarihi = sinav.Tarih;

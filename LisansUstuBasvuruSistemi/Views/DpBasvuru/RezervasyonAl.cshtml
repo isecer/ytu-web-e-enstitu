@@ -8,7 +8,7 @@
     Layout = null;
 
     var degerlendirmeDuzeltme = RoleNames.DonemProjesiSinavDegerlendirmeDuzeltme.InRoleCurrent();
-    var sinavOnlineYapilabilsin = DonemProjesiAyar.SinavOnlineYapilabilsin.GetAyarDp(Model.EnstituKod).ToBoolean(false);
+    var sinavOnlineYapilabilsin = DonemProjesiAyar.SinavOnlineYapilabilsin.GetAyar(Model.EnstituKod).ToBoolean(false);
 
 }
 @if (Model.YetkisizErisim)

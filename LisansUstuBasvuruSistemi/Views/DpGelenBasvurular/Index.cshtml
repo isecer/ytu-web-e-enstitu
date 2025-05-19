@@ -8,7 +8,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
-    var onayYapmayanJuriEmails = (List<string>)ViewBag.onayYapmayanJuriEmails;
+    var onayYapmayanJuriEmails = (List<string>)ViewBag.onayYapmayanJuriEmails; 
+
 }
 <div class="row">
     @using (Html.BeginForm("Index", "DpGelenBasvurular", FormMethod.Post, new { id = "frmDpBasvurular" }))
@@ -43,7 +44,7 @@
                                         $.ajax({
                                             url: '@Url.Action("GetTutanakRaporu", "DpGelenBasvurular")',
                                             data: {},
-                                            success: function (result) { 
+                                            success: function (result) {
 
                                                 PanelRefresh(_panel, true);
                                                 var btbxxFS = bootbox.dialog({
@@ -59,7 +60,7 @@
                                                                 PanelRefresh(pnlx, false);
                                                                 $('#TutanakRprForm').ajaxForm({
                                                                     success: function (result) {
-                                                                      
+
                                                                         PanelRefresh(pnlx, true);
                                                                         if (result.IsSuccess) {
 
@@ -67,7 +68,7 @@
                                                                             var _Bittar = $('#BitTar').val();
                                                                             var _ExportWordOrExcel = $('#exportWordOrExcel').val();
                                                                             var _EnstituOnayDurumId = $('#EnstituOnayDurumId').val();
-                                                                         
+
                                                                             window.location = '@Url.Action("GetTutanakRaporuExport", "DpGelenBasvurular")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&ExportWordOrExcel=' + _ExportWordOrExcel + "&enstituOnayDurumId=" + _EnstituOnayDurumId;
 
                                                                         }
@@ -111,19 +112,21 @@
                             if (filteredOgrenciIds.Any())
                             {
                                 <li>
-                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
                                 </li>
                             }
+
                             if (filteredDanismanIds.Any())
                             {
                                 <li>
-                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
                                 </li>
                             }
+
                             if (onayYapmayanJuriEmails.Any())
                             {
                                 <li>
-                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",onayYapmayanJuriEmails)',true,false)" title="Listelenen Başvurular için Değerlendirme Yapmayan @onayYapmayanJuriEmails.Count Jüri Üyesine Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> J</i></a>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",", onayYapmayanJuriEmails)',true,false)" title="Listelenen Başvurular için Değerlendirme Yapmayan @onayYapmayanJuriEmails.Count Jüri Üyesine Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> J</i></a>
                                 </li>
                             }
 

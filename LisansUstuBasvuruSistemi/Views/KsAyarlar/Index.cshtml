@@ -1,0 +1,220 @@
+﻿@using Entities.Entities
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model List<KayitSilmeAyarlar>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var grup = Model.Select(s => s.Kategori).Distinct();
+    var dctGrupToggle = (Dictionary<string, bool>)ViewBag.PanelToggled;
+    var selectedOnaySorumlulari = (Dictionary<string, string>)ViewBag.SelectedOnaySorumlulari;
+}
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-body">
+
+                    @foreach (var cat in grup)
+                    {
+                        var ayar = Model.Where(p => p.Kategori == cat).ToArray();
+                        var toggleC = dctGrupToggle.First(p => p.Key == cat);
+
+                        <div class="panel panel-warning">
+                            <div class="panel-heading padding-0">
+                                <div class="portlet-title">
+                                    <h3 class="panel-title"><i class="fa fa-cogs"></i>@cat</h3>
+                                    <ul class="panel-controls">
+                                        <li>
+                                            <input type="hidden" name="PanelToggled" value="@(cat)__@toggleC.Value.ToString().ToLower()" />
+                                            <a href="javascript:void(0);" onclick="toogleControl(this, '@cat');" class="panel-collapse"><span class="fa fa-angle-down"></span> </a>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body" style="padding:0px;margin:0px;">
+                                <div class="panel panel-default form-horizontal" style="padding:0px;margin:0px;">
+                                    <div class="panel-body form-group-separated">
+                                        <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                                            @foreach (var item in ayar)
+                                            {
+                                                <tr>
+                                                    <td style="text-align:right;" width="360">
+                                                        @item.AyarAdi
+                                                    </td>
+                                                    <td width="30" style="padding-left:10px;">
+                                                        @if (!item.Aciklama.IsNullOrWhiteSpace())
+                                                        {
+                                                            <button style="padding-left:3px;padding-right:2px;" type="button" class="btn btn-info popover-dismiss glow-on-hover" title="@item.AyarAdi" data-content="@item.Aciklama">
+                                                                <i class="fa fa-info-circle fa-lg" style="margin:0px;"></i>
+                                                            </button>
+
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <div class="inputContent input-icon right">
+                                                            <input type="text" style="width:100%;display:none;" name="AyarAdi" value="@item.AyarAdi" />
+
+                                                            @if (item.InpType == "text")
+                                                            {
+                                                                <input type="text" style="width:100%;" name="AyarDegeri" class="form-control" value="@item.AyarDegeri" />
+                                                            }
+                                                            else if (item.InpType == "password")
+                                                            {
+                                                                <input type="password" style="width:100%;" name="AyarDegeri" class="form-control" value="@item.AyarDegeri" />
+                                                            }
+                                                            else if (item.InpType == "textarea")
+                                                            {
+                                                                <textarea style="height: 160px;" name="AyarDegeri" class="form-control">@item.AyarDegeri</textarea>
+                                                            }
+                                                            else if (item.InpType == "checkbox")
+                                                            {
+                                                                var itms = item.SItems.Split(',');
+                                                                var dataOnL = "Evet";
+                                                                var dataOfL = "Hayır";
+                                                                if (itms.Length > 1)
+                                                                {
+                                                                    dataOnL = itms[0];
+                                                                    dataOfL = itms[1];
+                                                                }
+                                                                var chkD = !item.AyarDegeri.IsNullOrWhiteSpace() && Convert.ToBoolean(item.AyarDegeri);
+                                                                <input type="text" name="AyarDegeri" value="@item.AyarDegeri" style="display: none;" />
+                                                                <div class="make-switch" data-on-label="@dataOnL" data-off-label="@dataOfL">
+                                                                    <input type="checkbox" value="true" class="toggle" @chkD.ToChecked() onchange="checkControl(this)" />
+                                                                </div>
+                                                            }
+                                                            else if (item.InpType == "select")
+                                                            {
+                                                                var itms = item.SItems.Split(',');
+                                                                <select class="form-control" name="AyarDegeri" style="width: 100%;">
+                                                                    @foreach (var val in itms)
+                                                                    {
+                                                                        <option value="@val" @(val == item.AyarDegeri ? "selected='selected'" : "")>@val</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            else if (item.InpType == "selectMultiple")
+                                                            {
+                                                                var itms = item.SItems.Split(',');
+                                                                <input type="text" name="AyarDegeri" value="@item.AyarDegeri" style="display: none;" />
+                                                                <select multiple class="form-control select mSelect" change="SetAyarDegeriMultiSelect(this)">
+                                                                    @foreach (var val in itms)
+                                                                    {
+                                                                        <option value="@val" @(item.AyarDegeri.Split(',').Any(a => a == val) ? "selected='selected'" : "")>@val.ToInt()</option>
+                                                                    }
+                                                                </select>
+                                                                <script>
+                                                                    function SetAyarDegeriMultiSelect(sndr) {
+                                                                        $(sndr).prev().val(sndr.val());
+                                                                        alert(sndr.val());
+                                                                    }
+                                                                </script>
+                                                            }
+                                                            else if (item.InpType == "select2User")
+                                                            {
+
+
+                                                                string kullaniciText;
+                                                                selectedOnaySorumlulari.TryGetValue(item.AyarAdi, out kullaniciText);
+
+
+                                                                <input type="text" class="form-control kullanici-select" name="AyarDegeri" style="width: 100%;"
+                                                                       data-initial-value="@item.AyarDegeri"
+                                                                       data-kullanici-text="@kullaniciText" />
+
+                                                            }
+                                                            else if (item.InpType == "date")
+                                                            {
+                                                                <input class="form-control input-medium Tarih" autocomplete="off" size="16" type="text" value="@item.AyarDegeri.ToDate().ToFormatDateInput()" name="AyarDegeri">
+                                                            }
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    }
+
+                </div>
+
+                <div class="panel-footer">
+                    <button class="btn btn-primary pull-left" style="margin-left:7px;"><i class="fa fa-save"></i> Kaydet</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".popover-dismiss").popover({ trigger: 'hover', html: true });
+    });
+    $('.Tarih').datetimepicker({
+        lang: 'tr',
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+    function toogleControl(sndr, cat) {
+        var _val = $(sndr).prev().val();
+        var nval = _val.replace(cat + '__', '') == 'true';
+        $(sndr).prev().val(cat + '__' + (!nval).toString());
+
+    }
+    function checkControl(sndr) {
+        var chk = $(sndr).prop("checked");
+        var pContent = $(sndr).parents('.inputContent').first();
+        var pvalFielt = $(pContent).find("input[name='AyarDegeri']").first();
+        $(pvalFielt).val(chk);
+    }
+
+
+    $(document).ready(function () {
+    $(".kullanici-select").each(function () {
+        var el = $(this);
+        var initialVal = el.data("initial-value");
+        var kullaniciText = el.data("kullanici-text");
+
+        $(el).select2({
+            tags: true,
+            tokenSeparators: [",", " "],
+            minimumInputLength: 0,
+            maximumSelectionSize: 1,
+            multiple: false,
+            ajax: {
+                url: '@Url.Action("GetFilteredPersonel", "Ajax")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        'term': term
+                    };
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var returnhtml =
+                    "<table style='margin:0px;border-top:none;font-size:8pt;text-align:left;'>" +
+                    "<tr>" +
+                    "<td width='30'><img src='" + result.ResimAdi + "' style='width:25px;height:25px;cursor:pointer;' class='img-circle img-thumbnail'></td>" +
+                    "<td>" + result.text + "</td>" +
+                    "</tr>" +
+                    "</table>";
+                return returnhtml;
+            }, 
+        });  
+        if (initialVal && kullaniciText) {  
+            $(el).select2('data', { id: initialVal, text: kullaniciText }); 
+        }
+    });
+});
+</script>

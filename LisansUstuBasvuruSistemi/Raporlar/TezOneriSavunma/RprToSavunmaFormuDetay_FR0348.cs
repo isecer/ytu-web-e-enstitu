@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 cellDanismanDegerlendirmeSonucu.Text =
                     data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                         ? "KABUL (ACCEPTED)"
-                        : (data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
+                        : (data.Danisman.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi
                             ? "RET (REJECTED)"
                             : "DÜZELTME (REVISION)"
                         );
@@ -60,7 +60,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 cellTik1TarihImza.Text = "";
                 cellTik1DegerlendirmeSonucu.Text = data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                     ? "KABUL (ACCEPTED)"
-                    : (data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
+                    : (data.TikUyesi1.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi
                         ? "RET (REJECTED)"
                         : "DÜZELTME (REVISION)"
                     );
@@ -72,7 +72,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 cellTik2TarihImza.Text = "";
                 cellTik2DegerlendirmeSonucu.Text = data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi
                     ? "KABUL (ACCEPTED)"
-                    : (data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.RetEdildi
+                    : (data.TikUyesi2.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi
                         ? "RET (REJECTED)"
                         : "DÜZELTME (REVISION)"
                     );

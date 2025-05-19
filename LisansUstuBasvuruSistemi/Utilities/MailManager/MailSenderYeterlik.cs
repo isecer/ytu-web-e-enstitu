@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail,KullaniciId =ogrenci.KullaniciID, ToOrBcc = true } },
-                            MailSablonTipId =basvuru.IsEnstituOnaylandi==true? MailSablonTipiEnum.YeterlikBasvuruOnaylandiOgrenciye:MailSablonTipiEnum.YeterlikBasvuruRetEdildiOgrenciye,
+                            MailSablonTipId =basvuru.IsEnstituOnaylandi==true? MailSablonTipiEnum.YeterlikBasvuruOnaylandiOgrenciye:MailSablonTipiEnum.YeterlikBasvuruReddedildiOgrenciye,
                         }
                     };
                     if (basvuru.IsEnstituOnaylandi == true)

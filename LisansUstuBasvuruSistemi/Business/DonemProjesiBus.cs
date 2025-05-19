@@ -52,7 +52,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var basvuruYapmaYetki = RoleNames.DonemProjesiBasvuruYapmaYetkisi.InRoleCurrent();
                 var enstituBasvuruOnayYetkisi = RoleNames.DonemProjesiEnstituBasvuruOnayYetkisi.InRoleCurrent();
-                var isBasvuruAlimiAcik = DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyarDp(enstituKod).ToBoolean(false);
+                var isBasvuruAlimiAcik = DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyar(enstituKod).ToBoolean(false);
 
 
                 if (!enstituBasvuruOnayYetkisi && !isBasvuruAlimiAcik)
@@ -202,7 +202,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                     }
-                    else if (!DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyarDp(basvuru.EnstituKod).ToBoolean(false) && UserIdentity.Current.IsAdmin == false)
+                    else if (!DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyar(basvuru.EnstituKod).ToBoolean(false) && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Dönem Projesi başvuru süreci kapalı olduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
@@ -243,7 +243,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                     }
-                    else if (!DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyarDp(donemProjesiBasvuru.DonemProjesi.EnstituKod).ToBoolean(false) && UserIdentity.Current.IsAdmin == false)
+                    else if (!DonemProjesiAyar.DonemProjesiBasvuruAlimiAcik.GetAyar(donemProjesiBasvuru.DonemProjesi.EnstituKod).ToBoolean(false) && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Dönem Projesi başvuru süreci kapalı olduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");

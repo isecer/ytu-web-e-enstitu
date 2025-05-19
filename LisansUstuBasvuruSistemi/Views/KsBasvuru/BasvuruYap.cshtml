@@ -1,0 +1,228 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
+@model KmKayitSilmeBasvuruDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var isBelgeVar = !Model.NufusKayitOrnekDosyaAdi.IsNullOrWhiteSpace();
+    var colorKb = !isBelgeVar ? "#353333" : "#2f8c8d";
+}
+
+<div class="row">
+    <form id="bsvrSbmtFrm" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil" aria-hidden="true"></i> Kayıt Silme Başvuru Formu</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <input type="text" style="display:none;" id="UniqueID" name="UniqueID" value="@Model.UniqueID" />
+                            <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Ad Soyad</label>
+                                <div class="col-md-9 col-xs-10">
+                                    @Model.AdSoyad
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Öğrenci No</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="OgrenciNo" id="OgrenciNo" value="@Model.OgrenciNo" />
+                                    @Model.OgrenciNo
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Öğrenim Seviyesi</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="OgrenimTipAdi" id="OgrenimTipAdi" value="@Model.OgrenimTipAdi" />
+                                    @Model.OgrenimTipAdi
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Anabilim Dalı</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="AnabilimdaliAdi" id="AnabilimdaliAdi" value="@Model.AnabilimdaliAdi" />
+                                    @Model.AnabilimdaliAdi
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Program</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="ProgramAdi" id="ProgramAdi" value="@Model.ProgramAdi" />
+                                    @Model.ProgramAdi
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Nüfus Kayıt Örneği</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8pt;padding:6px 10px;min-height:30px;">
+                                        <b>@(isBelgeVar ? "Yüklenen nüfus kayıt örneği:" : "Nüfus kayıt örneğini pdf formatında buraya yükleyiniz")</b><br />
+                                        <div class="input-group" id="belgeContent">
+                                            <table style="width:100%;table-layout:fixed;">
+                                                <tr>
+                                                    <td width="35">
+                                                        <span class="input-group-addon" id="BelgeIcon_Ks" style="background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                    </td>
+                                                    <td>
+                                                        @if (isBelgeVar)
+                                                        {
+                                                            <input type="text" class="form-control" id="BelgeAdi_Ks" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@Model.NufusKayitOrnekDosyaAdi" onclick="PopupCenter('@Url.CustomUrlContent(Model.NufusKayitOrnekDosyaYolu)','@Model.NufusKayitOrnekDosyaAdi',800,600);" title="Yüklenen pdf dosyasını aç">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="text" class="form-control" id="BelgeAdi_Ks" style="cursor:default;color:@colorKb;" readonly="readonly" value="Belge Seçilmedi">
+                                                        }
+
+                                                        <input type="hidden" name="NufusKayitOrnekDosyaAdi" value="@Model.NufusKayitOrnekDosyaAdi" />
+                                                        <input type="hidden" name="NufusKayitOrnekDosyaYolu" value="@Model.NufusKayitOrnekDosyaYolu" />
+                                                    </td>
+                                                    <td width="104" style="padding:1px;">
+                                                        <span class="input-group-addon" id="DosyaSec_Ks" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_Ks').click();">
+                                                            <span class="@(isBelgeVar ? "fa fa-refresh" : "glyphicon glyphicon-folder-open")"></span>
+                                                            @(isBelgeVar ? "Değiştir" : "Dosya Seç")
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <input class="hide" type="file" name="DosyaNufusKayitOrnegi" accept="application/pdf" id="Belge_Ks" onchange="ChangeFile(this);" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label"></label>
+                                <div class="col-md-9 col-xs-10">
+                                    <div class="tasks ui-sortable">
+                                        <div class="task-item task-info" id="OnayCheckboxContent" style="margin-bottom: 0px; cursor: pointer;" onclick="toggleCheckbox()">
+                                            <div class="task-text ui-sortable-handle" style="padding-bottom: 0px; font-size: 8pt;">
+                                                <div class="task-checkbox" style="display: inline-block; margin-right: 10px;">
+                                                    <input type="checkbox" id="OnayCheckbox" name="IsTaahhutOnay" value="true" @Model.IsTaahhutOnay.ToChecked() style="transform: scale(1.5);" onclick="event.stopPropagation();" />
+                                                </div>
+                                                Kendi isteğimle kaydımın silinmesini istiyorum.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index",new { Model.KullaniciID})" class="btn btn-default"><i class="fa fa-reply"></i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save"></i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function ChangeFile(sndr) {
+        var _BelgeIconID = '#BelgeIcon_Ks';
+        var _BelgeAdiID = '#BelgeAdi_Ks';
+        $(_BelgeAdiID).removeAttr("onclick");
+        $(_BelgeIconID).removeAttr("onclick");
+        var isSuccessFSize = true;
+        if (sndr.files[0].size > (1024 * 1024 * 20)) {
+            isSuccessFSize = false;
+            var btbx = bootbox.dialog({
+                message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Ekleyeceğiniz Belge boyutu en fazla 20 MB olabilir.</td></tr></table>",
+                title: "Belge Kayıt İşlemi",
+                buttons: {
+                    success: {
+                        label: 'Tamam',
+                        className: "btn-info",
+                        callback: function () {
+                        }
+                    }
+                }
+            });
+        }
+        if (sndr.files.length > 0 && isSuccessFSize) {
+            $(_BelgeAdiID).val(sndr.files[0].name);
+            $('#DosyaSec_Ks').html('<span class="fa fa-refresh"></span> Değiştir');
+        }
+        else {
+            $(sndr).val("");
+            $(_BelgeAdiID).val('Belge Seçilmedi, Lütfen belge seçiniz.');
+            $('#DosyaSec_Ks').html('<span class="glyphicon glyphicon-folder-open"></span> Dosya Seç');
+        }
+    }
+</script>
+<script>
+    function toggleCheckbox() {
+        const cb = $('#OnayCheckbox');
+        cb.prop('checked', !cb.prop('checked'));
+    }
+
+    function pulseUyarisi(id) {
+        $('#' + id).pulsate({
+            color: "#fdbe41",
+            reach: 100,
+            repeat: 5,
+            speed: 400,
+            glow: true
+        });
+    }
+
+$("#bsvrSbmtFrm").submit(function (e) {
+    e.preventDefault();
+
+    var dosyaSecildiMi = $("#Belge_Ks")[0].files.length > 0 || '@isBelgeVar.ToString().ToLower()' === 'true';
+    var onayVarMi = $("#OnayCheckbox").is(":checked");
+
+    if (!dosyaSecildiMi || !onayVarMi) {
+
+        if (!onayVarMi) pulseUyarisi("OnayCheckboxContent");
+        if (!dosyaSecildiMi) pulseUyarisi("belgeContent");
+
+        var hataMesaji = "<ul>";
+        if (!dosyaSecildiMi)
+            hataMesaji += "<li>Belge yüklenmeden başvuru yapılamaz.</li>";
+        if (!onayVarMi)
+            hataMesaji += "<li>Devam etmek için onay kutusunu işaretlemelisiniz.</li>";
+        hataMesaji += "</ul>";
+
+        bootbox.dialog({
+            message: hataMesaji,
+            title: "Form Doğrulama",
+            buttons: {
+                success: {
+                    label: 'Tamam',
+                    className: "btn-info"
+                }
+            }
+        });
+
+        return false;
+    }
+
+    var frm = $("#bsvrSbmtFrm")[0];
+    var frmData = new FormData(frm);
+
+    $.ajax({
+        url: '@Url.Action("BasvuruYap", "KsBasvuru")',
+        type: 'POST',
+        enctype: "multipart/form-data",
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        data: frmData,
+        success: function (result) {
+            if (!result.IsSuccess) {
+                GetMsg(result);
+            }
+            else {
+                window.location.href = '@Url.Action("Index", "KsBasvuru")';
+            }
+        },
+        error: function (xhr) {
+            alert("İşlem sırasında bir hata oluştu:\n" + xhr.responseText);
+        }
+    });
+
+    return false;
+});
+</script>

@@ -1,0 +1,300 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model  FmKayitSilmeBasvuruDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var bilgiModel = (IndexPageInfoDto)ViewBag.BModel;
+
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Bilgisi</td>
+                </tr>
+                <tr>
+                    <td width="200" style="color:cadetblue">Enstitü</td>
+                    <td width="10">:</td>
+                    <td>
+                        @bilgiModel.Enstitü.EnstituAd
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ad Soyad</td>
+                    <td>:</td>
+                    <td>@bilgiModel.Kullanici.Ad @bilgiModel.Kullanici.Soyad</td>
+                </tr>
+                @if (bilgiModel.KullaniciTipYetki)
+                {
+                    <tr>
+                        <td>Öğrenci No / Öğrenim Seviyesi</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.OgrenciNo /  @bilgiModel.OgrenimTipAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Anabilim Dalı / Program</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.AnabilimdaliAdi / @bilgiModel.ProgramAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Durumu / Kayıt Tarihi</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.OgrenimDurumAdi / @bilgiModel.KayitDonemi
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    if (!bilgiModel.YtuOgrencisi)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>:</td>
+                            <td>
+                                Kayıt Silme başvurusu yapabilmek için hesap bilgilerinizde YTÜ Lisansüstü öğrencisi olduğunuza dair bilgilerin eksiksiz olarak doldurulması gerekmektedir. <a href="javascript:void(0)" onclick="HesapKayit('@UserIdentity.Current.Id')">Hesap bilgilerinizi güncellemek için tıklayınız.</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td></td>
+                            <td>:</td>
+                            <td> @bilgiModel.KullaniciTipYetkiYokMsj</td>
+                        </tr>
+                    }
+
+                }
+
+                @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.KullaniciTipYetki && bilgiModel.EnstituYetki)
+                {
+
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus tooltips"></i>Yeni Başvuru</button>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+
+                    if (bilgiModel.EnstituYetki == false)
+                    {
+                        <tr>
+                            <td>Not</td>
+                            <td>:</td>
+                            <td>
+                                Seçili enstitü için kayıt silme başvurusu yapamazsınız!
+                            </td>
+                        </tr>
+                    }
+                    else if (bilgiModel.SistemBasvuruyaAcik == false)
+                    {
+                        <tr>
+                            <td>Not</td>
+                            <td>:</td>
+                            <td>
+                                Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                                <br />
+                                <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                            </td>
+                        </tr>
+                    }
+
+
+
+                }
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-danger">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th width="75"></th>
+                        <th width="40"></th>
+                        <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                        <th width="150" class="sirala" field="BasvuruTarihi" width="80">Başvuru Tarihi</th>
+                        <th>Başvuru Durumu</th>
+                        <th width="45"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (Model.RowCount > 0)
+                    {
+
+                        var rowIndex = Model.StartRowIndex;
+                        foreach (var item in Model.Data)
+                        {
+                            rowIndex++;
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td style="width: 30px;">@rowIndex</td>
+                                            <td>
+                                                <ul class="panel-controls">
+                                                    <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
+                                                        <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <img src="@item.ResimAdi.ToKullaniciResim()" style="width: 40px; height: 40px; cursor: pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail">
+                                </td>
+                                <td>
+                                    @item.AdSoyad <br /> @item.OgrenciNo
+                                </td>
+                                <td id="KsBasvuruDonem_@item.UniqueID">
+                                    @item.ToKsBasvuruDonemView()
+                                </td>
+                                <td id="KsBasvuruDurum_@item.UniqueID">
+                                    @item.ToKsBasvuruDurumView()
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("BasvuruYap", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" title="Düzelt"></i></a>
+                                    <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" title="Sil"></i></a>
+                                </td>
+                            </tr>
+                            <tr class="cls-@item.UniqueID" style="display: none">
+                                <td colspan="6" style="padding: 1px 1px 2px 75px;">
+                                    <div class="panel" style="padding:0px;margin:0px;" id="cls-@item.UniqueID"></div>
+                                </td>
+                            </tr>
+
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" style="text-align: center;">
+                                Listelenen Kayıt Yok
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            @Model.ToPagerString()
+        </div>
+    </div>
+
+</div>
+@if (Model.RowCount > 0)
+{
+    <script>
+      $(function () {
+          ShowDetail('@Model.ShowBasvuruUniqueId');
+      }, 200);
+    </script>
+}
+<script>
+
+    function YeniBasvuruDuyuruKontrol()
+    {
+        var popupSetting = {
+            title:'||',
+            popupTipId:@DuyuruPopupTipiEnum.KayitSilmeBasvuru,
+            btnAdi: 'Başvuru Yap',
+            redirectUrl: '@Url.Action("BasvuruYap")',
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting);
+    }
+    function BasvuruSil(sndr, uniqueId, tarih) {
+        Swal.fire({
+            text: tarih + " tarihli Kayıt Silme başvurusunu silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Kayıt Silme Başvurusunu Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("Sil", "KsBasvuru")',
+                        data: { uniqueId },
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                $(sndr).parents('tr').first().remove();
+                                $(".cls-" + uniqueId).remove();
+                            }
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        }
+                    });
+
+                });
+            }
+        });
+    }
+    function ShowDetail(uniqueId) {
+        var rwID = $('#iShow_' + uniqueId);
+        var cls = 'cls-' + uniqueId;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(uniqueId);
+
+    }
+
+
+    function GetDetail(uniqueId) {
+        var panel = $('#cls-' + uniqueId);
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetailKsBasvuru", "Ajax")',
+            data: { uniqueId },
+            success: function (result) {
+                $('#cls-' + uniqueId).html(result);
+                PanelRefresh(panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(panel, true);
+            },
+            complete: function (cmp) {
+                PanelRefresh(panel, true);
+            },
+        });
+    }
+
+
+</script>

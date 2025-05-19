@@ -174,7 +174,18 @@
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                    <tr>
+                                        <td width="150">Danışmanlık Durumu</td>
+                                        <td>
+                                            @Html.DropDownList("IsDanismaniOlunanOgrenciler", null, new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
                             <td style="padding-left: 10px; vertical-align: top;">
                                 <table style="width: 100%; table-layout: fixed;">
                                     <tbody>
@@ -220,10 +231,8 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             @if (Model.RowCount > 0)
                             {
-
                                 var rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.Data)
                                 {
@@ -247,7 +256,14 @@
                                             <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="DetayGor('@item.UserKey')" class="img-circle img-thumbnail">
                                         </td>
                                         <td>
-                                            @item.AdSoyad <br /> @item.OgrenciNo
+                                            @item.AdSoyad
+                                            @if (item.IsDanismaniOlunanOgrenci && (RoleNames.YeterlikProgramYetkisi.InRoleCurrent() || RoleNames.YeterlikTumBasvurulariGormeYetkisi.InRoleCurrent()))
+                                            {
+                                                <span style="display: inline-block; font-size: 10px; color: #2573b3; border: 1.5px dashed #2573b3; padding: 2px 6px; margin-left: 6px; border-radius: 3px; opacity: 0.9; transform: rotate(-3deg); background-color: rgba(37, 115, 179, 0.08); font-weight: 600;" title="Danışmanı olduğunuz öğrenci">
+                                                    öğrenciniz
+                                                </span>
+                                            }
+                                            <br /> @item.OgrenciNo
                                         </td>
                                         <td>
                                             @item.BasvuruTarihi
@@ -266,7 +282,6 @@
                                     <tr class="cls-@item.UniqueID" style="display:none">
                                         <td id="cls-@item.UniqueID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
                                     </tr>
-
                                 }
                             }
                             else
@@ -277,7 +292,6 @@
                                     </td>
                                 </tr>
                             }
-
                         </tbody>
                     </table>
                 </div>

@@ -37,7 +37,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bbModel = new IndexPageInfoDto();
             if (model.IsDegerlendirme == null)
             {
-                bbModel.SistemBasvuruyaAcik = TiAyar.TiBasvurusuAcikmi.GetAyarTi(enstituKod, "false").ToBoolean(false);
+                bbModel.SistemBasvuruyaAcik = TiAyar.TiBasvurusuAcikmi.GetAyar(enstituKod, "false").ToBoolean(false);
 
                 if (model.KullaniciID.HasValue) model.KullaniciID = UserIdentity.Current.Id;
                 model.KullaniciID = model.KullaniciID ?? UserIdentity.Current.Id;
@@ -263,7 +263,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (mmMessage.Messages.Count == 0)
             {
-                kModel.BasvuruSonDonemSecilecekDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(kModel.EnstituKod);
+                kModel.BasvuruSonDonemSecilecekDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyar(kModel.EnstituKod);
                 kModel.KayitOgretimYiliBaslangic = kul.KayitYilBaslangic;
                 kModel.KayitOgretimYiliDonemID = kul.KayitDonemID;
                 kModel.KayitTarihi = kul.KayitTarihi;
@@ -360,7 +360,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Komite üyelerine değerlendirme linki gönderildikten sonra rapor bilgisinde değişiklik yapamazsınız. ");
             }
-            else if (tiBasvuruAraRapor == null && TiAyar.TiBasvurusuAcikmi.GetAyarTi(tiBasvuru.EnstituKod).ToBoolean() == false)
+            else if (tiBasvuruAraRapor == null && TiAyar.TiBasvurusuAcikmi.GetAyar(tiBasvuru.EnstituKod).ToBoolean() == false)
             {
                 mMessage.Messages.Add("Ara rapor giriş işelmemleri kapalıdır. ");
             }
@@ -390,7 +390,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var sondonemKayitolmasiGerekenDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod);
+                    var sondonemKayitolmasiGerekenDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyar(tiBasvuru.EnstituKod);
 
                     var kayitYapilacakDersKodlaris = !tiBasvuruAraRaporId.HasValue ? sondonemKayitolmasiGerekenDersKodlari.Split(',').Where(p => p.Trim() != "").ToList().Select(s => s.Trim()).ToList() : new List<string>();
                     if (kayitYapilacakDersKodlaris.Any() && kayitYapilacakDersKodlaris.Count(p => ogrenciInfo.AktifDonemDers.DersKodNums.Any(a => a == p)) != kayitYapilacakDersKodlaris.Count)
@@ -664,7 +664,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToTiAraRaporDonemBilgi(tiBasvuru.EnstituKod);
                 var obsDonemId = donemBilgi.BaslangicYil.ToString() + donemBilgi.DonemId;
                 var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.OgrenciKontrol(kul.OgrenciNo, obsDonemId) : new StudentControl();
-                var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod).Split(',').Where(p => p.Trim() != "").Select(s => s.Trim()).ToList() : new List<string>();
+                var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyar(tiBasvuru.EnstituKod).Split(',').Where(p => p.Trim() != "").Select(s => s.Trim()).ToList() : new List<string>();
 
                 if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemId))
                 {
@@ -894,7 +894,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (isYeniJo)
                             {
                                 var td = _entities.Kullanicilars.First(p => p.KullaniciID == kul.DanismanID);
-                                tiBasvuruAraRapor.BasvuruSonDonemSecilecekDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod);
+                                tiBasvuruAraRapor.BasvuruSonDonemSecilecekDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyar(tiBasvuru.EnstituKod);
                                 tiBasvuru.TezDanismanID = td.KullaniciID;
                                 tiBasvuruAraRapor.TezDanismanID = td.KullaniciID;
                                 tiBasvuruAraRapor.RaporTarihi = DateTime.Now;
@@ -1050,13 +1050,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 if (kModel.IsOnline == true && !TiAyar.TiAraRaporSinaviOnlineYapilabilsin
-                        .GetAyarTi(kModel.EnstituKod).ToBoolean(false))
+                        .GetAyar(kModel.EnstituKod).ToBoolean(false))
                 {
                     mmMessage.Messages.Add("Tez İzleme Sınavı Online olarak yapılamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });
                 }
                 else if (kModel.IsOnline == false && !TiAyar.TiAraRaporSinaviYuzYuzeYapilabilsin
-                             .GetAyarTi(kModel.EnstituKod).ToBoolean(false))
+                             .GetAyar(kModel.EnstituKod).ToBoolean(false))
                 {
                     mmMessage.Messages.Add("Tez İzleme Sınavı Yüz Yüze olarak yapılamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IsOnline" });

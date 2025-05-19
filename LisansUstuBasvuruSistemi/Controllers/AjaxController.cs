@@ -1219,7 +1219,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.DonemProjesiBasvurus.Any() || model.IsYeniBasvuruYapilabilir) model.ShowBasvuruUniqueId = showBasvuruUniqueId;
             return View(model);
         }
-
+        [HttpGet]
+        public ActionResult GetDetailKsBasvuru(Guid? uniqueId)
+        {
+            var model = KayitSilmeBus.GetSecilenBasvuruDetay(uniqueId); 
+            return View(model);
+        }
         public ActionResult SifreResetle(string mailAddress)
         {
             var mmMessage = new MmMessage();
@@ -2704,6 +2709,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             return KullanicilarBus.GetFilterAkademisyenJsonResult(term, enstituKod);
+        }
+        [Authorize]
+        public ActionResult GetFilteredPersonel(string term)
+        { 
+            return KullanicilarBus.GetFilterPersonelJsonResult(term);
         }
         [Authorize]
         public ActionResult GetUniversiteler(string term)

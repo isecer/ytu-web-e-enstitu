@@ -35,6 +35,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var isOnayBekleyenKomite = model.BasvuruDurumID == YeterlikBasvuruFilterEnum.KomiteOnayiBekleyenler;
             var isOnayBekleyenJuri = model.BasvuruDurumID == YeterlikBasvuruFilterEnum.SinavSurecindeOlanlar;
+            var kullaniciId = UserIdentity.Current.Id;
             var q = from yeterlikBasvuru in _entities.YeterlikBasvurus
                     join yeterlikSureci in _entities.YeterlikSurecis.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)) on yeterlikBasvuru.YeterlikSurecID equals yeterlikSureci.YeterlikSurecID
                     join kullanicilar in _entities.Kullanicilars on yeterlikBasvuru.KullaniciID equals kullanicilar.KullaniciID
@@ -56,6 +57,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EMail = kullanicilar.EMail,
                         CepTel = kullanicilar.CepTel,
                         KullaniciID = yeterlikBasvuru.KullaniciID,
+                        IsDanismaniOlunanOgrenci = kullaniciId == yeterlikBasvuru.TezDanismanID,
                         UserKey = kullanicilar.UserKey,
                         AdSoyad = kullanicilar.Ad + " " + kullanicilar.Soyad,
                         TcKimlikNo = kullanicilar.TcKimlikNo,
@@ -91,7 +93,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         SozluSinaviOrtalamaNotu = yeterlikBasvuru.SozluSinaviOrtalamaNotu,
                         GenelBasariNotu = yeterlikBasvuru.GenelBasariNotu,
                         IsGenelSonucBasarili = yeterlikBasvuru.IsGenelSonucBasarili,
-                        BirOncekiBasvuru = birOncekiBasvuru
+                        BirOncekiBasvuru = birOncekiBasvuru, 
+
+
 
                     };
             var q2 = q;
@@ -119,18 +123,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.BasarisizOlanlar) q = q.Where(p => p.IsGenelSonucBasarili == false);
             }
 
+            if (model.IsDanismaniOlunanOgrenciler.HasValue)
+                q = q.Where(p => p.IsDanismaniOlunanOgrenci == model.IsDanismaniOlunanOgrenciler.Value);
             var danismanYetkisi = RoleNames.YeterlikDanismanYetkisi.InRoleCurrent();
             var programYetkisi = RoleNames.YeterlikProgramYetkisi.InRoleCurrent();
             var tumOgrenciGormeYetkisi = RoleNames.YeterlikTumBasvurulariGormeYetkisi.InRoleCurrent();
 
             if (!tumOgrenciGormeYetkisi)
             {
-                var yetkiliProgramlar = new List<string>();
-
-                if (programYetkisi && UserIdentity.Current.EnstituProgramKods.ContainsKey(enstituKod))
-                {
-                    yetkiliProgramlar = UserIdentity.Current.EnstituProgramKods[enstituKod];
-                } 
+                var yetkiliProgramlar = UserIdentity.Current.SelectedEnstituProgramKod(enstituKod);
+                 
                 q = q.Where(p =>
                     (programYetkisi && yetkiliProgramlar.Contains(p.ProgramKod)) ||
                     (danismanYetkisi && p.TezDanismanID == UserIdentity.Current.Id)
@@ -172,9 +174,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ogrenciNo = yeterlikData.Select(s => s.OgrenciNo).Distinct().ToList();
 
                 var tezOneriIlkSavunmaHakkiAyKriter =
-                    TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(enstituKod).ToInt(0);
+                    TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyar(enstituKod).ToInt(0);
                 var tezOneriIkinciSavunmaHakkiAyKriter =
-                    TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(enstituKod).ToInt(0);
+                    TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyar(enstituKod).ToInt(0);
                 var tezOneriToplamSavunmaHakkiAyKriter =
                     tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
 
@@ -268,6 +270,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.onayYapmayanJuriEmails = isFiltered ? q.SelectMany(s => s.OnayYapmayanJuriEmails).Distinct().ToList() : new List<string>();
 
 
+            ViewBag.IsDanismaniOlunanOgrenciler = new SelectList(YeterlikBus.GetCmbDanismanlikDurum(true), "Value", "Caption", model.YeterlikSurecID);
             ViewBag.YeterlikSurecID = new SelectList(YeterlikBus.GetCmbYeterlikSurecleri(enstituKod, true), "Value", "Caption", model.YeterlikSurecID);
             ViewBag.AnabilimDaliID = new SelectList(YeterlikBus.GetCmbFilterYeterlikAnabilimDallari(enstituKod, model.YeterlikSurecID, true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.BasvuruDurumID = new SelectList(YeterlikBus.GetCmbBasvuruDurumu(true), "Value", "Caption", model.BasvuruDurumID);
@@ -294,7 +297,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 case ToBasvuruSavunmaDurumuEnum.KabulEdildi:
                     durumAdi += " Kabul Edildi";
                     break;
-                case ToBasvuruSavunmaDurumuEnum.RetEdildi:
+                case ToBasvuruSavunmaDurumuEnum.Reddedildi:
                     durumAdi += " Reddedildi";
                     break;
                 case ToBasvuruSavunmaDurumuEnum.Duzeltme:

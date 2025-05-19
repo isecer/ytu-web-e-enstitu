@@ -165,7 +165,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var obsOgrenci = KullanicilarBus.OgrenciBilgisiGuncelleObs(model.KullaniciID.Value);
                 var kul = entities.Kullanicilars.First(f => f.KullaniciID == model.KullaniciID);
                 model.BasvuruKontrolBilgi.EnstituAdi = entities.Enstitulers.First(p => p.EnstituKod == model.EnstituKod).EnstituAd;
-                model.BasvuruKontrolBilgi.IsBasvuruAcik = TiAyar.TikOneriAlimiAcik.GetAyarTi(model.EnstituKod, "false").ToBoolean(false);
+                model.BasvuruKontrolBilgi.IsBasvuruAcik = TiAyar.TikOneriAlimiAcik.GetAyar(model.EnstituKod, "false").ToBoolean(false);
                 model.BasvuruKontrolBilgi.AdSoyad = kul.Ad + " " + kul.Soyad;
 
                 if (!model.BasvuruKontrolBilgi.IsBasvuruAcik)
@@ -761,7 +761,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else sablonModel.Add(new KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>(sablon, new TijBasvuruOneriJuriler()));
                 }
-                var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(tijBasvuru.EnstituKod).ToInt(0);
+                var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyar(tijBasvuru.EnstituKod).ToInt(0);
                 //var tezOneriIkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(tijBasvuru.EnstituKod).ToInt(0);
                 //var tezOneriToplamSavunmaHakkiAyKriter = tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
                 var tezOneriSavunmaSonTarih = tijBasvuruOneri.SozluSinavBasariTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
@@ -875,8 +875,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else sablonModel.Add(new KeyValuePair<YaziSablonlari, TijBasvuruOneriJuriler>(sablon, new TijBasvuruOneriJuriler()));
                 }
-                var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(tijBasvuru.EnstituKod).ToInt(0);
-                var tezOneriIkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(tijBasvuru.EnstituKod).ToInt(0);
+                var tezOneriIlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyar(tijBasvuru.EnstituKod).ToInt(0);
+                var tezOneriIkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyar(tijBasvuru.EnstituKod).ToInt(0);
                 var tezOneriToplamSavunmaHakkiAyKriter = tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
                 var tezOneriSavunmaSonTarihSavunmaNo1 = tijBasvuruOneri.SozluSinavBasariTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
                 var tezOneriSavunmaSonTarihSavunmaNo2 = tijBasvuruOneri.SozluSinavBasariTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);

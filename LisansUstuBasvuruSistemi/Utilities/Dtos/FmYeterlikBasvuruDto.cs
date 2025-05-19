@@ -28,6 +28,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? YeterlikSurecID { get; set; }
         public int? OgrenimTipID { get; set; }
         public int? AnabilimDaliID { get; set; }
+        public bool? IsDanismaniOlunanOgrenciler { get; set; }
 
         public List<FrYeterlikBasvuruDto> Data { get; set; }
     }
@@ -54,6 +55,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> OnayYapmayanJuriEmails { get; set; }
         public bool IsYaziliSinaviYapildi { get; set; }
         public bool IsSozluSinaviYapildi { get; set; }
+        public bool IsDanismaniOlunanOgrenci { get; set; }
         public YeterlikBasvuru BirOncekiBasvuru { get; set; }
     }
 

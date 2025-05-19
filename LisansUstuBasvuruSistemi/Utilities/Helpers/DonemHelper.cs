@@ -101,7 +101,25 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             }
             return egitimOgretimDonemDto;
         }
-
+        public static EgitimOgretimDonemDto ToKsAkademikDonemBilgi(this DateTime date)
+        {
+            var donemId = KayitSilmeAyar
+                .GetDonemId(date, null).Value;
+            var egitimOgretimDonemDto = new EgitimOgretimDonemDto();
+            if (donemId == AkademikDonemEnum.BaharYariyili)
+            {
+                egitimOgretimDonemDto.BaslangicYil = date.Year - 1;
+                egitimOgretimDonemDto.DonemId = AkademikDonemEnum.BaharYariyili;
+                egitimOgretimDonemDto.DonemAdi = "Bahar";
+            }
+            else
+            {
+                egitimOgretimDonemDto.BaslangicYil = date.Year;
+                egitimOgretimDonemDto.DonemId = AkademikDonemEnum.GuzYariyili;
+                egitimOgretimDonemDto.DonemAdi = "Güz";
+            }
+            return egitimOgretimDonemDto;
+        }
 
         public static List<CmbStringDto> GetCmbAkademikTarih(string baslangicDonem, string bitisDonem)
         {
@@ -124,7 +142,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             int bitisDonemId = int.Parse(bitisDonem.Substring(4));
 
             // Create year-term pairs and sort them
-            var donemler = new List<KeyValuePair<int,int>>();
+            var donemler = new List<KeyValuePair<int, int>>();
 
             for (int yil = baslangicYil; yil <= bitisYil; yil++)
             {

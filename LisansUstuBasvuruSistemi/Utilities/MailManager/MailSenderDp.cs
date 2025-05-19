@@ -146,14 +146,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad+" "+ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, KullaniciId = ogrenci.KullaniciID, ToOrBcc = true } },
-                            MailSablonTipId =donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID==DonemProjesiEnstituOnayDurumEnum.RetEdildi ? MailSablonTipiEnum.DpBasvuruRetEdildiOgrenciye:MailSablonTipiEnum.DpBasvuruIptalEdildiOgrenciye
+                            MailSablonTipId =donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID==DonemProjesiEnstituOnayDurumEnum.Reddedildi ? MailSablonTipiEnum.DpBasvuruReddedildiOgrenciye:MailSablonTipiEnum.DpBasvuruIptalEdildiOgrenciye
                         },
                         new SablonMailModel
                         {
                             UnvanAdi = projeYurutucusu.Unvanlar.UnvanAdi,
                             AdSoyad = projeYurutucusu.Ad + " " + projeYurutucusu.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = projeYurutucusu.EMail, KullaniciId = projeYurutucusu.KullaniciID, ToOrBcc = true } },
-                            MailSablonTipId =donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID==DonemProjesiEnstituOnayDurumEnum.RetEdildi ? MailSablonTipiEnum.DpBasvuruRetEdildiYurutucuye:MailSablonTipiEnum.DpBasvuruIptalEdildiYurutucuye,
+                            MailSablonTipId =donemProjesiBasvuru.DonemProjesiEnstituOnayDurumID==DonemProjesiEnstituOnayDurumEnum.Reddedildi ? MailSablonTipiEnum.DpBasvuruReddedildiYurutucuye:MailSablonTipiEnum.DpBasvuruIptalEdildiYurutucuye,
                             JuriTipAdi = "Proje Yürütücüsü"
                         }
                     };
@@ -794,7 +794,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             JuriTipAdi = "Öğrenci",
                             AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = ogrenci.EMail, KullaniciId = ogrenci.KullaniciID, ToOrBcc = true } },
-                            MailSablonTipId =isEykYaOrEykDa? MailSablonTipiEnum.DpEykYaGonderimiRetEdildiOgrenciye:MailSablonTipiEnum.DpEykDaOnaylanmadiOgrenciye,
+                            MailSablonTipId =isEykYaOrEykDa? MailSablonTipiEnum.DpEykYaGonderimiReddedildiOgrenciye:MailSablonTipiEnum.DpEykDaOnaylanmadiOgrenciye,
                             Attachments = MailReportAttachment.GetDpSinavTutanagiAttachments(donemProjesiBasvuruId,false),
                         }
                     };

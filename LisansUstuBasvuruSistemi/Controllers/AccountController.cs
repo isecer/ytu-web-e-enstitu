@@ -15,8 +15,6 @@ using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Collections.Generic;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -375,7 +373,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     id = UserIdentity.Current.Id;
                 }
 
-                var mevcutKullanici = _entities.Kullanicilars.FirstOrDefault(p => (int?)p.KullaniciID == id);
+                var mevcutKullanici = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == id);
 
                 if (mevcutKullanici != null)
                 {

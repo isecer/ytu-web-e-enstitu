@@ -1,89 +1,90 @@
-﻿using Entities.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Entities.Entities;
 using System.Linq;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 {
-
     public static class DonemProjesiAyar
     {
-
-        public const string DonemProjesiDersKodu = "Dönem Projesi Ders Kodu";
-        public const string DonemProjesiBasvuruAlimiAcik = "Dönem Projesi başvurusu açık";
-        public const string DonemProjesiEykOgrenciDogrulamaAcik = "EYK işlemlerinde öğrenci doğrulaması açık";
-        public const string OgrencininBasvuruYapabilecegiDonemler = "Öğrencinin başvuru yapabileceği dönemler";
-        public const string DonemSecimiIcinBelirlenenAylarBaharDonemi = "Dönem seçimi için belirlenen aylar Bahar dönemi kabul edilecek";
-        public const string OgrencininBasvuruDonemindeAlmasiGerekenDersKodlari = "Başvuru döneminde öğrencinin OBS'de alması gereken dersler";
-        public const string SinavOnlineYapilabilsin = "Dönem Projesi sınavı online yapılabilsin";
-        public const string SinavYuzyuzeYapilabilsin = "Dönem Projesi sınavı yüz yüze yapılabilsin";
-        public const string EnFazlaTekKaynakOrani = "En fazla tek kaynak oranı";
-        public const string EnFazlaToplamKaynakOrani = "En fazla toplam kaynak oranı";
-        public const string BasariliKrediSayisi = "Başarılı kredi sayısı";
-        public const string KontrolEdilecekMinDersNotlari = "Kontrol edilecek min ders notları";
-
-
-
-        public static void SetAyarDp(string ayarAdi, string ayarDegeri, string enstituKod)
+        public class DonemProjesiAyarProperty
         {
-            using (var entities = new LubsDbEntities())
-            {
-                var ayar = entities.DonemProjesiAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
-                if (ayar != null)
-                {
-                    ayar.AyarDegeri = ayarDegeri;
-                }
-                else
-                {
-                    entities.DonemProjesiAyarlars.Add(new DonemProjesiAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
+            internal string PropertyValue { get; }
 
-                }
-                entities.SaveChanges();
+            internal DonemProjesiAyarProperty(string value)
+            {
+                PropertyValue = value;
+            }
+
+            public static implicit operator string(DonemProjesiAyarProperty property)
+            {
+                return property.PropertyValue;
             }
         }
-        public static string GetAyarDp(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
+
+        public static readonly DonemProjesiAyarProperty DonemProjesiDersKodu = new DonemProjesiAyarProperty("Dönem Projesi Ders Kodu");
+        public static readonly DonemProjesiAyarProperty DonemProjesiBasvuruAlimiAcik = new DonemProjesiAyarProperty("Dönem Projesi başvurusu açık");
+        public static readonly DonemProjesiAyarProperty DonemProjesiEykOgrenciDogrulamaAcik = new DonemProjesiAyarProperty("EYK işlemlerinde öğrenci doğrulaması açık");
+        public static readonly DonemProjesiAyarProperty OgrencininBasvuruYapabilecegiDonemler = new DonemProjesiAyarProperty("Öğrencinin başvuru yapabileceği dönemler");
+        public static readonly DonemProjesiAyarProperty DonemSecimiIcinBelirlenenAylarBaharDonemi = new DonemProjesiAyarProperty("Dönem seçimi için belirlenen aylar Bahar dönemi kabul edilecek");
+        public static readonly DonemProjesiAyarProperty OgrencininBasvuruDonemindeAlmasiGerekenDersKodlari = new DonemProjesiAyarProperty("Başvuru döneminde öğrencinin OBS'de alması gereken dersler");
+        public static readonly DonemProjesiAyarProperty SinavOnlineYapilabilsin = new DonemProjesiAyarProperty("Dönem Projesi sınavı online yapılabilsin");
+        public static readonly DonemProjesiAyarProperty SinavYuzyuzeYapilabilsin = new DonemProjesiAyarProperty("Dönem Projesi sınavı yüz yüze yapılabilsin");
+        public static readonly DonemProjesiAyarProperty EnFazlaTekKaynakOrani = new DonemProjesiAyarProperty("En fazla tek kaynak oranı");
+        public static readonly DonemProjesiAyarProperty EnFazlaToplamKaynakOrani = new DonemProjesiAyarProperty("En fazla toplam kaynak oranı");
+        public static readonly DonemProjesiAyarProperty BasariliKrediSayisi = new DonemProjesiAyarProperty("Başarılı kredi sayısı");
+        public static readonly DonemProjesiAyarProperty KontrolEdilecekMinDersNotlari = new DonemProjesiAyarProperty("Kontrol edilecek min ders notları");
+
+        public static string GetAyar(this DonemProjesiAyarProperty ayarProperty, string enstituKodu, string varsayilanDeger = "")
         {
             using (var entities = new LubsDbEntities())
             {
-                var ayar = entities.DonemProjesiAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                var ayar = entities.DonemProjesiAyarlars
+                    .FirstOrDefault(p => p.AyarAdi == ayarProperty.PropertyValue && p.EnstituKod == enstituKodu);
                 return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
         }
+         
 
         public static List<string> GetBasvuruDonemindeAlmasiGerekenDersKodlari(string enstituKod)
         {
-            var dersKodlariStr = OgrencininBasvuruDonemindeAlmasiGerekenDersKodlari.GetAyarDp(enstituKod);
-            return dersKodlariStr.IsNullOrWhiteSpace() ? new List<string>() : dersKodlariStr.Split(',').Select(s => s.Trim()).ToList();
+            var dersKodlariStr = OgrencininBasvuruDonemindeAlmasiGerekenDersKodlari.GetAyar(enstituKod);
+            return string.IsNullOrWhiteSpace(dersKodlariStr)
+                ? new List<string>()
+                : dersKodlariStr.Split(',').Select(s => s.Trim()).ToList();
         }
 
         public static List<int> GetBasvuruYapilabilecekDonemNos(string enstituKod)
         {
-            var donemNoStr = OgrencininBasvuruYapabilecegiDonemler.GetAyarDp(enstituKod);
-            if (donemNoStr.IsNullOrWhiteSpace())
-                return new List<int>();
-            return donemNoStr.Split(',').Select(s => s.Trim().ToInt().Value).ToList();
+            var donemNoStr = OgrencininBasvuruYapabilecegiDonemler.GetAyar(enstituKod);
+            return string.IsNullOrWhiteSpace(donemNoStr)
+                ? new List<int>()
+                : donemNoStr.Split(',').Select(s => s.Trim()).Select(int.Parse).ToList();
         }
+
         public static List<int> GetBaharDonemiIcinSecilenAyNos(string enstituKod)
         {
-            var ayNoStr = DonemSecimiIcinBelirlenenAylarBaharDonemi.GetAyarDp(enstituKod);
-            if (ayNoStr.IsNullOrWhiteSpace())
-                return new List<int>();
-            return ayNoStr.Split(',').Select(s => s.Trim().ToInt().Value).ToList();
+            var ayNoStr = DonemSecimiIcinBelirlenenAylarBaharDonemi.GetAyar(enstituKod);
+            return string.IsNullOrWhiteSpace(ayNoStr)
+                ? new List<int>()
+                : ayNoStr.Split(',').Select(s => s.Trim()).Select(int.Parse).ToList();
         }
+
         public static List<CmbStringDto> GetKontrolEdilecekMinDersNotlari(string enstituKod)
         {
-            var dersMinNotlariStr = KontrolEdilecekMinDersNotlari.GetAyarDp(enstituKod);
-            if (dersMinNotlariStr.IsNullOrWhiteSpace())
+            var dersMinNotlariStr = KontrolEdilecekMinDersNotlari.GetAyar(enstituKod);
+            if (string.IsNullOrWhiteSpace(dersMinNotlariStr))
                 return new List<CmbStringDto>();
-            var notlars = dersMinNotlariStr.Split(',').Select(s => s.Trim()).ToList();
-            return notlars.Select(s => new CmbStringDto
-            {
-                Value = s.Split('=')[0].Trim(),
-                Caption = s.Split('=')[1].Trim()
-            }).ToList();
+
+            return dersMinNotlariStr.Split(',')
+                .Select(s => s.Trim())
+                .Where(s => s.Contains('='))
+                .Select(s => new CmbStringDto
+                {
+                    Value = s.Split('=')[0].Trim(),
+                    Caption = s.Split('=')[1].Trim()
+                }).ToList();
         }
     }
-
-
 }
+

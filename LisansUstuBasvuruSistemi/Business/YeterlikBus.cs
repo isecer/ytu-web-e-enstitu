@@ -239,6 +239,14 @@ namespace LisansUstuBasvuruSistemi.Business
             return errorMessage;
 
         }
+        public static List<CmbBoolDto> GetCmbDanismanlikDurum(bool bosSecimVar = false)
+        {
+            var lst = new List<CmbBoolDto>();
+            if (bosSecimVar) lst.Add(new CmbBoolDto { Value = null, Caption = "" });
+            lst.Add(new CmbBoolDto { Value = true, Caption = "Danışmanlık Yaptığım Öğrenciler" });
+            lst.Add(new CmbBoolDto { Value = false, Caption = "Danışmanlık Yapmadığım Öğrenciler" }); 
+            return lst;
+        }
         public static List<CmbIntDto> GetCmbYeterlikSurecleri(string enstituKod, bool bosSecimVar = false)
         {
             var lst = new List<CmbIntDto>();
@@ -270,9 +278,28 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var entities = new LubsDbEntities())
             {
-                var yeterliAnabilimDaliIds = entities.YeterlikBasvurus
-                    .Where(p => p.YeterlikSureci.EnstituKod == enstituKod &&
-                                p.YeterlikSurecID == (basvuruSurecId ?? p.YeterlikSurecID)).Select(s => s.Programlar.AnabilimDaliID).Distinct().ToList();
+                List<int> yeterliAnabilimDaliIds;
+                var tumOgrenciGormeYetkisi = RoleNames.YeterlikTumBasvurulariGormeYetkisi.InRoleCurrent();
+
+                if (!tumOgrenciGormeYetkisi)
+                {
+                    var danismanYetkisi = RoleNames.YeterlikDanismanYetkisi.InRoleCurrent();
+                    var programYetkisi = RoleNames.YeterlikProgramYetkisi.InRoleCurrent(); 
+
+                    var yetkiliProgramlar = UserIdentity.Current.SelectedEnstituProgramKod(enstituKod);
+                    yeterliAnabilimDaliIds = entities.YeterlikBasvurus
+                        .Where(p => p.YeterlikSureci.EnstituKod == enstituKod &&
+                                    p.YeterlikSurecID == (basvuruSurecId ?? p.YeterlikSurecID) &&
+                                    ((programYetkisi && yetkiliProgramlar.Contains(p.ProgramKod)) ||
+                                     (danismanYetkisi && p.TezDanismanID == UserIdentity.Current.Id))).Select(s => s.Programlar.AnabilimDaliID).Distinct().ToList();
+                }
+                else
+                {
+                    yeterliAnabilimDaliIds = entities.YeterlikBasvurus
+                        .Where(p => p.YeterlikSureci.EnstituKod == enstituKod &&
+                                    p.YeterlikSurecID == (basvuruSurecId ?? p.YeterlikSurecID))
+                        .Select(s => s.Programlar.AnabilimDaliID).Distinct().ToList();
+                }
 
                 var anabilimDallaris = entities.AnabilimDallaris.Where(p => yeterliAnabilimDaliIds.Contains(p.AnabilimDaliID))
                     .Select(s => new { s.AnabilimDaliID, s.AnabilimDaliAdi }).OrderBy(o => o.AnabilimDaliAdi).ToList();
