@@ -19,6 +19,8 @@
     var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true);
     var onayBekleyen = Model.MezuniyetBasvurulariTezDosyalariDtos.FirstOrDefault(p => !p.IsOnaylandiOrDuzeltme.HasValue);
     var frmId = "TezDosyaEklePost_" + Model.MezuniyetBasvurulariID;
+
+    var showUzatmaTalepMezunDurum = !Model.IsMezunOldu.HasValue || (Model.IsMezunOldu.HasValue && Model.CiltliTezTeslimUzatmaTalebi == true && Model.CiltliTezTeslimUzatmaTalebiDanismanOnay.HasValue);
 }
 
 
@@ -394,7 +396,7 @@
                 </tbody>
             </table>
         </div>
-        @if ((Model.DefaultMaxTezTeslimSonTarih.HasValue && Model.DefaultMaxTezTeslimSonTarih > Model.TezTeslimSonTarih && Model.DefaultMaxTezTeslimSonTarih > DateTime.Now.Date) || Model.CiltliTezTeslimUzatmaTalebi.HasValue)
+        @if (showUzatmaTalepMezunDurum && ((Model.DefaultMaxTezTeslimSonTarih.HasValue && Model.DefaultMaxTezTeslimSonTarih > Model.TezTeslimSonTarih && Model.DefaultMaxTezTeslimSonTarih > DateTime.Now.Date) || Model.CiltliTezTeslimUzatmaTalebi.HasValue))
         {
             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8pt;padding:6px 10px;min-height:30px;">
                 <table style="width:100%;">
@@ -458,7 +460,7 @@
                                             <td class="CaptionTd">Danışman Talep Onay Durumu</td>
                                             <td class="CaptionTd">:</td>
                                             <td class="ValueTd">
-                                                @if (!Model.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue && (kayitYetki || Model.TezDanismanID == UserIdentity.Current.Id) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                                                @if (!Model.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue && (kayitYetki || Model.TezDanismanID == UserIdentity.Current.Id) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi && !Model.IsMezunOldu.HasValue)
                                                 {
                                                     <table>
                                                         <tr>
