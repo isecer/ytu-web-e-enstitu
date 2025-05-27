@@ -61,5 +61,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 
         public const byte DonemProjesiSinaviDegerlendirmeFormu = 80;
 
+        public static byte KayitSilmeTalepFormu = 90;
     }
 }

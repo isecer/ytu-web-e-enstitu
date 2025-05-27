@@ -28,7 +28,9 @@ namespace Entities.Entities
         public Nullable<int> KayitOgretimYiliBaslangic { get; set; }
         public Nullable<int> KayitOgretimYiliDonemID { get; set; }
         public Nullable<System.DateTime> KayitTarihi { get; set; }
-        public System.DateTime YeterlikSozluSinavTarihi { get; set; }
+        public string CepTel { get; set; }
+        public string EPostaAdresi { get; set; }
+        public Nullable<int> TezDanismanID { get; set; }
         public string NufusKayitOrnekDosyaAdi { get; set; }
         public string NufusKayitOrnekDosyaYolu { get; set; }
         public bool IsTaahhutOnay { get; set; }

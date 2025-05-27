@@ -65,7 +65,7 @@
                             <!-- DEFAULT LIST GROUP -->
                             <div class="panel panel-default">
                                 <div class="panel-heading padding-0">
-                                    <h3 class="panel-title" style="font-size:7pt;">@cat.Caption</h3> 
+                                    <h3 class="panel-title" style="font-size:7pt;">@(cat.Caption.Length>30?cat.Caption.Substring(0,29)+"...":cat.Caption)</h3> 
                                     <ul class="panel-controls">
                                         <li>
                                             Tümü:

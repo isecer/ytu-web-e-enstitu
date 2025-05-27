@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string BasvuruIslemleriMenuName = "Lisansüstü Başvuru";
 
         [Menu(MenuID = 82300, MenuAdi = TdoIslemleriMenuName, MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 12)]
-        public const string TdoIslemleriMenuName = "Tez Danışmanı / Eş Danışmanı Öneri";
+        public const string TdoIslemleriMenuName = "Tez Danışman/Eş Danışman/Tez Konu Değişiklik Öneri";
 
         [Menu(MenuID = 82500, MenuAdi = YeterlikIslemleriMenuName, MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 13)]
         public const string YeterlikIslemleriMenuName = "Yeterlik İşlemleri";

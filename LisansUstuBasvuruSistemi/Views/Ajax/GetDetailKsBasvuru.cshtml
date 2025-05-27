@@ -105,7 +105,7 @@
         </tr>
 
     </table>
-     
+
     <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;">
         <table style="width: 100%;">
             <tr>
@@ -114,7 +114,7 @@
             <tr>
                 <td style="padding-left: 10px; text-align: left;">
 
-                    <table style="width: 100%;"> 
+                    <table style="width: 100%;">
                         <tr>
                             <td class="CaptionTd" width="150">Taahhüt Metni</td>
                             <td class="CaptionTd" width="10">:</td>
@@ -124,16 +124,16 @@
                             <td class="CaptionTd">Onay Durumu</td>
                             <td class="CaptionTd">:</td>
                             <td class="ValueTd">
-                                  <div class="task-footer" style="padding-top:0pt;padding-bottom:0px;color:green;">
-                                        <div class="pull-left"><span class="fa fa-check-circle-o"></span> @Model.Ad @Model.Soyad tarafından  @Model.BasvuruTarihi.ToFormatDateAndTime() tarihinde onaylandı.</div>
-                                    </div> 
+                                <div class="task-footer" style="padding-top:0pt;padding-bottom:0px;color:green;">
+                                    <div class="pull-left"><span class="fa fa-check-circle-o"></span> @Model.Ad @Model.Soyad tarafından  @Model.BasvuruTarihi.ToFormatDateAndTime() tarihinde onaylandı.</div>
+                                </div>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
-    </div> 
+    </div>
     <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="harcBirimiOnayPanel_@Model.UniqueID">
         <table style="width: 100%;">
             <tr>
@@ -393,6 +393,17 @@
                     }
                     @if (Model.EYKYaGonderildi == true)
                     {
+
+                        <tr>
+                            <td class="CaptionTd">Kayıt Silme Talep Formu</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">
+                                <a href="javascript:void(0);" onclick="YeniDialogBB('Kayıt Silme Talep Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.KayitSilmeTalepFormu&UniqueID=@Model.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                    <i class="fa fa-print"></i> FR-0000 Kayıt Silme Talep Formunu İndir
+                                </a>
+                            </td>
+                        </tr>
+
                         if (eykYaHazrilamaYetkisi && !Model.EYKDaOnaylandi.HasValue)
                         {
                             <tr>
@@ -516,6 +527,7 @@
 
                         }
                     }
+
                 </table>
             </div>
         }
@@ -570,7 +582,7 @@
             }
         });
     }
-    
+
     function EykOnayChange(sndr, uniqueId) {
         var val = $(sndr).val().toLowerCase();
         if (val == 'false') {

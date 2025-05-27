@@ -95,12 +95,33 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.BelgeId.HasValue) q = q.Where(p => p.BelgeTalepID == model.BelgeId.Value);
             if (model.BelgeDurumId.HasValue) q = q.Where(p => p.BelgeDurumID == model.BelgeDurumId.Value);
             if (model.OgretimYili.IsNullOrWhiteSpace() == false)
-            {
+            { 
                 var oy = model.OgretimYili.Split('/').Select(s=>s.ToInt(0)).ToList();
                 var bas = oy[0];
                 var bit = oy[1];
                 var done = oy[2];
                 q = q.Where(p => p.OgretimYiliBaslangic == bas && p.OgretimYiliBitis == bit && p.DonemID == done);
+            }
+
+            if (model.BaslangicTarihi.HasValue || model.BitisTarihi.HasValue)
+            {
+                q = q.Where(x =>
+                    (x.BelgeDurumID == BelgeTalepDurumEnum.Hazirlaniyor ||
+                     x.BelgeDurumID == BelgeTalepDurumEnum.Hazirlandi ||
+                     x.BelgeDurumID == BelgeTalepDurumEnum.Verildi ||
+                     x.BelgeDurumID == BelgeTalepDurumEnum.Kapatildi ||
+                     x.BelgeDurumID == BelgeTalepDurumEnum.IptalEdildi)  
+                        ?
+                        (
+                            (!model.BaslangicTarihi.HasValue || x.IslemTarihi >= model.BaslangicTarihi.Value) &&
+                            (!model.BitisTarihi.HasValue || x.IslemTarihi <= model.BitisTarihi.Value)
+                        )
+                        :
+                        (
+                            (!model.BaslangicTarihi.HasValue || x.TalepTarihi >= model.BaslangicTarihi.Value) &&
+                            (!model.BitisTarihi.HasValue || x.TalepTarihi <= model.BitisTarihi.Value)
+                        )
+                );
             }
 
             if (model.BuGunkuKayitlar.IsNullOrWhiteSpace() == false)

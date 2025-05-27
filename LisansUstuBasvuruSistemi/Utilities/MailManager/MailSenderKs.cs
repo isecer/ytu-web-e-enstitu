@@ -4,14 +4,10 @@ using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
-using System.Data.Entity;
-using System.Threading.Tasks;
 
 namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 {

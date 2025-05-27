@@ -33,6 +33,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
+using LisansUstuBasvuruSistemi.Raporlar.KayitSilme;
 using LisansUstuBasvuruSistemi.Raporlar.LUB;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
 using LisansUstuBasvuruSistemi.WebServiceData.PersisService;
@@ -3608,6 +3609,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         rpr2.DisplayName = rpr2.DisplayName;
                         rpr.Pages.AddRange(rpr2.Pages);
                     }
+                    rprX = rpr;
+                }
+                else if (raporTipi == RaporTipiEnum.KayitSilmeTalepFormu)
+                {
+                    var uniqueId = new Guid(Request["UniqueID"]);
+                    var rapor = _entities.KayitSilmeBasvurus.First(p => p.UniqueID == uniqueId);
+
+                    var rpr = new RprKayitSilmeTalepFormu_FR_0000(rapor.KayitSilmeBasvuruID);
+                    rpr.CreateDocument();
+                    rpr.DisplayName = rpr.DisplayName; 
                     rprX = rpr;
                 }
             }

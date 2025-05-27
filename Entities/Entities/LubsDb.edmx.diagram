@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3d3f865a364a4319a8ffae5f3f523605" Name="Diagram1" ZoomLevel="35">
+      <Diagram DiagramId="3d3f865a364a4319a8ffae5f3f523605" Name="Diagram1" ZoomLevel="52">
         <EntityTypeShape EntityType="LubsDbModel.AlanTipleri" Width="1.5" PointX="13.5" PointY="40.375" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.AlesTipleri" Width="1.5" PointX="5.25" PointY="44" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.AnabilimDaliYeterlikKomiteUyeleri" Width="1.5" PointX="10.5" PointY="53.25" IsExpanded="false" />
@@ -542,7 +542,7 @@
         <AssociationConnector Association="LubsDbModel.KullaniciRolleri" />
         <AssociationConnector Association="LubsDbModel.MenuRollleri" />
         <EntityTypeShape EntityType="LubsDbModel.vW_ProgramBasvuruSonucSayisal" Width="1.5" PointX="7.375" PointY="8.75" />
-        <EntityTypeShape EntityType="LubsDbModel.KayitSilmeBasvuru" Width="1.5" PointX="25.75" PointY="59.625" />
+        <EntityTypeShape EntityType="LubsDbModel.KayitSilmeBasvuru" Width="1.5" PointX="25.75" PointY="59.5" />
         <AssociationConnector Association="LubsDbModel.FK_KayitSilmeBasvuru_Donemler" />
         <AssociationConnector Association="LubsDbModel.FK_KayitSilmeBasvuru_Enstituler" />
         <AssociationConnector Association="LubsDbModel.FK_KayitSilmeBasvuru_KayitSilmeDurumlari" />

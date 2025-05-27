@@ -24,15 +24,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.PanelToggled = panelToggled;
             var selectedHarcUserId = KayitSilmeAyar.HarcBirimiOnaySorumlusuKullaniciId.GetAyar(enstituKod).ToIntObj();
             var selectedKutuphaneUserId = KayitSilmeAyar.KutuphaneBirimiOnaySorumlusuKullaniciId.GetAyar(enstituKod).ToIntObj();
-            var kullaniciIds = new List<int?> { selectedKutuphaneUserId, selectedHarcUserId }
-                .Where(p => p.HasValue).Select(s => s.Value).ToList();
-            var selectedOnaySorumlulari = _entities.Kullanicilars.Where(p => kullaniciIds.Contains(p.KullaniciID))
-                .ToDictionary(
-                    t => (t.KullaniciID == selectedHarcUserId
-                        ? KayitSilmeAyar.HarcBirimiOnaySorumlusuKullaniciId
-                        : KayitSilmeAyar.KutuphaneBirimiOnaySorumlusuKullaniciId).ToString(),
-                    t => t.Unvanlar.UnvanAdi + " " + t.Ad + " " + t.Soyad);
+
+            var selectedUserIds = new List<int?> { selectedHarcUserId, selectedKutuphaneUserId }
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .ToList();
+
+            var users = _entities.Kullanicilars
+                .Where(k => selectedUserIds.Contains(k.KullaniciID))
+                .ToList();
+
+            var harcUser = users.FirstOrDefault(u => u.KullaniciID == selectedHarcUserId);
+            var kutuphaneUser = users.FirstOrDefault(u => u.KullaniciID == selectedKutuphaneUserId);
+
+            var selectedOnaySorumlulari = new Dictionary<string, string>
+            {
+                [KayitSilmeAyar.HarcBirimiOnaySorumlusuKullaniciId.ToString()] = harcUser != null
+                    ? $"{harcUser.Unvanlar.UnvanAdi} {harcUser.Ad} {harcUser.Soyad}"
+                    : string.Empty,
+
+                [KayitSilmeAyar.KutuphaneBirimiOnaySorumlusuKullaniciId.ToString()] = kutuphaneUser != null
+                    ? $"{kutuphaneUser.Unvanlar.UnvanAdi} {kutuphaneUser.Ad} {kutuphaneUser.Soyad}"
+                    : string.Empty
+            };
+
             ViewBag.SelectedOnaySorumlulari = selectedOnaySorumlulari;
+
             return View(data);
         }
         [HttpPost]
@@ -120,15 +137,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.PanelToggled = toggled;
             var selectedHarcUserId = KayitSilmeAyar.HarcBirimiOnaySorumlusuKullaniciId.GetAyar(enstituKod).ToIntObj();
             var selectedKutuphaneUserId = KayitSilmeAyar.KutuphaneBirimiOnaySorumlusuKullaniciId.GetAyar(enstituKod).ToIntObj();
-            var kullaniciIds = new List<int?> { selectedKutuphaneUserId, selectedHarcUserId }
-                .Where(p => p.HasValue).Select(s => s.Value).ToList();
-            var selectedOnaySorumlulari = _entities.Kullanicilars.Where(p => kullaniciIds.Contains(p.KullaniciID))
-                .ToDictionary(
-                    t => (t.KullaniciID == selectedHarcUserId
-                        ? KayitSilmeAyar.HarcBirimiOnaySorumlusuKullaniciId
-                        : KayitSilmeAyar.KutuphaneBirimiOnaySorumlusuKullaniciId).ToString(),
-                    t => t.Unvanlar.UnvanAdi + " " + t.Ad + " " + t.Soyad);
+
+            var selectedUserIds = new List<int?> { selectedHarcUserId, selectedKutuphaneUserId }
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .ToList();
+
+            var users = _entities.Kullanicilars
+                .Where(k => selectedUserIds.Contains(k.KullaniciID))
+                .ToList();
+
+            var harcUser = users.FirstOrDefault(u => u.KullaniciID == selectedHarcUserId);
+            var kutuphaneUser = users.FirstOrDefault(u => u.KullaniciID == selectedKutuphaneUserId);
+
+            var selectedOnaySorumlulari = new Dictionary<string, string>
+            {
+                [KayitSilmeAyar.HarcBirimiOnaySorumlusuKullaniciId.ToString()] = harcUser != null
+                    ? $"{harcUser.Unvanlar.UnvanAdi} {harcUser.Ad} {harcUser.Soyad}"
+                    : string.Empty,
+
+                [KayitSilmeAyar.KutuphaneBirimiOnaySorumlusuKullaniciId.ToString()] = kutuphaneUser != null
+                    ? $"{kutuphaneUser.Unvanlar.UnvanAdi} {kutuphaneUser.Ad} {kutuphaneUser.Soyad}"
+                    : string.Empty
+            };
+
             ViewBag.SelectedOnaySorumlulari = selectedOnaySorumlulari;
+
             return View(data);
         }
     }

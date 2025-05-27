@@ -106,53 +106,109 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static CmbIntDto GetBelgeVerilmeBilgisi(int belgeTalepId, string islemTipListeAdi)
         {
-            var html = "";
             var mdl = new CmbIntDto();
             using (var entities = new LubsDbEntities())
             {
                 var belge = entities.BelgeTalepleris.First(p => p.BelgeTalepID == belgeTalepId);
-                if (belge.BelgeDurumID == BelgeTalepDurumEnum.TalepEdildi || belge.BelgeDurumID == BelgeTalepDurumEnum.Hazirlaniyor || belge.BelgeDurumID == BelgeTalepDurumEnum.Hazirlandi)
+                var html = "";
+                var saatAralik = (belge.TeslimBaslangicSaat.HasValue && belge.TeslimBitisSaat.HasValue)
+                    ? belge.TeslimBaslangicSaat.Value.ToString(@"hh\:mm") + "-" + belge.TeslimBitisSaat.Value.ToString(@"hh\:mm")
+                    : "";
+
+                var durum = "(" + belge.BelgeDurumlari?.DurumAdi + ")";
+
+                if (belge.BelgeDurumID == BelgeTalepDurumEnum.TalepEdildi ||
+                    belge.BelgeDurumID == BelgeTalepDurumEnum.Hazirlaniyor ||
+                    belge.BelgeDurumID == BelgeTalepDurumEnum.Hazirlandi)
                 {
+                    var bugun = DateTime.Now.TodateToShortDate();
                     var verilecekTarih = belge.TalepTarihi.AddDays(belge.EklenecekGun).TodateToShortDate();
-                    var days = (verilecekTarih - DateTime.Now.TodateToShortDate());
-                    var day = Convert.ToInt32(days.Days);
-                    var gelecek = (days.Days > 0);
-                    mdl.Value = days.Days;
-                    var saatAralik = belge.TeslimBaslangicSaat.Value.ToString(@"hh\:mm") + "-" + belge.TeslimBitisSaat.Value.ToString(@"hh\:mm");
-                    var durum = "(" + belge.BelgeDurumlari.DurumAdi + ")";
-                    if (verilecekTarih == DateTime.Now.TodateToShortDate())
+                    var fark = (verilecekTarih - bugun);
+                    var gelecek = fark.TotalDays > 0;
+                    var gunFarki = Convert.ToInt32(fark.Days);
+                    mdl.Value = gunFarki;
+
+                    int yil, ay, gun;
+                    GetYearMonthDayDifference(bugun, verilecekTarih, out yil, out ay, out gun);
+                    var sureMetni = FormatSureMetni(yil, ay, gun);
+
+                    if (verilecekTarih == bugun)
                     {
-                        html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToFormatDate() + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>Bu Gün Verilecek " + durum + "</span>";
+                        html += $"<span style='font-size:9pt;font-weight:bold;'>{verilecekTarih.ToFormatDate()} {saatAralik}</span> <br /><span style='font-size:8.5pt;'>Bu Gün Verilecek {durum}</span>";
                     }
-                    else if (day == 1)
+                    else if (gunFarki == 1)
                     {
-                        html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToFormatDate() + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>Yarın Verilecek " + durum + "</span>";
+                        html += $"<span style='font-size:9pt;font-weight:bold;'>{verilecekTarih.ToFormatDate()} {saatAralik}</span> <br /><span style='font-size:8.5pt;'>Yarın Verilecek {durum}</span>";
                     }
                     else
                     {
+                        html += $"<span style='font-size:9pt;font-weight:bold;'>{verilecekTarih.ToFormatDate()} {saatAralik}</span><br />";
                         if (gelecek)
-                        {
-                            html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToFormatDate() + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>" + day + " Gün Sonra Verilecek " + durum + "</span>";
-                        }
+                            html += $"<span style='font-size:8.5pt;'>{sureMetni} Sonra Verilecek {durum}</span>";
                         else
-                        {
-                            html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToFormatDate() + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>" + Math.Abs(day) + " Gün Önce Verilmeliydi" + durum + "</span>";
-
-                        }
+                            html += $"<span style='font-size:8.5pt;'>{sureMetni} Önce Verilmeliydi {durum}</span>";
                     }
                 }
                 else if (belge.BelgeDurumID == BelgeTalepDurumEnum.Verildi)
                 {
-                    html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToFormatDateAndTime() + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde Verildi</span>";
-
+                    html += $"<span style='font-size:9pt;font-weight:bold;'>{belge.IslemTarihi.ToFormatDateAndTime()}</span> <br /><span style='font-size:8.5pt;'>Tarihinde Verildi</span>";
                 }
                 else
                 {
-                    html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToFormatDateAndTime() + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde " + islemTipListeAdi + "</span>";
+                    html += $"<span style='font-size:9pt;font-weight:bold;'>{belge.IslemTarihi.ToFormatDateAndTime()}</span> <br /><span style='font-size:8.5pt;'>Tarihinde {islemTipListeAdi}</span>";
                 }
+
                 mdl.Caption = html;
                 return mdl;
             }
+        }
+
+        private static void GetYearMonthDayDifference(DateTime start, DateTime end, out int years, out int months, out int days)
+        {
+            if (end < start)
+            {
+                var tempStart = start;
+                start = end;
+                end = tempStart;
+            }
+
+            years = end.Year - start.Year;
+            months = end.Month - start.Month;
+            days = end.Day - start.Day;
+
+            if (days < 0)
+            {
+                months--;
+                days += DateTime.DaysInMonth(end.AddMonths(-1).Year, end.AddMonths(-1).Month);
+            }
+
+            if (months < 0)
+            {
+                years--;
+                months += 12;
+            }
+        }
+
+        private static string FormatSureMetni(int yil, int ay, int gun)
+        {
+            if (yil >= 5)
+            {
+                // 5 yıl ve üzeri sadece yıl göster
+                return $"{yil} Yıl";
+            } 
+            if (yil >= 1)
+            {
+                // 1 yıldan büyük ama 5 yıldan küçükse yıl ve ay göster
+                if (ay > 0)
+                    return $"{yil} Yıl {ay} Ay";
+                return $"{yil} Yıl";
+            }
+            // 1 yıldan küçükse yıl, ay, gün göster
+            var parts = new List<string>();
+            if (ay > 0) parts.Add($"{ay} Ay");
+            if (gun > 0) parts.Add($"{gun} Gün");
+
+            return string.Join(" ", parts).Trim();
         }
 
         public static List<CmbIntDto> GetCmbBelgeTipleri(bool bosSecimVar = false, int? ogrenimDurumId = null, string enstituKod = null)

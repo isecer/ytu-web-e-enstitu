@@ -23,7 +23,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
-                    </h3> 
+                    </h3>
                 </div>
                 <div class="panel-body">
                     <table class="table table-hover" style="table-layout:fixed;">
@@ -37,6 +37,7 @@
                                 </div>
                             </td>
                             <td>
+
                                 <div class="form-group">
                                     <label class="col-md-4 col-xs-5 control-label">Belge Tipi</label>
                                     <div class="col-md-8 col-xs-7">
@@ -48,11 +49,19 @@
                         <tr>
                             <td>
                                 <div class="form-group">
-                                    <label class="col-md-4 col-xs-5 control-label">Öğrenim Durumu</label>
+                                    <label class="col-md-4 col-xs-5  control-label">Başlangıç / Bitiş Tarihi</label>
                                     <div class="col-md-8 col-xs-7">
-                                        @Html.DropDownList("OgrenimDurumID", null, new { @class = "form-control" })
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BaslangicTarihi.ToFormatDateInput()" name="BaslangicTarihi" id="BaslangicTarihi"></td>
+                                                <td style="width:5px;text-align:center;">/</td>
+                                                <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitisTarihi.ToFormatDateInput()" name="BitisTarihi" id="BitisTarihi"></td>
+                                            </tr>
+                                        </table>
+
                                     </div>
                                 </div>
+
                             </td>
                             <td>
                                 <div class="form-group">
@@ -66,11 +75,23 @@
                         <tr>
                             <td>
                                 <div class="form-group">
-                                    <label class="col-md-4 col-xs-5 control-label">Öğrenim Seviyesi</label>
+                                    <label class="col-md-4 col-xs-5 control-label">Öğrenim Drm/Seviye</label>
                                     <div class="col-md-8 col-xs-7">
-                                        @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td>
+                                                    @Html.DropDownList("OgrenimDurumID", null, new { @class = "form-control" })
+                                                </td>
+                                                <td style="width:5px;text-align:center;">/</td>
+                                                <td>
+                                                    @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
+                                                </td>
+                                            </tr>
+                                        </table>
+
                                     </div>
                                 </div>
+
                             </td>
                             <td>
                                 <div class="form-group">
@@ -152,18 +173,18 @@
                         <tbody>
                             @if (Model.RowCount > 0)
                             {
-                                int rowIndex = Model.StartRowIndex;  
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.BelgeTalepleriDtos)
                                 {
-                                    rowIndex++; 
+                                    rowIndex++;
                                     <tr class="mColor_@item.BelgeTalepID" style="color:@item.Color">
                                         <td>
-                                            <table>  
+                                            <table>
                                                 <tr>
                                                     <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.BelgeTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.BelgeTalepID')">
+                                                            <li id="iShow_@item.BelgeTalepID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.BelgeTalepID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
@@ -194,7 +215,7 @@
                                         </td>
                                         <td>
                                             @{
-                                                var vBil = BelgeTalepBus.GetBelgeVerilmeBilgisi(item.BelgeTalepID,item.DurumListeAdi);
+                                                var vBil = BelgeTalepBus.GetBelgeVerilmeBilgisi(item.BelgeTalepID, item.DurumListeAdi);
                                                 string tColor = "style=cursor:pointer;color:" + (vBil.Value < 0 ? "maroon;" : item.Color);
                                                 string vClass = (vBil.Value < 0 ? "fa fa-warning" : item.ClassName);
                                                 <table style="width:100%;table-layout:fixed;">
@@ -293,7 +314,7 @@
                 data: { id: id },
                 success: function (result) {
                     if (result.IsSuccess) {
-                        $(sndr).closest("tr").remove(); 
+                        $(sndr).closest("tr").remove();
                     }
                     toastr[result.IsSuccess ? "success" : "error"](result.Messages[0], "Belge Talebi Silme İşlemi");
                 },
@@ -343,7 +364,16 @@
 }
 <script type="text/javascript">
 
-
+    $('#BaslangicTarihi').datetimepicker({
+        lang: 'tr',
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+    $('#BitisTarihi').datetimepicker({
+        lang: 'tr',
+        timepicker: false,
+        format: 'Y-m-d'
+    });
     function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;

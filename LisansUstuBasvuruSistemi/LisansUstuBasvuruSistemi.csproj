@@ -296,6 +296,12 @@
     <Compile Include="Raporlar\KayitSilme\RprKsTutanak.Designer.cs">
       <DependentUpon>RprKsTutanak.cs</DependentUpon>
     </Compile>
+    <Compile Include="Raporlar\KayitSilme\RprKayitSilmeTalepFormu_FR_0000.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\KayitSilme\RprKayitSilmeTalepFormu_FR_0000.Designer.cs">
+      <DependentUpon>RprKayitSilmeTalepFormu_FR_0000.cs</DependentUpon>
+    </Compile>
     <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_Detay.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -4905,6 +4911,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\KayitSilme\RprKsTutanak.resx">
       <DependentUpon>RprKsTutanak.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\KayitSilme\RprKayitSilmeTalepFormu_FR_0000.resx">
+      <DependentUpon>RprKayitSilmeTalepFormu_FR_0000.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\LUB\raporLUB.resx">
       <DependentUpon>raporLUB.cs</DependentUpon>

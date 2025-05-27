@@ -1117,7 +1117,9 @@
           <Property Name="KayitOgretimYiliBaslangic" Type="int" />
           <Property Name="KayitOgretimYiliDonemID" Type="int" />
           <Property Name="KayitTarihi" Type="datetime" />
-          <Property Name="YeterlikSozluSinavTarihi" Type="date" Nullable="false" />
+          <Property Name="CepTel" Type="nvarchar" MaxLength="50" />
+          <Property Name="EPostaAdresi" Type="nvarchar" MaxLength="100" />
+          <Property Name="TezDanismanID" Type="int" />
           <Property Name="NufusKayitOrnekDosyaAdi" Type="nvarchar" MaxLength="1024" />
           <Property Name="NufusKayitOrnekDosyaYolu" Type="nvarchar(max)" />
           <Property Name="IsTaahhutOnay" Type="bit" Nullable="false" />
@@ -18849,7 +18851,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="KayitOgretimYiliBaslangic" Type="Int32" />
           <Property Name="KayitOgretimYiliDonemID" Type="Int32" />
           <Property Name="KayitTarihi" Type="DateTime" Precision="3" />
-          <Property Name="YeterlikSozluSinavTarihi" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CepTel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EPostaAdresi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TezDanismanID" Type="Int32" />
           <Property Name="NufusKayitOrnekDosyaAdi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="NufusKayitOrnekDosyaYolu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsTaahhutOnay" Type="Boolean" Nullable="false" />
@@ -22399,7 +22403,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IsTaahhutOnay" ColumnName="IsTaahhutOnay" />
                 <ScalarProperty Name="NufusKayitOrnekDosyaYolu" ColumnName="NufusKayitOrnekDosyaYolu" />
                 <ScalarProperty Name="NufusKayitOrnekDosyaAdi" ColumnName="NufusKayitOrnekDosyaAdi" />
-                <ScalarProperty Name="YeterlikSozluSinavTarihi" ColumnName="YeterlikSozluSinavTarihi" />
+                <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />
+                <ScalarProperty Name="EPostaAdresi" ColumnName="EPostaAdresi" />
+                <ScalarProperty Name="CepTel" ColumnName="CepTel" />
                 <ScalarProperty Name="KayitTarihi" ColumnName="KayitTarihi" />
                 <ScalarProperty Name="KayitOgretimYiliDonemID" ColumnName="KayitOgretimYiliDonemID" />
                 <ScalarProperty Name="KayitOgretimYiliBaslangic" ColumnName="KayitOgretimYiliBaslangic" />

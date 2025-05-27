@@ -21,6 +21,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ProgramKod { get; set; }
         public string BuGunkuKayitlar { get; set; }
         public IEnumerable<FrBelgeTalepleriDto> BelgeTalepleriDtos { get; set; }
+        public DateTime? BaslangicTarihi { get; set; }
+        public DateTime? BitisTarihi { get; set; }
     }
     public class FrBelgeTalepleriDto : BelgeTalepleri
     { 

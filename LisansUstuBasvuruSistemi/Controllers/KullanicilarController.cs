@@ -351,7 +351,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "Adres" });
                 }
 
-            if (isOgrenci && !kModel.YtuOgrencisi)
+            if (isOgrenci && !kModel.YtuOgrencisi && kModel.IsAktif)
             {
                 mmMessage.Messages.Add("Seçilen kullanıcı tipi için Ytü öğrencisi olduğunuzu belirtmek zorunludur.");
                 mmMessage.MessagesDialog.Add(new MrMessage

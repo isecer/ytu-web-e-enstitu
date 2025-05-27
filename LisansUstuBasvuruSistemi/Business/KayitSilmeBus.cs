@@ -42,6 +42,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var basvuranKullaniciId = kayitSilmeBasvuru?.KullaniciID ?? UserIdentity.Current.Id;
                 var basvuranKullanici = entities.Kullanicilars.First(f => f.KullaniciID == basvuranKullaniciId);
+                KullanicilarBus.OgrenciBilgisiGuncelleObs(basvuranKullaniciId);
 
                 var basvuruDuzeltmeyetkisi = RoleNames.KayitSilmeBasvuruDuzeltmeYetkisi.InRoleCurrent();
                 var enstituBasvuruOnayYetkisi = RoleNames.KayitSilmeGelenBasvurular.InRoleCurrent();
@@ -306,6 +307,11 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 // model.YeterlikSozluSinavTarihi= eklenecek mi ?
                 var donemInfo = (kayitSilmeBasvuru?.BasvuruTarihi ?? DateTime.Now.Date).ToKsAkademikDonemBilgi();
+                var tezDanismanId =
+                    (kullanici.OgrenimTipKod.IsDoktora() || kullanici.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans)
+                        ? kullanici.DanismanID
+                        : null;
+
                 if (kayitSilmeBasvuru != null)
                 {
 
@@ -319,6 +325,9 @@ namespace LisansUstuBasvuruSistemi.Business
                     kayitSilmeBasvuru.KayitOgretimYiliBaslangic = kullanici.KayitYilBaslangic.Value;
                     kayitSilmeBasvuru.KayitOgretimYiliDonemID = kullanici.KayitDonemID.Value;
                     kayitSilmeBasvuru.KayitTarihi = kullanici.KayitTarihi.Value;
+                    kayitSilmeBasvuru.CepTel = kullanici.CepTel;
+                    kayitSilmeBasvuru.EPostaAdresi = kullanici.EMail;
+                    kayitSilmeBasvuru.TezDanismanID = tezDanismanId;
                     kayitSilmeBasvuru.IslemTarihi = DateTime.Now;
                     kayitSilmeBasvuru.IslemYapanIP = UserIdentity.Ip;
                     kayitSilmeBasvuru.IslemYapanID = UserIdentity.Current.Id;
@@ -327,7 +336,6 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     entities.SaveChanges();
                     LogIslemleri.LogEkle("KayitSilmeBasvuru", LogCrudType.Update, kayitSilmeBasvuru.ToJson());
-                    SendMailBasvuruYapildi(kayitSilmeBasvuru.KayitSilmeBasvuruID);
                     return kayitSilmeBasvuru.UniqueID;
 
                 }
@@ -349,6 +357,9 @@ namespace LisansUstuBasvuruSistemi.Business
                     KayitTarihi = kullanici.KayitTarihi.Value,
                     NufusKayitOrnekDosyaAdi = model.NufusKayitOrnekDosyaAdi,
                     NufusKayitOrnekDosyaYolu = model.NufusKayitOrnekDosyaYolu,
+                    CepTel = kullanici.CepTel,
+                    EPostaAdresi = kullanici.EMail,
+                    TezDanismanID = tezDanismanId,
                     IsTaahhutOnay = model.IsTaahhutOnay,
                     IslemTarihi = DateTime.Now,
                     IslemYapanIP = UserIdentity.Ip,
@@ -356,6 +367,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 });
                 entities.SaveChanges();
+                SendMailBasvuruYapildi(kayitSilmeBasvuru.KayitSilmeBasvuruID);
                 return kayitSilmeBasvuru.UniqueID;
 
             }
