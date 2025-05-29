@@ -5,7 +5,6 @@
 @model KmMezuniyetBasvuru
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-
     var mmMessage = (MmMessage)ViewBag._MmMessage;
     var istezBasliklariAyni = Model.TezBaslikTr == Model.TezBaslikEn;
     var bsvDurum = (MezuniyetYayinKontrolDurumDto)ViewBag.MezuniyetYayinKontrolDurumu;
