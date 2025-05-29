@@ -113,16 +113,12 @@
                                                             }
                                                             else if (item.InpType == "select2User")
                                                             {
-
-
                                                                 string kullaniciText;
                                                                 selectedOnaySorumlulari.TryGetValue(item.AyarAdi, out kullaniciText);
 
-
-                                                                <input type="text" class="form-control kullanici-select" name="AyarDegeri" style="width: 100%;"
+                                                                <input type="text" class="form-control kullanici-select-multiple" name="AyarDegeri" style="width: 100%;"
                                                                        data-initial-value="@item.AyarDegeri"
                                                                        data-kullanici-text="@kullaniciText" />
-
                                                             }
                                                             else if (item.InpType == "date")
                                                             {
@@ -174,47 +170,71 @@
         $(pvalFielt).val(chk);
     }
 
-
     $(document).ready(function () {
-    $(".kullanici-select").each(function () {
-        var el = $(this);
-        var initialVal = el.data("initial-value");
-        var kullaniciText = el.data("kullanici-text");
+        $(".kullanici-select-multiple").each(function () {
+            var el = $(this); 
+            var initialVal = el.data("initial-value"); // Virgülle ayrılmış ID'ler
+            var kullaniciText = el.data("kullanici-text"); // Virgülle ayrılmış isimler
 
-        $(el).select2({
-            tags: true,
-            tokenSeparators: [",", " "],
-            minimumInputLength: 0,
-            maximumSelectionSize: 1,
-            multiple: false,
-            ajax: {
-                url: '@Url.Action("GetFilteredPersonel", "Ajax")',
-                dataType: "json",
-                data: function (term, page) {
-                    return {
-                        'term': term
-                    };
+            $(el).select2({
+                tags: true,
+                tokenSeparators: [",", " "],
+                minimumInputLength: 0,
+                maximumSelectionSize: 10,
+                multiple: true,
+                ajax: {
+                    url: '@Url.Action("GetFilteredPersonel", "Ajax")',
+                    dataType: "json",
+                    data: function (term, page) {
+                        return {
+                            'term': term
+                        };
+                    },
+                    results: function (data, page) {
+                        return {
+                            results: data
+                        };
+                    }
                 },
-                results: function (data, page) {
-                    return {
-                        results: data
-                    };
+                formatResult: function (result) {
+                    var returnhtml =
+                        "<table style='margin:0px;border-top:none;font-size:8pt;text-align:left;'>" +
+                        "<tr>" +
+                        "<td width='30'><img src='" + result.ResimAdi + "' style='width:25px;height:25px;cursor:pointer;' class='img-circle img-thumbnail'></td>" +
+                        "<td>" + result.text + "</td>" +
+                        "</tr>" +
+                        "</table>";
+                    return returnhtml;
                 }
-            },
-            formatResult: function (result) {
-                var returnhtml =
-                    "<table style='margin:0px;border-top:none;font-size:8pt;text-align:left;'>" +
-                    "<tr>" +
-                    "<td width='30'><img src='" + result.ResimAdi + "' style='width:25px;height:25px;cursor:pointer;' class='img-circle img-thumbnail'></td>" +
-                    "<td>" + result.text + "</td>" +
-                    "</tr>" +
-                    "</table>";
-                return returnhtml;
-            }, 
-        }); 
-        if (initialVal && kullaniciText) {  
-            $(el).select2('data', { id: initialVal, text: kullaniciText }); 
-        }
+            }); 
+            // Mevcut değerleri yükle
+            if (initialVal && initialVal.toString().trim() !== '') {
+                var idArray = initialVal.toString().split(',');
+                var textArray = kullaniciText ? kullaniciText.toString().split(', ') : [];
+
+                var initialData = [];
+                for (var i = 0; i < idArray.length; i++) {
+                    var id = idArray[i].trim();
+                    var text = textArray[i] ? textArray[i].trim() : 'ID: ' + id;
+                    if (id !== '') {
+                        initialData.push({ id: id, text: text });
+                    }
+                }
+
+                if (initialData.length > 0) {
+                    $(el).select2('data', initialData);
+                }
+            }
+
+            // Seçim değiştiğinde gizli input'u güncelle
+            $(el).on('change', function () {
+                var selectedIds = $(this).val();
+                if (selectedIds && selectedIds.length > 0) {
+                    $(this).val(selectedIds.join(','));
+                } else {
+                    $(this).val('');
+                }
+            });
+        });
     });
-});
 </script>

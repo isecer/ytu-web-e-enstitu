@@ -504,12 +504,12 @@
                     {
                         var roles = roller.Where(p => p.Value.Kategori == cat.Caption).ToArray();
                         var allcheckedCnt = roles.Count(a => a.Checked.Value);
+                        var capt = (cat.Caption.Length > 30 ? cat.Caption.Substring(0, 29) + "..." : cat.Caption);
                         <div class="col-md-6" style="margin:0px;padding:2px;">
-
-                            <!-- DEFAULT LIST GROUP -->
+                             
                             <div class="panel panel-default">
                                 <div class="panel-heading padding-0">
-                                    <h3 class="panel-title" style="font-size:9pt;">@cat.Caption (@(allcheckedCnt > 0 ? allcheckedCnt + " yetki" : "Yetki yok"))</h3>
+                                    <h3 class="panel-title" style="font-size:9pt;">@capt (@(allcheckedCnt > 0 ? allcheckedCnt + " yetki" : "Yetki yok"))</h3>
                                 </div>
                                 <div class="panel-body padding-0" style="height: 70px; overflow: auto;">
                                     <table class="chks" style="width:100%;table-layout:fixed;">

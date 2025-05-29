@@ -67,6 +67,15 @@
                                         <td>
                                             @Html.DropDownList("MesajYili", null, new { @class = "form-control", style = "padding:0px;", onchange = "$('#frmMesajlar').submit();" })
                                         </td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td><input class="form-control input-medium" autocomplete="off" size="10" type="text" placeholder="Başlangıç Tarihi" value="@Model.BaslangicTarihi.ToFormatDateInput()" name="BaslangicTarihi" id="BaslangicTarihi"></td>
+                                                    <td><input class="form-control input-medium" autocomplete="off" size="10" type="text" placeholder="Bitiş Tarihi" value="@Model.BitisTarihi.ToFormatDateInput()" name="BitisTarihi" id="BitisTarihi"></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+
                                     </tr>
                                 </table>
                             </td>
@@ -290,6 +299,16 @@
     }
 </div>
 <script type="text/javascript">
+    $('#BaslangicTarihi').datetimepicker({
+        lang: 'tr',
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+    $('#BitisTarihi').datetimepicker({
+        lang: 'tr',
+        timepicker: false,
+        format: 'Y-m-d'
+    });
     function senMx(id, mID) {
         var _konu = $('#konu_' + mID).val();
         mGonder(id, _konu, '', mID);

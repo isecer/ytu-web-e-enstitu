@@ -58,6 +58,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 filteredMesajsQuery = filteredMesajsQuery.Where(p => p.Tarih.Year == model.MesajYili);
             if (!model.Konu.IsNullOrWhiteSpace())
                 filteredMesajsQuery = filteredMesajsQuery.Where(p => p.Aciklama.Contains(model.Konu));
+            if (model.BaslangicTarihi.HasValue || model.BitisTarihi.HasValue)
+            {
+                if (model.BaslangicTarihi.HasValue && model.BitisTarihi.HasValue)
+                {
+                    filteredMesajsQuery = filteredMesajsQuery
+                        .Where(p => DbFunctions.TruncateTime(p.SonMesajTarihi) >= DbFunctions.TruncateTime(model.BaslangicTarihi.Value) &&
+                                    DbFunctions.TruncateTime(p.SonMesajTarihi) <= DbFunctions.TruncateTime(model.BitisTarihi.Value));
+                }
+                else if (model.BaslangicTarihi.HasValue)
+                {
+                    filteredMesajsQuery = filteredMesajsQuery
+                        .Where(p => DbFunctions.TruncateTime(p.SonMesajTarihi) >= DbFunctions.TruncateTime(model.BaslangicTarihi.Value));
+                }
+                else if (model.BitisTarihi.HasValue)
+                {
+                    filteredMesajsQuery = filteredMesajsQuery
+                        .Where(p => DbFunctions.TruncateTime(p.SonMesajTarihi) <= DbFunctions.TruncateTime(model.BitisTarihi.Value));
+                }
+            }
 
             var q = from s in filteredMesajsQuery
                     join ens in _entities.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }

@@ -37,13 +37,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstituYetkileri = UserIdentity.Current.EnstituKods;
 
-            var selectedHarcUserId = KayitSilmeAyar.HarcBirimiOnaySorumlusuKullaniciId.GetAyar(enstituKod).ToIntObj();
-            var isBirimOnaySorumlusu = selectedHarcUserId.HasValue && selectedHarcUserId == UserIdentity.Current.Id;
+            var selectedHarcUserIds = KayitSilmeAyar.GetHarcBirimiOnaySorumlusuKullaniciIds();
+            var isBirimOnaySorumlusu = selectedHarcUserIds.Contains(UserIdentity.Current.Id);
             if (!isBirimOnaySorumlusu)
             {
-                var selectedKutuphaneUserId = KayitSilmeAyar.KutuphaneBirimiOnaySorumlusuKullaniciId.GetAyar(enstituKod).ToIntObj();
+                var selectedKutuphaneUserIds = KayitSilmeAyar.GetKutuphaneBirimiOnaySorumlusuKullaniciIds();
 
-                isBirimOnaySorumlusu = selectedKutuphaneUserId.HasValue && selectedHarcUserId == UserIdentity.Current.Id;
+                isBirimOnaySorumlusu = selectedKutuphaneUserIds.Contains(UserIdentity.Current.Id);
                 if (isBirimOnaySorumlusu)
                     enstituYetkileri.AddRange(new List<string>
                     {

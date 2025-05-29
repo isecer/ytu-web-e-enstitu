@@ -142,6 +142,7 @@
 
         public const int TdoEsDanismanOnerisiYapildiOgrenci = 128;
         public const int TdoEsDanismanOnerisiYapildiDanisman = 129;
+        public const int TdoEsDanismanOnerisiEykYaGonderimiReddedildiOgrenciDanisman = 170;
         public const int TdoEsDanismanOnerisiEykDaOnaylandiOgrenci = 130;
         public const int TdoEsDanismanOnerisiEykDaOnaylandiDanisman = 131;
         public const int TdoEsDanismanOnerisiEykDaReddedildiOgrenciDanisman = 132;
@@ -149,10 +150,13 @@
 
         public const int TdoEsDanismanDegisikligiYapildiDanisman = 134;
         public const int TdoEsDanismanDegisikligiYapildiOgrenci = 135;
+        public const int TdoEsDanismanDegisikligiEykYaGonderimiReddedildiOgrenciDanisman = 171;
         public const int TdoEsDanismanDegisikligiEykDaOnaylandiEsDanisman = 136;
         public const int TdoEsDanismanDegisikligiEykDaOnaylandiOgrenci = 137;
         public const int TdoEsDanismanDegisikligiEykDaOnaylandiDanisman = -1;
         public const int TdoEsDanismanDegisikligiEykDaReddedildiOgrenciDanisman = 138;
+
+
 
         public const int YeterlikBasvuruOnaylandiOgrenciye = 250;
         public const int YeterlikBasvuruOnaylandiDanismana = 251;

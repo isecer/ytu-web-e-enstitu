@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Entities.Entities;
 using System.Linq;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
@@ -57,6 +58,19 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
             }
 
             return null;
+        }
+
+        public static List<int> GetHarcBirimiOnaySorumlusuKullaniciIds()
+        {
+            var strIds = GetAyar(HarcBirimiOnaySorumlusuKullaniciId, EnstituKodlariEnum.FenBilimleri);
+            if (strIds.IsNullOrWhiteSpace()) return new List<int>();
+            return strIds.Split(',').Select(s => s.ToInt() ?? 0).Where(p => p > 0).ToList();
+        }
+        public static List<int> GetKutuphaneBirimiOnaySorumlusuKullaniciIds()
+        {
+            var strIds = GetAyar(KutuphaneBirimiOnaySorumlusuKullaniciId, EnstituKodlariEnum.FenBilimleri);
+            if (strIds.IsNullOrWhiteSpace()) return new List<int>();
+            return strIds.Split(',').Select(s => s.ToInt() ?? 0).Where(p => p > 0).ToList();
         }
     }
 

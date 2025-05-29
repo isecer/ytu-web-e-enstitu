@@ -20,6 +20,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AdSoyad { get; set; }
         public int? MesajYili { get; set; }
         public IEnumerable<FrMesajlarDto> MesajlarDtos { get; set; }
+        public DateTime? BaslangicTarihi { get; set; }
+        public DateTime? BitisTarihi { get; set; }
     }
 
     public class FrMesajlarDto : Mesajlar

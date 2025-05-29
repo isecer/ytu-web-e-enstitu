@@ -778,7 +778,10 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             return MailSenderTdo.SendMailTdoEsEykOnay(tDoBasvuruEsDanismanId, isOnayOrRed);
         }
-
+        public static MmMessage SendMailTdoEsEykYaGonderimRet(int tDoBasvuruEsDanismanId)
+        {
+            return MailSenderTdo.SendMailTdoEsEykYaGonderimRet(tDoBasvuruEsDanismanId);
+        }
 
         public static SonTezBaslikInfo GetSonTezBaslik(string ogrenciNo)
         {

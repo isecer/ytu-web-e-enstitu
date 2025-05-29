@@ -2587,8 +2587,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("EYK'ya gönderilmeme sebebi açıklaması giriniz.");
             }
+        
             if (!mMessage.Messages.Any())
             {
+                var sendMail = tdoBasvuruEsDanis.EYKYaGonderildi != eykYaGonderildi && eykYaGonderildi == false;
 
 
                 tdoBasvuruEsDanis.EYKYaGonderildi = eykYaGonderildi;
@@ -2601,6 +2603,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.SaveChanges();
                 mMessage.IsSuccess = true;
                 LogIslemleri.LogEkle("TDOBasvuruEsDanisman", LogCrudType.Update, tdoBasvuruEsDanis.ToJson());
+                if (sendMail)
+                {
+                    TdoBus.SendMailTdoEsEykYaGonderimRet(tdoBasvuruEsDanismanId);
+                }
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;

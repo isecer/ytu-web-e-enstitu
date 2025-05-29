@@ -13,17 +13,17 @@
     var tezBaslikTrReadOnly = true;
     var tezBaslikEnReadOnly = true;
 
-    if (Model.IsTezDiliTr.HasValue)
-    {
-        if (!Model.IsTezDiliTr.Value)
-        {
-            tezBaslikTrReadOnly = !istezBasliklariAyni && !Model.TezBaslikTr.IsNullOrWhiteSpace();
-        }
-        if (Model.IsTezDiliTr.Value)
-        {
-            tezBaslikEnReadOnly = !istezBasliklariAyni && !Model.TezBaslikEn.IsNullOrWhiteSpace();
-        }
-    }
+    //if (Model.IsTezDiliTr.HasValue)
+    //{
+    //    if (!Model.IsTezDiliTr.Value)
+    //    {
+    //        tezBaslikTrReadOnly = !istezBasliklariAyni && !Model.TezBaslikTr.IsNullOrWhiteSpace();
+    //    }
+    //    if (Model.IsTezDiliTr.Value)
+    //    {
+    //        tezBaslikEnReadOnly = !istezBasliklariAyni && !Model.TezBaslikEn.IsNullOrWhiteSpace();
+    //    }
+    //}
 
     var yayinInfos = MezuniyetBus.YayinKontrol(Model.MezuniyetSurecID, Model.KullaniciID, Model.MezuniyetBasvurulariID);
 }
