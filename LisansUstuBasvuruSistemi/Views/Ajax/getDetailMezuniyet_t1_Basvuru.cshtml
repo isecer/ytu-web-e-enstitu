@@ -387,7 +387,7 @@
                     <tr>
                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book fa-lg" style="font-size:14pt;"></i> Yayın Bilgisi</td>
                         <td style="font-size:9pt; border-bottom:1px solid;">
-                            @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
+                            @if (false && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                             {
                                 <a style="float:right;" href="javascript:void(0);" onclick="YeniDialogBB('Mezuniyet Yayın Şartı Onayı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetBasvuruRaporu&MezuniyetBasvurulariID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
                                     <i class="fa fa-file-pdf-o"></i>  Yayın Onayını İndir
@@ -525,8 +525,8 @@
                                         </td>
                                     </tr>
                                 }
-                                <tr id="bdurumRowID_@Model.MezuniyetBasvurulariID" class="@(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi || Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KaydiSilindi ? "" : "hide")">
-                                    <td class="CaptionTd">Açıklama</td>
+                                <tr id="bdurumRowID_@Model.MezuniyetBasvurulariID" class="">
+                                    <td class="CaptionTd">Açıklama / Not</td>
                                     <td class="CaptionTd">:</td>
                                     <td class="ValueTd">
                                         @if (sonucGirisSureciAktif && Model.GelenBasvuru && kayitYetki)

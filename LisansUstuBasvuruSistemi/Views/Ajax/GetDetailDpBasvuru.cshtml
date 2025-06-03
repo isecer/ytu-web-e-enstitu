@@ -43,8 +43,9 @@
 {
     var item = Model.DonemProjesiBasvurus.First(p => p.DonemProjesiJurileris.Any(a => a.UniqueID == Model.DegerlendirenUniqueID));
     var itemJr = item.DonemProjesiJurileris.First(a => a.UniqueID == Model.DegerlendirenUniqueID);
-    var showDegerlendirme = !itemJr.DonemProjesiJuriOnayDurumID.HasValue;
-    var isDegerlendirmeAcik = showDegerlendirme || degerlendirmeDuzeltmeYetki;
+    var showDegerlendirme = !itemJr.DonemProjesiJuriOnayDurumID.HasValue; 
+    var isDegerlendirmeAcik = showDegerlendirme  || degerlendirmeDuzeltmeYetki;
+
     var isDanismanDegerlendirmeYapti = item.DonemProjesiJurileris.Any(a => a.IsTezDanismani && a.DonemProjesiJuriOnayDurumID.HasValue);
     if (showDegerlendirme && !itemJr.IsTezDanismani)
     {
@@ -242,7 +243,6 @@
                                                                     <td>
                                                                         <input type="file" name="IntihalDosya" id="intihalDosya_@itemJr.UniqueID">
                                                                     </td>
-
                                                                 }
                                                             </tr>
                                                         </table>
@@ -720,6 +720,10 @@ else
                                                                     var openRow = isDanismani && itemJr.IsTezDanismani;
                                                                     var openDegerlendirme = inxRw == 1 && srTalebiYapildi && !item.EYKYaGonderildi.HasValue && ((openRow && isDanismani && !itemJr.DonemProjesiJuriOnayDurumID.HasValue) || degerlendirmeDuzeltmeYetki);
                                                                     var sendLink = inxRw == 1 && srTalebiYapildi && !item.EYKYaGonderildi.HasValue && (isDanismani && !itemJr.IsTezDanismani && item.DonemProjesiJurileris.Count != item.DonemProjesiJurileris.Count(c => c.DonemProjesiJuriOnayDurumID.HasValue) || (degerlendirmeDuzeltmeYetki));
+                                                                    var isDanismanVeBaskaJuriYokAlt = itemJr.IsTezDanismani &&
+                                                                                                      !item.DonemProjesiJurileris.Any(a => !a.IsTezDanismani && a.DonemProjesiJuriOnayDurumID.HasValue)
+                                                                                                      && itemJr.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili;
+
                                                                     <tr>
                                                                         <td>
 
@@ -833,6 +837,7 @@ else
                                                                                     </tr>
                                                                                     @if (itemJr.IsTezDanismani)
                                                                                     {
+                                                                                    
                                                                                         <tr class="RwDpDetay_@itemJr.DonemProjesiJuriID @(itemJr.DonemProjesiJuriOnayDurumID==DonemProjesiJuriOnayDurumEnum.Basarili  ? "" : "hide")">
                                                                                             <td class="CaptionTd ctWidth" width="220">En Fazla Tek Kaynak Oranı</td>
                                                                                             <td class="CaptionTd" width="10">:</td>
@@ -861,7 +866,7 @@ else
                                                                                                 }
                                                                                             </td>
                                                                                         </tr>
-                                                                                        <tr class="RwDpDetay_@itemJr.DonemProjesiJuriID @(itemJr.DonemProjesiJuriOnayDurumID==DonemProjesiJuriOnayDurumEnum.Basarili  ? "" : "hide")">
+                                                                                        <tr class="RwDpDetay_@itemJr.DonemProjesiJuriID @(isDanismanVeBaskaJuriYokAlt  ? "" : "hide")">
                                                                                             <td class="CaptionTd ctWidth" width="220">Benzerlik Raporu Pdf Dosyası</td>
                                                                                             <td class="CaptionTd" width="10">:</td>
                                                                                             <td>
@@ -873,12 +878,13 @@ else
                                                                                                                 <a href="javascript:void(0);" title="Yüklenen pdf dosyasını aç" onclick="PopupCenter('@Url.CustomUrlContent(item.IntihalRaporuDosyaYolu)','@item.IntihalRaporuDosyaAdi',800,600);"><i class="fa fa-file-pdf-o" style="color:green;font-size:11pt;"></i> @item.IntihalRaporuDosyaAdi</a>
                                                                                                             }
                                                                                                         </td>
-                                                                                                        @if (openDegerlendirme)
+
+
+                                                                                                        @if (openDegerlendirme || isDanismanVeBaskaJuriYokAlt)
                                                                                                         {
                                                                                                             <td>
                                                                                                                 <input type="file" name="IntihalDosya" id="intihalDosya_@itemJr.UniqueID">
                                                                                                             </td>
-
                                                                                                         }
                                                                                                     </tr>
                                                                                                 </table>
@@ -900,10 +906,10 @@ else
                                                                                             }
                                                                                         </td>
                                                                                     </tr>
-
-                                                                                    @if (openDegerlendirme)
+                                                                                 
+                                                                                    @if (openDegerlendirme || isDanismanVeBaskaJuriYokAlt)
                                                                                     {
-                                                                                        if (isDanismani && itemJr.IsTezDanismani && !itemJr.DonemProjesiJuriOnayDurumID.HasValue)
+                                                                                        if (openDegerlendirme && isDanismani && itemJr.IsTezDanismani && !itemJr.DonemProjesiJuriOnayDurumID.HasValue)
                                                                                         {
                                                                                             <tr>
                                                                                                 <td colspan="3" class="ValueTd" style="color:maroon;">

@@ -2152,7 +2152,20 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     dct.Add(new CmbIntDto { Value = item.MezuniyetYayinKontrolDurumID, Caption = item.MezuniyetYayinKontrolDurumAdi });
                 }
+                dct.Insert(bosSecimVar ? 3 : 2, new CmbIntDto { Value = MezuniyetYayinKontrolDurumuEnum.DanismanOnayiBekleniyor, Caption = "Danışman Onayı Bekleniyor" });
+                dct.Insert(bosSecimVar ? 4 : 3, new CmbIntDto { Value = MezuniyetYayinKontrolDurumuEnum.EnstituOnayiBekleniyor, Caption = "Enstitü Onayı Bekleniyor" });
             }
+
+            return dct;
+
+        }
+        public static List<CmbBoolDto> GetCmbMezuniyetYayinKontrolAciklamaDurumListe(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbBoolDto>();
+            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
+            dct.Add(new CmbBoolDto { Value = true, Caption = "Açıklama Girilenler" });
+            dct.Add(new CmbBoolDto { Value = false, Caption = "Açıklama Girilmeyenler" });
+
 
             return dct;
 

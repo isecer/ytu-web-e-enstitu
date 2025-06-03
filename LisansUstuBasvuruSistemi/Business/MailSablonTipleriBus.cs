@@ -23,13 +23,17 @@ namespace LisansUstuBasvuruSistemi.Business
 
         }
 
-        public static List<CmbIntDto> GetCmbMailSablonTipleri(bool? sistemMaili = null, bool bosSecimVar = false, bool? isOlusturulmayanlar = null)
+        public static List<CmbIntDto> GetCmbMailSablonTipleri(string enstituKod, bool? sistemMaili = null, bool bosSecimVar = false, bool? isOlusturulmayanlar = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var entities = new LubsDbEntities())
             {
-                var data = entities.MailSablonTipleris.Where(p => isOlusturulmayanlar == true ? !p.MailSablonlaris.Any() : p.SistemMaili == (sistemMaili ?? p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
+                var qdata = entities.MailSablonTipleris.AsQueryable();
+                if (sistemMaili.HasValue) qdata = qdata.Where(p => p.SistemMaili == sistemMaili.Value);
+                if (isOlusturulmayanlar.HasValue && isOlusturulmayanlar == true)
+                    qdata = qdata.Where(p => p.MailSablonlaris.All(a => a.EnstituKod != enstituKod));
+                var data = qdata.OrderBy(o => o.SablonTipAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MailSablonTipID, Caption = item.SablonTipAdi });

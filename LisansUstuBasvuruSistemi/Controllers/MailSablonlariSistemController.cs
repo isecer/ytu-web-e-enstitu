@@ -68,13 +68,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.MailSablonlariDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true), "Value", "Caption", model.MailSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id, string ekd)
         {
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var mmMessage = new MmMessage();
             ViewBag.MmMessage = mmMessage;
             var model = new MailSablonlari();
@@ -87,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var sEnstituKod = enstKods.Count == 1 ? enstKods.First() : EnstituBus.GetSelectedEnstitu(ekd);
             ViewBag.SablonTipi = _entities.MailSablonTipleris.FirstOrDefault(p => p.MailSablonTipID == model.MailSablonTipID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true, !(id > 0)), "Value", "Caption", model.MailSablonTipID);
+            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(enstituKod, true, true, !(id > 0)), "Value", "Caption", model.MailSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -95,8 +95,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Kayit(MailSablonlari kModel, List<string> ekAdi, List<HttpPostedFileBase> dosyaEki, List<int?> mailSablonlariEkiId)
+        public ActionResult Kayit(MailSablonlari kModel, List<string> ekAdi, List<HttpPostedFileBase> dosyaEki, List<int?> mailSablonlariEkiId, string ekd)
         {
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var mmMessage = new MmMessage();
             mailSablonlariEkiId = mailSablonlariEkiId ?? new List<int?>();
             ekAdi = ekAdi ?? new List<string>();
@@ -207,7 +208,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = mmMessage;
             ViewBag.SablonTipi = _entities.MailSablonTipleris.FirstOrDefault(p => p.MailSablonTipID == kModel.MailSablonTipID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true, kModel.MailSablonTipID <= 0), "Value", "Caption", kModel.MailSablonTipID);
+            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(enstituKod, true, true, kModel.MailSablonTipID <= 0), "Value", "Caption", kModel.MailSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DevExpress.XtraPrinting.BarCode;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -125,7 +126,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MezuniyetSuresiGun = mOt.SinavUzatmaSinavAlmaSuresiMaxAy,
                         EYKTarihi = s.EYKTarihi,
                         EYKSayisi = s.EYKSayisi,
-                        MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Select(sy => sy.MezuniyetYayinTurID).ToList(),
+                        MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == s.MezuniyetBasvurulariID).Select(sy => sy.MezuniyetYayinTurID).ToList(),
+                        
                         FormNo = jOf != null ? jOf.UniqueID : "",
                         MezuniyetJuriOneriFormu = jOf,
                         CiltliTezTeslimUzatmaTalebi = s.CiltliTezTeslimUzatmaTalebi,
@@ -179,9 +181,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (model.MezuniyetYayinKontrolDurumID.HasValue)
             {
-                q = q.Where(p => p.MezuniyetYayinKontrolDurumID == model.MezuniyetYayinKontrolDurumID);
+                if (model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.DanismanOnayiBekleniyor)
+                {
+                    q = q.Where(p => p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi && !p.IsDanismanOnay.HasValue);
+                }
+                else if (model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.EnstituOnayiBekleniyor)
+                {
+                    q = q.Where(p => p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Onaylandi && p.IsDanismanOnay == true);
+                }
+                else q = q.Where(p => p.MezuniyetYayinKontrolDurumID == model.MezuniyetYayinKontrolDurumID);
             }
-
+            if (model.IsMezuniyetYayinKontrolAciklamasiVar.HasValue)
+            {
+                q = model.IsMezuniyetYayinKontrolAciklamasiVar.Value ?
+                    q.Where(p => p.MezuniyetYayinKontrolDurumAciklamasi != null && p.MezuniyetYayinKontrolDurumAciklamasi.Trim() != "") :
+                    q.Where(p => p.MezuniyetYayinKontrolDurumAciklamasi == null || p.MezuniyetYayinKontrolDurumAciklamasi.Trim() == "");
+            }
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod);
             if (model.IsTezDiliTr.HasValue) q = q.Where(p => p.IsTezDiliTr == model.IsTezDiliTr);
             if (model.JuriOneriFormuDurumuID.HasValue)
@@ -296,6 +311,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var gv = new GridView();
                 var qExp = q.ToList();
+                const int batchSize = 1000;
+                var basvuruIds = qExp.Select(x => x.MezuniyetBasvurulariID).ToList();
+                var yayinlar = new Dictionary<int, string>();
+                for (int i = 0; i < basvuruIds.Count; i += batchSize)
+                {
+                    var batch = basvuruIds.Skip(i).Take(batchSize).ToList();
+
+                    var batchYayinlar = (from q1 in _entities.MezuniyetBasvurulariYayins
+                            join qx in _entities.MezuniyetYayinTurleris on q1.MezuniyetYayinTurID equals qx.MezuniyetYayinTurID
+                            where batch.Contains(q1.MezuniyetBasvurulariID)
+                            select new
+                            {
+                                q1.MezuniyetBasvurulariID,
+                                YayinBilgisi = q1.YayinBasligi + " (" + qx.MezuniyetYayinTurAdi + ")"
+                            })
+                        .ToList()
+                        .GroupBy(x => x.MezuniyetBasvurulariID)
+                        .ToDictionary(g => g.Key, g => string.Join(", ", g.Select(x => x.YayinBilgisi)));
+
+                    foreach (var kvp in batchYayinlar)
+                    {
+                        yayinlar[kvp.Key] = kvp.Value;
+                    }
+                }
                 gv.DataSource = (from s in qExp
                                  join td in _entities.Kullanicilars on s.TezDanismanID equals td.KullaniciID
                                  select new
@@ -320,6 +359,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      UMakaleSayisi = s.MBYayinTurIDs.Count(p => p == 4),
                                      UABildiriSayisi = s.MBYayinTurIDs.Count(p => p == 3),
                                      UAMakaleSayisi = s.MBYayinTurIDs.Count(p => p == 5),
+                                     // Yayınları virgülle ayrılmış string olarak al
+                                     Yayinlar = yayinlar.ContainsKey(s.MezuniyetBasvurulariID)
+                                               ? yayinlar[s.MezuniyetBasvurulariID]
+                                               : "",
                                      s.MezuniyetYayinKontrolDurumAdi,
                                      EYKTarihi = s.EYKTarihi != null ? s.EYKTarihi.Value.ToFormatDate() : "",
                                      JOFTezbasligiDegisti = s.MezuniyetJuriOneriFormu != null ? (s.MezuniyetJuriOneriFormu.IsTezBasligiDegisti == true ? "Değişti" : "Değişmedi") : "-",
@@ -358,6 +401,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
 
             ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
+            ViewBag.IsMezuniyetYayinKontrolAciklamasiVar = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinKontrolAciklamaDurumListe(true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
             ViewBag.JuriOneriFormuDurumuID = new SelectList(MezuniyetBus.GetCmbJuriOneriFormuDurumu(true), "Value", "Caption", model.JuriOneriFormuDurumuID);
             ViewBag.CiltliTezTeslimUzatmaTalepDurumuID = new SelectList(MezuniyetBus.GetCmbCiltliTezTeslimUzatmaTalepDurumu(true), "Value", "Caption", model.CiltliTezTeslimUzatmaTalepDurumuID);
             ViewBag.KayitDonemi = new SelectList(MezuniyetBus.GetCmbMezuniyetKayitDonemleri(enstituKod, model.MezuniyetSurecID, true), "Value", "Caption", model.KayitDonemi);
@@ -550,7 +594,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (ogrenimTipKrt.ToplamKaynakOrani.HasValue) mBasvur.ToplamKaynakOrani = toplamKaynakOrani;
 
                 mBasvur.MezuniyetYayinKontrolDurumID = mezuniyetYayinKontrolDurumId.Value;
-                mBasvur.MezuniyetYayinKontrolDurumAciklamasi = mezuniyetYayinKontrolDurumId != MezuniyetYayinKontrolDurumuEnum.KabulEdildi ? mezuniyetYayinKontrolDurumAciklamasi : null;
+                mBasvur.MezuniyetYayinKontrolDurumAciklamasi = mezuniyetYayinKontrolDurumAciklamasi;
                 mBasvur.YayinKontrolKabulTaahhutEdildi = yayinKontrolKabulTaahhutEdildi;
                 mBasvur.IslemTarihi = DateTime.Now;
                 mBasvur.IslemYapanID = UserIdentity.Current.Id;
@@ -2953,7 +2997,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         pr.ProgramAdi,
                         DanismanAdSoyad = s.TezDanismanUnvani + " " + s.TezDanismanAdi,
                         BasariliOlunanSinavTarihi = srT.Tarih,
-                        mOt.TezTeslimSuresiAy, 
+                        mOt.TezTeslimSuresiAy,
                         s.CiltliTezTeslimUzatmaTalebiDanismanOnay,
                         s.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih,
                         s.CiltliTezTeslimUzatmaTalebiEykDaOnay,
@@ -2962,7 +3006,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IsMezunOldu,
                         FiterTarih = ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi ? s.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih : s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi
                     };
-            if (ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi)   
+            if (ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi)
             {
                 q = q.Where(p =>
                     p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true &&
@@ -3009,7 +3053,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 worksheet.Cells[currentRow, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
                 worksheet.Cells[currentRow, 1].Style.Font.Bold = true;
                 worksheet.Cells[currentRow, 1].Style.Font.Size = 14;
-                worksheet.Cells[currentRow, 1].Style.WrapText = true;  
+                worksheet.Cells[currentRow, 1].Style.WrapText = true;
                 worksheet.Row(currentRow).Height = 160;
 
                 // Başlık satırı için boşluk bırak

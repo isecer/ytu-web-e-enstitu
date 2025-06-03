@@ -1166,7 +1166,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                var donemProjesiJuri = _entities.DonemProjesiJurileris.FirstOrDefault(p => p.UniqueID == uniqueId);
+                var juriler = _entities.DonemProjesiJurileris.ToList();
+                var donemProjesiJuri = juriler.FirstOrDefault(p => p.UniqueID == uniqueId);
 
                 if (donemProjesiJuri == null)
                 {
@@ -1192,9 +1193,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else if (!degerlendirmeDuzeltmeYetki && donemProjesiJuri.DonemProjesiJuriOnayDurumID.HasValue)
                     {
-                        mMessage.IsSuccess = true;
-                        mMessage.Messages.Add("<span style='color:maroon;'>Değerlendirme işlemini daha önceden zaten yaptınız!</span>");
-                    }
+                        // Danışman daha önce başarılı seçmişse ve başka değerlendiren yoksa sadece dosya yükleyebilir
+                        var isDanismanBasariliVeDigerYok = donemProjesiJuri.IsTezDanismani &&
+                                                           donemProjesiJuri.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili &&
+                                                           !donemProjesiBasvuru.DonemProjesiJurileris.Any(a => !a.IsTezDanismani && a.DonemProjesiJuriOnayDurumID.HasValue);
+                        if (isDanismanBasariliVeDigerYok)
+                        {
+                            donemProjesiJuriOnayDurumId = donemProjesiJuri.DonemProjesiJuriOnayDurumID;
+                            aciklama = donemProjesiJuri.Aciklama;
+                            tekKaynakOrani = donemProjesiBasvuru.TekKaynakOrani;
+                            toplamKaynakOrani = donemProjesiBasvuru.ToplamKaynakOrani;
+                        }
+                        else 
+                        {
+                            mMessage.IsSuccess = true;
+                            mMessage.Messages.Add("<span style='color:maroon;'>Değerlendirme işlemini daha önceden zaten yaptınız!</span>");
+                        }
+                        // isDanismanBasariliVeDigerYok true ise else bloğuna geçer ve dosya yükleme yapabilir
+                    } 
                     else
                     {
 
@@ -1353,8 +1369,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     _entities.SaveChanges();
                                 }
                             }
-                        }
-                        else mMessage.Messages.Add("Değerlendirme işlemi tamamlandı.");
+                        } 
 
                         var donemProjesiJurileris = donemProjesiBasvuru.DonemProjesiJurileris;
                         var isDegerlendirmeTamam = donemProjesiJurileris.All(a => a.DonemProjesiJuriOnayDurumID.HasValue);

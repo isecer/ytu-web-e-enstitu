@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BiskaUtil;
-using Entities.Entities; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using Entities.Entities;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
@@ -29,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EykSayisi { get; set; }
         public int? ToplamBasvurulanProgram { get; set; }
         public int? MezuniyetYayinKontrolDurumID { get; set; }
+        public bool? IsMezuniyetYayinKontrolAciklamasiVar { get; set; }
         public int? OgrenimTipKod { get; set; }
         public bool? IsTezDiliTr { get; set; }
         public string ProgramKod { get; set; }
@@ -76,13 +74,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string IslemYapan { get; set; }
         public int UzatmaSuresiGun { get; set; }
         public int MezuniyetSuresiGun { get; set; }
-        public SRTalepleri SrTalebi { get; set; }
-        public int MyProperty { get; set; }
+        public SRTalepleri SrTalebi { get; set; } 
         public bool? IsOnaylandiOrDuzeltme { get; set; }
         public bool? TezDosyasiIlkKezKontrolBekliyor { get; set; }
         public MezuniyetBasvurulariTezDosyalari MezuniyetBasvurulariTezDosyasi { get; set; }
         public string FormNo { get; set; }
         public MezuniyetJuriOneriFormlari MezuniyetJuriOneriFormu { get; set; }
+        public List<string> YayinInfo { get; set; } = new List<string>();
         public List<int> MBYayinTurIDs { get; set; }
 
     }

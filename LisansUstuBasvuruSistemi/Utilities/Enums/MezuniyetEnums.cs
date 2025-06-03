@@ -9,6 +9,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
     {
         public const int Taslak = 1;
         public const int Onaylandi = 2;
+        public const int DanismanOnayiBekleniyor= 100;
+        public const int EnstituOnayiBekleniyor = 101; 
         public const int IptalEdildi = 4;
         public const int KabulEdildi = 5;
         public const int KaydiSilindi = 6;

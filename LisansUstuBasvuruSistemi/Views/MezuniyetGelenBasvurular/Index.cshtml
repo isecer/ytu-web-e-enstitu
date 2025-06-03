@@ -390,6 +390,9 @@
                                             <td>
                                                 @Html.DropDownList("MezuniyetYayinKontrolDurumID", null, new { @class = "form-control" })
                                             </td>
+                                            <td>
+                                                @Html.DropDownList("IsMezuniyetYayinKontrolAciklamasiVar", null, new { @class = "form-control" }) 
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -634,11 +637,11 @@
     }
 
     function BDurumChange(sndr, id) {
-        if ($(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" || $(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.KaydiSilindi" ) {
+        @*if ($(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.IptalEdildi" || $(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.KaydiSilindi" ) {
             $('#bdurumRowID_'+id).removeClass("hide");
         } else {
             $('#bdurumRowID_' + id).addClass("hide");
-        }
+        }*@
         if ($(sndr).val() == "@MezuniyetYayinKontrolDurumuEnum.KabulEdildi") {
             $('.intihalRwBasvuru_' + id).removeClass("hide");
             $('.taahhutRwBasvuru_' + id).removeClass("hide");
