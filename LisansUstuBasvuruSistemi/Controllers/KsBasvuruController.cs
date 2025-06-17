@@ -380,7 +380,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var eykDaOnayOrGonderim = onayTipId == EykTipEnum.EykDaOnaylandi;
                         if (onaylandi == false) KayitSilmeBus.SendMailEykOnaylanmadi(kayitSilmeBasvuru.KayitSilmeBasvuruID, eykDaOnayOrGonderim);
-                        else KayitSilmeBus.SendMailEykOnaylandi(kayitSilmeBasvuru.KayitSilmeBasvuruID);
+                        else if(eykDaOnayOrGonderim) KayitSilmeBus.SendMailEykOnaylandi(kayitSilmeBasvuru.KayitSilmeBasvuruID);
                     }
 
                 }

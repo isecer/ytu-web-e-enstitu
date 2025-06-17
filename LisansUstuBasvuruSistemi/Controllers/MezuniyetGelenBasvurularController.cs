@@ -127,7 +127,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EYKTarihi = s.EYKTarihi,
                         EYKSayisi = s.EYKSayisi,
                         MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == s.MezuniyetBasvurulariID).Select(sy => sy.MezuniyetYayinTurID).ToList(),
-                        
+
                         FormNo = jOf != null ? jOf.UniqueID : "",
                         MezuniyetJuriOneriFormu = jOf,
                         CiltliTezTeslimUzatmaTalebi = s.CiltliTezTeslimUzatmaTalebi,
@@ -140,6 +140,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DanismanOnayAciklama = s.DanismanOnayAciklama,
                         MezuniyetYayinKontrolDurumID = s.MezuniyetYayinKontrolDurumID,
                         MezuniyetYayinKontrolDurumAdi = dr.MezuniyetYayinKontrolDurumAdi,
+                        MezuniyetYayinKontrolDurumOnayTarihi = s.MezuniyetYayinKontrolDurumOnayTarihi,
+                        MezuniyetYayinKontrolDurumOnayYapanKullaniciID = s.MezuniyetYayinKontrolDurumOnayYapanKullaniciID,
                         DurumClassName = dr.ClassName,
                         DurumColor = dr.Color,
                         MezuniyetSinavDurumID = msd.MezuniyetSinavDurumID,
@@ -319,13 +321,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var batch = basvuruIds.Skip(i).Take(batchSize).ToList();
 
                     var batchYayinlar = (from q1 in _entities.MezuniyetBasvurulariYayins
-                            join qx in _entities.MezuniyetYayinTurleris on q1.MezuniyetYayinTurID equals qx.MezuniyetYayinTurID
-                            where batch.Contains(q1.MezuniyetBasvurulariID)
-                            select new
-                            {
-                                q1.MezuniyetBasvurulariID,
-                                YayinBilgisi = q1.YayinBasligi + " (" + qx.MezuniyetYayinTurAdi + ")"
-                            })
+                                         join qx in _entities.MezuniyetYayinTurleris on q1.MezuniyetYayinTurID equals qx.MezuniyetYayinTurID
+                                         where batch.Contains(q1.MezuniyetBasvurulariID)
+                                         select new
+                                         {
+                                             q1.MezuniyetBasvurulariID,
+                                             YayinBilgisi = q1.YayinBasligi + " (" + qx.MezuniyetYayinTurAdi + ")"
+                                         })
                         .ToList()
                         .GroupBy(x => x.MezuniyetBasvurulariID)
                         .ToDictionary(g => g.Key, g => string.Join(", ", g.Select(x => x.YayinBilgisi)));
@@ -337,6 +339,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 gv.DataSource = (from s in qExp
                                  join td in _entities.Kullanicilars on s.TezDanismanID equals td.KullaniciID
+                                 join ey in _entities.Kullanicilars on s.MezuniyetYayinKontrolDurumOnayYapanKullaniciID equals ey.KullaniciID into defEy
+                                 from Ey in defEy.DefaultIfEmpty()
                                  select new
                                  {
                                      s.MezuniyetSurecAdi,
@@ -363,7 +367,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      Yayinlar = yayinlar.ContainsKey(s.MezuniyetBasvurulariID)
                                                ? yayinlar[s.MezuniyetBasvurulariID]
                                                : "",
-                                     s.MezuniyetYayinKontrolDurumAdi,
+                                     BasvuruDurumu=s.MezuniyetYayinKontrolDurumAdi,
+                                     BasvuruOnayTarihi=s.MezuniyetYayinKontrolDurumOnayTarihi,
+                                     BasvuruyuOnaylayan = Ey != null ? (Ey.Ad + " " + Ey.Soyad) : "",
                                      EYKTarihi = s.EYKTarihi != null ? s.EYKTarihi.Value.ToFormatDate() : "",
                                      JOFTezbasligiDegisti = s.MezuniyetJuriOneriFormu != null ? (s.MezuniyetJuriOneriFormu.IsTezBasligiDegisti == true ? "Değişti" : "Değişmedi") : "-",
                                      JOFTezDili = s.MezuniyetJuriOneriFormu != null ? (s.IsTezDiliTr == true ? "Türkçe" : "İngilizce") : "",
@@ -594,11 +600,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (ogrenimTipKrt.ToplamKaynakOrani.HasValue) mBasvur.ToplamKaynakOrani = toplamKaynakOrani;
 
                 mBasvur.MezuniyetYayinKontrolDurumID = mezuniyetYayinKontrolDurumId.Value;
+                mBasvur.MezuniyetYayinKontrolDurumOnayYapanKullaniciID = UserIdentity.Current.Id;
+                mBasvur.MezuniyetYayinKontrolDurumOnayTarihi = DateTime.Now;
                 mBasvur.MezuniyetYayinKontrolDurumAciklamasi = mezuniyetYayinKontrolDurumAciklamasi;
                 mBasvur.YayinKontrolKabulTaahhutEdildi = yayinKontrolKabulTaahhutEdildi;
-                mBasvur.IslemTarihi = DateTime.Now;
-                mBasvur.IslemYapanID = UserIdentity.Current.Id;
-                mBasvur.IslemYapanIP = UserIdentity.Ip;
                 _entities.SaveChanges();
 
                 mmMessage.IsSuccess = true;
@@ -1813,6 +1818,81 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (mMessage.Messages.Count == 0 && saveData)
                     {
+                        var unvanlar = qGroup.SelectMany(s => s.DetayData)
+                            .Select(s => s.s.UnvanAdi)
+                            .Where(x => !string.IsNullOrEmpty(x))
+                            .ToList();
+
+                        // Dinamik olarak kontrol edilmesi gereken unvanlar
+                        var gerekliUnvanlar = new List<string>
+                        {
+                            UnvanlarBus.ProfDr,
+                            UnvanlarBus.DocDr
+                            // Gerekirse buraya başka unvanlar da eklenebilir
+                        };
+
+                        // Gerekli unvanlardan herhangi biri mevcut mu?
+                        bool kriterSaglanmis = unvanlar.Intersect(gerekliUnvanlar).Any();
+
+                        if (!kriterSaglanmis)
+                        {
+                            string unvanListesi = string.Join(" veya ", gerekliUnvanlar);
+                            mMessage.Messages.Add($"Jüri öneri formu oluşturulabilmesi için önerilen jüri üyeleri arasında en az bir adet {unvanListesi} unvanına sahip kişi bulunmalıdır.");
+                        }
+                    }
+                    if (mMessage.Messages.Count == 0 && saveData)
+                    {
+                        var juriUyeleri = qGroup.SelectMany(s => s.DetayData)
+                            .Where(d => !string.IsNullOrWhiteSpace(d.s.AdSoyad) && !string.IsNullOrWhiteSpace(d.s.UnvanAdi))
+                            .Select(d => new
+                            {
+                                AdSoyad = d.s.AdSoyad.Trim().ToUpper(),
+                                UnvanAdi = d.s.UnvanAdi.Trim().ToUpper(),
+                                EMail = d.s.EMail?.Trim().ToLower(),
+                                JuriTipAdi = d.s.JuriTipAdi,
+                                KisiKimlik = $"{d.s.AdSoyad.Trim().ToUpper()} - {d.s.UnvanAdi.Trim().ToUpper()}"
+                            })
+                            .ToList();
+
+                        var mukerrerKisiler = juriUyeleri
+                            .GroupBy(j => new { j.AdSoyad, j.UnvanAdi })
+                            .Where(g => g.Count() > 1)
+                            .Select(g => new
+                            {
+                                AdSoyad = g.Key.AdSoyad,
+                                UnvanAdi = g.Key.UnvanAdi,
+                                KisiKimlik = $"{g.Key.AdSoyad} - {g.Key.UnvanAdi}",
+                                JuriTipleri = g.Select(x => x.JuriTipAdi).ToList(),
+                                EMailler = g.Select(x => x.EMail).Where(e => !string.IsNullOrWhiteSpace(e)).Distinct().ToList()
+                            })
+                            .ToList();
+
+                        foreach (var mukerrerKisi in mukerrerKisiler)
+                        {
+                            var juriTipAdlari = string.Join(", ", mukerrerKisi.JuriTipleri.Select(GetJuriTipDisplayName));
+                            mMessage.Messages.Add($"Aynı kişi ({mukerrerKisi.KisiKimlik}) birden fazla jüri pozisyonu için önerilmiş: {juriTipAdlari}");
+                        }
+
+                        if (mukerrerKisiler.Any())
+                        {
+                            if (selectedAnaTabAdi == "")
+                            {
+                                var ilkMukerrer = mukerrerKisiler.FirstOrDefault()?.JuriTipleri.FirstOrDefault();
+
+                                if (!string.IsNullOrEmpty(ilkMukerrer))
+                                {
+                                    var ilkMukerrerItem = qGroup.FirstOrDefault(q => q.DetayData.Any(d => d.s.JuriTipAdi == ilkMukerrer));
+                                    if (ilkMukerrerItem != null)
+                                    {
+                                        selectedAnaTabAdi = ilkMukerrerItem.AnaTabAdi;
+                                        selectedDetayTabAdi = ilkMukerrerItem.DetayTabAdi;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (mMessage.Messages.Count == 0 && saveData)
+                    {
                         mbjo = isYeniJo ? new MezuniyetJuriOneriFormlari() : mbjo;
                         //doktora öğrenim tipindeki başvurular için tik üyesi haricindeki bilgiler alınsın
                         var kData = qData.Where(p => p.JuriTipAdi != (mb.OgrenimTipKod.IsDoktora() ? "TikUyesi" : "")).ToList();
@@ -1922,6 +2002,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 SelectedAnaTabAdi = selectedAnaTabAdi,
                 SelectedDetayTabAdi = selectedDetayTabAdi
             }.ToJsonResult();
+        }
+        private string GetJuriTipDisplayName(string juriTipAdi)
+        {
+            switch (juriTipAdi)
+            {
+                case "TezDanismani":
+                    return "Danışman";
+                case "TikUyesi1":
+                    return "Tik Üyesi 1";
+                case "TikUyesi2":
+                    return "Tik Üyesi 2";
+                case "YtuIciJuri1":
+                    return "YTÜ İçi Jüri 1";
+                case "YtuIciJuri2":
+                    return "YTÜ İçi Jüri 2";
+                case "YtuIciJuri3":
+                    return "YTÜ İçi Jüri 3";
+                case "YtuIciJuri4":
+                    return "YTÜ İçi Jüri 4";
+                case "YtuDisiJuri1":
+                    return "YTÜ Dışı Jüri 1";
+                case "YtuDisiJuri2":
+                    return "YTÜ Dışı Jüri 2";
+                case "YtuDisiJuri3":
+                    return "YTÜ Dışı Jüri 3";
+                case "YtuDisiJuri4":
+                    return "YTÜ Dışı Jüri 4";
+                default:
+                    return juriTipAdi;
+            }
         }
         public ActionResult JuriOneriFormu()
         {

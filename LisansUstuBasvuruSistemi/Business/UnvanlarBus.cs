@@ -9,8 +9,18 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class UnvanlarBus
     {
-        public static List<string> JuriUnvanList = new List<string> { "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
-        public static List<string> DpJuriUnvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
+
+
+        public static string ProfDr = "PROF. DR.";
+        public static string DocDr = "DOÇ. DR.";
+        public static string DrOgrUye = "DR. ÖĞR. ÜYESİ";
+        public static string ArGorDr = "ARŞ. GÖR. DR.";
+        public static string OgrGorDr = "ÖĞR. GÖR. DR.";
+        public static string Dr = "DR.";
+
+
+        public static List<string> JuriUnvanList = new List<string> { ProfDr, DocDr, DrOgrUye }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
+        public static List<string> DpJuriUnvanList = new List<string> { ArGorDr, OgrGorDr, ProfDr, DocDr, DrOgrUye }.Select(s => s.AddSpacesBetweenTitleAbbreviations()).ToList();
         public static string ToJuriUnvanAdi(this string unvanAdi)
         {
             if (unvanAdi.IsNullOrWhiteSpace()) return "";
@@ -21,12 +31,12 @@ namespace LisansUstuBasvuruSistemi.Business
             var profUnvan = new List<string> { "PROFESÖR".ToLower(), "PROFESÖR.DR".ToLower(), "PROF.DR.".ToLower(), "Prof.".ToLower() };
             var docUnvan = new List<string> { "DOÇENT".ToLower(), "DOÇ .DR.".ToLower(), "DOÇ.DR.".ToLower(), "DOÇENT.DR".ToLower(), "Doç.".ToLower() };
             var ogUyeUnvan = new List<string> { "DR.ÖĞR.ÜYE".ToLower(), "DR.ÖĞR.ÜYESİ".ToLower(), "DR.ÖĞRETİM.ÜYE".ToLower(), "DR.ÖĞRETİM.ÜYESİ".ToLower(), "Doktor Öğretim Üyesi".ToLower(), "Doktor.Öğretim.Üyesi".ToLower() };
-            if (profUnvan.Any(a => a.Contains(unvanAdi))) return "PROF. DR.";
-            if (docUnvan.Any(a => a.Contains(unvanAdi))) return "DOÇ. DR.";
-            if (arGorUnvan.Any(a => a.Contains(unvanAdi))) return "ARŞ. GÖR. DR.";
-            if (ogrGrUnvan.Any(a => a.Contains(unvanAdi))) return "ÖĞR. GÖR. DR.";
-            if (drUnvan.Any(a => a.ToLower() == unvanAdi.ToLower())) return "DR.";
-            return ogUyeUnvan.Any(a => a.Contains(unvanAdi)) ? "DR. ÖĞR. ÜYESİ" : unvanAdi.ToUpper();
+            if (profUnvan.Any(a => a.Contains(unvanAdi))) return ProfDr;
+            if (docUnvan.Any(a => a.Contains(unvanAdi))) return DocDr;
+            if (arGorUnvan.Any(a => a.Contains(unvanAdi))) return ArGorDr;
+            if (ogrGrUnvan.Any(a => a.Contains(unvanAdi))) return OgrGorDr;
+            if (drUnvan.Any(a => a.ToLower() == unvanAdi.ToLower())) return Dr;
+            return ogUyeUnvan.Any(a => a.Contains(unvanAdi)) ? DrOgrUye : unvanAdi.ToUpper();
         }
         public static string AddSpacesBetweenTitleAbbreviations(this string input)
         {
@@ -55,7 +65,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            var unvanList = new List<string> { "ARŞ. GÖR. DR.", "ÖĞR. GÖR. DR.", "DR.", "PROF. DR.", "DOÇ. DR.", "DR. ÖĞR. ÜYESİ" };
+            var unvanList = new List<string> { ArGorDr, OgrGorDr, Dr, ProfDr, DocDr, DrOgrUye };
             dct.AddRange(unvanList.Select(item => new CmbStringDto { Value = item, Caption = item }));
             return dct;
 

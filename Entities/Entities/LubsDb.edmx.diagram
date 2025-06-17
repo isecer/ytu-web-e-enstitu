@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3d3f865a364a4319a8ffae5f3f523605" Name="Diagram1" ZoomLevel="52">
+      <Diagram DiagramId="3d3f865a364a4319a8ffae5f3f523605" Name="Diagram1" ZoomLevel="77">
         <EntityTypeShape EntityType="LubsDbModel.AlanTipleri" Width="1.5" PointX="13.5" PointY="40.375" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.AlesTipleri" Width="1.5" PointX="5.25" PointY="44" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.AnabilimDaliYeterlikKomiteUyeleri" Width="1.5" PointX="10.5" PointY="53.25" IsExpanded="false" />
@@ -96,7 +96,6 @@
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulari" Width="1.5" PointX="12.75" PointY="49.375" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezDosyalari" Width="1.5" PointX="15" PointY="45.25" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariTezTeslimFormlari" Width="1.5" PointX="15" PointY="41.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="18" PointY="46.375" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetJuriOneriFormlari" Width="1.5" PointX="15" PointY="43.375" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetJuriOneriFormuJurileri" Width="1.5" PointX="17.25" PointY="43.375" IsExpanded="false" />
         <EntityTypeShape EntityType="LubsDbModel.MezuniyetSinavDurumlari" Width="1.5" PointX="21" PointY="41.5" IsExpanded="false" />
@@ -437,15 +436,8 @@
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulari_Programlar" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" />
         <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinBelgeTurleri" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinIndexTurleri" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinLinkTurleri" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinMetinTurleri" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinProjeTurleri" />
-        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinTurleri" />
         <AssociationConnector Association="LubsDbModel.FK_MezuniyetJuriOneriFormuJurileri_MezuniyetJuriOneriFormlari" />
         <AssociationConnector Association="LubsDbModel.FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri" />
         <AssociationConnector Association="LubsDbModel.FK_SRTalepleri_MezuniyetSinavDurumlari" />
@@ -548,6 +540,14 @@
         <AssociationConnector Association="LubsDbModel.FK_KayitSilmeBasvuru_KayitSilmeDurumlari" />
         <AssociationConnector Association="LubsDbModel.FK_KayitSilmeBasvuru_Kullanicilar" />
         <AssociationConnector Association="LubsDbModel.FK_KayitSilmeBasvuru_Programlar" />
+        <EntityTypeShape EntityType="LubsDbModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="24" PointY="32.625" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinBelgeTurleri" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinIndexTurleri" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinLinkTurleri" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinMetinTurleri" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinProjeTurleri" />
+        <AssociationConnector Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinTurleri" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

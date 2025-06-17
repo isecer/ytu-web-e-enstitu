@@ -17,9 +17,9 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MezuniyetYayinTurleri()
         {
-            this.MezuniyetBasvurulariYayins = new HashSet<MezuniyetBasvurulariYayin>();
             this.MezuniyetSureciYonetmelikleriOTs = new HashSet<MezuniyetSureciYonetmelikleriOT>();
             this.MezuniyetYonetmelikleriOTs = new HashSet<MezuniyetYonetmelikleriOT>();
+            this.MezuniyetBasvurulariYayins = new HashSet<MezuniyetBasvurulariYayin>();
         }
     
         public int MezuniyetYayinTurID { get; set; }
@@ -52,13 +52,13 @@ namespace Entities.Entities
     
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureciYonetmelikleriOT> MezuniyetSureciYonetmelikleriOTs { get; set; }
         public virtual MezuniyetYayinLinkTurleri MezuniyetYayinLinkTurleri { get; set; }
         public virtual MezuniyetYayinLinkTurleri MezuniyetYayinLinkTurleri1 { get; set; }
         public virtual MezuniyetYayinMetinTurleri MezuniyetYayinMetinTurleri { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetYonetmelikleriOT> MezuniyetYonetmelikleriOTs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
     }
 }

@@ -218,8 +218,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             _entities.SaveChanges();
             foreach (var item in eykDaOnaylanacakBasvurular)
             {
-                LogIslemleri.LogEkle("KayitSilmeBasvuru", LogCrudType.Update, item.ToJson());
-                // MezuniyetBus.SendMailJuriOneriFormuEykOnay(item.MezuniyetJuriOneriFormID, true);
+                LogIslemleri.LogEkle("KayitSilmeBasvuru", LogCrudType.Update, item.ToJson()); 
             }
             return new { eykDaOnaylanacakBasvurular.Count }.ToJsonResult();
         }

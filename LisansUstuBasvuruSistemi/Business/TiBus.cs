@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BiskaUtil;
-using DevExpress.XtraReports.UI;
 using Entities.Entities;
-using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;

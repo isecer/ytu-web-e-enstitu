@@ -67,12 +67,40 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
         public string HtmlContent { get; set; }
         public List<string> AddMailList { get; set; } = new List<string>();
     }
+
     public class MailParameterDto
     {
         public string Key { get; set; }
-        public string Value { get; set; }
+
+        private string _value;
+        public string Value
+        {
+            get { return CleanString(_value); }
+            set { _value = value; }
+        }
+
         public bool IsLink { get; set; }
+
+        private static string CleanString(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+            // bazı görünmeyen karakterler yazı şablonlarında tasarım bozukluğuna yol açtığı için parametre valueleri temizleniyor
+            // Temizlenecek karakterler
+            var specialWhitespaces = new[] { '\u00A0', '\u200B', '\u200C', '\u200D', '\uFEFF' };
+
+            // Tüm özel boşlukları standart boşlukla değiştir
+            foreach (var ch in specialWhitespaces)
+            {
+                input = input.Replace(ch, ' ');
+            }
+
+            // Gereksiz fazla boşlukları tek boşluğa indir ve kırp
+            return string.Join(" ", input.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)).Trim();
+        }
     }
+
+
     #endregion
     public static class MailManager
     {
@@ -116,7 +144,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             {
                 UniversiteAdi = "Yıldız Teknik Üniversitesi",
                 EnstituAdi = mailItem.EnstituAdi,
-                LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png",
+                LogoPath = "https://e-enstitu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png",
                 Content = model.HtmlContent.Replace("_removeRw_", ""),
                 WebAdresi = mailItem.WebAdresi,
                 SistemErisimAdresi = mailItem.SistemErisimAdresi

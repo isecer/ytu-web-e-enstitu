@@ -364,7 +364,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static string ToKullaniciResim(this string resimAdi)
         {
             var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
-            rsm = "https://lisansustu.yildiz.edu.tr" + rsm;
+            rsm = "https://e-enstitu.yildiz.edu.tr" + rsm;
             return rsm;
         }
 

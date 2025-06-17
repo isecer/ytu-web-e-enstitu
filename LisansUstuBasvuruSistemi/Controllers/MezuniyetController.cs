@@ -255,7 +255,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (!kul.DanismanID.HasValue)
                 {
-                    mmMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın lisansustu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
+                    mmMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın e-enstitu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
                     mmMessage.IsSuccess = false;
 
                     //Tez bilgisi gelmiyor ise Tez durumu ile alakalı olabilir. Tez durumu devam ediyor olmalı. Eğer değilse Ya yeni tez eklenecek yada gsis te tez guncellemeden tez durumunu devam ediyor yapılmalı.
@@ -422,7 +422,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (kul.DanismanID.HasValue == false)
                 {
 
-                    mmMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın lisansustu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
+                    mmMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın e-enstitu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
                     mmMessage.IsSuccess = false;
                 }
 
@@ -435,6 +435,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.Soyad = kul.Soyad;
             kModel.OgrenciNo = kul.OgrenciNo;
 
+
+
+            kModel.MezuniyetYayinKontrolDurumOnayYapanKullaniciID = UserIdentity.Current.Id;
+            kModel.MezuniyetYayinKontrolDurumOnayTarihi=DateTime.Now;
             kModel.IslemYapanID = UserIdentity.Current.Id;
             kModel.IslemTarihi = DateTime.Now;
             kModel.IslemYapanIP = UserIdentity.Ip;
@@ -466,6 +470,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         RowID = Guid.NewGuid(),
                         BasvuruTarihi = kModel.BasvuruTarihi,
                         MezuniyetYayinKontrolDurumID = kModel.MezuniyetYayinKontrolDurumID,
+                        MezuniyetYayinKontrolDurumOnayTarihi = kModel.MezuniyetYayinKontrolDurumOnayTarihi,
+                        MezuniyetYayinKontrolDurumOnayYapanKullaniciID = kModel.MezuniyetYayinKontrolDurumOnayYapanKullaniciID,
                         MezuniyetYayinKontrolDurumAciklamasi = kModel.MezuniyetYayinKontrolDurumAciklamasi,
                         KullaniciID = kModel.KullaniciID,
                         KullaniciTipID = kModel.KullaniciTipID,
@@ -524,6 +530,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mBasvuru.MezuniyetSurecID = kModel.MezuniyetSurecID;
                     mBasvuru.BasvuruTarihi = kModel.BasvuruTarihi;
                     mBasvuru.MezuniyetYayinKontrolDurumID = kModel.MezuniyetYayinKontrolDurumID;
+                    mBasvuru.MezuniyetYayinKontrolDurumOnayYapanKullaniciID = kModel.MezuniyetYayinKontrolDurumOnayYapanKullaniciID;
+                    mBasvuru.MezuniyetYayinKontrolDurumOnayTarihi = kModel.MezuniyetYayinKontrolDurumOnayTarihi;
                     mBasvuru.MezuniyetYayinKontrolDurumAciklamasi = kModel.MezuniyetYayinKontrolDurumAciklamasi;
                     mBasvuru.KullaniciID = kModel.KullaniciID;
                     mBasvuru.KullaniciTipID = kModel.KullaniciTipID;

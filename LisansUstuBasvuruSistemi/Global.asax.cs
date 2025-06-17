@@ -73,7 +73,7 @@ namespace LisansUstuBasvuruSistemi
             //    var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
             //    var logMessage = string.Format("{0} {1} from {2}", method, url, ip);
-            //    var logFilePath = @"C:\inetpub\wwwroot\lisansustu.yildiz.edu.tr\Log.txt";
+            //    var logFilePath = @"C:\inetpub\wwwroot\e-enstitu.yildiz.edu.tr\Log.txt";
             //    using (StreamWriter writer = File.AppendText(logFilePath))
             //    {
             //        writer.WriteLine(string.Format("{0} | {1} ", timestamp, logMessage));

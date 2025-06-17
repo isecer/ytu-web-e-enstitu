@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         {
             if (HttpContext.Current == null)
                 HttpContext.Current = new HttpContext(
-                                        new HttpRequest(null, "http://www.lisansustu.yildiz.edu.tr", null),
+                                        new HttpRequest(null, "http://www.e-enstitu.yildiz.edu.tr", null),
                                         new HttpResponse(null));
             var context = new HttpContextWrapper(HttpContext.Current) as HttpContextBase;
 

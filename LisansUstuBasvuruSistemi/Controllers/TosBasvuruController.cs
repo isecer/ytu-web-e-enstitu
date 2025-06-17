@@ -207,7 +207,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("Tez danışmanı bilginiz OBS sisteminden boş gelmektedir.  Başvurunuzu gerçekleştirebilmeniz için danışman bilginizin OBS sisteminde tanımlı olması gerekmektedir.");
 
                 }
-                else mMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın lisansustu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
+                else mMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın e-enstitu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
             }
             else if (toBasvuruSavunma == null && studentInfo.OgrenciTez.TEZ_DILI.IsNullOrWhiteSpace())
             {
@@ -451,7 +451,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (toBasvuruSavunma == null && !kul.DanismanID.HasValue)
             {
-                mMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın lisansustu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
+                mMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın e-enstitu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
             }
             else if (toBasvuruSavunma != null && toBasvuruSavunma.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue))
             {

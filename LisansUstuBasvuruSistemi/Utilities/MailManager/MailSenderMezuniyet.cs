@@ -12,7 +12,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
-using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 {

@@ -106,7 +106,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.Sablon == null) continue;
 
                         item.SablonEkleri.AddRange(item.Sablon.MailSablonlariEkleris);
-                        item.SablonEkleri.Add(new MailSablonlariEkleri { EkAdi = ogrenci.Ad + " " + ogrenci.Soyad + " " + tiAraRapor.AraRaporSayisi + ". Tez İzleme Çalışma Raporu Dosyası", EkDosyaYolu = tiAraRapor.TICalismaRaporDosyaYolu });
+                        //item.SablonEkleri.Add(new MailSablonlariEkleri { EkAdi = ogrenci.Ad + " " + ogrenci.Soyad + " " + tiAraRapor.AraRaporSayisi + ". Tez İzleme Çalışma Raporu Dosyası", EkDosyaYolu = tiAraRapor.TICalismaRaporDosyaYolu });
 
                         item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.CustomSplit();
                         item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.ToSplitEmailSendList());

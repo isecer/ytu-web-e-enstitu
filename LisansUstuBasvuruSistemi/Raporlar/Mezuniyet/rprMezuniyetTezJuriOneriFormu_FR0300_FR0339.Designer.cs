@@ -327,6 +327,7 @@
             this.txtYtuDisiJuri4UniversiteAdi = new DevExpress.XtraReports.UI.XRTableCell();
             this.txtYtuDisiJuri4AnabilimdaliProgramAdi = new DevExpress.XtraReports.UI.XRTableCell();
             this.txtYtuDisiJuri4UzmanlikAlani = new DevExpress.XtraReports.UI.XRTableCell();
+            this.SubBand4 = new DevExpress.XtraReports.UI.SubBand();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
@@ -339,6 +340,7 @@
             this.PageFooter = new DevExpress.XtraReports.UI.PageFooterBand();
             this.xrPageInfo2 = new DevExpress.XtraReports.UI.XRPageInfo();
             this.lblFormNo = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrRichKaraBigi = new DevExpress.XtraReports.UI.XRRichText();
             ((System.ComponentModel.ISupportInitialize)(this.xrTablex)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
@@ -367,6 +369,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.xrTable38)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable39)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable40)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -377,7 +380,8 @@
             this.Detail.SubBands.AddRange(new DevExpress.XtraReports.UI.SubBand[] {
             this.SubBand1,
             this.SubBand2,
-            this.SubBand3});
+            this.SubBand3,
+            this.SubBand4});
             this.Detail.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
             // 
             // SubBand1
@@ -4143,6 +4147,13 @@
             this.txtYtuDisiJuri4UzmanlikAlani.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.txtYtuDisiJuri4UzmanlikAlani.Weight = 2.6931739875753338D;
             // 
+            // SubBand4
+            // 
+            this.SubBand4.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrRichKaraBigi});
+            this.SubBand4.HeightF = 83.3334F;
+            this.SubBand4.Name = "SubBand4";
+            // 
             // TopMargin
             // 
             this.TopMargin.HeightF = 9F;
@@ -4269,6 +4280,21 @@
             this.lblFormNo.Text = "(Form No: FR-0300)";
             this.lblFormNo.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
+            // xrRichKaraBigi
+            // 
+            this.xrRichKaraBigi.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
+            | DevExpress.XtraPrinting.BorderSide.Bottom)));
+            this.xrRichKaraBigi.Font = new DevExpress.Drawing.DXFont("Arial", 11F, DevExpress.Drawing.DXFontStyle.Bold);
+            this.xrRichKaraBigi.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
+            this.xrRichKaraBigi.Name = "xrRichKaraBigi";
+            this.xrRichKaraBigi.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 0, 0, 0, 100F);
+            this.xrRichKaraBigi.SerializableRtfString = resources.GetString("xrRichKaraBigi.SerializableRtfString");
+            this.xrRichKaraBigi.SizeF = new System.Drawing.SizeF(1128F, 83.3334F);
+            this.xrRichKaraBigi.StylePriority.UseBorders = false;
+            this.xrRichKaraBigi.StylePriority.UseFont = false;
+            this.xrRichKaraBigi.StylePriority.UsePadding = false;
+            // 
             // RprMezuniyetTezJuriOneriFormu_FR0300_FR0339
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -4310,6 +4336,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.xrTable38)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable39)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable40)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -4624,5 +4651,7 @@
         private DevExpress.XtraReports.UI.XRTableCell txtYtuIciJuri4UniversiteAdi;
         private DevExpress.XtraReports.UI.XRTableCell txtYtuIciJuri4AnabilimdaliProgramAdi;
         private DevExpress.XtraReports.UI.XRTableCell txtYtuIciJuri4UzmanlikAlani;
+        private DevExpress.XtraReports.UI.SubBand SubBand4;
+        private DevExpress.XtraReports.UI.XRRichText xrRichKaraBigi;
     }
 }
