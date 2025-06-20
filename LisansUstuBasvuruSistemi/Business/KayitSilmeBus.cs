@@ -306,7 +306,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     model.NufusKayitOrnekDosyaAdi = model.DosyaNufusKayitOrnegi.FileName;
                 }
                 // model.YeterlikSozluSinavTarihi= eklenecek mi ?
-                var donemInfo = (kayitSilmeBasvuru?.BasvuruTarihi ?? DateTime.Now.Date).ToKsAkademikDonemBilgi();
+                var basvuruTarihi = kayitSilmeBasvuru == null || kayitSilmeBasvuru.IsHarcBirimiOnayladi != true ? DateTime.Now : kayitSilmeBasvuru.BasvuruTarihi;
+                var donemInfo = basvuruTarihi.ToKsAkademikDonemBilgi();
                 var tezDanismanId =
                     (kullanici.OgrenimTipKod.IsDoktora() || kullanici.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans)
                         ? kullanici.DanismanID
@@ -316,7 +317,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
 
 
-                    kayitSilmeBasvuru.BasvuruTarihi = DateTime.Now;
+                    kayitSilmeBasvuru.BasvuruTarihi = basvuruTarihi;
                     kayitSilmeBasvuru.OgretimYiliBaslangic = donemInfo.BaslangicYil;
                     kayitSilmeBasvuru.DonemID = donemInfo.DonemId;
                     kayitSilmeBasvuru.OgrenimTipKod = kullanici.OgrenimTipKod.Value;
@@ -347,7 +348,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     KayitSilmeDurumID = KayitSilmeDurumEnums.HarcBirimiOnaySureci,
                     OgretimYiliBaslangic = donemInfo.BaslangicYil,
                     DonemID = donemInfo.DonemId,
-                    BasvuruTarihi = DateTime.Now,
+                    BasvuruTarihi = basvuruTarihi,
                     KullaniciID = kullanici.KullaniciID,
                     OgrenciNo = kullanici.OgrenciNo,
                     OgrenimTipKod = kullanici.OgrenimTipKod.Value,

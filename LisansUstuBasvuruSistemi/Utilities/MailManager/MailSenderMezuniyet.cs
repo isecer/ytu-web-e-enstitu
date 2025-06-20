@@ -285,10 +285,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "IlkKontrolToplamIntihalOrani", Value = mBasvur.ToplamKaynakOrani.ToStrObj() });
 
 
-                        if (item.MailSablonTipId != MailSablonTipiEnum.MezYayinSartiSaglandiDanisman && mBasvur.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
-                        {
-                            item.Attachments.AddRange(MailReportAttachment.GetMezuniyetBasvuruRaporuAttachments(mBasvur.MezuniyetBasvurulariID));
-                        }
+                        //if (item.MailSablonTipId != MailSablonTipiEnum.MezYayinSartiSaglandiDanisman && mBasvur.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
+                        //{
+                        //    //Enstitü kaldırımlasını istedi.
+                        //    item.Attachments.AddRange(MailReportAttachment.GetMezuniyetYayinSartiOnayiFormuAttachments(mBasvur.MezuniyetBasvurulariID));
+                        //}
                         if (mBasvur.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                         {
                             item.Attachments.AddRange(MailReportAttachment.GetMezuniyetTezTeslimFormuAttachments(mBasvur.MezuniyetBasvurulariID, true));

@@ -1,4 +1,4 @@
-﻿@using Entities.Entities 
+﻿@using Entities.Entities
 @model TDOBasvuruEsDanisman
 @{
     Layout = null;
@@ -74,6 +74,30 @@
                 <label class="col-md-4 col-xs-5 control-label">Gerekçe</label>
                 <div class="col-md-8 col-xs-7">
                     <textarea class="form-control" name="Gerekce" id="Gerekce" maxlength="1024" autocomplete="off" style="min-height:100px;">@Model.Gerekce</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-xs-5 control-label">Taahhüt metni</label>
+                <div class="col-md-8 col-xs-7">
+                    <div class="tasks ui-sortable">
+                        <div class="task-item task-info" id="EsDanismanTaahhutContent-@Model.TDOBasvuruDanismanID" style="margin-bottom: 0px; cursor: pointer;" onclick="toggleCheckbox('@Model.TDOBasvuruDanismanID')">
+                            <div class="task-text ui-sortable-handle" style="padding-bottom: 0px; font-size: 8pt;">
+                                <div class="task-checkbox" style="display: inline-block; margin-right: 10px;">
+                                    <input type="checkbox" id="EsDanismanTaahhutEdildiChk-@Model.TDOBasvuruDanismanID" value="true" name="EsDanismanTezIzlemeKomiteUyerleriArasindaYokTaahhutu" style="transform: scale(1.5);" onclick="event.stopPropagation();">
+                                </div>
+                                Önerilen eş danışmanın tez izleme komite üyeleri arasında bulunmadığını kabul ediyorum.
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function toggleCheckbox(id) {
+                            const checkbox = document.getElementById(`EsDanismanTaahhutEdildiChk-${id}`);
+                            if (checkbox) {
+                                checkbox.checked = !checkbox.checked;
+                            }
+                        }
+                    </script>
                 </div>
             </div>
         </div>

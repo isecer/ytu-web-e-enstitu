@@ -94,7 +94,7 @@
                     {
                         if (Model.IsYeniDanismanOneriOrDegisiklik)
                         {
-                            <span class="label label-info" id="YeniRaporBtn_@Model.TDOBasvuruID" style="cursor: pointer;" onclick="GetTdoYeniDanismanFormu(@Model.TDOBasvuruID);"><i class="fa fa-plus"></i> Yeni Tez Danışmanı Öneri Formu Oluştur</span>
+                            <span class="label label-info" id="YeniRaporBtn_@Model.TDOBasvuruID" style="cursor: pointer;" onclick="DegisiklikDuyuruKontrol(function () { GetTdoYeniDanismanFormu(@Model.TDOBasvuruID); },'Yeni Tez Danışmanı Öneri Formu Oluştur',true);"><i class="fa fa-plus"></i> Yeni Tez Danışmanı Öneri Formu Oluştur</span>
                         }
                         else
                         {
@@ -102,13 +102,13 @@
                                 <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-danger dropdown-toggle"><i class="fa fa-cogs"></i> Değişiklik Talebi İşlemi İçin Tıklayınız</a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="javascript:void(0)" onclick="GetTdoDanismanDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,0)"><i class="fa fa-edit"></i>Tez Danışman/Dil/Başlık Değişikliği</a>
+                                        <a href="javascript:void(0)" onclick="DegisiklikDuyuruKontrol(function () { GetTdoDanismanDilBaslikDegisiklikFormu(@Model.TDOBasvuruID, 0); },'Tez Danışman/Dil/Başlık Değişikliği Yap',false)"><i class="fa fa-edit"></i>Tez Danışman/Dil/Başlık Değişikliği</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)" onclick="GetTdoDanismanDegisiklikFormu(@Model.TDOBasvuruID,0)"><i class="fa fa-edit"></i>Sadece Tez Danışmanı Değişikliği</a>
+                                        <a href="javascript:void(0)" onclick="DegisiklikDuyuruKontrol(function () { GetTdoDanismanDegisiklikFormu(@Model.TDOBasvuruID, 0); },'Sadece Tez Danışmanı Değişikliği Yap',false)"><i class="fa fa-edit"></i>Sadece Tez Danışmanı Değişikliği</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)" onclick="GetTdoDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,0)"><i class="fa fa-edit"></i>Sadece Tez Dil/Başlığı Değişikliği</a>
+                                        <a href="javascript:void(0)" onclick="DegisiklikDuyuruKontrol(function () { GetTdoDilBaslikDegisiklikFormu(@Model.TDOBasvuruID, 0); },'Sadece Tez Dil/Başlığı Değişikliği Yap',false)"><i class="fa fa-edit"></i>Sadece Tez Dil/Başlığı Değişikliği</a>
                                     </li>
                                 </ul>
                             </div>
@@ -1014,6 +1014,11 @@
                                                                                             </tr>
 
                                                                                             <tr>
+                                                                                                <td class="CaptionTd">Danışman Taahhüt</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">Önerilen eş danışmanın tez izleme komite üyeleri arasında bulunmadığını kabul ediyorum.</td>
+                                                                                            </tr>
+                                                                                            <tr>
                                                                                                 <td class="CaptionTd">Eş Danışman Öneri Formu</td>
                                                                                                 <td class="CaptionTd">:</td>
                                                                                                 <td class="ValueTd">
@@ -1285,7 +1290,16 @@
             format: 'Y-m-d'
         });
     })
-
+    function DegisiklikDuyuruKontrol(fnct,btnTitle,oneriOrDegisiklik) {
+        var popupSetting = {
+            title: '||',
+            popupTipId: oneriOrDegisiklik?@DuyuruPopupTipiEnum.TdoBasvuru:@DuyuruPopupTipiEnum.TdoBasvuruDegisiklik,
+            btnAdi: btnTitle,
+            redirectUrl: '',
+            callbackFnc: fnct
+        }
+        ShowDuyuru(popupSetting);
+    }
     function DOnayChange(id) {
         var val = $('#DanismanOnayladi_' + id).val();
 

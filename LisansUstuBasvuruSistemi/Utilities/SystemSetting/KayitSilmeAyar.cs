@@ -44,17 +44,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
                 var ayar = entities.KayitSilmeAyarlars.FirstOrDefault(p => p.AyarAdi == ayarProperty.PropertyValue && (p.EnstituKod == enstituKodu || p.EnstituKod == ""));
                 return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
-        }
-
+        } 
         public static int? GetDonemId(DateTime basvuruTarihi, string enstituKodu)
         {
             var maxGuzDonemiTarih = DonemGecisTarihi.GetAyar(enstituKodu);
             if (maxGuzDonemiTarih != null)
             {
                 var maxDonemTarihVal = maxGuzDonemiTarih.ToDate();
-                return maxDonemTarihVal.Value.Date >= basvuruTarihi.Date
-                    ? AkademikDonemEnum.GuzYariyili
-                    : AkademikDonemEnum.BaharYariyili;
+                return basvuruTarihi.Date < maxDonemTarihVal.Value.Date 
+                    ? AkademikDonemEnum.BaharYariyili
+                    : AkademikDonemEnum.GuzYariyili;
             }
 
             return null;

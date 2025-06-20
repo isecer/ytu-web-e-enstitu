@@ -102,7 +102,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return egitimOgretimDonemDto;
         }
         public static EgitimOgretimDonemDto ToKsAkademikDonemBilgi(this DateTime date)
-        {
+        { 
             var donemId = KayitSilmeAyar
                 .GetDonemId(date, null).Value;
             var egitimOgretimDonemDto = new EgitimOgretimDonemDto();
@@ -114,12 +114,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             }
             else
             {
-                egitimOgretimDonemDto.BaslangicYil = date.Year;
+                var year = date.Year;
+                //1. ay ve 3. ay dahilinde ise bir önceki yıl dönem başlangıç yılı olmalı
+                if (date.Month >= 1 && date.Month <= 3) year = date.Year - 1;
+                egitimOgretimDonemDto.BaslangicYil = year;
                 egitimOgretimDonemDto.DonemId = AkademikDonemEnum.GuzYariyili;
                 egitimOgretimDonemDto.DonemAdi = "Güz";
             }
             return egitimOgretimDonemDto;
         }
+
 
         public static List<CmbStringDto> GetCmbAkademikTarih(string baslangicDonem, string bitisDonem)
         {

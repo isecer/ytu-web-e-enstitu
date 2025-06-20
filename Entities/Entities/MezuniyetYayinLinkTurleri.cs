@@ -17,9 +17,9 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MezuniyetYayinLinkTurleri()
         {
+            this.MezuniyetBasvurulariYayins = new HashSet<MezuniyetBasvurulariYayin>();
             this.MezuniyetYayinTurleris = new HashSet<MezuniyetYayinTurleri>();
             this.MezuniyetYayinTurleris1 = new HashSet<MezuniyetYayinTurleri>();
-            this.MezuniyetBasvurulariYayins = new HashSet<MezuniyetBasvurulariYayin>();
         }
     
         public int MezuniyetYayinLinkTurID { get; set; }
@@ -29,10 +29,10 @@ namespace Entities.Entities
         public bool IsAktif { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetYayinTurleri> MezuniyetYayinTurleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetYayinTurleri> MezuniyetYayinTurleris1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
     }
 }

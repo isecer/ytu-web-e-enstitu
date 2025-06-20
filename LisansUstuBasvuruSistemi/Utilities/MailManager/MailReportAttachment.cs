@@ -15,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 {
     public class MailReportAttachment
     {
-        public static List<Attachment> GetMezuniyetBasvuruRaporuAttachments(int mezuniyetBasvurulariId)
+        public static List<Attachment> GetMezuniyetYayinSartiOnayiFormuAttachments(int mezuniyetBasvurulariId)
         {
             return CreateReportToMailAttachment(new RprMezuniyetYayinSartiOnayiFormu(mezuniyetBasvurulariId));
         }

@@ -791,7 +791,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         model.TezBaslikEn = ogrenciData.OgrenciTez.TEZ_BASLIK_ENG;
                     }
-                     
+
                 }
                 else
                 {
@@ -1137,7 +1137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.IsTezDiliTr = sonTezBaslik.IsTezDiliTr;
                         model.TezBaslikTr = sonTezBaslik.TezBaslikTr;
                         model.TezBaslikEn = sonTezBaslik.TezBaslikEn;
-                    } 
+                    }
                 }
 
 
@@ -1468,7 +1468,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                   
+
                     var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != tdoBasvuruDanismanId).OrderByDescending(o => o.TDOBasvuruDanismanID).FirstOrDefault();
                     if (oncekiBasvuru != null && (oncekiBasvuru.IsYeniTezDiliTr == false || oncekiBasvuru.IsTezDiliTr == false))
                     {
@@ -2468,6 +2468,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("Gerekçe giriniz.");
                 }
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.Gerekce.IsNullOrWhiteSpace() ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "Gerekce" });
+                if (kModel.EsDanismanTezIzlemeKomiteUyerleriArasindaYokTaahhutu != true)
+                {
+                    mMessage.Messages.Add("Taahhüt mentinin onaylayınız.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (kModel.EsDanismanTezIzlemeKomiteUyerleriArasindaYokTaahhutu == true ? MsgTypeEnum.Success : MsgTypeEnum.Warning), PropertyName = "EsDanismanTezIzlemeKomiteUyerleriArasindaYokTaahhutu" });
             }
 
             if (!mMessage.Messages.Any())
@@ -2524,6 +2529,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruEsDanis.TDProgramAdi = kModel.TDProgramAdi;
                     tdoBasvuruEsDanis.EMail = kModel.EMail;
                     tdoBasvuruEsDanis.Gerekce = kModel.Gerekce;
+                    tdoBasvuruEsDanis.EsDanismanTezIzlemeKomiteUyerleriArasindaYokTaahhutu = kModel.EsDanismanTezIzlemeKomiteUyerleriArasindaYokTaahhutu;
                     tdoBasvuruEsDanis.IslemTarihi = kModel.IslemTarihi;
                     tdoBasvuruEsDanis.IslemYapanID = kModel.IslemYapanID;
                     tdoBasvuruEsDanis.IslemYapanIP = kModel.IslemYapanIP;
@@ -2587,7 +2593,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("EYK'ya gönderilmeme sebebi açıklaması giriniz.");
             }
-        
+
             if (!mMessage.Messages.Any())
             {
                 var sendMail = tdoBasvuruEsDanis.EYKYaGonderildi != eykYaGonderildi && eykYaGonderildi == false;

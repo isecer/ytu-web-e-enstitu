@@ -25,6 +25,7 @@ namespace Entities.Entities
             this.BelgeTalepleris = new HashSet<BelgeTalepleri>();
             this.BolumEslestirs = new HashSet<BolumEslestir>();
             this.DonemProjesis = new HashSet<DonemProjesi>();
+            this.KayitSilmeBasvurus = new HashSet<KayitSilmeBasvuru>();
             this.Kullanicilars = new HashSet<Kullanicilar>();
             this.KullaniciProgramlaris = new HashSet<KullaniciProgramlari>();
             this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
@@ -38,7 +39,6 @@ namespace Entities.Entities
             this.TijBasvurus = new HashSet<TijBasvuru>();
             this.ToBasvurus = new HashSet<ToBasvuru>();
             this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
-            this.KayitSilmeBasvurus = new HashSet<KayitSilmeBasvuru>();
         }
     
         public string ProgramKod { get; set; }
@@ -70,6 +70,8 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonemProjesi> DonemProjesis { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<KayitSilmeBasvuru> KayitSilmeBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Kullanicilar> Kullanicilars { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -96,7 +98,5 @@ namespace Entities.Entities
         public virtual ICollection<ToBasvuru> ToBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<KayitSilmeBasvuru> KayitSilmeBasvurus { get; set; }
     }
 }

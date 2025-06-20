@@ -43,6 +43,7 @@ namespace Entities.Entities
             this.Enstitulers = new HashSet<Enstituler>();
             this.GonderilenMailKullanicilars = new HashSet<GonderilenMailKullanicilar>();
             this.GonderilenMaillers = new HashSet<GonderilenMailler>();
+            this.KayitSilmeBasvurus = new HashSet<KayitSilmeBasvuru>();
             this.KullaniciEnstituYetkileris = new HashSet<KullaniciEnstituYetkileri>();
             this.Kullanicilar1 = new HashSet<Kullanicilar>();
             this.KullaniciOgrenimleris = new HashSet<KullaniciOgrenimleri>();
@@ -78,7 +79,6 @@ namespace Entities.Entities
             this.YeterlikBasvuruKomitelers = new HashSet<YeterlikBasvuruKomiteler>();
             this.YeterlikSureciKriterMuafOgrencilers = new HashSet<YeterlikSureciKriterMuafOgrenciler>();
             this.Rollers = new HashSet<Roller>();
-            this.KayitSilmeBasvurus = new HashSet<KayitSilmeBasvuru>();
         }
     
         public int KullaniciID { get; set; }
@@ -202,6 +202,8 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GonderilenMailler> GonderilenMaillers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<KayitSilmeBasvuru> KayitSilmeBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KullaniciEnstituYetkileri> KullaniciEnstituYetkileris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Kullanicilar> Kullanicilar1 { get; set; }
@@ -281,7 +283,5 @@ namespace Entities.Entities
         public virtual ICollection<YeterlikSureciKriterMuafOgrenciler> YeterlikSureciKriterMuafOgrencilers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Roller> Rollers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<KayitSilmeBasvuru> KayitSilmeBasvurus { get; set; }
     }
 }

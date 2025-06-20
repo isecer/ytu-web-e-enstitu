@@ -33,6 +33,7 @@ namespace Entities.Entities
         public string ProgramAdi { get; set; }
         public string EMail { get; set; }
         public string Gerekce { get; set; }
+        public Nullable<bool> EsDanismanTezIzlemeKomiteUyerleriArasindaYokTaahhutu { get; set; }
         public Nullable<bool> EYKYaGonderildi { get; set; }
         public Nullable<int> EYKYaGonderildiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKYaGonderildiIslemTarihi { get; set; }

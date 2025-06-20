@@ -3120,22 +3120,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 q = q.Where(p =>
                     p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true &&
-                    !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue &&
-                    p.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih >= baslangicTarihi &&
-                    p.CiltliTezTeslimUzatmaTalebiDanismanOnayTarih <= bitisTarihi);
+                    !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue );
             }
             else
             {
                 q = q.Where(p =>
-                    p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true &&
-                    p.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi >= baslangicTarihi &&
-                    p.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi <= bitisTarihi);
+                    p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true );
             }
-            q = ciltliTezOnayDurumId == MezuniyetTezTeslimUzatmaDurumuEnum.DanismanOnayladi ? q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue) : q.Where(p => p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true && p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true);
-
-            q = q.Where(p => p.FiterTarih.HasValue && p.FiterTarih.Value > baslangicTarihi && p.FiterTarih.Value <= bitisTarihi);
-
-
+           
+            q = q.Where(p => p.FiterTarih.HasValue && p.FiterTarih.Value >= baslangicTarihi && p.FiterTarih.Value <= bitisTarihi);
+             
             var dataExport = q.ToList();
             using (var package = new ExcelPackage())
             {

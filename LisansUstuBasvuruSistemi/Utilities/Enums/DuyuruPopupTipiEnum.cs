@@ -23,12 +23,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int TalepYap = 3;
         public const int LisansustuBasvuru = 4;
         public const int TdoBasvuru = 5;
-        public const int YeterlikBasvuru = 6;
-        public const int TijOneri = 7;
-        public const int TezOneriSavunma = 8;
-        public const int TiBasvuru = 9;
-        public const int MezuniyetBasvuru = 10;
-        public const int DonemProjesiBasvuru = 11;
-        public const int KayitSilmeBasvuru = 12;
+        public const int TdoBasvuruDegisiklik = 6;
+        public const int YeterlikBasvuru = 7;
+        public const int TijOneri = 8;
+        public const int TezOneriSavunma = 9;
+        public const int TiBasvuru = 10;
+        public const int MezuniyetBasvuru = 11;
+        public const int DonemProjesiBasvuru = 12;
+        public const int KayitSilmeBasvuru = 13;
     }
 }
