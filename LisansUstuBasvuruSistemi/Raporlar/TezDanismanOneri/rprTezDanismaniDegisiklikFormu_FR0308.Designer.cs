@@ -463,7 +463,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableRow126 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell160 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell167 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrCheckBox5 = new DevExpress.XtraReports.UI.XRCheckBox();
+            this.chkDanismanOnayi = new DevExpress.XtraReports.UI.XRCheckBox();
             this.xrTable45 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow117 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell149 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -5637,7 +5637,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell167.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell167.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrCheckBox5});
+            this.chkDanismanOnayi});
             this.xrTableCell167.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell167.Multiline = true;
             this.xrTableCell167.Name = "xrTableCell167";
@@ -5650,15 +5650,15 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell167.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCell167.Weight = 0.41228267023975834D;
             // 
-            // xrCheckBox5
+            // chkDanismanOnayi
             // 
-            this.xrCheckBox5.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox5.GlyphOptions.Alignment = DevExpress.Utils.HorzAlignment.Far;
-            this.xrCheckBox5.LocationFloat = new DevExpress.Utils.PointFloat(22.56244F, 4.354988F);
-            this.xrCheckBox5.Name = "xrCheckBox5";
-            this.xrCheckBox5.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrCheckBox5.SizeF = new System.Drawing.SizeF(18.93091F, 21.30968F);
-            this.xrCheckBox5.StylePriority.UseBorders = false;
+            this.chkDanismanOnayi.Borders = DevExpress.XtraPrinting.BorderSide.None;
+            this.chkDanismanOnayi.GlyphOptions.Alignment = DevExpress.Utils.HorzAlignment.Far;
+            this.chkDanismanOnayi.LocationFloat = new DevExpress.Utils.PointFloat(22.56244F, 4.354988F);
+            this.chkDanismanOnayi.Name = "chkDanismanOnayi";
+            this.chkDanismanOnayi.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.chkDanismanOnayi.SizeF = new System.Drawing.SizeF(18.93091F, 21.30968F);
+            this.chkDanismanOnayi.StylePriority.UseBorders = false;
             // 
             // xrTable45
             // 
@@ -6314,7 +6314,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow126;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell160;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell167;
-        private DevExpress.XtraReports.UI.XRCheckBox xrCheckBox5;
+        private DevExpress.XtraReports.UI.XRCheckBox chkDanismanOnayi;
         private DevExpress.XtraReports.UI.XRTable xrTable45;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow117;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell149;

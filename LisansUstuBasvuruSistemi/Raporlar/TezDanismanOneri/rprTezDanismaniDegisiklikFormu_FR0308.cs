@@ -61,6 +61,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                              s.SinavAdi,
                              s.SinavYili,
                              s.SinavPuani,
+                             s.DanismanOnayladi,
                              s.DanismanOnayTarihi,
                              s.VarolanDanismanOnayTarihi,
                              s.Gerekce
@@ -98,6 +99,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 
                 chkDanismanDegisecekEvet.Checked = q.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniDegisikligi || q.TDODanismanTalepTipID == TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi;
                 chkDanismanDegisecekHayir.Checked = !chkDanismanDegisecekEvet.Checked;
+                chkDanismanOnayi.Checked = q.DanismanOnayladi == true;
                 if (chkDanismanDegisecekEvet.Checked)
                 {
                     cellDanismanUnvan.Text = q.TDUnvanAdi;
