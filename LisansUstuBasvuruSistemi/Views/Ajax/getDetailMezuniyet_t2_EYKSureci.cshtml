@@ -7,10 +7,10 @@
 @{
     Layout = null;
     var juriOneriFormuKyetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
-    var jfEykDaOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent();
-    var jofEykyaGonderimYetkisi = jfEykDaOnayYetki && Model.MezuniyetSrModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
+    var jofEykyaGonderimYetkisi = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent(); //rol adı farklı olsa da bu amaçla kullanılıyor. EykyaGonderimYetkisi dir
     var jofEykYaHazirlandiYetkisi = RoleNames.MezuniyetGelenBasvurularEykyaHazirlandiYetkisi.InRoleCurrent();
-    var jofEykdaOnayYetkisi = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSrModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
+    var jofEykdaOnayYetkisi = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent();
+    var jofEykdaOnayYetkisiVeOnaysizSrTalebiYok = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSrModel.SalonRezervasyonlari.All(a => a.SRDurumID != SrTalepDurumEnum.Onaylandı);
     var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
 
     var yaziGormeYetki = jofEykyaGonderimYetkisi || jofEykYaHazirlandiYetkisi || jofEykdaOnayYetkisi;
@@ -70,7 +70,7 @@
                                                     <td id="tezDiliText_@Model.MezuniyetBasvurulariID" width="90">
                                                         @(Model.IsTezDiliTr.HasValue ? (Model.IsTezDiliTr == true ? "Türkçe" : "İngilizce") : "")
                                                     </td>
-                                                    @if (jfEykDaOnayYetki)
+                                                    @if (jofEykyaGonderimYetkisi)
                                                     {
                                                         <td id="tezDiliDropdown_@Model.MezuniyetBasvurulariID" class="hide" width="90">
                                                             <select id="tezDiliSelect_@Model.MezuniyetBasvurulariID" class="form-control">
@@ -88,7 +88,7 @@
                                                 </tr>
                                             </table>
 
-                                            @if (jfEykDaOnayYetki)
+                                            @if (jofEykyaGonderimYetkisi)
                                             {
                                                 <script>
                                                 function editTezDili(id,isDefaultDilTr) {
@@ -225,7 +225,7 @@
                                                                         <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                                                     </td>
                                                                     <td style="text-align:center;">
-                                                                        @if (jofEykdaOnayYetkisi && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
+                                                                        @if (jofEykdaOnayYetkisiVeOnaysizSrTalebiYok && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
                                                                         {
                                                                             @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
                                                                             if (itemJr.IsAsilOrYedek.HasValue)
@@ -312,7 +312,7 @@
                                                                     </td>
 
                                                                     <td style="text-align:center;">
-                                                                        @if (jofEykdaOnayYetkisi && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
+                                                                        @if (jofEykdaOnayYetkisiVeOnaysizSrTalebiYok && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
                                                                         {
                                                                             @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
                                                                             if (itemJr.s.IsAsilOrYedek.HasValue)
@@ -399,7 +399,7 @@
                                                                     </td>
 
                                                                     <td style="text-align:center;">
-                                                                        @if (jofEykdaOnayYetkisi && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
+                                                                        @if (jofEykdaOnayYetkisiVeOnaysizSrTalebiYok && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
                                                                         {
                                                                             @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last : center" })
                                                                             if (itemJr.s.IsAsilOrYedek.HasValue)
@@ -622,7 +622,7 @@
 
                                         @if (juriOneriFormu.EYKYaHazirlandi == true)
                                         {
-                                            if (jofEykdaOnayYetkisi)
+                                            if (jofEykdaOnayYetkisiVeOnaysizSrTalebiYok)
                                             {
                                                 <tr id="EYKdaOnayOnayRow_@juriOneriFormu.MezuniyetJuriOneriFormID" class="@(juriOneriFormu.EYKYaHazirlandi == true ? "" : "hide")">
                                                     <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>

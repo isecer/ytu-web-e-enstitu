@@ -704,7 +704,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi = basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi;
                 model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi = basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi;
                 model.CiltliTezTeslimUzatmaTalebiEykDaOnayTarih = basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayTarih;
-                model.CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama = basvuru.CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama;
+                model.CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama = basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama;
 
                 model.MezuniyetJuriOneriFormlaris = entities.MezuniyetJuriOneriFormlaris.Include("MezuniyetJuriOneriFormuJurileris").Where(p => p.MezuniyetBasvurulariID == basvuru.MezuniyetBasvurulariID).ToList();
                 model.MezuniyetBasvurulariTezTeslimFormlaris = basvuru.MezuniyetBasvurulariTezTeslimFormlaris;

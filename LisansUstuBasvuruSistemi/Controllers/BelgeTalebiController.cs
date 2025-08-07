@@ -858,20 +858,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             htmlBigliRow.Add(new MailTableRowDto { Baslik = "İstenen Belge Sayısı", Aciklama = kModel.IstenenBelgeSayisi + " Adet" });
             //if (kModel.OgrenimDurumID == OgrenimDurum.Mezun) htmlBigliRow.Add(new HtmlContentBilgiRow { Baslik = "NOT", Aciklama = "Mezun olmamış öğrencilerin aynı dönem içinde alabileceği maksimum belge sayısı 3 adettir, eğer 3 adetten fazla belgeye ihtiyaç duyuyorsa daha önceden almış olduğu belgenin fotokopisini çektirip kurum tarafından 'Aslı Gibidir' kaşesi vurdurabilir." });
-            if (kModel.UcretsizMiktar.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Dönemlik ücretsiz alınabilecek belge sayısı", Aciklama = kModel.UcretsizMiktar.Value + " Adet" });
-            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Adet Fiyatı", Aciklama = kModel.BelgeFiyati.Value + " TL" });
-            if (tutar.VerilenBelgeTutar > 0) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Toplam Fiyat", Aciklama = tutar.VerilenBelgeTutar + " TL" });
-            htmlBigliRow.Add(kModel.UcretAlimiVar
-                ? new MailTableRowDto
-                {
-                    Baslik = "Ödeme Bilgisi",
-                    Aciklama = "<a href=" + btip.UcretAciklamasiLink + "> Ödeme bilgisi için tıklayınız.</a>"
-                }
-                : new MailTableRowDto
-                {
-                    Baslik = "Ücret Bilgisi",
-                    Aciklama = "Belge Ücretsizdir lütfen verilen randevu zamanında belgenizi alınız."
-                });
+            //if (kModel.UcretsizMiktar.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Dönemlik ücretsiz alınabilecek belge sayısı", Aciklama = kModel.UcretsizMiktar.Value + " Adet" });
+            //if (kModel.UcretAlimiVar) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Adet Fiyatı", Aciklama = kModel.BelgeFiyati.Value + " TL" });
+            //if (tutar.VerilenBelgeTutar > 0) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Toplam Fiyat", Aciklama = tutar.VerilenBelgeTutar + " TL" });
+            //htmlBigliRow.Add(kModel.UcretAlimiVar
+            //    ? new MailTableRowDto
+            //    {
+            //        Baslik = "Ödeme Bilgisi",
+            //        Aciklama = "<a href=" + btip.UcretAciklamasiLink + "> Ödeme bilgisi için tıklayınız.</a>"
+            //    }
+            //    : new MailTableRowDto
+            //    {
+            //        Baslik = "Ücret Bilgisi",
+            //        Aciklama = "Belge Ücretsizdir lütfen verilen randevu zamanında belgenizi alınız."
+            //    });
 
             if (kModel.DonemlikKota.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Not", Aciklama = "Bu belge tipi için dönemlik alınabilecek maksimum belge sayısı " + kModel.DonemlikKota.Value + " adettir, eğer " + kModel.DonemlikKota.Value + " adetten fazla belgeye ihtiyaç duyuluyorsa daha önceden alınmış olan belgenin fotokopisini çektirilip kurum tarafından 'Aslı Gibidir' kaşesi vurdurulabilir." });
             var konu = "";

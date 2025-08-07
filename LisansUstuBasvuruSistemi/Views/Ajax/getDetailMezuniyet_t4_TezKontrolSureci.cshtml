@@ -531,7 +531,7 @@
                                                                         <option value="false" @(Model.CiltliTezTeslimUzatmaTalebiEykDaOnay == false ? "selected" : "")> Eyk'da Reddedildi</option>
                                                                     </select>
                                                                 </td>
-                                                                <td class="form-group @(Model.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue?"":"hide")" id="CiltliTezTeslimUzatmaEykDaOnayEykTarihTd_@Model.MezuniyetBasvurulariID">
+                                                                <td class="form-group @(Model.CiltliTezTeslimUzatmaTalebiEykDaOnay==true?"":"hide")" id="CiltliTezTeslimUzatmaEykDaOnayEykTarihTd_@Model.MezuniyetBasvurulariID">
                                                                     <input type="text" class="form-control tarihB date-pickerx" style="width:100px;" placeholder="EYK Tarihi" id="CiltliTezTeslimUzatmaEykDaOnayEykTarihi_@Model.MezuniyetBasvurulariID" value="@Model.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi.ToFormatDateInput()" />
 
                                                                 </td>
@@ -792,7 +792,7 @@
             }
         });
     }
-    function EykSureTalepOnayChange(id) { 
+    function EykSureTalepOnayChange(id) {
         var val = $('#CiltliTezTeslimUzatmaEykDaOnayDurum_' + id).val();
         if (val == 'false') {
             $('#CiltliTezTeslimUzatmaEYKOnayAciklamaRow_' + id).removeClass('hide');
@@ -825,16 +825,16 @@
         var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
         PanelRefresh(_panel, false);
         var isOnaylandi = $('#CiltliTezTeslimUzatmaEykDaOnayDurum_' + mezuniyetBasvurulariId).val();
-        var aciklanma = $('#CiltliTezTeslimUzatmaEYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetBasvurulariId).val();
-        var eykTarihi = $('#CiltliTezTeslimUzatmaEykDaOnayEykTarihi_' + mezuniyetBasvurulariId).val(); 
+        var aciklama = $('#CiltliTezTeslimUzatmaEYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetBasvurulariId).val();
+        var eykTarihi = $('#CiltliTezTeslimUzatmaEykDaOnayEykTarihi_' + mezuniyetBasvurulariId).val();
         var eykSayisi = $('#CiltliTezTeslimUzatmaEykDaOnayEykSayisi_' + mezuniyetBasvurulariId).val();
-     
+
         var model = {
             mezuniyetBasvurulariId,
             isOnaylandi,
             eykTarihi,
             eykSayisi,
-            aciklanma
+            aciklama
         }
         $.ajax({
             url: '@Url.Action("CiltliTezTeslimEkSureEykOnayPost", "MezuniyetGelenBasvurular")',

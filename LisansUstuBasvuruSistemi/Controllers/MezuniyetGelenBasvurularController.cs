@@ -367,8 +367,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      Yayinlar = yayinlar.ContainsKey(s.MezuniyetBasvurulariID)
                                                ? yayinlar[s.MezuniyetBasvurulariID]
                                                : "",
-                                     BasvuruDurumu=s.MezuniyetYayinKontrolDurumAdi,
-                                     BasvuruOnayTarihi=s.MezuniyetYayinKontrolDurumOnayTarihi,
+                                     BasvuruDurumu = s.MezuniyetYayinKontrolDurumAdi,
+                                     BasvuruOnayTarihi = s.MezuniyetYayinKontrolDurumOnayTarihi,
                                      BasvuruyuOnaylayan = Ey != null ? (Ey.Ad + " " + Ey.Soyad) : "",
                                      EYKTarihi = s.EYKTarihi != null ? s.EYKTarihi.Value.ToFormatDate() : "",
                                      JOFTezbasligiDegisti = s.MezuniyetJuriOneriFormu != null ? (s.MezuniyetJuriOneriFormu.IsTezBasligiDegisti == true ? "Değişti" : "Değişmedi") : "-",
@@ -2509,10 +2509,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnay = isOnaylandi;
                 basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayTarih = DateTime.Now;
                 basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayAciklama = aciklama;
+                if (isOnaylandi.HasValue)
+                {
+                    basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi = eykSayisi;
+                }
+
                 if (isOnaylandi == true)
                 {
+
                     basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi = eykTarihi.Value.Date;
-                    basvuru.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi = eykSayisi;
                 }
 
                 var ogrenimTipi = basvuru.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(f => f.OgrenimTipKod == basvuru.OgrenimTipKod);
@@ -3120,16 +3125,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 q = q.Where(p =>
                     p.CiltliTezTeslimUzatmaTalebiDanismanOnay == true &&
-                    !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue );
+                    !p.CiltliTezTeslimUzatmaTalebiEykDaOnay.HasValue);
             }
             else
             {
                 q = q.Where(p =>
-                    p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true );
+                    p.CiltliTezTeslimUzatmaTalebiEykDaOnay == true);
             }
-           
+
             q = q.Where(p => p.FiterTarih.HasValue && p.FiterTarih.Value >= baslangicTarihi && p.FiterTarih.Value <= bitisTarihi);
-             
+
             var dataExport = q.ToList();
             using (var package = new ExcelPackage())
             {
