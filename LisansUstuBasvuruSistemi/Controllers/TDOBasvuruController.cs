@@ -811,13 +811,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (isNew || !tdoBd.DanismanOnayladi.HasValue || tdoBd.DanismanOnayladi == false) // yeni kayıt veya danışman onayı yok veya ret ise son tez başlığı getirilsin
                 {
-                    var sonTezBaslik = TdoBus.GetSonTezBaslik(tdoBas.OgrenciNo);//tez başlığı değişikliklerini diğer modülerde kontrol et eğer değişiklik varsa son değişiklik alınacak
-                    if (sonTezBaslik != null)
+                    var ogrenciObsData = KullanicilarBus.OgrenciKontrol(tdoBas.OgrenciNo);
+                    if (ogrenciObsData.OgrenciTez != null)
                     {
-                        model.IsTezDiliTr = sonTezBaslik.IsTezDiliTr;
-                        model.TezBaslikTr = sonTezBaslik.TezBaslikTr;
-                        model.TezBaslikEn = sonTezBaslik.TezBaslikEn;
+                        model.IsTezDiliTr = ogrenciObsData.IsTezDiliTr;
+                        model.TezBaslikTr = ogrenciObsData.OgrenciTez.TEZ_BASLIK;
+                        model.TezBaslikEn = ogrenciObsData.OgrenciTez.TEZ_BASLIK_ENG;
                     }
+                    //var sonTezBaslik = TdoBus.GetSonTezBaslik(tdoBas.OgrenciNo);//tez başlığı değişikliklerini diğer modülerde kontrol et eğer değişiklik varsa son değişiklik alınacak
+                    //if (sonTezBaslik != null)
+                    //{
+                    //    model.IsTezDiliTr = sonTezBaslik.IsTezDiliTr;
+                    //    model.TezBaslikTr = sonTezBaslik.TezBaslikTr;
+                    //    model.TezBaslikEn = sonTezBaslik.TezBaslikEn;
+                    //}
                 }
                 model.SListSinav = new SelectList(SinavTipleriBus.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
                 model.SListTdAnabilimDali = new SelectList(AnabilimDallariBus.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
@@ -1131,13 +1138,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (isNew || !tdoBd.DanismanOnayladi.HasValue || tdoBd.DanismanOnayladi == false) // yeni kayıt veya danışman onayı yok veya ret ise son tez başlığı getirilsin
                 {
-                    var sonTezBaslik = TdoBus.GetSonTezBaslik(tdoBas.OgrenciNo);//tez başlığı değişikliklerini diğer modülerde kontrol et eğer değişiklik varsa son değişiklik alınacak
-                    if (sonTezBaslik != null)
+                    var ogrenciObsData = KullanicilarBus.OgrenciKontrol(tdoBas.OgrenciNo);
+                    if (ogrenciObsData.OgrenciTez != null)
                     {
-                        model.IsTezDiliTr = sonTezBaslik.IsTezDiliTr;
-                        model.TezBaslikTr = sonTezBaslik.TezBaslikTr;
-                        model.TezBaslikEn = sonTezBaslik.TezBaslikEn;
+                        model.IsTezDiliTr = ogrenciObsData.IsTezDiliTr;
+                        model.TezBaslikTr = ogrenciObsData.OgrenciTez.TEZ_BASLIK;
+                        model.TezBaslikEn = ogrenciObsData.OgrenciTez.TEZ_BASLIK_ENG;
                     }
+                    //var sonTezBaslik = TdoBus.GetSonTezBaslik(tdoBas.OgrenciNo);//tez başlığı değişikliklerini diğer modülerde kontrol et eğer değişiklik varsa son değişiklik alınacak
+                    //if (sonTezBaslik != null)
+                    //{
+                    //    model.IsTezDiliTr = sonTezBaslik.IsTezDiliTr;
+                    //    model.TezBaslikTr = sonTezBaslik.TezBaslikTr;
+                    //    model.TezBaslikEn = sonTezBaslik.TezBaslikEn;
+                    //}
                 }
 
 
@@ -1147,6 +1161,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.SListTdProgram = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
                 if (model.SinavTipID.HasValue)
                 {
+                 
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
                     if (sinav.OzelNot) model.SListSinavNot = new SelectList(SinavTipleriBus.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
                 }
@@ -1480,13 +1495,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (isNew || !tdoBd.DanismanOnayladi.HasValue || tdoBd.DanismanOnayladi == false) // yeni kayıt veya danışman onayı yok veya ret ise son tez başlığı getirilsin
                 {
-                    var sonTezBaslik = TdoBus.GetSonTezBaslik(tdoBas.OgrenciNo);//tez başlığı değişikliklerini diğer modülerde kontrol et eğer değişiklik varsa son değişiklik alınacak
-                    if (sonTezBaslik != null)
+                    var ogrenciObsData = KullanicilarBus.OgrenciKontrol(tdoBas.OgrenciNo);
+                    if (ogrenciObsData.OgrenciTez != null)
                     {
-                        model.IsTezDiliTr = sonTezBaslik.IsTezDiliTr;
-                        model.TezBaslikTr = sonTezBaslik.TezBaslikTr;
-                        model.TezBaslikEn = sonTezBaslik.TezBaslikEn;
+                        model.IsTezDiliTr = ogrenciObsData.IsTezDiliTr;
+                        model.TezBaslikTr = ogrenciObsData.OgrenciTez.TEZ_BASLIK;
+                        model.TezBaslikEn = ogrenciObsData.OgrenciTez.TEZ_BASLIK_ENG;
                     }
+                    //var sonTezBaslik = TdoBus.GetSonTezBaslik(tdoBas.OgrenciNo);//tez başlığı değişikliklerini diğer modülerde kontrol et eğer değişiklik varsa son değişiklik alınacak
+                    //if (sonTezBaslik != null)
+                    //{
+                    //    model.IsTezDiliTr = sonTezBaslik.IsTezDiliTr;
+                    //    model.TezBaslikTr = sonTezBaslik.TezBaslikTr;
+                    //    model.TezBaslikEn = sonTezBaslik.TezBaslikEn;
+                    //}
                 }
 
                 model.SListTDoDanismanTalepTip = new SelectList(TdoBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);

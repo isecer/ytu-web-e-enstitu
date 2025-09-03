@@ -438,7 +438,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             kModel.MezuniyetYayinKontrolDurumOnayYapanKullaniciID = UserIdentity.Current.Id;
-            kModel.MezuniyetYayinKontrolDurumOnayTarihi=DateTime.Now;
+            kModel.MezuniyetYayinKontrolDurumOnayTarihi = DateTime.Now;
             kModel.IslemYapanID = UserIdentity.Current.Id;
             kModel.IslemTarihi = DateTime.Now;
             kModel.IslemYapanIP = UserIdentity.Ip;
@@ -1229,23 +1229,51 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kModel.IslemYapanIP = kModel.IslemYapanIP;
                         var juriOneriFormu = mezuniyetBasvurusu.MezuniyetJuriOneriFormlaris.First();
                         var mezuniyetJuriOneriFormuJurileris = juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.IsAsilOrYedek == true).ToList();
-                        foreach (var juri in mezuniyetJuriOneriFormuJurileris)
+
+                        var uzatmaSrRez = mezuniyetBasvurusu.SRTalepleris.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Uzatma && p.SRDurumID == SrTalepDurumEnum.Onaylandı).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
+                        if (uzatmaSrRez != null)
                         {
-                            kModel.SRTaleplerJuris.Add(new SRTaleplerJuri
+                            var juriler = uzatmaSrRez.SRTaleplerJuris.ToList();
+                            foreach (var juri in juriler)
                             {
-                                UniqueID = Guid.NewGuid(),
-                                MezuniyetJuriOneriFormuJuriID = juri.MezuniyetJuriOneriFormuJuriID,
-                                UniversiteAdi = juri.UniversiteAdi,
-                                AnabilimdaliProgramAdi = juri.AnabilimdaliProgramAdi,
-                                JuriTipAdi = juri.JuriTipAdi,
-                                UnvanAdi = juri.UnvanAdi,
-                                JuriAdi = juri.AdSoyad,
-                                Telefon = "",
-                                Email = juri.EMail,
-                                IslemTarihi = DateTime.Now,
-                                IslemYapanID = UserIdentity.Current.Id,
-                                IslemYapanIP = UserIdentity.Ip
-                            });
+                                kModel.SRTaleplerJuris.Add(new SRTaleplerJuri
+                                {
+                                    UniqueID = Guid.NewGuid(),
+                                    MezuniyetJuriOneriFormuJuriID = juri.MezuniyetJuriOneriFormuJuriID,
+                                    UniversiteAdi = juri.UniversiteAdi,
+                                    AnabilimdaliProgramAdi = juri.AnabilimdaliProgramAdi,
+                                    JuriTipAdi = juri.JuriTipAdi,
+                                    UnvanAdi = juri.UnvanAdi,
+                                    JuriAdi = juri.JuriAdi,
+                                    Telefon = juri.Telefon,
+                                    Email = juri.Email,
+                                    IslemTarihi = DateTime.Now,
+                                    IslemYapanID = UserIdentity.Current.Id,
+                                    IslemYapanIP = UserIdentity.Ip
+                                });
+                            }
+                        }
+                        else
+                        {
+
+                            foreach (var juri in mezuniyetJuriOneriFormuJurileris)
+                            {
+                                kModel.SRTaleplerJuris.Add(new SRTaleplerJuri
+                                {
+                                    UniqueID = Guid.NewGuid(),
+                                    MezuniyetJuriOneriFormuJuriID = juri.MezuniyetJuriOneriFormuJuriID,
+                                    UniversiteAdi = juri.UniversiteAdi,
+                                    AnabilimdaliProgramAdi = juri.AnabilimdaliProgramAdi,
+                                    JuriTipAdi = juri.JuriTipAdi,
+                                    UnvanAdi = juri.UnvanAdi,
+                                    JuriAdi = juri.AdSoyad,
+                                    Telefon = "",
+                                    Email = juri.EMail,
+                                    IslemTarihi = DateTime.Now,
+                                    IslemYapanID = UserIdentity.Current.Id,
+                                    IslemYapanIP = UserIdentity.Ip
+                                });
+                            }
                         }
                         SRTalepleri srTalebi;
 
