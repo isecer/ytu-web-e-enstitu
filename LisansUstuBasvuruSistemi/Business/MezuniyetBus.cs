@@ -598,6 +598,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     RowID = s.RowID,
                     SiraNo = s.SiraNo,
                     MezuniyetBasvurulariID = s.MezuniyetBasvurulariID,
+                    IsLatexOrWordSablonu = s.IsLatexOrWordSablonu,
                     TezDosyaAdi = s.TezDosyaAdi,
                     TezDosyaYolu = s.TezDosyaYolu,
                     IsOnaylandiOrDuzeltme = s.IsOnaylandiOrDuzeltme,

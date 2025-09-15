@@ -13,6 +13,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
+using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -246,7 +247,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (RoleNames.TiGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
             var mmMessage = TiBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.ToNullIntZero());
-
+          
             KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
             kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
@@ -256,11 +257,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (!kul.DanismanID.HasValue)
                 {
+                    mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Tez Danışmanınıza ait sistemde kullanıcı hesabı bilgisine rastlanmadı.");
                 }
 
             }
-
             if (mmMessage.Messages.Count == 0)
             {
                 kModel.BasvuruSonDonemSecilecekDersKodlari = TiAyar.TiSonDonemKayitOlunmasiGerekenDersKodlari.GetAyar(kModel.EnstituKod);

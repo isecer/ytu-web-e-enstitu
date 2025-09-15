@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.KayitSilme
 {
@@ -13,39 +14,42 @@ namespace LisansUstuBasvuruSistemi.Raporlar.KayitSilme
             {
 
 
-                var data = (from mb in entities.KayitSilmeBasvurus
-                            join enst in entities.Enstitulers on mb.EnstituKod equals enst.EnstituKod
-                            join osl in entities.OgrenimTipleris on new { mb.OgrenimTipKod, enst.EnstituKod } equals new { osl.OgrenimTipKod, osl.EnstituKod }
-                            join prg in entities.Programlars on mb.ProgramKod equals prg.ProgramKod
+                var data = (from ks in entities.KayitSilmeBasvurus
+                            join enst in entities.Enstitulers on ks.EnstituKod equals enst.EnstituKod
+                            join osl in entities.OgrenimTipleris on new { ks.OgrenimTipKod, enst.EnstituKod } equals new { osl.OgrenimTipKod, osl.EnstituKod }
+                            join prg in entities.Programlars on ks.ProgramKod equals prg.ProgramKod
                             join abd in entities.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                            join ogrenci in entities.Kullanicilars on mb.KullaniciID equals ogrenci.KullaniciID
-                            join danisman in entities.Kullanicilars on mb.TezDanismanID equals danisman.KullaniciID into defD
+                            join ogrenci in entities.Kullanicilars on ks.KullaniciID equals ogrenci.KullaniciID
+                            join danisman in entities.Kullanicilars on ks.TezDanismanID equals danisman.KullaniciID into defD
                             from dDanisman in defD.DefaultIfEmpty()
-                            join harcYetkili in entities.Kullanicilars on mb.HarcBirimiOnayYapanID equals harcYetkili.KullaniciID
-                            join kutuphaneYetkili in entities.Kullanicilars on mb.KutuphaneBirimiOnayYapanID equals kutuphaneYetkili.KullaniciID
-                            join enstituYetkili in entities.Kullanicilars on mb.EYKYaGonderildiIslemYapanID equals enstituYetkili.KullaniciID
-                            where mb.KayitSilmeBasvuruID == id
+                            join harcYetkili in entities.Kullanicilars on ks.HarcBirimiOnayYapanID equals harcYetkili.KullaniciID
+                            join kutuphaneYetkili in entities.Kullanicilars on ks.KutuphaneBirimiOnayYapanID equals kutuphaneYetkili.KullaniciID
+                            join enstituYetkili in entities.Kullanicilars on ks.EYKYaGonderildiIslemYapanID equals enstituYetkili.KullaniciID
+                            where ks.KayitSilmeBasvuruID == id
                             select new
                             {
-                                mb.KayitSilmeBasvuruID,
-                                mb.EnstituKod,
+                                ks.KayitSilmeBasvuruID,
+                                ks.EnstituKod,
+                                ks.UniqueID,
                                 EnstituAdi = enst.EnstituAd,
-                                DonemAdi = mb.OgretimYiliBaslangic + " / " + (mb.OgretimYiliBaslangic + 1) + " " + mb.Donemler.DonemAdi,
-                                mb.OgrenciNo,
+                                DonemAdi = ks.OgretimYiliBaslangic + " / " + (ks.OgretimYiliBaslangic + 1) + " " + ks.Donemler.DonemAdi,
+                                ks.OgrenciNo,
                                 OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
-                                mb.BasvuruTarihi,
+                                ks.BasvuruTarihi,
                                 osl.OgrenimTipAdi,
                                 abd.AnabilimDaliAdi,
                                 prg.ProgramAdi,
-                                mb.CepTel,
-                                mb.EPostaAdresi,
+                                ks.CepTel,
+                                ks.EPostaAdresi,
                                 DanismanAdSoyad = dDanisman != null ? dDanisman.Unvanlar.UnvanAdi + " " + dDanisman.Ad + " " + dDanisman.Soyad : "",
                                 HarcOnayYapanAdSoyad = harcYetkili.Unvanlar.UnvanAdi + " " + harcYetkili.Ad + " " + harcYetkili.Soyad,
-                                mb.HarcBirimiOnayIslemTarihi,
+                                ks.HarcBirimiOnayIslemTarihi,
                                 KutuphaneOnayYapanAdSoyad = kutuphaneYetkili.Unvanlar.UnvanAdi + " " + kutuphaneYetkili.Ad + " " + kutuphaneYetkili.Soyad,
-                                mb.KutuphaneBirimiOnayIslemTarihi,
+                                ks.KutuphaneBirimiOnayIslemTarihi,
                                 EnstituOnayYapanAdSoyad = enstituYetkili.Unvanlar.UnvanAdi + " " + enstituYetkili.Ad + " " + enstituYetkili.Soyad,
-                                mb.EYKYaGonderildiIslemTarihi
+                                ks.EYKYaGonderildiIslemTarihi,
+                                enst.SistemErisimAdresi,
+                                urlAdd = enst.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "KSTF_" + ks.KayitSilmeBasvuruID + "_" + ks.UniqueID
                             }).First();
 
 
@@ -74,6 +78,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.KayitSilme
                 cellImzaEnstituTarih.Text = data.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime();
 
 
+                cellFormKodu.Text = "Form Kodu: " + data.UniqueID.ToString().Substring(0, 8).ToUpper();
+                xrQRCode.ImageUrl = data.urlAdd;
+                xrQRCode.Image = data.urlAdd.CreateQrCode();
             }
         }
 

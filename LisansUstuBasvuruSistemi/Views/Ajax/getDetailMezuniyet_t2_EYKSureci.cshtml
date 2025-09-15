@@ -177,7 +177,7 @@
                                                                 </a>
                                                             </li>
 
-                                                        } 
+                                                        }
                                                     }
 
                                                 </ul>
@@ -624,7 +624,7 @@
                                         {
                                             if (jofEykdaOnayYetkisiVeOnaysizSrTalebiYok)
                                             {
-                                                <tr id="EYKdaOnayOnayRow_@juriOneriFormu.MezuniyetJuriOneriFormID" class="@(juriOneriFormu.EYKYaHazirlandi == true ? "" : "hide")">
+                                                <tr id="EYKdaOnayOnayRow_@juriOneriFormu.MezuniyetJuriOneriFormID">
                                                     <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd">
@@ -651,7 +651,38 @@
                                                         </table>
                                                     </td>
                                                 </tr>
+                                                
+                                                <tr class="RwtezBaslikMain_@juriOneriFormu.MezuniyetJuriOneriFormID @(juriOneriFormu.EYKDaOnaylandi == true ? "" : "hide")">
+                                                    <td colspan="3">
+                                                        <table style="width:100%;">
+                                                            <tr>
+                                                                <td class="CaptionTd" width="200">EYK'da Başlık Değişti mi?</td>
+                                                                <td class="CaptionTd" width="10"></td>
+                                                                <td class="ValueTd form-group">
+                                                                    <select class="form-control" style="width:100%;"id="IsTezBasligiDegisti_@juriOneriFormu.MezuniyetJuriOneriFormID" name="IsTezBasligiDegisti" onchange="if($(this).val()=='true'){ $('.RwtezBasliklari_@juriOneriFormu.MezuniyetJuriOneriFormID').removeClass('hide'); }else{$('.RwtezBasliklari_@juriOneriFormu.MezuniyetJuriOneriFormID').addClass('hide');}">
+                                                                        <option @((juriOneriFormu.IsTezBasligiDegisti == true).ToSelected()) value="true">Evet</option>
+                                                                        <option @((juriOneriFormu.IsTezBasligiDegisti == false).ToSelected()) value="false">Hayır</option>
+                                                                    </select>
+                                                                </td> 
+                                                            </tr>
+                                                            <tr class="RwtezBasliklari_@juriOneriFormu.MezuniyetJuriOneriFormID @(juriOneriFormu.IsTezBasligiDegisti == true ? "" : "hide")">
+                                                                <td class="CaptionTd" width="200">Yeni Tez Başlığı Türkçe</td>
+                                                                <td class="CaptionTd" width="10"></td>
+                                                                <td class="ValueTd form-group">
+                                                                    <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr_@juriOneriFormu.MezuniyetJuriOneriFormID" maxlength="512" value="@juriOneriFormu.YeniTezBaslikTr" class="form-control UpperTextTr tCharacterBlock"/>
+                                                                </td>
+                                                            </tr>
 
+                                                            <tr class="RwtezBasliklari_@juriOneriFormu.MezuniyetJuriOneriFormID @(juriOneriFormu.IsTezBasligiDegisti == true ? "" : "hide")">
+                                                                <td class="CaptionTd" width="200">Yeni Tez Başlığı İngilizce</td>
+                                                                <td class="CaptionTd" width="10"></td>
+                                                                <td class="ValueTd form-group">
+                                                                    <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn_@juriOneriFormu.MezuniyetJuriOneriFormID" maxlength="512" value="@juriOneriFormu.YeniTezBaslikEn" class="form-control UpperTextEn tCharacterBlock"/>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr> 
                                                 <tr id="EYKOnayAciklamaRow_@juriOneriFormu.MezuniyetJuriOneriFormID" class="form-group @(juriOneriFormu.EYKDaOnaylandi == false ? "" : "hide")">
                                                     <td class="CaptionTd">Onaylanmama Açıklaması</td>
                                                     <td class="CaptionTd">:</td>

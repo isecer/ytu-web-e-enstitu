@@ -417,7 +417,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell61 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow57 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell62 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrRichKaraBigi = new DevExpress.XtraReports.UI.XRRichText();
             this.detGrupTezDiliDr = new DevExpress.XtraReports.UI.DetailReportBand();
             this.Detail8 = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable46 = new DevExpress.XtraReports.UI.XRTable();
@@ -484,6 +483,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableRow155 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell193 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrRichText1 = new DevExpress.XtraReports.UI.XRRichText();
+            this.xrRichKaraBigi = new DevExpress.XtraReports.UI.XRRichText();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable6)).BeginInit();
@@ -534,7 +534,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             ((System.ComponentModel.ISupportInitialize)(this.xrTable56)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable57)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTblTahhutCapt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable46)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable47)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable31)).BeginInit();
@@ -545,6 +544,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             ((System.ComponentModel.ISupportInitialize)(this.xrTable60)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable61)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -3698,8 +3698,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell85.StylePriority.UsePadding = false;
             this.xrTableCell85.StylePriority.UseTextAlignment = false;
             this.xrTableCell85.Text = "‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılma" +
-    "sında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahh" +
-    "ütünü kabul ediyorum.";
+    "sında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ taah" +
+    "hüdünü kabul ediyorum.";
             this.xrTableCell85.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCell85.Weight = 2.5537760156722227D;
             // 
@@ -5116,21 +5116,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell62.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopCenter;
             this.xrTableCell62.Weight = 1D;
             // 
-            // xrRichKaraBigi
-            // 
-            this.xrRichKaraBigi.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
-            | DevExpress.XtraPrinting.BorderSide.Right) 
-            | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrRichKaraBigi.Font = new DevExpress.Drawing.DXFont("Arial", 11F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrRichKaraBigi.LocationFloat = new DevExpress.Utils.PointFloat(0F, 27.77783F);
-            this.xrRichKaraBigi.Name = "xrRichKaraBigi";
-            this.xrRichKaraBigi.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 0, 0, 0, 100F);
-            this.xrRichKaraBigi.SerializableRtfString = resources.GetString("xrRichKaraBigi.SerializableRtfString");
-            this.xrRichKaraBigi.SizeF = new System.Drawing.SizeF(749.8052F, 23.32465F);
-            this.xrRichKaraBigi.StylePriority.UseBorders = false;
-            this.xrRichKaraBigi.StylePriority.UseFont = false;
-            this.xrRichKaraBigi.StylePriority.UsePadding = false;
-            // 
             // detGrupTezDiliDr
             // 
             this.detGrupTezDiliDr.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -5731,9 +5716,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             // Detail9
             // 
             this.Detail9.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrTable60,
-            this.xrRichKaraBigi});
-            this.Detail9.HeightF = 51.10248F;
+            this.xrRichKaraBigi,
+            this.xrTable60});
+            this.Detail9.HeightF = 79.22751F;
             this.Detail9.Name = "Detail9";
             // 
             // xrTable60
@@ -5886,6 +5871,20 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrRichText1.StylePriority.UseFont = false;
             this.xrRichText1.StylePriority.UsePadding = false;
             // 
+            // xrRichKaraBigi
+            // 
+            this.xrRichKaraBigi.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
+            | DevExpress.XtraPrinting.BorderSide.Bottom)));
+            this.xrRichKaraBigi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 6.4F);
+            this.xrRichKaraBigi.LocationFloat = new DevExpress.Utils.PointFloat(0F, 27.77786F);
+            this.xrRichKaraBigi.Name = "xrRichKaraBigi";
+            this.xrRichKaraBigi.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 0, 0, 0, 100F);
+            this.xrRichKaraBigi.SerializableRtfString = resources.GetString("xrRichKaraBigi.SerializableRtfString");
+            this.xrRichKaraBigi.SizeF = new System.Drawing.SizeF(750F, 51.44965F);
+            this.xrRichKaraBigi.StylePriority.UseBorders = false;
+            this.xrRichKaraBigi.StylePriority.UseFont = false;
+            this.xrRichKaraBigi.StylePriority.UsePadding = false;
+            // 
             // RprTezDanismaniDegisiklikFormu_FR0308
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -5958,7 +5957,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             ((System.ComponentModel.ISupportInitialize)(this.xrTable56)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable57)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTblTahhutCapt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable46)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable47)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable31)).EndInit();
@@ -5969,6 +5967,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             ((System.ComponentModel.ISupportInitialize)(this.xrTable60)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable61)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -6231,7 +6230,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell61;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow57;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell62;
-        private DevExpress.XtraReports.UI.XRRichText xrRichKaraBigi;
         private DevExpress.XtraReports.UI.DetailReportBand detGrupTezDiliDr;
         private DevExpress.XtraReports.UI.DetailBand Detail8;
         private DevExpress.XtraReports.UI.XRTableRow rwTezOneriYapildiDr;
@@ -6429,5 +6427,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell111;
         private DevExpress.XtraReports.UI.XRTableCell cellYeniTezDili;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell85;
+        private DevExpress.XtraReports.UI.XRRichText xrRichKaraBigi;
     }
 }

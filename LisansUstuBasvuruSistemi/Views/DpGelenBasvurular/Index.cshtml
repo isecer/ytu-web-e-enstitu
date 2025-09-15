@@ -1,4 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Business
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -8,7 +9,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
-    var onayYapmayanJuriEmails = (List<string>)ViewBag.onayYapmayanJuriEmails; 
+    var onayYapmayanJuriEmails = (List<string>)ViewBag.onayYapmayanJuriEmails;
+    var eykDaOnaylanacakBasvuruIds = (List<int>)ViewBag.EykDaOnaylanacakBasvuruIds;
 
 }
 <div class="row">
@@ -24,7 +26,118 @@
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
                     </h3>
                     <ul class="panel-controls">
+                        @if (Model.RowCount > 0 && UserIdentity.Current.IsAdmin && eykDaOnaylanacakBasvuruIds.Any())
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="EykYaHazirlaTopluOnay()" title="EYK'da onay işlemi bekleyen başvuruları onayla"><i class="fa fa-thumbs-o-up fa-lg"></i></a>
+                                <script>
+                                     function EykYaHazirlaTopluOnay() {
+                                        var kontrolEdilmeyenTalepIds = @Json.Encode(eykDaOnaylanacakBasvuruIds);
 
+                                        // Bugünün tarihini varsayılan olarak ayarla
+                                        var bugun = new Date();
+                                        var varsayilanTarih = bugun.getFullYear() + '-' +
+                                            String(bugun.getMonth() + 1).padStart(2, '0') + '-' +
+                                            String(bugun.getDate()).padStart(2, '0');
+
+                                        Swal.fire({
+                                            title: 'Dönem Projesi Başvurusu Toplu Onay İşlemi',
+                                            html: `
+                                                <p style="margin-bottom: 15px;">EYK'da onay işlemi bekleyen '@eykDaOnaylanacakBasvuruIds.Count' adet başvuruyu onaylamak istiyor musunuz?</p>
+                                                <div style="margin-bottom: 10px;">
+                                                    <label for="eykTarihi" style="display: block; text-align: left; font-weight: bold; margin-bottom: 5px;">
+                                                        EYK Tarihi: <span style="color: red;">*</span>
+                                                    </label>
+                                                    <input type="date"
+                                                           id="eykTarihi"
+                                                           class="swal2-input"
+                                                           value="${varsayilanTarih}"
+                                                           style="width: 100%; margin: 0;"
+                                                           required>
+                                                </div>
+                                                <small style="color: #666;">* EYK tarihi zorunludur</small>
+                                            `,
+                                            icon: "question",
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Onayla',
+                                            confirmButtonColor: "#28a745",
+                                            cancelButtonText: 'Vazgeç',
+                                            showLoaderOnConfirm: true,
+                                            backdrop: true,
+                                            padding: '2em',
+                                            allowOutsideClick: false,
+                                            focusConfirm: false,
+                                            preConfirm: function () {
+                                                const eykTarihi = document.getElementById('eykTarihi').value;
+
+                                                // Tarih kontrolü
+                                                if (!eykTarihi) {
+                                                    Swal.showValidationMessage('EYK tarihi girişi zorunludur!');
+                                                    return false;
+                                                }
+
+                                                // Tarih formatı kontrolü
+                                                const tarihRegex = /^\d{4}-\d{2}-\d{2}$/;
+                                                if (!tarihRegex.test(eykTarihi)) {
+                                                    Swal.showValidationMessage('Geçerli bir tarih formatı giriniz! (YYYY-MM-DD)');
+                                                    return false;
+                                                }
+
+                                                // Geçmiş tarih kontrolü (isteğe bağlı)
+                                                //const girilenTarih = new Date(eykTarihi);
+                                                //const bugun = new Date();
+                                                //bugun.setHours(0,0,0,0); // Saati sıfırla, sadece tarihi karşılaştır
+
+                                                //if (girilenTarih > bugun) {
+                                                //    Swal.showValidationMessage('EYK tarihi bugünden ileri bir tarih olamaz!');
+                                                //    return false;
+                                                //}
+
+                                                $('.swal2-cancel').first().text("Onaylanıyor...");
+
+                                                return new Promise(function (resolve) {
+                                                    $.ajax({
+                                                        url: '@Url.Action("EykDaTopluOnay", "DpGelenBasvurular")',
+                                                        type: 'POST',
+                                                        cache: false,
+                                                        data: {
+                                                            'basvuruIds': kontrolEdilmeyenTalepIds,
+                                                            'eykTarihi': eykTarihi
+                                                        },
+                                                        success: function (result) {
+                                                            $('.swal2-cancel').first().text("Vazgeç");
+                                                            Swal.fire({
+                                                                html: result.message,
+                                                                icon: (result.success ? "success" : "error"),
+                                                                type: (result.success ? "success" : "error"),
+                                                                confirmButtonText: 'Tamam',
+                                                                padding: '2em'
+                                                            }).then(function() {
+                                                                if (result.success) {
+                                                                    // Başarılı olursa sayfayı yenile
+                                                                    location.reload();
+                                                                }
+                                                            });
+                                                            resolve();
+                                                        },
+                                                        error: function() {
+                                                            $('.swal2-cancel').first().text("Vazgeç");
+                                                            Swal.fire({
+                                                                title: 'Hata!',
+                                                                text: 'İşlem sırasında bir hata oluştu!',
+                                                                icon: 'error',
+                                                                confirmButtonText: 'Tamam'
+                                                            });
+                                                            resolve();
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                        });
+                                    }
+                                </script>
+                            </li>
+                        }
                         @if (Model.IsFiltered && Model.RowCount > 0)
                         {
                             <li>
@@ -32,6 +145,7 @@
                             </li>
 
                         }
+
                         @if (RoleNames.DonemProjesiEykYaGonder.InRole())
                         {
                             <li>

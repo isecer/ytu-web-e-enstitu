@@ -579,7 +579,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
                         }
 
-                    }
+                    } 
                 }
                 else
                 {

@@ -234,8 +234,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
 
                         if (!isOnayOrRet)
                         {
-                            if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
-                                item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = kayitSilmeBasvuru.HarcBirimiOnayAciklamasi });
+                            if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
+                                item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = kayitSilmeBasvuru.HarcBirimiOnayAciklamasi });
 
                         }
 
@@ -337,8 +337,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "OgrenciAdSoyad", Value = ogrenci.Ad + " " + ogrenci.Soyad });
 
-                        if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = kayitSilmeBasvuru.KutuphaneBirimiOnayAciklamasi });
+                        if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = kayitSilmeBasvuru.KutuphaneBirimiOnayAciklamasi });
 
 
 
@@ -500,8 +500,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "EYKTarihi", Value = kayitSilmeBasvuru.EYKTarihi.ToFormatDate() });
                         if (item.SablonParametreleri.Any(a => a == "@EYKSayisi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "EYKSayisi", Value = kayitSilmeBasvuru.EYKSayisi });
-                        if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = isEykYaOrEykDa ? kayitSilmeBasvuru.EYKYaGonderimDurumAciklamasi : kayitSilmeBasvuru.EYKDaOnaylanmadiDurumAciklamasi });
+                        if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = isEykYaOrEykDa ? kayitSilmeBasvuru.EYKYaGonderimDurumAciklamasi : kayitSilmeBasvuru.EYKDaOnaylanmadiDurumAciklamasi });
 
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
 

@@ -1606,7 +1606,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         [HttpPost]
-        public ActionResult TezDosyaEklePost(Guid rowId, int? mezuniyetBasvurulariTezDosyaId, HttpPostedFileBase tezSablonDosyasi)
+        public ActionResult TezDosyaEklePost(Guid rowId, int? mezuniyetBasvurulariTezDosyaId, HttpPostedFileBase tezSablonDosyasi, bool? isLatexOrWordSablonu)
         {
             var mMessage = new MmMessage
             {
@@ -1658,6 +1658,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
+            if (!isLatexOrWordSablonu.HasValue)
+            {
+                mMessage.Messages.Add("Şablon türü seçiniz.");
+            }
+
             if (mMessage.Messages.Count == 0)
             {
                 var siraNo = mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Any() ? mezuniyetBasvurusu.MezuniyetBasvurulariTezDosyalaris.Max(m => m.SiraNo) + 1 : 1;
@@ -1669,6 +1674,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         RowID = Guid.NewGuid(),
                         SiraNo = siraNo,
                         YuklemeTarihi = DateTime.Now,
+                        IsLatexOrWordSablonu = isLatexOrWordSablonu,
                         TezDosyaAdi = tezSablonDosyasi.FileName.GetFileName(),
                         TezDosyaYolu = FileHelper.SaveMezuniyetTezSablonDosya(tezSablonDosyasi),
                         IslemTarihi = DateTime.Now,
@@ -1681,6 +1687,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     FileHelper.Delete(tezDosyasi.TezDosyaYolu);
                     tezDosyasi.RowID = Guid.NewGuid();
                     tezDosyasi.SiraNo = siraNo;
+                    tezDosyasi.IsLatexOrWordSablonu = isLatexOrWordSablonu;
                     tezDosyasi.TezDosyaAdi = tezSablonDosyasi.FileName.GetFileName();
                     tezDosyasi.TezDosyaYolu = FileHelper.SaveMezuniyetTezSablonDosya(tezSablonDosyasi);
                     tezDosyasi.YuklemeTarihi = DateTime.Now;

@@ -175,8 +175,15 @@
                                                     <td>
                                                         <input type="text" class="form-control" id="BelgeAdi_@Model.MezuniyetBasvurulariID" style="cursor:default;color:@colorKb;" readonly="readonly" value="@("Belge Seçilmedi")">
                                                     </td>
-                                                    <td width="104" style="padding:1px;">
-                                                        <span class="input-group-addon" id="DosyaSec_@Model.MezuniyetBasvurulariID" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@Model.MezuniyetBasvurulariID').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
+                                                    <td width="40" style="padding:1px;">
+                                                        <span class="input-group-addon" id="DosyaSec_@Model.MezuniyetBasvurulariID" title="Dosya Seç" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@Model.MezuniyetBasvurulariID').click();"><span class="glyphicon glyphicon-folder-open"></span></span>
+                                                    </td>
+                                                    <td width="160" style="padding:1px;">
+                                                        <select class="form-control hide" name="IsLatexOrWordSablonu" id="IsLatexOrWordSablonu_@Model.MezuniyetBasvurulariID">
+                                                            <option>Şablon Türü Seçin</option>
+                                                            <option value="true">Yüklenen Tez Latex Şablonudur</option>
+                                                            <option value="false">Yüklenen Tez Word Şablonudur</option>
+                                                        </select>
                                                     </td>
                                                     <td width="120" style="padding:1px;">
                                                         <span class="input-group-addon hide" id="BelgeyiKaydet_@Model.MezuniyetBasvurulariID" onclick="TezDosyasiKaydet('@frmId',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(isBelgeVar ? "Değiştir" : "Kaydet")</span>
@@ -230,7 +237,7 @@
                                                 </td>
                                                 <td>
                                                     <span class="openFl" style="cursor:pointer;" FPath="@Url.CustomUrlContent(itemTd.TezDosyaYolu)" FName="@itemTd.TezDosyaAdi"><i class="fa fa-file-pdf-o fa-lg"></i> @itemTd.TezDosyaAdi</span>
-
+                                                    <br />@(itemTd.IsLatexOrWordSablonu.HasValue?itemTd.IsLatexOrWordSablonu.Value?"Latex Şablonu":"Word Şablonu":"")
                                                 </td>
                                                 <td style="color:@rwColor">
                                                     <i class="@icon"></i> @durumAdi
@@ -615,8 +622,9 @@
 
         $('#' + frmID).ajaxForm({
             success: function (result) {
-                PanelRefresh(pnlx, true);
-                GetDetailx(bID);
+                PanelRefresh(pnlx, true); 
+                if (result.IsSuccess)
+                    GetDetailx(bID);
                 ShowMmMessage(result.Messages, 'Tamam');
             },
             complete: function (cmp) {
@@ -667,7 +675,9 @@
     function ChangeFile(sndr, mBasvuruID) {
         var _BelgeIconID = '#BelgeIcon_' + mBasvuruID;
         var _BelgeAdiID = '#BelgeAdi_' + mBasvuruID;
+        var _IsLatexOrWordSablonu = '#IsLatexOrWordSablonu_' + mBasvuruID;
         var _BelgeyiKaydetID = '#BelgeyiKaydet_' + mBasvuruID;
+
         var _ChkInptTbl = '#yOnayChk_' + mBasvuruID;
         $(_BelgeAdiID).removeAttr("onclick");
         $(_BelgeIconID).removeAttr("onclick");
@@ -692,6 +702,7 @@
 
             $(_BelgeAdiID).val(sndr.files[0].name);
             $(_BelgeyiKaydetID).removeClass('hide');
+            $(_IsLatexOrWordSablonu).removeClass('hide');
             $(_ChkInptTbl).addClass('hide');
 
         }
@@ -699,6 +710,7 @@
             $(sndr).val("");
             $(_BelgeAdiID).val('Belge Seçilmedi, Lütfen belge seçiniz.');
             $(_BelgeyiKaydetID).addClass('hide');
+            $(_IsLatexOrWordSablonu).addClass('hide');
 
         }
     }

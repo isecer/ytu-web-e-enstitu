@@ -408,6 +408,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (tijBasvuru != null)
                 tijBasvuruOneri = tijBasvuru.TijBasvuruOneris.FirstOrDefault(f => f.UniqueID == basvuruJuriOneriUniqueId);
 
+
             var model = new TijOneriFormuKayitDto
             {
                 TijBasvuruOneriID = tijBasvuruOneri?.TijBasvuruOneriID ?? 0,
@@ -534,6 +535,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
+            if (!mMessage.Messages.Any() && MezuniyetBus.IsMezuniyetBasvuruVar(kul.KullaniciID, kul.OgrenciNo))
+            {
+                mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. TİK jüri değişikliği işlemi yapamazsınız.");
+            }
+
             if (mMessage.Messages.Count == 0)
             {
                 view = ViewRenderHelper.RenderPartialView("TiJuriOnerileriGb", "TijOneriFormu", model);
@@ -650,6 +656,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     mMessage.MessagesDialog.Add(new MrMessage { MessageType = !kModel.TijDegisiklikTipID.HasValue ? MsgTypeEnum.Warning : MsgTypeEnum.Success, PropertyName = "TijDegisiklikTipID" });
 
+                }
+                if (!mMessage.Messages.Any() && MezuniyetBus.IsMezuniyetBasvuruVar(kul.KullaniciID, kul.OgrenciNo))
+                {
+                    mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. TİK jüri değişikliği işlemi yapamazsınız.");
                 }
                 if (mMessage.Messages.Count == 0)
                 {

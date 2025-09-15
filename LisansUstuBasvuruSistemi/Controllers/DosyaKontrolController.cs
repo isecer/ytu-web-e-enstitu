@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Raporlar;
 using LisansUstuBasvuruSistemi.Raporlar.DonemProjesi;
+using LisansUstuBasvuruSistemi.Raporlar.KayitSilme;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
@@ -67,6 +68,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         break;
                     }
+
                 case "MZTTF":
                     {
                         var mb = _entities.MezuniyetBasvurularis.FirstOrDefault(p => p.TezTeslimUniqueID == rowId && p.MezuniyetBasvurulariID == tid);
@@ -184,6 +186,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         break;
                     }
+                case "KSTF":
+                {
+                    var kayitSilmeBasvuru = _entities.KayitSilmeBasvurus.FirstOrDefault(p => p.UniqueID == rowId && p.KayitSilmeBasvuruID == tid);
+                    if (kayitSilmeBasvuru != null)
+                    {
+                        var rpr = new RprKayitSilmeTalepFormu_FR_0000(kayitSilmeBasvuru.KayitSilmeBasvuruID);
+                        rpr.PrintingSystem.ContinuousPageNumbering = true;
+                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
+                        rprX = rpr;
+                    }
+
+                    break;
+                }
             }
 
             return View(rprX);

@@ -1515,6 +1515,7 @@
           <Property Name="RowID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="SiraNo" Type="int" Nullable="false" />
           <Property Name="MezuniyetBasvurulariID" Type="int" Nullable="false" />
+          <Property Name="IsLatexOrWordSablonu" Type="bit" />
           <Property Name="TezDosyaAdi" Type="nvarchar" MaxLength="1024" Nullable="false" />
           <Property Name="TezDosyaYolu" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsOnaylandiOrDuzeltme" Type="bit" />
@@ -12644,6 +12645,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="RowID" Type="Guid" Nullable="false" />
           <Property Name="SiraNo" Type="Int32" Nullable="false" />
           <Property Name="MezuniyetBasvurulariID" Type="Int32" Nullable="false" />
+          <Property Name="IsLatexOrWordSablonu" Type="Boolean" />
           <Property Name="TezDosyaAdi" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="TezDosyaYolu" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsOnaylandiOrDuzeltme" Type="Boolean" />
@@ -20558,6 +20560,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IsOnaylandiOrDuzeltme" ColumnName="IsOnaylandiOrDuzeltme" />
                 <ScalarProperty Name="TezDosyaYolu" ColumnName="TezDosyaYolu" />
                 <ScalarProperty Name="TezDosyaAdi" ColumnName="TezDosyaAdi" />
+                <ScalarProperty Name="IsLatexOrWordSablonu" ColumnName="IsLatexOrWordSablonu" />
                 <ScalarProperty Name="MezuniyetBasvurulariID" ColumnName="MezuniyetBasvurulariID" />
                 <ScalarProperty Name="SiraNo" ColumnName="SiraNo" />
                 <ScalarProperty Name="RowID" ColumnName="RowID" />

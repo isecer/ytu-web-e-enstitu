@@ -307,7 +307,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTable9,
             this.xrTable25});
             this.Detail.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Italic);
-            this.Detail.HeightF = 991.4688F;
+            this.Detail.HeightF = 1025.385F;
             this.Detail.Name = "Detail";
             this.Detail.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.Detail.StylePriority.UseFont = false;
@@ -695,7 +695,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.lblNot.BorderWidth = 1F;
             this.lblNot.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblNot.ForeColor = System.Drawing.Color.Black;
-            this.lblNot.LocationFloat = new DevExpress.Utils.PointFloat(0F, 765.7714F);
+            this.lblNot.LocationFloat = new DevExpress.Utils.PointFloat(0F, 804.3177F);
             this.lblNot.Multiline = true;
             this.lblNot.Name = "lblNot";
             this.lblNot.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -714,7 +714,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrRichText1.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrRichText1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 6.4F);
-            this.xrRichText1.LocationFloat = new DevExpress.Utils.PointFloat(44.9998F, 765.7714F);
+            this.xrRichText1.LocationFloat = new DevExpress.Utils.PointFloat(44.9998F, 804.3177F);
             this.xrRichText1.Name = "xrRichText1";
             this.xrRichText1.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.xrRichText1.SerializableRtfString = resources.GetString("xrRichText1.SerializableRtfString");
@@ -735,7 +735,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.lblEkBilgi.Multiline = true;
             this.lblEkBilgi.Name = "lblEkBilgi";
             this.lblEkBilgi.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.lblEkBilgi.SizeF = new System.Drawing.SizeF(45F, 33.32465F);
+            this.lblEkBilgi.SizeF = new System.Drawing.SizeF(45F, 71.87097F);
             this.lblEkBilgi.StylePriority.UseBackColor = false;
             this.lblEkBilgi.StylePriority.UseBorders = false;
             this.lblEkBilgi.StylePriority.UseBorderWidth = false;
@@ -749,12 +749,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             // 
             this.xrRichKaraBigi.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrRichKaraBigi.Font = new DevExpress.Drawing.DXFont("Arial", 11F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrRichKaraBigi.LocationFloat = new DevExpress.Utils.PointFloat(44.99982F, 732.4468F);
+            this.xrRichKaraBigi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 6.4F);
+            this.xrRichKaraBigi.LocationFloat = new DevExpress.Utils.PointFloat(44.99981F, 732.4468F);
             this.xrRichKaraBigi.Name = "xrRichKaraBigi";
             this.xrRichKaraBigi.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 0, 0, 0, 100F);
             this.xrRichKaraBigi.SerializableRtfString = resources.GetString("xrRichKaraBigi.SerializableRtfString");
-            this.xrRichKaraBigi.SizeF = new System.Drawing.SizeF(705.0003F, 33.32465F);
+            this.xrRichKaraBigi.SizeF = new System.Drawing.SizeF(705.0003F, 71.87097F);
             this.xrRichKaraBigi.StylePriority.UseBorders = false;
             this.xrRichKaraBigi.StylePriority.UseFont = false;
             this.xrRichKaraBigi.StylePriority.UsePadding = false;
@@ -1252,7 +1252,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell61.StylePriority.UseBorders = false;
             this.xrTableCell61.StylePriority.UseFont = false;
             this.xrTableCell61.StylePriority.UseTextAlignment = false;
-            this.xrTableCell61.Text = "E. Anabilim Dalı Başkanı Tahhüdü";
+            this.xrTableCell61.Text = "E. Anabilim Dalı Başkanı Taahhüdü";
             this.xrTableCell61.TextAlignment = DevExpress.XtraPrinting.TextAlignment.BottomCenter;
             this.xrTableCell61.Weight = 1D;
             // 

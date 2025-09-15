@@ -1762,8 +1762,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "EYKTarihi", Value = mBasvur.EYKTarihi.Value.ToFormatDate() });
 
-                        if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = mBasvur.CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama });
+                        if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = mBasvur.CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama });
 
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);
@@ -1906,8 +1906,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "EYKTarihi", Value = mBasvur.EYKTarihi.Value.ToFormatDate() });
 
-                        if (item.SablonParametreleri.Any(a => a == "@RetAciklama"))
-                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklama", Value = mBasvur.CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama });
+                        if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "RetAciklamasi", Value = mBasvur.CiltliTezTeslimUzatmaTalebiDanismanOnayAciklama });
 
                         var contentDetailDto = MailManager.CreateMailContentDetailModel(item);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, contentDetailDto.Title, contentDetailDto.HtmlContent, item.EMails, item.Attachments);

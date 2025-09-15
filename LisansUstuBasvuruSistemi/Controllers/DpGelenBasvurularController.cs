@@ -15,6 +15,7 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -73,6 +74,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DonemProjesiDurumID = sonBasvuru != null ? sonBasvuru.DonemProjesiDurumID : DonemProjesiDurumEnum.BasvuruTamamlanmadi,
                         FormKodu = sonBasvuru != null ? sonBasvuru.FormKodu : "",
                         DonemProjesiBasvuruID = sonBasvuru != null ? sonBasvuru.DonemProjesiBasvuruID : 0,
+                        EykYaHazrilandiBasvuruIds= donemProjesi.DonemProjesiBasvurus.Where(p =>!p.EYKDaOnaylandi.HasValue && p.EYKYaHazirlandi == true).Select(s => s.DonemProjesiBasvuruID).ToList(),
                         SonBasvuruDurum = sonBasvuru != null ? new DpBasvuruDurumDto
                         {
                             DonemProjesiID = sonBasvuru.DonemProjesiID,
@@ -122,7 +124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.YurutucuTarafindanOnaylanmadi) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.YurutucuOnaySureci && p.SonBasvuruDurum.IsDanismanOnay == false);
                 else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.JuriSinavOlusturmaSureci) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.JuriSinavOlusturmaSureci);
                 else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.SinavDegerlendirmeSureci) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.SinavDegerlendirmeSureci);
-                else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci && !p.SonBasvuruDurum.EYKYaGonderildi.HasValue && p.SonBasvuruDurum.DonemProjesiJuriOnayDurumID==DonemProjesiJuriOnayDurumEnum.Basarili);
+                else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci && !p.SonBasvuruDurum.EYKYaGonderildi.HasValue && p.SonBasvuruDurum.DonemProjesiJuriOnayDurumID == DonemProjesiJuriOnayDurumEnum.Basarili);
                 else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.EykYaGonderimiOnaylandi) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci && p.SonBasvuruDurum.EYKYaGonderildi == true && !p.SonBasvuruDurum.EYKYaHazirlandi.HasValue);
                 else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci && p.SonBasvuruDurum.EYKYaGonderildi == false && !p.SonBasvuruDurum.EYKYaHazirlandi.HasValue);
                 else if (model.DonemProjesiDurumID == DpBasvuruDurumEnum.EykYaHazirlandi) q = q.Where(p => p.SonBasvuruDurum != null && p.SonBasvuruDurum.DonemProjesiDurumID == DonemProjesiDurumEnum.EnstituYonetimKuruluSureci && p.SonBasvuruDurum.EYKYaHazirlandi == true && !p.SonBasvuruDurum.EYKDaOnaylandi.HasValue);
@@ -239,6 +241,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.filteredOgrenciIds = model.IsFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.filteredDanismanIds = model.IsFiltered ? q.Where(p => p.TezDanismanId > 0).Select(s => s.TezDanismanId.Value).Distinct().ToList() : new List<int>();
+            ViewBag.EykDaOnaylanacakBasvuruIds = model.IsFiltered ? q.SelectMany(s => s.EykYaHazrilandiBasvuruIds).Distinct().ToList() : new List<int>();
 
             if (model.IsFiltered && isDegerlendirmeSurecinde)
             {
@@ -376,6 +379,79 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
 
             }
+        }
+        [Authorize(Roles = RoleNames.DonemProjesiEykDaOnay)]
+        public ActionResult EykDaTopluOnay(List<int> basvuruIds, string eykTarihi)
+        {
+            var success = true;
+            string message;
+
+            if (UserIdentity.Current.IsAdmin)
+            {
+                try
+                {
+                    // EYK tarihi kontrolü
+                    if (string.IsNullOrWhiteSpace(eykTarihi))
+                    { 
+                        message = "EYK tarihi girişi zorunludur!";
+                        return new { success = false, message }.ToJsonResult();
+                    }
+
+                    // Tarih parse işlemi
+                    DateTime eykTarihiParsed;
+                    if (!DateTime.TryParse(eykTarihi, out eykTarihiParsed))
+                    { 
+                        message = "Geçerli bir EYK tarihi giriniz!";
+                        return new { success = false, message }.ToJsonResult();
+                    }
+                     
+
+                    var basvurus = _entities.DonemProjesiBasvurus
+                        .Where(p => p.EYKYaHazirlandi == true &&
+                                   !p.EYKDaOnaylandi.HasValue &&
+                                   basvuruIds.Contains(p.DonemProjesiBasvuruID))
+                        .ToList();
+
+                    if (!basvurus.Any())
+                    { 
+                        message = "Onaylanacak başvuru bulunamadı!";
+                        return new { success = false, message }.ToJsonResult();
+                    }
+
+                    foreach (var item in basvurus)
+                    {
+                        item.EYKDaOnaylandi = true;
+                        item.EYKTarihi = eykTarihiParsed;  
+                        item.EYKDaOnaylandiIslemTarihi = DateTime.Now;
+                        item.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
+                        item.IslemTarihi = DateTime.Now;
+                        item.IslemYapanID = UserIdentity.Current.Id;
+                        item.IslemYapanIP = UserIdentity.Ip;
+                    }
+
+                    _entities.SaveChanges();
+
+                    message = $"{basvurus.Count} adet dönem projesi başvurusu EYK'da onaylandı. EYK Tarihi: {eykTarihiParsed:dd.MM.yyyy}";
+
+                    LogIslemleri.LogEkle("DonemProjesiBasvuru", LogCrudType.Update, basvurus.ToJson());
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    message = "Dönem Projesi başvuruları EYK'da onaylanırken bir hata oluştu!";
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(
+                        "Dönem Projesi başvuruları EYK'da onaylanırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(),
+                        ex.ToExceptionStackTrace(),
+                        BilgiTipiEnum.Hata);
+                }
+            }
+            else
+            {
+                success = false;
+                message = "Bu işlemi yapmaya yetkili değilsiniz.";
+            }
+
+            return new { success, message }.ToJsonResult();
         }
     }
 }

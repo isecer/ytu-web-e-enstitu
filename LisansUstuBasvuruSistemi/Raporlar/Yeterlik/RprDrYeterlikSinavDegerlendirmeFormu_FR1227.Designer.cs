@@ -690,7 +690,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell26.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrTableCell26.StylePriority.UseFont = false;
             this.xrTableCell26.StylePriority.UsePadding = false;
-            this.xrTableCell26.Text = "Toplanma Şekli";
+            this.xrTableCell26.Text = "Toplantı Şekli";
             this.xrTableCell26.Weight = 1D;
             // 
             // xrTableRow15
@@ -3082,7 +3082,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell32.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrTableCell32.StylePriority.UseFont = false;
             this.xrTableCell32.StylePriority.UsePadding = false;
-            this.xrTableCell32.Text = "Toplanma Şekli";
+            this.xrTableCell32.Text = "Toplantı Şekli";
             this.xrTableCell32.Weight = 1D;
             // 
             // xrTableRow36

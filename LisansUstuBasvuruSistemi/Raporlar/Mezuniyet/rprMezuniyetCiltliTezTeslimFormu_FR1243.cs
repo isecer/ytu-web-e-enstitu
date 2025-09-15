@@ -12,11 +12,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
         {
             InitializeComponent();
 
-            using (var  entities = new LubsDbEntities())
+            using (var entities = new LubsDbEntities())
             {
 
 
-                var data = (from s in entities.MezuniyetBasvurulariTezTeslimFormlaris 
+                var data = (from s in entities.MezuniyetBasvurulariTezTeslimFormlaris
                             join mb in entities.MezuniyetBasvurularis on s.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
                             join ms in entities.MezuniyetSurecis on mb.MezuniyetSurecID equals ms.MezuniyetSurecID
                             join dnm in entities.Donemlers on mb.KayitOgretimYiliDonemID equals dnm.DonemID
@@ -30,7 +30,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                                 s.MezuniyetBasvurulariTezTeslimFormID,
                                 mb.MezuniyetBasvurulariID,
                                 ms.EnstituKod,
-                                enst.SistemErisimAdresi,
                                 mb.OgrenciNo,
                                 s.RowID,
                                 AdSoyad = mb.Ad + " " + mb.Soyad,
@@ -40,18 +39,19 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                                 abd.AnabilimDaliAdi,
                                 prg.ProgramAdi,
                                 OgrenciKayitDonemi = mb.KayitOgretimYiliBaslangic + " - " + (mb.KayitOgretimYiliBaslangic + 1) + " / " + (mb.KayitOgretimYiliDonemID == 1 ? "Güz" : "Bahar") + " (" + (mb.KayitOgretimYiliDonemID == 1 ? "Fall" : "Spring") + ")",
-
+                                mb.TezDanismanID,
                                 s.IsTezDiliTr,
                                 s.TezDili,
                                 s.TezBaslikTr,
                                 s.TezBaslikEn,
                                 mb.TezTeslimSonTarih,
+                                enst.SistemErisimAdresi,
                                 urlAdd = enst.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBBBC_" + s.MezuniyetBasvurulariTezTeslimFormID + "_" + s.RowID
                             }).First();
 
                 var sonSr = entities.SRTalepleris.First(f =>
-                    f.MezuniyetBasvurulariID==data.MezuniyetBasvurulariID && f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
-                this.DisplayName = data.AdSoyad + " FR-1243 Lisansüstü Ciltli Tez Teslim Formu";
+                    f.MezuniyetBasvurulariID == data.MezuniyetBasvurulariID && f.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili);
+                DisplayName = data.AdSoyad + " FR-1243 Lisansüstü Ciltli Tez Teslim Formu";
                 cellOgrenciNo.Text = data.OgrenciNo;
                 cellOgrenciAdSoyad.Text = data.AdSoyad;
                 cellOgrenciEnstituAdi.Text = data.EnstituAdi;
@@ -61,14 +61,14 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 cellOgrenciKayitDonemi.Text = data.OgrenciKayitDonemi;
 
                 var mezuniyetBasvuru = sonSr.MezuniyetBasvurulari;
-                var joForm = mezuniyetBasvuru.MezuniyetJuriOneriFormlaris.First(); 
+                var joForm = mezuniyetBasvuru.MezuniyetJuriOneriFormlaris.First();
                 var tezBasligiDegisenSinav = mezuniyetBasvuru.SRTalepleris.FirstOrDefault(p => p.SRDurumID == SrTalepDurumEnum.Onaylandı && p.IsTezBasligiDegisti == true);
-
-
+                var danisman = entities.Kullanicilars.First(f => f.KullaniciID == data.TezDanismanID);
+                cellDanismanAdSoyad.Text = danisman.Unvanlar.UnvanAdi + " " + danisman.Ad + " " + danisman.Soyad;
 
                 var tezBaslikTr = "";
                 var tezBaslikEn = "";
-                 
+
                 if (tezBasligiDegisenSinav != null)
                 {
                     tezBaslikTr = tezBasligiDegisenSinav.YeniTezBaslikTr;
@@ -85,7 +85,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     tezBaslikEn = mezuniyetBasvuru.TezBaslikEn;
                 }
 
-             
+
 
 
                 cellTezDili.Text = data.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
@@ -95,10 +95,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
                 cellImzaOgrenciAdSoyad.Text = data.AdSoyad;
 
-                cellFormKodu.Text = "Form Kodu: " + data.RowID.ToString().Substring(0, 8).ToUpper();
-                var qrUlr = data.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBBBC_" + data.MezuniyetBasvurulariTezTeslimFormID + "_" + data.RowID;
-                xrQRCode.ImageUrl = qrUlr;
-                xrQRCode.Image = qrUlr.CreateQrCode();
+                cellFormKodu.Text = "Form Kodu: " + data.RowID.ToString().Substring(0, 8).ToUpper(); 
+                xrQRCode.ImageUrl = data.urlAdd;
+                xrQRCode.Image = data.urlAdd.CreateQrCode();
 
             }
         }

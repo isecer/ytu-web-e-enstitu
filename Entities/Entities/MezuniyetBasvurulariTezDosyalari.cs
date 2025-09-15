@@ -18,6 +18,7 @@ namespace Entities.Entities
         public System.Guid RowID { get; set; }
         public int SiraNo { get; set; }
         public int MezuniyetBasvurulariID { get; set; }
+        public Nullable<bool> IsLatexOrWordSablonu { get; set; }
         public string TezDosyaAdi { get; set; }
         public string TezDosyaYolu { get; set; }
         public Nullable<bool> IsOnaylandiOrDuzeltme { get; set; }

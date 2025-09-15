@@ -50,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public DateTime? ToplantiTarihi { get; set; }
         public TimeSpan? ToplantiSaati { get; set; }
         public List<string> OnayYapmayanJuriEmails { get; set; } 
-
+        public List<int> EykYaHazrilandiBasvuruIds { get; set; }
         public List<string> FilterFormKoduKeys { get; set; }
         public List<string> FilterJuriAdiKeys { get; set; }
         public DpBasvuruDurumDto SonBasvuruDurum { get; set; }

@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -746,14 +747,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.AddRange(msgs);
 
                 }
-
-                if (!mMessage.Messages.Any())
+                if (!mMessage.Messages.Any() && MezuniyetBus.IsMezuniyetBasvuruVar(ogrenci.KullaniciID, ogrenci.OgrenciNo))
                 {
-                    if (MezuniyetBus.IsMezuniyetBasvuruVar(ogrenci.KullaniciID, ogrenci.OgrenciNo))
-                    {
-                        mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. Tez Danışmanı Değişikliği işlemi yapamazsınız.");
-                    }
-                }
+                    mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. Tez Danışmanı Değişikliği işlemi yapamazsınız.");
+                } 
             }
 
             if (!mMessage.Messages.Any() && !(tdoBasvuruDanismanId > 0))
@@ -884,13 +881,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (!mMessage.Messages.Any())
+                if (!mMessage.Messages.Any() && MezuniyetBus.IsMezuniyetBasvuruVar(tdoBas.KullaniciID, tdoBas.OgrenciNo))
                 {
-                    if (MezuniyetBus.IsMezuniyetBasvuruVar(tdoBas.KullaniciID, tdoBas.OgrenciNo))
-                    {
-                        mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. Tez danışman değişikliği işlemi yapamazsınız.");
-                    }
-                }
+                    mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. Tez danışman değişikliği işlemi yapamazsınız.");
+                } 
             }
 
             if (!mMessage.Messages.Any())
@@ -1089,13 +1083,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var msgs = TijBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
                 mMessage.Messages.AddRange(msgs);
-                if (!mMessage.Messages.Any())
+                if (!mMessage.Messages.Any() && MezuniyetBus.IsMezuniyetBasvuruVar(ogrenci.KullaniciID, ogrenci.OgrenciNo))
                 {
-                    if (MezuniyetBus.IsMezuniyetBasvuruVar(ogrenci.KullaniciID, ogrenci.OgrenciNo))
-                    {
-                        mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. Tez Dili, Tez Başlığı Değişikliği işlemi yapamazsınız.");
-                    }
-                }
+                    mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. Tez Dili, Tez Başlığı Değişikliği işlemi yapamazsınız.");
+                } 
             }
 
             if (!mMessage.Messages.Any())
@@ -1161,7 +1152,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.SListTdProgram = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
                 if (model.SinavTipID.HasValue)
                 {
-                 
+
                     var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
                     if (sinav.OzelNot) model.SListSinavNot = new SelectList(SinavTipleriBus.CmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
                 }
@@ -1442,14 +1433,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!mMessage.Messages.Any() && !(tdoBasvuruDanismanId > 0))
             {
                 var msgs = TijBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
-                mMessage.Messages.AddRange(msgs);
-                if (!mMessage.Messages.Any())
-                {
-                    if (MezuniyetBus.IsMezuniyetBasvuruVar(ogrenci.KullaniciID, ogrenci.OgrenciNo))
-                    {
-                        mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. Tez Danışmanı, Tez Dili, Tez Başlığı Değişikliği işlemi yapamazsınız.");
-                    }
-                }
+                mMessage.Messages.AddRange(msgs); 
+            }
+            if (!mMessage.Messages.Any() && MezuniyetBus.IsMezuniyetBasvuruVar(ogrenci.KullaniciID, ogrenci.OgrenciNo))
+            {
+                mMessage.Messages.Add("Aktif olarak devam eden bir mezuniyet başvurunuz bulunmakta. Tez Danışmanı, Tez Dili, Tez Başlığı Değişikliği işlemi yapamazsınız.");
             }
             if (!mMessage.Messages.Any())
             {
@@ -2746,7 +2734,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruEsDanis.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
                 if (eykDaOnaylandi == false)
                 {
-                    if (eykDaOnaylanmadiDurumAciklamasi.Trim() != tdoBasvuruEsDanis.EYKDaOnaylanmadiDurumAciklamasi.Trim()) sendMail = true;
+                    if (eykDaOnaylanmadiDurumAciklamasi.Trim() != (tdoBasvuruEsDanis.EYKDaOnaylanmadiDurumAciklamasi??"").Trim()) sendMail = true;
                     tdoBasvuruEsDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
                 }
                 tdoBasvuruEsDanis.IslemTarihi = DateTime.Now;

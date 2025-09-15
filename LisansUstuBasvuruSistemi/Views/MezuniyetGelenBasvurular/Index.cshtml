@@ -1215,6 +1215,7 @@
             $('#EYKOnayAciklamaRow_' + id).removeClass('hide');
             $('#EYKOnayEykTarihTd_' + id).addClass('hide');
             $('.EYKDaOnaySayi_' + id).removeClass('hide');
+            $('.RwtezBaslikMain_' + id).addClass('hide');
         }
         else if (val == 'true') {
             $('#EYKOnayAciklamaRow_' + id).addClass('hide');
@@ -1228,11 +1229,13 @@
             }
             $('#EYKOnayEykTarihTd_' + id).removeClass('hide');
             $('.EYKDaOnaySayi_' + id).removeClass('hide');
+            $('.RwtezBaslikMain_' + id).removeClass('hide');
         }
         else if (val == '') {
             $('#EYKOnayAciklamaRow_' + id).addClass('hide');
             $('#EYKOnayEykTarihTd_' + id).addClass('hide');
             $('.EYKDaOnaySayi_' + id).addClass('hide');
+            $('.RwtezBaslikMain_' + id).addClass('hide');
         }
 
 
@@ -1316,6 +1319,9 @@
         PanelRefresh(_panel, false);
         var eykDaOnaylandi = $('#EYKDaOnaylandi_' + mezuniyetJuriOneriFormId).val();
         var eykDaOnaylandiOnayTarihi = $('#EYKDaOnaylandiOnayTarihi_' + mezuniyetJuriOneriFormId).val();
+        var isTezBasligiDegisti = $('#IsTezBasligiDegisti_' + mezuniyetJuriOneriFormId).val();
+        var yeniTezBaslikTr = $('#YeniTezBaslikTr_' + mezuniyetJuriOneriFormId).val();
+        var yeniTezBaslikEn = $('#YeniTezBaslikEn_' + mezuniyetJuriOneriFormId).val();
         var eykDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + mezuniyetJuriOneriFormId).val();
         var eykSayisi = "";
         if (eykDaOnaylandi) {
@@ -1327,6 +1333,9 @@
             eykDaOnaylandi,
             eykSayisi,
             eykDaOnaylandiOnayTarihi,
+            isTezBasligiDegisti,
+            yeniTezBaslikTr,
+            yeniTezBaslikEn,
             eykDaOnaylanmadiDurumAciklamasi
         }
         $.ajax({
@@ -1337,7 +1346,7 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                PanelRefresh(_panel, true);
+                PanelRefresh(_panel, true); 
                 if (result.Messages.length > 0) GetMsg(result);
                 else GetDetailx(mezuniyetBasvurulariId);
 
