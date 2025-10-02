@@ -11,6 +11,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemData;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -31,10 +32,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         [Authorize(Roles = RoleNames.Kullanicilar)]
         public ActionResult Index(FmKullanicilarDto model, List<string> programKod = null)
-        {
+        { 
+
             programKod = programKod ?? new List<string>();
             var userEnst = UserIdentity.Current.EnstituKods;
-            var q = from s in _entities.Kullanicilars
+             
+            var q = from s in _entities.Kullanicilars.AsNoTracking()
                     join ktl in _entities.KullaniciTipleris on new { s.KullaniciTipID } equals new { ktl.KullaniciTipID }
                     join en in _entities.Enstitulers on s.EnstituKod equals en.EnstituKod
                     where userEnst.Contains(s.EnstituKod)
@@ -46,7 +49,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         en.EnstituKisaAd,
                         s.YetkiGrupID,
                         s.YetkiGruplari.YetkiGrupAdi,
-                        YetkiSayisi = s.Rollers.Count,
+                        IsYetkiVar = s.Rollers.Any(),
                         s.EnstituKod,
                         KtipBasvuruYapabilir = ktl.BasvuruYapabilir,
                         s.ResimAdi,
@@ -76,49 +79,55 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IslemYapanIP,
                         s.YtuOgrencisi
                     };
+        
             var q1 = q;
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => (p.Ad + " " + p.Soyad).Contains(model.AdSoyad) || p.EMail.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.TcKimlikNo.Contains(model.AdSoyad) || p.OgrenciNo.Contains(model.AdSoyad));
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p =>
+                (p.Ad + " " + p.Soyad).Contains(model.AdSoyad) ||
+                //p.EMail.Contains(model.AdSoyad) ||
+                p.KullaniciAdi.Contains(model.AdSoyad) ||
+                p.TcKimlikNo==model.AdSoyad ||
+                p.OgrenciNo==model.AdSoyad);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID.Value);
             if (model.BirimID.HasValue) q = q.Where(p => p.BirimID == model.BirimID.Value);
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod.Value);
             if (model.IsAdmin.HasValue)
-            {
-                q = model.IsAdmin.Value ? q.Where(p => p.YetkiSayisi > 0) : q.Where(p => p.YetkiSayisi == 0);
-            }
+                q = model.IsAdmin.Value ? q.Where(p => p.IsYetkiVar) : q.Where(p => !p.IsYetkiVar);
             if (model.OgrenimDurumID.HasValue) q = q.Where(p => p.OgrenimDurumID == model.OgrenimDurumID.Value);
             if (model.CinsiyetID.HasValue) q = q.Where(p => p.CinsiyetID == model.CinsiyetID.Value);
-            if (model.YetkiGrupID.HasValue)
-            {
-                q = q.Where(p => p.YetkiGrupID == model.YetkiGrupID.Value);
-            }
-
+            if (model.YetkiGrupID.HasValue) q = q.Where(p => p.YetkiGrupID == model.YetkiGrupID.Value);
+          
             if (!q1.Equals(q))
             {
                 ViewBag.filteredKullaniciIds = q.Select(s => s.KullaniciID).ToList();
+                ;
             }
-            model.RowCount = q.Count();
-            var indexModel = new MIndexBilgi
-            {
-                Toplam = model.RowCount,
-                Aktif = q.Count(p => p.IsAktif == true),
-                Pasif = q.Count(p => p.IsAktif == false)
-            };
+          
+            var toplam = q.Count();
+            var aktif = q.Count(p => p.IsAktif);
+            var pasif = toplam - aktif;
+
+            model.RowCount = toplam;
+            var indexModel = new MIndexBilgi { Toplam = toplam, Aktif = aktif, Pasif = pasif };
+           
             if (!model.Sort.IsNullOrWhiteSpace())
+            {
                 if (model.Sort == "AdSoyad") q = q.OrderBy(o => o.Ad).ThenBy(o => o.Soyad);
                 else if (model.Sort.Contains("AdSoyad") && model.Sort.Contains("DESC")) q = q.OrderByDescending(o => o.Ad).ThenByDescending(o => o.Soyad);
                 else if (model.Sort == "KullaniciTipAdi") q = q.OrderBy(o => o.KullaniciTipAdi);
                 else if (model.Sort.Contains("KullaniciTipAdi") && model.Sort.Contains("DESC")) q = q.OrderByDescending(o => o.KullaniciTipAdi);
                 else q = q.OrderBy(model.Sort);
+            }
             else q = q.OrderByDescending(o => o.OlusturmaTarihi);
+
             model.KullanicilarDtos = q.Select(s => new FrKullanicilarDto
             {
                 KullaniciID = s.KullaniciID,
                 UserKey = s.UserKey,
                 EnstituAdi = s.EnstituAd,
                 EnstituKod = s.EnstituKod,
-                YetkiGrupAdi = s.EnstituKisaAd + " - " + s.YetkiGrupAdi + (s.YetkiSayisi > 0 ? " (+ " + s.YetkiSayisi + " yetki)" : ""),
+                YetkiGrupAdi = s.EnstituKisaAd + " - " + s.YetkiGrupAdi,
                 KtipBasvuruYapabilir = s.KtipBasvuruYapabilir,
                 ResimAdi = s.ResimAdi,
                 KullaniciTipID = s.KullaniciTipID,
@@ -146,8 +155,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemTarihi = s.IslemTarihi,
                 IslemYapanIP = s.IslemYapanIP
             }).Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
+           
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
-            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.BirimID = new SelectList(BirimlerBus.GetBirimlerTreeList(), "BirimID", "BirimAdi", model.BirimID);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
@@ -159,6 +168,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
             ViewBag.SelectedPrograms = programKod;
             ViewBag.IndexModel = indexModel;
+         
+
             return View(model);
         }
         [Authorize(Roles = RoleNames.KullanicilarKayit)]

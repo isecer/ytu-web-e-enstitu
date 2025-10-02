@@ -1117,11 +1117,11 @@
           <Property Name="KayitOgretimYiliBaslangic" Type="int" />
           <Property Name="KayitOgretimYiliDonemID" Type="int" />
           <Property Name="KayitTarihi" Type="datetime" />
+          <Property Name="NufusKayitOrnekDosyaAdi" Type="nvarchar" MaxLength="1024" />
+          <Property Name="NufusKayitOrnekDosyaYolu" Type="nvarchar(max)" />
           <Property Name="CepTel" Type="nvarchar" MaxLength="50" />
           <Property Name="EPostaAdresi" Type="nvarchar" MaxLength="100" />
           <Property Name="TezDanismanID" Type="int" />
-          <Property Name="NufusKayitOrnekDosyaAdi" Type="nvarchar" MaxLength="1024" />
-          <Property Name="NufusKayitOrnekDosyaYolu" Type="nvarchar(max)" />
           <Property Name="IsTaahhutOnay" Type="bit" Nullable="false" />
           <Property Name="IsHarcBirimiOnayladi" Type="bit" />
           <Property Name="HarcBirimiOnayYapanID" Type="int" />
@@ -3247,6 +3247,8 @@
           <Property Name="ZamanTipID" Type="int" Nullable="false" />
           <Property Name="ZamanTipAdi" Type="nvarchar" MaxLength="256" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_Kullanicilar' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <!--Errors Found During Generation:
 warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonucSayisal' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vW_ProgramBasvuruSonucSayisal">
