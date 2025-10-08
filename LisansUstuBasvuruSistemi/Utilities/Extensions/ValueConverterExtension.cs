@@ -514,37 +514,34 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 
             int deep = 0;
             Func<T, int> fxDetail = null;
-            fxDetail = new Func<T, int>
-                (
-                   (parent) =>
-                   {
-                       deep++;
-                       object parentid = type.GetProperty(rootPropertyField).GetValue(parent, null);
-                       var details = queryObjectList.Where(p =>
-                           type.GetProperty(parentPropertyField).GetValue(p, null) != null && //it is root
-                           type.GetProperty(parentPropertyField).GetValue(p, null).ToString() == parentid.ToString())
-                           .AsEnumerable();
-                       foreach (var m in details)
-                       {
-                           if (string.IsNullOrEmpty(textPropertyField) == false)
-                           {
-                               var val = type.GetProperty(textPropertyField).GetValue(m, null);
-                               if (val != null)
-                               {
-                                   var str = val.ToString();
-                                   if (str.StartsWith(padString) == false)
-                                       for (int i = 0; i < deep; i++)
-                                           str = padString + str;
-                                   type.GetProperty(textPropertyField).SetValue(m, str, null);
-                               }
-                           }
-                           resultList.Add(m);
-                           fxDetail(m);
-                       }
-                       deep--;
-                       return 0;
-                   }
-                );
+            fxDetail = (parent) =>
+            {
+                deep++;
+                object parentid = type.GetProperty(rootPropertyField).GetValue(parent, null);
+                var details = queryObjectList.Where(p =>
+                        type.GetProperty(parentPropertyField).GetValue(p, null) != null && //it is root
+                        type.GetProperty(parentPropertyField).GetValue(p, null).ToString() == parentid.ToString())
+                    .AsEnumerable();
+                foreach (var m in details)
+                {
+                    if (string.IsNullOrEmpty(textPropertyField) == false)
+                    {
+                        var val = type.GetProperty(textPropertyField).GetValue(m, null);
+                        if (val != null)
+                        {
+                            var str = val.ToString();
+                            if (str.StartsWith(padString) == false)
+                                for (int i = 0; i < deep; i++)
+                                    str = padString + str;
+                            type.GetProperty(textPropertyField).SetValue(m, str, null);
+                        }
+                    }
+                    resultList.Add(m);
+                    fxDetail(m);
+                }
+                deep--;
+                return 0;
+            };
 
             foreach (var root in roots)
             {

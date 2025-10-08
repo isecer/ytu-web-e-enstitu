@@ -16,16 +16,23 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var entities = new LubsDbEntities())
             {
                 var enstituKods = UserBus.GetUserEnstituKods(UserIdentity.Current.Id);
-                var qListe = entities.Mesajlars.Where(p => enstituKods.Contains(p.EnstituKod) && p.EnstituKod == enstituKod && p.UstMesajID.HasValue == false && !p.IsAktif && p.Silindi == false).OrderByDescending(o => (o.Mesajlar1.Any() ? o.Mesajlar1.Select(s => s.Tarih).Max() : o.Tarih)).AsQueryable();
-                var liste = qListe.Take(20).ToList();
+                var qListe = entities.Mesajlars.AsNoTracking().Where(p => enstituKods.Contains(p.EnstituKod) && p.EnstituKod == enstituKod && p.UstMesajID.HasValue == false && !p.IsAktif && p.Silindi == false).OrderByDescending(o => (o.Mesajlar1.Any() ? o.Mesajlar1.Select(s => s.Tarih).Max() : o.Tarih)).AsQueryable();
+                var liste = qListe.Take(20).ToList().Select(s => new
+                {
+                    s.KullaniciID,
+                    s.AdSoyad,
+                    ResimAdi = s.KullaniciID > 0 ? s.Kullanicilar.ResimAdi : null,
+                    s.Konu,
+                    Tarih = s.Mesajlar1.Any() ? s.Mesajlar1.Select(s2 => s2.Tarih).Max() : s.Tarih
+                }).ToList();
                 var htmlContent = "";
                 foreach (var item in liste)
                 {
                     htmlContent += "<a href=\"javascript:void(0);\" class=\"list-group-item\" style=\"padding-top:0px;padding-bottom:0px;padding-left:2px;padding-right:-1px;\">" +
                                    "<table style=\"table-layout:fixed;width:100%;\">" +
                                    "<tr>" +
-                                   "<td width=\"40\"><img style=\"width:40px;height:40px;\" src=\"" + ((item.KullaniciID > 0 ? item.Kullanicilar.ResimAdi : "").ToKullaniciResim()) + "\" class=\"pull-left\"></td>" +
-                                   "<td><span class=\"contacts-title\">" + item.AdSoyad + "</span><span style=\"float:right;font-size:8pt;\"><b>" + (item.Mesajlar1.Any() ? item.Mesajlar1.Select(s => s.Tarih).Max().ToFormatDateAndTime() : item.Tarih.ToFormatDateAndTime()) + "</b></span><p><b>Konu:</b> " + item.Konu + "</p></td>" +
+                                   "<td width=\"40\"><img style=\"width:40px;height:40px;\" src=\"" + ((item.KullaniciID > 0 ? item.ResimAdi : "").ToKullaniciResim()) + "\" class=\"pull-left\"></td>" +
+                                   "<td><span class=\"contacts-title\">" + item.AdSoyad + "</span><span style=\"float:right;font-size:8pt;\"><b>" + item.Tarih.ToFormatDateAndTime() + "</b></span><p><b>Konu:</b> " + item.Konu + "</p></td>" +
                                    "</tr>" +
                                    "</table>" +
                                    "</a>";
@@ -70,7 +77,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var data = qdata.OrderBy(o => o.KategoriAdi).ToList();
                 foreach (var item in data)
                 {
-                    dct.Add(new CmbIntDto { Value = item.MesajKategoriID, Caption =   item.KategoriAdi });
+                    dct.Add(new CmbIntDto { Value = item.MesajKategoriID, Caption = item.KategoriAdi });
                 }
             }
             return dct;

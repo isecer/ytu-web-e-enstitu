@@ -508,6 +508,9 @@
     <Compile Include="Entities\sp_SearchMailsFullText_Result.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\sp_SearchUsersOptimized_Result.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\SRDurumlari.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>

@@ -3248,8 +3248,6 @@
           <Property Name="ZamanTipAdi" Type="nvarchar" MaxLength="256" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_Kullanicilar' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <!--Errors Found During Generation:
 warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonucSayisal' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vW_ProgramBasvuruSonucSayisal">
           <Key>
@@ -7574,6 +7572,26 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Parameter Name="PageSize" Type="int" Mode="In" />
           <Parameter Name="TotalCount" Type="int" Mode="InOut" />
         </Function>
+        <Function Name="sp_SearchUsersOptimized" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EnstituKodList" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="EnstituKod" Type="nvarchar" Mode="In" />
+          <Parameter Name="AdSoyad" Type="nvarchar" Mode="In" />
+          <Parameter Name="IsAktif" Type="bit" Mode="In" />
+          <Parameter Name="KullaniciTipID" Type="int" Mode="In" />
+          <Parameter Name="BirimID" Type="int" Mode="In" />
+          <Parameter Name="OgrenimTipKod" Type="int" Mode="In" />
+          <Parameter Name="IsEkYetkiVar" Type="bit" Mode="In" />
+          <Parameter Name="OgrenimDurumID" Type="int" Mode="In" />
+          <Parameter Name="CinsiyetID" Type="int" Mode="In" />
+          <Parameter Name="YetkiGrupID" Type="int" Mode="In" />
+          <Parameter Name="StartRow" Type="int" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="SortColumn" Type="nvarchar" Mode="In" />
+          <Parameter Name="SortDirection" Type="nvarchar" Mode="In" />
+          <Parameter Name="TotalCount" Type="int" Mode="InOut" />
+          <Parameter Name="AktifCount" Type="int" Mode="InOut" />
+          <Parameter Name="PasifCount" Type="int" Mode="InOut" />
+        </Function>
         <EntityContainer Name="LubsDbModelStoreContainer">
           <EntitySet Name="AlanTipleri" EntityType="Self.AlanTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AlesTipleri" EntityType="Self.AlesTipleri" Schema="dbo" store:Type="Tables" />
@@ -10768,6 +10786,26 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Menuler" EntitySet="Menulers" />
             <End Role="Roller" EntitySet="Rollers" />
           </AssociationSet>
+          <FunctionImport Name="sp_SearchUsersOptimized" ReturnType="Collection(LubsDbModel.sp_SearchUsersOptimized_Result)">
+            <Parameter Name="EnstituKodList" Mode="In" Type="String" />
+            <Parameter Name="EnstituKod" Mode="In" Type="String" />
+            <Parameter Name="AdSoyad" Mode="In" Type="String" />
+            <Parameter Name="IsAktif" Mode="In" Type="Boolean" />
+            <Parameter Name="KullaniciTipID" Mode="In" Type="Int32" />
+            <Parameter Name="BirimID" Mode="In" Type="Int32" />
+            <Parameter Name="OgrenimTipKod" Mode="In" Type="Int32" />
+            <Parameter Name="IsEkYetkiVar" Mode="In" Type="Boolean" />
+            <Parameter Name="OgrenimDurumID" Mode="In" Type="Int32" />
+            <Parameter Name="CinsiyetID" Mode="In" Type="Int32" />
+            <Parameter Name="YetkiGrupID" Mode="In" Type="Int32" />
+            <Parameter Name="StartRow" Mode="In" Type="Int32" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="SortColumn" Mode="In" Type="String" />
+            <Parameter Name="SortDirection" Mode="In" Type="String" />
+            <Parameter Name="TotalCount" Mode="InOut" Type="Int32" />
+            <Parameter Name="AktifCount" Mode="InOut" Type="Int32" />
+            <Parameter Name="PasifCount" Mode="InOut" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="sp_SearchMailsFullText_Result">
           <Property Type="Int32" Name="GonderilenMailID" Nullable="true" />
@@ -18957,6 +18995,41 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <End Type="LubsDbModel.Menuler" Role="Menuler" Multiplicity="*" />
           <End Type="LubsDbModel.Roller" Role="Roller" Multiplicity="*" />
         </Association>
+        <ComplexType Name="sp_SearchUsersOptimized_Result">
+          <Property Type="Int32" Name="KullaniciID" Nullable="true" />
+          <Property Type="Guid" Name="UserKey" Nullable="true" />
+          <Property Type="String" Name="EnstituAd" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="EnstituKisaAd" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="EnstituKod" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="YetkiGrupAdi" Nullable="true" MaxLength="200" />
+          <Property Type="Boolean" Name="KtipBasvuruYapabilir" Nullable="true" />
+          <Property Type="String" Name="ResimAdi" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="KullaniciTipID" Nullable="true" />
+          <Property Type="String" Name="KullaniciTipAdi" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="KullaniciAdi" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SicilNo" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Ad" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Soyad" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="UnvanID" Nullable="true" />
+          <Property Type="Int32" Name="BirimID" Nullable="true" />
+          <Property Type="Boolean" Name="ABDKoordinatoru" Nullable="true" />
+          <Property Type="Int32" Name="CinsiyetID" Nullable="true" />
+          <Property Type="Int32" Name="OgrenimTipKod" Nullable="true" />
+          <Property Type="Int32" Name="OgrenimDurumID" Nullable="true" />
+          <Property Type="String" Name="ProgramKod" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="TcKimlikNo" Nullable="true" MaxLength="11" />
+          <Property Type="String" Name="OgrenciNo" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="CepTel" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="EMail" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="IsAktif" Nullable="true" />
+          <Property Type="Boolean" Name="IsAdmin" Nullable="true" />
+          <Property Type="Boolean" Name="YtuOgrencisi" Nullable="true" />
+          <Property Type="DateTime" Name="OlusturmaTarihi" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="LastLogonDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="LastLogonIP" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="IslemTarihi" Nullable="true" Precision="23" />
+          <Property Type="String" Name="IslemYapanIP" Nullable="true" MaxLength="50" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -22437,6 +22510,45 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               <ScalarProperty Name="MenuID" ColumnName="MenuID" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="sp_SearchUsersOptimized" FunctionName="LubsDbModel.Store.sp_SearchUsersOptimized">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LubsDbModel.sp_SearchUsersOptimized_Result">
+                <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
+                <ScalarProperty Name="UserKey" ColumnName="UserKey" />
+                <ScalarProperty Name="EnstituAd" ColumnName="EnstituAd" />
+                <ScalarProperty Name="EnstituKisaAd" ColumnName="EnstituKisaAd" />
+                <ScalarProperty Name="EnstituKod" ColumnName="EnstituKod" />
+                <ScalarProperty Name="YetkiGrupAdi" ColumnName="YetkiGrupAdi" />
+                <ScalarProperty Name="KtipBasvuruYapabilir" ColumnName="KtipBasvuruYapabilir" />
+                <ScalarProperty Name="ResimAdi" ColumnName="ResimAdi" />
+                <ScalarProperty Name="KullaniciTipID" ColumnName="KullaniciTipID" />
+                <ScalarProperty Name="KullaniciTipAdi" ColumnName="KullaniciTipAdi" />
+                <ScalarProperty Name="KullaniciAdi" ColumnName="KullaniciAdi" />
+                <ScalarProperty Name="SicilNo" ColumnName="SicilNo" />
+                <ScalarProperty Name="Ad" ColumnName="Ad" />
+                <ScalarProperty Name="Soyad" ColumnName="Soyad" />
+                <ScalarProperty Name="UnvanID" ColumnName="UnvanID" />
+                <ScalarProperty Name="BirimID" ColumnName="BirimID" />
+                <ScalarProperty Name="ABDKoordinatoru" ColumnName="ABDKoordinatoru" />
+                <ScalarProperty Name="CinsiyetID" ColumnName="CinsiyetID" />
+                <ScalarProperty Name="OgrenimTipKod" ColumnName="OgrenimTipKod" />
+                <ScalarProperty Name="OgrenimDurumID" ColumnName="OgrenimDurumID" />
+                <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />
+                <ScalarProperty Name="TcKimlikNo" ColumnName="TcKimlikNo" />
+                <ScalarProperty Name="OgrenciNo" ColumnName="OgrenciNo" />
+                <ScalarProperty Name="CepTel" ColumnName="CepTel" />
+                <ScalarProperty Name="EMail" ColumnName="EMail" />
+                <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="YtuOgrencisi" ColumnName="YtuOgrencisi" />
+                <ScalarProperty Name="OlusturmaTarihi" ColumnName="OlusturmaTarihi" />
+                <ScalarProperty Name="LastLogonDate" ColumnName="LastLogonDate" />
+                <ScalarProperty Name="LastLogonIP" ColumnName="LastLogonIP" />
+                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

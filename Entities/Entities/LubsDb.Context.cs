@@ -264,5 +264,70 @@ namespace Entities.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_SearchMailsFullText_Result>("sp_SearchMailsFullText", enstituKodListParameter, isEkVarParameter, konuParameter, enstituKodParameter, tarihParameter, mailGonderenParameter, startRowParameter, pageSizeParameter, totalCount);
         }
+    
+        public virtual ObjectResult<sp_SearchUsersOptimized_Result> sp_SearchUsersOptimized(string enstituKodList, string enstituKod, string adSoyad, Nullable<bool> isAktif, Nullable<int> kullaniciTipID, Nullable<int> birimID, Nullable<int> ogrenimTipKod, Nullable<bool> isEkYetkiVar, Nullable<int> ogrenimDurumID, Nullable<int> cinsiyetID, Nullable<int> yetkiGrupID, Nullable<int> startRow, Nullable<int> pageSize, string sortColumn, string sortDirection, ObjectParameter totalCount, ObjectParameter aktifCount, ObjectParameter pasifCount)
+        {
+            var enstituKodListParameter = enstituKodList != null ?
+                new ObjectParameter("EnstituKodList", enstituKodList) :
+                new ObjectParameter("EnstituKodList", typeof(string));
+    
+            var enstituKodParameter = enstituKod != null ?
+                new ObjectParameter("EnstituKod", enstituKod) :
+                new ObjectParameter("EnstituKod", typeof(string));
+    
+            var adSoyadParameter = adSoyad != null ?
+                new ObjectParameter("AdSoyad", adSoyad) :
+                new ObjectParameter("AdSoyad", typeof(string));
+    
+            var isAktifParameter = isAktif.HasValue ?
+                new ObjectParameter("IsAktif", isAktif) :
+                new ObjectParameter("IsAktif", typeof(bool));
+    
+            var kullaniciTipIDParameter = kullaniciTipID.HasValue ?
+                new ObjectParameter("KullaniciTipID", kullaniciTipID) :
+                new ObjectParameter("KullaniciTipID", typeof(int));
+    
+            var birimIDParameter = birimID.HasValue ?
+                new ObjectParameter("BirimID", birimID) :
+                new ObjectParameter("BirimID", typeof(int));
+    
+            var ogrenimTipKodParameter = ogrenimTipKod.HasValue ?
+                new ObjectParameter("OgrenimTipKod", ogrenimTipKod) :
+                new ObjectParameter("OgrenimTipKod", typeof(int));
+    
+            var isEkYetkiVarParameter = isEkYetkiVar.HasValue ?
+                new ObjectParameter("IsEkYetkiVar", isEkYetkiVar) :
+                new ObjectParameter("IsEkYetkiVar", typeof(bool));
+    
+            var ogrenimDurumIDParameter = ogrenimDurumID.HasValue ?
+                new ObjectParameter("OgrenimDurumID", ogrenimDurumID) :
+                new ObjectParameter("OgrenimDurumID", typeof(int));
+    
+            var cinsiyetIDParameter = cinsiyetID.HasValue ?
+                new ObjectParameter("CinsiyetID", cinsiyetID) :
+                new ObjectParameter("CinsiyetID", typeof(int));
+    
+            var yetkiGrupIDParameter = yetkiGrupID.HasValue ?
+                new ObjectParameter("YetkiGrupID", yetkiGrupID) :
+                new ObjectParameter("YetkiGrupID", typeof(int));
+    
+            var startRowParameter = startRow.HasValue ?
+                new ObjectParameter("StartRow", startRow) :
+                new ObjectParameter("StartRow", typeof(int));
+    
+            var pageSizeParameter = pageSize.HasValue ?
+                new ObjectParameter("PageSize", pageSize) :
+                new ObjectParameter("PageSize", typeof(int));
+    
+            var sortColumnParameter = sortColumn != null ?
+                new ObjectParameter("SortColumn", sortColumn) :
+                new ObjectParameter("SortColumn", typeof(string));
+    
+            var sortDirectionParameter = sortDirection != null ?
+                new ObjectParameter("SortDirection", sortDirection) :
+                new ObjectParameter("SortDirection", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_SearchUsersOptimized_Result>("sp_SearchUsersOptimized", enstituKodListParameter, enstituKodParameter, adSoyadParameter, isAktifParameter, kullaniciTipIDParameter, birimIDParameter, ogrenimTipKodParameter, isEkYetkiVarParameter, ogrenimDurumIDParameter, cinsiyetIDParameter, yetkiGrupIDParameter, startRowParameter, pageSizeParameter, sortColumnParameter, sortDirectionParameter, totalCount, aktifCount, pasifCount);
+        }
     }
 }
