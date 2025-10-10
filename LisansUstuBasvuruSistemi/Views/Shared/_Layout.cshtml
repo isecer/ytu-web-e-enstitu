@@ -828,7 +828,6 @@
                                     var CaptchaText = $('#CaptchaInputText').val();
                                     var captchaRequestCode = $('#CaptchaDeText').val();
                                     var msg = "";
-
                                     //if (UserName == null || UserName == "" || Password == null || Password == "" || CaptchaText == null || CaptchaText == "") {
                                     //    msg = "Kullanıcı adı, Şifre ya da Güvenlik Kodu boş bırakılamaz!";
                                     //    showMessage("warning", "login İşlemi", msg);
@@ -850,12 +849,11 @@
                                                         icon: "question",
                                                         showCancelButton: true,
                                                         confirmButtonText: 'Kayıtlı olduğum enstitüye geç',
-                                                        confirmButtonColor: "gren",
+                                                        confirmButtonColor: "green",
                                                         cancelButtonText: 'Hayır',
                                                         showLoaderOnConfirm: true,
                                                         backdrop: true,
                                                         padding: '2em',
-                                                        backdrop: true,
                                                         allowOutsideClick: false,
                                                         preConfirm: function () {
                                                             $('.swal2-cancel').first().text("Enstitüye geçiliyor...");
@@ -868,7 +866,6 @@
                                                             window.location.href = result.ReturnUrl;
                                                         }
                                                     });
-
                                                 }
                                                 else if (result.ReturnUrl != null && result.ReturnUrl != "")
                                                     window.location.href = result.ReturnUrl;
@@ -876,11 +873,23 @@
                                             else
                                             {
                                                 $('#cContent').html(result.NewSrc);
-                                                showMessage("danger", "Login", result.Message);
+                                                Swal.fire({
+                                                    title: "Login",
+                                                    html: result.Message,
+                                                    icon: "error",
+                                                    confirmButtonText: 'Tamam',
+                                                    confirmButtonColor: "#d33"
+                                                });
                                             }
                                         },
                                         error: function (err) {
-                                            alert(err.responseText);
+                                            Swal.fire({
+                                                title: "Hata!",
+                                                html: "Bir hata oluştu:<br/>" + (err.responseText || err.statusText || "Bilinmeyen bir hata"),
+                                                icon: "error",
+                                                confirmButtonText: 'Tamam',
+                                                confirmButtonColor: "#d33"
+                                            });
                                         }
                                     });
                                 }

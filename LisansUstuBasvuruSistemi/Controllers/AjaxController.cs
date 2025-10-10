@@ -149,7 +149,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             else
                             {
                                 loginAjaxDto.IsSuccess = false;
-                                msg = "Uygulama şifresiyle Enstitü Bilgi Sistemine giriş yapılamadı! <a href='https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32' target='_blank' style='color:white;'>Detaylı bilgi almak için tıklayınız. https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32</a>";
+                                msg = "Uygulama şifresiyle Enstitü Bilgi Sistemine giriş yapılamadı! Detaylı bilgi almak için tıklayınız. <a href='https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32' target='_blank'>https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32</a>";
+                                msg += "</br>Uygulama şifrenizi unuttuysanız <a href='https://parola.yildiz.edu.tr' target='_blank'>https://parola.yildiz.edu.tr</a> adresinden sıfırlayabilirsiniz.";
                             }
                         }
                         if (loginUser != null && !loginUser.IsAktif)

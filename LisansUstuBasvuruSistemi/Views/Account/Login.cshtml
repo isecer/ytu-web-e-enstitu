@@ -3,7 +3,7 @@
     Layout = "/Views/Shared/_Layout.cshtml";
     var returnValue = (string)ViewBag.ReturnUrl;
 }
- 
+
 <div class="login-container login-v2">
     @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCaptcha" }))
     {
@@ -14,7 +14,13 @@
         {
             <script>
                $(function() {
-                   toastr["error"]('@ViewBag.Hata', "Hata");
+                   Swal.fire({
+                       title: "Hata",
+                       html: `@Html.Raw(ViewBag.Hata)`,
+                       icon: "error",
+                       confirmButtonText: 'Tamam',
+                       confirmButtonColor: "#d33"
+                   });
                });
             </script>
         }
