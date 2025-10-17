@@ -872,24 +872,32 @@
                                             }
                                             else
                                             {
-                                                $('#cContent').html(result.NewSrc);
+                                                $('#cContent').html(result.NewSrc); 
                                                 Swal.fire({
                                                     title: "Login",
                                                     html: result.Message,
                                                     icon: "error",
                                                     confirmButtonText: 'Tamam',
-                                                    confirmButtonColor: "#d33"
+                                                    confirmButtonColor: "#d33",
+                                                    didClose: function () {
+                                                        $('#loginPanel').addClass('active');
+                                                    }
                                                 });
+
                                             }
                                         },
-                                        error: function (err) {
+                                        error: function (err) { 
                                             Swal.fire({
                                                 title: "Hata!",
                                                 html: "Bir hata oluştu:<br/>" + (err.responseText || err.statusText || "Bilinmeyen bir hata"),
                                                 icon: "error",
                                                 confirmButtonText: 'Tamam',
-                                                confirmButtonColor: "#d33"
+                                                confirmButtonColor: "#d33",
+                                                didClose: function () {
+                                                    $('#loginPanel').addClass('active');
+                                                }
                                             });
+
                                         }
                                     });
                                 }
