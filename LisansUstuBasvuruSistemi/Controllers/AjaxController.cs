@@ -2053,7 +2053,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 secilenBccAlicilar.AddRange(model.SecilenTopluAlicilar.Split(',').ToList());
             }
 
-            // Dosya ekleri hazırla
+            // Dosya ekleri hazırla 
             var dosyaEkleri = dosyaEkiAdi.Select((ad, index) => new { Ad = ad, Index = index })
                 .Join(
                     dosyaEki.Select((dosya, index) => new { Dosya = dosya, Index = index }),
@@ -2065,9 +2065,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     ekYolu.Select((yol, index) => new { Yol = yol, Index = index }),
                     z => z.Index,
                     w => w.Index,
-                    (z, w) => new { z.Ad, z.Dosya, w.Yol, z.Index }
+                    (z, w) => new
+                    {
+                        z.Index,
+                        z.Dosya,
+                        DosyaAdi = z.Dosya != null ? z.Ad + z.Dosya.FileName.GetFileExtension() : z.Ad,
+                        DosyaYolu = z.Dosya != null ? FileHelper.SaveMailDosya(z.Dosya) : w.Yol
+                    }
                 ).ToList();
-
             // Mail gönderme işlemi
             var gonderilenMail = new GonderilenMailler();
 
@@ -2101,8 +2106,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 eklenenGonderilenMail.GonderilenMailEkleris = dosyaEkleri.Select(x => new GonderilenMailEkleri
                 {
                     GonderilenMailID = eklenenGonderilenMail.GonderilenMailID,
-                    EkAdi = x.Ad,
-                    EkDosyaYolu = x.Yol
+                    EkAdi = x.DosyaAdi,
+                    EkDosyaYolu = x.DosyaYolu
                 }).ToList();
 
                 // Mesaj güncelleme
@@ -2297,7 +2302,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         // Dosya eklerini temizle
                         foreach (var dosya in dosyaEkleri)
                         {
-                            FileHelper.Delete(dosya.Yol);
+                            FileHelper.Delete(dosya.DosyaYolu);
                         }
 
                         mesaj.IsSuccess = false;

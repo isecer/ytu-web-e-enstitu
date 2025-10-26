@@ -24,6 +24,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class MezuniyetGelenBasvurularController : Controller
     {
         private readonly LubsDbEntities _entities = new LubsDbEntities();
+        private readonly InviteRenderService _inviteRenderService = new InviteRenderService();
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurular)]
         public ActionResult Index(string ekd, int? sMezuniyetBid, int? sTabId)
         {
@@ -808,8 +809,45 @@ namespace LisansUstuBasvuruSistemi.Controllers
             srTalep.IslemTarihi = DateTime.Now;
             srTalep.IslemYapanID = UserIdentity.Current.Id;
             srTalep.IslemYapanIP = UserIdentity.Ip;
+
+
             if (srDurumId == SrTalepDurumEnum.Reddedildi) srTalep.SRDurumAciklamasi = srDurumAciklamasi;
             _entities.SaveChanges();
+
+            try
+            {
+                if (srTalep.SRDurumID == SrTalepDurumEnum.Onaylandı && srTalep.MezuniyetBasvurulari.OgrenimTipKod.IsDoktora())
+                {
+                    var srTalebiDavetModel = SrTalepleriBus
+                        .GetSonSrTalebiDavetData(srTalep.Enstituler, srTalep.SRTalepID).FirstOrDefault();
+                    if (srTalebiDavetModel != null)
+                    {
+
+                        var inviteImagePath = _inviteRenderService.RenderToFile(srTalebiDavetModel);
+                        srTalep.DavetResimYolu = inviteImagePath;
+                        _entities.SaveChanges();
+
+                    }
+                }
+                else
+                {
+                    if (!srTalep.DavetResimYolu.IsNullOrWhiteSpace())
+                    {
+                        FileHelper.Delete(srTalep.DavetResimYolu);
+                        srTalep.DavetResimYolu = null;
+                        _entities.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(
+                    "SR Talebi Davet Resmi işlemi sırasında bir hata oluştu! hata:" + ex.ToExceptionMessage(),
+                    ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
+            }
+
+
+
             LogIslemleri.LogEkle("SRTalepleri", LogCrudType.Update, srTalep.ToJson());
             var qbDrm = srTalep.SRDurumlari;
 
@@ -2332,14 +2370,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("EYK Sayısı Giriniz.");
                 }
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = eykSayisi.IsNullOrWhiteSpace() ? MsgTypeEnum.Error : MsgTypeEnum.Success, PropertyName = "EYKSayisiO_" + mezuniyetJuriOneriFormId });
-             
+
                 if (!isTezBasligiDegisti.HasValue)
                 {
                     mMessage.Messages.Add("Sınavda Tez Başlığı Değişecek Mi? Sorusunu cevaplayınız.");
                 }
                 else
                 {
-                
+
                     if (isTezBasligiDegisti == true)
                     {
                         if (yeniTezBaslikTr.IsNullOrWhiteSpace())
@@ -2351,7 +2389,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mMessage.Messages.Add("Yeni Tez Başlığı İngilizce bilgisini giriniz.");
                         }
                     }
-             
+
                 }
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = !isTezBasligiDegisti.HasValue ? MsgTypeEnum.Error : MsgTypeEnum.Success, PropertyName = "IsTezBasligiDegisti_" + mezuniyetJuriOneriFormId });
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = yeniTezBaslikTr.IsNullOrWhiteSpace() ? MsgTypeEnum.Error : MsgTypeEnum.Success, PropertyName = "YeniTezBaslikTr_" + mezuniyetJuriOneriFormId });
@@ -3290,6 +3328,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)] 
+        public ActionResult DownloadPdf(int id, string ekd)
+        {
+
+       
+
+            var srTalep = _entities.SRTalepleris.First(f => f.SRTalepID == id);
+            var data = SrTalepleriBus.GetSonSrTalebiDavetData(srTalep.Enstituler, id).First();
+            var pdfBytes = _inviteRenderService.RenderToPdf(data);
+            var mb = srTalep.MezuniyetBasvurulari;
+
+            var memoryStream = new MemoryStream(pdfBytes);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            Response.AddHeader("Content-Disposition", $"inline;filename=\"Tez_Sınavı_Daveti__{mb.Ad}_{mb.Soyad}.pdf\"");
+            return new FileStreamResult(memoryStream, "application/pdf");
+        }
 
     }
 }

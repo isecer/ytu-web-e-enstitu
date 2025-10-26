@@ -16,8 +16,10 @@ namespace LisansUstuBasvuruSistemi.Business
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
             using (var entities = new LubsDbEntities())
-            {
-                var data = entities.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod == enstituKod).OrderBy(o => o.AnabilimDaliAdi).ToList();
+            { 
+
+                var isnullEnstituKod = enstituKod.IsNullOrWhiteSpace();
+                var data = entities.AnabilimDallaris.Where(p => p.IsAktif && p.EnstituKod ==(isnullEnstituKod? p.EnstituKod: enstituKod)).OrderBy(o => o.AnabilimDaliAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbStringDto { Value = item.AnabilimDaliAdi, Caption = item.AnabilimDaliAdi });

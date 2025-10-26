@@ -1,9 +1,10 @@
-﻿using System.Linq;
-using BiskaUtil;
+﻿using BiskaUtil;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using System;
+using System.Linq;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -25,77 +26,100 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static void UpdateRoles()
         {
-            var roleAttrs = Membership.Roles();
-            var roleKeyGroup = roleAttrs.GroupBy(g => g.RolID).Select(s => new { s.Key, Count = s.Count(), Rolls = s.Select(sr => sr.RolAdi).ToList() });
-            var duplicateKeys = roleKeyGroup.Where(p => p.Count > 1).ToList();
-
-            if (duplicateKeys.Any())
-            { 
-                var duplicateStringList = duplicateKeys.Select(s => s.Key + " => " + string.Join(",", s.Rolls)).ToList();
-                var duplicateString = string.Join("<br/>", duplicateStringList);
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("Sistem Rolleri güncellenirken Unique olmayan roll id bilgilerine rastlandı! \r\n " + duplicateString, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Kritik);
-                return;
-            }
-
-            using (var entities = new LubsDbEntities())
+            try
             {
-                var dbRoller = entities.Rollers.ToArray();
-                foreach (var attr in roleAttrs)
-                {
-                    var dbrole = dbRoller.FirstOrDefault(p => p.RolID == attr.RolID);
+                var roleAttrs = Membership.Roles();
+                var roleKeyGroup = roleAttrs.GroupBy(g => g.RolID).Select(s => new { s.Key, Count = s.Count(), Rolls = s.Select(sr => sr.RolAdi).ToList() });
+                var duplicateKeys = roleKeyGroup.Where(p => p.Count > 1).ToList();
 
-                    if (dbrole == null)
+                if (duplicateKeys.Any())
+                {
+                    var duplicateStringList = duplicateKeys.Select(s => s.Key + " => " + string.Join(",", s.Rolls)).ToList();
+                    var duplicateString = string.Join("<br/>", duplicateStringList);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Sistem Rolleri güncellenirken Unique olmayan roll id bilgilerine rastlandı! \r\n " + duplicateString, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Kritik);
+                    return;
+                }
+
+                try
+                {
+                    using (var entities = new LubsDbEntities())
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Eklenen Rol: " + attr.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
-                        entities.Rollers.Add(new Roller
+                        // Database bağlantısını test et
+                        if (!entities.Database.Exists())
                         {
-                            RolID = attr.RolID,
-                            SiraNo = attr.SiraNo,
-                            GorunurAdi = attr.GorunurAdi,
-                            Aciklama = attr.Aciklama,
-                            Kategori = attr.Kategori,
-                            RolAdi = attr.RolAdi
-                        });
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("UpdateRoles: Veritabanına bağlanılamıyor!", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Kritik);
+                            return;
+                        }
+
+                        var dbRoller = entities.Rollers.ToArray();
+                        foreach (var attr in roleAttrs)
+                        {
+                            var dbrole = dbRoller.FirstOrDefault(p => p.RolID == attr.RolID);
+
+                            if (dbrole == null)
+                            {
+                                SistemBilgilendirmeBus.SistemBilgisiKaydet("Eklenen Rol: " + attr.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+                                entities.Rollers.Add(new Roller
+                                {
+                                    RolID = attr.RolID,
+                                    SiraNo = attr.SiraNo,
+                                    GorunurAdi = attr.GorunurAdi,
+                                    Aciklama = attr.Aciklama,
+                                    Kategori = attr.Kategori,
+                                    RolAdi = attr.RolAdi
+                                });
+                            }
+                            else
+                            {
+                                dbrole.RolID = attr.RolID;
+                                dbrole.SiraNo = attr.SiraNo;
+                                dbrole.GorunurAdi = attr.GorunurAdi;
+                                dbrole.Aciklama = attr.Aciklama;
+                                dbrole.Kategori = attr.Kategori;
+                                dbrole.RolAdi = attr.RolAdi;
+                            }
+                        }
+
+                        var silinenRoller = dbRoller.Where(p => roleAttrs.All(a => a.RolID != p.RolID)).ToList();
+                        var silinenRolIds = silinenRoller.Select(s => s.RolID).ToList();
+                        var silinecekKullaniciRolleris = entities.Kullanicilars
+                            .Where(p => p.Rollers.Any(a => silinenRolIds.Contains(a.RolID))).ToList();
+                        foreach (var kul in silinecekKullaniciRolleris)
+                        {
+                            foreach (var rol in silinenRoller)
+                            {
+                                kul.Rollers.Remove(rol);
+                            }
+                        }
+
+                        var yetkiGrupRolleris = entities.YetkiGrupRolleris.Where(p => silinenRolIds.Contains(p.RolID)).ToList();
+                        foreach (var ygItem in yetkiGrupRolleris)
+                        {
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Silinen Yetki Grubu Rolu: " + ygItem.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+                        }
+                        entities.YetkiGrupRolleris.RemoveRange(yetkiGrupRolleris);
+                        foreach (var rol in silinenRoller)
+                        {
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Silinen Rol: " + rol.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+                            entities.Rollers.Remove(rol);
+                        }
+
+                        entities.SaveChanges();
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("UpdateRoles başarılı", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
                     }
-                    else
-                    {
-                        dbrole.RolID = attr.RolID;
-                        dbrole.SiraNo = attr.SiraNo;
-                        dbrole.GorunurAdi = attr.GorunurAdi;
-                        dbrole.Aciklama = attr.Aciklama;
-                        dbrole.Kategori = attr.Kategori;
-                        dbrole.RolAdi = attr.RolAdi;
-                    }
                 }
-
-                var silinenRoller = dbRoller.Where(p => roleAttrs.All(a => a.RolID != p.RolID)).ToList();
-                var silinenRolIds = silinenRoller.Select(s => s.RolID).ToList();
-                var silinecekKullaniciRolleris = entities.Kullanicilars
-                    .Where(p => p.Rollers.Any(a => silinenRolIds.Contains(a.RolID))).ToList();
-                foreach (var kul in silinecekKullaniciRolleris)
+                catch (System.Data.Entity.Core.EntityException ex)
                 {
-                    foreach (var rol in silinenRoller)
-                    {
-                        kul.Rollers.Remove(rol);
-                    }
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet($"UpdateRoles - DB Bağlantı Hatası: {ex.Message}\r\nInner: {ex.InnerException?.Message}", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Kritik);
                 }
-
-                var yetkiGrupRolleris = entities.YetkiGrupRolleris.Where(p => silinenRolIds.Contains(p.RolID)).ToList();
-                foreach (var ygItem in yetkiGrupRolleris)
+                catch (System.Data.SqlClient.SqlException ex)
                 {
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Silinen Yetki Grubu Rolu: " + ygItem.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet($"UpdateRoles - SQL Hatası: {ex.Message}", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Kritik);
                 }
-                entities.YetkiGrupRolleris.RemoveRange(yetkiGrupRolleris);
-                foreach (var rol in silinenRoller)
-                {
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Silinen Rol: " + rol.ToJson(), ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
-
-                    entities.Rollers.Remove(rol);
-
-                }
-
-                entities.SaveChanges();
-                SistemBilgilendirmeBus.SistemBilgisiKaydet("UpdateRoles", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
+            }
+            catch (Exception ex)
+            {
+                SistemBilgilendirmeBus.SistemBilgisiKaydet($"UpdateRoles - Genel Hata: {ex.Message}\r\nStackTrace: {ex.StackTrace}", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Kritik);
             }
         }
     }

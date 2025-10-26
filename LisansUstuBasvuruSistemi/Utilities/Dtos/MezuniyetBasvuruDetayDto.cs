@@ -14,6 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool GelenBasvuru { get; set; }
         public bool SonucGirisSureciAktif { get; set; } 
         public bool IsYerli { get; set; }
+        public string EnstituKod { get; set; }
         public string EnstituAdi { get; set; }
         public int SelectedTabIndex { get; set; }
 

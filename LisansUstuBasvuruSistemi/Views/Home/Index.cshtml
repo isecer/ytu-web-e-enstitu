@@ -1,4 +1,5 @@
 ﻿@using Entities.Entities
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -11,15 +12,109 @@
     var mesajGroupId = (string)ViewBag.MesajGroupID;
     var duyurular = (List<FrDuyurularDto>)ViewBag.Duyurular;
     var anketGiris = (string)ViewBag.AnketGiris;
+    var galleryUrls = ViewBag.GaleryUrls as List<string>; 
 }
+
+
+@if (galleryUrls != null && galleryUrls.Count > 0)
+{
+    <link href="~/Content/assets/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <script src="~/Content/assets/swiper/swiper-bundle.min.js"></script>
+    <link href="~/Content/assets/swiper/galery.css" rel="stylesheet" />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success gallery-panel">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="fa fa-film"></i> Tez Savunmaları
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="swiper swiper-v3 myGallerySwiper3">
+                        <div class="swiper-wrapper">
+
+                            @foreach (var imgUrl in galleryUrls)
+                            {
+                                <div class="swiper-slide">
+                                    <img src="@imgUrl" alt="Savunma Duyurusu" onclick="openGalleryModal('@imgUrl')" />
+                                </div>
+                            }
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+
+                    <div class="gallery-swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const swiper3 = new Swiper(".gallery-panel .myGallerySwiper3", {
+                effect: "coverflow",
+                grabCursor: true,
+                centeredSlides: true,
+                loop: true,
+                slidesPerView: 2,  // Sadece 2 kart göster
+                coverflowEffect: {
+                    rotate: 20,
+                    stretch: 20,
+                    depth: 350,
+                    modifier: 1.9,
+                    slideShadows: true,
+                },
+                autoplay: {
+                    delay: 6000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                },
+                speed: 800,
+                navigation: {
+                    nextEl: ".gallery-panel .swiper-button-next",
+                    prevEl: ".gallery-panel .swiper-button-prev",
+                },
+                pagination: {
+                    el: ".gallery-panel .gallery-swiper-pagination",
+                    clickable: true,
+                    renderBullet: function (index, className) {
+                        return '<span class="' + className + '" data-index="' + (index + 1) + '"></span>';
+                    },
+                },
+                keyboard: {
+                    enabled: true,
+                },
+                on: {
+                    slideChangeTransitionEnd: function () {
+                        this.slides.forEach((slide, index) => {
+                            if (index === this.activeIndex) {
+                                slide.style.transform = 'scale(1.12)';
+                            }
+                        });
+                    }
+                }
+            });
+        });
+        function openGalleryModal(imgUrl) {
+            bootbox.dialog({
+                title: '<i class="fa fa-image"></i> Tez Savunma Sınavı Davet Görseli',
+                message: '<img src="' + imgUrl + '" alt="Savunma Görseli" />',
+                size: "large",
+                centerVertical: true,
+                className: 'bootbox-gallery-modal'
+            });
+        }
+    </script>
+}
+ 
 @if (duyurular.Count > 0)
 {
     <div class="row">
-
         @using (Html.BeginForm())
         {
             <div class="col-md-12">
-
                 <!-- START SIMPLE DATATABLE -->
                 <div class="panel panel-danger">
                     <div class="panel-heading padding-0">
@@ -29,10 +124,7 @@
                         </ul>
                     </div>
                     <div class="panel-body">
-
-
                         <div class="tasks">
-
                             @foreach (var item in duyurular)
                             {
                                 <div class="task-item task-info" style="cursor: auto;">
@@ -52,22 +144,14 @@
                                         }
                                     </div>
                                 </div>
-
                             }
                         </div>
                     </div>
-
                 </div>
-
-
-
-
-
             </div>
         }
     </div>
 }
-
 <div class="row">
     <div class="col-md-12">
         <!-- START SIMPLE DATATABLE -->
@@ -79,7 +163,6 @@
                 </ul>
             </div>
             <div class="panel-body">
-
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-body panel-body-map">
@@ -91,17 +174,11 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
         </div>
-
-
         @if (!string.IsNullOrEmpty(mesajGroupId))
         {
             <script>
-
                 setTimeout(function () {
                     mesGonder('@mesajGroupId');
                 }, 1200);
@@ -117,9 +194,8 @@
         }
         @if (anketGiris != null)
         {
-
             <script src="~/Content/assets/plugins/bootbox/bootbox.min.js"></script>
-            <script> 
+            <script>
                 setTimeout(getAnket(), 10);
                 function getAnket() {
                     var _AnketGiris = @Html.Raw(Json.Encode(anketGiris));
@@ -153,7 +229,6 @@
                                         error: function (err) {
                                             PanelRefresh(pnlx, true);
                                         }
-
                                     });
                                     $('#FrmAnket').submit();
                                     return false;
@@ -163,7 +238,6 @@
                     });
                     $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
                 }
-
             </script>
         }
         <script>
@@ -179,6 +253,4 @@
             });
         </script>
     </div>
-
-
 </div>

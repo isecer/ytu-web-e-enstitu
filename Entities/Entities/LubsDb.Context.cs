@@ -152,7 +152,6 @@ namespace Entities.Entities
         public virtual DbSet<OgrenimTipleri> OgrenimTipleris { get; set; }
         public virtual DbSet<OzelNotTipleri> OzelNotTipleris { get; set; }
         public virtual DbSet<OzelTarihTipleri> OzelTarihTipleris { get; set; }
-        public virtual DbSet<Programlar> Programlars { get; set; }
         public virtual DbSet<Roller> Rollers { get; set; }
         public virtual DbSet<Sehirler> Sehirlers { get; set; }
         public virtual DbSet<ServiceLog> ServiceLogs { get; set; }
@@ -179,7 +178,6 @@ namespace Entities.Entities
         public virtual DbSet<SRSalonDurumlari> SRSalonDurumlaris { get; set; }
         public virtual DbSet<SRSalonlar> SRSalonlars { get; set; }
         public virtual DbSet<SRSalonTalepTipleri> SRSalonTalepTipleris { get; set; }
-        public virtual DbSet<SRTalepleri> SRTalepleris { get; set; }
         public virtual DbSet<SRTaleplerJuri> SRTaleplerJuris { get; set; }
         public virtual DbSet<SRTalepTipleri> SRTalepTipleris { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
@@ -227,6 +225,8 @@ namespace Entities.Entities
         public virtual DbSet<YetkiGrupRolleri> YetkiGrupRolleris { get; set; }
         public virtual DbSet<ZamanTipleri> ZamanTipleris { get; set; }
         public virtual DbSet<vW_ProgramBasvuruSonucSayisal> vW_ProgramBasvuruSonucSayisal { get; set; }
+        public virtual DbSet<Programlar> Programlars { get; set; }
+        public virtual DbSet<SRTalepleri> SRTalepleris { get; set; }
     
         public virtual ObjectResult<sp_SearchMailsFullText_Result> sp_SearchMailsFullText(string enstituKodList, Nullable<bool> isEkVar, string konu, string enstituKod, Nullable<System.DateTime> tarih, string mailGonderen, Nullable<int> startRow, Nullable<int> pageSize, ObjectParameter totalCount)
         {

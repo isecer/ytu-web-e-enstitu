@@ -109,9 +109,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                         IslemYapanIP = UserIdentity.Ip,
                                     };
                                     ogrenci.KullaniciOgrenimleris.Add(kullaniciOgrenim);
-
-                                    var program = entities.Programlars.FirstOrDefault(f => f.ProgramKod == ogrenci.ProgramKod);
-                                    program.ObsProgramId = kayitBilgi.OgrenciInfo.PROGRAM_ID.ToInt();
+                                     
                                 }
                             }
 

@@ -40,8 +40,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EnstituKod = enst.EnstituKod,
                         EnstituAd = enst.EnstituAd,
                         AnabilimDaliKod = e.AnabilimDaliKod,
-                        AnabilimDaliAdi = e.AnabilimDaliAdi +(e.IsAktif?"":" (Pasif)"),
+                        AnabilimDaliAdi = e.AnabilimDaliAdi + (e.IsAktif ? "" : " (Pasif)"),
                         ProgramKod = s.ProgramKod,
+                        ObsProgramKod = s.ObsProgramKod,
                         ProgramAdi = slP != null ? slP.ProgramAdi : "",
                         AbdIsAktif = e.IsAktif,
                         IsAktif = s.IsAktif,
@@ -51,6 +52,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapan = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad
 
                     };
+            if (model.IsObsEslestirildi.HasValue)
+            {
+                q = model.IsObsEslestirildi == true ? q.Where(p => p.ObsProgramKod != null && p.ObsProgramKod != "") :
+                    q.Where(p => p.ObsProgramKod == null || p.ObsProgramKod == "");
+            }
             if (model.AbdIsAktif.HasValue) q = q.Where(p => p.AbdIsAktif == model.AbdIsAktif);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
@@ -66,6 +72,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             ViewBag.IndexModel = indexModel;
 
+
+            ViewBag.IsObsEslestirildi = new SelectList(ComboData.ObsProgramEslestirmeDurum(true), "Value", "Caption", model.IsObsEslestirildi);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.AbdIsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.AbdIsAktif);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
@@ -157,7 +165,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         AnabilimDaliID = kModel.AnabilimDaliID,
                         AnabilimDaliKod = bolm.AnabilimDaliKod,
-                        ObsProgramId = kModel.ObsProgramId,
+                        ObsProgramKod = kModel.ObsProgramKod,
                         ProgramKod = id,
                         ProgramAdi = kModel.ProgramAdi,
                         IsAktif = true,
@@ -174,7 +182,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var data = _entities.Programlars.First(p => p.ProgramKod == id);
                     data.AnabilimDaliID = kModel.AnabilimDaliID;
                     data.AnabilimDaliKod = bolm.AnabilimDaliKod;
-                    data.ObsProgramId = kModel.ObsProgramId;
+                    data.ObsProgramKod = kModel.ObsProgramKod;
                     data.ProgramAdi = kModel.ProgramAdi;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
@@ -256,6 +264,71 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 message = "Silmek istediğiniz Program sistemde bulunamadı!";
             }
             return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        [HttpGet]
+        public async System.Threading.Tasks.Task<ActionResult> GetObsProgramlarDropdown(string q = null, int? take = null, string ekd = null)
+        {
+            try
+            {
+                var obsProgramlar = await ProgramKodGuncellemeBus.GetObsProgramlarDropdownAsync();
+
+                var enstituKod = "1" + EnstituBus.GetSelectedEnstitu(ekd);
+                if (!string.IsNullOrWhiteSpace(q))
+                {
+                    var term = q.Trim().ToLowerInvariant();
+                    // İhtiyaca göre alanları genişletebilirsiniz
+                    obsProgramlar = obsProgramlar
+                        .Where(x => x.FakulteKod == enstituKod && (
+                                (!string.IsNullOrEmpty(x.ObsProgramKod) &&
+                                 x.ObsProgramKod.ToLowerInvariant().Contains(term)) ||
+                                (!string.IsNullOrEmpty(x.ProgramAdi) &&
+                                 x.ProgramAdi.ToLowerInvariant().Contains(term)) ||
+                                (!string.IsNullOrEmpty(x.BolumAdi) && x.BolumAdi.ToLowerInvariant().Contains(term)) ||
+                                (!string.IsNullOrEmpty(x.FakulteAdi) && x.FakulteAdi.ToLowerInvariant().Contains(term))
+                            )
+                        )
+                        .ToList();
+                }
+                else
+                    obsProgramlar = obsProgramlar
+                        .Where(x => x.FakulteKod == enstituKod).ToList();
+
+                if (take.HasValue && take.Value > 0)
+                    obsProgramlar = obsProgramlar.Take(take.Value).ToList();
+
+                return Json(obsProgramlar, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async System.Threading.Tasks.Task<ActionResult> ManuelEslestir(string programKod, string secilenObsKod)
+        {
+            try
+            {
+                var rapor = await ProgramKodGuncellemeBus.ManuelEslestirAsync(programKod, secilenObsKod);
+
+                return Json(new
+                {
+                    success = rapor.Basarili,
+                    message = rapor.Mesaj,
+                    data = rapor
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Hata: " + ex.Message
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
     }

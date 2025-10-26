@@ -347,6 +347,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 85000, MenuAdi = "Birimler", MenuCssClass = "fa fa-list-alt", MenuUrl = "Birimler/Index", SiraNo = 2)]
         [Role(GorunurAdi = "Birimler", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Birimler menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string Birimler = "Birimler";
+        [Menu(BagliMenuID = 85000, MenuAdi = "ObsBirimler", MenuCssClass = "fa fa-list-alt", MenuUrl = "ObsBirimler/Index", SiraNo = 2)]
+        [Role(GorunurAdi = "Obs Birimleri", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki OBS Birimlerini menüsünü Görebilmeyi sağlayan yetkidir.")]
+        public const string ObsBirimler = "ObsBirimler";
         [Menu(BagliMenuID = 85000, MenuAdi = "Unvanlar", MenuCssClass = "fa fa-list-alt", MenuUrl = "Unvanlar/Index", SiraNo = 3)]
         [Role(GorunurAdi = "Unvanlar", Kategori = SystemMenu.KullaniciIslemleriMenuName, Aciklama = "Bu yetki Unvanlar menüsünü Görebilme/Kayıt/Silme işlemlerini yapabilmeyi sağlayan yetkidir.")]
         public const string Unvanlar = "Ünvanlar";

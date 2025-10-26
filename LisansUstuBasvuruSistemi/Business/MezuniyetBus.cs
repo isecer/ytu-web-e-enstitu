@@ -674,6 +674,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.DanismanImzaliFormDosyaYolu = basvuru.DanismanImzaliFormDosyaYolu;
                 model.DanismanImzaliFormDosyaAdi = basvuru.DanismanImzaliFormDosyaAdi;
                 model.IsYerli = basvuru.KullaniciTipleri.Yerli;
+                model.EnstituKod=enstitu.EnstituKod;
                 model.EnstituAdi = enstitu.EnstituAd;
                 model.MezuniyetBasvurulariID = basvuru.MezuniyetBasvurulariID;
                 model.MezuniyetSureci = basvuru.MezuniyetSureci;

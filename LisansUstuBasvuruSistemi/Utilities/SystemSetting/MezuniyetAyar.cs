@@ -25,6 +25,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public static readonly MezuniyetAyarProperty MezuniyetBasvurusunuIlgiliTezSorumlusunaAta = new MezuniyetAyarProperty("Mezuniyet Basvurusunu İlgili Tez Sorumlusuna Ata");
         public static readonly MezuniyetAyarProperty TezSorumluAtamaHesaplamasiDonemselYap = new MezuniyetAyarProperty("Tez Sorumlusu Atama Hesaplaması Dönemsel Yapılsın");
         public static readonly MezuniyetAyarProperty YeniMezuniyetBasvurusundaMailGonder = new MezuniyetAyarProperty("Yeni Mezuniyet Başvurusunda Mail Gönder");
+        public static readonly MezuniyetAyarProperty TezSinaviDavetKartlariniAnaSayfadaGoster = new MezuniyetAyarProperty("Tez Savunma Davet Kartlarını Ana Sayfada Göster");
+        public static readonly MezuniyetAyarProperty TezSinaviDavetkartiPdfHaliMezuniyetSinavdanAlinabilsin = new MezuniyetAyarProperty("Tez Savunma Davet Kartı PDF dosyası Mezuniyet Sınav Ekranından indirilebilsin");
 
         public static string GetAyar(this MezuniyetAyarProperty ayarProperty, string enstituKodu, string varsayilanDeger = "")
         {

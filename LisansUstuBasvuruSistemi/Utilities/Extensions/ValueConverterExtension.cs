@@ -7,8 +7,6 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
@@ -78,7 +76,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                     .ToCharArray()
                     .Where(p => (p.ToString() == groupSeparator || p.ToString() == decimalSeparator || numbers.Contains(p))).ToArray()
             );
-            decimal def = 0;
+            decimal def;
             if (decimal.TryParse(moneyStr, out def)) return def;
             return null;
         }
@@ -145,8 +143,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
         public static bool? ToBooleanObj(this object obj)
         {
-            bool dgr;
-            if (obj != null && bool.TryParse(obj.ToString(), out dgr)) return Convert.ToBoolean(obj);
+            if (obj != null && bool.TryParse(obj.ToString(), out _)) return Convert.ToBoolean(obj);
             return null;
         }
         public static double? ToDoubleObj(this object obj)
@@ -186,8 +183,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
         public static int? ToInt(this string @string)
         {
-            int i = 0;
-            if (int.TryParse(@string, out i))
+            if (int.TryParse(@string, out var i))
                 return i;
             return null;
         }
@@ -238,7 +234,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             return dateTime == DateTime.MinValue ? "" : dateTime.ToString("dd.MM.yyyy HH:mm");
         }
-
+        public static string ToFormatDateDay(this DateTime dateTime)
+        {
+            return dateTime == DateTime.MinValue ? "" : dateTime.ToString("dd.MM.yyyy dddd", new CultureInfo("tr-TR"));
+        }
         public static string ToFormatDateDayTime(this DateTime dateTime)
         {
             return dateTime == DateTime.MinValue ? "" : dateTime.ToString("dd.MM.yyyy dddd HH.mm", new CultureInfo("tr-TR"));
@@ -360,7 +359,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return returnSonuc;
         }
 
-
+        
         public static string ToKullaniciResim(this string resimAdi)
         {
             var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
@@ -557,15 +556,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             List<T> resultList = new List<T>();
             if (objectList == null) return resultList.ToArray();
             //var LstObject = (object[])ObjectList;            
-            var LstObject = objectList;
-            if (LstObject.Length == 0) return resultList.ToArray();
-            var Lst = LstObject.AsQueryable();
+            var lstObject = objectList;
+            if (lstObject.Length == 0) return resultList.ToArray();
+            var lst = lstObject.AsQueryable();
 
-            var type = Lst.First().GetType();
-            var ids = Lst.Select(s => s.GetType().GetProperty(rootPropertyField).GetValue(s, null).ToString()).ToArray();
+            var type = lst.First().GetType();
+            var ids = lst.Select(s => s.GetType().GetProperty(rootPropertyField).GetValue(s, null).ToString()).ToArray();
 
             List<T> roots = new List<T>();
-            foreach (var l in Lst)
+            foreach (var l in lst)
             {
                 if (type.GetProperty(parentPropertyField).GetValue(l, null) == null) roots.Add(l);
                 else
@@ -577,36 +576,33 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 
             int deep = 0;
             Func<T, int> fxDetail = null;
-            fxDetail = new Func<T, int>
-                (
-                   (parent) =>
-                   {
-                       deep++;
-                       object parentid = type.GetProperty(rootPropertyField).GetValue(parent, null);
-                       var details = Lst.Where(p =>
-                           type.GetProperty(parentPropertyField).GetValue(p, null) != null && //it is root
-                           type.GetProperty(parentPropertyField).GetValue(p, null).ToString() == parentid.ToString()).ToArray();
-                       if (!string.IsNullOrEmpty(setHasChildField))
-                       {
-                           type.GetProperty(setHasChildField).SetValue(parent, details.Length > 0, null);
-                       }
-                       foreach (var m in details)
-                       {
-                           var val = type.GetProperty(textPropertyField).GetValue(m, null);
-                           if (val != null)
-                           {
-                               var str = val.ToString();
-                               for (int i = 0; i < deep; i++)
-                                   str = padString + str;
-                               type.GetProperty(textPropertyField).SetValue(m, str, null);
-                           }
-                           resultList.Add(m);
-                           fxDetail(m);
-                       }
-                       deep--;
-                       return 0;
-                   }
-                );
+            fxDetail = (parent) =>
+            {
+                deep++;
+                object parentid = type.GetProperty(rootPropertyField).GetValue(parent, null);
+                var details = lst.Where(p =>
+                    type.GetProperty(parentPropertyField).GetValue(p, null) != null && //it is root
+                    type.GetProperty(parentPropertyField).GetValue(p, null).ToString() == parentid.ToString()).ToArray();
+                if (!string.IsNullOrEmpty(setHasChildField))
+                {
+                    type.GetProperty(setHasChildField).SetValue(parent, details.Length > 0, null);
+                }
+                foreach (var m in details)
+                {
+                    var val = type.GetProperty(textPropertyField).GetValue(m, null);
+                    if (val != null)
+                    {
+                        var str = val.ToString();
+                        for (int i = 0; i < deep; i++)
+                            str = padString + str;
+                        type.GetProperty(textPropertyField).SetValue(m, str, null);
+                    }
+                    resultList.Add(m);
+                    fxDetail(m);
+                }
+                deep--;
+                return 0;
+            };
 
             foreach (var root in roots)
             {

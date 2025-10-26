@@ -1,0 +1,74 @@
+﻿@model LisansUstuBasvuruSistemi.WebServiceData.ObsRestData.FmObsProgramDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-university"></i> Fakülte / Bölüm / Program Listesi</h3>
+                    <ul class="panel-controls">
+                        <li><span class="label label-success label-form">Toplam:@Model.RowCount</span></li>
+                        <li><a href="@Url.Action("Index")"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+
+                <div class="panel-body"> 
+
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Fakülte</th>
+                                <th>Bölüm</th>
+                                <th>Program</th>
+                                <th>Program Kodu</th> 
+                            </tr>
+                            <tr class="filtrele">
+                                <th></th>
+                                <th>
+                                    @Html.DropDownListFor(m => m.FakulteKod, (SelectList)ViewBag.Fakulteler, "Tüm Fakülteler", new { @class = "form-control" })
+                                </th>
+                                <th>
+                                    @Html.DropDownListFor(m => m.BolumId, (SelectList)ViewBag.Bolumler, "Tüm Bölümler", new { @class = "form-control" })
+                                </th>
+                                <th>
+                                    <input name="ProgramAd" type="text" value="@Model.ProgramAd" class="form-control" />
+                                </th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Programlar != null && Model.Programlar.Any())
+                            {
+                                int index = Model.StartRowIndex;
+                                foreach (var item in Model.Programlar)
+                                {
+                                    <tr>
+                                        <td>@(++index)</td>
+                                        <td>@item.FakulteAd</td>
+                                        <td>@item.BolumAd</td>
+                                        <td>@item.ProgramAd [@item.ProgramId]</td>
+                                        <td>@item.ProgramKod</td> 
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="5" style="text-align:center;">[ Listelenen Kayıt Yok ]</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>

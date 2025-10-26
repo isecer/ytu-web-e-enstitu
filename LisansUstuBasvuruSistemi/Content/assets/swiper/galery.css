@@ -1,0 +1,318 @@
+/* PANEL BODY */
+.gallery-panel .panel-body {
+    background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+    padding: 10px;
+    padding-bottom: 40px;
+    position: relative;
+    min-height: 450px;
+}
+
+/* PANEL HEADER */
+.gallery-panel .panel-heading {
+    color: white;
+    border: none;
+}
+
+.gallery-panel .panel-title {
+    font-size: 20px;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* SWIPER CONTAINER */
+.gallery-panel .swiper-v3 {
+    width: 100%;
+    max-width: 1000px;
+    height: 350px;
+    margin: 0px auto 0 auto;
+    padding: 20px 0;
+}
+
+    /* SLIDE - YATAY DAHA BÜYÜK */
+    .gallery-panel .swiper-v3 .swiper-slide {
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        width: 420px; /* Yatay daha geniþ */
+        height: 280px; /* Yükseklik ayný */
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+        .gallery-panel .swiper-v3 .swiper-slide:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+        }
+
+        .gallery-panel .swiper-v3 .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            filter: brightness(0.95);
+            transition: filter 0.3s ease;
+        }
+
+        .gallery-panel .swiper-v3 .swiper-slide:hover img {
+            filter: brightness(1);
+        }
+
+    .gallery-panel .swiper-v3 .swiper-slide-active {
+        transform: scale(1.12) !important;
+        z-index: 10;
+    }
+
+        .gallery-panel .swiper-v3 .swiper-slide-active img {
+            filter: brightness(1);
+        }
+
+    /* NAVÝGASYON BUTONLARI */
+    .gallery-panel .swiper-v3 .swiper-button-next,
+    .gallery-panel .swiper-v3 .swiper-button-prev {
+        color: #ffd32a;
+        font-weight: bold;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+        transition: all 0.3s ease;
+        background: rgba(0, 0, 0, 0.3);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+        .gallery-panel .swiper-v3 .swiper-button-next:hover,
+        .gallery-panel .swiper-v3 .swiper-button-prev:hover {
+            color: #ffed4e;
+            transform: scale(1.15);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+/* BULLETS CONTAINER */
+.gallery-panel .gallery-swiper-pagination {
+    /*position: absolute !important;*/
+    bottom: 15px !important;
+    left: 0 !important;
+    right: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 2px !important;
+    flex-wrap: wrap !important;
+    padding: 0 20px !important;
+    z-index: 20 !important;
+}
+
+    /* NORMAL BULLET */
+    .gallery-panel .gallery-swiper-pagination .swiper-pagination-bullet {
+        background: rgba(26, 26, 46, 0.7);
+        opacity: 1;
+        width: 28px;
+        height: 28px;
+        margin: 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid rgba(102, 126, 234, 0.4);
+        cursor: pointer;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+        .gallery-panel .gallery-swiper-pagination .swiper-pagination-bullet::after {
+            content: attr(data-index);
+        }
+
+        .gallery-panel .gallery-swiper-pagination .swiper-pagination-bullet:hover {
+            background: rgba(26, 26, 46, 0.9);
+            transform: scale(1.15);
+            border-color: rgba(102, 126, 234, 0.7);
+            color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        }
+
+    /* AKTÝF BULLET */
+    .gallery-panel .gallery-swiper-pagination .swiper-pagination-bullet-active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        width: 42px;
+        height: 42px;
+        border: 3px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 25px rgba(102, 126, 234, 0.8), 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 2px 8px rgba(255, 255, 255, 0.2);
+        transform: scale(1);
+        font-size: 16px;
+        color: #ffffff;
+        font-weight: bold;
+        animation: pulseGlow 2.5s ease-in-out infinite;
+    }
+
+/* PULSE ANÝMASYONU */
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 25px rgba(102, 126, 234, 0.8), 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 35px rgba(102, 126, 234, 1), 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* MODAL */
+.bootbox-gallery-modal .modal-dialog {
+    max-width: 55vw !important;
+    width: 55vw !important; 
+    margin: 1.5vh auto;
+}
+
+.bootbox-gallery-modal .modal-content {
+    background: #0a0a0a;
+    border: none;
+    border-radius: 12px;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.bootbox-gallery-modal .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-bottom: 2px solid #ffd32a;
+    border-radius: 12px 12px 0 0;
+    padding: 15px 25px;
+    flex-shrink: 0;
+}
+
+.bootbox-gallery-modal .modal-title {
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bootbox-gallery-modal .modal-body {
+    text-align: center;
+    padding: 20px;
+    background: #0a0a0a;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+    .bootbox-gallery-modal .modal-body img {
+        width: auto;
+        max-width: 100%;
+        max-height: calc(95vh - 100px);
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 15px 60px rgba(255, 211, 42, 0.3);
+    }
+
+.bootbox-gallery-modal .close {
+    color: white;
+    opacity: 0.9;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 28px;
+    transition: all 0.3s ease;
+}
+
+    .bootbox-gallery-modal .close:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+    }
+
+/* RESPONSIVE */
+@media (max-width: 1400px) {
+    .gallery-panel .panel-body {
+        min-height: 420px;
+    }
+
+    .gallery-panel .swiper-v3 {
+        height: 340px;
+    }
+
+        .gallery-panel .swiper-v3 .swiper-slide {
+            width: 500px;
+            height: 280px;
+        }
+}
+
+@media (max-width: 1200px) {
+    .gallery-panel .panel-body {
+        min-height: 390px;
+    }
+
+    .gallery-panel .swiper-v3 {
+        height: 310px;
+    }
+
+        .gallery-panel .swiper-v3 .swiper-slide {
+            width: 440px;
+            height: 248px;
+        }
+}
+
+@media (max-width: 768px) {
+    .gallery-panel .panel-body {
+        min-height: 350px;
+        padding-bottom: 60px;
+    }
+
+    .gallery-panel .swiper-v3 {
+        height: 270px;
+    }
+
+        .gallery-panel .swiper-v3 .swiper-slide {
+            width: 360px;
+            height: 200px;
+        }
+
+    .gallery-panel .gallery-swiper-pagination .swiper-pagination-bullet {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+
+    .gallery-panel .gallery-swiper-pagination .swiper-pagination-bullet-active {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-panel .panel-body {
+        min-height: 310px;
+    }
+
+    .gallery-panel .swiper-v3 {
+        height: 230px;
+    }
+
+        .gallery-panel .swiper-v3 .swiper-slide {
+            width: 280px;
+            height: 158px;
+        }
+
+    .gallery-panel .gallery-swiper-pagination {
+        gap: 6px !important;
+    }
+
+        .gallery-panel .gallery-swiper-pagination .swiper-pagination-bullet {
+            width: 22px;
+            height: 22px;
+            font-size: 10px;
+        }
+
+        .gallery-panel .gallery-swiper-pagination .swiper-pagination-bullet-active {
+            width: 32px;
+            height: 32px;
+            font-size: 13px;
+        }
+}

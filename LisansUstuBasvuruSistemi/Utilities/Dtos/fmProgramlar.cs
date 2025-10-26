@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BiskaUtil;
-using Entities.Entities; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+﻿using System.Collections.Generic;
+using Entities.Entities;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
@@ -24,6 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? AbdIsAktif { get; set; }
         public bool? IsAktif { get; set; }
         public IEnumerable<FrProgramlar> data { get; set; }
+        public bool? IsObsEslestirildi { get; set; }
 
     }
     public class FrProgramlar : Programlar

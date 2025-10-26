@@ -48,6 +48,7 @@ namespace Entities.Entities
         public string Aciklama { get; set; }
         public int SRDurumID { get; set; }
         public string SRDurumAciklamasi { get; set; }
+        public string DavetResimYolu { get; set; }
         public Nullable<System.DateTime> RSBaslatildiMailGonderimTarihi { get; set; }
         public Nullable<bool> IsOyBirligiOrCoklugu { get; set; }
         public Nullable<int> JuriSonucMezuniyetSinavDurumID { get; set; }

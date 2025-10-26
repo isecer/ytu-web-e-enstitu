@@ -44,11 +44,11 @@ namespace Entities.Entities
         public string IslemYapanIP { get; set; }
     
         public virtual Kullanicilar Kullanicilar { get; set; }
-        public virtual Programlar Programlar { get; set; }
         public virtual TalepDurumlari TalepDurumlari { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TalepGelenTalepBelgeleri> TalepGelenTalepBelgeleris { get; set; }
         public virtual TalepSurecleri TalepSurecleri { get; set; }
         public virtual TalepTipleri TalepTipleri { get; set; }
+        public virtual Programlar Programlar { get; set; }
     }
 }

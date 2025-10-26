@@ -19,6 +19,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemData
 
             return lst;
         }
+        public static List<CmbBoolDto> ObsProgramEslestirmeDurum(bool bosSecimVar = false)
+        {
+            var lst = new List<CmbBoolDto>();
+            if (bosSecimVar) lst.Add(new CmbBoolDto());
+            lst.Add(new CmbBoolDto { Value = true, Caption = "Obs Programıyla Eşleştirildi" });
+            lst.Add(new CmbBoolDto { Value = false, Caption = "Obs Programıyla Eşleştirilmedi" });
+
+            return lst;
+        }
+
 
         public static List<CmbStringDto> GetCmbGrupKod(int grupSayisi, string grupAdi = "Grup", bool bosSecimVar = false)
         {

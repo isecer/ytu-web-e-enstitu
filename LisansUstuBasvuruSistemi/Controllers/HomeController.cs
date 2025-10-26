@@ -1,12 +1,16 @@
 ﻿using BiskaUtil;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using DevExpress.Data.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -15,11 +19,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
     {
         private readonly LubsDbEntities _entities = new LubsDbEntities();
 
- 
+
 
         public ActionResult Index(string ekd, string mesajGroupId, int? basvuruId, string rowId, bool isMesajGonder = false)
         {
-             
+
             var enstitu = _entities.Enstitulers.First(p => p.EnstituKisaAd.Contains(ekd));
             ViewBag.Konum = enstitu.Konum;
 
@@ -138,13 +142,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-            ViewBag.IsMesajGonder = isMesajGonder; 
 
-           // new ObsServiceData().GetAllStudent();
+            ViewBag.IsMesajGonder = isMesajGonder;
 
+            // new ObsServiceData().GetAllStudent();
+            #region DavetGaleriOlustur
+
+            if (MezuniyetAyar.TezSinaviDavetKartlariniAnaSayfadaGoster.GetAyar(enstitu.EnstituKod).ToBoolean(false))
+            {
+                ViewBag.GaleryUrls = _entities.SRTalepleris.Where(p => p.EnstituKod == enstitu.EnstituKod
+                                                                       && p.MezuniyetBasvurulariID.HasValue
+                                                                       && p.SRDurumID == SrTalepDurumEnum.Onaylandı
+                                                                       && p.DavetResimYolu != null &&
+                                                                       p.DavetResimYolu != "")
+                    .OrderByDescending(o => o.Tarih).ThenByDescending(t => t.BasSaat).Take(20)
+                    .Select(s => s.DavetResimYolu).ToList();
+            }
+             
+            #endregion
             return View(enstitu);
-        }
-         
+        } 
+
         public ActionResult AuthenticatedControl()
         {
             if (Request.Browser.IsMobileDevice) { }

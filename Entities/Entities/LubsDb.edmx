@@ -2057,7 +2057,7 @@
           <Property Name="ProgramKod" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="AnabilimDaliID" Type="int" Nullable="false" />
           <Property Name="AnabilimDaliKod" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="ObsProgramId" Type="int" />
+          <Property Name="ObsProgramKod" Type="nvarchar" MaxLength="16" />
           <Property Name="Ingilizce" Type="bit" Nullable="false" />
           <Property Name="ProgramAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
@@ -2386,6 +2386,7 @@
           <Property Name="Aciklama" Type="nvarchar" MaxLength="500" />
           <Property Name="SRDurumID" Type="int" Nullable="false" />
           <Property Name="SRDurumAciklamasi" Type="nvarchar" MaxLength="1024" />
+          <Property Name="DavetResimYolu" Type="nvarchar" MaxLength="500" />
           <Property Name="RSBaslatildiMailGonderimTarihi" Type="datetime" />
           <Property Name="IsOyBirligiOrCoklugu" Type="bit" />
           <Property Name="JuriSonucMezuniyetSinavDurumID" Type="int" />
@@ -9339,7 +9340,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="OgrenimTipleris" EntityType="LubsDbModel.OgrenimTipleri" />
           <EntitySet Name="OzelNotTipleris" EntityType="LubsDbModel.OzelNotTipleri" />
           <EntitySet Name="OzelTarihTipleris" EntityType="LubsDbModel.OzelTarihTipleri" />
-          <EntitySet Name="Programlars" EntityType="LubsDbModel.Programlar" />
           <EntitySet Name="Rollers" EntityType="LubsDbModel.Roller" />
           <EntitySet Name="Sehirlers" EntityType="LubsDbModel.Sehirler" />
           <EntitySet Name="ServiceLogs" EntityType="LubsDbModel.ServiceLog" />
@@ -9366,7 +9366,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="SRSalonDurumlaris" EntityType="LubsDbModel.SRSalonDurumlari" />
           <EntitySet Name="SRSalonlars" EntityType="LubsDbModel.SRSalonlar" />
           <EntitySet Name="SRSalonTalepTipleris" EntityType="LubsDbModel.SRSalonTalepTipleri" />
-          <EntitySet Name="SRTalepleris" EntityType="LubsDbModel.SRTalepleri" />
           <EntitySet Name="SRTaleplerJuris" EntityType="LubsDbModel.SRTaleplerJuri" />
           <EntitySet Name="SRTalepTipleris" EntityType="LubsDbModel.SRTalepTipleri" />
           <EntitySet Name="sysdiagrams" EntityType="LubsDbModel.sysdiagram" />
@@ -9437,10 +9436,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_AnabilimDallari_Kullanicilar" Association="LubsDbModel.FK_AnabilimDallari_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="AnabilimDallari" EntitySet="AnabilimDallaris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Programlar_AnabilimDallari" Association="LubsDbModel.FK_Programlar_AnabilimDallari">
-            <End Role="AnabilimDallari" EntitySet="AnabilimDallaris" />
-            <End Role="Programlar" EntitySet="Programlars" />
           </AssociationSet>
           <AssociationSet Name="FK_TDOBasvuruDanisman_AnabilimDallari" Association="LubsDbModel.FK_TDOBasvuruDanisman_AnabilimDallari">
             <End Role="AnabilimDallari" EntitySet="AnabilimDallaris" />
@@ -9582,10 +9577,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="BasvurularTercihleri" EntitySet="BasvurularTercihleris" />
           </AssociationSet>
-          <AssociationSet Name="FK_BasvurularTercihleri_Programlar" Association="LubsDbModel.FK_BasvurularTercihleri_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="BasvurularTercihleri" EntitySet="BasvurularTercihleris" />
-          </AssociationSet>
           <AssociationSet Name="FK_BasvurularTercihleriKayitOdemeleri_BasvurularTercihleri" Association="LubsDbModel.FK_BasvurularTercihleriKayitOdemeleri_BasvurularTercihleri">
             <End Role="BasvurularTercihleri" EntitySet="BasvurularTercihleris" />
             <End Role="BasvurularTercihleriKayitOdemeleri" EntitySet="BasvurularTercihleriKayitOdemeleris" />
@@ -9670,10 +9661,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="BasvuruSurecBelgeTipleri" EntitySet="BasvuruSurecBelgeTipleris" />
             <End Role="BasvuruSurecBelgeTipleriYuklemeSekli" EntitySet="BasvuruSurecBelgeTipleriYuklemeSeklis" />
           </AssociationSet>
-          <AssociationSet Name="FK_BasvuruSurecKotalar_Programlar" Association="LubsDbModel.FK_BasvuruSurecKotalar_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="BasvuruSurecKotalar" EntitySet="BasvuruSurecKotalars" />
-          </AssociationSet>
           <AssociationSet Name="FK_BasvuruSurecMulakatSinavTurleri_MulakatSinavTurleri" Association="LubsDbModel.FK_BasvuruSurecMulakatSinavTurleri_MulakatSinavTurleri">
             <End Role="MulakatSinavTurleri" EntitySet="MulakatSinavTurleris" />
             <End Role="BasvuruSurecMulakatSinavTurleri" EntitySet="BasvuruSurecMulakatSinavTurleris" />
@@ -9688,10 +9675,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_OgrenciBolumleri" Association="LubsDbModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_OgrenciBolumleri">
             <End Role="OgrenciBolumleri" EntitySet="OgrenciBolumleris" />
-            <End Role="BasvuruSurecProgramlarAlandisiBolumKisitlamalari" EntitySet="BasvuruSurecProgramlarAlandisiBolumKisitlamalaris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar" Association="LubsDbModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
             <End Role="BasvuruSurecProgramlarAlandisiBolumKisitlamalari" EntitySet="BasvuruSurecProgramlarAlandisiBolumKisitlamalaris" />
           </AssociationSet>
           <AssociationSet Name="FK_BasvuruSurecSinavNotlari_BasvuruSurecSinavTipleri" Association="LubsDbModel.FK_BasvuruSurecSinavNotlari_BasvuruSurecSinavTipleri">
@@ -9762,20 +9745,12 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="SinavTipleri" EntitySet="SinavTipleris" />
             <End Role="BasvuruSurecSinavTipleriOT_SNA" EntitySet="BasvuruSurecSinavTipleriOT_SNA" />
           </AssociationSet>
-          <AssociationSet Name="FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar" Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="BasvuruSurecSinavTipleriOT_SNA_PR" EntitySet="BasvuruSurecSinavTipleriOT_SNA_PR" />
-          </AssociationSet>
           <AssociationSet Name="FK_BasvuruSurecSinavTipleriOTNotAraliklari_SinavTipleri" Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklari_SinavTipleri">
             <End Role="SinavTipleri" EntitySet="SinavTipleris" />
             <End Role="BasvuruSurecSinavTipleriOTNotAraliklari" EntitySet="BasvuruSurecSinavTipleriOTNotAraliklaris" />
           </AssociationSet>
           <AssociationSet Name="FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_BasvuruSurecSinavTipleriOTNotAraliklari" Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_BasvuruSurecSinavTipleriOTNotAraliklari">
             <End Role="BasvuruSurecSinavTipleriOTNotAraliklari" EntitySet="BasvuruSurecSinavTipleriOTNotAraliklaris" />
-            <End Role="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" EntitySet="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
             <End Role="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" EntitySet="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars" />
           </AssociationSet>
           <AssociationSet Name="FK_BelgeDurumlari_Kullanicilar" Association="LubsDbModel.FK_BelgeDurumlari_Kullanicilar">
@@ -9804,10 +9779,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_BelgeTalepleri_OgrenimDurumlari" Association="LubsDbModel.FK_BelgeTalepleri_OgrenimDurumlari">
             <End Role="OgrenimDurumlari" EntitySet="OgrenimDurumlaris" />
-            <End Role="BelgeTalepleri" EntitySet="BelgeTalepleris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BelgeTalepleri_Programlar" Association="LubsDbModel.FK_BelgeTalepleri_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
             <End Role="BelgeTalepleri" EntitySet="BelgeTalepleris" />
           </AssociationSet>
           <AssociationSet Name="FK_BelgeTipDetay_Enstituler" Association="LubsDbModel.FK_BelgeTipDetay_Enstituler">
@@ -9860,10 +9831,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_BolumEslestir_OgrenciBolumleri" Association="LubsDbModel.FK_BolumEslestir_OgrenciBolumleri">
             <End Role="OgrenciBolumleri" EntitySet="OgrenciBolumleris" />
-            <End Role="BolumEslestir" EntitySet="BolumEslestirs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BolumEslestir_Programlar" Association="LubsDbModel.FK_BolumEslestir_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
             <End Role="BolumEslestir" EntitySet="BolumEslestirs" />
           </AssociationSet>
           <AssociationSet Name="FK_Kullanicilar_Cinsiyetler" Association="LubsDbModel.FK_Kullanicilar_Cinsiyetler">
@@ -9946,10 +9913,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="DonemProjesi" EntitySet="DonemProjesis" />
           </AssociationSet>
-          <AssociationSet Name="FK_DonemProjesi_Programlar" Association="LubsDbModel.FK_DonemProjesi_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="DonemProjesi" EntitySet="DonemProjesis" />
-          </AssociationSet>
           <AssociationSet Name="FK_DonemProjesiBasvuru_DonemProjesi" Association="LubsDbModel.FK_DonemProjesiBasvuru_DonemProjesi">
             <End Role="DonemProjesi" EntitySet="DonemProjesis" />
             <End Role="DonemProjesiBasvuru" EntitySet="DonemProjesiBasvurus" />
@@ -9973,10 +9936,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_DonemProjesiJurileri_DonemProjesiBasvuru" Association="LubsDbModel.FK_DonemProjesiJurileri_DonemProjesiBasvuru">
             <End Role="DonemProjesiBasvuru" EntitySet="DonemProjesiBasvurus" />
             <End Role="DonemProjesiJurileri" EntitySet="DonemProjesiJurileris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_TabloyaAdi" Association="LubsDbModel.FK_SRTalepleri_TabloyaAdi">
-            <End Role="DonemProjesiBasvuru" EntitySet="DonemProjesiBasvurus" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
           </AssociationSet>
           <AssociationSet Name="FK_DonemProjesiJurileri_DonemProjesiJuriOnayDurumlari" Association="LubsDbModel.FK_DonemProjesiJurileri_DonemProjesiJuriOnayDurumlari">
             <End Role="DonemProjesiJuriOnayDurumlari" EntitySet="DonemProjesiJuriOnayDurumlaris" />
@@ -10066,10 +10025,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Enstituler" EntitySet="Enstitulers" />
             <End Role="SRSalonlar" EntitySet="SRSalonlars" />
           </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_Enstituler" Association="LubsDbModel.FK_SRTalepleri_Enstituler">
-            <End Role="Enstituler" EntitySet="Enstitulers" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-          </AssociationSet>
           <AssociationSet Name="FK_TalepSurecleri_Enstituler" Association="LubsDbModel.FK_TalepSurecleri_Enstituler">
             <End Role="Enstituler" EntitySet="Enstitulers" />
             <End Role="TalepSurecleri" EntitySet="TalepSurecleris" />
@@ -10122,10 +10077,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="HaftaGunleri" EntitySet="HaftaGunleris" />
             <End Role="SRSaatler" EntitySet="SRSaatlers" />
           </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_HaftaGunleri" Association="LubsDbModel.FK_SRTalepleri_HaftaGunleri">
-            <End Role="HaftaGunleri" EntitySet="HaftaGunleris" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-          </AssociationSet>
           <AssociationSet Name="FK_MulakatDetay_Kampusler" Association="LubsDbModel.FK_MulakatDetay_Kampusler">
             <End Role="Kampusler" EntitySet="Kampuslers" />
             <End Role="MulakatDetay" EntitySet="MulakatDetays" />
@@ -10142,10 +10093,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="KayitSilmeBasvuru" EntitySet="KayitSilmeBasvurus" />
           </AssociationSet>
-          <AssociationSet Name="FK_KayitSilmeBasvuru_Programlar" Association="LubsDbModel.FK_KayitSilmeBasvuru_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="KayitSilmeBasvuru" EntitySet="KayitSilmeBasvurus" />
-          </AssociationSet>
           <AssociationSet Name="FK_KullaniciEnstituYetkileri_Kullanicilar" Association="LubsDbModel.FK_KullaniciEnstituYetkileri_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="KullaniciEnstituYetkileri" EntitySet="KullaniciEnstituYetkileris" />
@@ -10160,10 +10107,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_Kullanicilar_OgrenimDurumlari" Association="LubsDbModel.FK_Kullanicilar_OgrenimDurumlari">
             <End Role="OgrenimDurumlari" EntitySet="OgrenimDurumlaris" />
-            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Kullanicilar_Programlar" Association="LubsDbModel.FK_Kullanicilar_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
           </AssociationSet>
           <AssociationSet Name="FK_Kullanicilar_Sehirler" Association="LubsDbModel.FK_Kullanicilar_Sehirler">
@@ -10242,10 +10185,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="OgrenimTipleri" EntitySet="OgrenimTipleris" />
           </AssociationSet>
-          <AssociationSet Name="FK_Programlar_Kullanicilar" Association="LubsDbModel.FK_Programlar_Kullanicilar">
-            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
-            <End Role="Programlar" EntitySet="Programlars" />
-          </AssociationSet>
           <AssociationSet Name="FK_Sehirler_Kullanicilar" Association="LubsDbModel.FK_Sehirler_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="Sehirler" EntitySet="Sehirlers" />
@@ -10261,10 +10200,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_SRSalonlar_Kullanicilar" Association="LubsDbModel.FK_SRSalonlar_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="SRSalonlar" EntitySet="SRSalonlars" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_Kullanicilar" Association="LubsDbModel.FK_SRTalepleri_Kullanicilar">
-            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
           </AssociationSet>
           <AssociationSet Name="FK_TalepGelenTalepler_Kullanicilar" Association="LubsDbModel.FK_TalepGelenTalepler_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
@@ -10318,10 +10253,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="YeterlikSureciKriterMuafOgrenciler" EntitySet="YeterlikSureciKriterMuafOgrencilers" />
           </AssociationSet>
-          <AssociationSet Name="FK_KullaniciProgramlari_Programlar" Association="LubsDbModel.FK_KullaniciProgramlari_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="KullaniciProgramlari" EntitySet="KullaniciProgramlaris" />
-          </AssociationSet>
           <AssociationSet Name="FK_MezuniyetBasvurulari_KullaniciTipleri" Association="LubsDbModel.FK_MezuniyetBasvurulari_KullaniciTipleri">
             <End Role="KullaniciTipleri" EntitySet="KullaniciTipleris" />
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
@@ -10358,10 +10289,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="OgrenimDurumlari" EntitySet="OgrenimDurumlaris" />
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
           </AssociationSet>
-          <AssociationSet Name="FK_MezuniyetBasvurulari_Programlar" Association="LubsDbModel.FK_MezuniyetBasvurulari_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
-          </AssociationSet>
           <AssociationSet Name="FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" Association="LubsDbModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari">
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
             <End Role="MezuniyetBasvurulariTezDosyalari" EntitySet="MezuniyetBasvurulariTezDosyalaris" />
@@ -10377,10 +10304,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" Association="LubsDbModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari">
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
             <End Role="MezuniyetJuriOneriFormlari" EntitySet="MezuniyetJuriOneriFormlaris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_MezuniyetBasvurulari" Association="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari">
-            <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
           </AssociationSet>
           <AssociationSet Name="FK_MezuniyetBasvurulariYayin_MezuniyetYayinBelgeTurleri" Association="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinBelgeTurleri">
             <End Role="MezuniyetYayinBelgeTurleri" EntitySet="MezuniyetYayinBelgeTurleris" />
@@ -10413,10 +10336,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri" Association="LubsDbModel.FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri">
             <End Role="MezuniyetJuriOneriFormuJurileri" EntitySet="MezuniyetJuriOneriFormuJurileris" />
             <End Role="SRTaleplerJuri" EntitySet="SRTaleplerJuris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_MezuniyetSinavDurumlari" Association="LubsDbModel.FK_SRTalepleri_MezuniyetSinavDurumlari">
-            <End Role="MezuniyetSinavDurumlari" EntitySet="MezuniyetSinavDurumlaris" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
           </AssociationSet>
           <AssociationSet Name="FK_SRTaleplerJuri_MezuniyetSinavDurumlari" Association="LubsDbModel.FK_SRTaleplerJuri_MezuniyetSinavDurumlari">
             <End Role="MezuniyetSinavDurumlari" EntitySet="MezuniyetSinavDurumlaris" />
@@ -10470,10 +10389,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="MezuniyetYonetmelikleri" EntitySet="MezuniyetYonetmelikleris" />
             <End Role="MezuniyetYonetmelikleriOT" EntitySet="MezuniyetYonetmelikleriOTs" />
           </AssociationSet>
-          <AssociationSet Name="FK_Mulakat_Programlar" Association="LubsDbModel.FK_Mulakat_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="Mulakat" EntitySet="Mulakats" />
-          </AssociationSet>
           <AssociationSet Name="FK_MulakatDetay_Mulakat" Association="LubsDbModel.FK_MulakatDetay_Mulakat">
             <End Role="Mulakat" EntitySet="Mulakats" />
             <End Role="MulakatDetay" EntitySet="MulakatDetays" />
@@ -10513,42 +10428,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_SinavTipleri_OzelNotTipleri" Association="LubsDbModel.FK_SinavTipleri_OzelNotTipleri">
             <End Role="OzelNotTipleri" EntitySet="OzelNotTipleris" />
             <End Role="SinavTipleri" EntitySet="SinavTipleris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SinavTipleriOT_SNA_PR_Programlar" Association="LubsDbModel.FK_SinavTipleriOT_SNA_PR_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="SinavTipleriOT_SNA_PR" EntitySet="SinavTipleriOT_SNA_PR" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" Association="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="SinavTipleriOTNotAraliklariGecersizProgramlar" EntitySet="SinavTipleriOTNotAraliklariGecersizProgramlars" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TalepGelenTalepler_Programlar" Association="LubsDbModel.FK_TalepGelenTalepler_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="TalepGelenTalepler" EntitySet="TalepGelenTaleplers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TDOBasvuru_Programlar" Association="LubsDbModel.FK_TDOBasvuru_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="TDOBasvuru" EntitySet="TDOBasvurus" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TDOBasvuruDanisman_Programlar" Association="LubsDbModel.FK_TDOBasvuruDanisman_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="TDOBasvuruDanisman" EntitySet="TDOBasvuruDanismen" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TIBasvuru_Programlar" Association="LubsDbModel.FK_TIBasvuru_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="TIBasvuru" EntitySet="TIBasvurus" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TijBasvuru_Programlar" Association="LubsDbModel.FK_TijBasvuru_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="TijBasvuru" EntitySet="TijBasvurus" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ToBasvuru_Programlar" Association="LubsDbModel.FK_ToBasvuru_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="ToBasvuru" EntitySet="ToBasvurus" />
-          </AssociationSet>
-          <AssociationSet Name="FK_YeterlikBasvuru_Programlar" Association="LubsDbModel.FK_YeterlikBasvuru_Programlar">
-            <End Role="Programlar" EntitySet="Programlars" />
-            <End Role="YeterlikBasvuru" EntitySet="YeterlikBasvurus" />
           </AssociationSet>
           <AssociationSet Name="FK_YetkiGrupRolleri_Roller" Association="LubsDbModel.FK_YetkiGrupRolleri_Roller">
             <End Role="Roller" EntitySet="Rollers" />
@@ -10598,10 +10477,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="SinavTipleriOTNotAraliklari" EntitySet="SinavTipleriOTNotAraliklaris" />
             <End Role="SinavTipleriOTNotAraliklariGecersizProgramlar" EntitySet="SinavTipleriOTNotAraliklariGecersizProgramlars" />
           </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_SRDurumlari" Association="LubsDbModel.FK_SRTalepleri_SRDurumlari">
-            <End Role="SRDurumlari" EntitySet="SRDurumlaris" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-          </AssociationSet>
           <AssociationSet Name="FK_SROzelTanimlar_SROzelTanimTipleri" Association="LubsDbModel.FK_SROzelTanimlar_SROzelTanimTipleri">
             <End Role="SROzelTanimTipleri" EntitySet="SROzelTanimTipleris" />
             <End Role="SROzelTanimlar" EntitySet="SROzelTanimlars" />
@@ -10618,29 +10493,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="SRSalonlar" EntitySet="SRSalonlars" />
             <End Role="SRSalonTalepTipleri" EntitySet="SRSalonTalepTipleris" />
           </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_SRSalonlar" Association="LubsDbModel.FK_SRTalepleri_SRSalonlar">
-            <End Role="SRSalonlar" EntitySet="SRSalonlars" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-          </AssociationSet>
           <AssociationSet Name="FK_SRSalonTalepTipleri_SRTalepTipleri" Association="LubsDbModel.FK_SRSalonTalepTipleri_SRTalepTipleri">
             <End Role="SRTalepTipleri" EntitySet="SRTalepTipleris" />
             <End Role="SRSalonTalepTipleri" EntitySet="SRSalonTalepTipleris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_SRTalepTipleri" Association="LubsDbModel.FK_SRTalepleri_SRTalepTipleri">
-            <End Role="SRTalepTipleri" EntitySet="SRTalepTipleris" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_TIBasvuruAraRapor" Association="LubsDbModel.FK_SRTalepleri_TIBasvuruAraRapor">
-            <End Role="TIBasvuruAraRapor" EntitySet="TIBasvuruAraRapors" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleri_ToBasvuruSavunma" Association="LubsDbModel.FK_SRTalepleri_ToBasvuruSavunma">
-            <End Role="ToBasvuruSavunma" EntitySet="ToBasvuruSavunmas" />
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTaleplerJuri_SRTalepleri" Association="LubsDbModel.FK_SRTaleplerJuri_SRTalepleri">
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-            <End Role="SRTaleplerJuri" EntitySet="SRTaleplerJuris" />
           </AssociationSet>
           <AssociationSet Name="FK_TalepGelenTalepler_TalepDurumlari" Association="LubsDbModel.FK_TalepGelenTalepler_TalepDurumlari">
             <End Role="TalepDurumlari" EntitySet="TalepDurumlaris" />
@@ -10806,6 +10661,152 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <Parameter Name="AktifCount" Mode="InOut" Type="Int32" />
             <Parameter Name="PasifCount" Mode="InOut" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Programlars" EntityType="LubsDbModel.Programlar" />
+          <AssociationSet Name="FK_Programlar_AnabilimDallari" Association="LubsDbModel.FK_Programlar_AnabilimDallari">
+            <End Role="AnabilimDallari" EntitySet="AnabilimDallaris" />
+            <End Role="Programlar" EntitySet="Programlars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BasvurularTercihleri_Programlar" Association="LubsDbModel.FK_BasvurularTercihleri_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="BasvurularTercihleri" EntitySet="BasvurularTercihleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BasvuruSurecKotalar_Programlar" Association="LubsDbModel.FK_BasvuruSurecKotalar_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="BasvuruSurecKotalar" EntitySet="BasvuruSurecKotalars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar" Association="LubsDbModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="BasvuruSurecProgramlarAlandisiBolumKisitlamalari" EntitySet="BasvuruSurecProgramlarAlandisiBolumKisitlamalaris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar" Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="BasvuruSurecSinavTipleriOT_SNA_PR" EntitySet="BasvuruSurecSinavTipleriOT_SNA_PR" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" Association="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" EntitySet="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BelgeTalepleri_Programlar" Association="LubsDbModel.FK_BelgeTalepleri_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="BelgeTalepleri" EntitySet="BelgeTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BolumEslestir_Programlar" Association="LubsDbModel.FK_BolumEslestir_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="BolumEslestir" EntitySet="BolumEslestirs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DonemProjesi_Programlar" Association="LubsDbModel.FK_DonemProjesi_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="DonemProjesi" EntitySet="DonemProjesis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KayitSilmeBasvuru_Programlar" Association="LubsDbModel.FK_KayitSilmeBasvuru_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="KayitSilmeBasvuru" EntitySet="KayitSilmeBasvurus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Kullanicilar_Programlar" Association="LubsDbModel.FK_Kullanicilar_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Programlar_Kullanicilar" Association="LubsDbModel.FK_Programlar_Kullanicilar">
+            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
+            <End Role="Programlar" EntitySet="Programlars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KullaniciProgramlari_Programlar" Association="LubsDbModel.FK_KullaniciProgramlari_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="KullaniciProgramlari" EntitySet="KullaniciProgramlaris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MezuniyetBasvurulari_Programlar" Association="LubsDbModel.FK_MezuniyetBasvurulari_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mulakat_Programlar" Association="LubsDbModel.FK_Mulakat_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="Mulakat" EntitySet="Mulakats" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SinavTipleriOT_SNA_PR_Programlar" Association="LubsDbModel.FK_SinavTipleriOT_SNA_PR_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="SinavTipleriOT_SNA_PR" EntitySet="SinavTipleriOT_SNA_PR" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" Association="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="SinavTipleriOTNotAraliklariGecersizProgramlar" EntitySet="SinavTipleriOTNotAraliklariGecersizProgramlars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TalepGelenTalepler_Programlar" Association="LubsDbModel.FK_TalepGelenTalepler_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="TalepGelenTalepler" EntitySet="TalepGelenTaleplers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TDOBasvuru_Programlar" Association="LubsDbModel.FK_TDOBasvuru_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="TDOBasvuru" EntitySet="TDOBasvurus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TDOBasvuruDanisman_Programlar" Association="LubsDbModel.FK_TDOBasvuruDanisman_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="TDOBasvuruDanisman" EntitySet="TDOBasvuruDanismen" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TIBasvuru_Programlar" Association="LubsDbModel.FK_TIBasvuru_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="TIBasvuru" EntitySet="TIBasvurus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TijBasvuru_Programlar" Association="LubsDbModel.FK_TijBasvuru_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="TijBasvuru" EntitySet="TijBasvurus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ToBasvuru_Programlar" Association="LubsDbModel.FK_ToBasvuru_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="ToBasvuru" EntitySet="ToBasvurus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_YeterlikBasvuru_Programlar" Association="LubsDbModel.FK_YeterlikBasvuru_Programlar">
+            <End Role="Programlar" EntitySet="Programlars" />
+            <End Role="YeterlikBasvuru" EntitySet="YeterlikBasvurus" />
+          </AssociationSet>
+          <EntitySet Name="SRTalepleris" EntityType="LubsDbModel.SRTalepleri" />
+          <AssociationSet Name="FK_SRTalepleri_TabloyaAdi" Association="LubsDbModel.FK_SRTalepleri_TabloyaAdi">
+            <End Role="DonemProjesiBasvuru" EntitySet="DonemProjesiBasvurus" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_Enstituler" Association="LubsDbModel.FK_SRTalepleri_Enstituler">
+            <End Role="Enstituler" EntitySet="Enstitulers" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_HaftaGunleri" Association="LubsDbModel.FK_SRTalepleri_HaftaGunleri">
+            <End Role="HaftaGunleri" EntitySet="HaftaGunleris" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_Kullanicilar" Association="LubsDbModel.FK_SRTalepleri_Kullanicilar">
+            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_MezuniyetBasvurulari" Association="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari">
+            <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_MezuniyetSinavDurumlari" Association="LubsDbModel.FK_SRTalepleri_MezuniyetSinavDurumlari">
+            <End Role="MezuniyetSinavDurumlari" EntitySet="MezuniyetSinavDurumlaris" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_SRDurumlari" Association="LubsDbModel.FK_SRTalepleri_SRDurumlari">
+            <End Role="SRDurumlari" EntitySet="SRDurumlaris" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_SRSalonlar" Association="LubsDbModel.FK_SRTalepleri_SRSalonlar">
+            <End Role="SRSalonlar" EntitySet="SRSalonlars" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_SRTalepTipleri" Association="LubsDbModel.FK_SRTalepleri_SRTalepTipleri">
+            <End Role="SRTalepTipleri" EntitySet="SRTalepTipleris" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_TIBasvuruAraRapor" Association="LubsDbModel.FK_SRTalepleri_TIBasvuruAraRapor">
+            <End Role="TIBasvuruAraRapor" EntitySet="TIBasvuruAraRapors" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTalepleri_ToBasvuruSavunma" Association="LubsDbModel.FK_SRTalepleri_ToBasvuruSavunma">
+            <End Role="ToBasvuruSavunma" EntitySet="ToBasvuruSavunmas" />
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SRTaleplerJuri_SRTalepleri" Association="LubsDbModel.FK_SRTaleplerJuri_SRTalepleri">
+            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
+            <End Role="SRTaleplerJuri" EntitySet="SRTaleplerJuris" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="sp_SearchMailsFullText_Result">
           <Property Type="Int32" Name="GonderilenMailID" Nullable="true" />
@@ -10868,8 +10869,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AnabilimDaliYeterlikKomiteUyeleris" Relationship="LubsDbModel.FK_AnabilimdaliYeterlikKomiteUyeleri_AnabilimDallari" FromRole="AnabilimDallari" ToRole="AnabilimDaliYeterlikKomiteUyeleri" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_AnabilimDallari_Kullanicilar" FromRole="AnabilimDallari" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlars" Relationship="LubsDbModel.FK_Programlar_AnabilimDallari" FromRole="AnabilimDallari" ToRole="Programlar" />
           <NavigationProperty Name="TDOBasvuruDanismen" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_AnabilimDallari" FromRole="AnabilimDallari" ToRole="TDOBasvuruDanisman" />
+          <NavigationProperty Name="Programlars" Relationship="LubsDbModel.FK_Programlar_AnabilimDallari" FromRole="AnabilimDallari" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="Anket">
           <Key>
@@ -11151,9 +11152,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="AlanTipleri" Relationship="LubsDbModel.FK_BasvurularTercihleri_AlanTipleri" FromRole="BasvurularTercihleri" ToRole="AlanTipleri" />
           <NavigationProperty Name="Basvurular" Relationship="LubsDbModel.FK_BasvurularTercihleri_Basvurular" FromRole="BasvurularTercihleri" ToRole="Basvurular" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_BasvurularTercihleri_Kullanicilar" FromRole="BasvurularTercihleri" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_BasvurularTercihleri_Programlar" FromRole="BasvurularTercihleri" ToRole="Programlar" />
           <NavigationProperty Name="BasvurularTercihleriKayitOdemeleris" Relationship="LubsDbModel.FK_BasvurularTercihleriKayitOdemeleri_BasvurularTercihleri" FromRole="BasvurularTercihleri" ToRole="BasvurularTercihleriKayitOdemeleri" />
           <NavigationProperty Name="MulakatSonuclaris" Relationship="LubsDbModel.FK_MulakatSonuclari_BasvurularTercihleri" FromRole="BasvurularTercihleri" ToRole="MulakatSonuclari" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_BasvurularTercihleri_Programlar" FromRole="BasvurularTercihleri" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="BasvurularTercihleriKayitOdemeleri">
           <Key>
@@ -11814,8 +11815,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="DonemProjesi2" Relationship="LubsDbModel.FK_DonemProjesi_DonemProjesi" FromRole="DonemProjesi1" ToRole="DonemProjesi" />
           <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_DonemProjesi_Enstituler" FromRole="DonemProjesi" ToRole="Enstituler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_DonemProjesi_Kullanicilar" FromRole="DonemProjesi" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_DonemProjesi_Programlar" FromRole="DonemProjesi" ToRole="Programlar" />
           <NavigationProperty Name="DonemProjesiBasvurus" Relationship="LubsDbModel.FK_DonemProjesiBasvuru_DonemProjesi" FromRole="DonemProjesi" ToRole="DonemProjesiBasvuru" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_DonemProjesi_Programlar" FromRole="DonemProjesi" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="DonemProjesiAyarlar">
           <Key>
@@ -12060,7 +12061,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="SinavTipleris" Relationship="LubsDbModel.FK_SinavTipleri_Enstituler" FromRole="Enstituler" ToRole="SinavTipleri" />
           <NavigationProperty Name="SinavTipleriOTNotAraliklaris" Relationship="LubsDbModel.FK_SinavTipleriOTNotAraliklari_Enstituler" FromRole="Enstituler" ToRole="SinavTipleriOTNotAraliklari" />
           <NavigationProperty Name="SRSalonlars" Relationship="LubsDbModel.FK_SRSalonlar_Enstituler" FromRole="Enstituler" ToRole="SRSalonlar" />
-          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_Enstituler" FromRole="Enstituler" ToRole="SRTalepleri" />
           <NavigationProperty Name="TalepSurecleris" Relationship="LubsDbModel.FK_TalepSurecleri_Enstituler" FromRole="Enstituler" ToRole="TalepSurecleri" />
           <NavigationProperty Name="TDOBasvurus" Relationship="LubsDbModel.FK_TDOBasvuru_Enstituler" FromRole="Enstituler" ToRole="TDOBasvuru" />
           <NavigationProperty Name="TIBasvurus" Relationship="LubsDbModel.FK_TIBasvuru_Enstituler" FromRole="Enstituler" ToRole="TIBasvuru" />
@@ -12068,6 +12068,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="ToBasvurus" Relationship="LubsDbModel.FK_ToBasvuru_Enstituler" FromRole="Enstituler" ToRole="ToBasvuru" />
           <NavigationProperty Name="YaziSablonlaris" Relationship="LubsDbModel.FK_YaziSablonlari_Enstituler" FromRole="Enstituler" ToRole="YaziSablonlari" />
           <NavigationProperty Name="YeterlikSurecis" Relationship="LubsDbModel.FK_YeterlikSureci_Enstituler" FromRole="Enstituler" ToRole="YeterlikSureci" />
+          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_Enstituler" FromRole="Enstituler" ToRole="SRTalepleri" />
         </EntityType>
         <EntityType Name="GonderilenMailEkleri">
           <Key>
@@ -12343,7 +12344,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Kullanicilar2" Relationship="LubsDbModel.FK_Kullanicilar_KullanicilarDanisman" FromRole="Kullanicilar1" ToRole="Kullanicilar" />
           <NavigationProperty Name="KullaniciTipleri" Relationship="LubsDbModel.FK_Kullanicilar_KullaniciTipleri" FromRole="Kullanicilar" ToRole="KullaniciTipleri" />
           <NavigationProperty Name="OgrenimDurumlari" Relationship="LubsDbModel.FK_Kullanicilar_OgrenimDurumlari" FromRole="Kullanicilar" ToRole="OgrenimDurumlari" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_Kullanicilar_Programlar" FromRole="Kullanicilar" ToRole="Programlar" />
           <NavigationProperty Name="Sehirler" Relationship="LubsDbModel.FK_Kullanicilar_Sehirler" FromRole="Kullanicilar" ToRole="Sehirler" />
           <NavigationProperty Name="Sehirler1" Relationship="LubsDbModel.FK_Kullanicilar_Sehirler1" FromRole="Kullanicilar" ToRole="Sehirler" />
           <NavigationProperty Name="Sehirler2" Relationship="LubsDbModel.FK_Kullanicilar_Sehirler2" FromRole="Kullanicilar" ToRole="Sehirler" />
@@ -12363,12 +12363,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Mulakats" Relationship="LubsDbModel.FK_Mulakat_Kullanicilar" FromRole="Kullanicilar" ToRole="Mulakat" />
           <NavigationProperty Name="OgrenciBolumleris" Relationship="LubsDbModel.FK_OgrenciBolumleri_Kullanicilar" FromRole="Kullanicilar" ToRole="OgrenciBolumleri" />
           <NavigationProperty Name="OgrenimTipleris" Relationship="LubsDbModel.FK_OgrenimTipleri_Kullanicilar" FromRole="Kullanicilar" ToRole="OgrenimTipleri" />
-          <NavigationProperty Name="Programlars" Relationship="LubsDbModel.FK_Programlar_Kullanicilar" FromRole="Kullanicilar" ToRole="Programlar" />
           <NavigationProperty Name="Sehirlers" Relationship="LubsDbModel.FK_Sehirler_Kullanicilar" FromRole="Kullanicilar" ToRole="Sehirler" />
           <NavigationProperty Name="SinavTipleris" Relationship="LubsDbModel.FK_SinavTipleri_Kullanicilar" FromRole="Kullanicilar" ToRole="SinavTipleri" />
           <NavigationProperty Name="SistemBilgilendirmes" Relationship="LubsDbModel.FK_SistemBilgilendirme_Kullanicilar" FromRole="Kullanicilar" ToRole="SistemBilgilendirme" />
           <NavigationProperty Name="SRSalonlars" Relationship="LubsDbModel.FK_SRSalonlar_Kullanicilar" FromRole="Kullanicilar" ToRole="SRSalonlar" />
-          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_Kullanicilar" FromRole="Kullanicilar" ToRole="SRTalepleri" />
           <NavigationProperty Name="TalepGelenTaleplers" Relationship="LubsDbModel.FK_TalepGelenTalepler_Kullanicilar" FromRole="Kullanicilar" ToRole="TalepGelenTalepler" />
           <NavigationProperty Name="TDOBasvurus" Relationship="LubsDbModel.FK_TDOBasvuru_Kullanicilar" FromRole="Kullanicilar" ToRole="TDOBasvuru" />
           <NavigationProperty Name="TDOBasvuruDanismen" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_Kullanicilar" FromRole="Kullanicilar" ToRole="TDOBasvuruDanisman" />
@@ -12383,6 +12381,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="YeterlikBasvuruKomitelers" Relationship="LubsDbModel.FK_YeterlikBasvuruKomiteler_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikBasvuruKomiteler" />
           <NavigationProperty Name="YeterlikSureciKriterMuafOgrencilers" Relationship="LubsDbModel.FK_YeterlikSureciKriterMuafOgrenciler_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikSureciKriterMuafOgrenciler" />
           <NavigationProperty Name="Rollers" Relationship="LubsDbModel.KullaniciRolleri" FromRole="Kullanicilar" ToRole="Roller" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_Kullanicilar_Programlar" FromRole="Kullanicilar" ToRole="Programlar" />
+          <NavigationProperty Name="Programlars" Relationship="LubsDbModel.FK_Programlar_Kullanicilar" FromRole="Kullanicilar" ToRole="Programlar" />
+          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_Kullanicilar" FromRole="Kullanicilar" ToRole="SRTalepleri" />
         </EntityType>
         <EntityType Name="KullaniciOgrenimleri">
           <Key>
@@ -12670,11 +12671,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="MezuniyetSureci" Relationship="LubsDbModel.FK_MezuniyetBasvurulari_MezuniyetSureci" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetSureci" />
           <NavigationProperty Name="MezuniyetYayinKontrolDurumlari" Relationship="LubsDbModel.FK_MezuniyetBasvurulari_MezuniyetYayinKontrolDurumlari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetYayinKontrolDurumlari" />
           <NavigationProperty Name="OgrenimDurumlari" Relationship="LubsDbModel.FK_MezuniyetBasvurulari_OgrenimDurumlari" FromRole="MezuniyetBasvurulari" ToRole="OgrenimDurumlari" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_MezuniyetBasvurulari_Programlar" FromRole="MezuniyetBasvurulari" ToRole="Programlar" />
           <NavigationProperty Name="MezuniyetBasvurulariTezDosyalaris" Relationship="LubsDbModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariTezDosyalari" />
           <NavigationProperty Name="MezuniyetBasvurulariTezTeslimFormlaris" Relationship="LubsDbModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariTezTeslimFormlari" />
           <NavigationProperty Name="MezuniyetBasvurulariYayins" Relationship="LubsDbModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariYayin" />
           <NavigationProperty Name="MezuniyetJuriOneriFormlaris" Relationship="LubsDbModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetJuriOneriFormlari" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_MezuniyetBasvurulari_Programlar" FromRole="MezuniyetBasvurulari" ToRole="Programlar" />
           <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="SRTalepleri" />
         </EntityType>
         <EntityType Name="MezuniyetBasvurulariTezDosyalari">
@@ -12823,8 +12824,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_MezuniyetSinavDurumlari" FromRole="MezuniyetSinavDurumlari" ToRole="SRTalepleri" />
           <NavigationProperty Name="SRTaleplerJuris" Relationship="LubsDbModel.FK_SRTaleplerJuri_MezuniyetSinavDurumlari" FromRole="MezuniyetSinavDurumlari" ToRole="SRTaleplerJuri" />
+          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_MezuniyetSinavDurumlari" FromRole="MezuniyetSinavDurumlari" ToRole="SRTalepleri" />
         </EntityType>
         <EntityType Name="MezuniyetSureci">
           <Key>
@@ -13139,10 +13140,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanIp" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BasvuruSurec" Relationship="LubsDbModel.FK_Mulakat_BasvuruSurec" FromRole="Mulakat" ToRole="BasvuruSurec" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_Mulakat_Kullanicilar" FromRole="Mulakat" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_Mulakat_Programlar" FromRole="Mulakat" ToRole="Programlar" />
           <NavigationProperty Name="MulakatDetays" Relationship="LubsDbModel.FK_MulakatDetay_Mulakat" FromRole="Mulakat" ToRole="MulakatDetay" />
           <NavigationProperty Name="MulakatJuris" Relationship="LubsDbModel.FK_MulakatJuri_Mulakat" FromRole="Mulakat" ToRole="MulakatJuri" />
           <NavigationProperty Name="MulakatSonuclaris" Relationship="LubsDbModel.FK_MulakatSonuclari_Mulakat" FromRole="Mulakat" ToRole="MulakatSonuclari" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_Mulakat_Programlar" FromRole="Mulakat" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="MulakatDetay">
           <Key>
@@ -13314,45 +13315,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="OzelTarihTipID" Type="Int32" Nullable="false" />
           <Property Name="OzelTarihTipAdi" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BasvuruSurecSinavTipleris" Relationship="LubsDbModel.FK_BasvuruSurecSinavTipleri_OzelTarihTipleri" FromRole="OzelTarihTipleri" ToRole="BasvuruSurecSinavTipleri" />
-        </EntityType>
-        <EntityType Name="Programlar">
-          <Key>
-            <PropertyRef Name="ProgramKod" />
-          </Key>
-          <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="AnabilimDaliID" Type="Int32" Nullable="false" />
-          <Property Name="AnabilimDaliKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ObsProgramId" Type="Int32" />
-          <Property Name="Ingilizce" Type="Boolean" Nullable="false" />
-          <Property Name="ProgramAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="IsAktif" Type="Boolean" Nullable="false" />
-          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
-          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AnabilimDallari" Relationship="LubsDbModel.FK_Programlar_AnabilimDallari" FromRole="Programlar" ToRole="AnabilimDallari" />
-          <NavigationProperty Name="BasvurularTercihleris" Relationship="LubsDbModel.FK_BasvurularTercihleri_Programlar" FromRole="Programlar" ToRole="BasvurularTercihleri" />
-          <NavigationProperty Name="BasvuruSurecKotalars" Relationship="LubsDbModel.FK_BasvuruSurecKotalar_Programlar" FromRole="Programlar" ToRole="BasvuruSurecKotalar" />
-          <NavigationProperty Name="BasvuruSurecProgramlarAlandisiBolumKisitlamalaris" Relationship="LubsDbModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar" FromRole="Programlar" ToRole="BasvuruSurecProgramlarAlandisiBolumKisitlamalari" />
-          <NavigationProperty Name="BasvuruSurecSinavTipleriOT_SNA_PR" Relationship="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar" FromRole="Programlar" ToRole="BasvuruSurecSinavTipleriOT_SNA_PR" />
-          <NavigationProperty Name="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars" Relationship="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" FromRole="Programlar" ToRole="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" />
-          <NavigationProperty Name="BelgeTalepleris" Relationship="LubsDbModel.FK_BelgeTalepleri_Programlar" FromRole="Programlar" ToRole="BelgeTalepleri" />
-          <NavigationProperty Name="BolumEslestirs" Relationship="LubsDbModel.FK_BolumEslestir_Programlar" FromRole="Programlar" ToRole="BolumEslestir" />
-          <NavigationProperty Name="DonemProjesis" Relationship="LubsDbModel.FK_DonemProjesi_Programlar" FromRole="Programlar" ToRole="DonemProjesi" />
-          <NavigationProperty Name="KayitSilmeBasvurus" Relationship="LubsDbModel.FK_KayitSilmeBasvuru_Programlar" FromRole="Programlar" ToRole="KayitSilmeBasvuru" />
-          <NavigationProperty Name="Kullanicilars" Relationship="LubsDbModel.FK_Kullanicilar_Programlar" FromRole="Programlar" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_Programlar_Kullanicilar" FromRole="Programlar" ToRole="Kullanicilar" />
-          <NavigationProperty Name="KullaniciProgramlaris" Relationship="LubsDbModel.FK_KullaniciProgramlari_Programlar" FromRole="Programlar" ToRole="KullaniciProgramlari" />
-          <NavigationProperty Name="MezuniyetBasvurularis" Relationship="LubsDbModel.FK_MezuniyetBasvurulari_Programlar" FromRole="Programlar" ToRole="MezuniyetBasvurulari" />
-          <NavigationProperty Name="Mulakats" Relationship="LubsDbModel.FK_Mulakat_Programlar" FromRole="Programlar" ToRole="Mulakat" />
-          <NavigationProperty Name="SinavTipleriOT_SNA_PR" Relationship="LubsDbModel.FK_SinavTipleriOT_SNA_PR_Programlar" FromRole="Programlar" ToRole="SinavTipleriOT_SNA_PR" />
-          <NavigationProperty Name="SinavTipleriOTNotAraliklariGecersizProgramlars" Relationship="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" FromRole="Programlar" ToRole="SinavTipleriOTNotAraliklariGecersizProgramlar" />
-          <NavigationProperty Name="TalepGelenTaleplers" Relationship="LubsDbModel.FK_TalepGelenTalepler_Programlar" FromRole="Programlar" ToRole="TalepGelenTalepler" />
-          <NavigationProperty Name="TDOBasvurus" Relationship="LubsDbModel.FK_TDOBasvuru_Programlar" FromRole="Programlar" ToRole="TDOBasvuru" />
-          <NavigationProperty Name="TDOBasvuruDanismen" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_Programlar" FromRole="Programlar" ToRole="TDOBasvuruDanisman" />
-          <NavigationProperty Name="TIBasvurus" Relationship="LubsDbModel.FK_TIBasvuru_Programlar" FromRole="Programlar" ToRole="TIBasvuru" />
-          <NavigationProperty Name="TijBasvurus" Relationship="LubsDbModel.FK_TijBasvuru_Programlar" FromRole="Programlar" ToRole="TijBasvuru" />
-          <NavigationProperty Name="ToBasvurus" Relationship="LubsDbModel.FK_ToBasvuru_Programlar" FromRole="Programlar" ToRole="ToBasvuru" />
-          <NavigationProperty Name="YeterlikBasvurus" Relationship="LubsDbModel.FK_YeterlikBasvuru_Programlar" FromRole="Programlar" ToRole="YeterlikBasvuru" />
         </EntityType>
         <EntityType Name="Roller">
           <Key>
@@ -13535,8 +13497,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="SinavTipleriOT_SNA_PRID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="SinavTipleriOT_SNAID" Type="Int32" Nullable="false" />
           <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_SinavTipleriOT_SNA_PR_Programlar" FromRole="SinavTipleriOT_SNA_PR" ToRole="Programlar" />
           <NavigationProperty Name="SinavTipleriOT_SNA" Relationship="LubsDbModel.FK_SinavTipleriOT_SNA_PR_SinavTipleriOT_SNA" FromRole="SinavTipleriOT_SNA_PR" ToRole="SinavTipleriOT_SNA" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_SinavTipleriOT_SNA_PR_Programlar" FromRole="SinavTipleriOT_SNA_PR" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="SinavTipleriOTNotAraliklari">
           <Key>
@@ -13563,8 +13525,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="SinavTipleriOTNotAraliklariGecersizProgramlarID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="SinavTipleriOTNotAralikID" Type="Int32" Nullable="false" />
           <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" FromRole="SinavTipleriOTNotAraliklariGecersizProgramlar" ToRole="Programlar" />
           <NavigationProperty Name="SinavTipleriOTNotAraliklari" Relationship="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_SinavTipleriOTNotAraliklari" FromRole="SinavTipleriOTNotAraliklariGecersizProgramlar" ToRole="SinavTipleriOTNotAraliklari" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" FromRole="SinavTipleriOTNotAraliklariGecersizProgramlar" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="SinavTiplerSubSinavAralik">
           <Key>
@@ -13700,72 +13662,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="SRSalonlar" Relationship="LubsDbModel.FK_SRSalonTalepTipleri_SRSalonlar" FromRole="SRSalonTalepTipleri" ToRole="SRSalonlar" />
           <NavigationProperty Name="SRTalepTipleri" Relationship="LubsDbModel.FK_SRSalonTalepTipleri_SRTalepTipleri" FromRole="SRSalonTalepTipleri" ToRole="SRTalepTipleri" />
         </EntityType>
-        <EntityType Name="SRTalepleri">
-          <Key>
-            <PropertyRef Name="SRTalepID" />
-          </Key>
-          <Property Name="SRTalepID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UniqueID" Type="Guid" />
-          <Property Name="EnstituKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="TIBasvuruAraRaporID" Type="Int32" />
-          <Property Name="MezuniyetBasvurulariID" Type="Int32" />
-          <Property Name="ToBasvuruSavunmaID" Type="Int32" />
-          <Property Name="DonemProjesiBasvuruID" Type="Int32" />
-          <Property Name="IsOnline" Type="Boolean" Nullable="false" />
-          <Property Name="SRTalepTipID" Type="Int32" Nullable="false" />
-          <Property Name="TalepYapanID" Type="Int32" Nullable="false" />
-          <Property Name="SRSalonID" Type="Int32" />
-          <Property Name="SalonAdi" Type="String" MaxLength="160" FixedLength="false" Unicode="true" />
-          <Property Name="Tarih" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="HaftaGunID" Type="Int32" Nullable="false" />
-          <Property Name="BasSaat" Type="Time" Nullable="false" Precision="0" />
-          <Property Name="BitSaat" Type="Time" Nullable="false" Precision="0" />
-          <Property Name="TezOzeti" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="TezOzetiHtml" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="DanismanAdi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="EsDanismanAdi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="IsYokDrBursiyeriVar" Type="Boolean" />
-          <Property Name="YokDrOncelikliAlan" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="IsTezBasligiDegisti" Type="Boolean" />
-          <Property Name="YeniTezBaslikTr" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-          <Property Name="YeniTezBaslikEn" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-          <Property Name="Aciklama" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="SRDurumID" Type="Int32" Nullable="false" />
-          <Property Name="SRDurumAciklamasi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
-          <Property Name="RSBaslatildiMailGonderimTarihi" Type="DateTime" Precision="3" />
-          <Property Name="IsOyBirligiOrCoklugu" Type="Boolean" />
-          <Property Name="JuriSonucMezuniyetSinavDurumID" Type="Int32" />
-          <Property Name="DegerlendirmeSonucMailTarihi" Type="DateTime" Precision="3" />
-          <Property Name="MezuniyetSinavDurumID" Type="Int32" />
-          <Property Name="MezuniyetSinavDurumIslemTarihi" Type="DateTime" Precision="3" />
-          <Property Name="MezuniyetSinavDurumIslemYapanID" Type="Int32" />
-          <Property Name="UzatmaSonrasiOgrenciTaahhutSonTarih" Type="DateTime" Precision="3" />
-          <Property Name="UzatmaSonrasiOgrenciTaahhutSonTarihIslemYapanID" Type="Int32" />
-          <Property Name="UzatmaSonrasiOgrenciTaahhutSonTarihIslemTarihi" Type="DateTime" Precision="3" />
-          <Property Name="IsOgrenciUzatmaSonrasiOnay" Type="Boolean" />
-          <Property Name="OgrenciOnayTarihi" Type="DateTime" Precision="3" />
-          <Property Name="IsDanismanUzatmaSonrasiOnay" Type="Boolean" />
-          <Property Name="DanismanOnayTarihi" Type="DateTime" Precision="3" />
-          <Property Name="DanismanUzatmaSonrasiOnayAciklama" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
-          <Property Name="UzatmaSonrasiYeniSinavTalebiSonTarih" Type="DateTime" Precision="3" />
-          <Property Name="UzatmaSonrasiYeniSinavTalebiSonTarihIslemYapanID" Type="Int32" />
-          <Property Name="UzatmaSonrasiYeniSinavTalebiSonTarihIslemTarihi" Type="DateTime" Precision="3" />
-          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
-          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DonemProjesiBasvuru" Relationship="LubsDbModel.FK_SRTalepleri_TabloyaAdi" FromRole="SRTalepleri" ToRole="DonemProjesiBasvuru" />
-          <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_SRTalepleri_Enstituler" FromRole="SRTalepleri" ToRole="Enstituler" />
-          <NavigationProperty Name="HaftaGunleri" Relationship="LubsDbModel.FK_SRTalepleri_HaftaGunleri" FromRole="SRTalepleri" ToRole="HaftaGunleri" />
-          <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_SRTalepleri_Kullanicilar" FromRole="SRTalepleri" ToRole="Kullanicilar" />
-          <NavigationProperty Name="MezuniyetBasvurulari" Relationship="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari" FromRole="SRTalepleri" ToRole="MezuniyetBasvurulari" />
-          <NavigationProperty Name="MezuniyetSinavDurumlari" Relationship="LubsDbModel.FK_SRTalepleri_MezuniyetSinavDurumlari" FromRole="SRTalepleri" ToRole="MezuniyetSinavDurumlari" />
-          <NavigationProperty Name="SRDurumlari" Relationship="LubsDbModel.FK_SRTalepleri_SRDurumlari" FromRole="SRTalepleri" ToRole="SRDurumlari" />
-          <NavigationProperty Name="SRSalonlar" Relationship="LubsDbModel.FK_SRTalepleri_SRSalonlar" FromRole="SRTalepleri" ToRole="SRSalonlar" />
-          <NavigationProperty Name="SRTalepTipleri" Relationship="LubsDbModel.FK_SRTalepleri_SRTalepTipleri" FromRole="SRTalepleri" ToRole="SRTalepTipleri" />
-          <NavigationProperty Name="TIBasvuruAraRapor" Relationship="LubsDbModel.FK_SRTalepleri_TIBasvuruAraRapor" FromRole="SRTalepleri" ToRole="TIBasvuruAraRapor" />
-          <NavigationProperty Name="ToBasvuruSavunma" Relationship="LubsDbModel.FK_SRTalepleri_ToBasvuruSavunma" FromRole="SRTalepleri" ToRole="ToBasvuruSavunma" />
-          <NavigationProperty Name="SRTaleplerJuris" Relationship="LubsDbModel.FK_SRTaleplerJuri_SRTalepleri" FromRole="SRTalepleri" ToRole="SRTaleplerJuri" />
-        </EntityType>
         <EntityType Name="SRTaleplerJuri">
           <Key>
             <PropertyRef Name="SRTalepJuriID" />
@@ -13877,11 +13773,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_TalepGelenTalepler_Kullanicilar" FromRole="TalepGelenTalepler" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TalepGelenTalepler_Programlar" FromRole="TalepGelenTalepler" ToRole="Programlar" />
           <NavigationProperty Name="TalepDurumlari" Relationship="LubsDbModel.FK_TalepGelenTalepler_TalepDurumlari" FromRole="TalepGelenTalepler" ToRole="TalepDurumlari" />
           <NavigationProperty Name="TalepGelenTalepBelgeleris" Relationship="LubsDbModel.FK_TalepGelenTalepBelgeleri_TalepGelenTalepler" FromRole="TalepGelenTalepler" ToRole="TalepGelenTalepBelgeleri" />
           <NavigationProperty Name="TalepSurecleri" Relationship="LubsDbModel.FK_TalepGelenTalepler_TalepSurecleri" FromRole="TalepGelenTalepler" ToRole="TalepSurecleri" />
           <NavigationProperty Name="TalepTipleri" Relationship="LubsDbModel.FK_TalepGelenTalepler_TalepTipleri" FromRole="TalepGelenTalepler" ToRole="TalepTipleri" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TalepGelenTalepler_Programlar" FromRole="TalepGelenTalepler" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="TalepSureciTalepTipleri">
           <Key>
@@ -13970,9 +13866,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Donemler" Relationship="LubsDbModel.FK_TDOBasvuru_Donemler" FromRole="TDOBasvuru" ToRole="Donemler" />
           <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_TDOBasvuru_Enstituler" FromRole="TDOBasvuru" ToRole="Enstituler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_TDOBasvuru_Kullanicilar" FromRole="TDOBasvuru" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TDOBasvuru_Programlar" FromRole="TDOBasvuru" ToRole="Programlar" />
           <NavigationProperty Name="TDOBasvuruDanisman" Relationship="LubsDbModel.FK_TDOBasvuru_TDOBasvuruDanisman" FromRole="TDOBasvuru" ToRole="TDOBasvuruDanisman" />
           <NavigationProperty Name="TDOBasvuruDanismen" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_TDOBasvuru" FromRole="TDOBasvuru" ToRole="TDOBasvuruDanisman" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TDOBasvuru_Programlar" FromRole="TDOBasvuru" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="TDOBasvuruDanisman">
           <Key>
@@ -14043,12 +13939,12 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="AnabilimDallari" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_AnabilimDallari" FromRole="TDOBasvuruDanisman" ToRole="AnabilimDallari" />
           <NavigationProperty Name="Donemler" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_Donemler" FromRole="TDOBasvuruDanisman" ToRole="Donemler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_Kullanicilar" FromRole="TDOBasvuruDanisman" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_Programlar" FromRole="TDOBasvuruDanisman" ToRole="Programlar" />
           <NavigationProperty Name="SinavTipleri" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_SinavTipleri" FromRole="TDOBasvuruDanisman" ToRole="SinavTipleri" />
           <NavigationProperty Name="TDOBasvurus" Relationship="LubsDbModel.FK_TDOBasvuru_TDOBasvuruDanisman" FromRole="TDOBasvuruDanisman" ToRole="TDOBasvuru" />
           <NavigationProperty Name="TDOBasvuru" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_TDOBasvuru" FromRole="TDOBasvuruDanisman" ToRole="TDOBasvuru" />
           <NavigationProperty Name="TDODanismanTalepTipleri" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_TDODanismanTalepTipleri" FromRole="TDOBasvuruDanisman" ToRole="TDODanismanTalepTipleri" />
           <NavigationProperty Name="TDOBasvuruEsDanismen" Relationship="LubsDbModel.FK_TDOBasvuruEsDanisman_TDOBasvuruDanisman" FromRole="TDOBasvuruDanisman" ToRole="TDOBasvuruEsDanisman" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_Programlar" FromRole="TDOBasvuruDanisman" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="TDOBasvuruEsDanisman">
           <Key>
@@ -14140,9 +14036,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Donemler" Relationship="LubsDbModel.FK_TIBasvuru_Donemler" FromRole="TIBasvuru" ToRole="Donemler" />
           <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_TIBasvuru_Enstituler" FromRole="TIBasvuru" ToRole="Enstituler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_TIBasvuru_Kullanicilar" FromRole="TIBasvuru" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TIBasvuru_Programlar" FromRole="TIBasvuru" ToRole="Programlar" />
           <NavigationProperty Name="TIBasvuruAraRapor" Relationship="LubsDbModel.FK_TIBasvuru_TIBasvuruAraRapor" FromRole="TIBasvuru" ToRole="TIBasvuruAraRapor" />
           <NavigationProperty Name="TIBasvuruAraRapors" Relationship="LubsDbModel.FK_TIBasvuruAraRapor_TIBasvuru" FromRole="TIBasvuru" ToRole="TIBasvuruAraRapor" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TIBasvuru_Programlar" FromRole="TIBasvuru" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="TIBasvuruAraRapor">
           <Key>
@@ -14185,11 +14081,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Donemler" Relationship="LubsDbModel.FK_TIBasvuruAraRapor_Donemler" FromRole="TIBasvuruAraRapor" ToRole="Donemler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_TIBasvuruAraRapor_Kullanicilar" FromRole="TIBasvuruAraRapor" ToRole="Kullanicilar" />
-          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_TIBasvuruAraRapor" FromRole="TIBasvuruAraRapor" ToRole="SRTalepleri" />
           <NavigationProperty Name="TIBasvurus" Relationship="LubsDbModel.FK_TIBasvuru_TIBasvuruAraRapor" FromRole="TIBasvuruAraRapor" ToRole="TIBasvuru" />
           <NavigationProperty Name="TIBasvuru" Relationship="LubsDbModel.FK_TIBasvuruAraRapor_TIBasvuru" FromRole="TIBasvuruAraRapor" ToRole="TIBasvuru" />
           <NavigationProperty Name="TIBasvuruAraRaporDurumlari" Relationship="LubsDbModel.FK_TIBasvuruAraRapor_TIBasvuruAraRaporDurumlari" FromRole="TIBasvuruAraRapor" ToRole="TIBasvuruAraRaporDurumlari" />
           <NavigationProperty Name="TIBasvuruAraRaporKomites" Relationship="LubsDbModel.FK_TIBasvuruAraRaporKomite_TIBasvuruAraRapor" FromRole="TIBasvuruAraRapor" ToRole="TIBasvuruAraRaporKomite" />
+          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_TIBasvuruAraRapor" FromRole="TIBasvuruAraRapor" ToRole="SRTalepleri" />
         </EntityType>
         <EntityType Name="TIBasvuruAraRaporDurumlari">
           <Key>
@@ -14254,8 +14150,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_TijBasvuru_Enstituler" FromRole="TijBasvuru" ToRole="Enstituler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_TijBasvuru_Kullanicilar" FromRole="TijBasvuru" ToRole="Kullanicilar" />
           <NavigationProperty Name="OgrenimTipleri" Relationship="LubsDbModel.FK_TijBasvuru_OgrenimTipleri" FromRole="TijBasvuru" ToRole="OgrenimTipleri" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TijBasvuru_Programlar" FromRole="TijBasvuru" ToRole="Programlar" />
           <NavigationProperty Name="TijBasvuruOneris" Relationship="LubsDbModel.FK_TijBasvuruOneri_TijBasvuru" FromRole="TijBasvuru" ToRole="TijBasvuruOneri" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_TijBasvuru_Programlar" FromRole="TijBasvuru" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="TijBasvuruOneri">
           <Key>
@@ -14365,8 +14261,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Donemler" Relationship="LubsDbModel.FK_ToBasvuru_Donemler" FromRole="ToBasvuru" ToRole="Donemler" />
           <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_ToBasvuru_Enstituler" FromRole="ToBasvuru" ToRole="Enstituler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_ToBasvuru_Kullanicilar" FromRole="ToBasvuru" ToRole="Kullanicilar" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_ToBasvuru_Programlar" FromRole="ToBasvuru" ToRole="Programlar" />
           <NavigationProperty Name="ToBasvuruSavunmas" Relationship="LubsDbModel.FK_ToBasvuruSavunma_ToBasvuru" FromRole="ToBasvuru" ToRole="ToBasvuruSavunma" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_ToBasvuru_Programlar" FromRole="ToBasvuru" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="ToBasvuruSavunma">
           <Key>
@@ -14398,11 +14294,11 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Donemler" Relationship="LubsDbModel.FK_ToBasvuruSavunma_Donemler" FromRole="ToBasvuruSavunma" ToRole="Donemler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_ToBasvuruSavunma_Kullanicilar" FromRole="ToBasvuruSavunma" ToRole="Kullanicilar" />
-          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_ToBasvuruSavunma" FromRole="ToBasvuruSavunma" ToRole="SRTalepleri" />
           <NavigationProperty Name="ToBasvuru" Relationship="LubsDbModel.FK_ToBasvuruSavunma_ToBasvuru" FromRole="ToBasvuruSavunma" ToRole="ToBasvuru" />
           <NavigationProperty Name="ToBasvuruSavunmaDurumlari" Relationship="LubsDbModel.FK_ToBasvuruSavunma_ToBasvuruSavunmaDurumlari" FromRole="ToBasvuruSavunma" ToRole="ToBasvuruSavunmaDurumlari" />
           <NavigationProperty Name="ToBasvuruSavunmaDurumlari1" Relationship="LubsDbModel.FK_ToBasvuruSavunma_ToBasvuruSavunmaDurumlari1" FromRole="ToBasvuruSavunma" ToRole="ToBasvuruSavunmaDurumlari" />
           <NavigationProperty Name="ToBasvuruSavunmaKomites" Relationship="LubsDbModel.FK_ToBasvuruSavunmaKomite_ToBasvuruSavunma" FromRole="ToBasvuruSavunma" ToRole="ToBasvuruSavunmaKomite" />
+          <NavigationProperty Name="SRTalepleris" Relationship="LubsDbModel.FK_SRTalepleri_ToBasvuruSavunma" FromRole="ToBasvuruSavunma" ToRole="SRTalepleri" />
         </EntityType>
         <EntityType Name="ToBasvuruSavunmaDurumlari">
           <Key>
@@ -14587,10 +14483,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Donemler" Relationship="LubsDbModel.FK_YeterlikBasvuru_Donemler" FromRole="YeterlikBasvuru" ToRole="Donemler" />
           <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_YeterlikBasvuru_Kullanicilar" FromRole="YeterlikBasvuru" ToRole="Kullanicilar" />
           <NavigationProperty Name="OgrenimTipleri" Relationship="LubsDbModel.FK_YeterlikBasvuru_OgrenimTipleri" FromRole="YeterlikBasvuru" ToRole="OgrenimTipleri" />
-          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_YeterlikBasvuru_Programlar" FromRole="YeterlikBasvuru" ToRole="Programlar" />
           <NavigationProperty Name="YeterlikSureci" Relationship="LubsDbModel.FK_YeterlikBasvuru_YeterlikSureci" FromRole="YeterlikBasvuru" ToRole="YeterlikSureci" />
           <NavigationProperty Name="YeterlikBasvuruJuriUyeleris" Relationship="LubsDbModel.FK_YeterlikBasvuruJuriUyeleri_YeterlikBasvuru" FromRole="YeterlikBasvuru" ToRole="YeterlikBasvuruJuriUyeleri" />
           <NavigationProperty Name="YeterlikBasvuruKomitelers" Relationship="LubsDbModel.FK_YeterlikBasvuruKomiteler_YeterlikBasvuru" FromRole="YeterlikBasvuru" ToRole="YeterlikBasvuruKomiteler" />
+          <NavigationProperty Name="Programlar" Relationship="LubsDbModel.FK_YeterlikBasvuru_Programlar" FromRole="YeterlikBasvuru" ToRole="Programlar" />
         </EntityType>
         <EntityType Name="YeterlikBasvuruJuriUyeleri">
           <Key>
@@ -14830,18 +14726,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="AnabilimDallari">
               <PropertyRef Name="IslemYapanID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Programlar_AnabilimDallari">
-          <End Type="LubsDbModel.AnabilimDallari" Role="AnabilimDallari" Multiplicity="1" />
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AnabilimDallari">
-              <PropertyRef Name="AnabilimDaliID" />
-            </Principal>
-            <Dependent Role="Programlar">
-              <PropertyRef Name="AnabilimDaliID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -15277,18 +15161,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BasvurularTercihleri_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.BasvurularTercihleri" Role="BasvurularTercihleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="BasvurularTercihleri">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_BasvurularTercihleriKayitOdemeleri_BasvurularTercihleri">
           <End Type="LubsDbModel.BasvurularTercihleri" Role="BasvurularTercihleri" Multiplicity="1" />
           <End Type="LubsDbModel.BasvurularTercihleriKayitOdemeleri" Role="BasvurularTercihleriKayitOdemeleri" Multiplicity="*" />
@@ -15565,18 +15437,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BasvuruSurecKotalar_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.BasvuruSurecKotalar" Role="BasvuruSurecKotalar" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="BasvuruSurecKotalar">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_BasvuruSurecMulakatSinavTurleri_MulakatSinavTurleri">
           <End Type="LubsDbModel.MulakatSinavTurleri" Role="MulakatSinavTurleri" Multiplicity="1" />
           <End Type="LubsDbModel.BasvuruSurecMulakatSinavTurleri" Role="BasvuruSurecMulakatSinavTurleri" Multiplicity="*" />
@@ -15622,18 +15482,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="BasvuruSurecProgramlarAlandisiBolumKisitlamalari">
               <PropertyRef Name="OgrenciBolumID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Role="BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="BasvuruSurecProgramlarAlandisiBolumKisitlamalari">
-              <PropertyRef Name="ProgramKod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -15855,18 +15703,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA_PR" Role="BasvuruSurecSinavTipleriOT_SNA_PR" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="BasvuruSurecSinavTipleriOT_SNA_PR">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_BasvuruSurecSinavTipleriOTNotAraliklari_SinavTipleri">
           <End Type="LubsDbModel.SinavTipleri" Role="SinavTipleri" Multiplicity="1" />
           <End Type="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklari" Role="BasvuruSurecSinavTipleriOTNotAraliklari" Multiplicity="*" />
@@ -15890,18 +15726,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar">
               <PropertyRef Name="BasvuruSurecSinavTipleriOTNotAralikID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Role="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar">
-              <PropertyRef Name="ProgramKod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -15986,18 +15810,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="BelgeTalepleri">
               <PropertyRef Name="OgrenimDurumID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BelgeTalepleri_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.BelgeTalepleri" Role="BelgeTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="BelgeTalepleri">
-              <PropertyRef Name="ProgramKod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -16158,18 +15970,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="BolumEslestir">
               <PropertyRef Name="OgrenciBolumID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BolumEslestir_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.BolumEslestir" Role="BolumEslestir" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="BolumEslestir">
-              <PropertyRef Name="ProgramKod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -16413,18 +16213,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DonemProjesi_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.DonemProjesi" Role="DonemProjesi" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="DonemProjesi">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DonemProjesiBasvuru_DonemProjesi">
           <End Type="LubsDbModel.DonemProjesi" Role="DonemProjesi" Multiplicity="1" />
           <End Type="LubsDbModel.DonemProjesiBasvuru" Role="DonemProjesiBasvuru" Multiplicity="*" />
@@ -16493,18 +16281,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               <PropertyRef Name="DonemProjesiBasvuruID" />
             </Principal>
             <Dependent Role="DonemProjesiJurileri">
-              <PropertyRef Name="DonemProjesiBasvuruID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTalepleri_TabloyaAdi">
-          <End Type="LubsDbModel.DonemProjesiBasvuru" Role="DonemProjesiBasvuru" Multiplicity="0..1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DonemProjesiBasvuru">
-              <PropertyRef Name="DonemProjesiBasvuruID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
               <PropertyRef Name="DonemProjesiBasvuruID" />
             </Dependent>
           </ReferentialConstraint>
@@ -16777,18 +16553,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SRTalepleri_Enstituler">
-          <End Type="LubsDbModel.Enstituler" Role="Enstituler" Multiplicity="1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Enstituler">
-              <PropertyRef Name="EnstituKod" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="EnstituKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TalepSurecleri_Enstituler">
           <End Type="LubsDbModel.Enstituler" Role="Enstituler" Multiplicity="1" />
           <End Type="LubsDbModel.TalepSurecleri" Role="TalepSurecleri" Multiplicity="*" />
@@ -16949,18 +16713,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SRTalepleri_HaftaGunleri">
-          <End Type="LubsDbModel.HaftaGunleri" Role="HaftaGunleri" Multiplicity="1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="HaftaGunleri">
-              <PropertyRef Name="HaftaGunID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="HaftaGunID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MulakatDetay_Kampusler">
           <End Type="LubsDbModel.Kampusler" Role="Kampusler" Multiplicity="1" />
           <End Type="LubsDbModel.MulakatDetay" Role="MulakatDetay" Multiplicity="*" />
@@ -17006,18 +16758,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="KayitSilmeBasvuru">
               <PropertyRef Name="KullaniciID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_KayitSilmeBasvuru_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.KayitSilmeBasvuru" Role="KayitSilmeBasvuru" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="KayitSilmeBasvuru">
-              <PropertyRef Name="ProgramKod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -17068,18 +16808,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="Kullanicilar">
               <PropertyRef Name="OgrenimDurumID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Kullanicilar_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="0..1" />
-          <End Type="LubsDbModel.Kullanicilar" Role="Kullanicilar" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="Kullanicilar">
-              <PropertyRef Name="ProgramKod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -17315,18 +17043,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Programlar_Kullanicilar">
-          <End Type="LubsDbModel.Kullanicilar" Role="Kullanicilar" Multiplicity="1" />
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Kullanicilar">
-              <PropertyRef Name="KullaniciID" />
-            </Principal>
-            <Dependent Role="Programlar">
-              <PropertyRef Name="IslemYapanID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Sehirler_Kullanicilar">
           <End Type="LubsDbModel.Kullanicilar" Role="Kullanicilar" Multiplicity="1" />
           <End Type="LubsDbModel.Sehirler" Role="Sehirler" Multiplicity="*" />
@@ -17372,18 +17088,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="SRSalonlar">
               <PropertyRef Name="IslemYapanID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTalepleri_Kullanicilar">
-          <End Type="LubsDbModel.Kullanicilar" Role="Kullanicilar" Multiplicity="1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Kullanicilar">
-              <PropertyRef Name="KullaniciID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="TalepYapanID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -17543,18 +17247,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_KullaniciProgramlari_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.KullaniciProgramlari" Role="KullaniciProgramlari" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="KullaniciProgramlari">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MezuniyetBasvurulari_KullaniciTipleri">
           <End Type="LubsDbModel.KullaniciTipleri" Role="KullaniciTipleri" Multiplicity="0..1" />
           <End Type="LubsDbModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="*" />
@@ -17669,18 +17361,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MezuniyetBasvurulari_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="MezuniyetBasvurulari">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari">
           <End Type="LubsDbModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -17731,18 +17411,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               <PropertyRef Name="MezuniyetBasvurulariID" />
             </Principal>
             <Dependent Role="MezuniyetJuriOneriFormlari">
-              <PropertyRef Name="MezuniyetBasvurulariID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTalepleri_MezuniyetBasvurulari">
-          <End Type="LubsDbModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="0..1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MezuniyetBasvurulari">
-              <PropertyRef Name="MezuniyetBasvurulariID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
               <PropertyRef Name="MezuniyetBasvurulariID" />
             </Dependent>
           </ReferentialConstraint>
@@ -17840,18 +17508,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="SRTaleplerJuri">
               <PropertyRef Name="MezuniyetJuriOneriFormuJuriID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTalepleri_MezuniyetSinavDurumlari">
-          <End Type="LubsDbModel.MezuniyetSinavDurumlari" Role="MezuniyetSinavDurumlari" Multiplicity="0..1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MezuniyetSinavDurumlari">
-              <PropertyRef Name="MezuniyetSinavDurumID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="MezuniyetSinavDurumID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -18021,18 +17677,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Mulakat_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.Mulakat" Role="Mulakat" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="Mulakat">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MulakatDetay_Mulakat">
           <End Type="LubsDbModel.Mulakat" Role="Mulakat" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -18154,114 +17798,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="SinavTipleri">
               <PropertyRef Name="OzelNotTipID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SinavTipleriOT_SNA_PR_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.SinavTipleriOT_SNA_PR" Role="SinavTipleriOT_SNA_PR" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="SinavTipleriOT_SNA_PR">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.SinavTipleriOTNotAraliklariGecersizProgramlar" Role="SinavTipleriOTNotAraliklariGecersizProgramlar" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="SinavTipleriOTNotAraliklariGecersizProgramlar">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TalepGelenTalepler_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="0..1" />
-          <End Type="LubsDbModel.TalepGelenTalepler" Role="TalepGelenTalepler" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="TalepGelenTalepler">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TDOBasvuru_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.TDOBasvuru" Role="TDOBasvuru" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="TDOBasvuru">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TDOBasvuruDanisman_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="0..1" />
-          <End Type="LubsDbModel.TDOBasvuruDanisman" Role="TDOBasvuruDanisman" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="TDOBasvuruDanisman">
-              <PropertyRef Name="TDProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TIBasvuru_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.TIBasvuru" Role="TIBasvuru" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="TIBasvuru">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TijBasvuru_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.TijBasvuru" Role="TijBasvuru" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="TijBasvuru">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ToBasvuru_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.ToBasvuru" Role="ToBasvuru" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="ToBasvuru">
-              <PropertyRef Name="ProgramKod" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_YeterlikBasvuru_Programlar">
-          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
-          <End Type="LubsDbModel.YeterlikBasvuru" Role="YeterlikBasvuru" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Programlar">
-              <PropertyRef Name="ProgramKod" />
-            </Principal>
-            <Dependent Role="YeterlikBasvuru">
-              <PropertyRef Name="ProgramKod" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -18423,18 +17959,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SRTalepleri_SRDurumlari">
-          <End Type="LubsDbModel.SRDurumlari" Role="SRDurumlari" Multiplicity="1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SRDurumlari">
-              <PropertyRef Name="SRDurumID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="SRDurumID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SROzelTanimlar_SROzelTanimTipleri">
           <End Type="LubsDbModel.SROzelTanimTipleri" Role="SROzelTanimTipleri" Multiplicity="1" />
           <End Type="LubsDbModel.SROzelTanimlar" Role="SROzelTanimlar" Multiplicity="*" />
@@ -18487,18 +18011,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SRTalepleri_SRSalonlar">
-          <End Type="LubsDbModel.SRSalonlar" Role="SRSalonlar" Multiplicity="0..1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SRSalonlar">
-              <PropertyRef Name="SRSalonID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="SRSalonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SRSalonTalepTipleri_SRTalepTipleri">
           <End Type="LubsDbModel.SRTalepTipleri" Role="SRTalepTipleri" Multiplicity="1" />
           <End Type="LubsDbModel.SRSalonTalepTipleri" Role="SRSalonTalepTipleri" Multiplicity="*" />
@@ -18508,56 +18020,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="SRSalonTalepTipleri">
               <PropertyRef Name="SRTalepTipID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTalepleri_SRTalepTipleri">
-          <End Type="LubsDbModel.SRTalepTipleri" Role="SRTalepTipleri" Multiplicity="1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SRTalepTipleri">
-              <PropertyRef Name="SRTalepTipID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="SRTalepTipID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTalepleri_TIBasvuruAraRapor">
-          <End Type="LubsDbModel.TIBasvuruAraRapor" Role="TIBasvuruAraRapor" Multiplicity="0..1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TIBasvuruAraRapor">
-              <PropertyRef Name="TIBasvuruAraRaporID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="TIBasvuruAraRaporID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTalepleri_ToBasvuruSavunma">
-          <End Type="LubsDbModel.ToBasvuruSavunma" Role="ToBasvuruSavunma" Multiplicity="0..1" />
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ToBasvuruSavunma">
-              <PropertyRef Name="ToBasvuruSavunmaID" />
-            </Principal>
-            <Dependent Role="SRTalepleri">
-              <PropertyRef Name="ToBasvuruSavunmaID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTaleplerJuri_SRTalepleri">
-          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="LubsDbModel.SRTaleplerJuri" Role="SRTaleplerJuri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SRTalepleri">
-              <PropertyRef Name="SRTalepID" />
-            </Principal>
-            <Dependent Role="SRTaleplerJuri">
-              <PropertyRef Name="SRTalepID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -19030,6 +18492,546 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Type="DateTime" Name="IslemTarihi" Nullable="true" Precision="23" />
           <Property Type="String" Name="IslemYapanIP" Nullable="true" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="Programlar">
+          <Key>
+            <PropertyRef Name="ProgramKod" />
+          </Key>
+          <Property Name="ProgramKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="AnabilimDaliID" Type="Int32" Nullable="false" />
+          <Property Name="AnabilimDaliKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ObsProgramKod" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="Ingilizce" Type="Boolean" Nullable="false" />
+          <Property Name="ProgramAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="IsAktif" Type="Boolean" Nullable="false" />
+          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
+          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AnabilimDallari" Relationship="LubsDbModel.FK_Programlar_AnabilimDallari" FromRole="Programlar" ToRole="AnabilimDallari" />
+          <NavigationProperty Name="BasvurularTercihleris" Relationship="LubsDbModel.FK_BasvurularTercihleri_Programlar" FromRole="Programlar" ToRole="BasvurularTercihleri" />
+          <NavigationProperty Name="BasvuruSurecKotalars" Relationship="LubsDbModel.FK_BasvuruSurecKotalar_Programlar" FromRole="Programlar" ToRole="BasvuruSurecKotalar" />
+          <NavigationProperty Name="BasvuruSurecProgramlarAlandisiBolumKisitlamalaris" Relationship="LubsDbModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar" FromRole="Programlar" ToRole="BasvuruSurecProgramlarAlandisiBolumKisitlamalari" />
+          <NavigationProperty Name="BasvuruSurecSinavTipleriOT_SNA_PR" Relationship="LubsDbModel.FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar" FromRole="Programlar" ToRole="BasvuruSurecSinavTipleriOT_SNA_PR" />
+          <NavigationProperty Name="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars" Relationship="LubsDbModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" FromRole="Programlar" ToRole="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" />
+          <NavigationProperty Name="BelgeTalepleris" Relationship="LubsDbModel.FK_BelgeTalepleri_Programlar" FromRole="Programlar" ToRole="BelgeTalepleri" />
+          <NavigationProperty Name="BolumEslestirs" Relationship="LubsDbModel.FK_BolumEslestir_Programlar" FromRole="Programlar" ToRole="BolumEslestir" />
+          <NavigationProperty Name="DonemProjesis" Relationship="LubsDbModel.FK_DonemProjesi_Programlar" FromRole="Programlar" ToRole="DonemProjesi" />
+          <NavigationProperty Name="KayitSilmeBasvurus" Relationship="LubsDbModel.FK_KayitSilmeBasvuru_Programlar" FromRole="Programlar" ToRole="KayitSilmeBasvuru" />
+          <NavigationProperty Name="Kullanicilars" Relationship="LubsDbModel.FK_Kullanicilar_Programlar" FromRole="Programlar" ToRole="Kullanicilar" />
+          <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_Programlar_Kullanicilar" FromRole="Programlar" ToRole="Kullanicilar" />
+          <NavigationProperty Name="KullaniciProgramlaris" Relationship="LubsDbModel.FK_KullaniciProgramlari_Programlar" FromRole="Programlar" ToRole="KullaniciProgramlari" />
+          <NavigationProperty Name="MezuniyetBasvurularis" Relationship="LubsDbModel.FK_MezuniyetBasvurulari_Programlar" FromRole="Programlar" ToRole="MezuniyetBasvurulari" />
+          <NavigationProperty Name="Mulakats" Relationship="LubsDbModel.FK_Mulakat_Programlar" FromRole="Programlar" ToRole="Mulakat" />
+          <NavigationProperty Name="SinavTipleriOT_SNA_PR" Relationship="LubsDbModel.FK_SinavTipleriOT_SNA_PR_Programlar" FromRole="Programlar" ToRole="SinavTipleriOT_SNA_PR" />
+          <NavigationProperty Name="SinavTipleriOTNotAraliklariGecersizProgramlars" Relationship="LubsDbModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" FromRole="Programlar" ToRole="SinavTipleriOTNotAraliklariGecersizProgramlar" />
+          <NavigationProperty Name="TalepGelenTaleplers" Relationship="LubsDbModel.FK_TalepGelenTalepler_Programlar" FromRole="Programlar" ToRole="TalepGelenTalepler" />
+          <NavigationProperty Name="TDOBasvurus" Relationship="LubsDbModel.FK_TDOBasvuru_Programlar" FromRole="Programlar" ToRole="TDOBasvuru" />
+          <NavigationProperty Name="TDOBasvuruDanismen" Relationship="LubsDbModel.FK_TDOBasvuruDanisman_Programlar" FromRole="Programlar" ToRole="TDOBasvuruDanisman" />
+          <NavigationProperty Name="TIBasvurus" Relationship="LubsDbModel.FK_TIBasvuru_Programlar" FromRole="Programlar" ToRole="TIBasvuru" />
+          <NavigationProperty Name="TijBasvurus" Relationship="LubsDbModel.FK_TijBasvuru_Programlar" FromRole="Programlar" ToRole="TijBasvuru" />
+          <NavigationProperty Name="ToBasvurus" Relationship="LubsDbModel.FK_ToBasvuru_Programlar" FromRole="Programlar" ToRole="ToBasvuru" />
+          <NavigationProperty Name="YeterlikBasvurus" Relationship="LubsDbModel.FK_YeterlikBasvuru_Programlar" FromRole="Programlar" ToRole="YeterlikBasvuru" />
+        </EntityType>
+        <Association Name="FK_Programlar_AnabilimDallari">
+          <End Type="LubsDbModel.AnabilimDallari" Role="AnabilimDallari" Multiplicity="1" />
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AnabilimDallari">
+              <PropertyRef Name="AnabilimDaliID" />
+            </Principal>
+            <Dependent Role="Programlar">
+              <PropertyRef Name="AnabilimDaliID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BasvurularTercihleri_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.BasvurularTercihleri" Role="BasvurularTercihleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="BasvurularTercihleri">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BasvuruSurecKotalar_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.BasvuruSurecKotalar" Role="BasvuruSurecKotalar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="BasvuruSurecKotalar">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Role="BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="BasvuruSurecProgramlarAlandisiBolumKisitlamalari">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.BasvuruSurecSinavTipleriOT_SNA_PR" Role="BasvuruSurecSinavTipleriOT_SNA_PR" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="BasvuruSurecSinavTipleriOT_SNA_PR">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Role="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BelgeTalepleri_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.BelgeTalepleri" Role="BelgeTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="BelgeTalepleri">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BolumEslestir_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.BolumEslestir" Role="BolumEslestir" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="BolumEslestir">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DonemProjesi_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.DonemProjesi" Role="DonemProjesi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="DonemProjesi">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_KayitSilmeBasvuru_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.KayitSilmeBasvuru" Role="KayitSilmeBasvuru" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="KayitSilmeBasvuru">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Kullanicilar_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="0..1" />
+          <End Type="LubsDbModel.Kullanicilar" Role="Kullanicilar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="Kullanicilar">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Programlar_Kullanicilar">
+          <End Type="LubsDbModel.Kullanicilar" Role="Kullanicilar" Multiplicity="1" />
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="Programlar">
+              <PropertyRef Name="IslemYapanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_KullaniciProgramlari_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.KullaniciProgramlari" Role="KullaniciProgramlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="KullaniciProgramlari">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MezuniyetBasvurulari_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="MezuniyetBasvurulari">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mulakat_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.Mulakat" Role="Mulakat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="Mulakat">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SinavTipleriOT_SNA_PR_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.SinavTipleriOT_SNA_PR" Role="SinavTipleriOT_SNA_PR" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="SinavTipleriOT_SNA_PR">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.SinavTipleriOTNotAraliklariGecersizProgramlar" Role="SinavTipleriOTNotAraliklariGecersizProgramlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="SinavTipleriOTNotAraliklariGecersizProgramlar">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TalepGelenTalepler_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="0..1" />
+          <End Type="LubsDbModel.TalepGelenTalepler" Role="TalepGelenTalepler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="TalepGelenTalepler">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TDOBasvuru_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.TDOBasvuru" Role="TDOBasvuru" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="TDOBasvuru">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TDOBasvuruDanisman_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="0..1" />
+          <End Type="LubsDbModel.TDOBasvuruDanisman" Role="TDOBasvuruDanisman" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="TDOBasvuruDanisman">
+              <PropertyRef Name="TDProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TIBasvuru_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.TIBasvuru" Role="TIBasvuru" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="TIBasvuru">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TijBasvuru_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.TijBasvuru" Role="TijBasvuru" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="TijBasvuru">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ToBasvuru_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.ToBasvuru" Role="ToBasvuru" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="ToBasvuru">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_YeterlikBasvuru_Programlar">
+          <End Type="LubsDbModel.Programlar" Role="Programlar" Multiplicity="1" />
+          <End Type="LubsDbModel.YeterlikBasvuru" Role="YeterlikBasvuru" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programlar">
+              <PropertyRef Name="ProgramKod" />
+            </Principal>
+            <Dependent Role="YeterlikBasvuru">
+              <PropertyRef Name="ProgramKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SRTalepleri">
+          <Key>
+            <PropertyRef Name="SRTalepID" />
+          </Key>
+          <Property Name="SRTalepID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UniqueID" Type="Guid" />
+          <Property Name="EnstituKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TIBasvuruAraRaporID" Type="Int32" />
+          <Property Name="MezuniyetBasvurulariID" Type="Int32" />
+          <Property Name="ToBasvuruSavunmaID" Type="Int32" />
+          <Property Name="DonemProjesiBasvuruID" Type="Int32" />
+          <Property Name="IsOnline" Type="Boolean" Nullable="false" />
+          <Property Name="SRTalepTipID" Type="Int32" Nullable="false" />
+          <Property Name="TalepYapanID" Type="Int32" Nullable="false" />
+          <Property Name="SRSalonID" Type="Int32" />
+          <Property Name="SalonAdi" Type="String" MaxLength="160" FixedLength="false" Unicode="true" />
+          <Property Name="Tarih" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="HaftaGunID" Type="Int32" Nullable="false" />
+          <Property Name="BasSaat" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="BitSaat" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="TezOzeti" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TezOzetiHtml" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DanismanAdi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="EsDanismanAdi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="IsYokDrBursiyeriVar" Type="Boolean" />
+          <Property Name="YokDrOncelikliAlan" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsTezBasligiDegisti" Type="Boolean" />
+          <Property Name="YeniTezBaslikTr" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="YeniTezBaslikEn" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="Aciklama" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SRDurumID" Type="Int32" Nullable="false" />
+          <Property Name="SRDurumAciklamasi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="DavetResimYolu" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="RSBaslatildiMailGonderimTarihi" Type="DateTime" Precision="3" />
+          <Property Name="IsOyBirligiOrCoklugu" Type="Boolean" />
+          <Property Name="JuriSonucMezuniyetSinavDurumID" Type="Int32" />
+          <Property Name="DegerlendirmeSonucMailTarihi" Type="DateTime" Precision="3" />
+          <Property Name="MezuniyetSinavDurumID" Type="Int32" />
+          <Property Name="MezuniyetSinavDurumIslemTarihi" Type="DateTime" Precision="3" />
+          <Property Name="MezuniyetSinavDurumIslemYapanID" Type="Int32" />
+          <Property Name="UzatmaSonrasiOgrenciTaahhutSonTarih" Type="DateTime" Precision="3" />
+          <Property Name="UzatmaSonrasiOgrenciTaahhutSonTarihIslemYapanID" Type="Int32" />
+          <Property Name="UzatmaSonrasiOgrenciTaahhutSonTarihIslemTarihi" Type="DateTime" Precision="3" />
+          <Property Name="IsOgrenciUzatmaSonrasiOnay" Type="Boolean" />
+          <Property Name="OgrenciOnayTarihi" Type="DateTime" Precision="3" />
+          <Property Name="IsDanismanUzatmaSonrasiOnay" Type="Boolean" />
+          <Property Name="DanismanOnayTarihi" Type="DateTime" Precision="3" />
+          <Property Name="DanismanUzatmaSonrasiOnayAciklama" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <Property Name="UzatmaSonrasiYeniSinavTalebiSonTarih" Type="DateTime" Precision="3" />
+          <Property Name="UzatmaSonrasiYeniSinavTalebiSonTarihIslemYapanID" Type="Int32" />
+          <Property Name="UzatmaSonrasiYeniSinavTalebiSonTarihIslemTarihi" Type="DateTime" Precision="3" />
+          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
+          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DonemProjesiBasvuru" Relationship="LubsDbModel.FK_SRTalepleri_TabloyaAdi" FromRole="SRTalepleri" ToRole="DonemProjesiBasvuru" />
+          <NavigationProperty Name="Enstituler" Relationship="LubsDbModel.FK_SRTalepleri_Enstituler" FromRole="SRTalepleri" ToRole="Enstituler" />
+          <NavigationProperty Name="HaftaGunleri" Relationship="LubsDbModel.FK_SRTalepleri_HaftaGunleri" FromRole="SRTalepleri" ToRole="HaftaGunleri" />
+          <NavigationProperty Name="Kullanicilar" Relationship="LubsDbModel.FK_SRTalepleri_Kullanicilar" FromRole="SRTalepleri" ToRole="Kullanicilar" />
+          <NavigationProperty Name="MezuniyetBasvurulari" Relationship="LubsDbModel.FK_SRTalepleri_MezuniyetBasvurulari" FromRole="SRTalepleri" ToRole="MezuniyetBasvurulari" />
+          <NavigationProperty Name="MezuniyetSinavDurumlari" Relationship="LubsDbModel.FK_SRTalepleri_MezuniyetSinavDurumlari" FromRole="SRTalepleri" ToRole="MezuniyetSinavDurumlari" />
+          <NavigationProperty Name="SRDurumlari" Relationship="LubsDbModel.FK_SRTalepleri_SRDurumlari" FromRole="SRTalepleri" ToRole="SRDurumlari" />
+          <NavigationProperty Name="SRSalonlar" Relationship="LubsDbModel.FK_SRTalepleri_SRSalonlar" FromRole="SRTalepleri" ToRole="SRSalonlar" />
+          <NavigationProperty Name="SRTalepTipleri" Relationship="LubsDbModel.FK_SRTalepleri_SRTalepTipleri" FromRole="SRTalepleri" ToRole="SRTalepTipleri" />
+          <NavigationProperty Name="TIBasvuruAraRapor" Relationship="LubsDbModel.FK_SRTalepleri_TIBasvuruAraRapor" FromRole="SRTalepleri" ToRole="TIBasvuruAraRapor" />
+          <NavigationProperty Name="ToBasvuruSavunma" Relationship="LubsDbModel.FK_SRTalepleri_ToBasvuruSavunma" FromRole="SRTalepleri" ToRole="ToBasvuruSavunma" />
+          <NavigationProperty Name="SRTaleplerJuris" Relationship="LubsDbModel.FK_SRTaleplerJuri_SRTalepleri" FromRole="SRTalepleri" ToRole="SRTaleplerJuri" />
+        </EntityType>
+        <Association Name="FK_SRTalepleri_TabloyaAdi">
+          <End Type="LubsDbModel.DonemProjesiBasvuru" Role="DonemProjesiBasvuru" Multiplicity="0..1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DonemProjesiBasvuru">
+              <PropertyRef Name="DonemProjesiBasvuruID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="DonemProjesiBasvuruID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_Enstituler">
+          <End Type="LubsDbModel.Enstituler" Role="Enstituler" Multiplicity="1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Enstituler">
+              <PropertyRef Name="EnstituKod" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="EnstituKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_HaftaGunleri">
+          <End Type="LubsDbModel.HaftaGunleri" Role="HaftaGunleri" Multiplicity="1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HaftaGunleri">
+              <PropertyRef Name="HaftaGunID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="HaftaGunID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_Kullanicilar">
+          <End Type="LubsDbModel.Kullanicilar" Role="Kullanicilar" Multiplicity="1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="TalepYapanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_MezuniyetBasvurulari">
+          <End Type="LubsDbModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="0..1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MezuniyetBasvurulari">
+              <PropertyRef Name="MezuniyetBasvurulariID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="MezuniyetBasvurulariID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_MezuniyetSinavDurumlari">
+          <End Type="LubsDbModel.MezuniyetSinavDurumlari" Role="MezuniyetSinavDurumlari" Multiplicity="0..1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MezuniyetSinavDurumlari">
+              <PropertyRef Name="MezuniyetSinavDurumID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="MezuniyetSinavDurumID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_SRDurumlari">
+          <End Type="LubsDbModel.SRDurumlari" Role="SRDurumlari" Multiplicity="1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SRDurumlari">
+              <PropertyRef Name="SRDurumID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="SRDurumID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_SRSalonlar">
+          <End Type="LubsDbModel.SRSalonlar" Role="SRSalonlar" Multiplicity="0..1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SRSalonlar">
+              <PropertyRef Name="SRSalonID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="SRSalonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_SRTalepTipleri">
+          <End Type="LubsDbModel.SRTalepTipleri" Role="SRTalepTipleri" Multiplicity="1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SRTalepTipleri">
+              <PropertyRef Name="SRTalepTipID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="SRTalepTipID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_TIBasvuruAraRapor">
+          <End Type="LubsDbModel.TIBasvuruAraRapor" Role="TIBasvuruAraRapor" Multiplicity="0..1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TIBasvuruAraRapor">
+              <PropertyRef Name="TIBasvuruAraRaporID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="TIBasvuruAraRaporID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTalepleri_ToBasvuruSavunma">
+          <End Type="LubsDbModel.ToBasvuruSavunma" Role="ToBasvuruSavunma" Multiplicity="0..1" />
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ToBasvuruSavunma">
+              <PropertyRef Name="ToBasvuruSavunmaID" />
+            </Principal>
+            <Dependent Role="SRTalepleri">
+              <PropertyRef Name="ToBasvuruSavunmaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SRTaleplerJuri_SRTalepleri">
+          <End Type="LubsDbModel.SRTalepleri" Role="SRTalepleri" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="LubsDbModel.SRTaleplerJuri" Role="SRTaleplerJuri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SRTalepleri">
+              <PropertyRef Name="SRTalepID" />
+            </Principal>
+            <Dependent Role="SRTaleplerJuri">
+              <PropertyRef Name="SRTalepID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -21200,22 +21202,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Programlars">
-            <EntityTypeMapping TypeName="LubsDbModel.Programlar">
-              <MappingFragment StoreEntitySet="Programlar">
-                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
-                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
-                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
-                <ScalarProperty Name="ProgramAdi" ColumnName="ProgramAdi" />
-                <ScalarProperty Name="Ingilizce" ColumnName="Ingilizce" />
-                <ScalarProperty Name="ObsProgramId" ColumnName="ObsProgramId" />
-                <ScalarProperty Name="AnabilimDaliKod" ColumnName="AnabilimDaliKod" />
-                <ScalarProperty Name="AnabilimDaliID" ColumnName="AnabilimDaliID" />
-                <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Rollers">
             <EntityTypeMapping TypeName="LubsDbModel.Roller">
               <MappingFragment StoreEntitySet="Roller">
@@ -21528,61 +21514,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="SRTalepTipID" ColumnName="SRTalepTipID" />
                 <ScalarProperty Name="SRSalonID" ColumnName="SRSalonID" />
                 <ScalarProperty Name="SRSalonTalepTipID" ColumnName="SRSalonTalepTipID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SRTalepleris">
-            <EntityTypeMapping TypeName="LubsDbModel.SRTalepleri">
-              <MappingFragment StoreEntitySet="SRTalepleri">
-                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
-                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
-                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="UzatmaSonrasiYeniSinavTalebiSonTarihIslemTarihi" ColumnName="UzatmaSonrasiYeniSinavTalebiSonTarihIslemTarihi" />
-                <ScalarProperty Name="UzatmaSonrasiYeniSinavTalebiSonTarihIslemYapanID" ColumnName="UzatmaSonrasiYeniSinavTalebiSonTarihIslemYapanID" />
-                <ScalarProperty Name="UzatmaSonrasiYeniSinavTalebiSonTarih" ColumnName="UzatmaSonrasiYeniSinavTalebiSonTarih" />
-                <ScalarProperty Name="DanismanUzatmaSonrasiOnayAciklama" ColumnName="DanismanUzatmaSonrasiOnayAciklama" />
-                <ScalarProperty Name="DanismanOnayTarihi" ColumnName="DanismanOnayTarihi" />
-                <ScalarProperty Name="IsDanismanUzatmaSonrasiOnay" ColumnName="IsDanismanUzatmaSonrasiOnay" />
-                <ScalarProperty Name="OgrenciOnayTarihi" ColumnName="OgrenciOnayTarihi" />
-                <ScalarProperty Name="IsOgrenciUzatmaSonrasiOnay" ColumnName="IsOgrenciUzatmaSonrasiOnay" />
-                <ScalarProperty Name="UzatmaSonrasiOgrenciTaahhutSonTarihIslemTarihi" ColumnName="UzatmaSonrasiOgrenciTaahhutSonTarihIslemTarihi" />
-                <ScalarProperty Name="UzatmaSonrasiOgrenciTaahhutSonTarihIslemYapanID" ColumnName="UzatmaSonrasiOgrenciTaahhutSonTarihIslemYapanID" />
-                <ScalarProperty Name="UzatmaSonrasiOgrenciTaahhutSonTarih" ColumnName="UzatmaSonrasiOgrenciTaahhutSonTarih" />
-                <ScalarProperty Name="MezuniyetSinavDurumIslemYapanID" ColumnName="MezuniyetSinavDurumIslemYapanID" />
-                <ScalarProperty Name="MezuniyetSinavDurumIslemTarihi" ColumnName="MezuniyetSinavDurumIslemTarihi" />
-                <ScalarProperty Name="MezuniyetSinavDurumID" ColumnName="MezuniyetSinavDurumID" />
-                <ScalarProperty Name="DegerlendirmeSonucMailTarihi" ColumnName="DegerlendirmeSonucMailTarihi" />
-                <ScalarProperty Name="JuriSonucMezuniyetSinavDurumID" ColumnName="JuriSonucMezuniyetSinavDurumID" />
-                <ScalarProperty Name="IsOyBirligiOrCoklugu" ColumnName="IsOyBirligiOrCoklugu" />
-                <ScalarProperty Name="RSBaslatildiMailGonderimTarihi" ColumnName="RSBaslatildiMailGonderimTarihi" />
-                <ScalarProperty Name="SRDurumAciklamasi" ColumnName="SRDurumAciklamasi" />
-                <ScalarProperty Name="SRDurumID" ColumnName="SRDurumID" />
-                <ScalarProperty Name="Aciklama" ColumnName="Aciklama" />
-                <ScalarProperty Name="YeniTezBaslikEn" ColumnName="YeniTezBaslikEn" />
-                <ScalarProperty Name="YeniTezBaslikTr" ColumnName="YeniTezBaslikTr" />
-                <ScalarProperty Name="IsTezBasligiDegisti" ColumnName="IsTezBasligiDegisti" />
-                <ScalarProperty Name="YokDrOncelikliAlan" ColumnName="YokDrOncelikliAlan" />
-                <ScalarProperty Name="IsYokDrBursiyeriVar" ColumnName="IsYokDrBursiyeriVar" />
-                <ScalarProperty Name="EsDanismanAdi" ColumnName="EsDanismanAdi" />
-                <ScalarProperty Name="DanismanAdi" ColumnName="DanismanAdi" />
-                <ScalarProperty Name="TezOzetiHtml" ColumnName="TezOzetiHtml" />
-                <ScalarProperty Name="TezOzeti" ColumnName="TezOzeti" />
-                <ScalarProperty Name="BitSaat" ColumnName="BitSaat" />
-                <ScalarProperty Name="BasSaat" ColumnName="BasSaat" />
-                <ScalarProperty Name="HaftaGunID" ColumnName="HaftaGunID" />
-                <ScalarProperty Name="Tarih" ColumnName="Tarih" />
-                <ScalarProperty Name="SalonAdi" ColumnName="SalonAdi" />
-                <ScalarProperty Name="SRSalonID" ColumnName="SRSalonID" />
-                <ScalarProperty Name="TalepYapanID" ColumnName="TalepYapanID" />
-                <ScalarProperty Name="SRTalepTipID" ColumnName="SRTalepTipID" />
-                <ScalarProperty Name="IsOnline" ColumnName="IsOnline" />
-                <ScalarProperty Name="DonemProjesiBasvuruID" ColumnName="DonemProjesiBasvuruID" />
-                <ScalarProperty Name="ToBasvuruSavunmaID" ColumnName="ToBasvuruSavunmaID" />
-                <ScalarProperty Name="MezuniyetBasvurulariID" ColumnName="MezuniyetBasvurulariID" />
-                <ScalarProperty Name="TIBasvuruAraRaporID" ColumnName="TIBasvuruAraRaporID" />
-                <ScalarProperty Name="EnstituKod" ColumnName="EnstituKod" />
-                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
-                <ScalarProperty Name="SRTalepID" ColumnName="SRTalepID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -22549,6 +22480,78 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Programlars">
+            <EntityTypeMapping TypeName="LubsDbModel.Programlar">
+              <MappingFragment StoreEntitySet="Programlar">
+                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
+                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
+                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
+                <ScalarProperty Name="ProgramAdi" ColumnName="ProgramAdi" />
+                <ScalarProperty Name="Ingilizce" ColumnName="Ingilizce" />
+                <ScalarProperty Name="ObsProgramKod" ColumnName="ObsProgramKod" />
+                <ScalarProperty Name="AnabilimDaliKod" ColumnName="AnabilimDaliKod" />
+                <ScalarProperty Name="AnabilimDaliID" ColumnName="AnabilimDaliID" />
+                <ScalarProperty Name="ProgramKod" ColumnName="ProgramKod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SRTalepleris">
+            <EntityTypeMapping TypeName="LubsDbModel.SRTalepleri">
+              <MappingFragment StoreEntitySet="SRTalepleri">
+                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
+                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
+                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="UzatmaSonrasiYeniSinavTalebiSonTarihIslemTarihi" ColumnName="UzatmaSonrasiYeniSinavTalebiSonTarihIslemTarihi" />
+                <ScalarProperty Name="UzatmaSonrasiYeniSinavTalebiSonTarihIslemYapanID" ColumnName="UzatmaSonrasiYeniSinavTalebiSonTarihIslemYapanID" />
+                <ScalarProperty Name="UzatmaSonrasiYeniSinavTalebiSonTarih" ColumnName="UzatmaSonrasiYeniSinavTalebiSonTarih" />
+                <ScalarProperty Name="DanismanUzatmaSonrasiOnayAciklama" ColumnName="DanismanUzatmaSonrasiOnayAciklama" />
+                <ScalarProperty Name="DanismanOnayTarihi" ColumnName="DanismanOnayTarihi" />
+                <ScalarProperty Name="IsDanismanUzatmaSonrasiOnay" ColumnName="IsDanismanUzatmaSonrasiOnay" />
+                <ScalarProperty Name="OgrenciOnayTarihi" ColumnName="OgrenciOnayTarihi" />
+                <ScalarProperty Name="IsOgrenciUzatmaSonrasiOnay" ColumnName="IsOgrenciUzatmaSonrasiOnay" />
+                <ScalarProperty Name="UzatmaSonrasiOgrenciTaahhutSonTarihIslemTarihi" ColumnName="UzatmaSonrasiOgrenciTaahhutSonTarihIslemTarihi" />
+                <ScalarProperty Name="UzatmaSonrasiOgrenciTaahhutSonTarihIslemYapanID" ColumnName="UzatmaSonrasiOgrenciTaahhutSonTarihIslemYapanID" />
+                <ScalarProperty Name="UzatmaSonrasiOgrenciTaahhutSonTarih" ColumnName="UzatmaSonrasiOgrenciTaahhutSonTarih" />
+                <ScalarProperty Name="MezuniyetSinavDurumIslemYapanID" ColumnName="MezuniyetSinavDurumIslemYapanID" />
+                <ScalarProperty Name="MezuniyetSinavDurumIslemTarihi" ColumnName="MezuniyetSinavDurumIslemTarihi" />
+                <ScalarProperty Name="MezuniyetSinavDurumID" ColumnName="MezuniyetSinavDurumID" />
+                <ScalarProperty Name="DegerlendirmeSonucMailTarihi" ColumnName="DegerlendirmeSonucMailTarihi" />
+                <ScalarProperty Name="JuriSonucMezuniyetSinavDurumID" ColumnName="JuriSonucMezuniyetSinavDurumID" />
+                <ScalarProperty Name="IsOyBirligiOrCoklugu" ColumnName="IsOyBirligiOrCoklugu" />
+                <ScalarProperty Name="RSBaslatildiMailGonderimTarihi" ColumnName="RSBaslatildiMailGonderimTarihi" />
+                <ScalarProperty Name="DavetResimYolu" ColumnName="DavetResimYolu" />
+                <ScalarProperty Name="SRDurumAciklamasi" ColumnName="SRDurumAciklamasi" />
+                <ScalarProperty Name="SRDurumID" ColumnName="SRDurumID" />
+                <ScalarProperty Name="Aciklama" ColumnName="Aciklama" />
+                <ScalarProperty Name="YeniTezBaslikEn" ColumnName="YeniTezBaslikEn" />
+                <ScalarProperty Name="YeniTezBaslikTr" ColumnName="YeniTezBaslikTr" />
+                <ScalarProperty Name="IsTezBasligiDegisti" ColumnName="IsTezBasligiDegisti" />
+                <ScalarProperty Name="YokDrOncelikliAlan" ColumnName="YokDrOncelikliAlan" />
+                <ScalarProperty Name="IsYokDrBursiyeriVar" ColumnName="IsYokDrBursiyeriVar" />
+                <ScalarProperty Name="EsDanismanAdi" ColumnName="EsDanismanAdi" />
+                <ScalarProperty Name="DanismanAdi" ColumnName="DanismanAdi" />
+                <ScalarProperty Name="TezOzetiHtml" ColumnName="TezOzetiHtml" />
+                <ScalarProperty Name="TezOzeti" ColumnName="TezOzeti" />
+                <ScalarProperty Name="BitSaat" ColumnName="BitSaat" />
+                <ScalarProperty Name="BasSaat" ColumnName="BasSaat" />
+                <ScalarProperty Name="HaftaGunID" ColumnName="HaftaGunID" />
+                <ScalarProperty Name="Tarih" ColumnName="Tarih" />
+                <ScalarProperty Name="SalonAdi" ColumnName="SalonAdi" />
+                <ScalarProperty Name="SRSalonID" ColumnName="SRSalonID" />
+                <ScalarProperty Name="TalepYapanID" ColumnName="TalepYapanID" />
+                <ScalarProperty Name="SRTalepTipID" ColumnName="SRTalepTipID" />
+                <ScalarProperty Name="IsOnline" ColumnName="IsOnline" />
+                <ScalarProperty Name="DonemProjesiBasvuruID" ColumnName="DonemProjesiBasvuruID" />
+                <ScalarProperty Name="ToBasvuruSavunmaID" ColumnName="ToBasvuruSavunmaID" />
+                <ScalarProperty Name="MezuniyetBasvurulariID" ColumnName="MezuniyetBasvurulariID" />
+                <ScalarProperty Name="TIBasvuruAraRaporID" ColumnName="TIBasvuruAraRaporID" />
+                <ScalarProperty Name="EnstituKod" ColumnName="EnstituKod" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+                <ScalarProperty Name="SRTalepID" ColumnName="SRTalepID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -365,7 +365,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             });
             model.SelectListUndan = new SelectList(UnvanlarBus.GetCmbJuriUnvanlar(true), "Value", "Caption", null);
             model.SelectListUniversite = new SelectList(UniversitelerBus.CmbGetAktifUniversiteler(true, true), "Value", "Caption", null);
-            model.SelectListAnabilimDali = new SelectList(AnabilimDallariBus.CmbGetAktifAnabilimDallariStr(basvuru.YeterlikSureci.EnstituKod, true), "Value", "Caption", null);
+
+            //Temiz enerji enstitüsü tüm abd leri görebilir.
+            var abdSecimEnstituKod = EnstituKodlariEnum.TemizEnerjiTeknolojileri == basvuru.YeterlikSureci.EnstituKod ? "" : basvuru.YeterlikSureci.EnstituKod;
+            model.SelectListAnabilimDali = new SelectList(AnabilimDallariBus.CmbGetAktifAnabilimDallariStr(abdSecimEnstituKod, true), "Value", "Caption", null);
 
             var view = ViewRenderHelper.RenderPartialView("Yeterlik", "YeterlikJuriFormu", model);
             return new { success = true, view }.ToJsonResult();

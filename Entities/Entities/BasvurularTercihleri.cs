@@ -42,10 +42,10 @@ namespace Entities.Entities
         public virtual AlanTipleri AlanTipleri { get; set; }
         public virtual Basvurular Basvurular { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
-        public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasvurularTercihleriKayitOdemeleri> BasvurularTercihleriKayitOdemeleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MulakatSonuclari> MulakatSonuclaris { get; set; }
+        public virtual Programlar Programlar { get; set; }
     }
 }

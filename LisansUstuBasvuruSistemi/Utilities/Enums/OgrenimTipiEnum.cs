@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
@@ -14,11 +11,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int ButunlesikDoktora = 5;
         public const int BilimselHazirlik = 6;
 
+        public static List<int> DoktoraOgretimleri => new List<int> { OgrenimTipi.Doktra, OgrenimTipi.ButunlesikDoktora };
 
-        public bool IsDrOrYl(int ogrenimTipKod)
+        public static bool IsDrOrYl(int ogrenimTipKod)
         {
-            return ogrenimTipKod == Doktra || ogrenimTipKod == ButunlesikDoktora;
+            return DoktoraOgretimleri.Contains(ogrenimTipKod);
         }
-
     }
 }

@@ -42,8 +42,8 @@ namespace Entities.Entities
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual OgrenimTipleri OgrenimTipleri { get; set; }
-        public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TijBasvuruOneri> TijBasvuruOneris { get; set; }
+        public virtual Programlar Programlar { get; set; }
     }
 }

@@ -32,12 +32,12 @@ namespace Entities.Entities
     
         public virtual BasvuruSurec BasvuruSurec { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
-        public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MulakatDetay> MulakatDetays { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MulakatJuri> MulakatJuris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MulakatSonuclari> MulakatSonuclaris { get; set; }
+        public virtual Programlar Programlar { get; set; }
     }
 }

@@ -19,9 +19,9 @@
                 <div class="panel-heading padding-0">
                     <table style="width:100%;table-layout:fixed;">
                         <tr>
-                            <td><h3 class="panel-title"><i class="fa fa-list-alt"></i> Program Listesi</h3></td>
+                            <td style="width:280px;"><h3 class="panel-title"><i class="fa fa-list-alt"></i> Program Listesi</h3></td>
 
-                            <td style="width:380px;">
+                            <td>
                                 <ul class="panel-controls">
                                     @*<li><span class="label label-success label-form" onclick="getReportType()" style="cursor:pointer;">Program Listesini İndir</span></li>*@
                                     <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Program Ekle</span></li>
@@ -29,6 +29,7 @@
                                     <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
                                     <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
                                     <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)"><span class="fa fa-refresh"></span></a></li>
+
                                 </ul>
                             </td>
                         </tr>
@@ -40,7 +41,7 @@
                             <tr>
                                 <th width="75"></th>
                                 <th class="sirala" field="ProgramAdi">Anabilim Dalı / P Adı</th>
-                                
+                                <th class="sirala" field="ObsProgramKod">Obs Kod</th>
                                 <th class="sirala" field="AbdIsAktif" width="60">Abd Durum</th>
                                 <th class="sirala" field="IsAktif" width="60">Prg Durum</th>
                                 <th width="40"> </th>
@@ -52,6 +53,9 @@
                                 <th></th>
                                 <th>
                                     <input name="ProgramAdi" type="text" value="@Model.ProgramAdi" class="form-control" />
+                                </th>
+                                <th>
+                                    @Html.DropDownList("IsObsEslestirildi", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
                                 <th>
                                     @Html.DropDownList("AbdIsAktif", null, new { @class = "form-control", style = "padding:0px;" })
@@ -85,6 +89,7 @@
                                         <td id="tdMad_@item.ProgramKod">
                                             @item.AnabilimDaliAdi <br />@item.ProgramAdi
                                         </td>
+                                        <td id="tdObs_@item.ProgramKod">@item.ObsProgramKod</td>
                                         <td id="tdIabd_@item.ProgramKod" style="text-align:center;">
                                             <span class="label label-@(item.AbdIsAktif ? "success" : "danger")">@item.AbdIsAktif.ToAktifPasif()</span>
                                         </td>
@@ -116,47 +121,58 @@
                                                                         <div class="col-md-9" style="text-align: left;">@item.EnstituAd</div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-md-3 control-label">P Kod</label>
-                                                                        <div class="col-md-9">@item.ProgramKod</div>
+                                                                        <label class="col-md-3 control-label">E-Enstitü Program</label>
+                                                                        <div class="col-md-9">@item.ProgramKod @item.ProgramAdi</div>
                                                                     </div>
-
                                                                     <div class="form-group">
-                                                                        <label class="col-md-3 control-label">Eğitim Dili Ing</label>
+                                                                        <label class="col-md-3 control-label">OBS Eşleştirilen Program</label>
                                                                         <div class="col-md-9">
-                                                                            <span class="label label-@(item.Ingilizce ? "success" : "danger")">@(item.Ingilizce ? "Evet" : "Hayır")</span>
+                                                                            <input type="text"
+                                                                                   class="form-control"
+                                                                                   style="width:100%;color:black;"
+                                                                                   name="ObsProgramKod_@item.ProgramKod"
+                                                                                   id="ObsProgramKod_@item.ProgramKod"
+                                                                                   data-selected="@item.ObsProgramKod" />   
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
 
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 control-label">Durum</label>
-                                                                        <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@(item.IsAktif ? "Aktif" : "Pasif")</span>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-3 control-label">Eğitim Dili Ing</label>
+                                                                            <div class="col-md-9">
+                                                                                <span class="label label-@(item.Ingilizce ? "success" : "danger")">@(item.Ingilizce ? "Evet" : "Hayır")</span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 control-label">İşlem Yapan</label>
-                                                                        <div class="col-md-9">@item.IslemYapan [@item.IslemTarihi.ToFormatDateAndTime()]</div>
+
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-3 control-label">Durum</label>
+                                                                            <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
+                                                                                <span class="label label-@(item.IsAktif ? "success" : "danger")">@(item.IsAktif ? "Aktif" : "Pasif")</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-3 control-label">İşlem Yapan</label>
+                                                                            <div class="col-md-9">@item.IslemYapan [@item.IslemTarihi.ToFormatDateAndTime()]</div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">
+                                            [ Listelenen Kayıt Yok ]
                                         </td>
                                     </tr>
-
                                 }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="4" style="text-align: center;">
-                                        [ Listelenen Kayıt Yok ]
-                                    </td>
-                                </tr>
-                            }
 
                         </tbody>
                     </table>
@@ -170,12 +186,18 @@
 </div>
 <script type="text/javascript">
 
+    // Detay açılınca init + preselect
     function ShowDetail(id) {
         var sndr = $('#iShow_' + id);
         var cls = 'cls-' + id;
-        var unTogled = ($('.' + cls).css("display") == "none");
-        toggleByClass(sndr, cls, unTogled);
+        var willOpen = ($('.' + cls).css("display") == "none");
+        toggleByClass(sndr, cls, willOpen);
 
+        if (willOpen) {
+            setTimeout(function () {
+                initObsSelect2(id);
+            }, 0);
+        }
     }
     function SilmeOnay(sndr, id) {
         var gMesaj = $("#tdMad_" + id).html();
@@ -217,3 +239,101 @@
         });
     }
 </script>
+<script type="text/javascript">
+  function initObsSelect2(programKod) {
+      var $inp = $("#ObsProgramKod_" + programKod);
+      if ($inp.data('obs-init') === true) return;
+
+      $inp.select2({
+          minimumInputLength: 0,      // <— ÖNEMLİ: yazmadan açıldığında da istek atabilsin
+          multiple: false,
+          ajax: {
+              url: '@Url.Action("GetObsProgramlarDropdown", "Programlar")',
+              dataType: "json",
+              data: function (term, page) {
+                  return { q: term || '', take: null };   // take isterseniz sayı verin
+              },
+              results: function (data, page) {
+                  var res = $.map(data || [], function (d) {
+                      return { id: d.ObsProgramKod, text: d.DisplayText };
+                  });
+                  return { results: res };
+              }
+          },
+          formatResult: function (r) {
+              return "<div style='font-size:9pt;line-height:14px;'>" +
+                     "<div><b>" + (r.id || '') + "</b></div>" +
+                     "<div>" + (r.text || '') + "</div>" +
+                     "</div>";
+          },
+          formatSelection: function (r) {
+              return (r && r.id) ? (r.id + " — " + (r.text || "")) : "";
+          },
+          escapeMarkup: function (m) { return m; }
+      })
+      // İlk kez açıldığında boş aramayı tetikle → tüm liste gelsin
+      .on('select2-open', function () {
+          // sadece ilk açılışta tetikle
+          if (!$inp.data('obs-bootstrapped')) {
+              $inp.select2('search', '');   // <— boş arama: server q = '' alır, tüm liste döner
+              $inp.data('obs-bootstrapped', true);
+          }
+      })
+      // seçim değişince kaydet (opsiyonel)
+      .on('change', function () {
+          kaydetObsEslestirme(programKod);
+      });
+
+      // varsa mevcut kodu ilk açılışta set et
+      ensureObsPreselect(programKod);
+
+      $inp.data('obs-init', true);
+  }
+
+  function ensureObsPreselect(programKod) {
+      var $inp = $("#ObsProgramKod_" + programKod);
+      var selectedVal = ($inp.attr('data-selected') || '').toString().trim();
+      if (!selectedVal) return;
+
+      // Seçili kodu “DisplayText” ile göstermek için bir defa listeyi çekip buluyoruz
+      $.get('@Url.Action("GetObsProgramlarDropdown", "Programlar")', { q: '' }, function (list) {
+          var f = (list || []).filter(function (x) { return (x.ObsProgramKod || '') === selectedVal; })[0];
+          if (f) {
+              $inp.select2('data', { id: f.ObsProgramKod, text: f.DisplayText });
+              syncObsCell(programKod, f.ObsProgramKod);
+          } else {
+              $inp.select2('data', { id: selectedVal, text: selectedVal + " — (seçili)" });
+              syncObsCell(programKod, selectedVal);
+          }
+      });
+  }
+
+  function syncObsCell(programKod, obsKod) {
+      $("#tdObs_" + programKod).text(obsKod || "");
+  }
+
+  function kaydetObsEslestirme(programKod) {
+      var $inp = $("#ObsProgramKod_" + programKod);
+      var secilenObsKod = ($inp.select2('val') || '').toString();
+      $.ajax({
+          type: 'POST',
+          url: '@Url.Action("ManuelEslestir", "Programlar")',
+          data: { programKod: programKod, secilenObsKod: secilenObsKod },
+          success: function (res) {
+              if (res && res.success) {
+                  syncObsCell(programKod, secilenObsKod);
+                  if (window.toastr) toastr.success(res.message || 'Eşleştirme güncellendi.', 'OBS Eşleştirme');
+              } else {
+                  if (window.toastr) toastr.error((res && res.message) || 'İşlem başarısız.', 'OBS Eşleştirme');
+              }
+          },
+          error: function (err) {
+              if (window.toastr) toastr.error(err.responseText || 'Beklenmeyen bir hata oluştu.', 'OBS Eşleştirme');
+          }
+      });
+  }
+
+
+</script>
+
+

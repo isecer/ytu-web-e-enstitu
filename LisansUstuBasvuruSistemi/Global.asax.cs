@@ -31,9 +31,26 @@ namespace LisansUstuBasvuruSistemi
             SystemInformation.OnEvent += SystemInformation_OnEvent;
              
             SistemBilgilendirmeBus.SistemBilgisiKaydet("Application_Start()", ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Bilgi);
-           
-            //RollerBus.UpdateRoles();
-            //MenulerBus.UpdateMenus();
+
+            //var sw = System.Diagnostics.Stopwatch.StartNew();
+
+            //try
+            //{
+            //    var roles = Membership.Roles();
+            //    var menus = Membership.Menus();
+
+            //    sw.Stop();
+            //    System.Diagnostics.Debug.WriteLine($"✅ Menu/Role yükleme süresi: {sw.ElapsedMilliseconds}ms");
+            //    System.Diagnostics.Debug.WriteLine($"✅ Toplam {roles.Length} rol, {menus.Length} menü yüklendi");
+
+            //    RollerBus.UpdateRoles();
+            //    MenulerBus.UpdateMenus();
+            //}
+            //catch (Exception ex)
+            //{
+            //    sw.Stop();
+            //    System.Diagnostics.Debug.WriteLine($"❌ Hata ({sw.ElapsedMilliseconds}ms): {ex.Message}");
+            //}
 
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();

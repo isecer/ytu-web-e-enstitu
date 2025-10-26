@@ -6,6 +6,7 @@ using LisansUstuBasvuruSistemi.Business;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -14,6 +15,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class MezuniyetAyarlarController : Controller
     {
         private readonly LubsDbEntities _entities = new LubsDbEntities();
+        private readonly InviteRenderService _inviteRenderService = new InviteRenderService();
         public ActionResult Index(string ekd)
         {
             string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
@@ -30,6 +32,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(List<string> ayarAdi, List<string> ayarDegeri, List<string> panelToggled, string ekd)
         {
+
+            var updateSliderData = false;
+
             string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var qSistemAyarAdi = ayarAdi.Select((s, index) => new { inx = index, s }).ToList();
             var qSistemAyarDegeri = ayarDegeri.Select((s, index) => new { inx = index, s }).ToList();
@@ -47,6 +52,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ayar = _entities.MezuniyetAyarlars.FirstOrDefault(p => p.AyarAdi == item.AyarAdi && p.EnstituKod == enstituKod);
                 if (ayar != null)
                 {
+                    if (ayar.AyarAdi == MezuniyetAyar.TezSinaviDavetKartlariniAnaSayfadaGoster && ayar.AyarDegeri != item.AyarDegeri && item.AyarDegeri.ToBoolean()==true)
+                    {
+                        RederFiles(enstituKod);
+                    }
                     ayar.AyarDegeri = item.AyarDegeri;
                 }
             }
@@ -59,8 +68,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ptg = item.Replace("__", "◘").Split('◘');
                 toggled.Add(ptg[0], ptg[1].ToBoolean().Value);
             }
-            ViewBag.PanelToggled = toggled; 
+            ViewBag.PanelToggled = toggled;
+
+
+
             return View(data);
+        }
+
+        private void RederFiles(string enstituKod = null)
+        {
+            var enstituler = EnstituBus.Enstitulers.Where(p => p.EnstituKod == (enstituKod.IsNullOrWhiteSpace() ? p.EnstituKod : enstituKod)).ToList();
+            foreach (var iteme in enstituler)
+            {
+                var dataR = SrTalepleriBus.GetSonSrTalebiDavetData(iteme);
+                foreach (var itemD in dataR)
+                {
+                    var srTalebi = _entities.SRTalepleris.First(f => f.SRTalepID == itemD.TableId);
+                    srTalebi.DavetResimYolu = _inviteRenderService.RenderToFile(itemD);
+                }
+            }
+            _entities.SaveChanges();
         }
     }
 }

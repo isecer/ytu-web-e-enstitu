@@ -15,6 +15,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var model = new CmbIntDto();
             using (var entities = new LubsDbEntities())
             {
+
                 var enstituKods = UserBus.GetUserEnstituKods(UserIdentity.Current.Id);
                 var qListe = entities.Mesajlars.AsNoTracking().Where(p => enstituKods.Contains(p.EnstituKod) && p.EnstituKod == enstituKod && p.UstMesajID.HasValue == false && !p.IsAktif && p.Silindi == false).OrderByDescending(o => (o.Mesajlar1.Any() ? o.Mesajlar1.Select(s => s.Tarih).Max() : o.Tarih)).AsQueryable();
                 var liste = qListe.Take(20).ToList().Select(s => new

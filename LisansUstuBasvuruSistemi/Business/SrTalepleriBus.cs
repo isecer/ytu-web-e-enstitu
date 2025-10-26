@@ -8,6 +8,7 @@ using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -465,6 +466,104 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
 
+        public static List<ThesisInviteVm> GetSonSrTalebiDavetData(Enstituler enstitu, int? srTalepId = null,int take=20)
+        {
+            using (var entities = new LubsDbEntities())
+            {
+               
+                // Not: EF Include kullanmadan da tek projection ile tüm alanları alıyoruz.
+                // Jüri Öneri Formu'ndaki olası "yeni tez başlığı" ile SRTalep üzerindeki değişiklik önceliğini gözetiyoruz.
+                var raw = (from s in entities.SRTalepleris.Where(p => p.SRTalepID == (srTalepId ?? p.SRTalepID))
+                           join sal in entities.SRSalonlars on s.SRSalonID equals sal.SRSalonID into defSal
+                           from salon in defSal.DefaultIfEmpty()
+                           let mb = s.MezuniyetBasvurulari
+                           let jof = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault()
+                           where s.EnstituKod == enstitu.EnstituKod
+                                 && s.MezuniyetBasvurulariID.HasValue
+                                 && s.SRDurumID == SrTalepDurumEnum.Onaylandı && OgrenimTipi.DoktoraOgretimleri.Contains(mb.OgrenimTipKod)
+                           orderby s.Tarih descending, s.SRTalepID descending
+                           select new
+                           {
+                               s.SRTalepID,
+                               // kişi & program
+                               FullName = mb.Ad + " " + mb.Soyad,
+                               Department = mb.Programlar.AnabilimDallari.AnabilimDaliAdi,
+                               Program = mb.Programlar.ProgramAdi,
 
+                               // danışman
+                               Advisor = (mb.TezDanismanUnvani ?? "") +
+                                         (string.IsNullOrEmpty(mb.TezDanismanUnvani) ? "" : " ") +
+                                         (mb.TezDanismanAdi ?? ""),
+
+                               // başlık (TR/EN + değişiklik önceliği: SR -> JOF -> MB)
+                               IsTezDiliTr = (mb.IsTezDiliTr ?? true),
+                               SrIsDegisti = (s.IsTezBasligiDegisti ?? false),
+                               SrYeniTr = s.YeniTezBaslikTr,
+                               SrYeniEn = s.YeniTezBaslikEn,
+                               JofIsDegisti = (jof != null && jof.IsTezBasligiDegisti == true),
+                               JofYeniTr = (jof != null ? jof.YeniTezBaslikTr : null),
+                               JofYeniEn = (jof != null ? jof.YeniTezBaslikEn : null),
+                               MbTr = mb.TezBaslikTr,
+                               MbEn = mb.TezBaslikEn,
+
+                               // zaman & yer
+                               Tarih = s.Tarih,
+                               BasSaat = s.BasSaat,
+                               BitSaat = s.BitSaat,
+                               SalonAdi = s.SRSalonID.HasValue ? salon.SalonAdi : s.SalonAdi,
+
+                               // avatar (varsa)
+                               AvatarFile = mb.ResimAdi
+                           })
+                           .Take(take)
+                           .ToList();
+
+                // EF tarafında string formatlamayı zorlamayıp C# tarafında son hale getiriyoruz.
+                var list = new List<ThesisInviteVm>();
+
+                foreach (var r in raw)
+                {
+
+                    // Tez başlığı seçim mantığı:
+                    // 1) SR talepte yeni başlık varsa onu kullan
+                    // 2) yoksa JOF'taki yeni başlık varsa onu kullan
+                    // 3) yoksa başvurudaki (MB) başlığı kullan
+                    string titleTr = r.SrIsDegisti ? (r.SrYeniTr ?? r.JofYeniTr ?? r.MbTr)
+                                   : r.JofIsDegisti ? (r.JofYeniTr ?? r.MbTr)
+                                   : r.MbTr;
+
+                    string titleEn = r.SrIsDegisti ? (r.SrYeniEn ?? r.JofYeniEn ?? r.MbEn)
+                                   : r.JofIsDegisti ? (r.JofYeniEn ?? r.MbEn)
+                                   : r.MbEn;
+
+                    string finalTitle = (r.IsTezDiliTr ? titleTr : (titleEn ?? titleTr)) ?? ""; // emniyet
+
+                    // Tarih/Saat formatları—UI’da gerekirse değiştirilebilir
+                    string dateText = r.Tarih.ToFormatDateDay();
+                    string timeText = $"{r.BasSaat:hh\\:mm} - {r.BitSaat:hh\\:mm}";
+
+                    string avatarPath = string.IsNullOrWhiteSpace(r.AvatarFile)
+                        ? null
+                         //:  "/Images/KullaniciResimleri/isecer.jpg"; 
+                         : r.AvatarFile.ToKullaniciResim();
+
+                    list.Add(new ThesisInviteVm
+                    {
+                        TableId = r.SRTalepID,
+                        FullName = r.FullName,
+                        Department = r.Department,
+                        Program = r.Program,
+                        ThesisTitle = finalTitle,
+                        Advisor = r.Advisor,
+                        Date = dateText,
+                        Time = timeText,
+                        Place = r.SalonAdi ?? "",
+                        AvatarPath = avatarPath
+                    });
+                }
+
+                return list;
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model MezuniyetBasvuruDetayDto
 @{
     Layout = null;
@@ -28,7 +29,7 @@
         else if (sonSr.SRDurumID == SrTalepDurumEnum.IptalEdildi || sonSr.SRDurumID == SrTalepDurumEnum.Reddedildi) { isSrTalebiYapilabilir = true; }
     }
     else { isSrTalebiYapilabilir = true; }
-
+    var sinavPdfCiktiAlinabilir = MezuniyetAyar.TezSinaviDavetkartiPdfHaliMezuniyetSinavdanAlinabilsin.GetAyar(Model.EnstituKod).ToBoolean(false);
 }
 
 <div class="tab-pane @(Model.SelectedTabIndex == 3 ? "active" : "") " id="@tbName-3">
@@ -321,6 +322,18 @@
                                                                                                         </a>
                                                                                                     </td>
                                                                                                 </tr>
+                                                                                                if (sinavPdfCiktiAlinabilir)
+                                                                                                {
+                                                                                                    <tr>
+                                                                                                        <td class="CaptionTd">Sınav Daveti</td>
+                                                                                                        <td class="CaptionTd">:</td>
+                                                                                                        <td class="ValueTd">
+                                                                                                            <a href="javascript:void(0);" onclick="YeniDialogBB('Doktora Sınav Daveti','@Url.Action("DownloadPdf", "MezuniyetGelenBasvurular", new { id = item.SRTalepID, ekd = "" })?IsPdfStream=true', 'auto', 'modal-dialog modal-lg')">
+                                                                                                                <i class="fa fa-file-pdf-o fa-lg"></i> Doktora Sınav Davetini Görüntüle
+                                                                                                            </a>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                }
                                                                                             }
                                                                                             <tr class="@(item.SRDurumID == SrTalepDurumEnum.Reddedildi ? "" : "hide")" id="aciklamabilgi_@item.SRTalepID">
                                                                                                 <td class="CaptionTd">Açıklama</td>

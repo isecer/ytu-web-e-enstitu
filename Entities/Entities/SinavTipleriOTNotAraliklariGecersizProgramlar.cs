@@ -18,7 +18,7 @@ namespace Entities.Entities
         public int SinavTipleriOTNotAralikID { get; set; }
         public string ProgramKod { get; set; }
     
-        public virtual Programlar Programlar { get; set; }
         public virtual SinavTipleriOTNotAraliklari SinavTipleriOTNotAraliklari { get; set; }
+        public virtual Programlar Programlar { get; set; }
     }
 }

@@ -39,9 +39,9 @@ namespace Entities.Entities
         public virtual Donemler Donemler { get; set; }
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
-        public virtual Programlar Programlar { get; set; }
         public virtual TDOBasvuruDanisman TDOBasvuruDanisman { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TDOBasvuruDanisman> TDOBasvuruDanismen { get; set; }
+        public virtual Programlar Programlar { get; set; }
     }
 }

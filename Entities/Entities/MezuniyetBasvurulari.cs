@@ -105,7 +105,6 @@ namespace Entities.Entities
         public virtual MezuniyetSureci MezuniyetSureci { get; set; }
         public virtual MezuniyetYayinKontrolDurumlari MezuniyetYayinKontrolDurumlari { get; set; }
         public virtual OgrenimDurumlari OgrenimDurumlari { get; set; }
-        public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulariTezDosyalari> MezuniyetBasvurulariTezDosyalaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -114,6 +113,7 @@ namespace Entities.Entities
         public virtual ICollection<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetJuriOneriFormlari> MezuniyetJuriOneriFormlaris { get; set; }
+        public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTalepleri> SRTalepleris { get; set; }
     }

@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public const string KayitSilmeBasvuruNufusKayitOrnegiDosyaYolu = "/DosyaArsivi/KayitSilmeBasvuru";
         public const string MailSablonDosyaYolu = "/DosyaArsivi/MailSablonEkleri";
         public const string YaziSablonDosyaYolu = "/DosyaArsivi/YaziSablonEkleri";
-        public const string DuyuruDosyaYolu = "/DosyaArsivi/DuyuruEkleri";
+        public const string DuyuruDosyaYolu = "/DosyaArsivi/DuyuruEkleri"; 
 
         private static string CleanUrl(this string url)
         {

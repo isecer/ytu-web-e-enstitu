@@ -158,5 +158,6 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+
     }
 }
