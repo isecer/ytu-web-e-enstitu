@@ -1,5 +1,6 @@
-﻿@using Entities.Entities  
+﻿@using Entities.Entities
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model List<DonemProjesiAyarlar>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -37,7 +38,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="panel-body" style="padding:0px;margin:0px;">
                                 <div class="panel panel-default form-horizontal" style="padding:0px;margin:0px;">
                                     <div class="panel-body form-group-separated">
@@ -61,7 +62,23 @@
                                                         <div class="inputContent input-icon right">
                                                             <input type="text" style="width:100%;display:none;" name="AyarAdi" value="@item.AyarAdi" />
 
-                                                            @if (item.InpType == "text")
+                                                            @if (item.AyarAdi == DonemProjesiAyar.DonemProjesiIlkBasvuruAnketi)
+                                                            {
+                                                                var key = Guid.NewGuid().ToString();
+                                                                @Html.DropDownList(
+                                                                    "AyarDegeri",                     // name olarak AyarDegeri kalıyor
+                                                                    ViewBag.AnketId as SelectList,    // ViewBag’ten gelen liste
+                                                                    new { @class = "form-control", id = "AyarDegeri_" + key } // id de aynı isimde
+                                                                )
+
+                                                                <script>
+                                                                    $(function () {
+                                                                        $("#AyarDegeri_@key").val("@item.AyarDegeri");
+                                                                    });
+                                                                </script>
+                                                            }
+
+                                                            else if (item.InpType == "text")
                                                             {
                                                                 <input type="text" style="width:100%;" name="AyarDegeri" class="form-control" value="@item.AyarDegeri" />
                                                             }
@@ -73,6 +90,7 @@
                                                             {
                                                                 <textarea style="height: 160px;" name="AyarDegeri" class="form-control">@item.AyarDegeri</textarea>
                                                             }
+                                                           
                                                             else if (item.InpType == "checkbox")
                                                             {
                                                                 var itms = item.SItems.Split(',');
@@ -101,7 +119,7 @@
                                                             }
                                                             else if (item.InpType == "selectMultiple")
                                                             {
-                                                                var itms = item.SItems.Split(','); 
+                                                                var itms = item.SItems.Split(',');
                                                                 <input type="text" name="AyarDegeri" value="@item.AyarDegeri" style="display: none;" />
                                                                 <select multiple class="form-control select mSelect" change="SetAyarDegeriMultiSelect(this)">
                                                                     @foreach (var val in itms)
@@ -144,11 +162,11 @@
     $(function () {
         $(".popover-dismiss").popover({ trigger: 'hover', html: true });
     });
-    $(".mSelect").change(function () { 
+    $(".mSelect").change(function () {
         var vals = $(this).val();
-        var valStr = vals ? vals.join(","):"";
-        $(this).prev().val(valStr); 
-       
+        var valStr = vals ? vals.join(",") : "";
+        $(this).prev().val(valStr);
+
     });
     function toogleControl(sndr, cat) {
         var _val = $(sndr).prev().val();

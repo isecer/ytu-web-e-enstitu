@@ -574,7 +574,56 @@
                     <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
                         @if (formOlusturmaYetki)
                         {
-                            <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="YeniBasvuruDuyuruKontrol('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span>
+                             if (Model.IsAnketVar == false || Model.IsAnketDolduruldu)
+                            {
+                                <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="YeniBasvuruDuyuruKontrol('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span>
+                            }
+                            else
+                            {
+                                <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="GetAnket();"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span> 
+
+
+                                <script type="text/javascript">
+                                   function GetAnket() {
+                                       var strView = @Html.Raw(Json.Encode(Model.AnketView.Trim()));
+                                       var btbxxFS = bootbox.dialog({
+                                           message: strView,
+                                           buttons: {
+                                               success: {
+                                                   label: 'Kaydet',
+                                                   className: "btn-primary",
+                                                   callback: function (event) {
+                                                       var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                                       PanelRefresh(pnlx, false);
+                                                       $('#FrmAnket').ajaxForm({
+                                                           success: function (result) {
+                                                               if (result.IsSuccess) {
+                                                                   var _clsBtn = $('.bootbox-close-button').first();
+                                                                   $(_clsBtn).click();
+                                                                   YeniBasvuruDuyuruKontrol('@Model.UniqueID');
+                                                                   GetDetail('@Model.UniqueID');
+                                                               }
+                                                               else {
+                                                                   GetMsg(result);
+                                                                   return false;
+                                                               }
+                                                           },
+                                                           complete: function (cmp) {
+                                                               PanelRefresh(pnlx, true);
+                                                           }
+
+                                                       });
+                                                       $('#FrmAnket').submit();
+                                                       return false;
+                                                   }
+                                               }
+                                           }
+                                       });
+                                       $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+
+                                   }
+                                </script>
+                            }
                         }
                     </td>
 
@@ -1054,7 +1103,7 @@
         </div>
     }
 </div>
-<script src="~/Scripts/inputTextChangeUpperCase.js"></script> 
+<script src="~/Scripts/inputTextChangeUpperCase.js"></script>
 <script>
     onSpecialCharacterBlockerLoaded();
     $(function () {
@@ -1181,7 +1230,7 @@
                     'tosUniqueId': tosUniqueId
                 },
                 success: function (resultG) {
-                    PanelRefresh(_panel, true); 
+                    PanelRefresh(_panel, true);
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,

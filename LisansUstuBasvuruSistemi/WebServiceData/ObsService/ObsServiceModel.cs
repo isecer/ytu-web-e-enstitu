@@ -31,7 +31,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
         public TezIzlemeBilgileri SonTezIzlemeBilgileri { get; set; }
         public List<TezIzlJuriBilgileri> TezIzlJuriBilgileri { get; set; }
         public List<OgrenciYeter> OgrenciYeters { get; set; }
-        public Personel DanismanInfo { get; set; }
+        public Personel DanismanInfo { get; set; } 
     }
 
 

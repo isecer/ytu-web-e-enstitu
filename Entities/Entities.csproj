@@ -449,6 +449,12 @@
     <Compile Include="Entities\Programlar.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Programlar2.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Programlar2Obs.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Roller.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>

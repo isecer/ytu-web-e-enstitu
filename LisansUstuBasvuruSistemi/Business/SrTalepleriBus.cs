@@ -466,13 +466,16 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
 
-        public static List<ThesisInviteVm> GetSonSrTalebiDavetData(Enstituler enstitu, int? srTalepId = null,int take=20)
+        public static List<ThesisInviteVm> GetSonSrTalebiDavetData(Enstituler enstitu, int? srTalepId = null)
         {
             using (var entities = new LubsDbEntities())
             {
-               
-                // Not: EF Include kullanmadan da tek projection ile tüm alanları alıyoruz.
-                // Jüri Öneri Formu'ndaki olası "yeni tez başlığı" ile SRTalep üzerindeki değişiklik önceliğini gözetiyoruz.
+                var take = MezuniyetAyar.TezSinaviDavetListesindeGosterilecekKisiSayisi
+                    .GetAyar(enstitu.EnstituKod, "20").ToInt().Value;
+
+                var now = DateTime.Now;
+
+                // İlk sorgu: Veritabanı tarafında yapılabilecek filtreleme ve sıralama
                 var raw = (from s in entities.SRTalepleris.Where(p => p.SRTalepID == (srTalepId ?? p.SRTalepID))
                            join sal in entities.SRSalonlars on s.SRSalonID equals sal.SRSalonID into defSal
                            from salon in defSal.DefaultIfEmpty()
@@ -480,8 +483,9 @@ namespace LisansUstuBasvuruSistemi.Business
                            let jof = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault()
                            where s.EnstituKod == enstitu.EnstituKod
                                  && s.MezuniyetBasvurulariID.HasValue
-                                 && s.SRDurumID == SrTalepDurumEnum.Onaylandı && OgrenimTipi.DoktoraOgretimleri.Contains(mb.OgrenimTipKod)
-                           orderby s.Tarih descending, s.SRTalepID descending
+                                 && s.SRDurumID == SrTalepDurumEnum.Onaylandı
+                                 && OgrenimTipi.DoktoraOgretimleri.Contains(mb.OgrenimTipKod)
+                           orderby s.Tarih, s.BasSaat  // Önce tarihe, sonra saate göre sırala
                            select new
                            {
                                s.SRTalepID,
@@ -513,17 +517,28 @@ namespace LisansUstuBasvuruSistemi.Business
                                SalonAdi = s.SRSalonID.HasValue ? salon.SalonAdi : s.SalonAdi,
 
                                // avatar (varsa)
-                               AvatarFile = mb.ResimAdi
+                               AvatarFile = mb.Kullanicilar.ResimAdi
                            })
-                           .Take(take)
-                           .ToList();
+                           .ToList(); // Veritabanından çek
+
+                // Şimdi şimdiki zamana en yakın olanları bul (memory'de)
+                var sortedByProximity = raw
+                    .Select(r => new
+                    {
+                        Data = r,
+                        FullDateTime = r.Tarih.Add(r.BasSaat),
+                        AbsoluteMinutes = Math.Abs((r.Tarih.Add(r.BasSaat) - now).TotalMinutes)
+                    })
+                    .OrderBy(x => x.AbsoluteMinutes) // Şimdiki zamana en yakın
+                    .Take(take) // İlk N tanesini al
+                    .Select(x => x.Data)
+                    .ToList();
 
                 // EF tarafında string formatlamayı zorlamayıp C# tarafında son hale getiriyoruz.
                 var list = new List<ThesisInviteVm>();
 
-                foreach (var r in raw)
+                foreach (var r in sortedByProximity)
                 {
-
                     // Tez başlığı seçim mantığı:
                     // 1) SR talepte yeni başlık varsa onu kullan
                     // 2) yoksa JOF'taki yeni başlık varsa onu kullan
@@ -538,17 +553,17 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     string finalTitle = (r.IsTezDiliTr ? titleTr : (titleEn ?? titleTr)) ?? ""; // emniyet
 
-                    // Tarih/Saat formatları—UI’da gerekirse değiştirilebilir
+                    // Tarih/Saat formatları—UI'da gerekirse değiştirilebilir
                     string dateText = r.Tarih.ToFormatDateDay();
                     string timeText = $"{r.BasSaat:hh\\:mm} - {r.BitSaat:hh\\:mm}";
 
                     string avatarPath = string.IsNullOrWhiteSpace(r.AvatarFile)
                         ? null
-                         //:  "/Images/KullaniciResimleri/isecer.jpg"; 
-                         : r.AvatarFile.ToKullaniciResim();
+                        : r.AvatarFile.ToKullaniciResim();
 
                     list.Add(new ThesisInviteVm
                     {
+                        EnstituKod = enstitu.EnstituKod,
                         TableId = r.SRTalepID,
                         FullName = r.FullName,
                         Department = r.Department,

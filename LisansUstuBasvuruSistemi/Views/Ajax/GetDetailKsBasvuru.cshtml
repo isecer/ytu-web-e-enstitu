@@ -11,9 +11,9 @@
 
     var harcBirimiOnayYetkisi = RoleNames.KayitSilmeHarcBirimiBasvuruOnayYetkisi.InRoleCurrent();
     var kutuphaneBirimiOnayYetkisi = RoleNames.KayitSilmeKutuphaneBirimiBasvuruOnayYetkisi.InRoleCurrent();
-    var eykYaGondermeYetkisi = RoleNames.DonemProjesiEykYaGonder.InRoleCurrent();
-    var eykYaHazrilamaYetkisi = RoleNames.DonemProjesiEykYaHazirlandi.InRoleCurrent();
-    var eykDaOnayYetkisi = RoleNames.DonemProjesiEykDaOnay.InRoleCurrent();
+    var eykYaGondermeYetkisi = RoleNames.KayitSilmeEykYaGonder.InRoleCurrent();
+    var eykYaHazrilamaYetkisi = RoleNames.KayitSilmeEykYaGonder.InRoleCurrent();
+    var eykDaOnayYetkisi = RoleNames.KayitSilmeEykDaOnay.InRoleCurrent();
 
 
 }
@@ -238,7 +238,7 @@
                                 <td class="CaptionTd" width="150">Onay Durumu</td>
                                 <td class="CaptionTd" width="10">:</td>
                                 <td class="ValueTd">
-                                    @if (kutuphaneBirimiOnayYetkisi && !Model.EYKYaGonderildi.HasValue)
+                                    @if (kutuphaneBirimiOnayYetkisi && !Model.OnayMakaminaGonderildi.HasValue)
                                     {
                                         <select class="form-control" id="kutuphaneBirimiOnay_@Model.UniqueID" onchange="if ($(this).val() == 'false') {$('#kutuphaneBirimiIptalRow_@Model.UniqueID').removeClass('hide'); }else {$('#kutuphaneBirimiIptalRow_@Model.UniqueID').addClass('hide');}">
                                             <option></option>
@@ -268,7 +268,7 @@
                                 <td class="CaptionTd">Açıklama</td>
                                 <td class="CaptionTd">:</td>
                                 <td class="ValueTd">
-                                    @if (kutuphaneBirimiOnayYetkisi && !Model.EYKYaGonderildi.HasValue)
+                                    @if (kutuphaneBirimiOnayYetkisi && !Model.OnayMakaminaGonderildi.HasValue)
                                     {
                                         <textarea class="form-control" style="width: 100%; resize: vertical;" rows="2" maxlength="1024" id="kutuphaneBirimiOnayAciklama_@Model.UniqueID">@Model.KutuphaneBirimiOnayAciklamasi</textarea>
                                     }
@@ -299,7 +299,7 @@
                                     </td>
                                 </tr>
                             }
-                            @if (kutuphaneBirimiOnayYetkisi && !Model.EYKYaGonderildi.HasValue)
+                            @if (kutuphaneBirimiOnayYetkisi && !Model.OnayMakaminaGonderildi.HasValue)
                             {
                                 <tr>
                                     <td class="CaptionTd"></td>
@@ -317,83 +317,128 @@
         </div>
 
     }
+
     @if (Model.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci)
     {
-
         if (Model.IsKutuphaneBirimiOnayladi == true)
         {
-
             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                 <table style="width:100%;">
                     <tr>
-                        <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü EYK İşlemleri</td>
+                        <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> Enstitü Onay İşlemleri</td>
                     </tr>
-                    @if (!Model.EYKYaHazirlandi.HasValue && eykYaGondermeYetkisi)
+                    @if (!Model.OnayMakaminaHazirlandi.HasValue && eykYaGondermeYetkisi)
                     {
                         <tr>
-                            <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
+                            <td class="CaptionTd" width="200">Onay Makamı Seçimi</td>
                             <td class="CaptionTd" width="10">:</td>
                             <td class="ValueTd">
-                                <table>
+                                <select class="form-control" id="IsOnayMakamiEykOrEnstituMudur_@Model.UniqueID" onchange="OnayMakamiChange('@Model.UniqueID')">
+                                    <option value="">Onay Makamı Seçiniz</option>
+                                    <option value="true" @(Model.IsOnayMakamiEykOrEnstituMudur == true ? "selected" : "")>Enstitü Yönetim Kurulu</option>
+                                    <option value="false" @(Model.IsOnayMakamiEykOrEnstituMudur == false ? "selected" : "")>Enstitü Müdürlüğü</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr id="gonderimRow_@Model.UniqueID" class="@(Model.IsOnayMakamiEykOrEnstituMudur.HasValue ? "" : "hide")">
+                            <td class="CaptionTd" width="200" id="gonderimLabel_@Model.UniqueID">Gönderim Durumu</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                <table style="width:100%;">
                                     <tr>
                                         <td>
-                                            <select class="form-control" id="EykYaGonderildi_@Model.UniqueID" onchange="EykYaOnayChange('@Model.UniqueID')">
-                                                <option @(!Model.EYKYaGonderildi.HasValue ? "selected" : "")></option>
-                                                <option value="true" @(Model.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı @(Model.EYKYaGonderildi == true && Model.EYKYaGonderildiIslemTarihi.HasValue ? "(" + Model.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
-                                                <option value="false" @(Model.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(Model.EYKYaGonderildi == false && Model.EYKYaGonderildiIslemTarihi.HasValue ? "(" + Model.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
+                                            <select class="form-control" id="OnayMakaminaGonderildi_@Model.UniqueID" onchange="EykYaOnayChange('@Model.UniqueID')">
+                                                <option value=""></option>
+                                                @if (Model.IsOnayMakamiEykOrEnstituMudur == true)
+                                                {
+                                                    <option value="true" id="gonderimOnayOption_@Model.UniqueID" @(Model.OnayMakaminaGonderildi == true ? "selected" : "")>
+                                                        EYK'ya Gönderimi Onaylandı @(Model.OnayMakaminaGonderildi == true && Model.OnayMakaminaGonderildiIslemTarihi.HasValue ? "(" + Model.OnayMakaminaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")
+                                                    </option>
+                                                    <option value="false" id="gonderimRetOption_@Model.UniqueID" @(Model.OnayMakaminaGonderildi == false ? "selected" : "")>
+                                                        EYK'ya Gönderimi Onaylanmadı @(Model.OnayMakaminaGonderildi == false && Model.OnayMakaminaGonderildiIslemTarihi.HasValue ? "(" + Model.OnayMakaminaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="true" id="gonderimOnayOption_@Model.UniqueID" @(Model.OnayMakaminaGonderildi == true ? "selected" : "")>
+                                                        Enstitü Müdürlüğüne Gönderimi Onaylandı @(Model.OnayMakaminaGonderildi == true && Model.OnayMakaminaGonderildiIslemTarihi.HasValue ? "(" + Model.OnayMakaminaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")
+                                                    </option>
+                                                    <option value="false" id="gonderimRetOption_@Model.UniqueID" @(Model.OnayMakaminaGonderildi == false ? "selected" : "")>
+                                                        Enstitü Müdürlüğüne Gönderimi Onaylanmadı @(Model.OnayMakaminaGonderildi == false && Model.OnayMakaminaGonderildiIslemTarihi.HasValue ? "(" + Model.OnayMakaminaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")
+                                                    </option>
+
+                                                }
+
                                             </select>
                                         </td>
                                         <td>
-                                            <label class="btn btn-primary btn-sm" onclick="EykDurumKayit('@Model.UniqueID ', @EykTipEnum.EykYaGonderildi)"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
+                                            <label class="btn btn-primary btn-sm" onclick="EykDurumKayit('@Model.UniqueID', 1,'')"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</label>
                                         </td>
                                     </tr>
                                 </table>
-
                             </td>
                         </tr>
-                        <tr id="EYKYaGonderimAciklamaRow_@Model.UniqueID" class="form-group @(Model.EYKYaGonderildi == false ? "" : "hide")">
+
+                        <tr id="gonderimAciklamaRow_@Model.UniqueID" class="form-group @(Model.OnayMakaminaGonderildi == false ? "" : "hide")">
                             <td class="CaptionTd">Onaylanmama Açıklaması</td>
                             <td class="CaptionTd">:</td>
                             <td class="ValueTd">
-                                <textarea class="form-control" style="width: 100%; resize: vertical;" rows="2" id="EYKYaGonderimOnaylanmadiDurumAciklamasi_@Model.UniqueID" maxlength="512">@Model.EYKYaGonderimDurumAciklamasi</textarea>
+                                <textarea class="form-control" style="width: 100%; resize: vertical;" rows="2" id="GonderimAciklama_@Model.UniqueID" maxlength="512">@Model.OnayMakaminaGonderimDurumAciklamasi</textarea>
                             </td>
                         </tr>
                     }
                     else
                     {
                         <tr>
-                            <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
+                            <td class="CaptionTd" width="200" id="gonderimDurumuLabel_@Model.UniqueID">Onay Makamı</td>
                             <td class="CaptionTd" width="10">:</td>
                             <td class="ValueTd">
-                                @if (!Model.EYKYaGonderildi.HasValue)
+                                @if (!Model.IsOnayMakamiEykOrEnstituMudur.HasValue)
                                 {
-
-                                    <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderim Onayı Bekleniyor.</span>
+                                    <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i>  Onay Makamına Seçilmedi.</span>
                                 }
-                                else if (Model.EYKYaGonderildi == true)
+                                else if (Model.IsOnayMakamiEykOrEnstituMudur == true)
                                 {
-                                    <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı. (@Model.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
+                                    <span style="color:green;font-size:10pt;" aria-hidden="true"> Enstitü Yönetim Kurulu</span>
                                 }
                                 else
                                 {
-                                    <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı. (@Model.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
+                                    <span style="color:maroon;font-size:10pt;" aria-hidden="true"> Enstitü Müdürlüğü</span>
                                 }
                             </td>
                         </tr>
-                        if (Model.EYKYaGonderildi == false && !Model.EYKYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+                        <tr>
+                            <td class="CaptionTd" width="200" id="gonderimDurumuLabel_@Model.UniqueID">Gönderim Durumu</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                @if (!Model.OnayMakaminaGonderildi.HasValue)
+                                {
+                                    <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i>  Onay Makamına Gönderim Onayı Bekleniyor.</span>
+                                }
+                                else if (Model.OnayMakaminaGonderildi == true)
+                                {
+                                    <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> @(Model.IsOnayMakamiEykOrEnstituMudur==true?"EYK'ya":"Enstitü Müdürlüğüne") Gönderimi Onaylandı. (@Model.OnayMakaminaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
+                                }
+                                else
+                                {
+                                    <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i>  @(Model.IsOnayMakamiEykOrEnstituMudur==true?"EYK'ya":"Enstitü Müdürlüğüne") Gönderimi Onaylanmadı. (@Model.OnayMakaminaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
+                                }
+                            </td>
+                        </tr>
+                        if (Model.OnayMakaminaGonderildi == false && !Model.OnayMakaminaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
                         {
                             <tr>
                                 <td class="CaptionTd">Onaylanmama Açıklaması</td>
                                 <td class="CaptionTd">:</td>
                                 <td class="ValueTd">
-                                    @Model.EYKYaGonderimDurumAciklamasi
+                                    @Model.OnayMakaminaGonderimDurumAciklamasi
                                 </td>
                             </tr>
                         }
                     }
-                    @if (Model.EYKYaGonderildi == true)
+                    @if (Model.OnayMakaminaGonderildi == true)
                     {
-
                         <tr>
                             <td class="CaptionTd">Kayıt Silme Talep Formu</td>
                             <td class="CaptionTd">:</td>
@@ -403,264 +448,347 @@
                                 </a>
                             </td>
                         </tr>
-
-                        if (eykYaHazrilamaYetkisi && !Model.EYKDaOnaylandi.HasValue)
-                        {
-                            <tr>
-                                <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
-                                <td class="CaptionTd" width="10">:</td>
-                                <td class="ValueTd">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <select class="form-control" id="EykYaHazirlandi_@Model.UniqueID">
-                                                    <option @(!Model.EYKYaHazirlandi.HasValue ? "selected" : "")></option>
-                                                    <option value="true" @(Model.EYKYaHazirlandi == true ? "selected" : "")>EYK'ya Hazırlandı @(Model.EYKYaHazirlandi == true && Model.EYKYaHazirlandiIslemTarihi.HasValue ? "(" + Model.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <label class="btn btn-primary btn-sm" onclick="EykDurumKayit('@Model.UniqueID',@EykTipEnum.EykYaHazirlandi);"><i class="fa fa-save" aria-hidden="true"> </i>Kaydet</label>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                        }
-                        else
-                        {
-                            <tr>
-                                <td class="CaptionTd" width="200">EYK'ya Hazırlanma Durumu</td>
-                                <td class="CaptionTd" width="10">:</td>
-                                <td class="ValueTd">
-                                    @if (!Model.EYKYaHazirlandi.HasValue)
-                                    {
-
-                                        <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlanma İşlemi Bekleniyor.</span>
-                                    }
-                                    else if (Model.EYKYaHazirlandi == true)
-                                    {
-
-                                        <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Hazırlandı. (@Model.EYKYaHazirlandiIslemTarihi.ToFormatDateAndTime())</span>
-
-                                    }
-                                </td>
-                            </tr>
-
-
-
-                        }
                     }
-
-                    @if (Model.EYKYaHazirlandi == true)
+                    @if (eykYaHazrilamaYetkisi && Model.OnayMakaminaGonderildi == true && !Model.OnayMakamindaOnaylandi.HasValue)
                     {
-                        if (eykDaOnayYetkisi)
+                        <tr id="hazirlanmaRow_@Model.UniqueID">
+                            <td class="CaptionTd" width="200" id="hazirlanmaLabel_@Model.UniqueID"> Hazırlanma Durumu</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td>
+                                            <select class="form-control" id="OnayMakaminaHazirlandi_@Model.UniqueID">
+                                                <option @(!Model.OnayMakaminaHazirlandi.HasValue ? "selected" : "")></option>
+                                                @if (Model.IsOnayMakamiEykOrEnstituMudur == true)
+                                                {
+                                                    <option value="true" id="hazirlanmaOnayOption_@Model.UniqueID" @(Model.OnayMakaminaHazirlandi == true ? "selected" : "")>
+                                                        EYK'ya Hazırlandı @(Model.OnayMakaminaHazirlandi == true && Model.OnayMakaminaHazirlandiIslemTarihi.HasValue ? "(" + Model.OnayMakaminaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="true" id="hazirlanmaOnayOption_@Model.UniqueID" @(Model.OnayMakaminaHazirlandi == true ? "selected" : "")>
+                                                        Enstitü Müdürlüğü Onayına Hazırlandı @(Model.OnayMakaminaHazirlandi == true && Model.OnayMakaminaHazirlandiIslemTarihi.HasValue ? "(" + Model.OnayMakaminaHazirlandiIslemTarihi.ToFormatDateAndTime() + ")" : "")
+                                                    </option>
+                                                }
+
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <label class="btn btn-primary btn-sm" onclick="EykDurumKayit('@Model.UniqueID',@EykTipEnum.OnayMakaminaHazirlandi,'@(Model.IsOnayMakamiEykOrEnstituMudur.ToStrObjEmptString().ToLower())');"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                    else if (Model.OnayMakaminaGonderildi.HasValue)
+                    {
+                        <tr id="hazirlanmaDurumuRow_@Model.UniqueID">
+                            <td class="CaptionTd" width="200" id="hazirlanmaDurumuLabel_@Model.UniqueID">Hazırlanma Durumu</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                @if (!Model.OnayMakaminaHazirlandi.HasValue)
+                                {
+                                    <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i>  @(Model.IsOnayMakamiEykOrEnstituMudur==true? "EYK'ya Hazırlanma İşlemi Bekleniyor." : "Enstitü Müdürlüğü Onayına Hazırlanma İşlemi Bekleniyor")  Onayına</span>
+                                }
+                                else if (Model.OnayMakaminaHazirlandi == true)
+                                {
+                                    <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i>  @(Model.IsOnayMakamiEykOrEnstituMudur==true? "EYK'ya Hazırlandı":"Enstitü Müdürlüğü Onayına Hazırlandı") (@Model.OnayMakaminaHazirlandiIslemTarihi.ToFormatDateAndTime())</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if (eykDaOnayYetkisi && Model.OnayMakaminaHazirlandi == true)
+                    {
+                        <tr id="onayRow_@Model.UniqueID">
+                            <td class="CaptionTd" width="200" id="onayLabel_@Model.UniqueID">Onay Durumu</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td>
+                                            <select class="form-control" id="OnayMakamindaOnaylandi_@Model.UniqueID" onchange="EykOnayChange(this,'@Model.UniqueID','@((Model.IsOnayMakamiEykOrEnstituMudur==true).ToString().ToLower())')">
+                                                <option @(!Model.OnayMakamindaOnaylandi.HasValue ? "selected" : "")></option>
+                                                @if (Model.IsOnayMakamiEykOrEnstituMudur == true)
+                                                {
+                                                    <option value="true" id="onayOnayOption_@Model.UniqueID" @(Model.OnayMakamindaOnaylandi == true ? "selected" : "")>
+                                                        EYK'da Onaylandı @(Model.OnayMakamindaOnaylandi == true && Model.OnayMakamindaOnaylandiOnayTarihi.HasValue ? "(" + Model.OnayMakamindaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")
+                                                    </option>
+                                                    <option value="false" id="onayRetOption_@Model.UniqueID" @(Model.OnayMakamindaOnaylandi == false ? "selected" : "")>
+                                                        Eyk'da Onaylanmadı @(Model.OnayMakamindaOnaylandi == false && Model.OnayMakamindaOnaylandiOnayTarihi.HasValue ? "(" + Model.OnayMakamindaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="true" id="onayOnayOption_@Model.UniqueID" @(Model.OnayMakamindaOnaylandi == true ? "selected" : "")>
+                                                        Enstitü Müdürlüğünce Onaylandı @(Model.OnayMakamindaOnaylandi == true && Model.OnayMakamindaOnaylandiOnayTarihi.HasValue ? "(" + Model.OnayMakamindaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")
+                                                    </option>
+                                                    <option value="false" id="onayRetOption_@Model.UniqueID" @(Model.OnayMakamindaOnaylandi == false ? "selected" : "")>
+                                                        Enstitü Müdürlüğünce Onaylanmadı @(Model.OnayMakamindaOnaylandi == false && Model.OnayMakamindaOnaylandiOnayTarihi.HasValue ? "(" + Model.OnayMakamindaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")
+                                                    </option>
+
+                                                }
+
+                                            </select>
+                                        </td>
+                                        <td class="eykTarihSayiContainer_@Model.UniqueID @(Model.IsOnayMakamiEykOrEnstituMudur==true && Model.OnayMakamindaOnaylandi == true ? "" : "hide")" width="100">
+                                            <input type="text" class="form-control tarihB" style="width:100px;" placeholder="EYK Tarihi" id="EYKTarihi_@Model.UniqueID" value="@Model.EYKTarihi.ToFormatDateInput()" />
+                                        </td>
+                                        <td class="eykTarihSayiContainer_@Model.UniqueID @(Model.IsOnayMakamiEykOrEnstituMudur==true &&Model.OnayMakamindaOnaylandi == true ? "" : "hide")" width="60">
+                                            <input type="text" class="form-control" style="width: 60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="EYKSayisi_@Model.UniqueID" value="@Model.EYKSayisi" />
+
+                                        </td>
+                                        <td>
+                                            <label class="btn btn-primary btn-sm" onclick="EykDurumKayit('@Model.UniqueID',@EykTipEnum.OnayMakamindaOnaylandi,'@(Model.IsOnayMakamiEykOrEnstituMudur.ToStrObjEmptString().ToLower())');"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr id="onayAciklamaRow_@Model.UniqueID" class="form-group @(Model.OnayMakamindaOnaylandi == false ? "" : "hide")">
+                            <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">
+                                <textarea class="form-control" style="width: 100%; resize: vertical;" rows="2" id="OnayAciklama_@Model.UniqueID" maxlength="512">@Model.OnayMakamindaOnaylanmadiDurumAciklamasi</textarea>
+                            </td>
+                        </tr>
+                    }
+                    else if(Model.OnayMakaminaHazirlandi.HasValue)
+                    {
+                        if (Model.IsOnayMakamiEykOrEnstituMudur == false && Model.OnayMakamindaOnaylandi == true)
+                        {
+                            Model.EYKTarihi = Model.OnayMakamindaOnaylandiOnayTarihi;
+                        }
+                        <tr id="onayDurumuRow_@Model.UniqueID">
+                            <td class="CaptionTd" width="200" id="onayDurumuLabel_@Model.UniqueID">Onay Durumu</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                @if (!Model.OnayMakamindaOnaylandi.HasValue)
+                                {
+                                    <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Onay işlemi Bekleniyor.</span>
+                                }
+                                else if (Model.OnayMakamindaOnaylandi == true)
+                                {
+                                    <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> Onaylandı. (@Model.EYKTarihi.ToFormatDate())</span>
+                                }
+                                else
+                                {
+                                    <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> Onaylanmadı. (@Model.EYKTarihi.ToFormatDate())</span>
+                                }
+                            </td>
+                        </tr>
+                        if (Model.OnayMakamindaOnaylandi == false)
                         {
                             <tr>
-                                <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
-                                <td class="CaptionTd" width="10">:</td>
-                                <td class="ValueTd">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <select class="form-control" id="EykDaOnaylandi_@Model.UniqueID" onchange="EykOnayChange(this,'@Model.UniqueID')">
-                                                    <option @(!Model.EYKDaOnaylandi.HasValue ? "selected" : "")></option>
-                                                    <option value="true" @(Model.EYKDaOnaylandi == true ? "selected" : "")>EYK'da Onaylandı @(Model.EYKDaOnaylandi == true && Model.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + Model.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
-                                                    <option value="false" @(Model.EYKDaOnaylandi == false ? "selected" : "")>EYK'da Onaylanmadı @(Model.EYKDaOnaylandi == false && Model.EYKDaOnaylandiOnayTarihi.HasValue ? "(" + Model.EYKDaOnaylandiOnayTarihi.ToFormatDate() + ")" : "")</option>
-                                                </select>
-                                            </td>
-                                            <td class="form-group EYKTarihSayiVg_@Model.UniqueID  @(Model.EYKDaOnaylandi.HasValue ? "" : "hide")">
-                                                <input type="text" class="form-control tarihB" style="width:100px;" placeholder="EYK Tarihi" id="EYKTarihi_@Model.UniqueID" value="@Model.EYKTarihi.ToFormatDateInput()" />
-                                            </td>
-                                            <td class="form-group EYKTarihSayiVg_@Model.UniqueID @(Model.EYKDaOnaylandi.HasValue ? "" : "hide")">
-                                                <input type="text" class="form-control" style="width: 60px;" maxlength="10" title="EYK Sayısı" placeholder="EYK Sayısı" id="EYKSayisi_@Model.UniqueID" value="@Model.EYKSayisi" />
-                                            </td>
-                                            <td>
-                                                <label class="btn btn-primary btn-sm" onclick="EykDurumKayit('@Model.UniqueID',@EykTipEnum.EykDaOnaylandi);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</label>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <tr id="EykDaOnayAckRow_@Model.UniqueID" class="form-group @(Model.EYKDaOnaylandi == false ? "" : "hide")">
                                 <td class="CaptionTd">Onaylanmama Açıklaması</td>
                                 <td class="CaptionTd">:</td>
                                 <td class="ValueTd">
-                                    <textarea class="form-control" style="width: 100%; resize: vertical;" rows="2" id="EYKDaOnaylanmadiDurumAciklamasi_@Model.UniqueID" maxlength="512">@Model.EYKDaOnaylanmadiDurumAciklamasi</textarea>
+                                    @Model.OnayMakamindaOnaylanmadiDurumAciklamasi
                                 </td>
                             </tr>
-                        }
-                        else
-                        {
-                            <tr>
-                                <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
-                                <td class="CaptionTd" width="10">:</td>
-                                <td class="ValueTd">
-                                    @if (!Model.EYKDaOnaylandi.HasValue)
-                                    {
-
-                                        <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'da onay işlemi Bekleniyor.</span>
-                                    }
-                                    else if (Model.EYKDaOnaylandi == true)
-                                    {
-                                        <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@Model.EYKTarihi.ToFormatDate())</span>
-
-                                    }
-                                    else
-                                    {
-                                        <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı. (@Model.EYKTarihi.ToFormatDate())</span>
-
-                                    }
-                                </td>
-                            </tr>
-                            if (Model.EYKDaOnaylandi == false)
-                            {
-                                <tr>
-                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
-                                    <td class="CaptionTd">:</td>
-                                    <td class="ValueTd">
-                                        @Model.EYKDaOnaylanmadiDurumAciklamasi
-                                    </td>
-                                </tr>
-                            }
-
                         }
                     }
-
                 </table>
             </div>
         }
-    }
+
+    } 
 </div>
 
 
 <script>
     $(function () {
-        GetKsDurumView('@Model.UniqueID');
-    })
-    function GetKsDurumView(uniqueId) {
-        var panel = $('#cls-' + uniqueId);
-        PanelRefresh(panel, false);
-        $.ajax({
-            url: '@Url.Action("GetDurumView", "KsBasvuru")',
-            data: { uniqueId },
-            success: function (result) {
-                $('#KsBasvuruDurum_' + uniqueId).html(result.ksBasvuruDurumView);
-                $('#KsBasvuruDonem_' + uniqueId).html(result.ksBasvuruDonemView);
-                PanelRefresh(panel, true);
-            },
-            error: function (err) {
-                alert(err.responseText);
-                PanelRefresh(panel, true);
-            },
-            complete: function (cmp) {
-                PanelRefresh(panel, true);
-            },
-        });
-    }
-    function BirimOnayKayit(uniqueId, isOnayTipHarcOrKutuphane) {
-        var isOnaylandi = $((!isOnayTipHarcOrKutuphane ? '#kutuphaneBirimiOnay_' : '#harcBirimiOnay_') + uniqueId).val();
-        var aciklama = $((!isOnayTipHarcOrKutuphane ? '#kutuphaneBirimiOnayAciklama_' : '#harcBirimiOnayAciklama_') + uniqueId).val();
-        var panel = $((!isOnayTipHarcOrKutuphane ? '#kutuphaneBirimiOnayPanel_' : '#harcBirimiOnayPanel_') + uniqueId);
-        PanelRefresh(panel, false);
-        $.ajax({
-            url: '@Url.Action("BasvuruOnay", "KsBasvuru")',
-            data: { uniqueId, isOnaylandi, aciklama, isOnayTipHarcOrKutuphane },
-            success: function (result) {
-                if (result.IsSuccess) {
-                    GetDetail(uniqueId);
-                }
-                else {
-                    ShowMmMessage(result.Messages, 'Tamam');
-                }
-                PanelRefresh(panel, false);
-            },
-            error: function (err) {
-                PanelRefresh(panel, false);
-                alert(err.responseText);
+    GetKsDurumView('@Model.UniqueID');
+})
+
+function GetKsDurumView(uniqueId) {
+    var panel = $('#cls-' + uniqueId);
+    PanelRefresh(panel, false);
+    $.ajax({
+        url: '@Url.Action("GetDurumView", "KsBasvuru")',
+        data: { uniqueId },
+        success: function (result) {
+            $('#KsBasvuruDurum_' + uniqueId).html(result.ksBasvuruDurumView);
+            $('#KsBasvuruDonem_' + uniqueId).html(result.ksBasvuruDonemView);
+            PanelRefresh(panel, true);
+        },
+        error: function (err) {
+            alert(err.responseText);
+            PanelRefresh(panel, true);
+        },
+        complete: function (cmp) {
+            PanelRefresh(panel, true);
+        },
+    });
+}
+
+function BirimOnayKayit(uniqueId, isOnayTipHarcOrKutuphane) {
+    var isOnaylandi = $((!isOnayTipHarcOrKutuphane ? '#kutuphaneBirimiOnay_' : '#harcBirimiOnay_') + uniqueId).val();
+    var aciklama = $((!isOnayTipHarcOrKutuphane ? '#kutuphaneBirimiOnayAciklama_' : '#harcBirimiOnayAciklama_') + uniqueId).val();
+    var panel = $((!isOnayTipHarcOrKutuphane ? '#kutuphaneBirimiOnayPanel_' : '#harcBirimiOnayPanel_') + uniqueId);
+    PanelRefresh(panel, false);
+    $.ajax({
+        url: '@Url.Action("BasvuruOnay", "KsBasvuru")',
+        data: { uniqueId, isOnaylandi, aciklama, isOnayTipHarcOrKutuphane },
+        success: function (result) {
+            if (result.IsSuccess) {
+                GetDetail(uniqueId);
             }
-        });
-    }
-
-    function EykOnayChange(sndr, uniqueId) {
-        var val = $(sndr).val().toLowerCase();
-        if (val == 'false') {
-            $('#EykDaOnayAckRow_' + uniqueId).removeClass("hide");
-        }
-        else {
-            $('#EykDaOnayAckRow_' + uniqueId).addClass("hide");
-        }
-        if (val == '') {
-
-            $('.EYKTarihSayiVg_' + uniqueId).addClass("hide");
-
-        }
-        else {
-            var eykTarih = $('#EYKTarihi_' + uniqueId).val();
-            if (eykTarih == "") {
-                var today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, day = today.getDate();
-                if (month < 10) month = "0" + month;
-                if (day < 10) day = "0" + day;
-                var formattedDate = year + "-" + month + "-" + day;
-                $('#EYKTarihi_' + uniqueId).val(formattedDate);
+            else {
+                ShowMmMessage(result.Messages, 'Tamam');
             }
-            $('.EYKTarihSayiVg_' + uniqueId).removeClass("hide");
+            PanelRefresh(panel, false);
+        },
+        error: function (err) {
+            PanelRefresh(panel, false);
+            alert(err.responseText);
         }
+    });
+}
+
+function OnayMakamiChange(uniqueId) {
+    var isEyk = document.getElementById('IsOnayMakamiEykOrEnstituMudur_' + uniqueId).value;
+    var gonderimRow = document.getElementById('gonderimRow_' + uniqueId);
+    var gonderimLabel = document.getElementById('gonderimLabel_' + uniqueId);
+    var gonderimOnayOption = document.getElementById('gonderimOnayOption_' + uniqueId);
+    var gonderimRetOption = document.getElementById('gonderimRetOption_' + uniqueId);
+    var hazirlanmaLabel = document.getElementById('hazirlanmaLabel_' + uniqueId);
+    var hazirlanmaOnayOption = document.getElementById('hazirlanmaOnayOption_' + uniqueId);
+    var onayLabel = document.getElementById('onayLabel_' + uniqueId);
+    var onayOnayOption = document.getElementById('onayOnayOption_' + uniqueId);
+    var onayRetOption = document.getElementById('onayRetOption_' + uniqueId);
+
+    if (isEyk === '') {
+        gonderimRow.classList.add('hide');
+        document.getElementById('OnayMakaminaGonderildi_' + uniqueId).value = '';
+        document.getElementById('GonderimAciklama_' + uniqueId).value = '';
+        document.getElementById('gonderimAciklamaRow_' + uniqueId).classList.add('hide');
+    } else if (isEyk === 'true') {
+        gonderimRow.classList.remove('hide');
+        gonderimOnayOption.textContent = "EYK'ya Gönderimi Onaylandı";
+        gonderimRetOption.textContent = "EYK'ya Gönderimi Onaylanmadı";
+        hazirlanmaOnayOption.textContent = "EYK'ya Hazırlandı";
+        onayOnayOption.textContent = "EYK'da Onaylandı";
+        onayRetOption.textContent = "EYK'da Onaylanmadı";
+    } else if (isEyk === 'false') {
+        gonderimRow.classList.remove('hide');
+        gonderimOnayOption.textContent = "Müdürlüğe Gönderimi Onaylandı";
+        gonderimRetOption.textContent = "Müdürlüğe Gönderimi Onaylanmadı";
+        hazirlanmaOnayOption.textContent = "Müdürlüğe Hazırlandı";
+        onayOnayOption.textContent = "Müdürlükte Onaylandı";
+        onayRetOption.textContent = "Müdürlükte Onaylanmadı";
+        $('.eykTarihSayiContainer_' + uniqueId).addClass('hide');
     }
-    function EykYaOnayChange(id) {
-      var val = $('#EykYaGonderildi_' + id).val().toLowerCase();
-      if (val == 'false') {
-          $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
-      }
-      else {
-          $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
-      }
-  }
-    function EykDurumKayit(uniqueId, onayTipId) {
-        var panel = $('#cls-' + uniqueId);
-        PanelRefresh(panel, false);
-        var sndrId = "";
-        var durumAciklama = "";
-        var eykTarihi = "";
-        var eykSayisi = "";
-        if (onayTipId == @EykTipEnum.EykDaOnaylandi) {
-            sndrId = '#EykDaOnaylandi_' + uniqueId;
-            if ($(sndrId).val().toLowerCase() == 'false') durumAciklama = $('#EYKDaOnaylanmadiDurumAciklamasi_' + uniqueId).val();
+}
+
+function EykYaOnayChange(uniqueId) {
+    var val = document.getElementById('OnayMakaminaGonderildi_' + uniqueId).value;
+    var aciklamaRow = document.getElementById('gonderimAciklamaRow_' + uniqueId);
+
+    if (val === 'false') {
+        aciklamaRow.classList.remove('hide');
+    } else {
+        aciklamaRow.classList.add('hide');
+        document.getElementById('GonderimAciklama_' + uniqueId).value = '';
+    }
+}
+
+function EykOnayChange(sndr, uniqueId, isEyk) {
+    var val = sndr.value;
+    var onayAciklamaRow = document.getElementById('onayAciklamaRow_' + uniqueId);
+    var isEykValue = isEyk ? isEyk : document.getElementById('IsOnayMakamiEykOrEnstituMudur_' + uniqueId).value;
+
+    if (val === 'false') {
+        onayAciklamaRow.classList.remove('hide');
+        if (isEykValue === 'true') {
+            $('.eykTarihSayiContainer_' + uniqueId).addClass('hide');
+        }
+    } else if (val === 'true') {
+        onayAciklamaRow.classList.add('hide');
+        if (isEykValue === 'true') {
+            $('.eykTarihSayiContainer_' + uniqueId).removeClass('hide');
+            if (document.getElementById('EYKTarihi_' + uniqueId).value === '') {
+                var today = new Date();
+                var year = today.getFullYear();
+                var month = ('0' + (today.getMonth() + 1)).slice(-2);
+                var day = ('0' + today.getDate()).slice(-2);
+                document.getElementById('EYKTarihi_' + uniqueId).value = year + '-' + month + '-' + day;
+            }
+        }
+        document.getElementById('OnayAciklama_' + uniqueId).value = '';
+    } else {
+        // BOŞ SEÇİLDİYSE (Geriye dönüş)
+        onayAciklamaRow.classList.add('hide');
+        if (isEykValue === 'true') {
+            $('.eykTarihSayiContainer_' + uniqueId).addClass('hide');
+        }
+        document.getElementById('OnayAciklama_' + uniqueId).value = '';
+    }
+}
+
+function EykDurumKayit(uniqueId, onayTipId, isEykDrm) {
+    var panel = $('#cls-' + uniqueId);
+    PanelRefresh(panel, false);
+    var sndrId = "";
+    var durumAciklama = "";
+    var eykTarihi = "";
+    var eykSayisi = "";
+    var isEyk = isEykDrm ? isEykDrm : document.getElementById('IsOnayMakamiEykOrEnstituMudur_' + uniqueId).value;
+
+    if (onayTipId == 3) { // OnayMakamindaOnaylandi
+        sndrId = '#OnayMakamindaOnaylandi_' + uniqueId;
+        var onayVal = $(sndrId).val();
+
+        if (onayVal && onayVal.toLowerCase() == 'false') {
+            durumAciklama = $('#OnayAciklama_' + uniqueId).val();
+        }
+
+        if (onayVal && onayVal.toLowerCase() == 'true' && isEyk === 'true') {
             eykTarihi = $('#EYKTarihi_' + uniqueId).val();
             eykSayisi = $('#EYKSayisi_' + uniqueId).val();
-      }
-        else if (onayTipId == @EykTipEnum.EykYaHazirlandi) sndrId = '#EykYaHazirlandi_' + uniqueId;
-        else if (onayTipId == @EykTipEnum.EykYaGonderildi) {
-            sndrId = '#EykYaGonderildi_' + uniqueId;
-            if ($(sndrId).val().toLowerCase() == 'false') durumAciklama = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + uniqueId).val();
         }
-        var onaylandi = $(sndrId).val().toLowerCase();
-        $.ajax({
-            url: '@Url.Action("EykDurumKayit", "KsBasvuru")',
-            data: {
-                 uniqueId,
-                 onayTipId,
-                'Onaylandi': onaylandi,
-                'Aciklama': durumAciklama,
-                'OnayTarihi': eykTarihi,
-                'EykSayisi': eykSayisi
-            },
-            success: function (result) {
-                PanelRefresh(panel, true);
-                if (result.IsSuccess) {
-                    toastr["success"](result.mmMessage.Messages[0], result.mmMessage.Title);
-                    GetDetail(uniqueId);
-
-                }
-                else ShowMmMessage(result.Messages, 'Tamam');
-
-            },
-            error: function (err) {
-                PanelRefresh(panel, true);
-                alert(err.responseText);
-
-            }
-        });
     }
+    else if (onayTipId == 2) { // OnayMakaminaHazirlandi
+        sndrId = '#OnayMakaminaHazirlandi_' + uniqueId;
+    }
+    else if (onayTipId == 1) { // OnayMakaminaGonderildi
+        sndrId = '#OnayMakaminaGonderildi_' + uniqueId;
+        var gonderimVal = $(sndrId).val();
+
+        if (gonderimVal && gonderimVal.toLowerCase() == 'false') {
+            durumAciklama = $('#GonderimAciklama_' + uniqueId).val();
+        }
+    }
+
+    var onaylandi = $(sndrId).val() ? $(sndrId).val().toLowerCase() : '';
+
+    $.ajax({
+        url: '@Url.Action("EykDurumKayit", "KsBasvuru")',
+        data: {
+            uniqueId: uniqueId,
+            onayTipId: onayTipId,
+            'Onaylandi': onaylandi,
+            'Aciklama': durumAciklama,
+            'OnayTarihi': eykTarihi,
+            'EykSayisi': eykSayisi,
+            IsOnayMakamiEykOrEnstituMudur: isEyk
+        },
+        success: function (result) {
+            PanelRefresh(panel, true);
+            if (result.IsSuccess) {
+                toastr["success"](result.mmMessage.Messages[0], result.mmMessage.Title);
+                // Sayfayı yenile - geriye dönüş sonrası doğru görünümü göstermek için
+                GetDetail(uniqueId);
+            }
+            else ShowMmMessage(result.Messages, 'Tamam');
+        },
+        error: function (err) {
+            PanelRefresh(panel, true);
+            alert(err.responseText);
+        }
+    });
+}
 </script>

@@ -171,9 +171,9 @@
                                                                       var _Bastar = $('#BasTar').val();
                                                                       var _Bittar = $('#BitTar').val();
                                                                       var _ExportWordOrExcel = $('#exportWordOrExcel').val();
-                                                                      var _EnstituOnayDurumId = $('#EnstituOnayDurumId').val();
-
-                                                                      window.location = '@Url.Action("GetTutanakRaporuExport", "KsGelenBasvurular")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&ExportWordOrExcel=' + _ExportWordOrExcel + "&enstituOnayDurumId=" + _EnstituOnayDurumId;
+                                                                      var _EnstituOnayDurumId = $('#EnstituOnayDurumIdTtnk').val();
+                                                                      var _IsOnayMakamiEykOrEnstituMudur = $('#IsOnayMakamiEykOrEnstituMudurTtnk').val();
+                                                                       window.location = '@Url.Action("GetTutanakRaporuExport", "KsGelenBasvurular")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&ExportWordOrExcel=' + _ExportWordOrExcel + "&enstituOnayDurumId=" + _EnstituOnayDurumId + '&IsOnayMakamiEykOrEnstituMudur=' + _IsOnayMakamiEykOrEnstituMudur;
 
                                                                   }
                                                                   else {
@@ -258,9 +258,9 @@
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="160">Başvuru Durumu</td>
+                                            <td width="160">Onay Makamı</td>
                                             <td>
-                                                @Html.DropDownList("KayitSilmeDurumID", null, new { @class = "form-control" })
+                                                @Html.DropDownList("IsOnayMakamiEykOrEnstituMudur", null, new { @class = "form-control" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -282,6 +282,16 @@
                         <tr>
 
                             <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                    <tr>
+                                        <td width="160">Başvuru Durumu</td>
+                                        <td>
+                                            @Html.DropDownList("KayitSilmeDurumID", null, new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </td>
                             <td style="padding-left: 10px; vertical-align: top;">
                                 <table style="width: 100%; table-layout: fixed;">

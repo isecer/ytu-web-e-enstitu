@@ -103,9 +103,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? IkinciSavunmaHakkiAyKriter { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
         public List<ToBasvuruSavunmaDto> ToBasvuruSavunmaList { get; set; }
-
-        
-         
+        public bool IsAnketDolduruldu { get; set; }
+        public bool IsAnketVar { get; set; }
+        public string AnketView { get; set; }
     }
     public class ToBasvuruSavunmaDto : ToBasvuruSavunma
     {

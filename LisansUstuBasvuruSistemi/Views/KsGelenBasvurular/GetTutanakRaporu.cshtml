@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 <div class="widget widget-default" style="margin:0px;padding:4px;">
@@ -8,6 +7,7 @@
             @using (Ajax.BeginForm("GetTutanakRaporuKontrolu", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TutanakRprForm" }))
             {
                 <div class="panel-body form-group-separated">
+
                     <div class="form-group">
                         <label class="col-md-3 col-xs-3 control-label">Rapor Çıtısı</label>
                         <div class="col-md-9 col-xs-9">
@@ -17,15 +17,28 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <label class="col-md-3 col-xs-3 control-label">Enstitü Onay Durum</label>
+                        <label class="col-md-3 col-xs-3 control-label">Onay Makamı</label>
                         <div class="col-md-9 col-xs-9">
-                            <select id="EnstituOnayDurumId" name="EnstituOnayDurumId" class="form-control">
-                                <option value="2">Eyk'ya Hazırlananlar</option>
-                                <option selected="selected" value="3">Eyk'da Onaylananlar</option>
+                            <select id="IsOnayMakamiEykOrEnstituMudurTtnk" name="IsOnayMakamiEykOrEnstituMudur" class="form-control">
+                                <option value="true" selected="selected">Enstitü Yönetim Kurulu</option>
+                                <option value="false">Enstitü Müdürlüğü</option>
                             </select>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label id="lblEnstituOnayDurum" class="col-md-3 col-xs-3 control-label">EYK Onay Durumu</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="EnstituOnayDurumIdTtnk" name="EnstituOnayDurumId" class="form-control">
+                                <!-- Varsayılan olarak EYK'ya ait seçenekler -->
+                                <option value="2">EYK’ya Hazırlananlar</option>
+                                <option selected="selected" value="3">EYK’da Onaylananlar</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
                         <div class="col-md-9 col-xs-9">
@@ -38,14 +51,17 @@
                             </table>
                         </div>
                     </div>
+
                 </div>
             }
         </div>
     </div>
 </div>
-<script>
 
+<script>
     $(function () {
+
+        // Tarih alanları
         $('#BasTar').datetimepicker({
             lang: 'tr',
             timepicker: false,
@@ -56,11 +72,27 @@
             timepicker: false,
             format: 'Y-m-d'
         });
-        $('#RaporTarihi').datetimepicker({
-            lang: 'tr',
-            timepicker: false,
-            format: 'Y-m-d'
+
+        // Onay Makamı değiştiğinde tetiklenecek olay
+        $('#IsOnayMakamiEykOrEnstituMudur').change(function () {
+            var isEyk = $(this).val() === "true"; // EYK mı, Müdürlük mü
+            var $label = $('#lblEnstituOnayDurum');
+            var $select = $('#EnstituOnayDurumId');
+
+            $select.empty(); // Eski seçenekleri temizle
+
+            if (isEyk) {
+                // Enstitü Yönetim Kurulu seçiliyse
+                $label.text("EYK Onay Durumu");
+                $select.append('<option value="2">EYK’ya Hazırlananlar</option>');
+                $select.append('<option value="3" selected="selected">EYK’da Onaylananlar</option>');
+            } else {
+                // Enstitü Müdürlüğü seçiliyse
+                $label.text("Müdürlük Onay Durumu");
+                $select.append('<option value="4">Müdürlüğe Hazırlananlar</option>');
+                $select.append('<option value="5" selected="selected">Müdürlükte Onaylananlar</option>');
+            }
         });
 
-    })
+    });
 </script>

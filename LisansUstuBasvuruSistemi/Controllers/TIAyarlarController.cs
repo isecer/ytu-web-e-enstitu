@@ -21,7 +21,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var data = _entities.TIAyarlars.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
             var cats = data.Select(s => new { s.Kategori, Toggle = true }).Distinct().ToList();
             var panelToggled = cats.ToDictionary(item => item.Kategori, item => item.Toggle);
-            ViewBag.PanelToggled = panelToggled; 
+            ViewBag.PanelToggled = panelToggled;
+
+            var varolanAnketId = TiAyar.TezOneriIlkBasvuruAnketi.GetAyar(enstituKod).ToIntObj();
+            ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, varolanAnketId), "Value", "Caption");
             return View(data);
         }
         [HttpPost]
@@ -56,7 +59,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ptg = item.Replace("__", "◘").Split('◘');
                 toggled.Add(ptg[0], ptg[1].ToBoolean().Value);
             }
-            ViewBag.PanelToggled = toggled; 
+            ViewBag.PanelToggled = toggled;
+
+            var varolanAnketId = TiAyar.TezOneriIlkBasvuruAnketi.GetAyar(enstituKod).ToIntObj();
+            ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, varolanAnketId), "Value", "Caption");
             return View(data);
         }
     }

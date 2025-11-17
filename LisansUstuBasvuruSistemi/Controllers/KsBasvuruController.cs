@@ -104,11 +104,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         OgretimYiliBaslangic = kayitSilme.OgretimYiliBaslangic,
 
-                        EYKYaGonderildi = kayitSilme.EYKYaGonderildi,
-                        EYKYaGonderimDurumAciklamasi = kayitSilme.EYKYaGonderimDurumAciklamasi,
-                        EYKYaHazirlandi = kayitSilme.EYKYaHazirlandi,
-                        EYKDaOnaylandi = kayitSilme.EYKDaOnaylandi,
-                        EYKDaOnaylanmadiDurumAciklamasi = kayitSilme.EYKDaOnaylanmadiDurumAciklamasi,
+                        OnayMakaminaGonderildi = kayitSilme.OnayMakaminaGonderildi,
+                        OnayMakaminaGonderimDurumAciklamasi = kayitSilme.OnayMakaminaGonderimDurumAciklamasi,
+                        OnayMakaminaHazirlandi = kayitSilme.OnayMakaminaHazirlandi,
+                        OnayMakamindaOnaylandi = kayitSilme.OnayMakamindaOnaylandi,
+                        OnayMakamindaOnaylanmadiDurumAciklamasi = kayitSilme.OnayMakamindaOnaylanmadiDurumAciklamasi,
 
 
                     };
@@ -246,40 +246,41 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 HarcBirimiOnayAciklamasi = s.HarcBirimiOnayAciklamasi,
                 IsKutuphaneBirimiOnayladi = s.IsKutuphaneBirimiOnayladi,
                 KutuphaneBirimiOnayAciklamasi = s.KutuphaneBirimiOnayAciklamasi,
-                EYKYaGonderildi = s.EYKYaGonderildi,
-                EYKYaGonderimDurumAciklamasi = s.EYKYaGonderimDurumAciklamasi,
-                EYKYaHazirlandi = s.EYKYaHazirlandi,
-                EYKDaOnaylandi = s.EYKDaOnaylandi,
-                EYKDaOnaylanmadiDurumAciklamasi = s.EYKDaOnaylanmadiDurumAciklamasi
+                IsOnayMakamiEykOrEnstituMudur = s.IsOnayMakamiEykOrEnstituMudur,
+                OnayMakaminaGonderildi = s.OnayMakaminaGonderildi,
+                OnayMakaminaGonderimDurumAciklamasi = s.OnayMakaminaGonderimDurumAciklamasi,
+                OnayMakaminaHazirlandi = s.OnayMakaminaHazirlandi,
+                OnayMakamindaOnaylandi = s.OnayMakamindaOnaylandi,
+                OnayMakamindaOnaylanmadiDurumAciklamasi = s.OnayMakamindaOnaylanmadiDurumAciklamasi
             }).FirstOrDefault() ?? new FrKayitSilmeBasvuruDto();
             var ksBasvuruDurumView = donemProjesiBasvuru.ToKsBasvuruDurumView().ToString();
             var ksBasvuruDonemView = donemProjesiBasvuru.ToKsBasvuruDonemView().ToString();
             return new { ksBasvuruDurumView, ksBasvuruDonemView }.ToJsonResult();
         }
 
-
-        public ActionResult EykDurumKayit(Guid uniqueId, int onayTipId, bool? onaylandi, string aciklama, DateTime? onayTarihi, string eykSayisi)
+        public ActionResult EykDurumKayit(Guid uniqueId, int onayTipId, bool? onaylandi, string aciklama, DateTime? onayTarihi, string eykSayisi, bool? isOnayMakamiEykOrEnstituMudur = null)
         {
             var mmMessage = new MmMessage
             {
                 IsSuccess = false,
-                Title = "Kayıt Silme " + (onayTipId == EykTipEnum.EykDaOnaylandi ? "EYK'da onay" : (onayTipId == EykTipEnum.EykYaHazirlandi ? "EYK'ya Hazırlık" : "EYK'ya gönderim")) + " işlemi",
+                Title = "Kayıt Silme " + GetEykTipAdi(onayTipId),
                 MessageType = MsgTypeEnum.Warning
             };
 
             var kayitSilmeBasvuru = _entities.KayitSilmeBasvurus.FirstOrDefault(p => p.UniqueID == uniqueId);
 
-            if (onayTipId == EykTipEnum.EykYaGonderildi && !RoleNames.KayitSilmeEykYaGonder.InRoleCurrent())
+            // Yetki Kontrolleri
+            if (onayTipId == EykTipEnum.OnayMakaminaGonderildi && !RoleNames.KayitSilmeEykYaGonder.InRoleCurrent())
             {
-                mmMessage.Messages.Add("Kayıt Silme başvurularını EYK'ya gönderme yetkisine sahip değilsiniz!");
+                mmMessage.Messages.Add("Kayıt Silme başvurularını Onay Makamına gönderme yetkisine sahip değilsiniz!");
             }
-            else if (onayTipId == EykTipEnum.EykYaHazirlandi && !RoleNames.KayitSilmeEykYaHazirlandi.InRoleCurrent())
+            else if (onayTipId == EykTipEnum.OnayMakaminaHazirlandi && !RoleNames.KayitSilmeEykYaHazirlandi.InRoleCurrent())
             {
-                mmMessage.Messages.Add("Kayıt Silme başvurularında EYK'ya hazırlık yetkisine sahip değilsiniz!");
+                mmMessage.Messages.Add("Kayıt Silme başvurularında Onay Makamına hazırlık yetkisine sahip değilsiniz!");
             }
-            else if (onayTipId == EykTipEnum.EykDaOnaylandi && !RoleNames.KayitSilmeEykDaOnay.InRoleCurrent())
+            else if (onayTipId == EykTipEnum.OnayMakamindaOnaylandi && !RoleNames.KayitSilmeEykDaOnay.InRoleCurrent())
             {
-                mmMessage.Messages.Add("Kayıt Silme başvurularında EYK'da onay yetkisine sahip değilsiniz!");
+                mmMessage.Messages.Add("Kayıt Silme başvurularında Onay Makamında onay yetkisine sahip değilsiniz!");
             }
             else if (kayitSilmeBasvuru == null)
             {
@@ -287,104 +288,193 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (kayitSilmeBasvuru.IsKutuphaneBirimiOnayladi != true)
             {
-                mmMessage.Messages.Add("İşlem yapılmak istenen Kayıtta Kütüphane Birimi onayı bulunmadığından EYK işlemleri yapılamaz!");
+                mmMessage.Messages.Add("İşlem yapılmak istenen Kayıtta Kütüphane Birimi onayı bulunmadığından Onay Makamı işlemleri yapılamaz!");
             }
             else
             {
-                if (onayTipId == EykTipEnum.EykDaOnaylandi)
+                // Onay Makamı Seçim Kontrolü
+                if (onayTipId == EykTipEnum.OnayMakaminaGonderildi && !kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur.HasValue)
                 {
-                    if (kayitSilmeBasvuru.EYKYaHazirlandi != true)
+                    if (!isOnayMakamiEykOrEnstituMudur.HasValue)
                     {
-                        mmMessage.Messages.Add("EYK Ya hazırlanmayan Kayıt Silme üzerinde EYK Onayı işlemi yapılamaz!");
+                        mmMessage.Messages.Add("Onay Makamı seçilmemiştir!");
                     }
-                    else if (onaylandi == true)
-                    {
-                        if (!onayTarihi.HasValue) mmMessage.Messages.Add("EYK'da onay tarihini giriniz!");
-                        if (eykSayisi.IsNullOrWhiteSpace()) mmMessage.Messages.Add("EYK Sayısı giriniz!");
-                    }
-                    else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
-                    {
-                        mmMessage.Messages.Add("EYK'da onaylanmama sebebini giriniz!");
-                    }
-
                 }
-                else if (onayTipId == EykTipEnum.EykYaGonderildi)
+                else if (!kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur.HasValue && onayTipId != EykTipEnum.OnayMakaminaGonderildi)
                 {
-                    if (kayitSilmeBasvuru.KayitSilmeDurumID != KayitSilmeDurumEnums.EnstituYonetimKuruluSureci)
-                    {
-                        mmMessage.Messages.Add("EYK ya gönderim işlemi yapılabilmesi için öğrencinin sınavdan başarılı olması gerekmetekdir.");
-                    }
-                    else if (kayitSilmeBasvuru.EYKYaHazirlandi.HasValue)
-                    {
-                        mmMessage.Messages.Add("EYK ya hazırlama işlemi yapılan bir Kayıt Silme Eyk'ya gönderim işlemi gerçekleştirilemez!");
-                    }
-                    else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
-                    {
-                        mmMessage.Messages.Add("EYK'ya gönderiminin onaylanmama sebebini giriniz!");
-                    }
+                    mmMessage.Messages.Add("Onay Makamı seçilmemiştir!");
                 }
 
                 if (!mmMessage.Messages.Any())
                 {
-                    var isDegisiklikVar = false;
-                    if (onayTipId == EykTipEnum.EykYaGonderildi)
+                    // Adım Bazlı Validasyonlar
+                    if (onayTipId == EykTipEnum.OnayMakamindaOnaylandi)
                     {
-
-                        isDegisiklikVar = kayitSilmeBasvuru.EYKYaGonderildi != onaylandi || aciklama != kayitSilmeBasvuru.EYKYaGonderimDurumAciklamasi;
-                        kayitSilmeBasvuru.EYKYaGonderimDurumAciklamasi = onaylandi == false ? aciklama : "";
-                        kayitSilmeBasvuru.EYKYaGonderildi = onaylandi;
-                        kayitSilmeBasvuru.EYKYaGonderildiIslemTarihi = DateTime.Now;
-                        kayitSilmeBasvuru.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
-                        mmMessage.Messages.Add("Form EYK ya " + (onaylandi.HasValue ? (onaylandi.Value ? "'Gönderildi'" : "'Gönderilmedi'") : "Gönderilmesi bekleniyor") + " şeklinde güncellendi...");
-                    }
-                    else if (onayTipId == EykTipEnum.EykYaHazirlandi)
-                    {
-
-                        kayitSilmeBasvuru.EYKYaHazirlandi = onaylandi;
-                        kayitSilmeBasvuru.EYKYaHazirlandiIslemTarihi = DateTime.Now;
-                        kayitSilmeBasvuru.EYKYaHazirlandiIslemYapanID = UserIdentity.Current.Id;
-                        mmMessage.Messages.Add("Form EYK ya " + (onaylandi.HasValue ? (onaylandi.Value ? "'Hazırlandı'" : "'Hazırlanmadı'") : " Hazırlanması bekleniyor") + " şeklinde güncellendi...");
-                    }
-                    else if (onayTipId == EykTipEnum.EykDaOnaylandi)
-                    {
-                        isDegisiklikVar = kayitSilmeBasvuru.EYKDaOnaylandi != onaylandi || aciklama != kayitSilmeBasvuru.EYKDaOnaylanmadiDurumAciklamasi || kayitSilmeBasvuru.EYKTarihi != onayTarihi;
-                        kayitSilmeBasvuru.EYKDaOnaylandi = onaylandi;
-                        if (onaylandi.HasValue)
+                        if (kayitSilmeBasvuru.OnayMakaminaHazirlandi != true)
                         {
-                            kayitSilmeBasvuru.EYKTarihi = onayTarihi;
-                            kayitSilmeBasvuru.EYKSayisi = eykSayisi;
+                            mmMessage.Messages.Add("Onay Makamına hazırlanmayan Kayıt Silme üzerinde Onay Makamında Onay işlemi yapılamaz!");
                         }
-                        kayitSilmeBasvuru.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
-                        kayitSilmeBasvuru.EYKDaOnaylandiOnayTarihi = DateTime.Now;
-                        kayitSilmeBasvuru.EYKDaOnaylanmadiDurumAciklamasi = onaylandi == false ? aciklama : "";
-
-                        mmMessage.Messages.Add("Form EYK da " + (onaylandi.HasValue ? (onaylandi.Value ? "'Onaylandı'" : "'Onaylanmadı'") : "İşlem bekliyor") + " şeklinde güncellendi...");
-                        var ogrenci = kayitSilmeBasvuru.Kullanicilar;
-                        if (onaylandi == true)
+                        else if (onaylandi == true)
                         {
-                            if (ogrenci.YtuOgrencisi && ogrenci.ProgramKod == kayitSilmeBasvuru.ProgramKod && ogrenci.OgrenimTipKod == kayitSilmeBasvuru.OgrenimTipKod)
+                            if (kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur == true)
                             {
-                                ogrenci.YtuOgrencisi = false;
-                                ogrenci.IslemTarihi = DateTime.Now;
-                                ogrenci.IslemYapanID = UserIdentity.Current.Id;
-                                ogrenci.IslemYapanIP = UserIdentity.Ip;
+                                if (!onayTarihi.HasValue) mmMessage.Messages.Add("EYK'da onay tarihini giriniz!");
+                                if (eykSayisi.IsNullOrWhiteSpace()) mmMessage.Messages.Add("EYK Sayısı giriniz!");
                             }
                         }
+                        else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
+                        {
+                            mmMessage.Messages.Add("Onaylanmama sebebini giriniz!");
+                        }
                     }
-                    _entities.SaveChanges();
-                    mmMessage.MessageType = MsgTypeEnum.Success;
-                    mmMessage.IsSuccess = true;
-
-                    LogIslemleri.LogEkle("KayitSilmeBasvuru", LogCrudType.Update, kayitSilmeBasvuru.ToJson());
-                    if (isDegisiklikVar && onaylandi.HasValue)
+                    else if (onayTipId == EykTipEnum.OnayMakaminaGonderildi)
                     {
-                        var eykDaOnayOrGonderim = onayTipId == EykTipEnum.EykDaOnaylandi;
-                        if (onaylandi == false) KayitSilmeBus.SendMailEykOnaylanmadi(kayitSilmeBasvuru.KayitSilmeBasvuruID, eykDaOnayOrGonderim);
-                        else if(eykDaOnayOrGonderim) KayitSilmeBus.SendMailEykOnaylandi(kayitSilmeBasvuru.KayitSilmeBasvuruID);
+                        if (kayitSilmeBasvuru.KayitSilmeDurumID != KayitSilmeDurumEnums.EnstituYonetimKuruluSureci)
+                        {
+                            mmMessage.Messages.Add("Onay Makamına gönderim işlemi yapılabilmesi için öğrencinin sınavdan başarılı olması gerekmektedir.");
+                        }
+                        else if (kayitSilmeBasvuru.OnayMakaminaHazirlandi.HasValue)
+                        {
+                            mmMessage.Messages.Add("Onay Makamına hazırlama işlemi yapılan bir Kayıt Silme Onay Makamına gönderim işlemi gerçekleştirilemez!");
+                        }
+                        else if (onaylandi == false && aciklama.IsNullOrWhiteSpace())
+                        {
+                            mmMessage.Messages.Add("Gönderimin onaylanmama sebebini giriniz!");
+                        }
                     }
 
+                    if (!mmMessage.Messages.Any())
+                    {
+                        var isDegisiklikVar = false;
+
+                        // ============================================
+                        // ADIM 1: Onay Makamına Gönderildi
+                        // ============================================
+                        if (onayTipId == EykTipEnum.OnayMakaminaGonderildi)
+                        {
+                            isDegisiklikVar = kayitSilmeBasvuru.OnayMakaminaGonderildi != onaylandi ||
+                                              aciklama != kayitSilmeBasvuru.OnayMakaminaGonderimDurumAciklamasi ||
+                                              isOnayMakamiEykOrEnstituMudur != kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur;
+
+                            kayitSilmeBasvuru.OnayMakaminaGonderimDurumAciklamasi = onaylandi == false ? aciklama : "";
+                            kayitSilmeBasvuru.OnayMakaminaGonderildi = onaylandi;
+                            kayitSilmeBasvuru.OnayMakaminaGonderildiIslemTarihi = DateTime.Now;
+                            kayitSilmeBasvuru.OnayMakaminaGonderildiIslemYapanID = UserIdentity.Current.Id;
+                            kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur = isOnayMakamiEykOrEnstituMudur;
+
+                            // GERİYE DÖNÜŞ: Gönderim boşaltılırsa sonraki adımları sıfırla
+                            if (!onaylandi.HasValue)
+                            {
+                                kayitSilmeBasvuru.OnayMakaminaHazirlandi = null;
+                                kayitSilmeBasvuru.OnayMakaminaHazirlandiIslemTarihi = null;
+                                kayitSilmeBasvuru.OnayMakaminaHazirlandiIslemYapanID = null;
+
+                                kayitSilmeBasvuru.OnayMakamindaOnaylandi = null;
+                                kayitSilmeBasvuru.OnayMakamindaOnaylandiOnayTarihi = null;
+                                kayitSilmeBasvuru.OnayMakamindaOnaylandiIslemYapanID = null;
+                                kayitSilmeBasvuru.OnayMakamindaOnaylanmadiDurumAciklamasi = "";
+                                kayitSilmeBasvuru.EYKTarihi = null;
+                                kayitSilmeBasvuru.EYKSayisi = "";
+                            }
+
+                            var onayMakamiAdi = kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur == true ? "EYK'ya" : "Müdürlüğe";
+                            mmMessage.Messages.Add("Form " + onayMakamiAdi + " " + (onaylandi.HasValue ? (onaylandi.Value ? "'Gönderildi'" : "'Gönderilmedi'") : "Gönderilmesi bekleniyor") + " şeklinde güncellendi...");
+                        }
+                        // ============================================
+                        // ADIM 2: Onay Makamına Hazırlandı
+                        // ============================================
+                        else if (onayTipId == EykTipEnum.OnayMakaminaHazirlandi)
+                        {
+                            isDegisiklikVar = kayitSilmeBasvuru.OnayMakaminaHazirlandi != onaylandi;
+
+                            kayitSilmeBasvuru.OnayMakaminaHazirlandi = onaylandi;
+                            kayitSilmeBasvuru.OnayMakaminaHazirlandiIslemTarihi = DateTime.Now;
+                            kayitSilmeBasvuru.OnayMakaminaHazirlandiIslemYapanID = UserIdentity.Current.Id;
+
+                            // GERİYE DÖNÜŞ: Hazırlama boşaltılırsa son adımı sıfırla
+                            if (!onaylandi.HasValue)
+                            {
+                                kayitSilmeBasvuru.OnayMakamindaOnaylandi = null;
+                                kayitSilmeBasvuru.OnayMakamindaOnaylandiOnayTarihi = null;
+                                kayitSilmeBasvuru.OnayMakamindaOnaylandiIslemYapanID = null;
+                                kayitSilmeBasvuru.OnayMakamindaOnaylanmadiDurumAciklamasi = "";
+                                kayitSilmeBasvuru.EYKTarihi = null;
+                                kayitSilmeBasvuru.EYKSayisi = "";
+                            }
+
+                            var onayMakamiAdi = kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur == true ? "EYK'ya" : "Müdürlüğe";
+                            mmMessage.Messages.Add("Form " + onayMakamiAdi + " " + (onaylandi.HasValue ? (onaylandi.Value ? "'Hazırlandı'" : "'Hazırlanmadı'") : " Hazırlanması bekleniyor") + " şeklinde güncellendi...");
+                        }
+                        // ============================================
+                        // ADIM 3: Onay Makamında Onaylandı (SON ADIM)
+                        // ============================================
+                        else if (onayTipId == EykTipEnum.OnayMakamindaOnaylandi)
+                        {
+                            isDegisiklikVar = kayitSilmeBasvuru.OnayMakamindaOnaylandi != onaylandi ||
+                                              aciklama != kayitSilmeBasvuru.OnayMakamindaOnaylanmadiDurumAciklamasi ||
+                                              kayitSilmeBasvuru.EYKTarihi != onayTarihi;
+
+                            kayitSilmeBasvuru.OnayMakamindaOnaylandi = onaylandi;
+
+                            if (onaylandi.HasValue && kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur == true)
+                            {
+                                kayitSilmeBasvuru.EYKTarihi = onayTarihi;
+                                kayitSilmeBasvuru.EYKSayisi = eykSayisi;
+                            }
+                            else if (!onaylandi.HasValue) // Boşa çekiliyorsa EYK bilgilerini temizle
+                            {
+                                kayitSilmeBasvuru.EYKTarihi = null;
+                                kayitSilmeBasvuru.EYKSayisi = "";
+                            }
+
+                            kayitSilmeBasvuru.OnayMakamindaOnaylandiIslemYapanID = UserIdentity.Current.Id;
+                            kayitSilmeBasvuru.OnayMakamindaOnaylandiOnayTarihi = DateTime.Now;
+                            kayitSilmeBasvuru.OnayMakamindaOnaylanmadiDurumAciklamasi = onaylandi == false ? aciklama : "";
+
+                            var onayMakamiAdi = kayitSilmeBasvuru.IsOnayMakamiEykOrEnstituMudur == true ? "EYK'da" : "Müdürlükte";
+                            mmMessage.Messages.Add("Form " + onayMakamiAdi + " " + (onaylandi.HasValue ? (onaylandi.Value ? "'Onaylandı'" : "'Onaylanmadı'") : "İşlem bekliyor") + " şeklinde güncellendi...");
+
+                            // Öğrenci durumu güncelleme (sadece onaylandıysa)
+                            var ogrenci = kayitSilmeBasvuru.Kullanicilar;
+                            if (onaylandi == true)
+                            {
+                                if (ogrenci.YtuOgrencisi && ogrenci.ProgramKod == kayitSilmeBasvuru.ProgramKod && ogrenci.OgrenimTipKod == kayitSilmeBasvuru.OgrenimTipKod)
+                                {
+                                    ogrenci.YtuOgrencisi = false;
+                                    ogrenci.IslemTarihi = DateTime.Now;
+                                    ogrenci.IslemYapanID = UserIdentity.Current.Id;
+                                    ogrenci.IslemYapanIP = UserIdentity.Ip;
+                                }
+                            }
+                            else if (!onaylandi.HasValue) // Boşa çekiliyorsa öğrenciyi geri aktif et
+                            {
+                                if (!ogrenci.YtuOgrencisi && ogrenci.ProgramKod == kayitSilmeBasvuru.ProgramKod && ogrenci.OgrenimTipKod == kayitSilmeBasvuru.OgrenimTipKod)
+                                {
+                                    ogrenci.YtuOgrencisi = true;
+                                    ogrenci.IslemTarihi = DateTime.Now;
+                                    ogrenci.IslemYapanID = UserIdentity.Current.Id;
+                                    ogrenci.IslemYapanIP = UserIdentity.Ip;
+                                }
+                            }
+                        }
+
+                        _entities.SaveChanges();
+                        mmMessage.MessageType = MsgTypeEnum.Success;
+                        mmMessage.IsSuccess = true;
+
+                        LogIslemleri.LogEkle("KayitSilmeBasvuru", LogCrudType.Update, kayitSilmeBasvuru.ToJson());
+
+                        // Mail gönderimi
+                        if (isDegisiklikVar && onaylandi.HasValue)
+                        {
+                            var eykDaOnayOrGonderim = onayTipId == EykTipEnum.OnayMakamindaOnaylandi;
+                            if (onaylandi == false) KayitSilmeBus.SendMailEykOnaylanmadi(kayitSilmeBasvuru.KayitSilmeBasvuruID, eykDaOnayOrGonderim);
+                            else if (eykDaOnayOrGonderim) KayitSilmeBus.SendMailEykOnaylandi(kayitSilmeBasvuru.KayitSilmeBasvuruID);
+                        }
+                    }
                 }
             }
+
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new
             {
@@ -392,6 +482,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Messages = strView,
                 mmMessage
             }.ToJsonResult();
+        }
+        private string GetEykTipAdi(int onayTipId)
+        {
+            switch (onayTipId)
+            {
+                case EykTipEnum.OnayMakaminaGonderildi:
+                    return "Onay Makamına Gönderim işlemi";
+                case EykTipEnum.OnayMakaminaHazirlandi:
+                    return "Onay Makamına Hazırlık işlemi";
+                case EykTipEnum.OnayMakamindaOnaylandi:
+                    return "Onay Makamında Onay işlemi";
+                default:
+                    return "işlemi";
+            }
         }
 
 
@@ -430,7 +534,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("Başvuru için Kütüphane Birimi onayı işlemi gerçekleştirildiğinden Harç Birimi onayı işlemi yapılamaz! İşlem için önce Kütüphane Birim onay durumu kaldırılmalıdır.");
                 }
-                if (!isOnayTipHarcOrKutuphane && kayitSilmeBasvuru.EYKYaGonderildi.HasValue)
+                if (!isOnayTipHarcOrKutuphane && kayitSilmeBasvuru.OnayMakaminaGonderildi.HasValue)
                 {
                     mmMessage.Messages.Add("Başvuru için EYK'ya gönderim onay işlemi gerçekleştirildiğinden Kütüphane Birimi onayı işlemi yapılamaz! İşlem için önce Eyk'ya gönderim onay durumu kaldırılmalıdır.");
                 }
@@ -439,7 +543,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mmMessage.Messages.Any())
             {
-                var isDegisiklikVar = false;
+                bool isDegisiklikVar;
                 if (isOnayTipHarcOrKutuphane)
                 {
                     isDegisiklikVar = isOnaylandi.HasValue && (kayitSilmeBasvuru.IsHarcBirimiOnayladi != isOnaylandi || kayitSilmeBasvuru.HarcBirimiOnayAciklamasi != aciklama);

@@ -73,6 +73,36 @@
                                                             {
                                                                 <textarea style="height: 160px;" name="AyarDegeri" class="form-control">@item.AyarDegeri</textarea>
                                                             }
+                                                            else if (item.InpType == "textareaHtml")
+                                                            {
+                                                                var txtId = Guid.NewGuid(); 
+                                                                <textarea style="min-height:100px;height:100px;resize:vertical;" maxlength="2048" type="text" class="summernotex" name="AyarDegeri" id="AyarDegeri@(txtId)" autocomplete="off">@Html.Raw(item.AyarDegeri ?? "")</textarea>
+                                                                <script>
+                                                                     $(function () {
+                                                                         $('#AyarDegeri@(txtId)').summernote({
+                                                                             height: 120,
+                                                                             lang: 'tr',
+                                                                             toolbar:
+                                                                                 [
+                                                                                     ['style', ['bold', 'italic', 'underline', 'clear']],
+                                                                                     ['fontsize', ['fontsize']],
+                                                                                     ['color', ['color']],
+                                                                                     ['Insert', ['link', 'table', 'hr']],
+                                                                                     ['para', ['ul', 'ol', 'paragraph']],
+                                                                                     ['font', ['strikethrough', 'superscript', 'subscript']],
+                                                                                     ['height', ['height']]
+                                                                                 ],
+                                                                             codemirror: {
+                                                                                 mode: 'text/html',
+                                                                                 htmlMode: true,
+                                                                                 lineNumbers: true,
+                                                                                 theme: 'monokai'
+                                                                             }
+
+                                                                         });
+                                                                     });
+                                                             </script>
+                                                            }
                                                             else if (item.InpType == "checkbox")
                                                             {
                                                                 var itms = item.SItems.Split(',');

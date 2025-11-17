@@ -67,6 +67,9 @@
         public const int MezBasvuruYapildiDanisman = 150;
         public const int MezBasvuruYapildiOgrenci = 151;
 
+        public const int MezUzatmaSonrasiDanismanOnayladiOgrenci = 152;
+        public const int MezUzatmaSonrasiDanismanOnaylamadiOgrenci = 153;
+
         public const int MezCiltliTezTeslimEkSureTalebiYapildiOgrenciye = 530;
         public const int MezCiltliTezTeslimEkSureTalebiYapildiDanismana = 531;
         public const int MezCiltliTezTeslimEkSureTalebiDanismanOnayladiOgrenciye = 532;

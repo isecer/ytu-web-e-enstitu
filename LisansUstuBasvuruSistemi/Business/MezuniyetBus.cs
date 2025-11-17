@@ -604,6 +604,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     IsOnaylandiOrDuzeltme = s.IsOnaylandiOrDuzeltme,
                     Aciklama = s.Aciklama,
                     YuklemeTarihi = s.YuklemeTarihi,
+                    IsOnayTaahhutuVerildi = s.IsOnayTaahhutuVerildi,
                     OnayTarihi = s.OnayTarihi,
                     OnayYapanID = s.OnayYapanID,
                 }).OrderByDescending(o => o.YuklemeTarihi).ToList();
@@ -887,7 +888,9 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                    DanismanOnayTarihi = s.DanismanOnayTarihi,
                                                                    DanismanUzatmaSonrasiOnayAciklama = s.DanismanUzatmaSonrasiOnayAciklama,
                                                                    IsYokDrBursiyeriVar = s.IsYokDrBursiyeriVar,
-                                                                   YokDrOncelikliAlan = s.YokDrOncelikliAlan
+                                                                   YokDrOncelikliAlan = s.YokDrOncelikliAlan,
+                                                                   DavetResimYolu = s.DavetResimYolu,
+                                                                   DavetResmiGostermeDurum = s.DavetResmiGostermeDurum
 
                                                                }).OrderByDescending(o => o.SRTalepID).ToList();
 
@@ -946,54 +949,17 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     if (bsurec.AnketID.HasValue)
                     {
-                        if (!entities.AnketCevaplaris.Any(a => a.MezuniyetBasvurulariID == mezuniyetBasvurulariId))
+                        bool anketCevabiVarMi = entities.AnketCevaplaris
+                            .Any(a => a.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+
+                        if (!anketCevabiVarMi)
                         {
-
-                            var anketSorulari = (from bsa in entities.Ankets.Where(p => p.AnketID == bsurec.AnketID)
-                                                 join aso in entities.AnketSorus on bsa.AnketID equals aso.AnketID
-                                                 join sb in entities.AnketCevaplaris.Where(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId && p.Basvurular.KullaniciID == basvuru.KullaniciID) on aso.AnketSoruID equals sb.AnketSoruID into def1
-                                                 from sbc in def1.DefaultIfEmpty()
-                                                 select new
-                                                 {
-                                                     aso.AnketSoruID,
-                                                     AnketSoruSecenekID = sbc != null ? sbc.AnketSoruSecenekID : null,
-                                                     aso.IsTabloVeriGirisi,
-                                                     aso.IsTabloVeriMaxSatir,
-                                                     Aciklama = sbc != null ? sbc.EkAciklama : "",
-                                                     aso.SiraNo,
-                                                     aso.SoruAdi,
-                                                     Secenekler = aso.AnketSoruSeceneks.Select(ss => new
-                                                     {
-                                                         ss.AnketSoruSecenekID,
-                                                         ss.AnketSoruID,
-                                                         ss.SiraNo,
-                                                         ss.IsYaziOrSayi,
-                                                         ss.IsEkAciklamaGir,
-                                                         ss.SecenekAdi
-                                                     }).OrderBy(o => o.SiraNo).ToList()
-
-
-                                                 }).OrderBy(o => o.SiraNo).ToList();
-                            var modelAnk = new KmAnketlerCevap
-                            {
-                                RowID = basvuru.RowID.ToString(),
-                                AnketTipID = 4,
-                                BasvuruSurecID = bsurec.MezuniyetSurecID,
-                                AnketID = bsurec.AnketID.Value,
-                                JsonStringData = anketSorulari.ToJson()
-                            };
-                            foreach (var item in anketSorulari)
-                            {
-                                modelAnk.AnketCevapModel.Add(new AnketCevapDto
-                                {
-                                    SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
-                                    SoruBilgi = new FrAnketDetayDto { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir },
-                                    SoruSecenek = item.Secenekler.Select(s => new FrAnketSecenekDetayDto { AnketSoruSecenekID = s.AnketSoruSecenekID, SiraNo = s.SiraNo, IsEkAciklamaGir = s.IsEkAciklamaGir, SecenekAdi = s.SecenekAdi }).ToList(),
-                                    SelectListSoruSecenek = new SelectList(item.Secenekler.ToList(), "AnketSoruSecenekID", "SecenekAdi", item.AnketSoruSecenekID)
-                                });
-                            }
-
-                            model.AnketView = ViewRenderHelper.RenderPartialView("Ajax", "GetAnket", modelAnk);
+                            model.AnketView = AnketlerBus.GetAnketView(
+                                anketId: bsurec.AnketID.Value,
+                                anketTipId: AnketTipiEnum.MezuniyetSureciDegerlendirmeAnketi,
+                                mezuniyetBasvurulariId: mezuniyetBasvurulariId,
+                                rowId: basvuru.RowID.ToString()
+                            );
                         }
                     }
                 }
@@ -2309,6 +2275,10 @@ namespace LisansUstuBasvuruSistemi.Business
         public static MmMessage SendMailMezuniyetSinavSonucu(int srTalepId, int mezuniyetSinavDurumId)
         {
             return MailSenderMezuniyet.SendMailMezuniyetSinavSonucu(srTalepId, mezuniyetSinavDurumId);
+        }
+        public static MmMessage SendMailUzatmaSonrasiDanismanOnay(int srTalepId)
+        {
+            return MailSenderMezuniyet.SendMailUzatmaSonrasiDanismanOnay(srTalepId);
         }
 
 

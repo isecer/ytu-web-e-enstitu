@@ -1964,10 +1964,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.TDProgramKod = program.ProgramKod;
                     tdoBasvuruDanis.TDProgramAdi = program.ProgramAdi;
                     tdoBasvuruDanis.TDAnabilimDaliID = program.AnabilimDaliID;
-                    tdoBasvuruDanis.TDAnabilimDaliAdi = program.AnabilimDallari.AnabilimDaliAdi;
-
-
-
+                    tdoBasvuruDanis.TDAnabilimDaliAdi = program.AnabilimDallari.AnabilimDaliAdi; 
                 }
 
                 tdoBasvuruDanis.DanismanOnayladi = kModel.DanismanOnayladi;

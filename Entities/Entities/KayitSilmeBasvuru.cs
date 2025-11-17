@@ -28,11 +28,11 @@ namespace Entities.Entities
         public Nullable<int> KayitOgretimYiliBaslangic { get; set; }
         public Nullable<int> KayitOgretimYiliDonemID { get; set; }
         public Nullable<System.DateTime> KayitTarihi { get; set; }
+        public string NufusKayitOrnekDosyaAdi { get; set; }
+        public string NufusKayitOrnekDosyaYolu { get; set; }
         public string CepTel { get; set; }
         public string EPostaAdresi { get; set; }
         public Nullable<int> TezDanismanID { get; set; }
-        public string NufusKayitOrnekDosyaAdi { get; set; }
-        public string NufusKayitOrnekDosyaYolu { get; set; }
         public bool IsTaahhutOnay { get; set; }
         public Nullable<bool> IsHarcBirimiOnayladi { get; set; }
         public Nullable<int> HarcBirimiOnayYapanID { get; set; }
@@ -42,19 +42,20 @@ namespace Entities.Entities
         public Nullable<int> KutuphaneBirimiOnayYapanID { get; set; }
         public Nullable<System.DateTime> KutuphaneBirimiOnayIslemTarihi { get; set; }
         public string KutuphaneBirimiOnayAciklamasi { get; set; }
-        public Nullable<bool> EYKYaGonderildi { get; set; }
-        public Nullable<int> EYKYaGonderildiIslemYapanID { get; set; }
-        public Nullable<System.DateTime> EYKYaGonderildiIslemTarihi { get; set; }
-        public string EYKYaGonderimDurumAciklamasi { get; set; }
-        public Nullable<bool> EYKYaHazirlandi { get; set; }
-        public Nullable<int> EYKYaHazirlandiIslemYapanID { get; set; }
-        public Nullable<System.DateTime> EYKYaHazirlandiIslemTarihi { get; set; }
+        public Nullable<bool> IsOnayMakamiEykOrEnstituMudur { get; set; }
+        public Nullable<bool> OnayMakaminaGonderildi { get; set; }
+        public Nullable<int> OnayMakaminaGonderildiIslemYapanID { get; set; }
+        public Nullable<System.DateTime> OnayMakaminaGonderildiIslemTarihi { get; set; }
+        public string OnayMakaminaGonderimDurumAciklamasi { get; set; }
+        public Nullable<bool> OnayMakaminaHazirlandi { get; set; }
+        public Nullable<int> OnayMakaminaHazirlandiIslemYapanID { get; set; }
+        public Nullable<System.DateTime> OnayMakaminaHazirlandiIslemTarihi { get; set; }
         public Nullable<System.DateTime> EYKTarihi { get; set; }
         public string EYKSayisi { get; set; }
-        public Nullable<bool> EYKDaOnaylandi { get; set; }
-        public Nullable<int> EYKDaOnaylandiIslemYapanID { get; set; }
-        public Nullable<System.DateTime> EYKDaOnaylandiOnayTarihi { get; set; }
-        public string EYKDaOnaylanmadiDurumAciklamasi { get; set; }
+        public Nullable<bool> OnayMakamindaOnaylandi { get; set; }
+        public Nullable<int> OnayMakamindaOnaylandiIslemYapanID { get; set; }
+        public Nullable<System.DateTime> OnayMakamindaOnaylandiOnayTarihi { get; set; }
+        public string OnayMakamindaOnaylanmadiDurumAciklamasi { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

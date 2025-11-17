@@ -477,6 +477,26 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.IslemYapanIP = basvuru.IslemYapanIP;
 
                 model.DegerlendirenUniqueID = uniqueId;
+
+
+                if (sonBasvuru == null)
+                {
+                    model.IsAnketDolduruldu = basvuru.AnketCevaplaris.Any();
+                    if (model.IsAnketDolduruldu == false)
+                    {
+                        var anketId = DonemProjesiAyar.DonemProjesiIlkBasvuruAnketi.GetAyar(basvuru.EnstituKod, "").ToInt();
+                        model.IsAnketVar = anketId > 0;
+                        if (anketId > 0)
+                        {
+                            model.AnketView = AnketlerBus.GetAnketView(
+                                anketId: anketId.Value,
+                                anketTipId: AnketTipiEnum.TezsizYukseklisansDonemProjesiBasvuruAnketi,
+                                donemProjesiID: basvuru.DonemProjesiID,
+                                rowId: basvuru.UniqueID.ToString()
+                            );
+                        }
+                    }
+                }
             }
             return model;
         }

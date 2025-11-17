@@ -47,7 +47,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static TdoBasvuruDetayDto GetSecilenBasvuruTdoDetay(int tdoBasvuruId, Guid? uniqueId)
         {
-            tekrarYukle:
+        tekrarYukle:
             var model = new TdoBasvuruDetayDto() { TDOBasvuruID = tdoBasvuruId };
 
             using (var entities = new LubsDbEntities())
@@ -281,7 +281,23 @@ namespace LisansUstuBasvuruSistemi.Business
                         model.TDOBasvuruDanisman == null ||
                         model.TDOBasvuruDanisman.DanismanOnayladi == false ||
                         model.TDOBasvuruDanisman.EYKYaGonderildi == false ||
-                        model.TDOBasvuruDanisman.EYKDaOnaylandi == false;
+                        model.TDOBasvuruDanisman.EYKDaOnaylandi == false; 
+
+                    model.IsAnketDolduruldu = basvuru.AnketCevaplaris.Any();
+                    if (model.IsAnketDolduruldu == false)
+                    {
+                        var anketId = TdoAyar.IlkDanismanOnerisindeIstenenAnket.GetAyar(basvuru.EnstituKod, "").ToInt();  
+                        model.IsAnketVar = anketId > 0;
+                        if (anketId > 0)
+                        {
+                            model.AnketView = AnketlerBus.GetAnketView(
+                                anketId: anketId.Value,
+                                anketTipId: AnketTipiEnum.DanismanAtamaBasvurunAnketi,
+                                tdoBasvuruID: basvuru.TDOBasvuruID,
+                                rowId:basvuru.UniqueID.ToString()
+                            );
+                        }
+                    }
 
 
                 }
@@ -307,6 +323,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
 
             }
+
+
             return model;
 
         }
@@ -579,7 +597,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, ObjectExtensions.GetCurrentMethodPath(), BilgiTipiEnum.Saldırı);
                         }
 
-                    } 
+                    }
                 }
                 else
                 {

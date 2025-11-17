@@ -10,5 +10,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int EykYaGonderildi = 1;
         public const int EykYaHazirlandi = 2;
         public const int EykDaOnaylandi = 3;
+
+
+        public const int OnayMakaminaGonderildi = 1;
+        public const int OnayMakaminaHazirlandi = 2;
+        public const int OnayMakamindaOnaylandi = 3;
     }
 }

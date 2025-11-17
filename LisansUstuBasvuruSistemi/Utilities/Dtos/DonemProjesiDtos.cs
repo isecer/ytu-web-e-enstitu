@@ -54,7 +54,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DurumColor { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
         public Guid? ShowBasvuruUniqueId { get; set; }
-        public new List<DonemProjesiBasvuruDto> DonemProjesiBasvurus { get; set; } 
+        public new List<DonemProjesiBasvuruDto> DonemProjesiBasvurus { get; set; }
+        public bool IsAnketDolduruldu { get; set; }
+        public bool IsAnketVar { get; set; }
+        public string AnketView { get; set; }
     }
     public class DonemProjesiBasvuruDto : DonemProjesiBasvuru
     {

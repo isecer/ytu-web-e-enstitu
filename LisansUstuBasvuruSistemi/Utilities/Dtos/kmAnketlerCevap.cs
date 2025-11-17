@@ -11,6 +11,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string RowID { get; set; }
         public int BasvuruSurecID { get; set; }
         public int AnketID { get; set; }
+        public string AnketAdi { get; set; }
         public string JsonStringData { get; set; }
         public List<AnketCevapDto> AnketCevapModel { get; set; }
         public List<int> AnketSoruID { get; set; }

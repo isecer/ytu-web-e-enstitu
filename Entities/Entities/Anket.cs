@@ -17,10 +17,10 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Anket()
         {
-            this.AnketCevaplaris = new HashSet<AnketCevaplari>();
             this.AnketSorus = new HashSet<AnketSoru>();
             this.BasvuruSurecs = new HashSet<BasvuruSurec>();
             this.MezuniyetSurecis = new HashSet<MezuniyetSureci>();
+            this.AnketCevaplaris = new HashSet<AnketCevaplari>();
         }
     
         public int AnketID { get; set; }
@@ -34,12 +34,12 @@ namespace Entities.Entities
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnketSoru> AnketSorus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasvuruSurec> BasvuruSurecs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureci> MezuniyetSurecis { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
     }
 }

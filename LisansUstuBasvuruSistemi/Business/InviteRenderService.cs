@@ -9,8 +9,8 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class InviteRenderService
     {
-        private readonly string _templatePath =
-            HttpContext.Current.Server.MapPath("~/Content/templates/tez-daveti-bg.png");
+        private string GetTemplate(string ekd) =>
+            HttpContext.Current.Server.MapPath($"~/Content/templates/tez-daveti-bg-{ekd}.png");
 
         public string RenderToFile(ThesisInviteVm vm, int quality = 75)
         {
@@ -22,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             Func<float, float> ToPx = pt => pt * 96f / 72f;
 
-            using (var bg = SKBitmap.Decode(_templatePath))
+            using (var bg = SKBitmap.Decode(GetTemplate(vm.EnstituKod)))
             using (var surface = SKSurface.Create(new SKImageInfo(bg.Width, bg.Height)))
             {
                 var canvas = surface.Canvas;
@@ -64,9 +64,9 @@ namespace LisansUstuBasvuruSistemi.Business
                     float yThesisTitleAreaBottom = 560f;
 
                     float yAdvisor = 610f;
-                    float yDate = 705f;
-                    float yTime = 735f;
-                    float yPlaceTop = 745f;
+                    float yDate = 700f;
+                    float yTime = 730f;
+                    float yPlaceTop = 735f;
 
                     // Avatar (değişmedi)
                     if (!string.IsNullOrEmpty(vm.AvatarPath))
@@ -94,7 +94,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 using (avatarBitmap)
                                 using (var paint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High })
                                 {
-                                    var cx = CX; 
+                                    var cx = CX;
                                     var cy = yAvatarCenter;
                                     var circle = new SKPath();
                                     circle.AddCircle(cx, cy, avatarRadius);
@@ -209,13 +209,13 @@ namespace LisansUstuBasvuruSistemi.Business
             if (string.IsNullOrWhiteSpace(text)) return;
 
             using (var paint = new SKPaint
-                   {
-                       Typeface = tf,
-                       TextSize = sizePx,
-                       IsAntialias = true,
-                       Color = color,
-                       TextAlign = SKTextAlign.Center
-                   })
+            {
+                Typeface = tf,
+                TextSize = sizePx,
+                IsAntialias = true,
+                Color = color,
+                TextAlign = SKTextAlign.Center
+            })
             {
                 var lines = WrapLines(text, paint, maxWidth);
                 while (lines.Count > maxLines && paint.TextSize > autoShrinkMinPx)
@@ -270,13 +270,13 @@ namespace LisansUstuBasvuruSistemi.Business
             if (string.IsNullOrWhiteSpace(text)) return;
 
             using (var paint = new SKPaint
-                   {
-                       Typeface = tf,
-                       TextSize = sizePx,
-                       IsAntialias = true,
-                       Color = color,
-                       TextAlign = SKTextAlign.Center
-                   })
+            {
+                Typeface = tf,
+                TextSize = sizePx,
+                IsAntialias = true,
+                Color = color,
+                TextAlign = SKTextAlign.Center
+            })
             {
                 var lines = WrapLines(text, paint, maxWidth);
                 while (lines.Count > maxLines && paint.TextSize > autoShrinkMinPx)
@@ -325,6 +325,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
     public class ThesisInviteVm
     {
+        public string EnstituKod { get; set; }
         public string FullName { get; set; }
         public string Department { get; set; }
         public string Program { get; set; }

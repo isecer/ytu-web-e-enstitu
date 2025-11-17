@@ -755,14 +755,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("Öğrenci Başvurusunu Reddediyorum seçeneği seçilirse Açıklama girilmesi zorunludur.");
                 }
+                var sendMail = false;
                 if (mmMessage.Messages.Count == 0)
                 {
+                    if (isDanismanUzatmaSonrasiOnay.HasValue &&
+                        isDanismanUzatmaSonrasiOnay != srTalep.IsDanismanUzatmaSonrasiOnay)
+                        sendMail = true;
                     srTalep.IsDanismanUzatmaSonrasiOnay = isDanismanUzatmaSonrasiOnay;
                     srTalep.DanismanUzatmaSonrasiOnayAciklama = danismanUzatmaSonrasiOnayAciklama;
                     srTalep.DanismanOnayTarihi = onayTarihi;
 
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("SRTalebi", LogCrudType.Update, srTalep.ToJson());
+
+                    if (sendMail)
+                    {
+                        MezuniyetBus.SendMailUzatmaSonrasiDanismanOnay(srTalep.SRTalepID);
+                    }
+
                     mmMessage.IsSuccess = true;
                     mmMessage.Messages.Add(isDanismanUzatmaSonrasiOnay.HasValue ? (isDanismanUzatmaSonrasiOnay.Value ? "Başvuru Onaylandı." : "Başvuru Reddedildi.") : "Onaylama İşlemi Geril Alındı.");
                 }
@@ -770,6 +780,69 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
             return Json(new { Messages = mmMessage }, "application/json", JsonRequestBehavior.AllowGet);
 
+        }
+
+
+
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
+        public ActionResult SrDavetResmiGostermeDurumKaydet(int id, int durumId)
+        {
+            var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == id);
+            srTalep.DavetResmiGostermeDurum = durumId;
+
+            string mmMessage = "";
+            bool isSuccess = true;
+
+            try
+            {
+                if (srTalep.SRDurumID == SrTalepDurumEnum.Onaylandı &&
+                    srTalep.MezuniyetBasvurulari.OgrenimTipKod.IsDoktora())
+                {
+                    var srTalebiDavetModel = SrTalepleriBus
+                        .GetSonSrTalebiDavetData(srTalep.Enstituler, srTalep.SRTalepID).FirstOrDefault();
+
+                    if (srTalebiDavetModel != null)
+                    {
+                        if (srTalep.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetProfilResmiOlmadanGoster)
+                        {
+                            srTalebiDavetModel.AvatarPath = null;
+                        }
+
+                        if (srTalep.DavetResmiGostermeDurum != SrDavetResmiGostermeDurumEnum.DavetResmiGosterme)
+                        {
+                            var inviteImagePath = _inviteRenderService.RenderToFile(srTalebiDavetModel);
+                            srTalep.DavetResimYolu = inviteImagePath;
+                        }
+                    }
+
+                    if (srTalep.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetResmiGosterme &&
+                        !srTalep.DavetResimYolu.IsNullOrWhiteSpace())
+                    {
+                        FileHelper.Delete(srTalep.DavetResimYolu);
+                        srTalep.DavetResimYolu = null;
+                    }
+                }
+
+                _entities.SaveChanges();
+                LogIslemleri.LogEkle("SRTalepleri", LogCrudType.Update, srTalep.ToJson());
+
+                mmMessage = "Davet resmi gösterme durumu başarıyla güncellendi.";
+            }
+            catch (Exception ex)
+            {
+                isSuccess = false;
+                mmMessage = "İşlem sırasında bir hata oluştu!";
+
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(
+                    "SR Talebi Davet Resmi işlemi sırasında bir hata oluştu! hata:" + ex.ToExceptionMessage(),
+                    ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
+            }
+
+            return new
+            {
+                IsSuccess = isSuccess,
+                MmMessage = mmMessage
+            }.ToJsonResult();
         }
 
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
@@ -822,22 +895,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         .GetSonSrTalebiDavetData(srTalep.Enstituler, srTalep.SRTalepID).FirstOrDefault();
                     if (srTalebiDavetModel != null)
                     {
+                        if (srTalep.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetProfilResmiOlmadanGoster)
+                        {
+                            srTalebiDavetModel.AvatarPath = null;
+                        }
 
-                        var inviteImagePath = _inviteRenderService.RenderToFile(srTalebiDavetModel);
-                        srTalep.DavetResimYolu = inviteImagePath;
+                        if (srTalep.DavetResmiGostermeDurum != SrDavetResmiGostermeDurumEnum.DavetResmiGosterme)
+                        {
+                            var inviteImagePath = _inviteRenderService.RenderToFile(srTalebiDavetModel);
+                            srTalep.DavetResimYolu = inviteImagePath;
+                        }
+
                         _entities.SaveChanges();
 
                     }
                 }
-                else
+
+                if (srTalep.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetResmiGosterme && !srTalep.DavetResimYolu.IsNullOrWhiteSpace())
                 {
-                    if (!srTalep.DavetResimYolu.IsNullOrWhiteSpace())
-                    {
-                        FileHelper.Delete(srTalep.DavetResimYolu);
-                        srTalep.DavetResimYolu = null;
-                        _entities.SaveChanges();
-                    }
+                    FileHelper.Delete(srTalep.DavetResimYolu);
+                    srTalep.DavetResimYolu = null;
+                    _entities.SaveChanges();
                 }
+
             }
             catch (Exception ex)
             {
@@ -1013,7 +1093,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult TdDurumKaydet(MezuniyetBasvurulariTezDosyalari kModel, int? sonTekKaynakOrani, int? sonToplamKaynakOrani)
+        public ActionResult TdDurumKaydet(MezuniyetBasvurulariTezDosyalari kModel, int? sonTekKaynakOrani, int? sonToplamKaynakOrani, bool? IsOnayTaahhutuVerildi)
         {
             var mmMessage = new MmMessage
             {
@@ -1021,78 +1101,132 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsSuccess = false
             };
 
-            var talep = _entities.MezuniyetBasvurulariTezDosyalaris.First(p => p.MezuniyetBasvurulariTezDosyaID == kModel.MezuniyetBasvurulariTezDosyaID);
-            var kYetki = RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
-            if (!kYetki)
+            try
             {
-                mmMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz.");
-            }
-            else if (kModel.IsOnaylandiOrDuzeltme.HasValue)
-            {
-                if (kModel.IsOnaylandiOrDuzeltme == false && kModel.Aciklama.IsNullOrWhiteSpace()) mmMessage.Messages.Add("Düzeltme talebi için açıklama giriniz.");
-            }
+                var talep = _entities.MezuniyetBasvurulariTezDosyalaris
+                    .FirstOrDefault(p => p.MezuniyetBasvurulariTezDosyaID == kModel.MezuniyetBasvurulariTezDosyaID);
 
-            if (kModel.IsOnaylandiOrDuzeltme == true && (sonTekKaynakOrani.HasValue || sonToplamKaynakOrani.HasValue))
-            {
-                var ogrenimTipKrt =
-                    talep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.FirstOrDefault(f =>
-                        f.OgrenimTipKod == talep.MezuniyetBasvurulari.OgrenimTipKod);
-                if (sonTekKaynakOrani.HasValue)
+                if (talep == null)
                 {
-                    if (sonTekKaynakOrani.Value > ogrenimTipKrt.TekKaynakOrani.Value || sonTekKaynakOrani.Value < 0)
-                        mmMessage.Messages.Add($"En fazla Tek Kaynak Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.TekKaynakOrani} değerleri arasında olmalıdır.");
+                    mmMessage.Messages.Add("Kayıt bulunamadı!");
+                    return new { mmMessage, mmMessage.IsSuccess, Messages = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage) }.ToJsonResult();
                 }
-                if (!mmMessage.Messages.Any() && ogrenimTipKrt.ToplamKaynakOrani.HasValue)
+
+                var yetkiVar = RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
+                if (!yetkiVar)
                 {
-                    if (sonToplamKaynakOrani.Value > ogrenimTipKrt.ToplamKaynakOrani.Value || sonToplamKaynakOrani.Value < 0)
-                        mmMessage.Messages.Add($"Toplam Benzerlik Oranı bilgisi 0 ile {ogrenimTipKrt.ToplamKaynakOrani} değerleri arasında olmalıdır.");
+                    mmMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz.");
                 }
-            }
-            if (mmMessage.Messages.Count == 0)
-            {
-                try
+                else if (!kModel.IsOnaylandiOrDuzeltme.HasValue)
                 {
+                    mmMessage.Messages.Add("Onay / Düzeltme seçimi yapmadınız.");
+                }
+                else if (kModel.IsOnaylandiOrDuzeltme == false && kModel.Aciklama.IsNullOrWhiteSpace())
+                {
+                    mmMessage.Messages.Add("Düzeltme talebi için açıklama giriniz.");
+                }
 
-                    if (kModel.IsOnaylandiOrDuzeltme.HasValue) talep.Aciklama = kModel.Aciklama.IsNullOrWhiteSpace() ? null : kModel.Aciklama.Trim();
-                    else talep.Aciklama = null;
+                // --- Oran kontrolleri (sadece onaylandıysa geçerli)
+                if (kModel.IsOnaylandiOrDuzeltme == true)
+                {
+                    var ogrKriter = talep.MezuniyetBasvurulari
+                        .MezuniyetSureci
+                        .MezuniyetSureciOgrenimTipKriterleris
+                        .FirstOrDefault(f => f.OgrenimTipKod == talep.MezuniyetBasvurulari.OgrenimTipKod);
 
-                    if (kModel.IsOnaylandiOrDuzeltme == true)
+                    if (ogrKriter != null)
                     {
-                        talep.MezuniyetBasvurulari.SonTekKaynakOrani = sonTekKaynakOrani;
-                        talep.MezuniyetBasvurulari.SonToplamKaynakOrani = sonToplamKaynakOrani;
+                        if (sonTekKaynakOrani.HasValue)
+                        {
+                            if (sonTekKaynakOrani.Value > ogrKriter.TekKaynakOrani || sonTekKaynakOrani.Value < 0)
+                                mmMessage.Messages.Add($"Tek Kaynak Benzerlik Oranı 0 ile {ogrKriter.TekKaynakOrani} arasında olmalıdır.");
+                        }
+
+                        if (sonToplamKaynakOrani.HasValue)
+                        {
+                            if (sonToplamKaynakOrani.Value > ogrKriter.ToplamKaynakOrani || sonToplamKaynakOrani.Value < 0)
+                                mmMessage.Messages.Add($"Toplam Benzerlik Oranı 0 ile {ogrKriter.ToplamKaynakOrani} arasında olmalıdır.");
+                        }
                     }
+                    if (!IsOnayTaahhutuVerildi.HasValue || IsOnayTaahhutuVerildi.Value == false)
+                        mmMessage.Messages.Add("Onay işlemi için 'Taahhüt Metnini Okudum ve Onaylıyorum' kutusunu işaretlemeniz gerekmektedir.");
 
-                    talep.IsOnaylandiOrDuzeltme = kModel.IsOnaylandiOrDuzeltme;
-                    talep.OnayTarihi = DateTime.Now;
-                    talep.OnayYapanID = UserIdentity.Current.Id;
-                    talep.IslemTarihi = DateTime.Now;
-                    talep.IslemYapanID = UserIdentity.Current.Id;
-                    talep.IslemYapanIP = UserIdentity.Ip;
-
-                    mmMessage.Messages.Add("Tez kontrol bilgisi kayıt edildi.");
-                    _entities.SaveChanges();
-                    LogIslemleri.LogEkle("MezuniyetBasvurulariTezDosyalari", LogCrudType.Update, talep.ToJson());
-                    mmMessage.IsSuccess = true;
-                    if (kModel.IsOnaylandiOrDuzeltme == true) mmMessage.Messages.AddRange(MezuniyetBus.SendMailMezuniyetTezSablonKontrol(talep.MezuniyetBasvurulariTezDosyaID, MailSablonTipiEnum.MezTezKontrolTezDosyasiBasarili, kModel.Aciklama).Messages);
-                    else if (kModel.IsOnaylandiOrDuzeltme == false) mmMessage.Messages.AddRange(MezuniyetBus.SendMailMezuniyetTezSablonKontrol(talep.MezuniyetBasvurulariTezDosyaID, MailSablonTipiEnum.MezTezKontrolTezDosyasiOnaylanmadi, kModel.Aciklama).Messages);
                 }
-                catch (Exception ex)
+
+                if (mmMessage.Messages.Any())
                 {
-                    mmMessage.MessageType = MsgTypeEnum.Error;
-                    mmMessage.IsSuccess = false;
-                    mmMessage.Messages.Add("Tez dosyası kontrolü durum bilgisi kayıt edilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
+                    mmMessage.MessageType = MsgTypeEnum.Warning;
+                    return new
+                    {
+                        mmMessage,
+                        mmMessage.IsSuccess,
+                        Messages = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage)
+                    }.ToJsonResult();
                 }
+
+                // --- Kayıt işlemleri ---
+                talep.Aciklama = kModel.IsOnaylandiOrDuzeltme.HasValue && !kModel.Aciklama.IsNullOrWhiteSpace()
+                    ? kModel.Aciklama.Trim()
+                    : null;
+
+                talep.IsOnaylandiOrDuzeltme = kModel.IsOnaylandiOrDuzeltme;
+                talep.OnayTarihi = DateTime.Now;
+                talep.OnayYapanID = UserIdentity.Current.Id;
+                talep.IslemTarihi = DateTime.Now;
+                talep.IslemYapanID = UserIdentity.Current.Id;
+                talep.IslemYapanIP = UserIdentity.Ip;
+
+                // Oranlar sadece onaylandıysa güncellenir
+                if (kModel.IsOnaylandiOrDuzeltme == true)
+                {
+                    talep.MezuniyetBasvurulari.SonTekKaynakOrani = sonTekKaynakOrani;
+                    talep.MezuniyetBasvurulari.SonToplamKaynakOrani = sonToplamKaynakOrani;
+                    talep.IsOnayTaahhutuVerildi = IsOnayTaahhutuVerildi;
+                }
+                else
+                {
+                    talep.IsOnayTaahhutuVerildi = null;
+                } 
+                   
+
+                _entities.SaveChanges();
+
+                LogIslemleri.LogEkle("MezuniyetBasvurulariTezDosyalari", LogCrudType.Update, talep.ToJson());
+
+                mmMessage.IsSuccess = true;
+                mmMessage.Messages.Add("Tez kontrol bilgisi başarıyla kayıt edildi.");
+
+                // Mail gönderimleri
+                if (kModel.IsOnaylandiOrDuzeltme == true)
+                    mmMessage.Messages.AddRange(MezuniyetBus.SendMailMezuniyetTezSablonKontrol(
+                        talep.MezuniyetBasvurulariTezDosyaID,
+                        MailSablonTipiEnum.MezTezKontrolTezDosyasiBasarili,
+                        kModel.Aciklama).Messages);
+                else
+                    mmMessage.Messages.AddRange(MezuniyetBus.SendMailMezuniyetTezSablonKontrol(
+                        talep.MezuniyetBasvurulariTezDosyaID,
+                        MailSablonTipiEnum.MezTezKontrolTezDosyasiOnaylanmadi,
+                        kModel.Aciklama).Messages);
             }
+            catch (Exception ex)
+            {
+                mmMessage.MessageType = MsgTypeEnum.Error;
+                mmMessage.Messages.Add("Tez dosyası kontrolü kayıt edilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
+            }
+
             mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Warning;
-            var strView = mmMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage) : "";
+
+            var rendered = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
+
             return new
             {
                 mmMessage,
                 mmMessage.IsSuccess,
-                Messages = strView,
+                Messages = rendered
             }.ToJsonResult();
         }
+
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
         public ActionResult MezuniyetDurumKaydet(int id, bool? isMezunOldu, int? sonTekKaynakOrani, int? sonToplamKaynakOrani, DateTime? tarih)
         {
@@ -3328,14 +3462,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)] 
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
         public ActionResult DownloadPdf(int id, string ekd)
         {
 
-       
+
 
             var srTalep = _entities.SRTalepleris.First(f => f.SRTalepID == id);
             var data = SrTalepleriBus.GetSonSrTalebiDavetData(srTalep.Enstituler, id).First();
+
+            if (srTalep.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetProfilResmiOlmadanGoster)
+            {
+                data.AvatarPath = null;
+            }
+
             var pdfBytes = _inviteRenderService.RenderToPdf(data);
             var mb = srTalep.MezuniyetBasvurulari;
 

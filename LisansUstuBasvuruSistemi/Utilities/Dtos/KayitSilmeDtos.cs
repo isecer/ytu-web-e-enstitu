@@ -14,6 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EnstituKod { get; set; }
         public string EnstituAdi { get; set; }
         public string AkademikDonemID { get; set; }
+        public bool? IsOnayMakamiEykOrEnstituMudur { get; set; }
         public int? KayitSilmeDurumID { get; set; } 
         public string AdSoyad { get; set; }
         public string OgrenciNo { get; set; } 
@@ -22,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public IEnumerable<FrKayitSilmeBasvuruDto> Data { get; set; } 
         public bool IsAktifOgrenimBasvuruVar { get; set; }
         public List<int> SelectedKayitSilmeBasvurulariIds { get; set; } = new List<int>();
-        public int? OgrenimTipKod { get; set; } 
+        public int? OgrenimTipKod { get; set; }
     }
     public class FrKayitSilmeBasvuruDto : KayitSilmeBasvuru
     {

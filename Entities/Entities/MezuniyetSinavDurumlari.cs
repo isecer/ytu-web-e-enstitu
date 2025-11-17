@@ -17,8 +17,8 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MezuniyetSinavDurumlari()
         {
-            this.SRTaleplerJuris = new HashSet<SRTaleplerJuri>();
             this.SRTalepleris = new HashSet<SRTalepleri>();
+            this.SRTaleplerJuris = new HashSet<SRTaleplerJuri>();
         }
     
         public int MezuniyetSinavDurumID { get; set; }
@@ -31,8 +31,8 @@ namespace Entities.Entities
         public string IslemYapanIP { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SRTaleplerJuri> SRTaleplerJuris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTalepleri> SRTalepleris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SRTaleplerJuri> SRTaleplerJuris { get; set; }
     }
 }

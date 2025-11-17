@@ -20,12 +20,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int KutuphaneBirimiOnayBekleniyor = 4;
         public const int KutuphaneBirimiTarafindanOnaylandi = 5; 
         public const int KutuphaneBirimiTarafindanReddedildi = 6;
-        public const int EykYaGonderimOnayiBekleniyor = 7;
-        public const int EykYaGonderimiOnaylandi = 8;
-        public const int EykYaGonderimiOnaylanmadi = 9;
-        public const int EykYaHazirlandi = 10;
-        public const int EykDaOnaylandi = 11;
-        public const int EykDaOnaylanmadi = 12; 
+        public const int OnayMakaminaGonderimOnayiBekleniyor = 7;
+        public const int OnayMakaminaGonderimiOnaylandi = 8;
+        public const int OnayMakamınaGonderimiOnaylanmadi = 9;
+        public const int OnayMakaminaHazirlandi = 10;
+        public const int OnayMakamindaOnaylandi = 11;
+        public const int OnayMakamindaOnaylanmadi = 12; 
     }
 
 }

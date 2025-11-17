@@ -28,6 +28,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string BulunamayanDanismanAdSoyad { get; set; }
         public bool IsObsOgrenciNoAktif { get; set; }
         public List<TdoBasvuruDanismanDto> TDOBasvuruDanismanList { get; set; }
+        public bool IsAnketVar { get; set; }
+        public bool IsAnketDolduruldu { get; set; }
+        public string AnketView { get; set; }
     }
     public class TdoBasvuruDanismanDto : TDOBasvuruDanisman
     {

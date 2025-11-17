@@ -27,7 +27,7 @@
             <div class="panel panel-success gallery-panel">
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
-                        <i class="fa fa-film"></i> Tez Savunmaları
+                        <i class="fa fa-film"></i> Doktora Tez Savunmaları
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -36,8 +36,9 @@
 
                             @foreach (var imgUrl in galleryUrls)
                             {
+                                var nowTicks = DateTime.Now.Ticks;
                                 <div class="swiper-slide">
-                                    <img src="@imgUrl" alt="Savunma Duyurusu" onclick="openGalleryModal('@imgUrl')" />
+                                    <img src="@imgUrl?v=@nowTicks" alt="Savunma Duyurusu" onclick="openGalleryModal('@imgUrl?v=@nowTicks')" />
                                 </div>
                             }
                         </div>
@@ -99,7 +100,7 @@
         });
         function openGalleryModal(imgUrl) {
             bootbox.dialog({
-                title: '<i class="fa fa-image"></i> Tez Savunma Sınavı Davet Görseli',
+                title: '<i class="fa fa-image"></i> Doktora Tez Savunma Sınavı Davet Görseli',
                 message: '<img src="' + imgUrl + '" alt="Savunma Görseli" />',
                 size: "large",
                 centerVertical: true,

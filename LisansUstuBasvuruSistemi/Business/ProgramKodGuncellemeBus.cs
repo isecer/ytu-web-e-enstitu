@@ -10,6 +10,8 @@ using BiskaUtil;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData.Models;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -595,7 +597,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
         /// <summary>OBS program kodundan baz kodu ayıklar (örn. 701-3 → 701)</summary>
-        private static string ProgramKodAyikla(string programKod)
+        public static string ProgramKodAyikla(string programKod)
         {
             if (string.IsNullOrEmpty(programKod)) return programKod;
             var idx = programKod.IndexOf('-');
@@ -609,12 +611,12 @@ namespace LisansUstuBasvuruSistemi.Business
             var parts = programKod.Split('-');
             if (parts.Length < 2) return null;
 
-            switch (parts[1])
+            switch (parts[1].ToIntObj())
             {
-                case "1": return "YL";
-                case "2": return "TYL";
-                case "3": return "DR";
-                case "5": return "BDR";
+                case OgrenimTipi.TezsizYuksekLisans: return "YL";
+                case OgrenimTipi.TezliYuksekLisans: return "TYL";
+                case OgrenimTipi.Doktra: return "DR";
+                case OgrenimTipi.ButunlesikDoktora: return "BDR";
                 default: return null;
             }
         }

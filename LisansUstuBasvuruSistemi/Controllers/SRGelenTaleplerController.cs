@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class SrGelenTaleplerController : Controller
     {
         private readonly LubsDbEntities _entities = new LubsDbEntities();
+        private readonly InviteRenderService _inviteRenderService = new InviteRenderService();
         public ActionResult Index(string ekd)
         {
             return Index(new FmTalepler { }, ekd);
@@ -294,6 +295,44 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage = MezuniyetBus.SendMailMezuniyetSinavYerBilgisi(id, srDurumId == SrTalepDurumEnum.Onaylandı);
                 }
 
+            }
+            try
+            {
+                if (talep.SRDurumID == SrTalepDurumEnum.Onaylandı && talep.MezuniyetBasvurulari.OgrenimTipKod.IsDoktora())
+                {
+                    var srTalebiDavetModel = SrTalepleriBus
+                        .GetSonSrTalebiDavetData(talep.Enstituler, talep.SRTalepID).FirstOrDefault();
+                    if (srTalebiDavetModel != null)
+                    {
+                        if (talep.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetProfilResmiOlmadanGoster)
+                        {
+                            srTalebiDavetModel.AvatarPath = null;
+                        }
+
+                        if (talep.DavetResmiGostermeDurum != SrDavetResmiGostermeDurumEnum.DavetResmiGosterme)
+                        {
+                            var inviteImagePath = _inviteRenderService.RenderToFile(srTalebiDavetModel);
+                            talep.DavetResimYolu = inviteImagePath;
+                        }
+
+                        _entities.SaveChanges();
+
+                    }
+                }
+
+                if (talep.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetResmiGosterme && !talep.DavetResimYolu.IsNullOrWhiteSpace())
+                {
+                    FileHelper.Delete(talep.DavetResimYolu);
+                    talep.DavetResimYolu = null;
+                    _entities.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(
+                    "SR Talebi Davet Resmi işlemi sırasında bir hata oluştu! hata:" + ex.ToExceptionMessage(),
+                    ex.ToExceptionStackTrace(), BilgiTipiEnum.Kritik);
             }
 
             var messageView = "";

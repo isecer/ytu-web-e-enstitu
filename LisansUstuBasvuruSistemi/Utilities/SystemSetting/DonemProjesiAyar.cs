@@ -34,6 +34,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public static readonly DonemProjesiAyarProperty EnFazlaToplamKaynakOrani = new DonemProjesiAyarProperty("En fazla toplam kaynak oranı");
         public static readonly DonemProjesiAyarProperty BasariliKrediSayisi = new DonemProjesiAyarProperty("Başarılı kredi sayısı");
         public static readonly DonemProjesiAyarProperty KontrolEdilecekMinDersNotlari = new DonemProjesiAyarProperty("Kontrol edilecek min ders notları");
+        public static readonly DonemProjesiAyarProperty DonemProjesiIlkBasvuruAnketi = new DonemProjesiAyarProperty("Dönem Projesi Başvuru Anketi");
 
         public static string GetAyar(this DonemProjesiAyarProperty ayarProperty, string enstituKodu, string varsayilanDeger = "")
         {

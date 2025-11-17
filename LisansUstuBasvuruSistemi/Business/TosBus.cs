@@ -1,19 +1,20 @@
-﻿using Entities.Entities;
+﻿using BiskaUtil;
+using DevExpress.XtraReports.UI;
+using Entities.Entities;
+using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MailManager;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
-using BiskaUtil;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.MailManager;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Raporlar.Genel;
+using static LisansUstuBasvuruSistemi.Business.TosBus;
 
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -475,6 +476,29 @@ namespace LisansUstuBasvuruSistemi.Business
                 var sinavTarihi = model.ToBasvuruSavunmaList.FirstOrDefault()?.SRModel?.Tarih;
                 var basvuruKiterKontrol = TosDurumInfo(basvuru.UniqueID, sinavTarihi);
 
+                if (sonTos == null)
+                {  
+
+                    if (basvuruKiterKontrol.MmMessage.IsSuccess)
+                    {
+                        model.IsAnketDolduruldu = basvuru.AnketCevaplaris.Any();
+                        if (model.IsAnketDolduruldu == false)
+                        {
+                            var anketId = TiAyar.TezOneriIlkBasvuruAnketi.GetAyar(basvuru.EnstituKod, "").ToInt();
+                            model.IsAnketVar = anketId > 0;
+                            if (anketId > 0)
+                            {
+                                model.AnketView = AnketlerBus.GetAnketView(
+                                    anketId: anketId.Value,
+                                    anketTipId: AnketTipiEnum.DoktoraTezOneriSinaviBasvuruAnketi,
+                                    toBasvuruID: basvuru.ToBasvuruID,
+                                    rowId: basvuru.UniqueID.ToString()
+                                );
+                            }
+                        }
+                    }
+
+                }
 
                 if (basvuruKiterKontrol.MmMessage.MessagesDialog.Any())
                 {

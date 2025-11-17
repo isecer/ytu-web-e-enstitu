@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using BiskaUtil;
-using LisansUstuBasvuruSistemi.Business;
+﻿using BiskaUtil;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -21,6 +22,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var cats = data.Select(s => new { s.Kategori, Toggle = true }).Distinct().ToList();
             var panelToggled = cats.ToDictionary(item => item.Kategori, item => item.Toggle);
             ViewBag.PanelToggled = panelToggled;
+
+            var varolanAnketId = TdoAyar.IlkDanismanOnerisindeIstenenAnket.GetAyar(enstituKod).ToIntObj();
+            ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, varolanAnketId), "Value", "Caption");
             return View(data);
         }
         [HttpPost]
@@ -55,7 +59,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ptg = item.Replace("__", "◘").Split('◘');
                 toggled.Add(ptg[0], ptg[1].ToBoolean().Value);
             }
-            ViewBag.PanelToggled = toggled; 
+            ViewBag.PanelToggled = toggled;
+
+            var varolanAnketId = TdoAyar.IlkDanismanOnerisindeIstenenAnket.GetAyar(enstituKod).ToIntObj();
+            ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, varolanAnketId), "Value", "Caption");
             return View(data);
         }
     }

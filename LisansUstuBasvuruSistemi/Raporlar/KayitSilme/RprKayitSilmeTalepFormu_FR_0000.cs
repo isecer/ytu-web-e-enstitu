@@ -24,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.KayitSilme
                             from dDanisman in defD.DefaultIfEmpty()
                             join harcYetkili in entities.Kullanicilars on ks.HarcBirimiOnayYapanID equals harcYetkili.KullaniciID
                             join kutuphaneYetkili in entities.Kullanicilars on ks.KutuphaneBirimiOnayYapanID equals kutuphaneYetkili.KullaniciID
-                            join enstituYetkili in entities.Kullanicilars on ks.EYKYaGonderildiIslemYapanID equals enstituYetkili.KullaniciID
+                            join enstituYetkili in entities.Kullanicilars on ks.OnayMakaminaGonderildiIslemYapanID equals enstituYetkili.KullaniciID
                             where ks.KayitSilmeBasvuruID == id
                             select new
                             {
@@ -47,7 +47,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.KayitSilme
                                 KutuphaneOnayYapanAdSoyad = kutuphaneYetkili.Unvanlar.UnvanAdi + " " + kutuphaneYetkili.Ad + " " + kutuphaneYetkili.Soyad,
                                 ks.KutuphaneBirimiOnayIslemTarihi,
                                 EnstituOnayYapanAdSoyad = enstituYetkili.Unvanlar.UnvanAdi + " " + enstituYetkili.Ad + " " + enstituYetkili.Soyad,
-                                ks.EYKYaGonderildiIslemTarihi,
+                                ks.OnayMakaminaGonderildiIslemTarihi,
                                 enst.SistemErisimAdresi,
                                 urlAdd = enst.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "KSTF_" + ks.KayitSilmeBasvuruID + "_" + ks.UniqueID
                             }).First();
@@ -75,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.KayitSilme
                 cellImzaKutuphaneTarih.Text = data.KutuphaneBirimiOnayIslemTarihi.ToFormatDateAndTime();
 
                 cellImzaEnstituAdSoyad.Text = data.EnstituOnayYapanAdSoyad;
-                cellImzaEnstituTarih.Text = data.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime();
+                cellImzaEnstituTarih.Text = data.OnayMakaminaGonderildiIslemTarihi.ToFormatDateAndTime();
 
 
                 cellFormKodu.Text = "Form Kodu: " + data.UniqueID.ToString().Substring(0, 8).ToUpper();

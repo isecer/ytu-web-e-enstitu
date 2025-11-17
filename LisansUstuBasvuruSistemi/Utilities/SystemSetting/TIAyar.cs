@@ -27,6 +27,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public static readonly TiAyarProperty TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter = new TiAyarProperty("Düzeltme alan öğrenci yeni sınavı kaç ay içinde amalı");
         public static readonly TiAyarProperty TezOneriIlkSavunmaHakkiAyKriter = new TiAyarProperty("ilk başvuru için 1. Savunma kaç ay içinde yapılmalı");
         public static readonly TiAyarProperty TezOneriIkinciSavunmaHakkiAyKriter = new TiAyarProperty("ilk başvuru için 2. Savunma kaç ay içinde yapılmalı");
+        public static readonly TiAyarProperty TezOneriIlkBasvuruAnketi = new TiAyarProperty("Tez Öneri Savunma Başvurusunda İstenecek Anket");
 
         public static readonly TiAyarProperty TiBasvurusuAcikmi = new TiAyarProperty("Ara rapor başvuru alımı açık");
         public static readonly TiAyarProperty TiGecmisAraRaporBasvurulariDegerlendirilebilsin = new TiAyarProperty("Geçmiş ara rapor başvuruları değerlendirilebilsin");

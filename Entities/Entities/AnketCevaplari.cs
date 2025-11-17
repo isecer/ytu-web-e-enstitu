@@ -18,6 +18,9 @@ namespace Entities.Entities
         public Nullable<int> BasvuruID { get; set; }
         public Nullable<int> BelgeTalepID { get; set; }
         public Nullable<int> MezuniyetBasvurulariID { get; set; }
+        public Nullable<int> TDOBasvuruID { get; set; }
+        public Nullable<int> ToBasvuruID { get; set; }
+        public Nullable<int> DonemProjesiID { get; set; }
         public int AnketID { get; set; }
         public int AnketSoruID { get; set; }
         public Nullable<int> AnketSoruSecenekID { get; set; }
@@ -34,6 +37,9 @@ namespace Entities.Entities
         public virtual AnketSoruSecenek AnketSoruSecenek { get; set; }
         public virtual Basvurular Basvurular { get; set; }
         public virtual BelgeTalepleri BelgeTalepleri { get; set; }
+        public virtual DonemProjesi DonemProjesi { get; set; }
         public virtual MezuniyetBasvurulari MezuniyetBasvurulari { get; set; }
+        public virtual TDOBasvuru TDOBasvuru { get; set; }
+        public virtual ToBasvuru ToBasvuru { get; set; }
     }
 }

@@ -87,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var zatenBasvuruVar = entities.KayitSilmeBasvurus.Any(a =>
                         a.KullaniciID == basvuranKullaniciId &&
                         a.OgrenciNo == basvuranKullanici.OgrenciNo &&
-                        a.ProgramKod == basvuranKullanici.ProgramKod && a.IsHarcBirimiOnayladi != false && a.IsKutuphaneBirimiOnayladi != false && a.EYKYaGonderildi != false && a.EYKYaHazirlandi != false && a.EYKDaOnaylandi != false);
+                        a.ProgramKod == basvuranKullanici.ProgramKod && a.IsHarcBirimiOnayladi != false && a.IsKutuphaneBirimiOnayladi != false && a.OnayMakaminaGonderildi != false && a.OnayMakaminaHazirlandi != false && a.OnayMakamindaOnaylandi != false);
 
                     if (zatenBasvuruVar)
                     {
@@ -254,26 +254,25 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 model.KutuphaneBirimiOnayIslemTarihi = basvuru.KutuphaneBirimiOnayIslemTarihi;
                 model.KutuphaneBirimiOnayAciklamasi = basvuru.KutuphaneBirimiOnayAciklamasi;
-
-                model.EYKYaGonderildi = basvuru.EYKYaGonderildi;
-                model.EYKYaGonderildiIslemYapanID = basvuru.EYKYaGonderildiIslemYapanID;
-                model.EYKYaGonderildiIslemTarihi = basvuru.EYKYaGonderildiIslemTarihi;
-                model.EYKYaGonderimDurumAciklamasi = basvuru.EYKYaGonderimDurumAciklamasi;
-                model.EYKYaHazirlandi = basvuru.EYKYaHazirlandi;
-                model.EYKYaHazirlandiIslemTarihi = basvuru.EYKYaHazirlandiIslemTarihi;
-                model.EYKYaHazirlandiIslemYapanID = basvuru.EYKYaHazirlandiIslemYapanID;
-                model.EYKDaOnaylandi = basvuru.EYKDaOnaylandi;
-                model.EYKDaOnaylandiIslemYapanID = basvuru.EYKDaOnaylandiIslemYapanID;
+                model.IsOnayMakamiEykOrEnstituMudur = basvuru.IsOnayMakamiEykOrEnstituMudur;
+                model.OnayMakaminaGonderildi = basvuru.OnayMakaminaGonderildi;
+                model.OnayMakaminaGonderildiIslemYapanID = basvuru.OnayMakaminaGonderildiIslemYapanID;
+                model.OnayMakaminaGonderildiIslemTarihi = basvuru.OnayMakaminaGonderildiIslemTarihi;
+                model.OnayMakaminaGonderimDurumAciklamasi = basvuru.OnayMakaminaGonderimDurumAciklamasi;
+                model.OnayMakaminaHazirlandi = basvuru.OnayMakaminaHazirlandi;
+                model.OnayMakaminaHazirlandiIslemTarihi = basvuru.OnayMakaminaHazirlandiIslemTarihi;
+                model.OnayMakaminaHazirlandiIslemYapanID = basvuru.OnayMakaminaHazirlandiIslemYapanID;
+                model.OnayMakamindaOnaylandi = basvuru.OnayMakamindaOnaylandi;
+                model.OnayMakamindaOnaylandiIslemYapanID = basvuru.OnayMakamindaOnaylandiIslemYapanID;
                 model.EYKTarihi = basvuru.EYKTarihi;
                 model.EYKSayisi = basvuru.EYKSayisi;
-                model.EYKDaOnaylandiOnayTarihi = basvuru.EYKDaOnaylandiOnayTarihi;
-                model.EYKDaOnaylanmadiDurumAciklamasi = basvuru.EYKDaOnaylanmadiDurumAciklamasi;
-
-                model.EYKYaGonderildi = basvuru.EYKYaGonderildi;
-                model.EYKYaGonderimDurumAciklamasi = basvuru.EYKYaGonderimDurumAciklamasi;
-                model.EYKYaHazirlandi = basvuru.EYKYaHazirlandi;
-                model.EYKDaOnaylandi = basvuru.EYKDaOnaylandi;
-                model.EYKDaOnaylanmadiDurumAciklamasi = basvuru.EYKDaOnaylanmadiDurumAciklamasi;
+                 
+                model.OnayMakaminaGonderildi = basvuru.OnayMakaminaGonderildi;
+                model.OnayMakaminaGonderimDurumAciklamasi = basvuru.OnayMakaminaGonderimDurumAciklamasi;
+                model.OnayMakaminaHazirlandi = basvuru.OnayMakaminaHazirlandi;
+                model.OnayMakamindaOnaylandi = basvuru.OnayMakamindaOnaylandi;
+                model.OnayMakamindaOnaylandiOnayTarihi = basvuru.OnayMakamindaOnaylandiOnayTarihi;
+                model.OnayMakamindaOnaylanmadiDurumAciklamasi = basvuru.OnayMakamindaOnaylanmadiDurumAciklamasi;
 
                 model.IslemTarihi = basvuru.IslemTarihi;
                 model.IslemYapanID = basvuru.IslemYapanID;
@@ -411,26 +410,46 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+        public static List<CmbStringDto> CmbKsOnayMakamlari(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbStringDto>();
 
+            if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
+
+            // Harç Birimi
+            dct.Add(new CmbStringDto { Value = "true", Caption = "Enstitü Yönetim Kurulu" });
+            dct.Add(new CmbStringDto { Value = "false", Caption = "Enstitü Müdürlüğü" });
+
+
+            return dct;
+        }
         public static List<CmbIntDto> CmbKsDurumListe(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
 
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+
+            // Harç Birimi
             dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.HarcBirimiOnayBekleniyor, Caption = "Harç Birimi Onayı Bekleniyor" });
             dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.HarcBirimiTarafindanOnaylandi, Caption = "Harç Birimi Tarafından Onaylandı" });
             dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.HarcBirimiTarafindanReddedildi, Caption = "Harç Birimi Reddedildi" });
+
+            // Kütüphane Birimi
             dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.KutuphaneBirimiOnayBekleniyor, Caption = "Kütüphane Birimi Onayı Bekleniyor" });
             dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.KutuphaneBirimiTarafindanOnaylandi, Caption = "Kütüphane Birimi Tarafından Onaylandı" });
             dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.KutuphaneBirimiTarafindanReddedildi, Caption = "Kütüphane Birimi Reddedildi" });
-            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.EykYaGonderimOnayiBekleniyor, Caption = "EYK'ya Gönderimi Bekleniyor" });
-            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.EykYaGonderimiOnaylandi, Caption = "EYK'ya Gönderimi Onaylandı" });
-            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.EykYaGonderimiOnaylanmadi, Caption = "EYK'ya Gönderimi Onaylanmadı" });
-            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.EykYaHazirlandi, Caption = "EYK'ya Hazırlandı" });
-            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.EykDaOnaylandi, Caption = "EYK'da Onaylandı" });
-            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.EykDaOnaylanmadi, Caption = "EYK'da Onaylanmadı" });
+
+            // Onay Makamı (EYK veya Enstitü Müdürlüğü fark etmeksizin ortak)
+            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.OnayMakaminaGonderimOnayiBekleniyor, Caption = "Onay Makamı Onayı Bekleniyor" });
+            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.OnayMakaminaGonderimiOnaylandi, Caption = "Onay Makamına Gönderildi" });
+            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.OnayMakamınaGonderimiOnaylanmadi, Caption = "Onay Makamına Gönderilmedi" });
+            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.OnayMakaminaHazirlandi, Caption = "Onay Makamı Hazırlandı" });
+            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.OnayMakamindaOnaylandi, Caption = "Onay Makamı Onayladı" });
+            dct.Add(new CmbIntDto { Value = KsFilterDurumEnums.OnayMakamindaOnaylanmadi, Caption = "Onay Makamı Onaylamadı" });
+
             return dct;
         }
+
         public static List<CmbStringDto> GetCmbFilterKsProgramlar(string enstituKod, int? ogrenimTipKod, bool bosSecimVar = false)
         {
             using (var entities = new LubsDbEntities())

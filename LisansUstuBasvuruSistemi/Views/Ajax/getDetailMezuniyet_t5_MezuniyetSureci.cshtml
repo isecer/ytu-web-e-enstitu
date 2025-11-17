@@ -41,7 +41,7 @@
                                                             <table style="width:100%;">
                                                                 <tr>
                                                                     <td>
-                                                                        @if (mezuniyetBasvurulariTezTeslimFormu == null)
+                                                                        @if (mezuniyetBasvurulariTezTeslimFormu == null )
                                                                         {
                                                                             if (Model.IsAnketVar == false || Model.IsAnketDolduruldu)
                                                                             {
@@ -58,8 +58,7 @@
                                                                                     function GetAnket() {
                                                                                         var strView = @Html.Raw(Json.Encode(Model.AnketView.Trim()));
                                                                                         var btbxxFS = bootbox.dialog({
-                                                                                            message: strView,
-                                                                                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                                                                                            message: strView, 
                                                                                             buttons: {
                                                                                                 success: {
                                                                                                     label: 'Kaydet',

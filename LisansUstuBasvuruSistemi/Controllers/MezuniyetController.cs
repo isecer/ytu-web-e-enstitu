@@ -1296,6 +1296,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 BitSaat = kModel.BitSaat,
                                 DanismanAdi = kModel.DanismanAdi,
                                 EsDanismanAdi = kModel.EsDanismanAdi,
+                                DavetResmiGostermeDurum = SrDavetResmiGostermeDurumEnum.DavetProfilResmiyleGoster,
                                 TezOzeti = kModel.TezOzeti,
                                 Aciklama = kModel.Aciklama,
                                 SRDurumID = kModel.SRDurumID,

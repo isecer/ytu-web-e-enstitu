@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using BiskaUtil;
-using LisansUstuBasvuruSistemi.Business;
+﻿using BiskaUtil;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -25,6 +26,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 panelToggled.Add(item.Kategori, item.Toggle);
             }
             ViewBag.PanelToggled = panelToggled;
+             
+            ViewBag.IlkBelgeTalepAnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, BelgeTalepAyar.IlkBelgeTalebiAnketi.GetAyar(enstituKod).ToIntObj()), "Value", "Caption");
+            ViewBag.Donem4BelgeTalepAnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, BelgeTalepAyar.Donem4BelgeTalebiAnketi.GetAyar(enstituKod).ToIntObj()), "Value", "Caption");
             return View(data);
         }
         [HttpPost]
@@ -59,7 +63,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ptg = item.Replace("__", "◘").Split('◘');
                 panelToggledx.Add(ptg[0], ptg[1].ToBoolean().Value);
             }
-            ViewBag.PanelToggled = panelToggledx; 
+            ViewBag.PanelToggled = panelToggledx;
+            ViewBag.IlkBelgeTalepAnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, BelgeTalepAyar.IlkBelgeTalebiAnketi.GetAyar(enstituKod).ToIntObj()), "Value", "Caption");
+            ViewBag.Donem4BelgeTalepAnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, BelgeTalepAyar.Donem4BelgeTalebiAnketi.GetAyar(enstituKod).ToIntObj()), "Value", "Caption");
+
             return View(data);
         }
     }

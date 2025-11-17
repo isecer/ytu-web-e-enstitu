@@ -83,11 +83,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         OgretimYiliBaslangic = kayitSilme.OgretimYiliBaslangic,
                         IsHarcBirimiOnayladi = kayitSilme.IsHarcBirimiOnayladi,
                         IsKutuphaneBirimiOnayladi = kayitSilme.IsKutuphaneBirimiOnayladi,
-                        EYKYaGonderildi = kayitSilme.EYKYaGonderildi,
-                        EYKYaGonderimDurumAciklamasi = kayitSilme.EYKYaGonderimDurumAciklamasi,
-                        EYKYaHazirlandi = kayitSilme.EYKYaHazirlandi,
-                        EYKDaOnaylandi = kayitSilme.EYKDaOnaylandi,
-                        EYKDaOnaylanmadiDurumAciklamasi = kayitSilme.EYKDaOnaylanmadiDurumAciklamasi,
+                        IsOnayMakamiEykOrEnstituMudur = kayitSilme.IsOnayMakamiEykOrEnstituMudur,
+                        OnayMakaminaGonderildi = kayitSilme.OnayMakaminaGonderildi,
+                        OnayMakaminaGonderimDurumAciklamasi = kayitSilme.OnayMakaminaGonderimDurumAciklamasi,
+                        OnayMakaminaHazirlandi = kayitSilme.OnayMakaminaHazirlandi,
+                        OnayMakamindaOnaylandi = kayitSilme.OnayMakamindaOnaylandi,
+                        OnayMakamindaOnaylanmadiDurumAciklamasi = kayitSilme.OnayMakamindaOnaylanmadiDurumAciklamasi,
                         EYKTarihi = kayitSilme.EYKTarihi,
                         EYKSayisi = kayitSilme.EYKSayisi
                     };
@@ -95,7 +96,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AkademikDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.AkademikDonemID == model.AkademikDonemID);
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod);
             if (!model.ProgramKod.IsNullOrWhiteSpace()) q = q.Where(p => p.ProgramKod == model.ProgramKod);
-
+            if (model.IsOnayMakamiEykOrEnstituMudur.HasValue)
+                q = q.Where(p => p.IsOnayMakamiEykOrEnstituMudur == model.IsOnayMakamiEykOrEnstituMudur);
             if (model.KayitSilmeDurumID.HasValue)
             {
                 if (model.KayitSilmeDurumID == KsFilterDurumEnums.HarcBirimiOnayBekleniyor) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.HarcBirimiOnaySureci && !p.IsHarcBirimiOnayladi.HasValue);
@@ -104,12 +106,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.KayitSilmeDurumID == KsFilterDurumEnums.KutuphaneBirimiOnayBekleniyor) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.KutuphaneBirimiOnaySureci && !p.IsKutuphaneBirimiOnayladi.HasValue);
                 else if (model.KayitSilmeDurumID == KsFilterDurumEnums.KutuphaneBirimiTarafindanOnaylandi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.KutuphaneBirimiOnaySureci && p.IsKutuphaneBirimiOnayladi == true);
                 else if (model.KayitSilmeDurumID == KsFilterDurumEnums.KutuphaneBirimiTarafindanReddedildi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.KutuphaneBirimiOnaySureci && p.IsKutuphaneBirimiOnayladi == false);
-                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && !p.EYKYaGonderildi.HasValue && p.IsKutuphaneBirimiOnayladi == true);
-                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.EykYaGonderimiOnaylandi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.EYKYaGonderildi == true && !p.EYKYaHazirlandi.HasValue);
-                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.EYKYaGonderildi == false && !p.EYKYaHazirlandi.HasValue);
-                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.EykYaHazirlandi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.EYKYaHazirlandi == true && !p.EYKDaOnaylandi.HasValue);
-                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.EykDaOnaylandi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.EYKDaOnaylandi == true && p.EYKYaHazirlandi.HasValue);
-                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.EykDaOnaylanmadi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.EYKDaOnaylandi == false && p.EYKYaHazirlandi.HasValue);
+                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.OnayMakaminaGonderimOnayiBekleniyor) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && !p.OnayMakaminaGonderildi.HasValue && p.IsKutuphaneBirimiOnayladi == true);
+                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.OnayMakaminaGonderimiOnaylandi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.OnayMakaminaGonderildi == true && !p.OnayMakaminaHazirlandi.HasValue);
+                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.OnayMakamınaGonderimiOnaylanmadi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.OnayMakaminaGonderildi == false && !p.OnayMakaminaHazirlandi.HasValue);
+                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.OnayMakaminaHazirlandi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.OnayMakaminaHazirlandi == true && !p.OnayMakamindaOnaylandi.HasValue);
+                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.OnayMakamindaOnaylandi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.OnayMakamindaOnaylandi == true && p.OnayMakaminaHazirlandi.HasValue);
+                else if (model.KayitSilmeDurumID == KsFilterDurumEnums.OnayMakamindaOnaylanmadi) q = q.Where(p => p.KayitSilmeDurumID == KayitSilmeDurumEnums.EnstituYonetimKuruluSureci && p.OnayMakamindaOnaylandi == false && p.OnayMakaminaHazirlandi.HasValue);
             }
 
             if (!model.AdSoyad.IsNullOrWhiteSpace())
@@ -118,11 +120,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     p.AdSoyad.Contains(model.AdSoyad)
                     || p.OgrenciNo.StartsWith(model.AdSoyad)
                     || p.TcKimlikNo.StartsWith(model.AdSoyad)
-                    || p.EYKSayisi==model.AdSoyad
+                    || p.EYKSayisi == model.AdSoyad
                 );
 
             }
-            if (model.KayitSilmeDurumID == KsFilterDurumEnums.EykYaHazirlandi) model.SelectedKayitSilmeBasvurulariIds = q.Select(s => s.KayitSilmeBasvuruID).ToList();
+            if (model.KayitSilmeDurumID == KsFilterDurumEnums.OnayMakaminaHazirlandi) model.SelectedKayitSilmeBasvurulariIds = q.Select(s => s.KayitSilmeBasvuruID).ToList();
 
             model.IsFiltered = !Equals(q, q2);
             model.RowCount = q.Count();
@@ -141,14 +143,40 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     s.ProgramAdi,
                     s.DonemAdi,
                     s.KayitSilmeDurumAdi,
-                    HarcBirimiOnayDurumu = s.IsHarcBirimiOnayladi.HasValue ? (s.IsHarcBirimiOnayladi == true ? "Onaylandı" : "Reddedildi") : "İşlem Bekliyor",
-                    KutuphaneBirimiOnayDurumu = s.IsKutuphaneBirimiOnayladi.HasValue ? (s.IsKutuphaneBirimiOnayladi == true ? "Onaylandı" : "Reddedildi") : "İşlem Bekliyor",
-                    EYKYaGonderildi = s.EYKYaGonderildi.HasValue ? s.EYKYaGonderildi.Value ? "Eyk'ya gönderildi" : "Eyk'ya gönderilmedi" : "İşlem Bekliyor",
-                    EYKYaHazirlandi = s.EYKYaHazirlandi.HasValue ? "Eyk'ya hazırlandı" : "İşlem Bekliyor",
-                    EYKTarihi = s.EYKDaOnaylandi.HasValue ? s.EYKTarihi : null,
-                    EYKDaOnaylandi = s.EYKDaOnaylandi.HasValue ? s.EYKDaOnaylandi.Value ? "Eyk'da onaylandı" : "Eyk'ya onaylanmadı" : "İşlem Bekliyor",
 
+                    HarcBirimiOnayDurumu = s.IsHarcBirimiOnayladi.HasValue
+                        ? (s.IsHarcBirimiOnayladi.Value ? "Onaylandı" : "Reddedildi")
+                        : "İşlem Bekliyor",
+
+                    KutuphaneBirimiOnayDurumu = s.IsKutuphaneBirimiOnayladi.HasValue
+                        ? (s.IsKutuphaneBirimiOnayladi.Value ? "Onaylandı" : "Reddedildi")
+                        : "İşlem Bekliyor",
+                    OnayMakamiAdi = s.IsOnayMakamiEykOrEnstituMudur.HasValue ? (s.IsOnayMakamiEykOrEnstituMudur.Value ? "Enstitü Yönetim Kurulu" : "Enstitü Müdürlüğü") : "Belirlenmedi",
+                    OnayMakaminaGonderildi = s.OnayMakaminaGonderildi.HasValue
+                        ? (s.OnayMakaminaGonderildi.Value
+                            ? (s.IsOnayMakamiEykOrEnstituMudur.HasValue
+                                ? (s.IsOnayMakamiEykOrEnstituMudur.Value ? "EYK'ya gönderildi" : "Enstitü Müdürlüğüne gönderildi")
+                                : "Gönderim Bilgisi Yok")
+                            : "Gönderilmedi")
+                        : "İşlem Bekliyor",
+
+                    OnayMakaminaHazirlandi = s.OnayMakaminaHazirlandi.HasValue
+                        ? (s.IsOnayMakamiEykOrEnstituMudur.HasValue
+                            ? (s.IsOnayMakamiEykOrEnstituMudur.Value ? "EYK'ya hazırlandı" : "Enstitü Müdürlüğüne hazırlandı")
+                            : "Hazırlık Bilgisi Yok")
+                        : "İşlem Bekliyor",
+
+                    EYKTarihi = s.OnayMakamindaOnaylandi.HasValue ? s.EYKTarihi : null,
+
+                    OnayMakamindaOnaylandi = s.OnayMakamindaOnaylandi.HasValue
+                        ? (s.OnayMakamindaOnaylandi.Value
+                            ? (s.IsOnayMakamiEykOrEnstituMudur.HasValue
+                                ? (s.IsOnayMakamiEykOrEnstituMudur.Value ? "EYK'da onaylandı" : "Enstitü Müdürlüğünde onaylandı")
+                                : "Onay Bilgisi Yok")
+                            : "Onaylanmadı")
+                        : "İşlem Bekliyor",
                 }).ToList();
+
 
                 var exportData = (from s in data
                                   select new
@@ -163,9 +191,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                       s.ProgramAdi,
                                       s.HarcBirimiOnayDurumu,
                                       s.KutuphaneBirimiOnayDurumu,
-                                      s.EYKYaGonderildi,
-                                      s.EYKYaHazirlandi,
-                                      s.EYKDaOnaylandi,
+                                      s.OnayMakamiAdi,
+                                      s.OnayMakaminaGonderildi,
+                                      s.OnayMakaminaHazirlandi,
+                                      s.OnayMakamindaOnaylandi,
                                       s.EYKTarihi
                                   }).ToList();
 
@@ -187,11 +216,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
 
             ViewBag.filteredOgrenciIds = model.IsFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
-          
+
             ViewBag.AkademikDonemID = new SelectList(KayitSilmeBus.CmbKsDonemListe(enstituKod, true), "Value", "Caption", model.AkademikDonemID);
             ViewBag.OgrenimTipKod = new SelectList(KayitSilmeBus.CmbKsOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.IsOnayMakamiEykOrEnstituMudur = new SelectList(KayitSilmeBus.CmbKsOnayMakamlari(true), "Value", "Caption", model.IsOnayMakamiEykOrEnstituMudur.ToStrObjEmptString());
             ViewBag.KayitSilmeDurumID = new SelectList(KayitSilmeBus.CmbKsDurumListe(true), "Value", "Caption", model.KayitSilmeDurumID);
-            ViewBag.ProgramKod = new SelectList(KayitSilmeBus.GetCmbFilterKsProgramlar(enstituKod,model.OgrenimTipKod, true), "Value", "Caption", model.ProgramKod);
+            ViewBag.ProgramKod = new SelectList(KayitSilmeBus.GetCmbFilterKsProgramlar(enstituKod, model.OgrenimTipKod, true), "Value", "Caption", model.ProgramKod);
             return View(model);
         }
 
@@ -202,23 +232,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kayitSilmeBasvuruIds = kayitSilmeBasvuruIds ?? new List<int>();
             var eykDaOnaylanacakBasvurular = _entities.KayitSilmeBasvurus.Where(p =>
                 kayitSilmeBasvuruIds.Contains(p.KayitSilmeBasvuruID)
-                && p.EYKYaHazirlandi == true && !p.EYKDaOnaylandi.HasValue
+                && p.OnayMakaminaHazirlandi == true && !p.OnayMakamindaOnaylandi.HasValue
             ).ToList();
             foreach (var item in eykDaOnaylanacakBasvurular)
             {
-                item.EYKDaOnaylandi = true;
-                item.EYKDaOnaylandiOnayTarihi = DateTime.Now;
+                item.OnayMakamindaOnaylandi = true;
+                item.OnayMakamindaOnaylandiOnayTarihi = DateTime.Now;
                 item.EYKTarihi = eykTarihi;
                 if (!eykSayisi.IsNullOrWhiteSpace())
                 {
                     item.EYKSayisi = eykSayisi;
                 }
-                item.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
+                item.OnayMakamindaOnaylandiIslemYapanID = UserIdentity.Current.Id;
             }
             _entities.SaveChanges();
             foreach (var item in eykDaOnaylanacakBasvurular)
             {
-                LogIslemleri.LogEkle("KayitSilmeBasvuru", LogCrudType.Update, item.ToJson()); 
+                LogIslemleri.LogEkle("KayitSilmeBasvuru", LogCrudType.Update, item.ToJson());
             }
             return new { eykDaOnaylanacakBasvurular.Count }.ToJsonResult();
         }
@@ -272,67 +302,145 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             return mMessage.ToJsonResult();
         }
-        public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, bool exportWordOrExcel, int enstituOnayDurumId, string ekd)
+        public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, bool exportWordOrExcel, int enstituOnayDurumId, bool isOnayMakamiEykOrEnstituMudur, string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstitu = _entities.Enstitulers.First(f => f.EnstituKod == enstituKod);
+
             var baslangicTarihi = basTar.ToDate(DateTime.Now);
             var bitisTarihi = bitTar.ToDate(DateTime.Now);
 
-            var tutanakData = (from ksBasvuru in _entities.KayitSilmeBasvurus
-                               join program in _entities.Programlars on ksBasvuru.ProgramKod equals program.ProgramKod
-                               join anabilimDali in _entities.AnabilimDallaris on program.AnabilimDaliID equals anabilimDali.AnabilimDaliID
-                               join ogrenimSeviyesi in _entities.OgrenimTipleris on new {ksBasvuru.OgrenimTipKod,ksBasvuru.EnstituKod}equals new { ogrenimSeviyesi.OgrenimTipKod, ogrenimSeviyesi.EnstituKod }
-                               join ogrenci in _entities.Kullanicilars on ksBasvuru.KullaniciID equals ogrenci.KullaniciID
-                               where ksBasvuru.EnstituKod == enstituKod &&
-                                     (enstituOnayDurumId == 2 ? ksBasvuru.EYKYaHazirlandi == true &&
-                                                                !ksBasvuru.EYKDaOnaylandi.HasValue &&
-                                                                ksBasvuru.EYKYaHazirlandiIslemTarihi >= baslangicTarihi &&
-                                                                ksBasvuru.EYKYaHazirlandiIslemTarihi <= bitisTarihi
-                                         :
-                                         ksBasvuru.EYKDaOnaylandi == true &&
-                                         ksBasvuru.EYKYaHazirlandi == true &&
-                                         ksBasvuru.EYKTarihi >= baslangicTarihi &&
-                                         ksBasvuru.EYKTarihi <= bitisTarihi)
-                               select new KsTutanakDto
-                               {
+            var query = from ksBasvuru in _entities.KayitSilmeBasvurus
+                        join program in _entities.Programlars on ksBasvuru.ProgramKod equals program.ProgramKod
+                        join anabilimDali in _entities.AnabilimDallaris on program.AnabilimDaliID equals anabilimDali.AnabilimDaliID
+                        join ogrenimSeviyesi in _entities.OgrenimTipleris
+                            on new { ksBasvuru.OgrenimTipKod, ksBasvuru.EnstituKod }
+                            equals new { ogrenimSeviyesi.OgrenimTipKod, ogrenimSeviyesi.EnstituKod }
+                        join ogrenci in _entities.Kullanicilars on ksBasvuru.KullaniciID equals ogrenci.KullaniciID
+                        where ksBasvuru.EnstituKod == enstituKod
+                        select new { ksBasvuru, program, anabilimDali, ogrenimSeviyesi, ogrenci };
 
-                                   OgrenciNo = ogrenci.OgrenciNo,
-                                   OgrenciAdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
-                                   OgrenimSeviyesiAdi = ogrenimSeviyesi.OgrenimTipAdi,
-                                   AnabilimDaliAdi = anabilimDali.AnabilimDaliAdi,
-                                   ProgramAdi = program.ProgramAdi,
-                                   KayitSilmeDonemAdi = ksBasvuru.OgretimYiliBaslangic + "/" + (ksBasvuru.OgretimYiliBaslangic + 1) + " " + ksBasvuru.Donemler.DonemAdi,
-                                   KayitSilmeEykTarihi = ksBasvuru.EYKTarihi,
+            if (isOnayMakamiEykOrEnstituMudur)
+            {
+                query = query.Where(q => q.ksBasvuru.IsOnayMakamiEykOrEnstituMudur == true);
+            }
+            else
+            {
+                query = query.Where(q => q.ksBasvuru.IsOnayMakamiEykOrEnstituMudur == false);
+            }
 
-                               }).OrderBy(o => o.KayitSilmeEykTarihi).ToList();
+            if (enstituOnayDurumId == 2)
+            {
+                query = query.Where(q =>
+                   q.ksBasvuru.OnayMakaminaHazirlandi == true &&
+                   !q.ksBasvuru.OnayMakamindaOnaylandi.HasValue &&
+                   q.ksBasvuru.OnayMakaminaHazirlandiIslemTarihi >= baslangicTarihi &&
+                   q.ksBasvuru.OnayMakaminaHazirlandiIslemTarihi <= bitisTarihi);
+            }
+            else
+            {
+                if (isOnayMakamiEykOrEnstituMudur)
+                {
+                    query = query.Where(q =>
+                        q.ksBasvuru.OnayMakaminaHazirlandi == true &&
+                        q.ksBasvuru.OnayMakamindaOnaylandi == true &&
+                        q.ksBasvuru.EYKTarihi >= baslangicTarihi &&
+                        q.ksBasvuru.EYKTarihi <= bitisTarihi);
+                }
+                else
+                {
+                    query = query.Where(q =>
+                        q.ksBasvuru.OnayMakaminaHazirlandi == true &&
+                        q.ksBasvuru.OnayMakamindaOnaylandi == true &&
+                        q.ksBasvuru.OnayMakamindaOnaylandiOnayTarihi >= baslangicTarihi &&
+                        q.ksBasvuru.OnayMakamindaOnaylandiOnayTarihi <= bitisTarihi);
+                }
+              
+            }
 
-
-
-
-
-
-
+            var tutanakData = query
+               .Select(q => new KsTutanakDto
+               {
+                   OgrenciNo = q.ogrenci.OgrenciNo,
+                   OgrenciAdSoyad = q.ogrenci.Ad + " " + q.ogrenci.Soyad,
+                   OgrenimSeviyesiAdi = q.ogrenimSeviyesi.OgrenimTipAdi,
+                   AnabilimDaliAdi = q.anabilimDali.AnabilimDaliAdi,
+                   ProgramAdi = q.program.ProgramAdi,
+                   KayitSilmeDonemAdi = q.ksBasvuru.OgretimYiliBaslangic + "/" +
+                                        (q.ksBasvuru.OgretimYiliBaslangic + 1) + " " +
+                                        q.ksBasvuru.Donemler.DonemAdi,
+                   KayitSilmeEykTarihi = q.ksBasvuru.EYKTarihi
+               })
+               .OrderBy(o => o.KayitSilmeEykTarihi)
+               .ToList();
 
             var report = new XtraReport();
-
-
-            var rpr = new RprKsTutanak(enstitu.EnstituAd);
+            var rpr = new RprKsTutanak(enstitu.EnstituAd, isOnayMakamiEykOrEnstituMudur);
             rpr.DataSource = tutanakData;
             rpr.CreateDocument();
             report.Pages.AddRange(rpr.Pages);
 
             report.ExportOptions.Html.ExportMode = HtmlExportMode.SingleFilePageByPage;
-            using (MemoryStream ms = new MemoryStream())
+
+            using (var ms = new MemoryStream())
             {
                 report.ExportToHtml(ms);
                 ms.Position = 0;
                 var sr = new StreamReader(ms);
                 var html = sr.ReadToEnd();
-                var raporAdi = $"Kayıt Silme Tutanağı - {(enstituOnayDurumId == 2 ? "EYKya Hazırlananlar" : "EYKda Onaylananlar")}";
-                return File(System.Text.Encoding.UTF8.GetBytes(html), (exportWordOrExcel ? "application/vnd.ms-word" : "application/ms-excel"), raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + (exportWordOrExcel ? "doc" : "xls"));
 
+                var hazirlanmaDurumAdi = isOnayMakamiEykOrEnstituMudur == true ? "EYK'ya Hazırlananlar" : "Enstitü Müdürlüğüne Hazırlananlar";
+                var onaylanmaDurumAdi = isOnayMakamiEykOrEnstituMudur == true ? "EYK’da Onaylananlar" : "Enstitü Müdürlüğünce Onaylananlar";
+                var raporAdi = $"Kayıt Silme Tutanağı - {(enstituOnayDurumId == 2 ? hazirlanmaDurumAdi : onaylanmaDurumAdi)}";
+                var mimeType = exportWordOrExcel
+                    ? "application/vnd.ms-word"
+                    : "application/ms-excel";
+                var fileExt = exportWordOrExcel ? "doc" : "xls";
+
+                return File(
+                    System.Text.Encoding.UTF8.GetBytes(html),
+                    mimeType,
+                    $"{raporAdi} ({basTar.Replace("-", ".")}-{bitTar.Replace("-", ".")}).{fileExt}"
+                );
             }
+
+
+            //var rpr = new RprKsTutanak(enstitu.EnstituAd, isOnayMakamiEykOrEnstituMudur);
+            //rpr.DataSource = tutanakData;
+            //rpr.CreateDocument();
+
+            //// report değişkenini tamamen kaldırın, rpr'yi kullanın
+            //using (var ms = new MemoryStream())
+            //{
+            //    var hazirlanmaDurumAdi = isOnayMakamiEykOrEnstituMudur == true ? "EYK'ya Hazırlananlar" : "Enstitü Müdürlüğüne Hazırlananlar";
+            //    var onaylanmaDurumAdi = isOnayMakamiEykOrEnstituMudur == true ? "EYK'da Onaylananlar" : "Enstitü Müdürlüğünce Onaylananlar";
+            //    var raporAdi = $"Kayıt Silme Tutanağı - {(enstituOnayDurumId == 2 ? hazirlanmaDurumAdi : onaylanmaDurumAdi)}";
+
+            //    string mimeType;
+            //    string fileExt;
+
+            //    if (exportWordOrExcel)
+            //    {
+            //        // Word export
+            //        rpr.ExportToDocx(ms);  // ✅ report değil, rpr
+            //        mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            //        fileExt = "docx";  // ✅ doc değil, docx
+            //    }
+            //    else
+            //    {
+            //        // Excel export
+            //        rpr.ExportToXlsx(ms);  // ✅ report değil, rpr
+            //        mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            //        fileExt = "xlsx";  // ✅ xls değil, xlsx
+            //    }
+
+            //    return File(
+            //        ms.ToArray(),
+            //        mimeType,
+            //        $"{raporAdi} ({basTar.Replace("-", ".")}-{bitTar.Replace("-", ".")}).{fileExt}"
+            //    );
+            //}
         }
+
     }
 }

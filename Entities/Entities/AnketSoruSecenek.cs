@@ -27,8 +27,8 @@ namespace Entities.Entities
         public bool IsYaziOrSayi { get; set; }
         public bool IsEkAciklamaGir { get; set; }
     
+        public virtual AnketSoru AnketSoru { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
-        public virtual AnketSoru AnketSoru { get; set; }
     }
 }

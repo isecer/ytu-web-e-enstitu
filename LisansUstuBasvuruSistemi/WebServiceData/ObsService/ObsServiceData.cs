@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Entities.Entities;
+﻿using Entities.Entities;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData;
 using LisansUstuBasvuruSistemi.Ws_ObsService;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 {
@@ -39,7 +42,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                         model.KayitVar = true;
                         var ogrenci = ogrencis[0].ogrenci.OrderBy(p => p.OGRENIMSEVIYE_ID == "4" ? 2 : 1).FirstOrDefault();
                         if (ogrenci != null)
-                        {
+                        { 
                             if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
                             {
                                 model.KayitTarihi = ogrenci.KAYIT_TARIHI.ToDate().Value;
@@ -49,7 +52,6 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                 model.DonemID = parsedDonem.DonemNo;
 
                             }
-
                             model.OkuduguDonemNo = ogrenci.OKUDUGU_DNM_YENIKANUN.ToIntObj() ?? 0;
                             if (!donemId.IsNullOrWhiteSpace()) model.HesaplananOkuduguDonemNo = (model.BaslangicYil + "" + model.DonemID).GetDonemFark(donemId);
                             model.OgrenciInfo = ogrenci;
@@ -91,7 +93,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
                                         model.IsTezDiliTr = tez.TEZ_DILI.ToLower().Contains("türkçe");
                                         model.OgrenciTez = tez;
 
-                                        var sonTezIzlemeBilgiler = tez.tezizlemebilgileri.Where(p=>p.TEZ_IZL_DURUM!="MUAF")
+                                        var sonTezIzlemeBilgiler = tez.tezizlemebilgileri.Where(p => p.TEZ_IZL_DURUM != "MUAF")
                                             .OrderByDescending(o => o.TEZ_IZL_SIRA.ToIntObj()).FirstOrDefault();
                                         if (sonTezIzlemeBilgiler != null)
                                             model.SonTezIzlemeBilgileri = sonTezIzlemeBilgiler;
@@ -313,5 +315,7 @@ namespace LisansUstuBasvuruSistemi.WebServiceData.ObsService
 
             return model;
         }
+
+
     }
 }

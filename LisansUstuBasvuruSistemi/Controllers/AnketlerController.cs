@@ -259,8 +259,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new AnketSoruSecenek();
             model.AnketSoruID = anketSoruId;
-            model.AnketSoruID = anketSoruId;
             model.IsYaziOrSayi = true;
+            model.AnketSoru = _entities.AnketSorus.First(f => f.AnketSoruID == anketSoruId);
             if (anketSoruSecenekId.HasValue)
             {
                 var data = _entities.AnketSoruSeceneks.FirstOrDefault(p => p.AnketSoruSecenekID == anketSoruSecenekId);
@@ -332,27 +332,31 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var kayit = _entities.Ankets.FirstOrDefault(p => p.AnketID == id);
             string message;
+
+            if (kayit == null)
+                return Json(new { success = false, message = "Silmek istediğiniz Anket sistemde bulunamadı!" }, "application/json", JsonRequestBehavior.AllowGet);
+            if (kayit.AnketCevaplaris.Any())
+                return Json(new { success = false, message = "Silmek istediğiniz Anket daha önceden cevaplanan verileri olduğundan silinemez!" }, "application/json", JsonRequestBehavior.AllowGet);
+
+
+
             bool success = true;
-            if (kayit != null)
+            try
             {
-                try
-                {
-                    message = "'" + kayit.AnketAdi + "' İsimli Anket Silindi!";
-                    _entities.Ankets.Remove(kayit);
-                    _entities.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    success = false;
-                    message = "'" + kayit.AnketAdi + "' İsimli Anket Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
-                }
+                message = "'" + kayit.AnketAdi + "' İsimli Anket Silindi!";
+                _entities.AnketSoruSeceneks.RemoveRange(kayit.AnketSorus.SelectMany(s => s.AnketSoruSeceneks));
+                _entities.AnketSorus.RemoveRange(kayit.AnketSorus);
+                _entities.Ankets.Remove(kayit);
+                _entities.SaveChanges();
             }
-            else
+            catch (Exception ex)
             {
                 success = false;
-                message = "Silmek istediğiniz Anket sistemde bulunamadı!";
+                message = "'" + kayit.AnketAdi + "' İsimli Anket Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message, ex.ToExceptionStackTrace(),
+                    BilgiTipiEnum.OnemsizHata);
             }
+
             return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
         public ActionResult SilSoru(int id)

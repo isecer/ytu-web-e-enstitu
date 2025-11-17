@@ -17,14 +17,14 @@
             tabAdi = "Harç Birimi Onay Süreci";
             if (!Model.IsHarcBirimiOnayladi.HasValue)
             {
-                durumAdi = "Harç Birimi Onayı Bekleniyor";
+                durumAdi = "Harç Birimi onayı bekleniyor";
                 durumColor = "green";
                 durumIconClass = "fa fa-clock-o";
                 durumDetay = "Başvurunuz alındı. Süreç devamı için Harç Birimi onayı bekleniyor.";
             }
             else if (Model.IsHarcBirimiOnayladi == false)
             {
-                durumAdi = "Harç Birimi Reddetti";
+                durumAdi = "Harç Birimi reddetti";
                 durumColor = "maroon";
                 durumIconClass = "fa fa-thumbs-o-down";
                 durumDetay = "Başvuru Harç Birimi tarafından reddedildi.";
@@ -36,14 +36,14 @@
             tabAdi = "Kütüphane Birimi Onay Süreci";
             if (!Model.IsKutuphaneBirimiOnayladi.HasValue)
             {
-                durumAdi = "Kütüphane Onayı Bekleniyor";
+                durumAdi = "Kütüphane onayı bekleniyor";
                 durumColor = "green";
                 durumIconClass = "fa fa-clock-o";
                 durumDetay = "Başvuru Harç Birimi tarafından onaylandı. Kütüphane Birimi'nin onaylaması bekleniyor.";
             }
             else if (Model.IsKutuphaneBirimiOnayladi == false)
             {
-                durumAdi = "Kütüphane Birimi Reddetti";
+                durumAdi = "Kütüphane Birimi reddetti";
                 durumColor = "maroon";
                 durumIconClass = "fa fa-thumbs-o-down";
                 durumDetay = "Başvuru Kütüphane Birimi tarafından reddedildi.";
@@ -52,51 +52,105 @@
             break;
 
         case KayitSilmeDurumEnums.EnstituYonetimKuruluSureci:
-            tabAdi = "Enstitü Yönetim Kurulu Süreci";
+            tabAdi = "Enstitü Onay Süreci";
 
-            if (!Model.EYKYaGonderildi.HasValue)
+            bool? isEyk = Model.IsOnayMakamiEykOrEnstituMudur;
+
+            if (isEyk == true) // EYK için eski ifadeler
             {
-                durumAdi = "EYK'ya Gönderilmesi Bekleniyor";
-                durumColor = "green";
-                durumIconClass = "fa fa-clock-o";
-                durumDetay = "Enstitü tarafından EYK'ya gönderilmesi bekleniyor.";
+                if (!Model.OnayMakaminaGonderildi.HasValue)
+                {
+                    durumAdi = "EYK'ya gönderilmesi bekleniyor";
+                    durumColor = "green";
+                    durumIconClass = "fa fa-clock-o";
+                    durumDetay = "Enstitü tarafından EYK'ya gönderilmesi bekleniyor.";
+                }
+                else if (Model.OnayMakaminaGonderildi == false)
+                {
+                    durumAdi = "EYK'ya gönderilmedi";
+                    durumColor = "maroon";
+                    durumIconClass = "fa fa-thumbs-o-down";
+                    durumDetay = "Başvuru enstitü tarafından EYK'ya gönderilmedi.";
+                    durumDetayTitle = Model.OnayMakaminaGonderimDurumAciklamasi;
+                }
+                else if (Model.OnayMakaminaGonderildi == true && !Model.OnayMakaminaHazirlandi.HasValue)
+                {
+                    durumAdi = "EYK'ya gönderildi";
+                    durumColor = "green";
+                    durumIconClass = "fa fa-thumbs-o-up";
+                    durumDetay = "EYK hazırlık işlemlerinin tamamlanması bekleniyor.";
+                }
+                else if (Model.OnayMakaminaHazirlandi == true && !Model.OnayMakamindaOnaylandi.HasValue)
+                {
+                    durumAdi = "EYK'ya hazırlandı";
+                    durumColor = "green";
+                    durumIconClass = "fa fa-thumbs-o-up";
+                    durumDetay = "EYK onay işlemi bekleniyor.";
+                }
+                else if (Model.OnayMakamindaOnaylandi == true)
+                {
+                    durumAdi = "EYK'da onaylandı";
+                    durumColor = "green";
+                    durumIconClass = "fa fa-thumbs-o-up";
+                    durumDetay = "Kayıt silme başvurunuz EYK'da onaylandı.";
+                }
+                else if (Model.OnayMakamindaOnaylandi == false)
+                {
+                    durumAdi = "EYK onaylamadı";
+                    durumColor = "maroon";
+                    durumIconClass = "fa fa-thumbs-o-down";
+                    durumDetay = "Başvurunuz EYK'da onaylanmadı.";
+                    durumDetayTitle = Model.OnayMakamindaOnaylanmadiDurumAciklamasi;
+                }
             }
-            else if (Model.EYKYaGonderildi == false)
+            else if (isEyk == false) // Enstitü Müdürlüğü için yeni ifadeler
             {
-                durumAdi = "EYK'ya Gönderilmedi";
-                durumColor = "maroon";
-                durumIconClass = "fa fa-thumbs-o-down";
-                durumDetay = "Başvuru enstitü tarafından EYK'ya gönderilmedi.";
-                durumDetayTitle = Model.EYKYaGonderimDurumAciklamasi;
-            }
-            else if (Model.EYKYaGonderildi == true && !Model.EYKYaHazirlandi.HasValue)
-            {
-                durumAdi = "EYK'ya Gönderildi";
-                durumColor = "green";
-                durumIconClass = "fa fa-thumbs-o-up";
-                durumDetay = "EYK hazırlık işlemlerinin tamamlanması bekleniyor.";
-            }
-            else if (Model.EYKYaHazirlandi == true && !Model.EYKDaOnaylandi.HasValue)
-            {
-                durumAdi = "EYK'ya Hazırlandı";
-                durumColor = "green";
-                durumIconClass = "fa fa-thumbs-o-up";
-                durumDetay = "EYK onay işlemi bekleniyor.";
-            }
-            else if (Model.EYKDaOnaylandi == true)
-            {
-                durumAdi = "EYK'da Onaylandı";
-                durumColor = "green";
-                durumIconClass = "fa fa-thumbs-o-up";
-                durumDetay = "Kayıt silme başvurunuz EYK'da onaylandı.";
-            }
-            else if (Model.EYKDaOnaylandi == false)
-            {
-                durumAdi = "EYK Onaylamadı";
-                durumColor = "maroon";
-                durumIconClass = "fa fa-thumbs-o-down";
-                durumDetay = "Başvurunuz EYK'da onaylanmadı.";
-                durumDetayTitle = Model.EYKDaOnaylanmadiDurumAciklamasi;
+                string makamAdi = "Enstitü Müdürlüğü";
+
+                if (!Model.OnayMakaminaGonderildi.HasValue)
+                {
+                    durumAdi = $"{makamAdi} onay için bekleniyor";
+                    durumColor = "green";
+                    durumIconClass = "fa fa-clock-o";
+                    durumDetay = $"{makamAdi} tarafından onaya gönderilmesi bekleniyor.";
+                }
+                else if (Model.OnayMakaminaGonderildi == false)
+                {
+                    durumAdi = $"{makamAdi} onaya gönderilmedi";
+                    durumColor = "maroon";
+                    durumIconClass = "fa fa-thumbs-o-down";
+                    durumDetay = $"Başvuru {makamAdi} tarafından onaya gönderilmedi.";
+                    durumDetayTitle = Model.OnayMakaminaGonderimDurumAciklamasi;
+                }
+                else if (Model.OnayMakaminaGonderildi == true && !Model.OnayMakaminaHazirlandi.HasValue)
+                {
+                    durumAdi = $"{makamAdi} onay hazırlığı bekleniyor";
+                    durumColor = "green";
+                    durumIconClass = "fa fa-thumbs-o-up";
+                    durumDetay = $"{makamAdi} hazırlık işlemlerinin tamamlanması bekleniyor.";
+                }
+                else if (Model.OnayMakaminaHazirlandi == true && !Model.OnayMakamindaOnaylandi.HasValue)
+                {
+                    durumAdi = $"{makamAdi} onay işlemi bekleniyor";
+                    durumColor = "green";
+                    durumIconClass = "fa fa-thumbs-o-up";
+                    durumDetay = $"{makamAdi} onay işlemi bekleniyor.";
+                }
+                else if (Model.OnayMakamindaOnaylandi == true)
+                {
+                    durumAdi = $"{makamAdi} tarafından onaylandı";
+                    durumColor = "green";
+                    durumIconClass = "fa fa-thumbs-o-up";
+                    durumDetay = $"Kayıt silme başvurunuz {makamAdi} tarafından onaylandı.";
+                }
+                else if (Model.OnayMakamindaOnaylandi == false)
+                {
+                    durumAdi = $"{makamAdi} onaylamadı";
+                    durumColor = "maroon";
+                    durumIconClass = "fa fa-thumbs-o-down";
+                    durumDetay = $"Başvurunuz {makamAdi} tarafından onaylanmadı.";
+                    durumDetayTitle = Model.OnayMakamindaOnaylanmadiDurumAciklamasi;
+                }
             }
             break;
     }
@@ -105,24 +159,24 @@
 
 <table>
     <tbody>
-    <tr style="color:@durumColor">
-        <td>
-            <span style="font-size:9pt;margin:0px;">@tabAdi</span>
-            |
-            <span style="font-size:7pt;" title="@durumDetayTitle">
-                <i class="@durumIconClass" style="font-size:8pt;"></i> @durumAdi
-            </span>
-        </td>
-    </tr>
-    @if (!string.IsNullOrEmpty(durumDetay))
-    {
-        <tr>
+        <tr style="color:@durumColor">
             <td>
+                <span style="font-size:9pt;margin:0px;">@tabAdi</span>
+                |
                 <span style="font-size:7pt;" title="@durumDetayTitle">
-                    <i class="@durumDetayIconClass" style="font-size:8pt;"></i> @Html.Raw(durumDetay)
+                    <i class="@durumIconClass" style="font-size:8pt;"></i> @durumAdi
                 </span>
             </td>
         </tr>
-    }
+        @if (!string.IsNullOrEmpty(durumDetay))
+        {
+            <tr>
+                <td>
+                    <span style="font-size:7pt;" title="@durumDetayTitle">
+                        <i class="@durumDetayIconClass" style="font-size:8pt;"></i> @Html.Raw(durumDetay)
+                    </span>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

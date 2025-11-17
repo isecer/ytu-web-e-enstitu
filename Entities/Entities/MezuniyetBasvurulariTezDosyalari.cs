@@ -24,6 +24,7 @@ namespace Entities.Entities
         public Nullable<bool> IsOnaylandiOrDuzeltme { get; set; }
         public string Aciklama { get; set; }
         public Nullable<System.DateTime> YuklemeTarihi { get; set; }
+        public Nullable<bool> IsOnayTaahhutuVerildi { get; set; }
         public Nullable<System.DateTime> OnayTarihi { get; set; }
         public Nullable<int> OnayYapanID { get; set; }
         public System.DateTime IslemTarihi { get; set; }

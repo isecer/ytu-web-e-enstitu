@@ -291,6 +291,7 @@
             cache: false,
             data: { 'AnketSoruID': AsID, 'AnketSoruSecenekID': AssID, },
             success: function (result) {
+                debugger
                 SecenekEkle(result.page, AsID, AssID);
                 PanelRefresh(_pnl, true);
             },

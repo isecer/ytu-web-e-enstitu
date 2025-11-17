@@ -5,6 +5,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model MezuniyetBasvuruDetayDto
 @{
 
@@ -268,6 +269,10 @@
                                                                     <td style="padding-left:10px;text-align:left;">
                                                                         @using (Ajax.BeginForm("TdDurumKaydet", "MezuniyetGelenBasvurular", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TdDurumKaydet_" + itemTd.MezuniyetBasvurulariTezDosyaID }))
                                                                         {
+
+                                                                            var latexHtml = MezuniyetAyar.TezKontrolOnayTaahhutMetniLatex.GetAyar(Model.EnstituKod);
+                                                                            var wordHtml = MezuniyetAyar.TezKontrolOnayTaahhutMetniWord.GetAyar(Model.EnstituKod);
+
                                                                             @Html.Hidden("MezuniyetBasvurulariTezDosyaID", itemTd.MezuniyetBasvurulariTezDosyaID)
                                                                             var aciklamaVar = !itemTd.Aciklama.IsNullOrWhiteSpace();
                                                                             <table style="width:100%;table-layout:fixed;margin:0px;">
@@ -311,23 +316,7 @@
                                                                                             </td>
                                                                                         </tr>
                                                                                     }
-                                                                                    @if (itemTd.IsOnaylandiOrDuzeltme.HasValue)
-                                                                                    {
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd" style="color:@rwColor">Kontrol Yapan Yetkili</td>
-                                                                                            <td class="CaptionTd" style="color:@rwColor">:</td>
-                                                                                            <td class="ValueTd" style="color:@rwColor">
-                                                                                                @if (kayitYetki)
-                                                                                                {
-                                                                                                    <a href="javascript:void(0)" onclick="DetayGor('@itemTd.UserKey','#kulPnl')"><i class="fa fa-user"></i> @itemTd.OnayYapanTezKontrolYetkiliAdSoyad - @itemTd.OnayTarihi.ToFormatDateAndTime()</a>
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    @(itemTd.OnayYapanTezKontrolYetkiliAdSoyad +" "+itemTd.OnayTarihi.ToFormatDateAndTime())
-                                                                                                }
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    }
+
                                                                                     <tr id="TdAciklama_@itemTd.MezuniyetBasvurulariTezDosyaID" class="@(itemTd.IsOnaylandiOrDuzeltme.HasValue ? "" : "hide")" style="@(aciklamaVar ? "border-top:1px solid; border-bottom:1px solid;" : "")">
 
                                                                                         <td class="ValueTd" colspan="3" style="@(aciklamaVar ? "padding-bottom:10px;padding-top:10px;" : "")">
@@ -368,6 +357,69 @@
                                                                                             }
                                                                                         </td>
                                                                                     </tr>
+
+                                                                                    @if (itemTd.IsOnaylandiOrDuzeltme.HasValue)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd" style="color:@rwColor">Kontrol Yapan Yetkili</td>
+                                                                                            <td class="CaptionTd" style="color:@rwColor">:</td>
+                                                                                            <td class="ValueTd" style="color:@rwColor">
+                                                                                                @if (kayitYetki)
+                                                                                                {
+                                                                                                    <a href="javascript:void(0)" onclick="DetayGor('@itemTd.UserKey','#kulPnl')"><i class="fa fa-user"></i> @itemTd.OnayYapanTezKontrolYetkiliAdSoyad - @itemTd.OnayTarihi.ToFormatDateAndTime()</a>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    @(itemTd.OnayYapanTezKontrolYetkiliAdSoyad +" "+itemTd.OnayTarihi.ToFormatDateAndTime())
+                                                                                                }
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                    @{
+                                                                                        // Taahhüt satırını gösterme koşulu
+                                                                                        var shouldShowTaahhut = false;
+                                                                                        var canEditCheckbox = false;
+
+                                                                                        // Yetki varsa ve "Onayla" durumu seçiliyse
+                                                                                        if (yetki && itemTd.IsOnaylandiOrDuzeltme == true)
+                                                                                        {
+                                                                                            shouldShowTaahhut = true;
+                                                                                            canEditCheckbox = true; // Yetki varsa düzenleyebilir
+                                                                                        }
+                                                                                        // Yetki yoksa ama daha önce onaylanmış ve taahhüt verilmişse (sadece görüntüleme)
+                                                                                        else if (!yetki && (itemTd.IsOnaylandiOrDuzeltme == true && itemTd.IsOnayTaahhutuVerildi == true && kayitYetki))
+                                                                                        {
+                                                                                            shouldShowTaahhut = true;
+                                                                                            canEditCheckbox = false; // Yetki yoksa sadece görür, düzenleyemez
+                                                                                        }
+
+                                                                                        var taahhutHtml = itemTd.IsLatexOrWordSablonu.HasValue
+                                                                                            ? (itemTd.IsLatexOrWordSablonu.Value ? latexHtml : wordHtml)
+                                                                                            : "";
+                                                                                    }
+
+                                                                                    <tr class="taahhutRw_@itemTd.MezuniyetBasvurulariTezDosyaID @(shouldShowTaahhut ? "" : "hide")" data-has-edit-permission="@(yetki ? "true" : "false")">
+                                                                                        <td colspan="3" style="padding:10px; border-top:1px solid #ccc; border-bottom:1px solid #ccc; background:#f8f9fa;">
+                                                                                            <div id="taahhutMetni_@itemTd.MezuniyetBasvurulariTezDosyaID"
+                                                                                                 class="taahhutMetni"
+                                                                                                 style="max-height:300px; overflow:auto; padding:10px; border:1px solid #ddd; background:#fff;">
+                                                                                                @Html.Raw(taahhutHtml)
+                                                                                            </div>
+                                                                                            <div style="margin-top:10px;">
+                                                                                                <label>
+                                                                                                    <input type="checkbox"
+                                                                                                           name="IsOnayTaahhutuVerildi"
+                                                                                                           value="true"
+                                                                                                           id="chkTaahhut_@itemTd.MezuniyetBasvurulariTezDosyaID"
+                                                                                                           @itemTd.IsOnayTaahhutuVerildi.ToChecked()
+                                                                                                           @(canEditCheckbox ? "" : "disabled='disabled'") />
+                                                                                                    <span style="margin-left:5px;">Taahhüt metnini okudum ve onaylıyorum.</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    </tr>
+
+
 
                                                                                     @if (yetki && showRow)
                                                                                     {
@@ -622,7 +674,7 @@
 
         $('#' + frmID).ajaxForm({
             success: function (result) {
-                PanelRefresh(pnlx, true); 
+                PanelRefresh(pnlx, true);
                 if (result.IsSuccess)
                     GetDetailx(bID);
                 ShowMmMessage(result.Messages, 'Tamam');
@@ -715,34 +767,105 @@
         }
     }
     function TKayitDurumChange(sndr, mezuniyetBasvurulariTezDosyaID) {
-        if ($(sndr).val() != '') { $('#TdAciklama_' + mezuniyetBasvurulariTezDosyaID).removeClass('hide'); }
-        else { $('#TdAciklama_' + mezuniyetBasvurulariTezDosyaID).addClass('hide'); }
-        if ($(sndr).val() == 'true') { $('.intihalRwBasvuruTk_' + mezuniyetBasvurulariTezDosyaID).removeClass('hide'); }
-        else { $('.intihalRwBasvuruTk_' + mezuniyetBasvurulariTezDosyaID).addClass('hide'); }
-    }
-    function TdDurumKayit(MezuniyetBasvurulariID, MezuniyetBasvurulariTezDosyaID) {
-        var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        PanelRefresh(_panel, false);
-        $('#TdDurumKaydet_' + MezuniyetBasvurulariTezDosyaID).ajaxForm({
-            success: function (result) {
+        try {
+            var val = $(sndr).val();
 
-                ShowMmMessage(result.Messages, 'Tamam');
-                if (result.IsSuccess) {
-                    GetDetailx(MezuniyetBasvurulariID);
-                }
-                PanelRefresh(_panel, true);
-
-            },
-            complete: function (cmp) {
-                PanelRefresh(_panel, true);
-            },
-            error: function (err) {
-                PanelRefresh(_panel, true);
+            // Açıklama alanı göster/gizle
+            if (val && val !== '') {
+                $('#TdAciklama_' + mezuniyetBasvurulariTezDosyaID).removeClass('hide');
+            } else {
+                $('#TdAciklama_' + mezuniyetBasvurulariTezDosyaID).addClass('hide');
             }
 
-        }).submit();
+            // intihal satırı göster/gizle
+            if (val === 'true') {
+                $('.intihalRwBasvuruTk_' + mezuniyetBasvurulariTezDosyaID).removeClass('hide');
+            } else {
+                $('.intihalRwBasvuruTk_' + mezuniyetBasvurulariTezDosyaID).addClass('hide');
+            }
 
+            // taahhüt satırı kontrolü
+            var taahhutRow = $('.taahhutRw_' + mezuniyetBasvurulariTezDosyaID);
+            var hasEditPermission = taahhutRow.attr('data-has-edit-permission') === 'true';
+            var checkbox = $('#chkTaahhut_' + mezuniyetBasvurulariTezDosyaID);
+
+            if (val === 'true') {
+                // Onayla seçildiğinde göster
+                taahhutRow.removeClass('hide');
+
+                // Yetki varsa checkbox'u aktif et
+                if (hasEditPermission) {
+                    checkbox.prop('disabled', false);
+                } else {
+                    checkbox.prop('disabled', true);
+                }
+            } else {
+                // Onayla seçili değilse gizle
+                taahhutRow.addClass('hide');
+            }
+
+        } catch (ex) {
+            console && console.error && console.error('TKayitDurumChange error', ex);
+        }
     }
+
+
+    function TdDurumKayit(MezuniyetBasvurulariID, MezuniyetBasvurulariTezDosyaID) {
+        var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
+        var _form = $('#TdDurumKaydet_' + MezuniyetBasvurulariTezDosyaID);
+        var refreshStarted = false;
+
+        try {
+            _form.ajaxForm({
+                beforeSubmit: function () {
+                    try {
+                        var selectVal = $('#TdOnay_' + MezuniyetBasvurulariTezDosyaID).val();
+
+                        if (selectVal === 'true') {
+                            var chk = $('#chkTaahhut_' + MezuniyetBasvurulariTezDosyaID);
+                            if (chk.length && !chk.is(':checked')) {
+                                alert('Lütfen taahhüt metnini okuyup onay kutusunu işaretleyiniz.');
+                                return false; // kaydetme
+                            }
+                        }
+
+                        PanelRefresh(_panel, false);
+                        refreshStarted = true;
+                        return true;
+
+                    } catch (ex) {
+                        console.error('beforeSubmit error:', ex);
+                        return false;
+                    }
+                },
+                success: function (result) {
+                    try {
+                        ShowMmMessage(result.Messages, 'Tamam');
+                        if (result.IsSuccess) {
+                            GetDetailx(MezuniyetBasvurulariID);
+                        }
+                    } catch (ex) {
+                        console.error('success handler error:', ex);
+                    } finally {
+                        if (refreshStarted) PanelRefresh(_panel, true);
+                    }
+                },
+                complete: function () {
+                    if (refreshStarted) PanelRefresh(_panel, true);
+                },
+                error: function (err) {
+                    console.error('Ajax error:', err);
+                    if (refreshStarted) PanelRefresh(_panel, true);
+                }
+            }).submit();
+
+        } catch (ex) {
+            console.error('TdDurumKayit error:', ex);
+            if (refreshStarted) PanelRefresh(_panel, true);
+        }
+    }
+
+
     function EkSureTalep(mezuniyetBasvurulariId) {
         var _panel = $('#bsvrDet_' + mezuniyetBasvurulariId);
         PanelRefresh(_panel, false);

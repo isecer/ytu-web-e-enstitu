@@ -743,72 +743,47 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "IstenenBelgeSayisi" });
                 }
 
-
+                 
                 if (mmMessage.Messages.Count == 0)
                 {
-                    var ilkBtAnketAdi = BelgeTalepAyar.IlkBelgeTalebiAnketiAdi.GetAyar(enstituKod, "");
-                    var ilkBtAnketId = _entities.Ankets.Where(p => p.AnketAdi == ilkBtAnketAdi).Select(s => s.AnketID).FirstOrDefault();
-                    var ilkBelgeTalebiVar = _entities.BelgeTalepleris.Any(a => a.OgrenciNo == kul.OgrenciNo && kul.ProgramKod == a.ProgramKod) || ilkBtAnketAdi.IsNullOrWhiteSpace();
+                    var ilkBtAnketId = BelgeTalepAyar.IlkBelgeTalebiAnketi.GetAyar(enstituKod, "").ToInt();
+                     
+
+                    var ilkBelgeTalebiVar = _entities.BelgeTalepleris
+                                                .Any(a => a.OgrenciNo == kul.OgrenciNo && kul.ProgramKod == a.ProgramKod)
+                                            || !ilkBtAnketId.HasValue;
+
                     var kullaniciDonem4 = Convert.ToDouble((kul.KayitYilBaslangic.Value + 2) + "." + kul.KayitDonemID.Value);
                     var suankiDonem = DateTime.Now.ToAkademikDonemBilgi();
-
                     var aktifDonem = Convert.ToDouble((suankiDonem.BaslangicYil) + "." + suankiDonem.DonemId);
-                    var anketAdi = "";
+
+                    int? anketId = null;
+
                     if (kullaniciDonem4 <= aktifDonem)
                     {
-                        if (!_entities.BelgeTalepleris.Where(a => a.OgrenciNo == kul.OgrenciNo && kul.ProgramKod == a.ProgramKod).ToList().Any(a => a.AnketCevaplaris.All(a2 => a2.AnketID != ilkBtAnketId)))
-                            anketAdi = BelgeTalepAyar.Donem4BelgeTalebiAnketiAdi.GetAyar(enstituKod, "");
-                    }
-                    else if (!ilkBelgeTalebiVar) anketAdi = ilkBtAnketAdi;
-
-                    if (anketAdi != "")
-                    {
-                        var anketId = _entities.Ankets.Where(p => p.AnketAdi == anketAdi).Select(s => s.AnketID).FirstOrDefault();
-                        var anketSorulari = (from bsa in _entities.Ankets.Where(p => p.AnketID == anketId)
-                                             join aso in _entities.AnketSorus on bsa.AnketID equals aso.AnketID
-                                             join sb in _entities.AnketCevaplaris.Where(p => p.AnketID == anketId && p.BelgeTalepID == kModel.BelgeTalepID) on aso.AnketSoruID equals sb.AnketSoruID into def1
-                                             from sbc in def1.DefaultIfEmpty()
-                                             select new
-                                             {
-                                                 aso.AnketSoruID,
-                                                 AnketSoruSecenekID = sbc != null ? sbc.AnketSoruSecenekID : (int?)null,
-                                                 Aciklama = sbc != null ? sbc.EkAciklama : "",
-                                                 aso.SiraNo,
-                                                 aso.SoruAdi,
-                                                 aso.IsTabloVeriGirisi,
-                                                 aso.IsTabloVeriMaxSatir,
-                                                 Secenekler = (from s in aso.AnketSoruSeceneks
-                                                               select new
-                                                               {
-                                                                   Value = s.AnketSoruSecenekID,
-                                                                   s.SiraNo,
-                                                                   s.IsEkAciklamaGir,
-                                                                   s.IsYaziOrSayi,
-                                                                   Caption = s.SecenekAdi
-                                                               }).OrderBy(o => o.SiraNo).ToList()
-
-
-                                             }).OrderBy(o => o.SiraNo).ToList();
-                        var model = new KmAnketlerCevap
+                        if (!_entities.BelgeTalepleris
+                                .Where(a => a.OgrenciNo == kul.OgrenciNo && kul.ProgramKod == a.ProgramKod)
+                                .ToList()
+                                .Any(a => a.AnketCevaplaris.All(a2 => a2.AnketID != ilkBtAnketId)))
                         {
-                            AnketTipID = 2,
-                            AnketID = anketId,
-                            JsonStringData = anketSorulari.ToJson()
-                        };
-                        foreach (var item in anketSorulari)
-                        {
-                            model.AnketCevapModel.Add(new AnketCevapDto
-                            {
-                                SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
-                                SoruBilgi = new FrAnketDetayDto { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir, },
-                                SoruSecenek = item.Secenekler.Select(s => new FrAnketSecenekDetayDto { AnketSoruSecenekID = s.Value, SiraNo = s.SiraNo, IsEkAciklamaGir = s.IsEkAciklamaGir, IsYaziOrSayi = s.IsYaziOrSayi, SecenekAdi = s.Caption }).ToList(),
-                                SelectListSoruSecenek = new SelectList(item.Secenekler.ToList(), "Value", "Caption", item.AnketSoruSecenekID)
-                            });
+                            anketId = BelgeTalepAyar.Donem4BelgeTalebiAnketi.GetAyar(enstituKod, "").ToInt();
+                          
                         }
-
-                        anketGiris = ViewRenderHelper.RenderPartialView("Ajax", "GetAnket", model);
+                    }
+                    else if (!ilkBelgeTalebiVar)
+                        anketId = ilkBtAnketId;
+                     
+                    if (anketId.HasValue)
+                    {
+                         anketGiris = AnketlerBus.GetAnketView(
+                            anketId.Value,
+                            AnketTipiEnum.BelgeTalepAnketi,
+                            belgeTalepId: kModel.BelgeTalepID 
+                        );
+                         
                     }
                 }
+
                 #endregion
 
             }
@@ -1134,6 +1109,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
             var belge = _entities.BelgeTalepleris.FirstOrDefault(p => p.BelgeTalepID == id && p.KullaniciID == kul.KullaniciID);
+            if (belge != null && belge.AnketCevaplaris.Any())
+            {
+                mmMessage.IsSuccess = false;
+                mmMessage.Messages.Add("Bu belge talebi için anket verisi doldurulduğundan silinemez."); 
+            }
             if (mmMessage.IsSuccess)
             {
                 try

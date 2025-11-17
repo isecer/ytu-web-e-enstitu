@@ -18,6 +18,7 @@ namespace Entities.Entities
         public DonemProjesi()
         {
             this.DonemProjesiBasvurus = new HashSet<DonemProjesiBasvuru>();
+            this.AnketCevaplaris = new HashSet<AnketCevaplari>();
         }
     
         public int DonemProjesiID { get; set; }
@@ -41,8 +42,10 @@ namespace Entities.Entities
         public virtual DonemProjesi DonemProjesi2 { get; set; }
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
+        public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonemProjesiBasvuru> DonemProjesiBasvurus { get; set; }
-        public virtual Programlar Programlar { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
     }
 }

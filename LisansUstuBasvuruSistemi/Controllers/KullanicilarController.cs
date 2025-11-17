@@ -201,7 +201,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.CinsiyetID = new SelectList(KullanicilarBus.CmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
 
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
+            ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.OgrenimEnstituKod, true, true), "Value", "Caption", model.ProgramKod);
             ViewBag.OgrenimDurumID = new SelectList(KullanicilarBus.CmbAktifOgrenimDurumu(true, isHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.YetkiGrupID = new SelectList(YetkiGrupBus.CmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
             ViewBag.IsKurumIci = isKurumIci;

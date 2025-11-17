@@ -1,5 +1,6 @@
 ﻿@using Entities.Entities
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model List<TIAyarlar>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -55,7 +56,22 @@
                                                         <div class="inputContent input-icon right">
                                                             <input type="text" style="width:100%;display:none;" name="AyarAdi" value="@item.AyarAdi" />
 
-                                                            @if (item.InpType == "text")
+                                                            @if (item.AyarAdi == TiAyar.TezOneriIlkBasvuruAnketi)
+                                                            {
+                                                                var key = Guid.NewGuid().ToString();
+                                                                @Html.DropDownList(
+                                                                    "AyarDegeri",                     // name olarak AyarDegeri kalıyor
+                                                                    ViewBag.AnketId as SelectList,    // ViewBag’ten gelen liste
+                                                                    new { @class = "form-control", id = "AyarDegeri_" + key } // id de aynı isimde
+                                                                )
+
+                                                                <script>
+                                                                      $(function () {
+                                                                          $("#AyarDegeri_@key").val("@item.AyarDegeri");
+                                                                      });
+                                                                </script>
+                                                            }
+                                                            else if (item.InpType == "text")
                                                             {
                                                                 <input type="text" style="width:100%;" name="AyarDegeri" class="form-control" value="@item.AyarDegeri" />
                                                             }

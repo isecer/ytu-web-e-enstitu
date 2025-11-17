@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using BiskaUtil;
+﻿using BiskaUtil;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
@@ -14,7 +6,17 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsService;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -31,7 +33,161 @@ namespace LisansUstuBasvuruSistemi.Business
             //} 
             return obsData.GetObsStudentControl(tcOrOgrenciNo, donemId);
         }
+        public static async Task<MmMessage> OgrenciBilgileriniObsdenGetir(string tcKimlikNo, string ogrenciNo)
+        {
 
+            var messageModel = new MmMessage { Title = "OBS Bilgi Kontrolü" };
+
+            try
+            {
+                using (var _entities = new LubsDbEntities())
+                {
+                    var ogrenciKontrol = KullanicilarBus.OgrenciKontrol(tcKimlikNo.Trim());
+
+                    if (ogrenciKontrol == null || ogrenciKontrol.Hata)
+                    {
+                        messageModel.Messages.Add("OBS sisteminde öğrenci kaydınız bulunamadı: " +
+                                                  (ogrenciKontrol?.HataMsj ?? ""));
+                        messageModel.MessageType = MsgTypeEnum.Error;
+                        return messageModel;
+                    }
+
+                    if (!ogrenciKontrol.KayitVar)
+                    {
+                        messageModel.Messages.Add("OBS sisteminde aktif öğrenci kaydınız bulunamadı.");
+                        messageModel.MessageType = MsgTypeEnum.Error;
+                        return messageModel;
+                    }
+
+                    var ogrenci = ogrenciKontrol.OgrenciInfo;
+                    if (ogrenci == null)
+                    {
+                        messageModel.Messages.Add("Öğrenci bilgileri alınamadı.");
+                        messageModel.MessageType = MsgTypeEnum.Error;
+                        return messageModel;
+                    }
+
+                    if (ogrenci.OGR_NO?.Trim() != ogrenciNo.Trim())
+                    {
+                        messageModel.Messages.Add("Girdiğiniz Öğrenci Numarası TC Kimlik Numaranız ile eşleşmiyor.");
+                        messageModel.Messages.Add("OBS'de kayıtlı öğrenci numaranız: " + ogrenci.OGR_NO);
+                        messageModel.MessageType = MsgTypeEnum.Error;
+                        return messageModel;
+                    }
+
+                    if (ogrenci.OGRENIMDURUM_ID?.ToUpper() == "MEZ")
+                    {
+                        messageModel.Messages.Add(
+                            "Mezun olan öğrencilerin belge talep işlemini Davutpaşa Öğrenci İşleri Daire Başkanlığından yapmaları gerekmektedir.");
+                        messageModel.MessageType = MsgTypeEnum.Error;
+                        return messageModel;
+                    }
+
+                    // Program eşleştirmesi
+                    var obsProgramlar = await ObsProgramCacheService.GetProgramsFlatAsync();
+                    if (obsProgramlar == null || !obsProgramlar.Any())
+                    {
+                        messageModel.Messages.Add("OBS program listesi alınamadı.");
+                        messageModel.MessageType = MsgTypeEnum.Error;
+                        return messageModel;
+                    }
+
+                    var obsProgram = obsProgramlar.FirstOrDefault(p => p.ProgramId == ogrenci.PROGRAM_ID);
+                    if (obsProgram == null)
+                    {
+                        messageModel.Messages.Add("OBS'de programınız bulunamadı");
+                        messageModel.MessageType = MsgTypeEnum.Error;
+                        return messageModel;
+                    }
+
+                    var obsProgramKod = ProgramKodGuncellemeBus.ProgramKodAyikla(obsProgram.ProgramKod);
+                    var dbProgram =
+                        _entities.Programlars.FirstOrDefault(p => p.ObsProgramKod == obsProgramKod && p.IsAktif);
+
+                    if (dbProgram == null)
+                    {
+                        messageModel.Messages.Add("Programınız e-Enstitü sisteminde eşleştirilemedi.");
+                        messageModel.MessageType = MsgTypeEnum.Warning;
+                        return messageModel;
+                    }
+
+                    string enstituKod = dbProgram.AnabilimDallari.EnstituKod;
+                    if (string.IsNullOrWhiteSpace(enstituKod))
+                    {
+                        messageModel.Messages.Add("Programınız için enstitü bilgisi bulunamadı.");
+                        messageModel.MessageType = MsgTypeEnum.Warning;
+                        return messageModel;
+                    }
+
+                    // Cinsiyet
+                    int? cinsiyetID = null;
+                    if (!string.IsNullOrWhiteSpace(ogrenci.CINSIYET))
+                    {
+                        var cinsiyetLower = ogrenci.CINSIYET.Trim().ToLower();
+                        if (cinsiyetLower.Contains("erkek"))
+                            cinsiyetID = 1;
+                        else if (cinsiyetLower.Contains("kadın") || cinsiyetLower.Contains("kadin"))
+                            cinsiyetID = 2;
+                    }
+
+                    // Öğrenim Durumu
+                    int? ogrenimDurumID = null;
+                    if (!string.IsNullOrWhiteSpace(ogrenci.OGRENIMDURUM_ID))
+                    {
+                        var durumKod = ogrenci.OGRENIMDURUM_ID.Trim().ToUpper();
+                        ogrenimDurumID = durumKod == "AKT"
+                            ? (int)OgrenimDurumEnum.HalenOğrenci
+                            : (int)OgrenimDurumEnum.Mezun;
+                    }
+
+                    // Kayıt Tarihi
+                    DateTime? kayitTarihi = null;
+                    if (!string.IsNullOrWhiteSpace(ogrenci.KAYIT_TARIHI))
+                    {
+                        DateTime kayitTarih;
+                        if (DateTime.TryParse(ogrenci.KAYIT_TARIHI, out kayitTarih))
+                        {
+                            kayitTarihi = kayitTarih;
+                        }
+                    }
+
+                    var enstitu = EnstituBus.Enstitulers.FirstOrDefault(f => f.EnstituKod == dbProgram.AnabilimDallari.EnstituKod);
+                    // Başarılı - tüm bilgileri Data'ya ekle
+                    messageModel.IsSuccess = true;
+                    messageModel.MessageType = MsgTypeEnum.Success;
+                    messageModel.Table = new
+                    {
+                        Ad = ogrenci.AD?.Trim(),
+                        Soyad = ogrenci.SOYAD?.Trim(),
+                        TcKimlikNo = ogrenci.TCKIMLIKNO?.Trim(),
+                        CinsiyetID = cinsiyetID,
+                        EMail = !string.IsNullOrWhiteSpace(ogrenci.E_POSTA1)
+                            ? ogrenci.E_POSTA1.Trim()
+                            : ogrenci.E_POSTA2?.Trim(),
+                        CepTel = !string.IsNullOrWhiteSpace(ogrenci.GSM1) ? ogrenci.GSM1.Trim() : ogrenci.GSM2?.Trim(),
+                        EnstituKod = enstituKod,
+                        OgrenimEnstituKod = enstituKod,
+                        ProgramKod = dbProgram.ProgramKod,
+                        ProgramAdi = dbProgram.ProgramAdi,
+                        OgrenciNo = ogrenci.OGR_NO?.Trim(),
+                        OgrenimTipKod = ogrenci.OGRENIMSEVIYE_ID.ToInt(),
+                        OgrenimDurumID = ogrenimDurumID,
+                        KayitTarihi = kayitTarihi,
+                        EnstituAdi = enstitu?.EnstituAd ?? "",
+                        OgrenimTipAdi = ogrenci.OGRENIMSEVIYE_AD?.Trim() ?? "",
+                        OgrenimDurumAdi = ogrenci.OGRENIMDURUM_AD?.Trim() ?? ""
+                    };
+
+                    return messageModel;
+                }
+            }
+            catch (Exception ex)
+            {
+                messageModel.Messages.Add("OBS bilgileri alınırken hata oluştu: " + ex.Message);
+                messageModel.MessageType = MsgTypeEnum.Error;
+                return messageModel;
+            }
+        }
         public static StudentControl OgrenciBilgisiGuncelleObs(Guid userKey)
         {
             return OgrenciBilgisiGuncelleObs(null, userKey);
@@ -59,9 +215,11 @@ namespace LisansUstuBasvuruSistemi.Business
                 var ogrenciler = ogrenciQuery.ToList();
                 foreach (var ogrenci in ogrenciler)
                 {
+
                     if (ogrenci.YtuOgrencisi)
                     {
                         kayitBilgi = OgrenciKontrol(ogrenci.OgrenciNo);
+                         
                         if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == ogrenci.OgrenimTipKod)
                         {
                             if (ogrenci.ObsKayitDonemOtoGuncellemeKapali != true)
@@ -109,7 +267,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                         IslemYapanIP = UserIdentity.Ip,
                                     };
                                     ogrenci.KullaniciOgrenimleris.Add(kullaniciOgrenim);
-                                     
+
                                 }
                             }
 
@@ -118,7 +276,15 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             ogrenci.YtuOgrencisi = false;
                         }
-
+                        if (kayitBilgi.KayitVar)
+                        {
+                            var ad = kayitBilgi.OgrenciInfo?.AD;
+                            var soyad = kayitBilgi.OgrenciInfo?.SOYAD; 
+                            if (!ad.IsNullOrWhiteSpace() && ogrenci.Ad != ad)
+                                ogrenci.Ad = ad;
+                            if (!soyad.IsNullOrWhiteSpace() && ogrenci.Soyad != soyad)
+                                ogrenci.Soyad = soyad;
+                        }
                         entities.SaveChanges();
                     }
                 }
@@ -187,7 +353,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             if (string.IsNullOrWhiteSpace(term))
             {
-                return new List<object>().ToJsonResult();  
+                return new List<object>().ToJsonResult();
             }
 
             using (var entities = new LubsDbEntities())
@@ -195,7 +361,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var kullaniciTipIds = new List<int> { KullaniciTipiEnum.AkademikPersonel, KullaniciTipiEnum.IdariPersonel };
                 var dataList = entities.Kullanicilars
                     .Where(p => p.IsAktif &&
-                                kullaniciTipIds.Contains(p.KullaniciTipID)  &&
+                                kullaniciTipIds.Contains(p.KullaniciTipID) &&
                                                 ((p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term))
                     )
                     .Select(s => new

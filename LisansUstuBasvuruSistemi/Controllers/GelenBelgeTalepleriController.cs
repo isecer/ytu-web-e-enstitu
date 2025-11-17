@@ -220,6 +220,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage();
             var kayit = _entities.BelgeTalepleris.First(p => p.BelgeTalepID == id);
+            if (kayit != null && kayit.AnketCevaplaris.Any())
+            {
+                mmMessage.IsSuccess = false;
+                mmMessage.Messages.Add("Bu belge talebi için anket verisi doldurulduğundan silinemez.");
+            }
             try
             {
                 _entities.BelgeTalepleris.Remove(kayit);

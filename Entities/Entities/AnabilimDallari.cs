@@ -18,8 +18,8 @@ namespace Entities.Entities
         public AnabilimDallari()
         {
             this.AnabilimDaliYeterlikKomiteUyeleris = new HashSet<AnabilimDaliYeterlikKomiteUyeleri>();
-            this.TDOBasvuruDanismen = new HashSet<TDOBasvuruDanisman>();
             this.Programlars = new HashSet<Programlar>();
+            this.TDOBasvuruDanismen = new HashSet<TDOBasvuruDanisman>();
         }
     
         public int AnabilimDaliID { get; set; }
@@ -36,8 +36,8 @@ namespace Entities.Entities
         public virtual ICollection<AnabilimDaliYeterlikKomiteUyeleri> AnabilimDaliYeterlikKomiteUyeleris { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TDOBasvuruDanisman> TDOBasvuruDanismen { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Programlar> Programlars { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TDOBasvuruDanisman> TDOBasvuruDanismen { get; set; }
     }
 }

@@ -4,17 +4,14 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using DevExpress.Data.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*")]
+    [OutputCache(Duration = 0, VaryByParam = "*")]
     public class HomeController : Controller
     {
         private readonly LubsDbEntities _entities = new LubsDbEntities();
@@ -81,65 +78,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (basvuruId.HasValue && rowId.IsNullOrWhiteSpace() == false)
             {
                 var nRwId = new Guid(rowId);
-                var basvuru = _entities.Basvurulars.FirstOrDefault(p => p.BasvuruID == basvuruId.Value && p.RowID == nRwId);
-                if (basvuru?.BasvuruSurec.KayitOlmayanlarAnketID != null && basvuru.AnketCevaplaris.All(p => p.AnketID != basvuru.BasvuruSurec.KayitOlmayanlarAnketID))
+                var basvuru = _entities.Basvurulars
+                    .FirstOrDefault(p => p.BasvuruID == basvuruId.Value && p.RowID == nRwId);
+
+                if (basvuru?.BasvuruSurec.KayitOlmayanlarAnketID != null &&
+                    basvuru.AnketCevaplaris.All(p => p.AnketID != basvuru.BasvuruSurec.KayitOlmayanlarAnketID))
                 {
-
                     var anketId = basvuru.BasvuruSurec.KayitOlmayanlarAnketID.Value;
-                    var anketSorulari = (from bsa in _entities.Ankets.Where(p => p.AnketID == anketId)
-                                         join aso in _entities.AnketSorus on bsa.AnketID equals aso.AnketID
-                                         join sb in _entities.AnketCevaplaris.Where(p => p.AnketID == anketId && p.BasvuruID == basvuruId) on aso.AnketSoruID equals sb.AnketSoruID into def1
-                                         from sbc in def1.DefaultIfEmpty()
-                                         select new
-                                         {
-                                             aso.AnketSoruID,
-                                             AnketSoruSecenekID = sbc != null ? sbc.AnketSoruSecenekID : null,
-                                             Aciklama = sbc != null ? sbc.EkAciklama : "",
-                                             aso.SiraNo,
-                                             aso.SoruAdi,
-                                             aso.IsTabloVeriGirisi,
-                                             aso.IsTabloVeriMaxSatir,
-                                             Secenekler = (from s in aso.AnketSoruSeceneks
-                                                           select new
-                                                           {
-                                                               Value = s.AnketSoruSecenekID,
-                                                               s.SiraNo,
-                                                               s.IsEkAciklamaGir,
-                                                               s.IsYaziOrSayi,
-                                                               Caption = s.SecenekAdi,
 
-                                                           }).OrderBy(o => o.SiraNo).ToList()
+                    // 📌 Ortak helper metodunu çağırıyoruz
+                    var anketViewHtml = AnketlerBus.GetAnketView(
+                        anketId: anketId,
+                        anketTipId: AnketTipiEnum.KayitHakkiKazananKayitYaptirmayanAnketi,
+                        basvuruId: basvuruId,
+                        rowId: rowId
+                    );
 
-
-                                         }).OrderBy(o => o.SiraNo).ToList();
-                    var model = new KmAnketlerCevap
-                    {
-                        AnketTipID = 3,
-                        RowID = rowId,
-                        AnketID = anketId,
-                        JsonStringData = anketSorulari.ToJson()
-                    };
-                    foreach (var item in anketSorulari)
-                    {
-                        model.AnketCevapModel.Add(new AnketCevapDto
-                        {
-                            SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
-                            SoruBilgi = new FrAnketDetayDto { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir, },
-                            SoruSecenek = item.Secenekler.Select(s => new FrAnketSecenekDetayDto
-                            {
-                                AnketSoruSecenekID = s.Value,
-                                SiraNo = s.SiraNo,
-                                IsEkAciklamaGir = s.IsEkAciklamaGir,
-                                IsYaziOrSayi = s.IsYaziOrSayi,
-                                SecenekAdi = s.Caption
-                            }).ToList(),
-                            SelectListSoruSecenek = new SelectList(item.Secenekler.ToList(), "Value", "Caption", item.AnketSoruSecenekID)
-                        });
-                    }
-
-                    var anketGiris = ViewRenderHelper.RenderPartialView("Ajax", "GetAnket", model);
-                    ViewBag.AnketGiris = anketGiris;
-
+                    // ViewBag'e setle
+                    ViewBag.AnketGiris = anketViewHtml;
                 }
             }
 
@@ -148,20 +104,66 @@ namespace LisansUstuBasvuruSistemi.Controllers
             // new ObsServiceData().GetAllStudent();
             #region DavetGaleriOlustur
 
-            if (MezuniyetAyar.TezSinaviDavetKartlariniAnaSayfadaGoster.GetAyar(enstitu.EnstituKod).ToBoolean(false))
+            if (MezuniyetAyar.TezSinaviDavetKartlariniAnaSayfadaGoster
+                .GetAyar(enstitu.EnstituKod).ToBoolean(false))
             {
-                ViewBag.GaleryUrls = _entities.SRTalepleris.Where(p => p.EnstituKod == enstitu.EnstituKod
-                                                                       && p.MezuniyetBasvurulariID.HasValue
-                                                                       && p.SRDurumID == SrTalepDurumEnum.Onaylandı
-                                                                       && p.DavetResimYolu != null &&
-                                                                       p.DavetResimYolu != "")
-                    .OrderByDescending(o => o.Tarih).ThenByDescending(t => t.BasSaat).Take(20)
-                    .Select(s => s.DavetResimYolu).ToList();
+                var take = MezuniyetAyar.TezSinaviDavetListesindeGosterilecekKisiSayisi
+                    .GetAyar(enstitu.EnstituKod, "20").ToInt().Value;
+
+                var now = DateTime.Now;
+
+                // DB'den sadece gerekli alanları çek
+                var rawData = _entities.SRTalepleris
+                    .Where(p => p.EnstituKod == enstitu.EnstituKod
+                                && p.MezuniyetBasvurulariID.HasValue
+                                && p.MezuniyetBasvurulari.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi
+                                && p.SRDurumID == SrTalepDurumEnum.Onaylandı
+                                && !string.IsNullOrEmpty(p.DavetResimYolu))
+                    .Select(p => new
+                    {
+                        p.DavetResimYolu,
+                        p.Tarih,
+                        p.BasSaat
+                    })
+                    .ToList();
+
+                // Bellekte tam zamanı oluştur
+                var withDate = rawData
+                    .Select(p => new
+                    {
+                        p.DavetResimYolu,
+                        FullDateTime = p.Tarih.Add(p.BasSaat)
+                    })
+                    .ToList();
+
+                // 1) Bugün/gelecek olanları al (en yakın gelecekten başlayarak)
+                var future = withDate
+                    .Where(x => x.FullDateTime >= now)
+                    .OrderBy(x => x.FullDateTime) // küçükten büyüğe => en yakın gelecek önce
+                    .Take(take)
+                    .ToList();
+
+                // 2) Eğer eksik varsa geçmişten tamamla (günümüze en yakın olan önce)
+                if (future.Count < take)
+                {
+                    var remaining = take - future.Count;
+
+                    var past = withDate
+                        .Where(x => x.FullDateTime < now)
+                        .OrderByDescending(x => x.FullDateTime)  
+                        .Take(remaining)
+                        .ToList();
+
+                    future.AddRange(past.OrderBy(o=>o.FullDateTime).ToList());
+                }
+
+                // 3) Sonuç: future içindeki sıralama zaten doğru (gelecek: en yakın->uzak ; ardından geçmiş: en yakın->uzak)
+                ViewBag.GaleryUrls = future.Select(x => x.DavetResimYolu).ToList();
             }
-             
             #endregion
+
             return View(enstitu);
-        } 
+        }
 
         public ActionResult AuthenticatedControl()
         {

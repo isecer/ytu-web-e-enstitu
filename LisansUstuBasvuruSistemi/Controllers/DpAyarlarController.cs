@@ -6,6 +6,7 @@ using LisansUstuBasvuruSistemi.Business;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -25,6 +26,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 panelToggled.Add(item.Kategori, item.Toggle);
             }
             ViewBag.PanelToggled = panelToggled;
+            var varolanAnketId = DonemProjesiAyar.DonemProjesiIlkBasvuruAnketi.GetAyar(enstituKod).ToIntObj();
+            ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, varolanAnketId), "Value", "Caption");
             return View(data);
         }
         [HttpPost]
@@ -59,7 +62,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var ptg = item.Replace("__", "◘").Split('◘');
                 toggled.Add(ptg[0], ptg[1].ToBoolean().Value);
             }
-            ViewBag.PanelToggled = toggled;  
+            ViewBag.PanelToggled = toggled;
+            var varolanAnketId = DonemProjesiAyar.DonemProjesiIlkBasvuruAnketi.GetAyar(enstituKod).ToIntObj();
+            ViewBag.AnketID = new SelectList(AnketlerBus.CmbGetAktifAnketler(enstituKod, true, varolanAnketId), "Value", "Caption");
             return View(data);
         }
     }

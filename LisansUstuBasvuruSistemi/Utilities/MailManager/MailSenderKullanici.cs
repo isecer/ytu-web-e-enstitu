@@ -70,6 +70,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         SistemErisimAdresi = mailBilgi.SistemErisimAdresi
                     };
                     var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "GetMailContent", mmmC);
+ 
                     MailManager.SendMail(enstitu.EnstituKod, "Yeni Kullanıcı Hesabınız Hakkında", htmlMail, kModel.EMail, null);
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;

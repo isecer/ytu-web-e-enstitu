@@ -27,4 +27,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const int GecmisTarih = 5;
         public const int ResmiTatil = 6;
     }
+    public static class SrDavetResmiGostermeDurumEnum
+    {
+        public const int DavetProfilResmiyleGoster = 1;
+        public const int DavetProfilResmiOlmadanGoster = 2;
+        public const int DavetResmiGosterme = 3; 
+    }
 }

@@ -24,8 +24,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public static readonly BelgeTalepAyarProperty YeniBelgeTalebindeMailGonder = new BelgeTalepAyarProperty("Yeni Belge Talebinde Mail Gönder");
         public static readonly BelgeTalepAyarProperty BelgeAlımAdresi = new BelgeTalepAyarProperty("Belge Alım Adresi");
         public static readonly BelgeTalepAyarProperty BelgeTalebiResmiTatilDurum = new BelgeTalepAyarProperty("Belge Talebinde Resmi Tatillere Göre İşlem Yap");
-        public static readonly BelgeTalepAyarProperty IlkBelgeTalebiAnketiAdi = new BelgeTalepAyarProperty("İlk Belge Talebinde İstenen Anket");
-        public static readonly BelgeTalepAyarProperty Donem4BelgeTalebiAnketiAdi = new BelgeTalepAyarProperty("4. Dönem İlk Belge Talebinde İstenen Anket");
+        public static readonly BelgeTalepAyarProperty IlkBelgeTalebiAnketi = new BelgeTalepAyarProperty("İlk Belge Talebinde İstenen Anket");
+        public static readonly BelgeTalepAyarProperty Donem4BelgeTalebiAnketi = new BelgeTalepAyarProperty("4. Dönem İlk Belge Talebinde İstenen Anket");
   
         public static string GetAyar(this BelgeTalepAyarProperty ayarProperty, string enstituKodu, string varsayilanDeger = "")
         {

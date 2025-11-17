@@ -17,12 +17,12 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Basvurular()
         {
-            this.AnketCevaplaris = new HashSet<AnketCevaplari>();
             this.BasvurularSinavBilgis = new HashSet<BasvurularSinavBilgi>();
             this.BasvurularTercihleris = new HashSet<BasvurularTercihleri>();
             this.BasvurularYuklenenBelgelers = new HashSet<BasvurularYuklenenBelgeler>();
             this.GonderilenMaillers = new HashSet<GonderilenMailler>();
             this.MulakatSonuclaris = new HashSet<MulakatSonuclari>();
+            this.AnketCevaplaris = new HashSet<AnketCevaplari>();
         }
     
         public int BasvuruID { get; set; }
@@ -92,8 +92,6 @@ namespace Entities.Entities
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
         public virtual BasvuruDurumlari BasvuruDurumlari { get; set; }
         public virtual BasvuruSurec BasvuruSurec { get; set; }
         public virtual Cinsiyetler Cinsiyetler { get; set; }
@@ -110,5 +108,7 @@ namespace Entities.Entities
         public virtual ICollection<GonderilenMailler> GonderilenMaillers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MulakatSonuclari> MulakatSonuclaris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
     }
 }

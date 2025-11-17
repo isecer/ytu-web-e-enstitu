@@ -1,5 +1,6 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @model KmAnketlerCevap
 @{
     Layout = null;
@@ -16,27 +17,10 @@
     @Html.HiddenFor(p => p.AnketID)
     @Html.HiddenFor(p => p.RowID)
     @Html.Hidden("jSonData", Model.JsonStringData) 
-    <div class="panel panel-info">
-
+    <div class="panel panel-info"> 
         <div class="panel-body" style="min-height:40px;text-align:center;color:#268a8b;font-weight:bold;font-size:13pt;">
-            @if (Model.AnketTipID == 1)
-            {
-                @("Başvurunuzu tamamlamadan önce lütfen aşağıdaki anketi doldurunuz.")
-            }
-            else if (Model.AnketTipID == 2)
-            {
-                @("Belge Talep işleminizi tamamlamadan önce lütfen aşağıdaki anketi doldurunuz.") 
-            }
-            else if (Model.AnketTipID == 3)
-            {
-                @("KAYIT HAKKI KAZANAN VE KAYIT YAPTIRMAYAN ADAYLAR İÇİN DEĞERLENDİRME ANKETİ") 
-            }
-            else if (Model.AnketTipID == 4)
-            {
-                @("LİSANSÜSTÜ MEZUNİYET SÜRECİ DEĞERLENDİRME ANKETİ") 
-            }
-        </div>
-
+            @Model.AnketAdi 
+        </div> 
     </div>
     <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
         <div class="panel panel-primary" style="margin: 0px; padding: 0px;">

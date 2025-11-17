@@ -136,7 +136,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group ytuOgrencisi @(Model.YtuOgrencisi?"":"hide")">
-                                        <label class="col-md-2 col-xs-2 control-label">Enstitu</label>
+                                        <label class="col-md-2 col-xs-2 control-label">Enstitü</label>
                                         <div class="col-md-10 col-xs-10">
                                             @Html.DropDownList("OgrenimEnstituKod", null, new { @class = "form-control", onChange = "getprgData(this)" })
                                         </div>
@@ -178,7 +178,7 @@
                                     <div class="form-group Yab Yer Ku Kd ">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Cep Tel</label>
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                            <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel" placeholder="(0XXX) XXX-XXXX" class="form-control">
+                                            <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel" placeholder="05XXXXXXXXX" class="form-control">
                                         </div>
                                     </div>
                                     <div class="form-group Yab Yer Ku Kd ">
@@ -302,7 +302,7 @@
                                     @if (UserIdentity.Current.IsAdmin)
                                     {
                                         <div class="form-group">
-                                            <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Yöneticimi</label>
+                                            <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Yönetici mi?</label>
                                             <div class="col-md-10 col-xs-8 padding-top-0 padding-bottom-0">
                                                 <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
                                                     <input type="checkbox" value="true" name="IsAdmin" class="toggle" @Model.IsAdmin.ToChecked() />
@@ -357,10 +357,36 @@
         browseClass: "btn btn-danger",
         fileType: "any"
     });
-    $("#CepTel").mask("(9999) 999-9999");
-    $("#EvTel").mask("(9999) 999-9999");
-    $("#IsTel").mask("(9999) 999-9999");
+    $("#CepTel").on('input', function () {
+        this.value = this.value.replace(/\D/g, ''); 
+        if (this.value.length > 11) {
+            this.value = this.value.substr(0, 11);  
+        }
+    }); 
+    var cepTel = $('#CepTel').val();
+    if (cepTel && cepTel.trim() !== '') {
+        var clean = cepTel.replace(/\D/g, '');
 
+        // 10 haneli ve 0 ile başlamıyorsa başına 0 ekle
+        if (clean.length === 10 && !clean.startsWith('0')) {
+            clean = '0' + clean;
+        }
+
+        // Validasyonlar
+        if (clean.length !== 11) {
+            e.preventDefault();
+            toastr.error('Cep telefonu 11 haneli olmalıdır');
+            $('#CepTel').focus(); 
+        }
+
+        if (!clean.startsWith('05')) {
+            e.preventDefault();
+            toastr.error('Cep telefonu 05 ile başlamalıdır');
+            $('#CepTel').focus(); 
+        }
+
+        $('#CepTel').val(clean);
+    }
     function KullaniciTipKontrol() {
         var ptipID = $('#KullaniciTipID').val();
         if (ptipID == null || ptipID == "") return;

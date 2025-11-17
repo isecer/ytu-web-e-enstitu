@@ -17,9 +17,9 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TIBasvuruAraRapor()
         {
+            this.SRTalepleris = new HashSet<SRTalepleri>();
             this.TIBasvurus = new HashSet<TIBasvuru>();
             this.TIBasvuruAraRaporKomites = new HashSet<TIBasvuruAraRaporKomite>();
-            this.SRTalepleris = new HashSet<SRTalepleri>();
         }
     
         public int TIBasvuruAraRaporID { get; set; }
@@ -61,12 +61,12 @@ namespace Entities.Entities
         public virtual Donemler Donemler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SRTalepleri> SRTalepleris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuru> TIBasvurus { get; set; }
         public virtual TIBasvuru TIBasvuru { get; set; }
         public virtual TIBasvuruAraRaporDurumlari TIBasvuruAraRaporDurumlari { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuruAraRaporKomite> TIBasvuruAraRaporKomites { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SRTalepleri> SRTalepleris { get; set; }
     }
 }

@@ -556,6 +556,7 @@
     <Compile Include="Utilities\Dtos\MIndexBilgi.cs" />
     <Compile Include="Utilities\Dtos\MmMessage.cs" />
     <Compile Include="Utilities\Dtos\MSurecDetay.cs" />
+    <Compile Include="Utilities\Enums\AnketTipiEnum.cs" />
     <Compile Include="Utilities\Enums\KayitSilmeDurumEnums.cs" />
     <Compile Include="Utilities\Enums\YaziSablonTipiEnum.cs" />
     <Compile Include="Utilities\Enums\TezKontrolDurumEnum.cs" />
@@ -4330,7 +4331,6 @@
     <Content Include="Content\ckeditor\showCk.js" />
     <Content Include="Content\preloader\preloader.css" />
     <Content Include="Content\preloader\prloader.js" />
-    <Content Include="Content\templates\tez-daveti-bg.png" />
     <Content Include="EbisIco.ico" />
     <Content Include="Global.asax" />
     <Content Include="Images\Attachment.png" />
@@ -4954,6 +4954,7 @@
     <Content Include="Views\KsGelenBasvurular\Index.cshtml" />
     <Content Include="Views\KsGelenBasvurular\GetTutanakRaporu.cshtml" />
     <Content Include="Views\ObsBirimler\Index.cshtml" />
+    <Content Include="Views\Account\HesapKayit - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4969,6 +4970,7 @@
     <Folder Include="Content\ckeditor\samples\" />
     <Folder Include="Content\js\plugins\fileinput\fileinput\" />
     <Folder Include="Content\js\plugins\slidingmenu\" />
+    <Folder Include="Content\templates\" />
     <Folder Include="Images\KullaniciResimleri\" />
     <Folder Include="Images\SinavDavetGaleri\" />
   </ItemGroup>
@@ -5187,16 +5189,16 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\SkiaSharp.NativeAssets.macOS.3.119.1\build\net462\SkiaSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.NativeAssets.macOS.3.119.1\build\net462\SkiaSharp.NativeAssets.macOS.targets'))" />
-    <Error Condition="!Exists('..\packages\SkiaSharp.NativeAssets.Win32.3.119.1\build\net462\SkiaSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.NativeAssets.Win32.3.119.1\build\net462\SkiaSharp.NativeAssets.Win32.targets'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+    <Error Condition="!Exists('..\packages\SkiaSharp.NativeAssets.macOS.3.119.1\build\net462\SkiaSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.NativeAssets.macOS.3.119.1\build\net462\SkiaSharp.NativeAssets.macOS.targets'))" />
+    <Error Condition="!Exists('..\packages\SkiaSharp.NativeAssets.Win32.3.119.1\build\net462\SkiaSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.NativeAssets.Win32.3.119.1\build\net462\SkiaSharp.NativeAssets.Win32.targets'))" />
   </Target>
-  <Import Project="..\packages\SkiaSharp.NativeAssets.macOS.3.119.1\build\net462\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('..\packages\SkiaSharp.NativeAssets.macOS.3.119.1\build\net462\SkiaSharp.NativeAssets.macOS.targets')" />
-  <Import Project="..\packages\SkiaSharp.NativeAssets.Win32.3.119.1\build\net462\SkiaSharp.NativeAssets.Win32.targets" Condition="Exists('..\packages\SkiaSharp.NativeAssets.Win32.3.119.1\build\net462\SkiaSharp.NativeAssets.Win32.targets')" />
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <Import Project="..\packages\SkiaSharp.NativeAssets.macOS.3.119.1\build\net462\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('..\packages\SkiaSharp.NativeAssets.macOS.3.119.1\build\net462\SkiaSharp.NativeAssets.macOS.targets')" />
+  <Import Project="..\packages\SkiaSharp.NativeAssets.Win32.3.119.1\build\net462\SkiaSharp.NativeAssets.Win32.targets" Condition="Exists('..\packages\SkiaSharp.NativeAssets.Win32.3.119.1\build\net462\SkiaSharp.NativeAssets.Win32.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -18,7 +18,7 @@ namespace Entities.Entities
         public int SinavTipleriOT_SNAID { get; set; }
         public string ProgramKod { get; set; }
     
-        public virtual SinavTipleriOT_SNA SinavTipleriOT_SNA { get; set; }
         public virtual Programlar Programlar { get; set; }
+        public virtual SinavTipleriOT_SNA SinavTipleriOT_SNA { get; set; }
     }
 }

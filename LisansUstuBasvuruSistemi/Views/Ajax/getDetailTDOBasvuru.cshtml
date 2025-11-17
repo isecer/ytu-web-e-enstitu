@@ -94,7 +94,56 @@
                     {
                         if (Model.IsYeniDanismanOneriOrDegisiklik)
                         {
-                            <span class="label label-info" id="YeniRaporBtn_@Model.TDOBasvuruID" style="cursor: pointer;" onclick="DegisiklikDuyuruKontrol(function () { GetTdoYeniDanismanFormu(@Model.TDOBasvuruID); },'Yeni Tez Danışmanı Öneri Formu Oluştur',true);"><i class="fa fa-plus"></i> Yeni Tez Danışmanı Öneri Formu Oluştur</span>
+                            if (Model.IsAnketVar == false || Model.IsAnketDolduruldu)
+                            {
+                                <span class="label label-info" id="YeniRaporBtn_@Model.TDOBasvuruID" style="cursor: pointer;" onclick="DegisiklikDuyuruKontrol(function () { GetTdoYeniDanismanFormu(@Model.TDOBasvuruID); },'Yeni Tez Danışmanı Öneri Formu Oluştur',true);"><i class="fa fa-plus"></i> Yeni Tez Danışmanı Öneri Formu Oluştur</span>
+                            }
+                            else
+                            {
+                                <span class="label label-info" id="YeniRaporBtn_@Model.TDOBasvuruID" style="cursor: pointer;" onclick="GetAnket()"><i class="fa fa-plus"></i> Yeni Tez Danışmanı Öneri Formu Oluştur</span>
+
+
+                                <script type="text/javascript">
+                                  function GetAnket() {
+                                      var strView = @Html.Raw(Json.Encode(Model.AnketView.Trim()));
+                                      var btbxxFS = bootbox.dialog({
+                                          message: strView,
+                                          buttons: {
+                                              success: {
+                                                  label: 'Kaydet',
+                                                  className: "btn-primary",
+                                                  callback: function (event) {
+                                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                                      PanelRefresh(pnlx, false);
+                                                      $('#FrmAnket').ajaxForm({
+                                                          success: function (result) {
+                                                              if (result.IsSuccess) {
+                                                                  var _clsBtn = $('.bootbox-close-button').first();
+                                                                  $(_clsBtn).click();
+                                                                  DegisiklikDuyuruKontrol(function () { GetTdoYeniDanismanFormu(@Model.TDOBasvuruID); },'Yeni Tez Danışmanı Öneri Formu Oluştur',true); 
+                                                                  GetDetail('@Model.TDOBasvuruID');
+                                                              }
+                                                              else {
+                                                                  GetMsg(result);
+                                                                  return false;
+                                                              }
+                                                          },
+                                                          complete: function (cmp) {
+                                                              PanelRefresh(pnlx, true);
+                                                          }
+
+                                                      });
+                                                      $('#FrmAnket').submit();
+                                                      return false;
+                                                  }
+                                              }
+                                          }
+                                      });
+                                      $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+
+                                  }
+                                </script>
+                            }
                         }
                         else
                         {
@@ -422,7 +471,7 @@
                                                     @if (item.YeniDanismanOnayIslemiAcik)
                                                     {
 
-                                                        <tr class="form-group TDProgramKod_@item.TDOBasvuruDanismanID @(item.DanismanOnayladi==true?"":"hide")">
+                                                        <tr class="form-group TDProgramKod_@item.TDOBasvuruDanismanID @(item.DanismanOnayladi.HasValue?"":"hide")">
                                                             <td class="CaptionTd" width="200">Anabilim Dalı / Program</td>
                                                             <td class="CaptionTd" width="10">:</td>
                                                             <td class="ValueTd">
@@ -1261,7 +1310,7 @@
             </tr>
 
         </table>
-    </div> 
+    </div>
 
 </div>
 
@@ -1326,6 +1375,9 @@
             $('.TDOgrenciSayisiDR_' + id).addClass('hide');
             $('.TDTezSayisiDR_' + id).addClass('hide');
             $('#DanismanGerekceRow_' + id).addClass('hide');
+        }
+        if (val != '') {
+            $('.TDProgramKod_' + id).removeClass('hide');
         }
     }
     function DVarolanOnayChange(id) {

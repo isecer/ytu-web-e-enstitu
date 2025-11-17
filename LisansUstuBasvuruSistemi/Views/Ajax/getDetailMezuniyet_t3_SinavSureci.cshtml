@@ -322,18 +322,57 @@
                                                                                                         </a>
                                                                                                     </td>
                                                                                                 </tr>
-                                                                                                if (sinavPdfCiktiAlinabilir)
+                                                                                                if (sinavPdfCiktiAlinabilir && item.IsSonSrTalebi && item.SRDurumID == SrTalepDurumEnum.Onaylandı && Model.OgrenimTipKod.IsDoktora())
                                                                                                 {
                                                                                                     <tr>
-                                                                                                        <td class="CaptionTd">Sınav Daveti</td>
+                                                                                                        <td class="CaptionTd">Tez Savunma Daveti</td>
                                                                                                         <td class="CaptionTd">:</td>
                                                                                                         <td class="ValueTd">
+                                                                                                            <select id="ddlDavetResmiDurum_@item.SRTalepID"
+                                                                                                                    class="form-control"
+                                                                                                                    style="width: auto; display: inline-block;"
+                                                                                                                    onchange="SaveDavetResmiDurum(@item.SRTalepID)">
+                                                                                                                <option value="1" @(item.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetProfilResmiyleGoster ? "selected" : "")>Daveti Profil Resmiyle Göster</option>
+                                                                                                                <option value="2" @(item.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetProfilResmiOlmadanGoster ? "selected" : "")>Daveti Profil Resmi Olmadan Göster</option>
+                                                                                                                <option value="3" @(item.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetResmiGosterme ? "selected" : "")>Davet Hiç Gösterme</option>
+                                                                                                            </select>
+                                                                                                            <span id="davetResmiDurumLoading_@item.SRTalepID" style="display:none; margin-left: 10px;">
+                                                                                                                <i class="fa fa-spinner fa-spin"></i> Kaydediliyor...
+                                                                                                            </span>
+                                                                                                            <span style="margin-left: 20px; margin-right: 10px;">|</span>
                                                                                                             <a href="javascript:void(0);" onclick="YeniDialogBB('Doktora Sınav Daveti','@Url.Action("DownloadPdf", "MezuniyetGelenBasvurular", new { id = item.SRTalepID, ekd = "" })?IsPdfStream=true', 'auto', 'modal-dialog modal-lg')">
                                                                                                                 <i class="fa fa-file-pdf-o fa-lg"></i> Doktora Sınav Davetini Görüntüle
                                                                                                             </a>
                                                                                                         </td>
                                                                                                     </tr>
+                                                                                                    <script>
+                                                                                                         function SaveDavetResmiDurum(id) {
+                                                                                                             var durumId = $('#ddlDavetResmiDurum_' + id).val();
+                                                                                                             var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
+                                                                                                             var loadingSpan = $('#davetResmiDurumLoading_' + id);
+                                                                                                             loadingSpan.show();
+                                                                                                             PanelRefresh(_panel, false);
+                                                                                                             $.ajax({
+                                                                                                                 url: '@Url.Action("SrDavetResmiGostermeDurumKaydet", "MezuniyetGelenBasvurular")',
+                                                                                                                 data: { 'id': id, 'durumId': durumId },
+                                                                                                                 success: function (result) {
+                                                                                                                     PanelRefresh(_panel, true);
+                                                                                                                     loadingSpan.hide();
+                                                                                                                     GetMsg(result.MmMessage);
+                                                                                                                     if (result.IsSuccess) {
+                                                                                                                         GetDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                     }
+                                                                                                                 },
+                                                                                                                 error: function (err) {
+                                                                                                                     PanelRefresh(_panel, true);
+                                                                                                                     loadingSpan.hide();
+                                                                                                                     alert(err.responseText);
+                                                                                                                 }
+                                                                                                             });
+                                                                                                         }
+                                                                                                    </script>
                                                                                                 }
+
                                                                                             }
                                                                                             <tr class="@(item.SRDurumID == SrTalepDurumEnum.Reddedildi ? "" : "hide")" id="aciklamabilgi_@item.SRTalepID">
                                                                                                 <td class="CaptionTd">Açıklama</td>
@@ -1045,7 +1084,7 @@
                                                                                                 <td class="CaptionTd" width="140">Taahhüt Metni</td>
                                                                                                 <td class="CaptionTd" width="10">:</td>
                                                                                                 <td class="ValueTd">
-                                                                                                    Tez savunma sınavında jüri üyeleri tarfından verilen uzatma sonrası düzeltilmiş tezimi danışmana ve diğer jüri üyelerine teslim ettiğimi taahhüt ederim.
+                                                                                                    Tez savunma sınavında jüri tarafından verilen uzatma süresi kapsamında, Senato Uygulama Usul ve Esaslarında belirtilen süreler içinde düzeltilmiş tezimi tez danışmanıma ve jüri üyelerine teslim ettiğimi taahhüt ederim.
                                                                                                 </td>
                                                                                             </tr>
                                                                                         }
@@ -1108,6 +1147,8 @@
                                                                                                                 <b>Taahhüt 1:</b> Öğrencinin başvurusunda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
                                                                                                                 <br /><br />
                                                                                                                 <b>Taahhüt 2:</b> Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                                                                                                <br /><br />
+                                                                                                                <b>Taahhüt 3:</b> Öğrencinin, tez savunma sınavında jüri tarafından verilen uzatma süresi kapsamında, Senato Uygulama Usul ve Esaslarında belirtilen süreler içinde düzeltilmiş tezini şahsıma ve diğer jüri üyelerine teslim ettiğini taahhüt ederim.
                                                                                                             </div>
                                                                                                             @if (item.IsDanismanUzatmaSonrasiOnay == true)
                                                                                                             {
