@@ -9,7 +9,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
     {
         public const int HarcBirimiOnaySureci = 1;
         public const int KutuphaneBirimiOnaySureci = 2;
-        public const int EnstituYonetimKuruluSureci = 3; 
+        public const int EnstituOnaySureci = 3; 
     }
 
     public class KsFilterDurumEnums

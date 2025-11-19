@@ -1056,6 +1056,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var tarih = uzatmaAlinanSrTalebi.OgrenciOnayTarihi ?? uzatmaAlinanSrTalebi.Tarih;
                     model.Tarih = tarih.AddDays(ogrenimTipKriterleri.SinavKacGunSonraAlabilir);
+                    
                 }
                 else model.Tarih = mezuniyetBasvuru.EYKTarihi.Value.AddDays(ogrenimTipKriterleri.SinavKacGunSonraAlabilir);
 
@@ -1240,7 +1241,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 {
                                     UniqueID = Guid.NewGuid(),
                                     MezuniyetJuriOneriFormuJuriID = juri.MezuniyetJuriOneriFormuJuriID,
-                                    UniversiteAdi = juri.UniversiteAdi,
+                                    UniversiteAdi = juri.UniversiteAdi, 
                                     AnabilimdaliProgramAdi = juri.AnabilimdaliProgramAdi,
                                     JuriTipAdi = juri.JuriTipAdi,
                                     UnvanAdi = juri.UnvanAdi,
@@ -1252,6 +1253,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     IslemYapanIP = UserIdentity.Ip
                                 });
                             }
+
+                            kModel.IsTezBasligiDegisti = uzatmaSrRez.IsTezBasligiDegisti;
+                            kModel.YeniTezBaslikTr = uzatmaSrRez.YeniTezBaslikTr;
+                            kModel.YeniTezBaslikEn = uzatmaSrRez.YeniTezBaslikEn;
                         }
                         else
                         {
@@ -1299,6 +1304,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 DavetResmiGostermeDurum = SrDavetResmiGostermeDurumEnum.DavetProfilResmiyleGoster,
                                 TezOzeti = kModel.TezOzeti,
                                 Aciklama = kModel.Aciklama,
+                                IsTezBasligiDegisti = kModel.IsTezBasligiDegisti,
+                                YeniTezBaslikTr = kModel.YeniTezBaslikTr,
+                                YeniTezBaslikEn = kModel.YeniTezBaslikEn,
                                 SRDurumID = kModel.SRDurumID,
                                 IslemTarihi = kModel.IslemTarihi,
                                 IslemYapanID = kModel.IslemYapanID,

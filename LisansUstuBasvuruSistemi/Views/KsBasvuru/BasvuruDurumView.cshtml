@@ -51,12 +51,19 @@
             }
             break;
 
-        case KayitSilmeDurumEnums.EnstituYonetimKuruluSureci:
+        case KayitSilmeDurumEnums.EnstituOnaySureci:
             tabAdi = "Enstitü Onay Süreci";
 
             bool? isEyk = Model.IsOnayMakamiEykOrEnstituMudur;
 
-            if (isEyk == true) // EYK için eski ifadeler
+            if (!isEyk.HasValue)
+            {
+                durumAdi = "Onay Makamına gönderilmesi bekleniyor";
+                durumColor = "green";
+                durumIconClass = "fa fa-clock-o";
+                durumDetay = "Enstitü tarafından Onay Makamına gönderilmesi bekleniyor.";
+            }
+            else if (isEyk == true) // EYK için eski ifadeler
             {
                 if (!Model.OnayMakaminaGonderildi.HasValue)
                 {

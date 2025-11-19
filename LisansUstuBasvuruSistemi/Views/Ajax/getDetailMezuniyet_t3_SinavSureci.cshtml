@@ -1110,20 +1110,7 @@
                                                                                             </td>
                                                                                         </tr>
                                                                                     }
-                                                                                    @if (item.IsOgrenciUzatmaSonrasiOnay == true && kayitYetki)
-                                                                                    {
-
-                                                                                        <tr>
-                                                                                            <td class="CaptionTd">Bilgi Yazıları</td>
-                                                                                            <td class="CaptionTd">:</td>
-                                                                                            <td class="ValueTd">
-                                                                                                <a href="javascript:void(0);" onclick="YeniDialogBB('İkinci Tez Teslim Taahhüt Onayı Bilgilendirme Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetIkinciTezTeslimTaahhutOnayYazilari&Id=@item.SRTalepID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                                                    <i class="fa fa-file-pdf-o fa-lg"></i> İkinci Tez Teslim Taahhüt Onayı Bilgilendirme Yazılarını İndir
-                                                                                                </a>
-                                                                                            </td>
-                                                                                        </tr>
-
-                                                                                    }
+                                                                                   
                                                                                 </table>
 
                                                                             </div>
@@ -1202,6 +1189,20 @@
 
                                                                                             if (item.IsDanismanUzatmaSonrasiOnay == true)
                                                                                             {
+                                                                                                if (kayitYetki)
+                                                                                                {
+
+                                                                                                    <tr>
+                                                                                                        <td class="CaptionTd">Bilgi Yazıları</td>
+                                                                                                        <td class="CaptionTd">:</td>
+                                                                                                        <td class="ValueTd">
+                                                                                                            <a href="javascript:void(0);" onclick="YeniDialogBB('İkinci Tez Teslim Taahhüt Onayı Bilgilendirme Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetIkinciTezTeslimTaahhutOnayYazilari&Id=@item.SRTalepID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                                <i class="fa fa-file-pdf-o fa-lg"></i> İkinci Tez Teslim Taahhüt Onayı Bilgilendirme Yazılarını İndir
+                                                                                                            </a>
+                                                                                                        </td>
+                                                                                                    </tr>
+
+                                                                                                }
                                                                                                 <tr>
                                                                                                     <td class="CaptionTd">Tez Teslim Formu</td>
                                                                                                     <td class="CaptionTd">:</td>
@@ -1271,6 +1272,20 @@
                                                                                             }
                                                                                             if (item.IsDanismanUzatmaSonrasiOnay == true)
                                                                                             {
+                                                                                                if (kayitYetki)
+                                                                                                {
+
+                                                                                                    <tr>
+                                                                                                        <td class="CaptionTd">Bilgi Yazıları</td>
+                                                                                                        <td class="CaptionTd">:</td>
+                                                                                                        <td class="ValueTd">
+                                                                                                            <a href="javascript:void(0);" onclick="YeniDialogBB('İkinci Tez Teslim Taahhüt Onayı Bilgilendirme Yazıları','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetIkinciTezTeslimTaahhutOnayYazilari&Id=@item.SRTalepID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                                <i class="fa fa-file-pdf-o fa-lg"></i> İkinci Tez Teslim Taahhüt Onayı Bilgilendirme Yazılarını İndir
+                                                                                                            </a>
+                                                                                                        </td>
+                                                                                                    </tr>
+
+                                                                                                }
                                                                                                 <tr>
                                                                                                     <td class="CaptionTd">Tez Teslim Formu</td>
                                                                                                     <td class="CaptionTd">:</td>

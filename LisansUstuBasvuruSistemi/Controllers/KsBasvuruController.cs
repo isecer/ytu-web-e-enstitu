@@ -329,7 +329,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else if (onayTipId == EykTipEnum.OnayMakaminaGonderildi)
                     {
-                        if (kayitSilmeBasvuru.KayitSilmeDurumID != KayitSilmeDurumEnums.EnstituYonetimKuruluSureci)
+                        if (kayitSilmeBasvuru.KayitSilmeDurumID != KayitSilmeDurumEnums.EnstituOnaySureci)
                         {
                             mmMessage.Messages.Add("Onay Makamına gönderim işlemi yapılabilmesi için öğrencinin sınavdan başarılı olması gerekmektedir.");
                         }
@@ -561,7 +561,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kayitSilmeBasvuru.IsKutuphaneBirimiOnayladi = isOnaylandi;
                     kayitSilmeBasvuru.KutuphaneBirimiOnayAciklamasi = aciklama;
                     kayitSilmeBasvuru.KutuphaneBirimiOnayIslemTarihi = DateTime.Now;
-                    kayitSilmeBasvuru.KayitSilmeDurumID = isOnaylandi == true ? KayitSilmeDurumEnums.EnstituYonetimKuruluSureci : KayitSilmeDurumEnums.KutuphaneBirimiOnaySureci;
+                    kayitSilmeBasvuru.KayitSilmeDurumID = isOnaylandi == true ? KayitSilmeDurumEnums.EnstituOnaySureci : KayitSilmeDurumEnums.KutuphaneBirimiOnaySureci;
                 }
                 _entities.SaveChanges();
                 LogIslemleri.LogEkle("KayitSilmeBasvuru", LogCrudType.Update, kayitSilmeBasvuru.ToJson());
