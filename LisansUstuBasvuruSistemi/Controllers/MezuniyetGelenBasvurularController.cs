@@ -3378,7 +3378,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var dataExport = q.ToList();
             using (var package = new ExcelPackage())
             {
-
                 var firstRow = dataExport
                     .Select(s => new { s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKTarihi, s.CiltliTezTeslimUzatmaTalebiEykDaOnayEYKSayisi })
                     .FirstOrDefault();

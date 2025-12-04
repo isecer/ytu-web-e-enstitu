@@ -32,6 +32,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsToplamKaynakOraniGirisiYapilacak { get; set; }
         public bool IsTekKaynakOraniGirisiYapilacak { get; set; }
         public string MezuniyetYayinKontrolDurumAdi { get; set; }
+        public string MezuniyetYayinKontrolDurumOnayYapanKullaniciAdi { get; set; }
         public string DurumClassName { get; set; }
         public string DurumColor { get; set; }
         public bool IsAnketVar { get; set; }

@@ -631,6 +631,14 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.MezuniyetSurecID = basvuru.MezuniyetSurecID;
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
                 model.MezuniyetYayinKontrolDurumID = basvuru.MezuniyetYayinKontrolDurumID;
+                model.MezuniyetYayinKontrolDurumOnayYapanKullaniciID = basvuru.MezuniyetYayinKontrolDurumOnayYapanKullaniciID;
+                model.MezuniyetYayinKontrolDurumOnayTarihi = basvuru.MezuniyetYayinKontrolDurumOnayTarihi;
+                if (basvuru.MezuniyetYayinKontrolDurumOnayYapanKullaniciID.HasValue)
+                { 
+                    var yayinKontrolYapanKullanici = entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == basvuru.MezuniyetYayinKontrolDurumOnayYapanKullaniciID);
+                    
+                    model.MezuniyetYayinKontrolDurumOnayYapanKullaniciAdi = yayinKontrolYapanKullanici.Unvanlar?.UnvanAdi+" "+ yayinKontrolYapanKullanici.Ad + " " + yayinKontrolYapanKullanici.Soyad;
+                }
                 model.MezuniyetYayinKontrolDurumAciklamasi = basvuru.MezuniyetYayinKontrolDurumAciklamasi;
                 model.KullaniciID = basvuru.KullaniciID;
                 model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + entities.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi;

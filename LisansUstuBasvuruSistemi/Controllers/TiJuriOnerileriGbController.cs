@@ -786,11 +786,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (mMessage.Messages.Count == 0)
                     {
+                        StudentControl obsOgrenci = KullanicilarBus.OgrenciKontrol(tijBasvuru != null ? tijBasvuru.OgrenciNo : kul.OgrenciNo);
                         tijBasvuruOneri = isJuriOnerisiVar ? new TijBasvuruOneri() : tijBasvuruOneri;
                         var kData = qData.Where(p => p.AdSoyadSuccess).ToList();
                         bool isDegisiklikVar;
                         var varolanJurilers = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki).ToList();
-                        isDegisiklikVar = tijBasvuruOneri.TijBasvuruOneriJurilers.Count != kData.Count || tijBasvuruOneri.TijDegisiklikTipID != kModel.TijDegisiklikTipID || tijBasvuruOneri.TijFormTipID != kModel.TijFormTipID;
+                        isDegisiklikVar = tijBasvuruOneri.TijBasvuruOneriJurilers.Count != kData.Count
+                                          || tijBasvuruOneri.TijDegisiklikTipID != kModel.TijDegisiklikTipID
+                                          || tijBasvuruOneri.TijFormTipID != kModel.TijFormTipID
+                                          || tijBasvuruOneri.IsTezDiliTr != obsOgrenci.IsTezDiliTr
+                                          || tijBasvuruOneri.TezBaslikTr != obsOgrenci.OgrenciTez.TEZ_BASLIK
+                                          || tijBasvuruOneri.TezBaslikEn != obsOgrenci.OgrenciTez.TEZ_BASLIK_ENG;
                         foreach (var item in kData)
                         {
                             if (!isDegisiklikVar)
@@ -803,7 +809,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     rw.AnabilimdaliAdi != item.AnabilimdaliAdi) isDegisiklikVar = true;
                             }
                         }
-                        StudentControl obsOgrenci = KullanicilarBus.OgrenciKontrol(tijBasvuru != null ? tijBasvuru.OgrenciNo : kul.OgrenciNo);
 
                         var universitelers = _entities.Universitelers.ToList();
 

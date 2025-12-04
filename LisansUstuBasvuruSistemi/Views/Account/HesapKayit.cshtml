@@ -538,20 +538,17 @@
                             <td style="padding-left:10px;text-align:left;">
                                 <table style="width:100%;">
                                     <tbody>
-                                        @if (dogrulanmisMi || (!isOgrenci && !Model.YtuOgrencisi))
-                                        {
-                                            <!-- Doğrulanmışsa VEYA Personel+YTÜ Hayır ise göster -->
+                                        @*@if (dogrulanmisMi || (!isOgrenci && !Model.YtuOgrencisi))
+                                        { 
                                             <tr>
                                                 <td width="140">E-Posta</td>
                                                 <td width="10">:</td>
                                                 <td class="form-group">
                                                     <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control"> 
-                                                    @if (!isGuncelleme)
-                                                    {
-                                                        <small  id="emailNote" style="display:block; margin-top:5px; color:#17a2b8;">
-                                                            <i class="fa fa-info-circle"></i> <strong>E-posta adresiniz sisteme giriş için kullanıcı adınız olacaktır.</strong>
+                                                 
+                                                        <small  id="emailNote" style="display:block; margin-top:5px; color:#17a2b8;"> 
                                                         </small>
-                                                    }
+                                                    
                                                 </td>
                                             </tr>
                                             <tr>
@@ -572,12 +569,33 @@
                                             </tr>
                                         }
                                         else
-                                        {
-                                            <!-- Doğrulama yapılmadıysa hidden inputlar -->
-                                            <input type="hidden" name="EMail" id="EMail" value="">
-                                            <input type="hidden" name="CepTel" id="CepTel" value="">
-                                            <input type="hidden" name="Adres" id="Adres" value="">
-                                        }
+                                        {*@
+                                            <tr>
+                                                <td width="140">E-Posta</td>
+                                                <td width="10">:</td>
+                                                <td class="form-group">
+                                                    <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control"> 
+                                                    <small  id="emailNote" style="display:block; margin-top:5px; color:#17a2b8;"> 
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cep Telefonu</td>
+                                                <td>:</td>
+                                                <td class="form-group">
+                                                    <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel"
+                                                           placeholder="05XXXXXXXXX" class="form-control">
+                                                </td>
+                                            </tr>
+                                            <tr id="adresRow" style="@(isKurumIci ? "display:none;" : "")">
+                                                <td>Açık Adres</td>
+                                                <td>:</td>
+                                                <td class="form-group">
+                                                    <input type="text" name="Adres" id="Adres" value="@Model.Adres"
+                                                           class="form-control UpperTextTr">
+                                                </td>
+                                            </tr>
+                                        @*}*@
                                     </tbody>
                                 </table>
                             </td>
@@ -771,7 +789,8 @@
                 $('#CepTel').closest('tr').hide();
                 $('#Adres').closest('tr').hide();
             }
-        } else {
+        }
+        else {
             // YTÜ Öğrencisi HAYIR
             $('.ytuOgrenciAlanlari').hide();
             $('#tcKimlikRow').show(); // Alt TC göster
@@ -1144,7 +1163,7 @@
                     } else {
                         $('.obsOgrenimBilgileri').replaceWith(ogrenimBilgileriHTML);
                     }
-
+                    debugger
                     // İletişim bilgilerini göster
                     $('#EMail').closest('tr').show();
                     $('#CepTel').closest('tr').show();

@@ -1194,7 +1194,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "YeniEsDanismanUnvanAdi", Value = esDanisman.UnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@YeniEsDanismanAdSoyad"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "YeniEsDanismanAdSoyad", Value = esDanisman.AdSoyad });
-
+                        if (item.SablonParametreleri.Any(a => a == "@YeniEsDanismanUniversite"))
+                            item.MailParameterDtos.Add(new MailParameterDto { Key = "YeniEsDanismanUniversite", Value = esDanisman.UniversiteAdi });
 
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
                             item.MailParameterDtos.Add(new MailParameterDto { Key = "TezBaslikTr", Value = tdoBasvuruDanisman.TezBaslikTr });

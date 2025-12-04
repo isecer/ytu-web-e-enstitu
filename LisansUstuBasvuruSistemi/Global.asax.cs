@@ -3,11 +3,14 @@ using CaptchaMvc.Infrastructure;
 using CaptchaMvc.Interface;
 using CaptchaMvc.Models;
 using DevExpress.XtraReports.Security;
-using LisansUstuBasvuruSistemi.Business;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Controllers;
+using LisansUstuBasvuruSistemi.Utilities.ApplicationTasks;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +18,15 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using LisansUstuBasvuruSistemi.Utilities.ApplicationTasks;
-using LisansUstuBasvuruSistemi.Controllers;
 
 namespace LisansUstuBasvuruSistemi
 {
     public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
-        {
+        { 
+            ExcelPackage.License.SetNonCommercialOrganization("Yildiz Technical University");
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -68,6 +71,8 @@ namespace LisansUstuBasvuruSistemi
                     | SecurityProtocolType.Tls11
                     | SecurityProtocolType.Tls12
                     | SecurityProtocolType.Ssl3;
+
+
 
 
             var captchaManager = (DefaultCaptchaManager)CaptchaUtils.CaptchaManager;
