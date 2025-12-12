@@ -359,13 +359,47 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return returnSonuc;
         }
 
-        
         public static string ToKullaniciResim(this string resimAdi)
         {
-            var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
-            rsm = "https://e-enstitu.yildiz.edu.tr" + rsm;
-            return rsm;
+            // Resim adı yoksa default resmi al
+            var rsm = resimAdi.IsNullOrWhiteSpace()
+                ? ("/" + SistemAyar.KullaniciDefaultResim)
+                : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
+
+            // Dosya arşiv sunucusu
+            var baseUrl = SistemAyar.DosyaArsiviSunucusuErisimAdresi
+                .GetAyar("https://e-enstitu.yildiz.edu.tr");
+
+            // Eğer localhost içeriyorsa → sadece host + port kısmını al
+            if (baseUrl.Contains("localhost"))
+            {
+                try
+                {
+                    // örn: http://localhost:57324/file/index?filepath=
+                    // sadece http://localhost:57324 kısmını al
+                    var uri = new Uri(baseUrl);
+                    baseUrl = $"{uri.Scheme}://{uri.Host}:{uri.Port}";
+                }
+                catch
+                {
+                    // parse edilemezse fallback
+                    baseUrl = "http://localhost";
+                }
+            }
+            else
+            {
+                // Localhost değilse her zaman prod domain kullanılacak
+                baseUrl = "https://e-enstitu.yildiz.edu.tr";
+            }
+
+            return baseUrl + rsm;
         }
+        //public static string ToKullaniciResim(this string resimAdi)
+        //{
+        //    var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
+        //    rsm = "https://e-enstitu.yildiz.edu.tr" + rsm;
+        //    return rsm;
+        //}
 
         public static DateTime ToGetBitisTarihi(this DateTime baslangicTarihi, int ay)
         {

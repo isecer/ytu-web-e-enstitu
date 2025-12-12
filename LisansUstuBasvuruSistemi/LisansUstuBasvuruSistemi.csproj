@@ -4954,7 +4954,6 @@
     <Content Include="Views\KsGelenBasvurular\Index.cshtml" />
     <Content Include="Views\KsGelenBasvurular\GetTutanakRaporu.cshtml" />
     <Content Include="Views\ObsBirimler\Index.cshtml" />
-    <Content Include="Views\Account\HesapKayit - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -20,6 +20,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public static readonly TdoAyarProperty DanismanMinSinavPuanKabulKriter = new TdoAyarProperty("Danışman için Dil Sınavı kabulü min puan");
 
         public static readonly TdoAyarProperty IlkDanismanOnerisindeIstenenAnket = new TdoAyarProperty("İlk Danışman Önerisinde İstenen Anket");
+
+
+        public static readonly TdoAyarProperty EsDanismanOneriYlMaxDonemKriter = new TdoAyarProperty("YL Eş Danışman Önerisinde Belirlenen Dönem ve Sonrası için Öneri Yapılamaz");
+        public static readonly TdoAyarProperty EsDanismanOneriDRMaxDonemKriter = new TdoAyarProperty("DR Eş Danışman Önerisinde Belirlenen Dönem ve Sonrası için Öneri Yapılamaz");
         public static string GetAyar(this TdoAyarProperty ayarProperty, string enstituKodu, string varsayilanDeger = "")
         {
             using (var entities = new LubsDbEntities())
