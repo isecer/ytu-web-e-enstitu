@@ -158,6 +158,20 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+        public static List<CmbStringDto> CmbGetAktifProgramlar(string programKod, int? anabilimDaliId)
+        {
+
+            var dct = new List<CmbStringDto>(); 
+            using (var entities = new LubsDbEntities())
+            {
+                var data = entities.Programlars.Where(p => (p.AnabilimDaliID == anabilimDaliId || p.ProgramKod==programKod) && p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
+                foreach (var item in data)
+                {
+                    dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption =item.AnabilimDallari.AnabilimDaliAdi+" / [ObsKod="+item.ObsProgramKod+"] "+ item.ProgramAdi });
+                }
+            }
+            return dct;
+        }
 
     }
 }

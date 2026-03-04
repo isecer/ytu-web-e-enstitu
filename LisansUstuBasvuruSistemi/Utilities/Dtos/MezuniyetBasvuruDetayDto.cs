@@ -20,6 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public string OgrenimDurumAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
+        public int AnabilimdaliID { get; set; }
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
         public string KayitDonemi { get; set; }
@@ -57,11 +58,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public MezuniyetSrModel MezuniyetSrModel { get; set; } = new MezuniyetSrModel();
         public List<MezuniyetBasvurulariTezDosyalariDto> MezuniyetBasvurulariTezDosyalariDtos { get; set; }
         public SrDurumSelectList MezuniyetDurumSelectList = new SrDurumSelectList();
+       
 
         public SelectList SMezuniyetYayinKontrolDurum { get; set; }
         public SelectList SeykYaGonderildi { get; set; }
         public SelectList SeykDaOnaylandi { get; set; }
         public SelectList SIsAsilOryedek { get; set; }
+        public SelectList OgrenciProgramList { get; set; }
     }
 
     public class MezuniyetSrModel

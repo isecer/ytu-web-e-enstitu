@@ -403,7 +403,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         });
                         if (item.JuriTipAdi == "TezDanismani" && !mBasvur.TezEsDanismanEMail.IsNullOrWhiteSpace())
                         {
-                            //Eş danışman var ise Danışmana giden mail eş danışmana da gönderilmesi için.
+                            //İkinci Danışman var ise Danışmana giden mail İkinci Danışmana da gönderilmesi için.
                             mModel.Add(new SablonMailModel
                             {
 
@@ -1072,7 +1072,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         if (!mb.TezEsDanismanEMail.IsNullOrWhiteSpace())
                             mModel.Add(new SablonMailModel
                             {
-                                JuriTipAdi = "Eş Danışman",
+                                JuriTipAdi = "İkinci Danışman",
                                 AdSoyad = mb.TezEsDanismanUnvani + " " + mb.TezEsDanismanAdi,
                                 EMails = new List<MailSendList> { new MailSendList { EMail = mb.TezEsDanismanEMail, ToOrBcc = true } },
                                 MailSablonTipId = juriSablonTipId,

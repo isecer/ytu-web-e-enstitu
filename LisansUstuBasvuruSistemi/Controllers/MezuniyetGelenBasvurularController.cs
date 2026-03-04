@@ -348,6 +348,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  join td in _entities.Kullanicilars on s.TezDanismanID equals td.KullaniciID
                                  join ey in _entities.Kullanicilars on s.MezuniyetYayinKontrolDurumOnayYapanKullaniciID equals ey.KullaniciID into defEy
                                  from ey in defEy.DefaultIfEmpty()
+                                 join tk in _entities.Kullanicilars on s.TezKontrolKullaniciID equals tk.KullaniciID into defTk
+                                 from tk in defTk.DefaultIfEmpty()
                                  select new
                                  {
                                      s.MezuniyetSurecAdi,
@@ -394,6 +396,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      TezTeslimSonTarih = s.SrTalebi != null && s.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili ? (s.TezTeslimSonTarih ?? s.SrTalebi.Tarih.AddDays(s.MezuniyetSuresiGun).Date).ToString("dd.MM.yyy") : "",
                                      MezuniyetDurumu = s.IsMezunOldu.HasValue ? (s.IsMezunOldu.Value ? "Ciltli Son Tez Teslimini Yapmıştır" : "Ciltli Son Tez Teslimini Yapmamıştır") : "İşlem Bekliyor",
                                      MezuniyetTarihi = s.IsMezunOldu == true ? s.MezuniyetTarihi.Value.ToFormatDate() : "",
+                                     TezKontrolYetkilisi = tk != null ? ((tk.UnvanID.HasValue ? tk.Unvanlar.UnvanAdi + " " : "") + tk.Ad + " " + tk.Soyad) : "",
+
                                  }).ToList();
                 gv.DataBind();
                 Response.ContentType = "application/ms-excel";
@@ -1186,8 +1190,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     talep.IsOnayTaahhutuVerildi = null;
-                } 
-                   
+                }
+
 
                 _entities.SaveChanges();
 
@@ -1301,6 +1305,54 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.IsSuccess,
                 Messages = strView
+            }.ToJsonResult();
+        }
+
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
+
+        public ActionResult BasvuruProgramGuncelle(int id, string programKod)
+        {
+            var mmMessage = new MmMessage
+            {
+                Title = "Başvuru Programı Değişikliği İşlemi",
+                IsSuccess = true
+            };
+            if (!UserIdentity.Current.IsAdmin)
+            {
+                mmMessage.Messages.Add("Bu işlemi yapabilmek için Admin yetkisine sahip olmalısınız.");
+                mmMessage.IsSuccess = false;
+            }
+
+            if (mmMessage.IsSuccess)
+            {
+                var mb = _entities.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == id);
+
+                if (mb != null)
+                {
+
+
+                    mb.ProgramKod = programKod;
+
+
+
+                    _entities.SaveChanges();
+                    LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, mb.ToJson());
+                    mmMessage.Messages.Add("Başvuru Programramı Güncellendi");
+                    mmMessage.IsSuccess = true;
+
+                }
+                else
+                {
+                    mmMessage.Messages.Add("İşlem yapmaya çalıştığınız mezuniyet başvurusu sistemde bulunamadı!");
+                    mmMessage.IsSuccess = false;
+                }
+            }
+
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return new
+            {
+                mmMessage.IsSuccess,
+                MmMessage = mmMessage,
             }.ToJsonResult();
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
@@ -3235,7 +3287,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var baslikTr = tezBasligiDegisenSinav == null ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikTr : joForm.MezuniyetBasvurulari.TezBaslikTr) : tezBasligiDegisenSinav.YeniTezBaslikTr;
                         var baslikEn = tezBasligiDegisenSinav == null ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikEn : joForm.MezuniyetBasvurulari.TezBaslikEn) : tezBasligiDegisenSinav.YeniTezBaslikEn;
                         var tezBaslik = joForm.MezuniyetBasvurulari.IsTezDiliTr == true ? baslikTr : baslikEn;
-
+                      
                         row.OgrenciNo = itemO.OgrenciNo;
                         row.Konu = itemO.Ad + " " + itemO.Soyad + " 'DOKTORA DERECESİ' alması Hk.";
                         row.Aciklama1 = "Enstitümüz " + abdl.AnabilimDaliAdi + " Anabilim Dalı " + prgl.ProgramAdi + " doktora programı öğrencisi <b>" + itemO.OgrenciNo + "</b> no’lu <b>" + itemO.Ad + " " + itemO.Soyad + ";</b> "
@@ -3245,6 +3297,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         row.Aciklama2 = "1 Mart 2017 tarih ve 29994 sayılı Yüksek Öğretim Kurulu Lisansüstü Eğitim ve Öğretim Yönetmeliğinde Değişiklik Yapılmasına Dair Yönetmelik:<b> Madde 2- “Mezuniyet Tarihi tezin sınav "
                             + "jüri komisyonu tarafından imzalı nüshasının teslim edildiği tarihtir.”</b> gereğince <b>" + itemO.MezuniyetTarihi.Value.Date.ToFormatDate() + "</b> tarihinde tezini Enstitümüze teslim eden İlgili öğrencinin, tezinin kabul edildiğini ve kendisine "
                             + "<b>'DOKTORA DERECESİ'</b> verildiğini bildiren jüri ortak raporunun <b>" + raporTarihi.ToDate().Value.ToFormatDate() + "</b> tarihi itibariyle onanmasına ve Üniversite Senatosu'na sunulmak üzere Rektörlüğe arzına </b>oybirliğiyle</b> karar verildi.";
+
+                        var ikinciDanismanBilgi = itemO.TezEsDanismanUnvani+" "+itemO.TezEsDanismanAdi;
+                        if (!ikinciDanismanBilgi.IsNullOrWhiteSpace()) 
+                            row.Aciklama2 += "</br></br><b>İkinci Danışmanı: "+ ikinciDanismanBilgi + "</b>";
                         model.Add(row);
                     }
                     var strOgrenciNos = "";
@@ -3298,7 +3354,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             danismanBilgi = sinav.SRTaleplerJuris.First().JuriAdi.ToUpper();
                         }
                         row.OgrenciNo = itemO.OgrenciNo;
-                        row.DanismanAdSoyad = danismanBilgi;
+                        row.DanismanAdSoyad = danismanBilgi; 
+                        row.IkinciDanismanAdSoyad = itemO.TezEsDanismanUnvani + " " + itemO.TezEsDanismanAdi;
                         row.TezKonusu = tezSonBilgi.IsTezDiliTr ? tezSonBilgi.TezBaslikTr : tezSonBilgi.TezBaslikEn;
                         row.TezDili = tezSonBilgi.IsTezDiliTr ? "Türkçe" : "İngilizce";
                         row.SavunmaTarihi = sinav.Tarih.ToFormatDate();
@@ -3484,6 +3541,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             Response.AddHeader("Content-Disposition", $"inline;filename=\"Tez_Sınavı_Daveti__{mb.Ad}_{mb.Soyad}.pdf\"");
             return new FileStreamResult(memoryStream, "application/pdf");
         }
+
 
     }
 }

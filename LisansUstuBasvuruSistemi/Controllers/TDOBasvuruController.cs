@@ -2322,7 +2322,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!formYetki || (!yYetki && tdoBasvuruDanismanData.TezDanismanID != UserIdentity.Current.Id))
             {
-                mMessage.Messages.Add("Tez Eş Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
+                mMessage.Messages.Add("Tez İkinci Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
             }
             else if (!IslemYapilabilir(
                          tdoBasvuruDanismanData.EYKYaGonderildi,
@@ -2330,18 +2330,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                          tdoBasvuruDanismanData.EYKDaOnaylandi
                      ))
             {
-                mMessage.Messages.Add("EYK'süreci devam eden danışman formu bulunduğundan eş danışman öneri ya da düzeltme işlemi yapılamaz.");
+                mMessage.Messages.Add("EYK'süreci devam eden danışman formu bulunduğundan İkinci Danışman öneri ya da düzeltme işlemi yapılamaz.");
             }
             else if (tdoBasvuruEsDanismanId.HasValue)
             {
                 var esDanismanFormu = tdoBasvuruDanismanData.TDOBasvuruEsDanismen.First();
                 if (esDanismanFormu.EYKDaOnaylandi == true)
                 {
-                    mMessage.Messages.Add("EYK'da onaylanan Eş danışman öneri formu üzerinde değişiklik yapılamaz.");
+                    mMessage.Messages.Add("EYK'da onaylanan İkinci Danışman öneri formu üzerinde değişiklik yapılamaz.");
                 }
                 else if (esDanismanFormu.EYKYaGonderildi == true && esDanismanFormu.EYKDaOnaylandi != false)
                 {
-                    mMessage.Messages.Add("EYK'ya gönderilen Eş danışman öneri formu üzerinde değişiklik yapılamaz.");
+                    mMessage.Messages.Add("EYK'ya gönderilen İkinci Danışman öneri formu üzerinde değişiklik yapılamaz.");
                 }
 
             }
@@ -2360,7 +2360,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (ogrenciObsBilgi.OkuduguDonemNo >= donemNoKriter)
                     {
-                        mMessage.Messages.Add($"Okuduğunuz öğrenim seviyesi için aktif okuduğunuz dönem {donemNoKriter}. dönem ve sonrası ise Tez Eş Danışman Önerisi yapamazsınız.");
+                        mMessage.Messages.Add($"Okuduğunuz öğrenim seviyesi için aktif okuduğunuz dönem {donemNoKriter}. dönem ve sonrası ise Tez İkinci Danışman Önerisi yapamazsınız.");
                     }
                 }
             
@@ -2403,7 +2403,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mMessage = new MmMessage
             {
                 MessageType = MsgTypeEnum.Success,
-                Title = "Tez Eş Danışmanı Öneri Formu Oluşturma İşlemi"
+                Title = "Tez İkinci Danışmanı Öneri Formu Oluşturma İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
             var yYetki = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent() || RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent();
@@ -2411,7 +2411,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!formYetki || (!yYetki && tdoBasvuruDanismanData.TezDanismanID != UserIdentity.Current.Id))
             {
-                mMessage.Messages.Add("Tez Eş Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
+                mMessage.Messages.Add("Tez İkinci Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
             }
             else if (!IslemYapilabilir(
                          tdoBasvuruDanismanData.EYKYaGonderildi,
@@ -2419,18 +2419,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                          tdoBasvuruDanismanData.EYKDaOnaylandi
                      ))
             {
-                mMessage.Messages.Add("EYK'süreci devam eden danışman formu bulunduğundan eş danışman öneri ya da düzeltme işlemi yapılamaz.");
+                mMessage.Messages.Add("EYK'süreci devam eden danışman formu bulunduğundan İkinci Danışman öneri ya da düzeltme işlemi yapılamaz.");
             }
             else if (kModel.TDOBasvuruEsDanismanID > 0)
             {
                 var esDanismanFormu = tdoBasvuruDanismanData.TDOBasvuruEsDanismen.First(p => p.UniqueID == kModel.UniqueID);
                 if (esDanismanFormu.EYKDaOnaylandi == true)
                 {
-                    mMessage.Messages.Add("EYK'da onaylanan Eş danışman öneri formu üzerinde değişiklik yapılamaz.");
+                    mMessage.Messages.Add("EYK'da onaylanan İkinci Danışman öneri formu üzerinde değişiklik yapılamaz.");
                 }
                 else if (esDanismanFormu.EYKYaGonderildi == true)
                 {
-                    mMessage.Messages.Add("EYK'ya gönderilen Eş danışman öneri formu üzerinde değişiklik yapılamaz.");
+                    mMessage.Messages.Add("EYK'ya gönderilen İkinci Danışman öneri formu üzerinde değişiklik yapılamaz.");
                 }
             }
 
@@ -2443,7 +2443,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (ogrenciBilgi.DanismanInfo == null && kModel.TDOBasvuruEsDanismanID <= 0)
                 {
-                    mMessage.Messages.Add(tdoBasvuruDanismanData.TDOBasvuru.OgrenciNo + " öğrenci numarasına ait OBS isteminde aktif bir danışman bilgisine rastlanmadı. Eş danışman önerisi yapılabilmesi için OBS sisteminde danışman bilgisinin tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+                    mMessage.Messages.Add(tdoBasvuruDanismanData.TDOBasvuru.OgrenciNo + " öğrenci numarasına ait OBS isteminde aktif bir danışman bilgisine rastlanmadı. İkinci Danışman önerisi yapılabilmesi için OBS sisteminde danışman bilgisinin tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
                 }
             }
             if (!mMessage.Messages.Any())
@@ -2515,7 +2515,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (ogrenciObsBilgi.OkuduguDonemNo >= donemNoKriter)
                     {
-                        mMessage.Messages.Add($"Okuduğunuz öğrenim seviyesi için aktif okuduğunuz dönem {donemNoKriter}. dönem ve sonrası ise Tez Eş Danışman Önerisi yapamazsınız.");
+                        mMessage.Messages.Add($"Okuduğunuz öğrenim seviyesi için aktif okuduğunuz dönem {donemNoKriter}. dönem ve sonrası ise Tez İkinci Danışman Önerisi yapamazsınız.");
                     }
                 }
 
@@ -2616,7 +2616,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mMessage = new MmMessage
             {
                 MessageType = MsgTypeEnum.Success,
-                Title = "Tez Eş Danışmanı Öneri Formu EYK'ya Gönderim İşlemi"
+                Title = "Tez İkinci Danışmanı Öneri Formu EYK'ya Gönderim İşlemi"
             };
 
             var esDanismanTalepTipIds = new List<int>() { TdoDanismanTalepTipEnum.TezDanismaniOnerisi, TdoDanismanTalepTipEnum.TezDanismaniDegisikligi, TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi };
@@ -2628,11 +2628,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (esDanismanTalepTipIds.Contains(tdoBasvuruEsDanis.TDOBasvuruDanisman.TDODanismanTalepTipID) && tdoBasvuruEsDanis.TDOBasvuruDanisman.EYKDaOnaylandi != true)
             {
-                mMessage.Messages.Add("Tez danışmanı öneri formu EYK'da onaylanmadığından Tez Eş Danışman EYK'ya gönderim işlemi yapılamaz.");
+                mMessage.Messages.Add("Tez danışmanı öneri formu EYK'da onaylanmadığından Tez İkinci Danışman EYK'ya gönderim işlemi yapılamaz.");
             }
             else if (tdoBasvuruEsDanis.EYKYaHazirlandi.HasValue)
             {
-                mMessage.Messages.Add("Enstitü tarafından EYK'ya hazırlanma işlemi yapılan Tez Eş Danışman öneri formu üzerinden EYK'ya gönderim işlemi yapılamaz.");
+                mMessage.Messages.Add("Enstitü tarafından EYK'ya hazırlanma işlemi yapılan Tez İkinci Danışman öneri formu üzerinden EYK'ya gönderim işlemi yapılamaz.");
             }
             else if (eykYaGonderildi == false && eykYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
             {
@@ -2677,11 +2677,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (tdoBasvuruEsDanis.EYKYaGonderildi != true)
             {
-                mMessage.Messages.Add("Enstitü tarafından Eyk'ya gönderim işlemi yapılmayan Eş Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
+                mMessage.Messages.Add("Enstitü tarafından Eyk'ya gönderim işlemi yapılmayan İkinci Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
             }
             else if (tdoBasvuruEsDanis.EYKDaOnaylandi.HasValue)
             {
-                mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan Eş Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
+                mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan İkinci Danışman öneri formu üzerinden EYK'ya hazırlandı işlemi yapılamaz.");
             }
 
             if (!mMessage.Messages.Any())
@@ -2728,7 +2728,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mMessage = new MmMessage
             {
                 MessageType = MsgTypeEnum.Success,
-                Title = "Tez Eş Danışmanı Öneri Formu EYK'Da Onay İşlemi"
+                Title = "Tez İkinci Danışmanı Öneri Formu EYK'Da Onay İşlemi"
             };
             var tdoBasvuruEsDanis = _entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
             if (!RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent())
@@ -2737,11 +2737,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (tdoBasvuruEsDanis.TDOBasvuruDanisman.EYKDaOnaylandi != true)
             {
-                mMessage.Messages.Add("Tez danışmanı öneri formu EYK'da onaylanmadığından Tez Eş Danışman EYK'da onay işlemi yapılamaz.");
+                mMessage.Messages.Add("Tez danışmanı öneri formu EYK'da onaylanmadığından Tez İkinci Danışman EYK'da onay işlemi yapılamaz.");
             }
             else if (tdoBasvuruEsDanis.EYKYaHazirlandi != true)
             {
-                mMessage.Messages.Add("Enstitü tarafından EYK'ya hazırlanma işlemi yapılmayan Eş Danışman öneri formu üzerinden EYK onay işlemi yapılamaz.");
+                mMessage.Messages.Add("Enstitü tarafından EYK'ya hazırlanma işlemi yapılmayan İkinci Danışman öneri formu üzerinden EYK onay işlemi yapılamaz.");
             }
             if (eykDaOnaylandi == false)
             {
@@ -2861,7 +2861,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage
             {
-                Title = "Tez Eş Danışman öneri başvurusu silme işlemi"
+                Title = "Tez İkinci Danışman öneri başvurusu silme işlemi"
             };
             var tdoeyKdaOnayYetkisi = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
             var tdoeyKyaGonderimYetkisi = RoleNames.TdoEykyaGonderimYetkisi.InRoleCurrent();
@@ -2870,7 +2870,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!(tdoeyKdaOnayYetkisi || tdoeyKyaGonderimYetkisi))
             {
-                mmMessage.Messages.Add("Eş danışman bilgisini silmeye yetkili değilsiniz.");
+                mmMessage.Messages.Add("İkinci Danışman bilgisini silmeye yetkili değilsiniz.");
             }
             if (tdoEsDanisman == null)
             {
@@ -2878,7 +2878,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (tdoEsDanisman.EYKYaGonderildi.HasValue)
             {
-                mmMessage.Messages.Add("Silmek istediğiniz eş danışman öneri formu eyk'ya gönderim işlemi gördüğünden silinemez.");
+                mmMessage.Messages.Add("Silmek istediğiniz İkinci Danışman öneri formu eyk'ya gönderim işlemi gördüğünden silinemez.");
             }
             else
             {
@@ -2888,12 +2888,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
                     LogIslemleri.LogEkle("TDOBasvuruEsDanisman", LogCrudType.Delete, tdoEsDanisman.ToJson());
-                    mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silindi.");
+                    mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli İkinci Danışman Öneri Formu sistemden silindi.");
 
                 }
                 catch (Exception ex)
                 {
-                    mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silinemedi.");
+                    mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli İkinci Danışman Öneri Formu sistemden silinemedi.");
                     SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.OnemsizHata);
                 }
             }

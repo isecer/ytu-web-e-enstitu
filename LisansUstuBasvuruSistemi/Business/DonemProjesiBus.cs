@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BiskaUtil;
+﻿using BiskaUtil;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
@@ -12,6 +8,10 @@ using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MailManager;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -38,6 +38,8 @@ namespace LisansUstuBasvuruSistemi.Business
             var pagerString = model.ToRenderPartialViewHtml("DpBasvuru", "BasvuruDonemView");
             return pagerString;
         }
+      
+      
         public static List<string> DonemProjesiKontrol(string enstituKod, Guid? donemProjesiUniqueId, Guid? donemProjesiBasvuruUniqueId)
         {
             var errorMessage = new List<string>();
@@ -81,22 +83,47 @@ namespace LisansUstuBasvuruSistemi.Business
                     errorMessage.Add("Kayıtlı olunan enstitü ile başvuru yapılan entistü uyuşmamaktadır. Enstitünüz: " + enstitu.EnstituAd + " olarak gözükmektedir.");
                     return errorMessage;
                 }
+                var donemProjesiDersKodu = DonemProjesiAyar.DonemProjesiDersKodu.GetAyar(enstituKod);
+                var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(enstituKod);
+
+                if (!donemProjesiDersKodu.IsNullOrWhiteSpace())
+                {
+                    var donemProjesiDersi = obsStudentInfo.TumDonemDersNotlari?.FirstOrDefault(p =>
+                        p.DersKoduNum == donemProjesiDersKodu &&
+                        p.DonemId == aktifDonem.BaslangicYil + "" + aktifDonem.DonemId);
+
+                    if (donemProjesiDersi == null)
+                    {
+                        errorMessage.Add($"Aktif döneminizde ({aktifDonem.DonemAdiLong}) dönem projesi dersi ({donemProjesiDersKodu}) bulunamadı. Başvuru yapabilmeniz için bu dersi almanız ve OBS sisteminde görünmesi gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+                        return errorMessage;
+                    }
+
+                    if (donemProjesiDersi.HocaTc.IsNullOrWhiteSpace())
+                    {
+                        errorMessage.Add($"Dönem projesi dersiniz ({donemProjesiDersKodu}) için proje yürütücüsü bilgisi OBS sisteminde tanımlı değildir. Başvurunun gerçekleşebilmesi için dersinizin proje yürütücü bilgisinin OBS sisteminde düzgün şekilde atanması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+                        return errorMessage;
+                    }
+                }
+
                 if (obsStudentInfo.DanismanInfo == null)
                 {
-                    errorMessage.Add("Proje yürütücüsü bilgisi OBS sisteminden boş ya da hatalı gelmektedir.  Başvurunun gerçekleşebilmesi için proje yürütücüsü bilgisinin düzgün bir şekilde OBS sisteminde tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+                    var ek = donemProjesiDersKodu.IsNullOrWhiteSpace()
+                        ? "OBS sisteminde danışman bilgisi"
+                        : $"Aktif döneminizde ({aktifDonem.DonemAdiLong}) aldığınız dönem projesi dersi ({donemProjesiDersKodu})";
+
+                    errorMessage.Add($"Proje yürütücüsü bilgisi bulunamadı. {ek} üzerinden proje yürütücüsü ataması yapılmamış veya hatalı gelmektedir. Başvurunun gerçekleşebilmesi için proje yürütücüsü bilgisinin düzgün bir şekilde OBS sisteminde tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
                     return errorMessage;
                 }
+
                 if (obsStudentInfo.DanismanInfo.TCKIMLIKNO.IsNullOrWhiteSpace() || obsStudentInfo.DanismanInfo.TCKIMLIKNO.Length != 11)
                 {
-                    errorMessage.Add("Proje yürütücüsünün Tc Kimlik Numarası  bilgisi OBS sisteminden boş ya da hatalı gelmektedir.  Başvurunun gerçekleşebilmesi için proje yürütücüsü bilgisinin düzgün bir şekilde OBS sisteminde tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+                    errorMessage.Add($"Proje yürütücünüz '{obsStudentInfo.DanismanInfo.UNVAN_AD} {obsStudentInfo.DanismanInfo.AD} {obsStudentInfo.DanismanInfo.SOYAD}' için TC Kimlik Numarası bilgisi OBS sisteminde boş ya da hatalı gelmektedir. Başvurunun gerçekleşebilmesi için proje yürütücüsünün TC kimlik bilgisinin düzgün bir şekilde OBS sisteminde tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
                     return errorMessage;
                 }
+
                 if (!obsStudentInfo.AktifDanismanID.HasValue)
                 {
-                    var projeYurutucuMessage = obsStudentInfo.DanismanInfo == null
-                           ? "Başvuru yapabilmeniz için proje yürütücü bilginizin OBS sisteminde tanımlı olması gerekmektedir. Bu durumu enstitü yetkililerine iletiniz."
-                           : $"Başvuru yapabilmeniz için proje yürütücünüzün '{obsStudentInfo.DanismanInfo.UNVAN_AD} {obsStudentInfo.DanismanInfo.AD} {obsStudentInfo.DanismanInfo.SOYAD}' lisansüstü sisteminde kullanıcı hesabı oluşturması gerekmektedir.";
-                    errorMessage.Add(projeYurutucuMessage);
+                    errorMessage.Add($"Başvuru yapabilmeniz için proje yürütücünüz '{obsStudentInfo.DanismanInfo.UNVAN_AD} {obsStudentInfo.DanismanInfo.AD} {obsStudentInfo.DanismanInfo.SOYAD}' (TC: {obsStudentInfo.DanismanInfo.TCKIMLIKNO}) adlı öğretim üyesinin lisansüstü sisteminde kullanıcı hesabı oluşturması gerekmektedir. Proje yürütücünüzün sisteme kayıt olması için enstitü yetkililerine başvurunuz.");
                     return errorMessage;
                 }
                 if (donemProjesi != null)
@@ -144,13 +171,12 @@ namespace LisansUstuBasvuruSistemi.Business
                             controlMessage.Add("Aktif okunan dönem " + domeStr + " dönemlerden biri olması gerekmektedir.");
                         }
 
-                        if (donemProjesi!=null && donemProjesi.IsYeniBasvuruYapilabilir && donemProjesi.DonemProjesiBasvurus.Any(p => p.IsDanismanOnay != false && p.DonemProjesiEnstituOnayDurumID != DonemProjesiEnstituOnayDurumEnum.IptalEdildi && p.DonemProjesi.OgrenciNo == obsStudentInfo.OgrenciInfo.OGR_NO && p.OkuduguDonemNo == obsStudentInfo.OkuduguDonemNo))
+                        if (donemProjesi != null && donemProjesi.IsYeniBasvuruYapilabilir && donemProjesi.DonemProjesiBasvurus.Any(p => p.IsDanismanOnay != false && p.DonemProjesiEnstituOnayDurumID != DonemProjesiEnstituOnayDurumEnum.IptalEdildi && p.DonemProjesi.OgrenciNo == obsStudentInfo.OgrenciInfo.OGR_NO && p.OkuduguDonemNo == obsStudentInfo.OkuduguDonemNo))
                         {
                             controlMessage.Add("Aktif okuduğunuz " + obsStudentInfo.OkuduguDonemNo + ". döneminiz için zaten bir başvurunuz bulunmaktadır.");
                         }
                         if (alimnasiGerekenDersKodlari.Any())
-                        {
-                            var aktifDonem = DateTime.Now.ToDonemProjesiDonemBilgi(enstituKod);
+                        { 
                             var alinanDersler = obsStudentInfo.TumDonemDersNotlari
                                 .Where(p => p.DonemId == (aktifDonem.BaslangicYil + "" + aktifDonem.DonemId))
                                 .Select(s => s.DersKoduNum).ToList();
@@ -355,7 +381,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     ProjeBasligi = s.ProjeBasligi,
                     ProjeOzeti = s.ProjeOzeti,
                     TezDanismanID = s.TezDanismanID,
-                    DanismanAdi = s.Kullanicilar.Unvanlar.UnvanAdi + " " + s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
+                    DanismanAdi = (s.Kullanicilar.UnvanID.HasValue ? s.Kullanicilar.Unvanlar.UnvanAdi + " " : "") + s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
                     TezDanismaniUserKey = s.Kullanicilar.UserKey,
                     DonemProjesiEnstituOnayDurumID = s.DonemProjesiEnstituOnayDurumID,
                     DonemProjesiEnstituOnayDurumlari = s.DonemProjesiEnstituOnayDurumlari,
@@ -447,8 +473,13 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.IsYeniBasvuruYapilabilir = basvuru.IsYeniBasvuruYapilabilir;
                 model.UniqueID = basvuru.UniqueID;
                 model.TezDanismaniUserKey = aktifTezDanismani.UserKey;
-                model.TezDanismanBilgiEslesen = aktifTezDanismani.Unvanlar.UnvanAdi + " " + aktifTezDanismani.Ad + " " +
+                model.TezDanismanBilgiEslesen = aktifTezDanismani.Ad + " " +
                                                 aktifTezDanismani.Soyad;
+                if (aktifTezDanismani.Unvanlar != null)
+                {
+                    model.TezDanismanBilgiEslesen =
+                        aktifTezDanismani.Unvanlar.UnvanAdi + " " + model.TezDanismanBilgiEslesen;
+                }
                 model.TezDanismanID = basvuru.TezDanismanID;
                 model.DonemProjesiID = basvuru.DonemProjesiID;
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
@@ -484,7 +515,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     model.IsAnketDolduruldu = basvuru.AnketCevaplaris.Any();
                     if (model.IsAnketDolduruldu == false)
                     {
-                        var anketId = DonemProjesiAyar.DonemProjesiIlkBasvuruAnketi.GetAyar(basvuru.EnstituKod, "").ToInt();
+                        var anketId = DonemProjesiAyar.DonemProjesiIlkBasvuruAnketi.GetAyar(basvuru.EnstituKod).ToInt();
                         model.IsAnketVar = anketId > 0;
                         if (anketId > 0)
                         {

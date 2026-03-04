@@ -333,7 +333,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                             //{
-                            //    mMessage.Messages.Add("Öğrencinin yapmış olduğu bir Tez Eş Danışman Öneri başvurusu bulunmakta. Jüri önerisi yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                            //    mMessage.Messages.Add("Öğrencinin yapmış olduğu bir Tez İkinci Danışman Öneri başvurusu bulunmakta. Jüri önerisi yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                             //}
                             else if (enstituKod != kul.Programlar.AnabilimDallari.EnstituKod)
                             {

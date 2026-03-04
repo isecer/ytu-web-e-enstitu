@@ -1061,7 +1061,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                var message = "Tez Eş danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu!";
+                var message = "Tez İkinci Danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu!";
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
@@ -1119,7 +1119,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                         });
                         mModel.Add(new SablonMailModel
                         {
-                            JuriTipAdi = "Eş Danışman",
+                            JuriTipAdi = "İkinci Danışman",
                             AdSoyad = esDanisman.AdSoyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = esDanisman.EMail, ToOrBcc = true } },
                             MailSablonTipId = esDanisman.IsDegisiklikTalebi ?
@@ -1255,7 +1255,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                var message = "Tez Eş Danışmanı işlemi için mail gönderilirken bir hata oluştu!";
+                var message = "Tez İkinci Danışmanı işlemi için mail gönderilirken bir hata oluştu!";
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;
@@ -1405,7 +1405,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
             }
             catch (Exception ex)
             {
-                var message = "Tez Eş Danışmanı işlemi için mail gönderilirken bir hata oluştu!";
+                var message = "Tez İkinci Danışmanı işlemi için mail gönderilirken bir hata oluştu!";
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipiEnum.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = MsgTypeEnum.Error;

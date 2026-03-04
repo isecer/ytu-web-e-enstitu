@@ -8,7 +8,7 @@
 
 <table>
     <tr>
-        <td width="80">Danışman:</td>
+        <td width="100">Danışman:</td>
         <td>
             @if (!Model.AktifTDOBasvuruDanismanID.HasValue)
             {
@@ -62,11 +62,11 @@
         </td>
     </tr>
     <tr>
-        <td>Eş Danışman:</td>
+        <td>İkinci Danışman:</td>
         <td>
             @if (!Model.EsDanismanOnerisiVar)
             {
-                <span>Eş Danışman Formu Oluşturulmadı </span>
+                <span>İkinci Danışman Formu Oluşturulmadı </span>
             }
             else if (Model.Es_EYKYaGonderildi == true && !Model.Es_EYKYaHazirlandi.HasValue)
             {

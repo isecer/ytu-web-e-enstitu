@@ -73,6 +73,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ResimAdi = kullanicilar.ResimAdi,
                         UserKey = kullanicilar.UserKey,
                         AdSoyad = kullanicilar.Ad + " " + kullanicilar.Soyad,
+                        EMail = kullanicilar.EMail,
                         OgrenciNo = kayitSilme.OgrenciNo,
                         TcKimlikNo = kullanicilar.TcKimlikNo,
                         OgrenimTipKod = kayitSilme.OgrenimTipKod,
@@ -308,7 +309,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var enstitu = _entities.Enstitulers.First(f => f.EnstituKod == enstituKod);
 
             var baslangicTarihi = basTar.ToDate(DateTime.Now);
-            var bitisTarihi = bitTar.ToDate(DateTime.Now);
+            var bitisTarihi = bitTar.ToDate(DateTime.Now).AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999);
 
             var query = from ksBasvuru in _entities.KayitSilmeBasvurus
                         join program in _entities.Programlars on ksBasvuru.ProgramKod equals program.ProgramKod

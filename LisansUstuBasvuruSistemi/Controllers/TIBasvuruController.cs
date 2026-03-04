@@ -457,8 +457,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             model.AraRaporSayisi = tiBasvuruAraRapor.AraRaporSayisi;
                             model.TIBasvuruAraRaporID = tiBasvuruAraRapor.TIBasvuruAraRaporID;
-                            model.IsTezDiliTr = model.IsTezDiliTr;
-                            model.TezBaslikEn = tiBasvuruAraRapor.TezBaslikEn;
+                            //model.IsTezDiliTr = model.IsTezDiliTr; 
                             model.IsTezBasligiDegisti = tiBasvuruAraRapor.IsTezBasligiDegisti;
                             model.YeniTezBaslikTr = tiBasvuruAraRapor.YeniTezBaslikTr;
                             model.YeniTezBaslikEn = tiBasvuruAraRapor.YeniTezBaslikEn;
@@ -845,32 +844,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                     }
 
-                    if (mMessage.Messages.Count == 0 && saveData && !tiBasvuru.TIBasvuruAraRapors.Any())
-                    {
-                        // Unvan kontrolü - en az bir Prof. Dr. veya Doç. Dr. unvanı bulunmalı
-                        var unvanlar = qData
-                            .Where(d => d.IsSuccessRow && !string.IsNullOrWhiteSpace(d.Row.UnvanAdi))
-                            .Select(d => d.Row.UnvanAdi.Trim())
-                            .ToList();
+                    //if (mMessage.Messages.Count == 0 && saveData && !tiBasvuru.TIBasvuruAraRapors.Any())
+                    //{
+                    //    // Unvan kontrolü - en az bir Prof. Dr. veya Doç. Dr. unvanı bulunmalı
+                    //    var unvanlar = qData
+                    //        .Where(d => d.IsSuccessRow && !string.IsNullOrWhiteSpace(d.Row.UnvanAdi))
+                    //        .Select(d => d.Row.UnvanAdi.Trim())
+                    //        .ToList();
 
-                        // Dinamik olarak kontrol edilmesi gereken unvanlar (UnvanlarBus sabitlerinden)
-                        var gerekliUnvanlar = new List<string>
-                        {
-                            UnvanlarBus.ProfDr,
-                            UnvanlarBus.DocDr
-                            // Gerekirse buraya başka unvanlar da eklenebilir
-                        };
+                    //    // Dinamik olarak kontrol edilmesi gereken unvanlar (UnvanlarBus sabitlerinden)
+                    //    var gerekliUnvanlar = new List<string>
+                    //    {
+                    //        UnvanlarBus.ProfDr,
+                    //        UnvanlarBus.DocDr
+                    //        // Gerekirse buraya başka unvanlar da eklenebilir
+                    //    };
 
-                        // Gerekli unvanlardan herhangi biri mevcut mu?
-                        bool kriterSaglanmis = unvanlar.Intersect(gerekliUnvanlar).Any();
+                    //    // Gerekli unvanlardan herhangi biri mevcut mu?
+                    //    bool kriterSaglanmis = unvanlar.Intersect(gerekliUnvanlar).Any();
 
-                        if (!kriterSaglanmis)
-                        {
-                            string unvanListesi = string.Join(" veya ", gerekliUnvanlar);
-                            mMessage.Messages.Add(
-                                $"Tez izleme rapor formu oluşturulabilmesi için önerilen komite üyeleri arasında en az bir adet {unvanListesi} unvanına sahip kişi bulunmalıdır.");
-                        }
-                    }
+                    //    if (!kriterSaglanmis)
+                    //    {
+                    //        string unvanListesi = string.Join(" veya ", gerekliUnvanlar);
+                    //        mMessage.Messages.Add(
+                    //            $"Tez izleme rapor formu oluşturulabilmesi için önerilen komite üyeleri arasında en az bir adet {unvanListesi} unvanına sahip kişi bulunmalıdır.");
+                    //    }
+                    //}
 
                     if (mMessage.Messages.Count == 0 && saveData)
                     {

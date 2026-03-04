@@ -249,7 +249,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                     //{
-                    //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
+                    //    mMessage.Messages.Add("Aktif bir Tez İkinci Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
                     //}
 
 
@@ -471,7 +471,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                     //{
-                    //    mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
+                    //    mMessage.Messages.Add("Aktif bir Tez İkinci Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
                     //} 
                 }
 

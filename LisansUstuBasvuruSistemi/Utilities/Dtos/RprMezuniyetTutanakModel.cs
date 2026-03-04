@@ -24,6 +24,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string OgrenciNo { get; set; }
         public string OgrenciBilgi { get; set; }
         public string DanismanAdSoyad { get; set; }
+        public string IkinciDanismanAdSoyad { get; set; }
         public string TezKonusu { get; set; }
         public string TezDili { get; set; }
         public string SavunmaTarihi { get; set; }

@@ -712,7 +712,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell21.StylePriority.UseBorders = false;
             this.xrTableCell21.StylePriority.UseFont = false;
             this.xrTableCell21.StylePriority.UseTextAlignment = false;
-            this.xrTableCell21.Text = "D. Önerilen Eş Danışmanı Bilgileri";
+            this.xrTableCell21.Text = "D. Önerilen İkinci Danışmanı Bilgileri";
             this.xrTableCell21.TextAlignment = DevExpress.XtraPrinting.TextAlignment.BottomCenter;
             this.xrTableCell21.Weight = 1D;
             // 
@@ -804,7 +804,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell17.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrTableCell17.StylePriority.UseFont = false;
             this.xrTableCell17.StylePriority.UsePadding = false;
-            this.xrTableCell17.Text = "Eş Danışman Atama Durumu";
+            this.xrTableCell17.Text = "İkinci Danışman Atama Durumu";
             this.xrTableCell17.Weight = 1D;
             // 
             // xrTableRow13
@@ -877,7 +877,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell10.StylePriority.UseBorders = false;
             this.xrTableCell10.StylePriority.UseFont = false;
             this.xrTableCell10.StylePriority.UseTextAlignment = false;
-            this.xrTableCell10.Text = "C. Eş Danışman Öneri/Değişiklik Bilgileri";
+            this.xrTableCell10.Text = "C. İkinci Danışman Öneri/Değişiklik Bilgileri";
             this.xrTableCell10.TextAlignment = DevExpress.XtraPrinting.TextAlignment.BottomCenter;
             this.xrTableCell10.Weight = 1D;
             // 
@@ -1023,7 +1023,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell28.StylePriority.UseFont = false;
             this.xrTableCell28.StylePriority.UsePadding = false;
             this.xrTableCell28.StylePriority.UseTextAlignment = false;
-            this.xrTableCell28.Text = "Önerilen eş danışmanın tez izleme komite üyeleri arasında bulunmadığını kabul edi" +
+            this.xrTableCell28.Text = "Önerilen İkinci Danışmanın tez izleme komite üyeleri arasında bulunmadığını kabul edi" +
     "yorum.";
             this.xrTableCell28.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell28.Weight = 3.4526217386381512D;

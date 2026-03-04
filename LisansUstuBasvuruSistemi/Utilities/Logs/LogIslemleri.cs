@@ -46,5 +46,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
                 // ignored
             }
         }
+        public static object GetChanges<T>(T oldEntity, T newEntity)
+        {
+            var changes = new List<object>();
+
+            var props = typeof(T).GetProperties();
+
+            foreach (var prop in props)
+            {
+                var oldVal = prop.GetValue(oldEntity);
+                var newVal = prop.GetValue(newEntity);
+
+                // aynıysa geç
+                if (Equals(oldVal, newVal))
+                    continue;
+
+                changes.Add(new
+                {
+                    Field = prop.Name,
+                    Old = oldVal,
+                    New = newVal
+                });
+            }
+
+            return changes;
+        }
     }
 }

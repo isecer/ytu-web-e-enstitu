@@ -13,6 +13,8 @@
     var tdoEykdaOnayYetkisi = RoleNames.TdoEykdaOnayYetkisi.InRoleCurrent();
     var tdoFormOlusturmaYetkisi = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
     var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
+    bool programDegisiklikYetki = UserIdentity.Current.IsAdmin && kayitYetki;
+
     var esDanismanTalepTipIds = new List<int>() { TdoDanismanTalepTipEnum.TezDanismaniOnerisi, TdoDanismanTalepTipEnum.TezDanismaniDegisikligi, TdoDanismanTalepTipEnum.TezDanismaniVeBaslikDegisikligi };
 
 
@@ -65,9 +67,68 @@
                         }
                         <tr>
                             <td class="CaptionTd">Program</td>
-                            <td class="CaptionTd">:</td>
-                            <td class="ValueTd">@Model.AnabilimdaliAdi / @Model.ProgramAdi</td>
-                        </tr>
+                            <td>:</td>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td id="prgLbl_@Model.TDOBasvuruID">
+                                            @Model.AnabilimdaliAdi / @Model.ProgramAdi
+                                        </td>
+                                        <td id="prgInp_@Model.TDOBasvuruID" class="hide">
+                                            @Html.DropDownList("InpProgram_" + Model.TDOBasvuruID,
+                                                Model.OgrenciProgramList,
+                                                new { @class = "form-control" })
+                                        </td>
+
+                                        @if (programDegisiklikYetki)
+                                        {
+                                            <td width="25" style="text-align:right;font-size:10pt;">
+                                                <a href="javascript:void(0)" onclick="ShowProgramEdit(@Model.TDOBasvuruID,this)">
+                                                    <i class="fa fa-edit fa-lg" title="Program Düzenle"></i>
+                                                </a>
+                                                <script>
+                                                    function ShowProgramEdit(id, sndr) {
+                                                        if ($('#prgLbl_' + id).hasClass('hide')) {
+                                                            $('#prgLbl_' + id).removeClass('hide');
+                                                            $('#prgInp_' + id).addClass('hide');
+                                                            $('#prgSv_' + id).addClass('hide');
+                                                        }
+                                                        else {
+                                                            $('#prgLbl_' + id).addClass('hide');
+                                                            $('#prgInp_' + id).removeClass('hide');
+                                                            $('#prgSv_' + id).removeClass('hide');
+                                                        }
+                                                    }
+                                                </script>
+                                            </td>
+                                            <td id="prgSv_@Model.TDOBasvuruID" width="25" style="text-align:right;font-size:10pt;" class="hide">
+                                                <a href="javascript:void(0)" onclick="SaveProgram(@Model.TDOBasvuruID,this)">
+                                                    <i class="fa fa-save fa-lg" title="Program Kaydet"></i>
+                                                </a>
+                                                <script>
+                                                     function SaveProgram(id, sndr) {
+                                                         var val = $('#InpProgram_' + id).val();
+                                                         $.ajax({
+                                                             url: '@Url.Action("BasvuruProgramGuncelle", "TdoGelenBasvurular")',
+                                                             data: { 'id': id, 'ProgramKod': val },
+                                                             success: function (result) {
+                                                                 GetMsg(result.MmMessage);
+                                                                 if (result.IsSuccess) {
+                                                                     GetDetail(id);
+                                                                 }
+                                                             },
+                                                             error: function (err) {
+                                                                 alert(err.responseText);
+                                                             }
+                                                         });
+                                                     }
+                                                </script>
+                                            </td>
+                                        }
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr> 
                         @if (!Model.DegerlendirenUniqueID.HasValue)
                         {
                             <tr>
@@ -185,7 +246,7 @@
                                 <th width="120">Başvuru Tarihi</th>
                                 <th>Talep Türü</th>
                                 <th>Danışman Onay Durumu</th>
-                                <th>Eş Danışman Onay Durumu</th>
+                                <th>İkinci Danışman Onay Durumu</th>
                                 <th width="60"></th>
                             </tr>
                             @foreach (var item in Model.TDOBasvuruDanismanList)
@@ -230,7 +291,7 @@
                                     <td>
                                         @if (item.EsDanismanBilgi == null)
                                         {
-                                            <span style="color:maroon;font-size:10pt;" aria-hidden="true">Eş Danışman Önerisi Yok.</span>
+                                            <span style="color:maroon;font-size:10pt;" aria-hidden="true">İkinci Danışman Önerisi Yok.</span>
                                         }
                                         else
                                         {
@@ -953,17 +1014,17 @@
                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                                 <table style="width:100%;">
                                                     <tr>
-                                                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-user-o"></i> Eş Danışman Bilgileri</td>
+                                                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-user-o"></i> İkinci Danışman Bilgileri</td>
                                                         <td width="100" colspan="2" style=" border-bottom: 1px solid; text-align: right; padding-bottom: 2px;">
                                                             @if (item.TdoEsBasvurusuYapabilir)
                                                             {
                                                                 if (item.IsYeniEsDanismanOneriOrDegisiklik)
                                                                 {
-                                                                    <span class="label label-info" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID, @Model.AktifTDOBasvuruDanismanID);"><i class="fa fa-plus"></i> Tez Eş Danışman Öneri Formu Oluştur</span>
+                                                                    <span class="label label-info" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID, @Model.AktifTDOBasvuruDanismanID);"><i class="fa fa-plus"></i> Tez İkinci Danışman Öneri Formu Oluştur</span>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <span class="label label-danger" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID,@Model.AktifTDOBasvuruDanismanID,'',true);"><i class="fa fa-plus"></i> Tez Eş Danışman Değişikliği Öneri Formu Oluştur</span>
+                                                                    <span class="label label-danger" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID,@Model.AktifTDOBasvuruDanismanID,'',true);"><i class="fa fa-plus"></i> Tez İkinci Danışman Değişikliği Öneri Formu Oluştur</span>
 
                                                                 }
                                                             }
@@ -979,7 +1040,7 @@
                                                                         <th width="40"></th>
                                                                         <th>Başvuru Tarihi</th>
                                                                         <th>Talep Türü</th>
-                                                                        <th>Eş Danışman</th>
+                                                                        <th>İkinci Danışman</th>
                                                                         <th width="90"></th>
                                                                     </tr>
                                                                     @foreach (var itemE in item.TDOBasvuruEsDanismen)
@@ -995,7 +1056,7 @@
                                                                                 </ul>
                                                                             </td>
                                                                             <td>@(itemE.IsObsData?"Obs'de Doğrulandı": itemE.BasvuruTarihi.ToFormatDateAndTime())</td>
-                                                                            <td>@(itemE.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Öneri")</td>
+                                                                            <td>@(itemE.IsDegisiklikTalebi ? "İkinci Danışman Değişikliği" : "İkinci Danışman Öneri")</td>
                                                                             <td>@itemE.UnvanAdi @itemE.AdSoyad</td>
                                                                             <td>
                                                                                 @if ((tdoEykdaOnayYetkisi || tdoEykyaGonderimYetkisi || item.TezDanismanID == UserIdentity.Current.Id) && (!itemE.EYKYaGonderildi.HasValue))
@@ -1027,14 +1088,14 @@
                                                                                         @if (!itemE.OncekiEsDanismanAdi.IsNullOrWhiteSpace())
                                                                                         {
                                                                                             <tr>
-                                                                                                <td class="CaptionTd" width="200">Önceki Eş Danışman Ad Soyad</td>
+                                                                                                <td class="CaptionTd" width="200">Önceki İkinci Danışman Ad Soyad</td>
                                                                                                 <td class="CaptionTd" width="10">:</td>
                                                                                                 <td class="ValueTd">@itemE.OncekiEsDanismanAdi</td>
                                                                                             </tr>
                                                                                         }
 
                                                                                         <tr>
-                                                                                            <td class="CaptionTd" width="200">Önerilen Eş Danışman Ad Soyad</td>
+                                                                                            <td class="CaptionTd" width="200">Önerilen İkinci Danışman Ad Soyad</td>
                                                                                             <td class="CaptionTd" width="10">:</td>
                                                                                             <td class="ValueTd">@itemE.UnvanAdi @itemE.AdSoyad</td>
                                                                                         </tr>
@@ -1051,7 +1112,7 @@
                                                                                                 <td class="ValueTd">@itemE.AnabilimDaliAdi / @itemE.ProgramAdi</td>
                                                                                             </tr>
                                                                                             <tr>
-                                                                                                <td class="CaptionTd">Eş Danışman EMail</td>
+                                                                                                <td class="CaptionTd">İkinci Danışman EMail</td>
                                                                                                 <td class="CaptionTd">:</td>
                                                                                                 <td class="ValueTd">@itemE.EMail</td>
                                                                                             </tr>
@@ -1065,14 +1126,14 @@
                                                                                             <tr>
                                                                                                 <td class="CaptionTd">Danışman Taahhüt</td>
                                                                                                 <td class="CaptionTd">:</td>
-                                                                                                <td class="ValueTd">Önerilen eş danışmanın tez izleme komite üyeleri arasında bulunmadığını kabul ediyorum.</td>
+                                                                                                <td class="ValueTd">Önerilen İkinci Danışmanın tez izleme komite üyeleri arasında bulunmadığını kabul ediyorum.</td>
                                                                                             </tr>
                                                                                             <tr>
-                                                                                                <td class="CaptionTd">Eş Danışman Öneri Formu</td>
+                                                                                                <td class="CaptionTd">İkinci Danışman Öneri Formu</td>
                                                                                                 <td class="CaptionTd">:</td>
                                                                                                 <td class="ValueTd">
-                                                                                                    <a href="javascript:void(0);" onclick="YeniDialogBB('Eş Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezEsDanismanOneriFormu&UniqueID=@itemE.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                                                        <i class="fa fa-print"></i> FR-0320 Eş Danışmanı Öneri Formunu İndir
+                                                                                                    <a href="javascript:void(0);" onclick="YeniDialogBB('İkinci Danışman Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.TezEsDanismanOneriFormu&UniqueID=@itemE.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                        <i class="fa fa-print"></i> FR-0320 İkinci Danışmanı Öneri Formunu İndir
                                                                                                     </a>
                                                                                                 </td>
                                                                                             </tr>
@@ -1292,7 +1353,7 @@
                                                     else
                                                     {
                                                         <tr>
-                                                            <td colspan="2" style="text-align:center;color:maroon;height:40px;">Tez Eş Danışman Önerisi Yapılmadı.</td>
+                                                            <td colspan="2" style="text-align:center;color:maroon;height:40px;">Tez İkinci Danışman Önerisi Yapılmadı.</td>
                                                         </tr>
                                                     }
                                                 </table>
@@ -1736,7 +1797,7 @@
     }
     function DetayEsDanismanSil(id, uniqueID, tarih) {
         Swal.fire({
-            text: tarih + " tarihli Eş Danışmanı öneri başvurusunu silmek istiyor musunuz?",
+            text: tarih + " tarihli İkinci Danışmanı öneri başvurusunu silmek istiyor musunuz?",
             type: 'warning',
             icon: "question",
             showCancelButton: true,

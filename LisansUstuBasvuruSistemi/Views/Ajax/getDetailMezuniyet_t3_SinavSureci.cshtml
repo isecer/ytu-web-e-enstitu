@@ -331,7 +331,7 @@
                                                                                                             <select id="ddlDavetResmiDurum_@item.SRTalepID"
                                                                                                                     class="form-control"
                                                                                                                     style="width: auto; display: inline-block;"
-                                                                                                                    onchange="SaveDavetResmiDurum(@item.SRTalepID)">
+                                                                                                                    onchange="SaveDavetResimDurum(@item.SRTalepID)">
                                                                                                                 <option value="1" @(item.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetProfilResmiyleGoster ? "selected" : "")>Daveti Profil Resmiyle Göster</option>
                                                                                                                 <option value="2" @(item.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetProfilResmiOlmadanGoster ? "selected" : "")>Daveti Profil Resmi Olmadan Göster</option>
                                                                                                                 <option value="3" @(item.DavetResmiGostermeDurum == SrDavetResmiGostermeDurumEnum.DavetResmiGosterme ? "selected" : "")>Davet Hiç Gösterme</option>
@@ -346,7 +346,7 @@
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <script>
-                                                                                                         function SaveDavetResmiDurum(id) {
+                                                                                                         function SaveDavetResimDurum(id) {
                                                                                                              var durumId = $('#ddlDavetResmiDurum_' + id).val();
                                                                                                              var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
                                                                                                              var loadingSpan = $('#davetResmiDurumLoading_' + id);

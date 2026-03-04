@@ -1,12 +1,13 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Business;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.Logs;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -170,8 +171,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     EykDaOnaylanmaTarihi = s.TDOBasvuruDanisman?.EYKDaOnaylandiOnayTarihi,
                     EsDanismanAdSoyad = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanismen.Any(s2 => s2.TDOBasvuruEsDanismen.Any()) ? (s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad) : "Danışman Yok",
                     EsDanismanOnayladi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.DanismanOnayladi.HasValue ? (s.DanismanOnayladi.Value ? "Danışman Onayladı" : "Danışman Onaylamadı") : "Danışman Onayı Bekleniyor") : "Danışman Yok",
-                    EsDanismanEYKYaGonderildi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Eş Danışman Yok",
-                    EsDanismanEYKDaOnaylandi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKDaOnaylandi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKDaOnaylandi.Value ? "EYK'da Onaylandı" : "EYK'da Onaylanmadı") : "EYK'da Onay işlemi Bekleniyor") : "Eş Danışman Yok",
+                    EsDanismanEYKYaGonderildi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "İkinci Danışman Yok",
+                    EsDanismanEYKDaOnaylandi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKDaOnaylandi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.First().EYKDaOnaylandi.Value ? "EYK'da Onaylandı" : "EYK'da Onaylanmadı") : "EYK'da Onay işlemi Bekleniyor") : "İkinci Danışman Yok",
 
                 }).ToList();
                 gv.DataBind();
@@ -213,7 +214,52 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipKodYuksekLisans(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             return View(model);
         }
+        [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
 
+        public ActionResult BasvuruProgramGuncelle(int id, string programKod)
+        {
+            var mmMessage = new MmMessage
+            {
+                Title = "Başvuru Programı Değişikliği İşlemi",
+                IsSuccess = true
+            };
+            if (!UserIdentity.Current.IsAdmin)
+            {
+                mmMessage.Messages.Add("Bu işlemi yapabilmek için Admin yetkisine sahip olmalısınız.");
+                mmMessage.IsSuccess = false;
+            }
+
+            if (mmMessage.IsSuccess)
+            {
+                var tdo = _entities.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == id);
+
+                if (tdo != null)
+                { 
+
+                    tdo.ProgramKod = programKod;
+
+
+
+                    _entities.SaveChanges();
+                    LogIslemleri.LogEkle("TDOBasvuru", LogCrudType.Update, tdo.ToJson());
+                    mmMessage.Messages.Add("Tez Danışman Başvurusunda Programram Güncellendi");
+                    mmMessage.IsSuccess = true;
+
+                }
+                else
+                {
+                    mmMessage.Messages.Add("İşlem yapmaya çalıştığınız mezuniyet başvurusu sistemde bulunamadı!");
+                    mmMessage.IsSuccess = false;
+                }
+            }
+
+            mmMessage.MessageType = mmMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
+            return new
+            {
+                mmMessage.IsSuccess,
+                MmMessage = mmMessage,
+            }.ToJsonResult();
+        }
         public ActionResult GetTutanakRaporu()
         {
             return View();
@@ -310,7 +356,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var data = qes.ToList().Select((s, inx) => new
                 {
                     SiraNo = inx + 1,
-                    EsDanismanOnerisi_EsDanısmanDegisikligi = s.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Önerisi",
+                    EsDanismanOnerisi_EsDanısmanDegisikligi = s.IsDegisiklikTalebi ? "İkinci Danışman Değişikliği" : "İkinci Danışman Önerisi",
                     s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
                     OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Kullanicilar.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Kullanicilar.Soyad,
                     OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
@@ -338,15 +384,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 // Sütunları tanımlayın ve başlıklarını belirleyin
                 gv.Columns.Add(new BoundField { DataField = "SiraNo", HeaderText = "Sıra No" });
-                gv.Columns.Add(new BoundField { DataField = "EsDanismanOnerisi_EsDanısmanDegisikligi", HeaderText = "Eş Danışman Önerisi / Değişikliği" });
+                gv.Columns.Add(new BoundField { DataField = "EsDanismanOnerisi_EsDanısmanDegisikligi", HeaderText = "İkinci Danışman Önerisi / Değişikliği" });
                 gv.Columns.Add(new BoundField { DataField = "OgrenciNo", HeaderText = "Öğrenci No" });
                 gv.Columns.Add(new BoundField { DataField = "OgrenciAdSoyad", HeaderText = "Öğrenci Ad Soyad" });
                 gv.Columns.Add(new BoundField { DataField = "OgrenciAnabilimDali", HeaderText = "Öğrenci Anabilim Dalı" });
                 gv.Columns.Add(new BoundField { DataField = "YL_DR", HeaderText = "YL_DR" });
                 gv.Columns.Add(new BoundField { DataField = "DanismanAdSoyad", HeaderText = "Danışman Ad Soyad" });
-                gv.Columns.Add(new BoundField { DataField = "EsDanismanOncekiAdSoyad", HeaderText = "Önceki Eş Danışman Ad Soyad" });
-                gv.Columns.Add(new BoundField { DataField = "EsDanismanAdSoyad", HeaderText = "Eş Danışman Ad Soyad" });
-                gv.Columns.Add(new BoundField { DataField = "EsDanismanKurumAdi", HeaderText = "Eş Danışman Kurum Adı" });
+                gv.Columns.Add(new BoundField { DataField = "EsDanismanOncekiAdSoyad", HeaderText = "Önceki İkinci Danışman Ad Soyad" });
+                gv.Columns.Add(new BoundField { DataField = "EsDanismanAdSoyad", HeaderText = "İkinci Danışman Ad Soyad" });
+                gv.Columns.Add(new BoundField { DataField = "EsDanismanKurumAdi", HeaderText = "İkinci Danışman Kurum Adı" });
 
                 gv.DataSource = data;
                 gv.DataBind();

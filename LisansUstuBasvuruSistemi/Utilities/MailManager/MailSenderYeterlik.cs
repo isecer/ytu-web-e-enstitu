@@ -233,6 +233,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MailManager
                                 GonderilenMailKullanicilars = item.GetGonderilenMailKullanicilaris
                             };
                             entities.GonderilenMaillers.Add(kModel);
+                            
                             komite.DegerlendirmeIslemTarihi = null;
                             komite.DegerlendirmeIslemYapanIP = null;
                             komite.DegerlendirmeYapanID = null;

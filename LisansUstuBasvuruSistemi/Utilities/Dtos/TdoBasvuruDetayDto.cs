@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Entities.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Entities.Entities;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
@@ -13,6 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ResimAdi { get; set; }
         public string OgrenciAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
+        public int AnabilimdaliID { get; set; } 
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
         public string KayitDonemi { get; set; }
@@ -31,6 +33,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsAnketVar { get; set; }
         public bool IsAnketDolduruldu { get; set; }
         public string AnketView { get; set; }
+        public SelectList OgrenciProgramList { get; set; }
     }
     public class TdoBasvuruDanismanDto : TDOBasvuruDanisman
     {

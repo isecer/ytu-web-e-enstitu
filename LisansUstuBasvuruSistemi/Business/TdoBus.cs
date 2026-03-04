@@ -209,6 +209,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = entities.OgrenimTipleris.First(p => p.EnstituKod == basvuru.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
                 var progLng = basvuru.Programlar;
+                model.AnabilimdaliID = progLng.AnabilimDaliID;
                 model.AnabilimdaliAdi = progLng.AnabilimDallari.AnabilimDaliAdi;
                 model.ProgramAdi = progLng.ProgramAdi;
                 model.OgrenimTipKod = basvuru.OgrenimTipKod;
@@ -237,8 +238,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 else if (tdoBasvuruId > 0 && !model.TDOBasvuruDanismanList.Any() && ogrenciBilgiUpdate.IsDanismanHesabiBulunamadi)
                 {
                     model.IsDanismanHesabiBulunamadi = true;
-                    model.BulunamayanDanismanAdSoyad = ogrenciBilgiUpdate.DanismanInfo.UNVAN_AD + " " + ogrenciBilgiUpdate.DanismanInfo.AD + " " +
-                                                       ogrenciBilgiUpdate.DanismanInfo.SOYAD;
+
+                    //model.BulunamayanDanismanAdSoyad = ogrenciBilgiUpdate.DanismanInfo?.AD+" "+ ogrenciBilgiUpdate.OgrenciInfo.DANISMAN_AD_SOYAD1;
                 }
 
                 foreach (var firstRow in model.TDOBasvuruDanismanList)

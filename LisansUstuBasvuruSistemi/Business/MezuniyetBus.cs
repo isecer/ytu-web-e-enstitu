@@ -650,6 +650,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.UyrukKod = basvuru.UyrukKod;
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = entities.OgrenimTipleris.First(p => p.EnstituKod == bsurec.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
+                model.AnabilimdaliID = basvuru.Programlar.AnabilimDaliID;
                 model.AnabilimdaliAdi = basvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
                 model.ProgramAdi = basvuru.Programlar.ProgramAdi;
                 model.OgrenimDurumID = basvuru.OgrenimDurumID;
@@ -1028,7 +1029,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (esDanismanVerileri.Any(a => a.IsNullOrWhiteSpace()))
                 {
 
-                    mmMessage.Messages.Add("Tez Eş Danışman bilgisi girilecekse eğer Eş Danışman Unvanı, Ad Soyad bilgisi ve Email bilgisinin tümü girilmelidir. Eğer girilmeyecekse bu bilgileri boş bırakınız.");
+                    mmMessage.Messages.Add("Tez İkinci Danışman bilgisi girilecekse eğer İkinci Danışman Unvanı, Ad Soyad bilgisi ve Email bilgisinin tümü girilmelidir. Eğer girilmeyecekse bu bilgileri boş bırakınız.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanUnvani" });
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanAdi" });
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanEMail" });
@@ -1038,7 +1039,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     if (!kModel.TezEsDanismanEMail.ToIsValidEmail())
                     {
-                        mmMessage.Messages.Add("Lütfen Eş danışman E-Posta Adresi bilgisini Uygun Formatta Giriniz.");
+                        mmMessage.Messages.Add("Lütfen İkinci Danışman E-Posta Adresi bilgisini Uygun Formatta Giriniz.");
                         mmMessage.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TezEsDanismanEMail" });
 
                     }

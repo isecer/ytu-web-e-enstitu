@@ -14,6 +14,46 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ValueConverterExtension
     {
+        public static string SmartMask(this string input, int minMaskChars = 3, char maskChar = '*')
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+            var s = input.Trim();
+            int len = s.Length;
+
+            minMaskChars = Math.Max(1, minMaskChars);
+
+            // len == 1
+            if (len == 1)
+                return new string(maskChar, Math.Max(3, minMaskChars));
+
+            int keepStart, keepEnd;
+
+            if (len >= 6)
+            {
+                keepStart = 2;
+                keepEnd = 2;
+            }
+            else if (len == 5)
+            {
+                keepStart = 1;
+                keepEnd = 1;
+            }
+            else // 2..4
+            {
+                keepStart = 1;
+                keepEnd = 0;
+            }
+
+            // Build masked string
+            var start = s.Substring(0, keepStart);
+            var end = keepEnd > 0 ? s.Substring(len - keepEnd, keepEnd) : string.Empty;
+
+            int middleLen = len - keepStart - keepEnd;
+            int maskLen = Math.Max(Math.Max(3, minMaskChars), middleLen);
+
+            return start + new string(maskChar, maskLen) + end;
+        }
         public static string ToLowerTurkish(this string str)
         {
             if (string.IsNullOrEmpty(str))

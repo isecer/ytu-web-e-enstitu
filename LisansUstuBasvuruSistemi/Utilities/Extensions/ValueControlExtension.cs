@@ -48,6 +48,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 
             return true;
         }
+       
         public static ObsDonemDto ParseObsDonem(this string donem)
         {
             var donemModel = new ObsDonemDto();

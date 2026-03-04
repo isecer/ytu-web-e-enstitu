@@ -102,7 +102,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     // Seçilen değer baz kod (ProgramKod ayıklanmış) ya da ProgramId olabilir
                     var obsProgram = obsProgramlar.FirstOrDefault(
-                        op => ProgramKodAyikla(op.ProgramKod) == secilenObsKod || op.ProgramId == secilenObsKod);
+                        op => ProgramKodAyikla(op.ProgramKod) == secilenObsKod);
 
                     if (obsProgram == null)
                     {

@@ -1181,7 +1181,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.SMezuniyetYayinKontrolDurum = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurum(false, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
             model.SeykYaGonderildi = new SelectList(ComboData.GetCmbEykGonderimDurumData(true, onayTarihi), "Value", "Caption", model.EykYaGonderildi);
             model.SeykDaOnaylandi = new SelectList(ComboData.GetCmbEykOnayDurumData(true), "Value", "Caption", model.EykDaOnaylandi);
-
+            model.OgrenciProgramList = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.ProgramKod, model.AnabilimdaliID), "Value", "Caption", model.ProgramKod);
             model.SIsAsilOryedek = new SelectList(ComboData.GetCmbAsilYedekDurumData(true), "Value", "Caption");
 
 
@@ -1212,6 +1212,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = TdoBus.GetSecilenBasvuruTdoDetay(id, uniqueId);
             ViewBag.ProgramKod = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
+            model.OgrenciProgramList = new SelectList(ProgramlarBus.CmbGetAktifProgramlar(model.ProgramKod, model.AnabilimdaliID), "Value", "Caption", model.ProgramKod);
             return View(model);
         }
         [HttpGet]
@@ -1224,7 +1225,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpGet]
         public ActionResult GetDetailKsBasvuru(Guid? uniqueId)
         {
-            var model = KayitSilmeBus.GetSecilenBasvuruDetay(uniqueId); 
+            var model = KayitSilmeBus.GetSecilenBasvuruDetay(uniqueId);
             return View(model);
         }
         public ActionResult SifreResetle(string mailAddress)
@@ -1419,7 +1420,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult SetAnket(KmAnketlerCevap kModel)
         {
-            var result=AnketlerBus.SetAnket(kModel);
+            var result = AnketlerBus.SetAnket(kModel);
             return result.ToJsonResult();
 
         }
@@ -1508,7 +1509,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-        [Authorize(Roles = RoleNames.MailGonder),ValidateInput(false)] 
+        [Authorize(Roles = RoleNames.MailGonder), ValidateInput(false)]
         public ActionResult MailGonder(KmMailGonder model, string ekd = "")
         {
             model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
@@ -1531,7 +1532,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = new MmMessage();
 
             return View(model);
-        } 
+        }
 
 
 
@@ -1905,7 +1906,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var chunk = kullaniciIDleri.Skip(count).Take(1500).ToList();
                         var kullanicilar = _entities.Kullanicilars
                             .Where(s => chunk.Contains(s.KullaniciID))
-                            .Select(s => new {
+                            .Select(s => new
+                            {
                                 Email = s.EMail,
                                 eklenenGonderilenMail.GonderilenMailID,
                                 s.KullaniciID
@@ -1947,7 +1949,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var chunk = kullaniciIDleriBcc.Skip(count).Take(1500).ToList();
                         var kullanicilar = _entities.Kullanicilars
                             .Where(s => chunk.Contains(s.KullaniciID))
-                            .Select(s => new {
+                            .Select(s => new
+                            {
                                 Email = s.EMail,
                                 eklenenGonderilenMail.GonderilenMailID,
                                 s.KullaniciID
@@ -1961,13 +1964,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         Email = ((dynamic)x).Email,
                         GonderilenMailID = ((dynamic)x).GonderilenMailID,
-                        KullaniciID = ((dynamic)x).KullaniciID 
+                        KullaniciID = ((dynamic)x).KullaniciID
                     }));
 
                     gonderilenMailKullanicilariBcc.AddRange(emailAdresleri.Select(email => new GonderilenMailKullanicilar
                     {
                         Email = email,
-                        GonderilenMailID = eklenenGonderilenMail.GonderilenMailID 
+                        GonderilenMailID = eklenenGonderilenMail.GonderilenMailID
                     }));
                 }
 
@@ -1998,7 +2001,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mailGonderimListeleri.Add(key, emailListesi.Take(500).Select(email => new MailSendList
                     {
-                        EMail = email 
+                        EMail = email
                     }).ToList());
 
                     emailListesi = emailListesi.Skip(500).ToList();
@@ -2487,7 +2490,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
         public ActionResult GetFilteredPersonel(string term)
-        { 
+        {
             return KullanicilarBus.GetFilterPersonelJsonResult(term);
         }
         [Authorize]
@@ -3392,7 +3395,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     var rpr = new RprKayitSilmeTalepFormu_FR_0000(rapor.KayitSilmeBasvuruID);
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName; 
+                    rpr.DisplayName = rpr.DisplayName;
                     rprX = rpr;
                 }
             }

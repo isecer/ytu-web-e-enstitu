@@ -32,44 +32,44 @@
         position: relative;
     }
 
-        .profile-card .panel-refresh {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            background: rgba(248, 249, 250, 0.95) !important;
-            border-radius: 8px !important;
-            z-index: 10 !important;
-        }
+    .profile-card .panel-refresh {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: rgba(248, 249, 250, 0.95) !important;
+        border-radius: 8px !important;
+        z-index: 10 !important;
+    }
 
-        .profile-card .preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,.12);
-            background: #fff;
-        }
+    .profile-card .preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,.12);
+        background: #fff;
+    }
 
-            .profile-card .preview img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+    .profile-card .preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-        .profile-card .actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+    .profile-card .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
     .btn-soft {
         display: inline-flex;
@@ -86,9 +86,9 @@
         transition: all .2s ease;
     }
 
-        .btn-soft:hover {
-            background: #0056b3;
-        }
+    .btn-soft:hover {
+        background: #0056b3;
+    }
 
     .btn-rotate {
         display: inline-flex;
@@ -105,10 +105,10 @@
         transition: all .2s ease;
     }
 
-        .btn-rotate:hover {
-            background: #6c757d;
-            color: #fff;
-        }
+    .btn-rotate:hover {
+        background: #6c757d;
+        color: #fff;
+    }
 
     .ytuOgrenciAlanlari {
         display: none;
@@ -126,10 +126,10 @@
             padding: 18px 12px;
         }
 
-            .profile-card .preview {
-                width: 90px;
-                height: 90px;
-            }
+        .profile-card .preview {
+            width: 90px;
+            height: 90px;
+        }
     }
 </style>
 
@@ -218,8 +218,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-
-                                        <!-- YTÜ Öğrencisi Seçimi -->
+                                         
                                         <tr>
                                             <td width="140">YTÜ Öğrencisi Misiniz?</td>
                                             <td width="10">:</td>
@@ -227,19 +226,16 @@
                                                 <select class="form-control" id="YtuOgrencisi" name="YtuOgrencisi" onchange="ytuOgrKontrol()">
                                                     <option value="false" @((!Model.YtuOgrencisi).ToSelected())>Hayır</option>
                                                     <option value="true" @Model.YtuOgrencisi.ToSelected()>Evet</option>
-                                                </select> 
+                                                </select>
                                             </td>
                                         </tr>
-
-                                        <!-- ========== YTÜ ÖĞRENCİSİ = EVET İSE GÖZÜKECEKLER ========== -->
+                                         
                                         <tr class="ytuOgrenciAlanlari" style="@(Model.YtuOgrencisi ? "" : "display:none;")">
-                                            <td colspan="3">
-                                                <!-- Ayırıcı çizgi -->
+                                            <td colspan="3"> 
                                                 <div style="border-top:1px dashed #dee2e6; margin:15px 0;"></div>
 
                                                 <table style="width:100%;">
-                                                    <tbody>
-                                                        <!-- Bilgilendirme -->
+                                                    <tbody> 
                                                         <tr>
                                                             <td colspan="3">
                                                                 <div id="dogrulamaBilgi" style="background:#e8f4f8; border-left:4px solid #17a2b8; padding:12px; margin-bottom:15px; border-radius:4px; @(dogrulanmisMi ? "display:none;" : "")">
@@ -252,11 +248,10 @@
                                                                         <li>Doğrulama sonrası tüm bilgileriniz (Ad, Soyad, E-posta, Telefon, Öğrenim Bilgileri) <strong>otomatik olarak</strong> sisteme aktarılacaktır.</li>
                                                                         <li>Son olarak <strong>sayfanın altındaki "Kaydet" butonuna</strong> tıklayarak kaydınızı tamamlayınız.</li>
                                                                     </ol>
-                                                                </div> 
+                                                                </div>
                                                             </td>
                                                         </tr>
-
-                                                        <!-- TC Kimlik No (YTÜ Öğrencisi Evet ise buraya) -->
+                                                         
                                                         <tr>
                                                             <td width="140">T.C. Kimlik No</td>
                                                             <td width="10">:</td>
@@ -266,8 +261,7 @@
                                                                        @(dogrulanmisMi ? "readonly style='background-color:#f5f5f5;'" : "")>
                                                             </td>
                                                         </tr>
-
-                                                        <!-- Öğrenci No -->
+                                                         
                                                         <tr>
                                                             <td width="140">Öğrenci No</td>
                                                             <td width="10">:</td>
@@ -277,8 +271,7 @@
                                                                        @(dogrulanmisMi ? "readonly style='background-color:#f5f5f5;'" : "")>
                                                             </td>
                                                         </tr>
-
-                                                        <!-- Doğrulama Butonu -->
+                                                         
                                                         <tr id="dogrulamaButonRow" style="@(dogrulanmisMi ? "display:none;" : "")">
                                                             <td></td>
                                                             <td></td>
@@ -296,13 +289,30 @@
                                                                         <i class="fa fa-exclamation-triangle"></i> <strong>Doğrulama Hatası</strong><br>
                                                                         <small id="dogrulamaHataMesaj"></small>
                                                                     </div>
+                                                                    @*<button type="button" id="btnMesajGonder" class="btn btn-info" onclick="EnstMesGonder()" style="width:100%; margin-bottom:10px;">
+                                                                        <i class="fa fa-check-circle"></i> Enstitüye Bildir
+                                                                    </button>
+                                                                    <script>
+                                                                        function EnstMesGonder() {
+                                                                            var enstituKod = $('#EnstituKod').val();
+
+                                                                            var enstituKisaAd =
+                                                                                enstituKod == '@EnstituKodlariEnum.FenBilimleri' ? 'fbe' :
+                                                                                    enstituKod == '@EnstituKodlariEnum.SosyalBilimleri' ? 'sbe' :
+                                                                                        'tet';
+
+                                                                            var url = 'https://e-enstitu.yildiz.edu.tr/' + enstituKisaAd + '?ismesajgonder=true';
+
+                                                                            window.open(url, '_blank');
+                                                                        }
+                                                                    </script>*@
+
                                                                 </div>
 
                                                                 <input type="hidden" id="ogrenciDogrulandiMi" value="@(dogrulanmisMi ? "true" : "false")">
                                                             </td>
                                                         </tr>
-
-                                                        <!-- Doğrulama Kodu -->
+                                                         
                                                         <tr id="dogrulamaKoduRow" style="display:none;">
                                                             <td>Doğrulama Kodu</td>
                                                             <td>:</td>
@@ -334,15 +344,13 @@
                                                 </table>
                                             </td>
                                         </tr>
-
-                                        <!-- ========== AYIRICI ÇİZGİ ========== -->
+                                         
                                         <tr id="kimlikAyirici">
                                             <td colspan="3">
                                                 <div style="border-top:1px dashed #dee2e6; margin:15px 0;"></div>
                                             </td>
                                         </tr>
-
-                                        <!-- TC KİMLİK (YTÜ Hayır ise buraya) -->
+                                         
                                         <tr id="tcKimlikRow" style="@(Model.YtuOgrencisi ? "display:none;" : "")">
                                             <td width="140">T.C. Kimlik No</td>
                                             <td width="10">:</td>
@@ -353,8 +361,7 @@
                                         </tr>
 
                                         @if (dogrulanmisMi && Model.YtuOgrencisi)
-                                        {
-                                            <!-- SADECE YTÜ Öğrencisi EVET ve doğrulanmışsa readonly -->
+                                        { 
                                             <tr class="obsReadonlyField">
                                                 <td>Ad</td>
                                                 <td>:</td>
@@ -377,8 +384,7 @@
                                                     @Html.Hidden("CinsiyetID_Hidden", Model.CinsiyetID)
                                                 </td>
                                             </tr>
-
-                                            <!-- Öğrenim Bilgileri (Doğrulanmışsa göster) -->
+                                             
                                             <tr>
                                                 <td colspan="3">
                                                     <div style="border-top:1px dashed #dee2e6; margin:15px 0;"></div>
@@ -442,29 +448,28 @@
                                             </tr>
                                         }
                                         else if (!Model.YtuOgrencisi || !isOgrenci)
-                                        {
-                                        <!-- YTÜ Öğrencisi HAYIR ise VEYA Personel ise → Her zaman değiştirilebilir -->
-                                        <tr class="normalInput">
-                                            <td>Ad</td>
-                                            <td>:</td>
-                                            <td class="form-group">
-                                                <input type="text" name="Ad" id="Ad" value="@Model.Ad" class="form-control UpperTextTr">
-                                            </td>
-                                        </tr>
-                                        <tr class="normalInput">
-                                            <td>Soyad</td>
-                                            <td>:</td>
-                                            <td class="form-group">
-                                                <input type="text" name="Soyad" id="Soyad" value="@Model.Soyad" class="form-control UpperTextTr">
-                                            </td>
-                                        </tr>
-                                        <tr class="normalInput">
-                                            <td>Cinsiyet</td>
-                                            <td>:</td>
-                                            <td class="form-group">
-                                                @Html.DropDownList("CinsiyetID", null, new { @class = "form-control" })
-                                            </td>
-                                        </tr>
+                                        { 
+                                            <tr class="normalInput">
+                                                <td>Ad</td>
+                                                <td>:</td>
+                                                <td class="form-group">
+                                                    <input type="text" name="Ad" id="Ad" value="@Model.Ad" class="form-control UpperTextTr">
+                                                </td>
+                                            </tr>
+                                            <tr class="normalInput">
+                                                <td>Soyad</td>
+                                                <td>:</td>
+                                                <td class="form-group">
+                                                    <input type="text" name="Soyad" id="Soyad" value="@Model.Soyad" class="form-control UpperTextTr">
+                                                </td>
+                                            </tr>
+                                            <tr class="normalInput">
+                                                <td>Cinsiyet</td>
+                                                <td>:</td>
+                                                <td class="form-group">
+                                                    @Html.DropDownList("CinsiyetID", null, new { @class = "form-control" })
+                                                </td>
+                                            </tr>
                                         }
                                     </tbody>
                                 </table>
@@ -473,8 +478,7 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- 4. PERSONEL BİLGİLERİ (Sadece Kurum İçi) -->
+             
             <div id="personelBilgi" class="widget widget-default cKayitGrup @(Model.KullaniciID>0 && isKurumIci ?"":"hide")"
                  style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                 <table style="width:100%;">
@@ -523,8 +527,7 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- 5. İLETİŞİM BİLGİLERİ -->
+             
             <div class="widget widget-default cKayitGrup @(Model.KullaniciID>0?"":"hide")"
                  style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                 <table style="width:100%;">
@@ -539,62 +542,62 @@
                                 <table style="width:100%;">
                                     <tbody>
                                         @*@if (dogrulanmisMi || (!isOgrenci && !Model.YtuOgrencisi))
-                                        { 
-                                            <tr>
-                                                <td width="140">E-Posta</td>
-                                                <td width="10">:</td>
-                                                <td class="form-group">
-                                                    <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control"> 
-                                                 
-                                                        <small  id="emailNote" style="display:block; margin-top:5px; color:#17a2b8;"> 
-                                                        </small>
-                                                    
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Cep Telefonu</td>
-                                                <td>:</td>
-                                                <td class="form-group">
-                                                    <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel"
-                                                           placeholder="05XXXXXXXXX" class="form-control">
-                                                </td>
-                                            </tr>
-                                            <tr id="adresRow" style="@(isKurumIci ? "display:none;" : "")">
-                                                <td>Açık Adres</td>
-                                                <td>:</td>
-                                                <td class="form-group">
-                                                    <input type="text" name="Adres" id="Adres" value="@Model.Adres"
-                                                           class="form-control UpperTextTr">
-                                                </td>
-                                            </tr>
-                                        }
-                                        else
-                                        {*@
-                                            <tr>
-                                                <td width="140">E-Posta</td>
-                                                <td width="10">:</td>
-                                                <td class="form-group">
-                                                    <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control"> 
-                                                    <small  id="emailNote" style="display:block; margin-top:5px; color:#17a2b8;"> 
-                                                    </small>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Cep Telefonu</td>
-                                                <td>:</td>
-                                                <td class="form-group">
-                                                    <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel"
-                                                           placeholder="05XXXXXXXXX" class="form-control">
-                                                </td>
-                                            </tr>
-                                            <tr id="adresRow" style="@(isKurumIci ? "display:none;" : "")">
-                                                <td>Açık Adres</td>
-                                                <td>:</td>
-                                                <td class="form-group">
-                                                    <input type="text" name="Adres" id="Adres" value="@Model.Adres"
-                                                           class="form-control UpperTextTr">
-                                                </td>
-                                            </tr>
+                                            {
+                                                <tr>
+                                                    <td width="140">E-Posta</td>
+                                                    <td width="10">:</td>
+                                                    <td class="form-group">
+                                                        <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control">
+
+                                                            <small  id="emailNote" style="display:block; margin-top:5px; color:#17a2b8;">
+                                                            </small>
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Cep Telefonu</td>
+                                                    <td>:</td>
+                                                    <td class="form-group">
+                                                        <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel"
+                                                               placeholder="05XXXXXXXXX" class="form-control">
+                                                    </td>
+                                                </tr>
+                                                <tr id="adresRow" style="@(isKurumIci ? "display:none;" : "")">
+                                                    <td>Açık Adres</td>
+                                                    <td>:</td>
+                                                    <td class="form-group">
+                                                        <input type="text" name="Adres" id="Adres" value="@Model.Adres"
+                                                               class="form-control UpperTextTr">
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else
+                                            {*@
+                                        <tr>
+                                            <td width="140">E-Posta</td>
+                                            <td width="10">:</td>
+                                            <td class="form-group">
+                                                <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control">
+                                                <small id="emailNote" style="display:block; margin-top:5px; color:#17a2b8;">
+                                                </small>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cep Telefonu</td>
+                                            <td>:</td>
+                                            <td class="form-group">
+                                                <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel"
+                                                       placeholder="05XXXXXXXXX" class="form-control">
+                                            </td>
+                                        </tr>
+                                        <tr id="adresRow" style="@(isKurumIci ? "display:none;" : "")">
+                                            <td>Açık Adres</td>
+                                            <td>:</td>
+                                            <td class="form-group">
+                                                <input type="text" name="Adres" id="Adres" value="@Model.Adres"
+                                                       class="form-control UpperTextTr">
+                                            </td>
+                                        </tr>
                                         @*}*@
                                     </tbody>
                                 </table>
@@ -603,8 +606,7 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- 6. KULLANICI HESABI (Sadece yetkili için) -->
+             
             @if (kullaniciYetki)
             {
                 <div class="widget widget-default cKayitGrup"
@@ -707,9 +709,9 @@
         $(inx).attr('autocomplete', 'off');
     });
     $("#CepTel").on('input', function () {
-        this.value = this.value.replace(/\D/g, '');  
+        this.value = this.value.replace(/\D/g, '');
         if (this.value.length > 11) {
-            this.value = this.value.substr(0, 11);  
+            this.value = this.value.substr(0, 11);
         }
     });
 
@@ -742,10 +744,10 @@
 
                 if (isOgrenciTip) {
                     $('#YtuOgrencisi').val('true');
-                    $('#YtuOgrencisi').prop('disabled', true).css('background-color', '#f5f5f5'); 
+                    $('#YtuOgrencisi').prop('disabled', true).css('background-color', '#f5f5f5');
                     ytuOgrKontrol();
                 } else {
-                    $('#YtuOgrencisi').prop('disabled', false).css('background-color', '#fff'); 
+                    $('#YtuOgrencisi').prop('disabled', false).css('background-color', '#fff');
                 }
 
                 if (result.KurumIci) {
@@ -1111,7 +1113,7 @@
                     if ($('#emailNote').length) {
                         $('#emailNote').html('<i class="fa fa-info-circle"></i> OBS\'den gelen: ' + data.EMail + ' (İsterseniz değiştirebilirsiniz)').show();
                     }
-                     
+
                     if (data.CepTel && data.CepTel.trim() !== '') {
                         var clean = data.CepTel.trim().replace(/\D/g, '');
                         if (clean.length === 10) clean = '0' + clean;
@@ -1209,7 +1211,7 @@
         $('#ogrenciDogrulandiMi').val('false');
 
         $('#TcKimlikNo').prop('readonly', false).css('background-color', '#fff').val('');
-        $('#OgrenciNo').prop('readonly', false).css('background-color', '#fff').val(''); 
+        $('#OgrenciNo').prop('readonly', false).css('background-color', '#fff').val('');
 
         // Butonu gizle
         $('#ogrenciBilgiGuncelleRow').hide();

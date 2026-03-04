@@ -86,13 +86,13 @@
                             if (Model.AktifEsDurumID == TdoDansimanDurumuEnum.EykYaHazirlandi)
                             {
                                 <li>
-                                    <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnayEs()" title="EYK'ya hazırlanmış olan Eş Danışman başvurularını Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0);" class="topluOnay" onclick="EYKDaOnayEs()" title="EYK'ya hazırlanmış olan İkinci Danışman başvurularını Eyk'da onaylandı olarak güncelle"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
                                     <script>
 
                                         function EYKDaOnayEs() {
                                             var btbx = bootbox.dialog({
-                                                message: "Listelenen @Model.SelectedTdoBasvuruEsDanismanIds.Count() adet EYK'ya hazırlanmış olup EYK'da onay işlemi bekleyen</b> Eş Danışman formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
-                                                title: "Eş Danışman Toplu EYK'da onaylama işlemi",
+                                                message: "Listelenen @Model.SelectedTdoBasvuruEsDanismanIds.Count() adet EYK'ya hazırlanmış olup EYK'da onay işlemi bekleyen</b> İkinci Danışman formlarını <b>EYK'da onaylandı</b> olarak güncellemek istiyor musunuz?<br>Not: bu işlem onaylanan başvuru sayısına göre uzun sürebilir.",
+                                                title: "İkinci Danışman Toplu EYK'da onaylama işlemi",
                                                 buttons: {
                                                     success: {
                                                         label: "Onayla",
@@ -110,7 +110,7 @@
                                                                 data: { selectedTdoBasvuruEsDanismanIds },
                                                                 success: function (result) {
                                                                     PanelRefresh(_panel, true);
-                                                                    toastr["info"](result.Count + " adet Eş Danışman başvurusu eyk'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
+                                                                    toastr["info"](result.Count + " adet İkinci Danışman başvurusu eyk'da onaylandı olarak güncellendi.", "Toplu Onaylama İşlemi Tamamlandı");
                                                                     $(btbx).find('.close').first().click();
                                                                 },
                                                                 error: function (err) {
@@ -276,7 +276,7 @@
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="160">Başvuru Durumu Eş Danışman</td>
+                                            <td width="160">Başvuru Durumu İkinci Danışman</td>
                                             <td>
                                                 @Html.DropDownList("AktifEsDurumID", null, new { @class = "form-control" })
                                             </td>

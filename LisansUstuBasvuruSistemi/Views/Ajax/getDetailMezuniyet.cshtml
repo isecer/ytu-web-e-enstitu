@@ -1,4 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -14,6 +15,7 @@
 
 
     bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi;
+    bool programDegisiklikYetki = UserIdentity.Current.IsAdmin && RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
     var tbName = TabAdiEnum.MezuniyetBasvurulariTn + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID + "_cp" : Model.MezuniyetBasvurulariID.ToString());
     var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalariDtos.Any(a => a.IsOnaylandiOrDuzeltme == true);
     var bezCiltForm = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
@@ -132,7 +134,66 @@
                                     <tr>
                                         <td>Program</td>
                                         <td>:</td>
-                                        <td>@Model.AnabilimdaliAdi / @Model.ProgramAdi</td>
+                                        <td>
+                                            <table style="width:100%;table-layout:fixed;">
+                                                <tr>
+                                                    <td id="prgLbl_@Model.MezuniyetBasvurulariID">
+                                                        @Model.AnabilimdaliAdi / @Model.ProgramAdi
+                                                    </td>
+                                                    <td id="prgInp_@Model.MezuniyetBasvurulariID" class="hide">
+                                                        @Html.DropDownList("InpProgram_" + Model.MezuniyetBasvurulariID,
+                                                            Model.OgrenciProgramList,
+                                                            new { @class = "form-control" })
+                                                    </td>
+
+                                                    @if (programDegisiklikYetki)
+                                                    {
+                                                        <td width="25" style="text-align:right;font-size:10pt;">
+                                                            <a href="javascript:void(0)" onclick="ShowProgramEdit(@Model.MezuniyetBasvurulariID,this)">
+                                                                <i class="fa fa-edit fa-lg" title="Program Düzenle"></i>
+                                                            </a>
+                                                            <script>
+                                                                function ShowProgramEdit(id, sndr) {
+                                                                    if ($('#prgLbl_' + id).hasClass('hide')) {
+                                                                        $('#prgLbl_' + id).removeClass('hide');
+                                                                        $('#prgInp_' + id).addClass('hide');
+                                                                        $('#prgSv_' + id).addClass('hide');
+                                                                    }
+                                                                    else {
+                                                                        $('#prgLbl_' + id).addClass('hide');
+                                                                        $('#prgInp_' + id).removeClass('hide');
+                                                                        $('#prgSv_' + id).removeClass('hide');
+                                                                    }
+                                                                }
+                                                            </script>
+                                                        </td>
+                                                        <td id="prgSv_@Model.MezuniyetBasvurulariID" width="25" style="text-align:right;font-size:10pt;" class="hide">
+                                                            <a href="javascript:void(0)" onclick="SaveProgram(@Model.MezuniyetBasvurulariID,this)">
+                                                                <i class="fa fa-save fa-lg" title="Program Kaydet"></i>
+                                                            </a>
+                                                            <script>
+                                                                function SaveProgram(id, sndr) {
+                                                                    var val = $('#InpProgram_' + id).val();
+                                                                    $.ajax({
+                                                                        url: '@Url.Action("BasvuruProgramGuncelle", "MezuniyetGelenBasvurular")',
+                                                                        data: { 'id': id, 'ProgramKod': val },
+                                                                        success: function (result) {
+                                                                            GetMsg(result.MmMessage);
+                                                                            if (result.IsSuccess) {
+                                                                                GetDetailx(id);
+                                                                            }
+                                                                        },
+                                                                        error: function (err) {
+                                                                            alert(err.responseText);
+                                                                        }
+                                                                    });
+                                                                }
+                                                            </script>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            </table>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Kayıt Tarihi</td>

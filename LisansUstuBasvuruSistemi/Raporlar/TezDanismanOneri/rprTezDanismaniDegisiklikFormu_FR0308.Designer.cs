@@ -470,6 +470,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell150 = new DevExpress.XtraReports.UI.XRTableCell();
             this.DetailReport8 = new DevExpress.XtraReports.UI.DetailReportBand();
             this.Detail9 = new DevExpress.XtraReports.UI.DetailBand();
+            this.xrRichKaraBigi = new DevExpress.XtraReports.UI.XRRichText();
             this.xrTable60 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow152 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell190 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -483,7 +484,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableRow155 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell193 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrRichText1 = new DevExpress.XtraReports.UI.XRRichText();
-            this.xrRichKaraBigi = new DevExpress.XtraReports.UI.XRRichText();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable6)).BeginInit();
@@ -541,10 +541,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             ((System.ComponentModel.ISupportInitialize)(this.xrTable50)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable49)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable45)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable60)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable61)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -5130,6 +5130,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTable45});
             this.Detail8.HeightF = 149.5352F;
             this.Detail8.Name = "Detail8";
+            this.Detail8.PageBreak = DevExpress.XtraReports.UI.PageBreak.BeforeBand;
             // 
             // xrTable46
             // 
@@ -5721,6 +5722,20 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.Detail9.HeightF = 79.22751F;
             this.Detail9.Name = "Detail9";
             // 
+            // xrRichKaraBigi
+            // 
+            this.xrRichKaraBigi.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
+            | DevExpress.XtraPrinting.BorderSide.Bottom)));
+            this.xrRichKaraBigi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 6.4F);
+            this.xrRichKaraBigi.LocationFloat = new DevExpress.Utils.PointFloat(0F, 27.77786F);
+            this.xrRichKaraBigi.Name = "xrRichKaraBigi";
+            this.xrRichKaraBigi.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 0, 0, 0, 100F);
+            this.xrRichKaraBigi.SerializableRtfString = resources.GetString("xrRichKaraBigi.SerializableRtfString");
+            this.xrRichKaraBigi.SizeF = new System.Drawing.SizeF(750F, 51.44965F);
+            this.xrRichKaraBigi.StylePriority.UseBorders = false;
+            this.xrRichKaraBigi.StylePriority.UseFont = false;
+            this.xrRichKaraBigi.StylePriority.UsePadding = false;
+            // 
             // xrTable60
             // 
             this.xrTable60.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(198)))), ((int)(((byte)(231)))));
@@ -5871,20 +5886,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrRichText1.StylePriority.UseFont = false;
             this.xrRichText1.StylePriority.UsePadding = false;
             // 
-            // xrRichKaraBigi
-            // 
-            this.xrRichKaraBigi.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
-            | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrRichKaraBigi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 6.4F);
-            this.xrRichKaraBigi.LocationFloat = new DevExpress.Utils.PointFloat(0F, 27.77786F);
-            this.xrRichKaraBigi.Name = "xrRichKaraBigi";
-            this.xrRichKaraBigi.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 0, 0, 0, 100F);
-            this.xrRichKaraBigi.SerializableRtfString = resources.GetString("xrRichKaraBigi.SerializableRtfString");
-            this.xrRichKaraBigi.SizeF = new System.Drawing.SizeF(750F, 51.44965F);
-            this.xrRichKaraBigi.StylePriority.UseBorders = false;
-            this.xrRichKaraBigi.StylePriority.UseFont = false;
-            this.xrRichKaraBigi.StylePriority.UsePadding = false;
-            // 
             // RprTezDanismaniDegisiklikFormu_FR0308
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -5964,10 +5965,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             ((System.ComponentModel.ISupportInitialize)(this.xrTable50)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable49)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable45)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable60)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable61)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }

@@ -190,23 +190,24 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-md-3 col-xs-2 control-label">Tez Eş Danışmanı / E-Posta</label>
+                                                    <label class="col-md-3 col-xs-2 control-label">Tez İkinci Danışmanı / E-Posta</label>
                                                     <div class="col-md-9 col-xs-10">
                                                         <table style="width:100%;">
                                                             <tr>
                                                                 <td width="110">
                                                                     <div class="form-group">
-                                                                        @Html.DropDownList("TezEsDanismanUnvani", null, new { id = "TezEsDanismanUnvani", @class = "form-control" })
+                                                                         <input type="text" name="TezEsDanismanUnvani" id="TezEsDanismanUnvani" readonly="readonly" maxlength="200" value="@((Model.TezEsDanismanUnvani??"").ToUpper())" class="form-control" style="color:black;" />
+
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group"> 
+                                                                        <input type="text" name="TezEsDanismanAdi" id="TezEsDanismanAdi" readonly="readonly" maxlength="200" value="@((Model.TezEsDanismanAdi??"").ToUpper())" class="form-control" style="color:black;" />
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-group">
-                                                                        <input type="text" name="TezEsDanismanAdi" id="TezEsDanismanAdi" maxlength="200" value="@Model.TezEsDanismanAdi" title="(Eş danışman Adı) Eş Danışman yoksa boş bırakınız" class="form-control" />
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="form-group">
-                                                                        <input type="text" name="TezEsDanismanEMail" id="TezEsDanismanEMail" maxlength="120" value="@Model.TezEsDanismanEMail" title="(E Posta) Eş danışman bilgisi yoksa boş bırakınız" class="form-control" />
+                                                                        <input type="text" name="TezEsDanismanEMail" id="TezEsDanismanEMail" @(Model.TezEsDanismanAdi.IsNullOrWhiteSpace()?"readonly=readonly":"") maxlength="120" value="@Model.TezEsDanismanEMail" title="(E Posta) İkinci Danışman bilgisi yoksa boş bırakınız" placeholder="E-Posta" class="form-control" />
                                                                     </div>
                                                                 </td>
                                                             </tr>

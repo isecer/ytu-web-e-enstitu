@@ -209,7 +209,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                                 {
                                     model.BasvuruKontrolBilgi.IsBasvuruAcik = false;
-                                    model.BasvuruKontrolBilgi.Aciklama = "Adınıza ait yapılan bir Tez Eş Danışman başvurunuz bulunmakta. Jüri önerisi yapılabilmesi için Eş Danışman sürecinin tamamlanması gerekmektedir.";
+                                    model.BasvuruKontrolBilgi.Aciklama = "Adınıza ait yapılan bir Tez İkinci Danışman başvurunuz bulunmakta. Jüri önerisi yapılabilmesi için İkinci Danışman sürecinin tamamlanması gerekmektedir.";
                                 }
                                 else
                                 {
