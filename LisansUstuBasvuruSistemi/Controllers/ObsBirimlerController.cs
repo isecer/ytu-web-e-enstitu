@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData.Models;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

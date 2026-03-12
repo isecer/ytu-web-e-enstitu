@@ -25,8 +25,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
             return Index(new FmKayitSilmeBasvuruDto() { PageSize = 50, ShowBasvuruUniqueId = showBasvuruUniqueId }, ekd);
-        }
-        [AllowAnonymous]
+        } 
         [HttpPost]
         public ActionResult Index(FmKayitSilmeBasvuruDto model, string ekd)
         {

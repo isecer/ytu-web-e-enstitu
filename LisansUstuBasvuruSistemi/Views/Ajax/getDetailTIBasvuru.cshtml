@@ -571,7 +571,7 @@
                                                             var openRow = (isDanismani && isTezDanismani);
                                                             var openDegerlendirme = (inxRw == 1 || Model.IsGecmisDegerlendirilebilsin) && srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.IsBasarili.HasValue) || degerlendirmeDuzeltmeYetki);
                                                             var sendLink = inxRw == 1 && srTalebiYapildi && (isDanismani && !isTezDanismani && item.TIBasvuruAraRaporKomites.Count != item.TIBasvuruAraRaporKomites.Count(c => c.IsBasarili.HasValue) || (degerlendirmeDuzeltmeYetki));
-
+                                                            var isDegerlendirmeGormeyetki = degerlendirmeYetki || degerlendirmeDuzeltmeYetki;
                                                             <tr>
                                                                 <td>
 
@@ -591,7 +591,7 @@
                                                                     <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                                                 </td>
                                                                 <td>
-                                                                    @if (isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
+                                                                    @if (isDegerlendirmeGormeyetki)
                                                                     {
                                                                         if (!srTalebiYapildi)
                                                                         {
@@ -664,7 +664,7 @@
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
-                                                                    @if (isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
+                                                                    @if (isDegerlendirmeGormeyetki)
                                                                     {
                                                                         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                             <table style="width:100%;">

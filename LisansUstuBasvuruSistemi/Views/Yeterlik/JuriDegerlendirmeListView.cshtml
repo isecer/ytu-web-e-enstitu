@@ -13,6 +13,8 @@
     var juriler = Model.YeterlikBasvuruJuriUyeleris.Where(p => p.IsSecilenJuri).ToList();
     var tumJuriOnayladi = juriler.All(a => a.IsSonucOnaylandi.HasValue);
     var isDegerlendirmeAcik = (Model.IsYaziliSinavBasarili == false || Model.IsYaziliSinavinaKatildi == false || Model.IsSozluSinavinaKatildi.HasValue);
+    var isDegerlendirmeGormeyetki = isYetkili || isDanismani || raporYetkisi;
+
 
 }
 
@@ -63,7 +65,7 @@
                                         @itemJr.AdSoyad<br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                     </td>
                                     <td>
-                                        @(isDegerlendirmeAcik? itemJr.ToJuriOnayDurumView():new HtmlString(""))
+                                        @(isDegerlendirmeAcik && isDegerlendirmeGormeyetki ? itemJr.ToJuriOnayDurumView():new HtmlString(""))
                                     </td>
                                     <td>
                                         @if (isYetkili || isDanismani)
@@ -81,7 +83,7 @@
                                         }
                                     </td>
                                 </tr>
-                                if (isDegerlendirmeAcik)
+                                if (isDegerlendirmeAcik && isDegerlendirmeGormeyetki)
                                 {
                                     <tr class="MainRow2 cls-Jr_@itemJr.UniqueID" style="@(openRow ? "" : "display:none;")">
                                         <td id="cls-Jr_@itemJr.UniqueID" colspan="5" style="padding: 1px 1px 2px 50px;">

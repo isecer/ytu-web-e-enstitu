@@ -102,7 +102,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 UserName = userName,
                 Password = password
             };
-            rememberMe = rememberMe ?? false;
 
             Kullanicilar loginUser = null;
             string hata = null;
@@ -214,7 +213,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         TdoBus.ObsDanismanBasvuruBilgiEslestir(loginUser.KullaniciID, tdoBasvuruId);
                     }
                 }
-                FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, string.Empty, rememberMe ?? false);
+                rememberMe = rememberMe ?? false;
+                FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, string.Empty, (bool)rememberMe);
                 UserBus.SetLastLogon();
             }
 

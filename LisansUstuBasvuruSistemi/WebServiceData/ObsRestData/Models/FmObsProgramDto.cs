@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData.Models;
 
-namespace LisansUstuBasvuruSistemi.WebServiceData.ObsRestData
+namespace LisansUstuBasvuruSistemi.WebServiceData.ObsRestData.Models
 {
     public class FmObsProgramDto : PagerModel
     {

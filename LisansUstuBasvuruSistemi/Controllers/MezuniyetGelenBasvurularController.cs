@@ -3216,12 +3216,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (joForm.IsTezBasligiDegisti == true)
                     {
-                        row.TezKonusu = itemO.IsTezDiliTr == true ? joForm.YeniTezBaslikTr : joForm.YeniTezBaslikEn;
-                    }
-                    else if (joForm.IsTezBasligiDegisti == true)
-                    {
-                        row.TezKonusu = itemO.IsTezDiliTr == true ? joForm.YeniTezBaslikTr : joForm.YeniTezBaslikEn;
-                    }
+                        row.TezKonusu = itemO.IsTezDiliTr == true ? itemO.TezBaslikTr : itemO.TezBaslikEn;
+                        row.YeniTezKonusu = itemO.IsTezDiliTr == true ? joForm.YeniTezBaslikTr : joForm.YeniTezBaslikEn;
+                    } 
                     else
                     {
                         row.TezKonusu = itemO.IsTezDiliTr == true ? itemO.TezBaslikTr : itemO.TezBaslikEn;

@@ -10,7 +10,7 @@
             {
                 trTik1.Visible = false;
                 trTik2.Visible = false;
-                Detail.HeightF = Detail.HeightF - 50;
+                Detail.HeightF -= 50;
 
             }
  

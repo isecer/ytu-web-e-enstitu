@@ -11,7 +11,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var isKurumIci = (bool)ViewBag.IsKurumIci;
     var isYerli = (bool)ViewBag.IsYerli;
-    var resimVar = (bool)ViewBag.ResimVar;
     var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
     var programYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
     var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();

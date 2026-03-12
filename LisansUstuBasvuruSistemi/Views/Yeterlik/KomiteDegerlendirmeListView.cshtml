@@ -7,8 +7,10 @@
     Layout = null;
     var openRow = !Model.IsAbdKomitesiJuriyiOnayladi.HasValue;
     var isDanisman = Model.TezDanismanID == UserIdentity.Current.Id && !Model.IsDegerlendirme.HasValue;
-    var isYetkili = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.IsDegerlendirme.HasValue; 
+    var isYetkili = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.IsDegerlendirme.HasValue;
     var onayDuzeltmeYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.SozluSinavTarihi.HasValue;
+    var isDegerlendirmeGormeyetki = isDanisman || RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
+
 }
 
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="komiteContentView_@Model.UniqueID">
@@ -60,7 +62,11 @@
                                             <a href="javascript:void(0)" onclick="DetayGor('@itemKom.UserKey')">@itemKom.UnvanAdi @itemKom.AdSoyad</a> <br /> @itemKom.EMail
                                         </td>
                                         <td>
-                                            @itemKom.ToKomiteOnayDurumView()
+                                            @if (isDegerlendirmeGormeyetki)
+                                            {
+                                                @itemKom.ToKomiteOnayDurumView()
+                                            }
+
                                         </td>
                                         <td style="text-align: right;">
                                             @if ((isDanisman || isYetkili) && openRow)
@@ -76,49 +82,51 @@
                                                 if (isYetkili || !itemKom.IsJuriOnaylandi.HasValue)
                                                 {
                                                     <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="KomiteLinkGonder('@Model.UniqueID','@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
-                                                } 
+                                                }
                                             }
                                         </td>
                                     </tr>
-                                    <tr class="MainRow2 cls-Km_@itemKom.UniqueID" style="display:none;">
-                                        <td id="cls-Km_@itemKom.UniqueID" colspan="5" style="padding: 1px 1px 2px 50px;">
-                                            <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
-                                                <table style="width: 100%;">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="CaptionTd" width="180">Onay Durumu</td>
-                                                            <td class="CaptionTd" width="10">:</td>
-                                                            <td class="ValueTd">
-                                                                @if (onayDuzeltmeYetki)
-                                                                {
-                                                                    <select id="KomiteIsOnaylandi_@itemKom.UniqueID">
-                                                                        <option></option>
-                                                                        <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Belirlenen Yeterlik Jürilerini Onaylıyorum</option>
-                                                                    </select>
-                                                                }
-                                                                else
-                                                                {
-                                                                    @itemKom.ToKomiteOnayDurumView()
-                                                                }
-                                                            </td>
-                                                        </tr>
-
-                                                        @if (onayDuzeltmeYetki)
-                                                        {
-                                                            <tr class="RwKBtn_@itemKom.UniqueID">
-                                                                <td class="CaptionTd"></td>
-                                                                <td class="CaptionTd">:</td>
-                                                                <td class="ValueTd" style="padding-top: 5px; font-size: 11pt;">
-                                                                    <span class="label label-primary" style="cursor: pointer;" onclick="KomiteJuriOnayKayit('@Model.UniqueID','@itemKom.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Onaylama İşlemini Kaydet</span>
+                                    if (isDegerlendirmeGormeyetki)
+                                    {
+                                        <tr class="MainRow2 cls-Km_@itemKom.UniqueID" style="display:none;">
+                                            <td id="cls-Km_@itemKom.UniqueID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                                <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+                                                    <table style="width: 100%;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="CaptionTd" width="180">Onay Durumu</td>
+                                                                <td class="CaptionTd" width="10">:</td>
+                                                                <td class="ValueTd">
+                                                                    @if (onayDuzeltmeYetki)
+                                                                    {
+                                                                        <select id="KomiteIsOnaylandi_@itemKom.UniqueID">
+                                                                            <option></option>
+                                                                            <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Belirlenen Yeterlik Jürilerini Onaylıyorum</option>
+                                                                        </select>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @itemKom.ToKomiteOnayDurumView()
+                                                                    }
                                                                 </td>
                                                             </tr>
-                                                        }
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </td>
-                                    </tr>
 
+                                                            @if (onayDuzeltmeYetki)
+                                                            {
+                                                                <tr class="RwKBtn_@itemKom.UniqueID">
+                                                                    <td class="CaptionTd"></td>
+                                                                    <td class="CaptionTd">:</td>
+                                                                    <td class="ValueTd" style="padding-top: 5px; font-size: 11pt;">
+                                                                        <span class="label label-primary" style="cursor: pointer;" onclick="KomiteJuriOnayKayit('@Model.UniqueID','@itemKom.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Onaylama İşlemini Kaydet</span>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
                                 }
 
                             </tbody>
@@ -192,7 +200,7 @@
             url: '@Url.Action("GetKomiteDegisiklik")',
             data: {  uniqueId },
             async: false,
-            success: function (result) { 
+            success: function (result) {
                 if (result.IsSuccess) {
                     bootbox.dialog({
                         message: "<div id='komiteDegisiklikContent'>" + result.view + "</div>",

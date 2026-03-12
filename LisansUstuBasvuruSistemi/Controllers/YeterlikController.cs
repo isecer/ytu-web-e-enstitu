@@ -324,6 +324,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ? p.DmYeterlikKomites.Any(a => a.UniqueID == isDegerlendirme)
                         : p.YeterlikBasvuruJuriUyeleris.Any(a => a.UniqueID == isDegerlendirme));
             else query = query.Where(p => p.UniqueID == id);
+            if (!query.Any())
+            {
+                var queryParameterJsonText = new
+                {
+                    id,
+                    isKomiteOrJuri,
+                    isDegerlendirme
+
+                }.ToJson();
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Yeterlik başvurusu bulunamadı!\r\n" + queryParameterJsonText, "Yeterlik/GetDetail", BilgiTipiEnum.Uyarı);
+            }
             var basvuru = query.First();
             var danisman = _entities.Kullanicilars.First(p => p.KullaniciID == basvuru.TezDanismanID);
             basvuru.DanismanAdi = danisman.Unvanlar.UnvanAdi + " " + danisman.Ad + " " + danisman.Soyad;
@@ -999,7 +1010,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Yazılı sınavı katılım bilgileri danışman tarafından henüz sisteme işlenmediği için Değerlendirme işlemi yapamazsınız.");
             }
             else
-            {  
+            {
 
                 if (basvuru.IsYaziliSinavBasarili != false && !basvuru.IsSozluSinavOnline.HasValue)
                 {

@@ -11,7 +11,7 @@
     var isYerli = (bool)ViewBag.IsYerli;
     var kullaniciYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
     var kulTipAdi = (string)ViewBag.KullaniciTipAdi;
-    var isOgrenci = new List<int> { (int)KullaniciTipiEnum.YerliOgrenci, (int)KullaniciTipiEnum.YabanciOgrenci }.Contains(Model.KullaniciTipID);
+    var isOgrenci = new List<int> { KullaniciTipiEnum.YerliOgrenci, KullaniciTipiEnum.YabanciOgrenci }.Contains(Model.KullaniciTipID);
     var isGuncelleme = Model.KullaniciID > 0;
     var dogrulanmisMi = isGuncelleme && Model.YtuOgrencisi && !string.IsNullOrWhiteSpace(Model.OgrenciNo);
 }
@@ -758,7 +758,7 @@
                     $('#personelBilgi').hide();
                 }
 
-                if (ptipID == '@((int)KullaniciTipiEnum.AkademikPersonel)' || ptipID == '@((int)KullaniciTipiEnum.IdariPersonel)') {
+                if (ptipID == '@KullaniciTipiEnum.AkademikPersonel' || ptipID == '@KullaniciTipiEnum.IdariPersonel') {
                     getUnvanlar();
                 }
             },

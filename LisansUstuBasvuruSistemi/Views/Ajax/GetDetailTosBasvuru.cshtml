@@ -574,13 +574,13 @@
                     <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
                         @if (formOlusturmaYetki)
                         {
-                             if (Model.IsAnketVar == false || Model.IsAnketDolduruldu)
+                            if (Model.IsAnketVar == false || Model.IsAnketDolduruldu)
                             {
                                 <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="YeniBasvuruDuyuruKontrol('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span>
                             }
                             else
                             {
-                                <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="GetAnket();"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span> 
+                                <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="GetAnket();"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span>
 
 
                                 <script type="text/javascript">
@@ -768,7 +768,7 @@
                                                             var openRow = (isDanismani && isKomiteTezDanismani);
                                                             var openDegerlendirme = inxRw == 1 && srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.ToBasvuruSavunmaDurumID.HasValue) || degerlendirmeDuzeltmeYetki);
                                                             var sendLink = inxRw == 1 && srTalebiYapildi && (isDanismani && !isKomiteTezDanismani && item.ToBasvuruSavunmaKomites.Count != item.ToBasvuruSavunmaKomites.Count(c => c.ToBasvuruSavunmaDurumID.HasValue) || (degerlendirmeDuzeltmeYetki));
-
+                                                            var isDegerlendirmeGormeyetki = degerlendirmeYetki || degerlendirmeDuzeltmeYetki;
                                                             <tr>
                                                                 <td>
 
@@ -788,7 +788,7 @@
                                                                     <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                                                 </td>
                                                                 <td>
-                                                                    @if (isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
+                                                                    @if (isDegerlendirmeGormeyetki)
                                                                     {
                                                                         if (!srTalebiYapildi)
                                                                         {
@@ -797,23 +797,25 @@
                                                                         }
                                                                         else if (itemJr.ToBasvuruSavunmaDurumID.HasValue)
                                                                         {
+
+
                                                                             if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.KabulEdildi)
                                                                             {
                                                                                 <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;"></i> Kabul Edildi</span>
                                                                                 <br />
-                                                                                <span style="font-size:8pt;color:green;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
+                                                                                <span style="font-size:8pt;color:green;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString() @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                             }
                                                                             else if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Reddedildi)
                                                                             {
                                                                                 <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;"></i> Reddedildi</span>
                                                                                 <br />
-                                                                                <span style="font-size:8pt;color:maroon;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
+                                                                                <span style="font-size:8pt;color:maroon;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString() @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                             }
                                                                             else if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumuEnum.Duzeltme)
                                                                             {
                                                                                 <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-calendar" style="font-size:12pt;"></i> Düzeltme Talep Edildi</span>
                                                                                 <br />
-                                                                                <span style="font-size:8pt;color:maroon;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
+                                                                                <span style="font-size:8pt;color:maroon;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString() @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                             }
 
                                                                         }
@@ -829,7 +831,8 @@
                                                                                 <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
                                                                                 if (itemJr.IsLinkGonderildi == true)
                                                                                 {
-                                                                                    <br /><span style="color:green;font-size:8pt;">@itemJr.LinkGonderimTarihi.Value.ToLongDateString()  @itemJr.LinkGonderimTarihi.Value.ToString("HH:mm")  Tarihinde Değerlendirme Linki Gönderildi.</span>
+                                                                                    <br />
+                                                                                    <span style="color:green;font-size:8pt;">@itemJr.LinkGonderimTarihi.Value.ToLongDateString() @itemJr.LinkGonderimTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirme Linki Gönderildi.</span>
                                                                                 }
                                                                             }
                                                                         }
@@ -866,7 +869,7 @@
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
-                                                                    @if (isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
+                                                                    @if (isDegerlendirmeGormeyetki)
                                                                     {
                                                                         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                             <table style="width:100%;">
@@ -1035,7 +1038,9 @@
                                                             {
                                                                 <table style="width:100%;table-layout:fixed;">
                                                                     <tr>
-                                                                        <td style="color:maroon;font-size:13pt; text-align:center;height:80px;">Herhangi bir toplantı bilgisi girişi bulunamadı</td>
+                                                                        <td style="color:maroon;font-size:13pt; text-align:center;height:80px;">
+                                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-calendar" style="font-size:12pt;"></i> Toplantı Bilgi Girişi Bekleniyor.</span>
+                                                                        </td>
                                                                     </tr>
                                                                 </table>
                                                             }
