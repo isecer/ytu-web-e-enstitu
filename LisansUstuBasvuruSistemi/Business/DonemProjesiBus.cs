@@ -522,7 +522,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             model.AnketView = AnketlerBus.GetAnketView(
                                 anketId: anketId.Value,
                                 anketTipId: AnketTipiEnum.TezsizYukseklisansDonemProjesiBasvuruAnketi,
-                                donemProjesiID: basvuru.DonemProjesiID,
+                                donemProjesiId: basvuru.DonemProjesiID,
                                 rowId: basvuru.UniqueID.ToString()
                             );
                         }

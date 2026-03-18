@@ -299,6 +299,7 @@
     <Compile Include="Business\EnstituBus.cs" />
     <Compile Include="Business\GonderilenMaillerBus.cs" />
     <Compile Include="Business\LisansustuBasvuruBus.cs" />
+    <Compile Include="Business\TezKontrolYetkilisiAtama.cs" />
     <Compile Include="Business\YaziSablonTipleriBus.cs" />
     <Compile Include="Business\MailSablonTipleriBus.cs" />
     <Compile Include="Business\MenulerBus.cs" />
@@ -403,6 +404,7 @@
     <Compile Include="Utilities\ApplicationTasks\ObsStudentControlTaskRunner.cs" />
     <Compile Include="Utilities\Dtos\DonemProjesiDtos.cs" />
     <Compile Include="Utilities\Dtos\FileAttachmentInfo.cs" />
+    <Compile Include="Utilities\Dtos\GaleryItem.cs" />
     <Compile Include="Utilities\Dtos\KayitSilmeDtos.cs" />
     <Compile Include="Utilities\Dtos\FmDonemProjesiBasvuruDto.cs" />
     <Compile Include="Utilities\Dtos\FmDonemProjesiMuafOgrenciler.cs" />
@@ -4954,6 +4956,7 @@
     <Content Include="Views\KsGelenBasvurular\Index.cshtml" />
     <Content Include="Views\KsGelenBasvurular\GetTutanakRaporu.cshtml" />
     <Content Include="Views\ObsBirimler\Index.cshtml" />
+    <Content Include="Views\Mezuniyet\BasvuruDurumView_V0.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -4977,7 +4980,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\DonemProjesi\RprDpSinavTutanakFormuDetay_FR0366.resx">
       <DependentUpon>RprDpSinavTutanakFormuDetay_FR0366.cs</DependentUpon>
     </EmbeddedResource>

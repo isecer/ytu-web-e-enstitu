@@ -12,17 +12,14 @@ namespace Entities.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Programlar2
+    public partial class C_vW_BasvuruAlesOrtalamalar
     {
-        public string ProgramKod { get; set; }
-        public int AnabilimDaliID { get; set; }
-        public string AnabilimDaliKod { get; set; }
-        public string ObsProgramKod { get; set; }
-        public bool Ingilizce { get; set; }
-        public string ProgramAdi { get; set; }
-        public bool IsAktif { get; set; }
-        public System.DateTime IslemTarihi { get; set; }
-        public int IslemYapanID { get; set; }
-        public string IslemYapanIP { get; set; }
+        public string EnstituKisaAd { get; set; }
+        public int BaslangicYil { get; set; }
+        public string DonemAdi { get; set; }
+        public Nullable<double> OnaylananBasvurularAlesOrtalama { get; set; }
+        public Nullable<double> KayitOlanOgrenciAlesOrtalama { get; set; }
+        public Nullable<double> OnaylananBasvurularLisansAgnoOrtalama { get; set; }
+        public Nullable<double> KayitOlanOgrenciLisansAgnoOrtalama { get; set; }
     }
 }

@@ -56,6 +56,8 @@ namespace Entities.Entities
         public Nullable<int> IslemYapanID { get; set; }
         public string IslemYapanIp { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
         public virtual BelgeDurumlari BelgeDurumlari { get; set; }
         public virtual BelgeTipleri BelgeTipleri { get; set; }
         public virtual Donemler Donemler { get; set; }
@@ -63,7 +65,5 @@ namespace Entities.Entities
         public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual OgrenimDurumlari OgrenimDurumlari { get; set; }
         public virtual Programlar Programlar { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
     }
 }

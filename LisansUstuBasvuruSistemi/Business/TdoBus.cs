@@ -294,7 +294,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             model.AnketView = AnketlerBus.GetAnketView(
                                 anketId: anketId.Value,
                                 anketTipId: AnketTipiEnum.DanismanAtamaBasvurunAnketi,
-                                tdoBasvuruID: basvuru.TDOBasvuruID,
+                                tdoBasvuruId: basvuru.TDOBasvuruID,
                                 rowId:basvuru.UniqueID.ToString()
                             );
                         }

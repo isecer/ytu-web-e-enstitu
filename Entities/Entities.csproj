@@ -209,6 +209,12 @@
     <Compile Include="Entities\Cinsiyetler.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\C_vW_BasvuruAlesOrtalamalar.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\C_vW_BasvuruKayitSinavBilgi.cs">
+      <DependentUpon>LubsDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Donemler.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
@@ -450,9 +456,6 @@
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Programlar2.cs">
-      <DependentUpon>LubsDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Programlar2Obs.cs">
       <DependentUpon>LubsDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Roller.cs">

@@ -123,6 +123,7 @@ namespace Entities.Entities
         public Nullable<int> DanismanID { get; set; }
         public Nullable<System.DateTime> IzinBaslamaTarihi { get; set; }
         public Nullable<System.DateTime> IzinBitisTarihi { get; set; }
+        public Nullable<bool> IsTezAtamaAcik { get; set; }
         public bool FixedHeader { get; set; }
         public bool FixedSidebar { get; set; }
         public bool ScrollSidebar { get; set; }

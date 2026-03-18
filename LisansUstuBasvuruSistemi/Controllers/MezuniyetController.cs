@@ -1056,7 +1056,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var tarih = uzatmaAlinanSrTalebi.OgrenciOnayTarihi ?? uzatmaAlinanSrTalebi.Tarih;
                     model.Tarih = tarih.AddDays(ogrenimTipKriterleri.SinavKacGunSonraAlabilir);
-                    
+
                 }
                 else model.Tarih = mezuniyetBasvuru.EYKTarihi.Value.AddDays(ogrenimTipKriterleri.SinavKacGunSonraAlabilir);
 
@@ -1241,7 +1241,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 {
                                     UniqueID = Guid.NewGuid(),
                                     MezuniyetJuriOneriFormuJuriID = juri.MezuniyetJuriOneriFormuJuriID,
-                                    UniversiteAdi = juri.UniversiteAdi, 
+                                    UniversiteAdi = juri.UniversiteAdi,
                                     AnabilimdaliProgramAdi = juri.AnabilimdaliProgramAdi,
                                     JuriTipAdi = juri.JuriTipAdi,
                                     UnvanAdi = juri.UnvanAdi,
@@ -1445,14 +1445,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var basvuru = _entities.MezuniyetBasvurularis.First(f =>
                  f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
+            var isOgrenciSureckriterlerindenMuaf = basvuru.MezuniyetSureci.MezuniyetSureciKriterMuafOgrencilers.Any(a =>
+                
+                a.KullaniciID == basvuru.KullaniciID);
 
             if (basvuru.KullaniciID != UserIdentity.Current.Id && !yetkiliKullanici)
             {
                 message.Messages.Add("Başka bir kullanıcı tez teslim formu oluşturmaya yetkili değilsiniz!");
             }
-            else if (basvuru.MezuniyetYayinKontrolDurumID != 5)
+            else if (basvuru.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
             {
                 message.Messages.Add("Mezuniyet başvuru durumu Kabul Edildi olan başvurularda işlem yapılabilir.");
+            }
+            else if (!isOgrenciSureckriterlerindenMuaf && basvuru.MezuniyetBasvurulariTezDosyalaris.All(a => a.IsOnaylandiOrDuzeltme != true))
+            {
+                message.Messages.Add("Tez kontrol sürecinde onaylanmış bir teziniz bulunmadığı için tez teslim formu oluşturamazsınız.");
             }
             else if (basvuru.IsMezunOldu != null)
             {
@@ -1706,8 +1713,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 _entities.SaveChanges();
-
-                MezuniyetBus.TezDosyasiKontrolYetkilisiAta(mezuniyetBasvurusu.MezuniyetBasvurulariID);
+                TezKontrolYetkilisiAtama.TezDosyasiKontrolYetkilisiAta(mezuniyetBasvurusu.MezuniyetBasvurulariID);
                 MezuniyetBus.SendMailMezuniyetTezSablonKontrol(tezDosyasi.MezuniyetBasvurulariTezDosyaID, MailSablonTipiEnum.MezTezKontrolTezDosyasiYuklendi);
                 mMessage.Messages.Add("Tez Dosyası Yükleme İşlemi Başarılı");
 

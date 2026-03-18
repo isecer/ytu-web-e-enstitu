@@ -513,7 +513,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mulakatSonuclaris = basvuru.MulakatSonuclaris.Where(p => mulakatSonucTipIDs.Contains(p.MulakatSonucTipID)).ToList();
             }
             else mdl.IsYedekCokluTercih = true;
-            mdl.IsGonderilenMaillerVar = basvuru.GonderilenMaillers.Any();
+            mdl.IsGonderilenMaillerVar = _entities.GonderilenMaillers.Any(a=>a.BasvuruID==basvuru.BasvuruID);
             mdl.IsKayitHakkiVar = mulakatSonuclaris.Any();
             mdl.KayitIslemiGordu = mulakatSonuclaris.Any(a => a.KayitDurumID.HasValue && a.KayitDurumlari.IsKayitOldu);
 
@@ -2669,7 +2669,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                 };
                         var rowIDstr = Request["RowID"].ToStrObj();
-                        var rowId = new Guid();
+                        var rowId = Guid.Empty;
                         var isOgrenciSonucListesindePuanGozuksun = false;
                         if (!rowIDstr.IsNullOrWhiteSpace())
                         {

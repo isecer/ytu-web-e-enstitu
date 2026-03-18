@@ -631,6 +631,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var sfr = kModel.Sifre;
                     kModel.UserKey = Guid.NewGuid();
                     kModel.YetkiGrupID = erisimYetki ? kModel.YetkiGrupID : 1;
+                    kModel.IsTezAtamaAcik = YetkiGrupBus.TezKontrolYetkiGrupId == kModel.YetkiGrupID;
                     kModel.OlusturmaTarihi = DateTime.Now;
                     kModel.Sifre = kModel.Sifre.ComputeHash(GlobalSistemSetting.Tuz);
                     kModel.IsAktif = true;
@@ -678,13 +679,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kullanici.OgrenimEnstituKod = kModel.OgrenimEnstituKod;
                     kullanici.KullaniciTipID = kModel.KullaniciTipID;
                     kullanici.Ad = kModel.Ad;
+                    var eskiYetkiGrupId = kullanici.YetkiGrupID;
+                    var yeniYetkiGrupId = kModel.YetkiGrupID;
                     bool isYetkiDegisti = false;
                     if (erisimYetki)
                     {
-                        isYetkiDegisti = kullanici.YetkiGrupID != kModel.YetkiGrupID;
-                        kullanici.YetkiGrupID = kModel.YetkiGrupID;
+                        isYetkiDegisti = eskiYetkiGrupId != yeniYetkiGrupId;
+                        kullanici.YetkiGrupID = yeniYetkiGrupId;
 
+                        var tezKontrolYetkisineYeniGecis =
+                            isYetkiDegisti &&
+                            yeniYetkiGrupId == YetkiGrupBus.TezKontrolYetkiGrupId &&
+                            eskiYetkiGrupId != YetkiGrupBus.TezKontrolYetkiGrupId;
+
+                        if (tezKontrolYetkisineYeniGecis && !kullanici.IsTezAtamaAcik.HasValue)
+                        {
+                            kullanici.IsTezAtamaAcik = true;
+                        }
                     }
+                     
                     kullanici.Soyad = kModel.Soyad;
                     kullanici.TcKimlikNo = kModel.TcKimlikNo;
                     kullanici.CinsiyetID = kModel.CinsiyetID;

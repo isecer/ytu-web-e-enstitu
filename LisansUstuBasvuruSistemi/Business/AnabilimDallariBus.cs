@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using BiskaUtil;
 using Entities.Entities;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;

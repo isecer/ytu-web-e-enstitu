@@ -17,12 +17,12 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MezuniyetBasvurulari()
         {
+            this.AnketCevaplaris = new HashSet<AnketCevaplari>();
+            this.MezuniyetBasvurulariTezDosyalaris = new HashSet<MezuniyetBasvurulariTezDosyalari>();
             this.MezuniyetBasvurulariTezTeslimFormlaris = new HashSet<MezuniyetBasvurulariTezTeslimFormlari>();
             this.MezuniyetBasvurulariYayins = new HashSet<MezuniyetBasvurulariYayin>();
             this.MezuniyetJuriOneriFormlaris = new HashSet<MezuniyetJuriOneriFormlari>();
             this.SRTalepleris = new HashSet<SRTalepleri>();
-            this.AnketCevaplaris = new HashSet<AnketCevaplari>();
-            this.MezuniyetBasvurulariTezDosyalaris = new HashSet<MezuniyetBasvurulariTezDosyalari>();
         }
     
         public int MezuniyetBasvurulariID { get; set; }
@@ -88,6 +88,7 @@ namespace Entities.Entities
         public Nullable<System.DateTime> EYKTarihi { get; set; }
         public string EYKSayisi { get; set; }
         public Nullable<int> TezKontrolKullaniciID { get; set; }
+        public Nullable<System.DateTime> TezKontrolAtamaTarihi { get; set; }
         public Nullable<System.DateTime> TezTeslimSonTarih { get; set; }
         public Nullable<int> SonToplamKaynakOrani { get; set; }
         public Nullable<int> SonTekKaynakOrani { get; set; }
@@ -97,6 +98,8 @@ namespace Entities.Entities
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
         public virtual Donemler Donemler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual KullaniciTipleri KullaniciTipleri { get; set; }
@@ -105,6 +108,8 @@ namespace Entities.Entities
         public virtual OgrenimDurumlari OgrenimDurumlari { get; set; }
         public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MezuniyetBasvurulariTezDosyalari> MezuniyetBasvurulariTezDosyalaris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulariTezTeslimFormlari> MezuniyetBasvurulariTezTeslimFormlaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
@@ -112,9 +117,5 @@ namespace Entities.Entities
         public virtual ICollection<MezuniyetJuriOneriFormlari> MezuniyetJuriOneriFormlaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTalepleri> SRTalepleris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MezuniyetBasvurulariTezDosyalari> MezuniyetBasvurulariTezDosyalaris { get; set; }
     }
 }

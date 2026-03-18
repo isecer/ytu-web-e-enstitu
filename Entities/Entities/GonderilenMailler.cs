@@ -36,7 +36,6 @@ namespace Entities.Entities
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        public virtual Basvurular Basvurular { get; set; }
         public virtual Enstituler Enstituler { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GonderilenMailEkleri> GonderilenMailEkleris { get; set; }

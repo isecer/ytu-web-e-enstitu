@@ -468,11 +468,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (TdoBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                     {
                         mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi içim bu sürecinin tamamlanması gerekmektedir.");
-                    }
-                    //else if (TdoBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
-                    //{
-                    //    mMessage.Messages.Add("Aktif bir Tez İkinci Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi için bu sürecin tamamlanması gerekmektedir.");
-                    //} 
+                    } 
                 }
 
 

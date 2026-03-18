@@ -1,17 +1,19 @@
 ﻿using BiskaUtil;
+using DevExpress.XtraCharts;
 using Entities.Entities;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.WebServiceData.ObsRestData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -585,69 +587,374 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 #endregion
                 page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "GetYonetmelikBilgi", qData);
             }
+
             if (tbInx == 3)
             {
-
-                var surec = _entities.MezuniyetSurecis.First(f => f.MezuniyetSurecID == id);
-
-
-
-                var aktifMezuniyetSureciTezKontrolBilgiDtos = (from kul in _entities.Kullanicilars.Where(p => p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif && p.EnstituKod == surec.EnstituKod)
-
-                                                               select new MezuniyetSureciTezKontrolBilgiDto
-                                                               {
-                                                                   KullaniciId = kul.KullaniciID,
-                                                                   UserKey = kul.UserKey,
-                                                                   ResimAdi = kul.ResimAdi,
-                                                                   AdSoyad = kul.Ad + " " + kul.Soyad,
-                                                                   SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
-                                                                   SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.OnayYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
-                                                                   GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
-                                                                   GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.OnayYapanID == kul.KullaniciID)),
-                                                               }).OrderByDescending(o => o.GenelToplamOnay).ToList();
-                var aktifKullaniciIds = aktifMezuniyetSureciTezKontrolBilgiDtos.Select(s => s.KullaniciId).ToList();
-
-                var digerMezuniyetBasvurulariTezDosyalaKontrolYapanIds = _entities.MezuniyetBasvurulariTezDosyalaris
-                    .Where(p => p.IsOnaylandiOrDuzeltme == true && p.OnayYapanID.HasValue && p.MezuniyetBasvurulari.MezuniyetSureci.EnstituKod == surec.EnstituKod && !aktifKullaniciIds.Contains(p.OnayYapanID.Value)).Select(s => s.OnayYapanID.Value).Distinct()
-                    .ToList();
-                var digerMezuniyetBasvuruTezDosyaKontrolSorumluId = _entities.MezuniyetBasvurularis
-                    .Where(p => p.MezuniyetSureci.EnstituKod == surec.EnstituKod && p.TezKontrolKullaniciID.HasValue &&
-                                !aktifKullaniciIds.Contains(p.TezKontrolKullaniciID.Value))
-                    .Select(s => s.TezKontrolKullaniciID.Value).Distinct().ToList();
-
-                var secilenDigerKullaniciIds = digerMezuniyetBasvurulariTezDosyalaKontrolYapanIds;
-                secilenDigerKullaniciIds.AddRange(digerMezuniyetBasvuruTezDosyaKontrolSorumluId);
-                secilenDigerKullaniciIds = secilenDigerKullaniciIds.Distinct().ToList();
-
-
-                var pasifMezuniyetSureciTezKontrolBilgiDtos = (from kul in _entities.Kullanicilars.Where(p => secilenDigerKullaniciIds.Contains(p.KullaniciID))
-
-                                                               select new MezuniyetSureciTezKontrolBilgiDto
-                                                               {
-                                                                   KullaniciId = kul.KullaniciID,
-                                                                   UserKey = kul.UserKey,
-                                                                   ResimAdi = kul.ResimAdi,
-                                                                   AdSoyad = kul.Ad + " " + kul.Soyad,
-                                                                   SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
-                                                                   SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.OnayYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
-                                                                   GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
-                                                                   GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.OnayYapanID == kul.KullaniciID)),
-                                                               }).OrderByDescending(o => o.GenelToplamOnay).ToList();
-                var model = new MezuniyetSureciTezKontrolDto
-                {
-                    DonemAdi = surec.BaslangicYil + " - " + surec.BitisYil + " " + surec.Donemler.DonemAdi + " " + surec.SiraNo,
-                    MezuniyetSurecId = surec.MezuniyetSurecID,
-                    AktifMezuniyetSureciTezKontrolBilgiDtos = aktifMezuniyetSureciTezKontrolBilgiDtos,
-                    PasifMezuniyetSureciTezKontrolBilgiDtos = pasifMezuniyetSureciTezKontrolBilgiDtos
-
-                };
-                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "GetMsTezKontrolBilgileri", model);
+                page = RenderTezKontrolTabView(id);
             }
             return Content(page, "text/html");
+        }
+
+        private string RenderTezKontrolTabView(int mezuniyetSurecId)
+        {
+
+            var surec = _entities.MezuniyetSurecis.First(f => f.MezuniyetSurecID == mezuniyetSurecId);
+            var enstituKod = surec.EnstituKod;
+            var nowDate = DateTime.Now;
+            var bugunBaslangic = nowDate.Date;
+
+            // ─────────────────────────────────────────────────────
+            //  Ayarları oku
+            // ─────────────────────────────────────────────────────
+
+            var atamaYontemiDeger = MezuniyetAyar.TezAtamaYontemi.GetAyar(enstituKod, "En Az Atanan — Genel");
+            var isSiraylaAta = atamaYontemiDeger.StartsWith("Sırayla");
+            var isDonemsel = atamaYontemiDeger.Contains("Dönemsel");
+            var isZamanPencereli = atamaYontemiDeger.Contains("Belirlenen Gün Sayısına Göre");
+
+            var gunSiniri = isZamanPencereli
+                ? MezuniyetAyar.TezAtamaGunSiniri.GetAyar(enstituKod).ToInt(7)
+                : 0;
+
+            var gunlukTavan = MezuniyetAyar.TezAtamaGunlukTavan.GetAyar(enstituKod).ToInt(0);
+
+            var isProgramOnceliklendirme = MezuniyetAyar.MezuniyetBasvurusunuIlgiliTezSorumlusunaAta
+                .GetAyar(enstituKod).ToBoolean(false);
+
+            var isKontrolBekleyenDahil = MezuniyetAyar.TezAtamadaKontrolBekleyenleriIsYukuneDahilEt
+                .GetAyar(enstituKod).ToBoolean(false);
+            var isDuzeltmeBekleyenDahil = MezuniyetAyar.TezAtamadaDuzeltmedeBekleyenleriIsYukuneDahilEt
+                .GetAyar(enstituKod).ToBoolean(false);
+
+            var isBekleyenIsYukuAktif = isKontrolBekleyenDahil || isDuzeltmeBekleyenDahil;
+
+            DateTime? pencereBaslangic = gunSiniri > 0 ? nowDate.AddDays(-gunSiniri) : (DateTime?)null;
+
+            // ─────────────────────────────────────────────────────
+            //  Strateji açıklama metni
+            // ─────────────────────────────────────────────────────
+
+            var stratejiParcalar = new List<string>();
+
+            if (isSiraylaAta)
+            {
+                stratejiParcalar.Add("Sırayla Atama (Round-Robin)");
+            }
+            else
+            {
+                stratejiParcalar.Add("En Az Atanan");
+                stratejiParcalar.Add(isDonemsel ? "Aktif Süreç" : "Tüm Süreçler");
+                stratejiParcalar.Add(gunSiniri > 0 ? "Son " + gunSiniri + " Gün" : "Tüm Zaman");
+
+                if (gunSiniri > 0)
+                    stratejiParcalar.Add("İzin Normalizasyonu Aktif");
+            }
+
+            if (gunlukTavan > 0)
+                stratejiParcalar.Add("Günlük Tavan: " + gunlukTavan);
+
+            if (isKontrolBekleyenDahil)
+                stratejiParcalar.Add("Bekleyen Kontrol: Aktif");
+            if (isDuzeltmeBekleyenDahil)
+                stratejiParcalar.Add("Bekleyen Düzeltme: Aktif");
+
+            if (isProgramOnceliklendirme)
+                stratejiParcalar.Add("Program Önceliklendirme Açık");
+
+            var stratejiAciklama = string.Join(" | ", stratejiParcalar);
+
+            // ─────────────────────────────────────────────────────
+            //  Round-Robin: Sıradaki yetkili hesabı
+            // ─────────────────────────────────────────────────────
+
+            int? siradakiKullaniciId = null;
+            if (isSiraylaAta)
+            {
+                var sonAtananId = _entities.MezuniyetBasvurularis
+                    .Where(m => m.TezKontrolKullaniciID.HasValue && m.MezuniyetSureci.EnstituKod == enstituKod)
+                    .OrderByDescending(m => m.MezuniyetBasvurulariID)
+                    .Select(m => m.TezKontrolKullaniciID)
+                    .FirstOrDefault();
+
+                var aktifYetkiliIds = _entities.Kullanicilars
+                    .Where(p =>
+                        p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId &&
+                        p.IsAktif &&
+                        (p.IsTezAtamaAcik == null || p.IsTezAtamaAcik == true) &&
+                        p.EnstituKod == enstituKod &&
+                        !(
+                            p.IzinBaslamaTarihi.HasValue &&
+                            p.IzinBaslamaTarihi <= nowDate && p.IzinBitisTarihi >= nowDate
+                        ))
+                    .OrderBy(p => p.KullaniciID)
+                    .Select(p => p.KullaniciID)
+                    .ToList();
+
+                if (aktifYetkiliIds.Any())
+                {
+                    if (!sonAtananId.HasValue)
+                    {
+                        siradakiKullaniciId = aktifYetkiliIds.First();
+                    }
+                    else
+                    {
+                        var idx = aktifYetkiliIds.IndexOf(sonAtananId.Value);
+                        siradakiKullaniciId = (idx < 0 || idx >= aktifYetkiliIds.Count - 1)
+                            ? aktifYetkiliIds.First()
+                            : aktifYetkiliIds[idx + 1];
+                    }
+                }
+            }
+
+            // ─────────────────────────────────────────────────────
+            //  Bekleyen iş yükü: Sorumluya atanmış ve henüz kontrol
+            //  edilmemiş dosya bekleyen başvuru sayıları
+            // ─────────────────────────────────────────────────────
+             
+            Dictionary<int, int> bekleyenIslerDict = new Dictionary<int, int>();
+            if (isBekleyenIsYukuAktif)
+            {
+                var bekleyenDegerler = new List<bool?>();
+                if (isKontrolBekleyenDahil) bekleyenDegerler.Add(null);
+                if (isDuzeltmeBekleyenDahil) bekleyenDegerler.Add(false);
+
+                bekleyenIslerDict = _entities.MezuniyetBasvurularis
+                    .Where(m =>
+                        m.TezKontrolKullaniciID.HasValue &&
+                        m.MezuniyetSureci.EnstituKod == enstituKod &&
+                        m.MezuniyetBasvurulariTezDosyalaris
+                            .OrderByDescending(d => d.SiraNo)
+                            .FirstOrDefault() != null &&
+                        bekleyenDegerler.Contains(m.MezuniyetBasvurulariTezDosyalaris
+                            .OrderByDescending(d => d.SiraNo)
+                            .FirstOrDefault().IsOnaylandiOrDuzeltme))
+                                   .GroupBy(m => m.TezKontrolKullaniciID.Value)
+                       .Select(g => new { Id = g.Key, Sayi = g.Count() })
+                       .ToDictionary(x => x.Id, x => x.Sayi);
+            }
+
+            // ─────────────────────────────────────────────────────
+            //  Bugünkü atama sayıları (günlük tavan göstergesi için)
+            // ─────────────────────────────────────────────────────
+
+            Dictionary<int, int> bugunkuAtamalarDict = new Dictionary<int, int>();
+            if (gunlukTavan > 0)
+            {
+                bugunkuAtamalarDict = _entities.MezuniyetBasvurularis
+                    .Where(m =>
+                        m.TezKontrolKullaniciID.HasValue &&
+                        m.MezuniyetSureci.EnstituKod == enstituKod &&
+                        m.TezKontrolAtamaTarihi >= bugunBaslangic)
+                    .GroupBy(m => m.TezKontrolKullaniciID.Value)
+                    .Select(g => new { Id = g.Key, Sayi = g.Count() })
+                    .ToDictionary(x => x.Id, x => x.Sayi);
+            }
+
+            // ─────────────────────────────────────────────────────
+            //  Aktif yetkililer sorgusu
+            // ─────────────────────────────────────────────────────
+
+            var aktifMezuniyetSureciTezKontrolBilgiDtos = (
+                from kul in _entities.Kullanicilars.Where(p =>
+                    p.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId && p.IsAktif && p.EnstituKod == surec.EnstituKod)
+                select new MezuniyetSureciTezKontrolBilgiDto
+                {
+                    KullaniciId = kul.KullaniciID,
+                    IsTezAtamaAcik = kul.IsTezAtamaAcik == null || kul.IsTezAtamaAcik == true,
+                    IsIzinde = kul.IzinBaslamaTarihi.HasValue && kul.IzinBaslamaTarihi <= nowDate && kul.IzinBitisTarihi >= nowDate,
+                    IzinBaslamaTarihi = kul.IzinBaslamaTarihi,
+                    IzinBitisTarihi = kul.IzinBitisTarihi,
+                    UserKey = kul.UserKey,
+                    ResimAdi = kul.ResimAdi,
+                    AdSoyad = kul.Ad + " " + kul.Soyad,
+
+                    // Süreç bazlı
+                    SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c =>
+                        c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
+                    SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c =>
+                        c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID &&
+                        c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
+                    SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c =>
+                        c.MezuniyetSurecID == surec.MezuniyetSurecID &&
+                        c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.OnayYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+
+                    // Genel
+                    GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c =>
+                        c.TezKontrolKullaniciID == kul.KullaniciID),
+                    GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c =>
+                        c.TezKontrolKullaniciID == kul.KullaniciID &&
+                        c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
+                    GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c =>
+                        c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.OnayYapanID == kul.KullaniciID)),
+
+                    // V2: Gün penceresi atama sayısı
+                    GunPenceresiAtanan = pencereBaslangic.HasValue
+                        ? _entities.MezuniyetBasvurularis.Count(c =>
+                            c.TezKontrolKullaniciID == kul.KullaniciID &&
+                            c.MezuniyetSureci.EnstituKod == surec.EnstituKod &&
+                            c.TezKontrolAtamaTarihi >= pencereBaslangic)
+                        : 0,
+
+                }).OrderByDescending(o => o.GenelToplamOnay).ToList();
+
+            // ─────────────────────────────────────────────────────
+            //  Post-processing: Normalizasyon, iş yükü, skor hesabı
+            //  (LINQ to Entities'de yapılamayan C# hesapları)
+            // ─────────────────────────────────────────────────────
+
+
+            foreach (var dto in aktifMezuniyetSureciTezKontrolBilgiDtos)
+            {
+                // Bekleyen iş yükü
+                if (isBekleyenIsYukuAktif && bekleyenIslerDict.ContainsKey(dto.KullaniciId))
+                    dto.BekleyenIsYuku = bekleyenIslerDict[dto.KullaniciId];
+
+                // Bugünkü atama ve tavan kontrolü
+                if (gunlukTavan > 0)
+                {
+                    dto.BugunkuAtamaSayisi = bugunkuAtamalarDict.ContainsKey(dto.KullaniciId)
+                        ? bugunkuAtamalarDict[dto.KullaniciId]
+                        : 0;
+                    dto.IsTavanda = dto.BugunkuAtamaSayisi >= gunlukTavan;
+                }
+
+                // İzin normalizasyonu ve skor (sadece Belirlenen Gün Sayısına Göre + skorlama modu)
+                if (gunSiniri > 0 && !isSiraylaAta)
+                {
+                    var izinliGun = 0;
+                    if (dto.IzinBaslamaTarihi.HasValue && dto.IzinBitisTarihi.HasValue && pencereBaslangic.HasValue)
+                    {
+                        var kesisimBaslangic = dto.IzinBaslamaTarihi.Value > pencereBaslangic.Value
+                            ? dto.IzinBaslamaTarihi.Value : pencereBaslangic.Value;
+                        var kesisimBitis = dto.IzinBitisTarihi.Value < nowDate
+                            ? dto.IzinBitisTarihi.Value : nowDate;
+                        izinliGun = (int)Math.Max(0, (kesisimBitis - kesisimBaslangic).TotalDays + 1);
+                    }
+
+                    // Aktif gün = pencere - izinli günler (0 olabilir)
+                    dto.AktifGunSayisi = gunSiniri - izinliGun;
+
+                    if (dto.AktifGunSayisi > 0)
+                    {
+                        dto.NormalizeOran = (double)dto.GunPenceresiAtanan / dto.AktifGunSayisi;
+                        dto.FinalSkor = dto.NormalizeOran + (dto.BekleyenIsYuku * TezKontrolYetkilisiAtama.BekleyenIsKatsayisi);
+                    }
+                    else
+                    {
+                        // Pencerede aktif günü yok → atamaya dahil edilmez
+                        // Dashboard'da skor "—" olarak gösterilecek
+                        dto.NormalizeOran = -1; // View'da -1 ise "—" gösterilir
+                        dto.FinalSkor = -1;
+                    }
+                }
+                else if (!isSiraylaAta)
+                {
+                    // Pencere yok: mutlak sayı üzerinden skor
+                    dto.AktifGunSayisi = 0; // gösterilmez
+                    dto.NormalizeOran = 0;  // gösterilmez
+
+                    // Kriter kolonuna göre atama sayısını al
+                    var kriterAtama = isDonemsel ? dto.SurecToplamAtanan : dto.GenelToplamAtanan;
+                    dto.FinalSkor = kriterAtama + (dto.BekleyenIsYuku * TezKontrolYetkilisiAtama.BekleyenIsKatsayisi);
+                }
+            }
+
+            // Sıradaki işaretlemesi
+            if (siradakiKullaniciId.HasValue)
+            {
+                var siradaki = aktifMezuniyetSureciTezKontrolBilgiDtos
+                    .FirstOrDefault(f => f.KullaniciId == siradakiKullaniciId.Value);
+                if (siradaki != null) siradaki.IsSiradaki = true;
+            }
+
+            // ─────────────────────────────────────────────────────
+            //  Pasif yetkililer (değişmedi, mevcut mantık korunuyor)
+            // ─────────────────────────────────────────────────────
+
+            var aktifKullaniciIds = aktifMezuniyetSureciTezKontrolBilgiDtos.Select(s => s.KullaniciId).ToList();
+
+            var digerMezuniyetBasvurulariTezDosyalaKontrolYapanIds = _entities.MezuniyetBasvurulariTezDosyalaris
+                .Where(p => p.IsOnaylandiOrDuzeltme == true && p.OnayYapanID.HasValue &&
+                            p.MezuniyetBasvurulari.MezuniyetSureci.EnstituKod == surec.EnstituKod &&
+                            !aktifKullaniciIds.Contains(p.OnayYapanID.Value))
+                .Select(s => s.OnayYapanID.Value).Distinct().ToList();
+
+            var digerMezuniyetBasvuruTezDosyaKontrolSorumluId = _entities.MezuniyetBasvurularis
+                .Where(p => p.MezuniyetSureci.EnstituKod == surec.EnstituKod &&
+                            p.TezKontrolKullaniciID.HasValue &&
+                            !aktifKullaniciIds.Contains(p.TezKontrolKullaniciID.Value))
+                .Select(s => s.TezKontrolKullaniciID.Value).Distinct().ToList();
+
+            var secilenDigerKullaniciIds = digerMezuniyetBasvurulariTezDosyalaKontrolYapanIds;
+            secilenDigerKullaniciIds.AddRange(digerMezuniyetBasvuruTezDosyaKontrolSorumluId);
+            secilenDigerKullaniciIds = secilenDigerKullaniciIds.Distinct().ToList();
+
+            var pasifMezuniyetSureciTezKontrolBilgiDtos = (
+                from kul in _entities.Kullanicilars.Where(p => secilenDigerKullaniciIds.Contains(p.KullaniciID))
+                select new MezuniyetSureciTezKontrolBilgiDto
+                {
+                    KullaniciId = kul.KullaniciID,
+                    UserKey = kul.UserKey,
+                    ResimAdi = kul.ResimAdi,
+                    AdSoyad = kul.Ad + " " + kul.Soyad,
+                    SurecToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID),
+                    SurecToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
+                    SurecToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetSurecID == surec.MezuniyetSurecID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.OnayYapanID == kul.KullaniciID && a.IsOnaylandiOrDuzeltme == true)),
+                    GenelToplamAtanan = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID),
+                    GenelToplamKendiOnayi = _entities.MezuniyetBasvurularis.Count(c => c.TezKontrolKullaniciID == kul.KullaniciID && c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
+                    GenelToplamOnay = _entities.MezuniyetBasvurularis.Count(c => c.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true && a.OnayYapanID == kul.KullaniciID)),
+                }).OrderByDescending(o => o.GenelToplamOnay).ToList();
+
+            // ─────────────────────────────────────────────────────
+            //  Model oluştur
+            // ─────────────────────────────────────────────────────
+
+            // Atanmamış tez sayısı:
+            // Durum: KabulEdildi + tez dosyası yüklenmiş + son dosyada onay/düzeltme kararı yok + sorumlu atanmamış
+            // View'daki "Tez Dosyası Yüklendi — Enstitü onayı bekleniyor" durumuna karşılık gelir.
+            var atanmamisTezSayisi = _entities.MezuniyetBasvurularis.Count(m =>
+                m.MezuniyetSureci.EnstituKod == surec.EnstituKod &&
+                m.MezuniyetYayinKontrolDurumID == (int)MezuniyetYayinKontrolDurumuEnum.KabulEdildi &&
+                !m.TezKontrolKullaniciID.HasValue &&
+                m.MezuniyetBasvurulariTezDosyalaris.Any() &&
+                m.MezuniyetBasvurulariTezDosyalaris
+                    .OrderByDescending(d => d.SiraNo)
+                    .FirstOrDefault().IsOnaylandiOrDuzeltme == null);
+
+            var isTopluAtamaAktif = MezuniyetAyar.TezKontrolTopluAtamaAktif
+                .GetAyar(enstituKod).ToBoolean(false);
+
+            // Yetki kontrolü: Bu ekrandaki işlemleri (aktif/pasif, toplu atama) yapabilme yetkisi
+            var isYetkili = User.IsInRole(RoleNames.MezuniyetSureciKayıt);
+            var bekleyenAciklamaParcalar = new List<string>();
+            if (isKontrolBekleyenDahil) bekleyenAciklamaParcalar.Add("kontrol bekleyen");
+            if (isDuzeltmeBekleyenDahil) bekleyenAciklamaParcalar.Add("düzeltme bekleyen");
+            var bekleyenAciklama = bekleyenAciklamaParcalar.Any()
+                ? string.Join(" + ", bekleyenAciklamaParcalar) + " başvuru sayısı"
+                : "";
+            var model = new MezuniyetSureciTezKontrolDto
+            {
+                DonemAdi = surec.BaslangicYil + " - " + surec.BitisYil + " " + surec.Donemler.DonemAdi + " " + surec.SiraNo,
+                MezuniyetSurecId = surec.MezuniyetSurecID,
+                AktifMezuniyetSureciTezKontrolBilgiDtos = aktifMezuniyetSureciTezKontrolBilgiDtos,
+                PasifMezuniyetSureciTezKontrolBilgiDtos = pasifMezuniyetSureciTezKontrolBilgiDtos,
+                AtamaYontemi = atamaYontemiDeger,
+                AktifStratejiAciklama = stratejiAciklama,
+                BekleyenAciklama = bekleyenAciklama,
+                GunSiniri = gunSiniri,
+                GunlukTavan = gunlukTavan,
+                IsDonemsel = isDonemsel,
+                IsSiraylaAtama = isSiraylaAta,
+                IsProgramOnceliklendirme = isProgramOnceliklendirme,
+                IsBekleyenIsYukuAktif = isBekleyenIsYukuAktif,
+                IsZamanPencereli = isZamanPencereli,
+                AtanmamisTezSayisi = atanmamisTezSayisi,
+                IsTopluAtamaAktif = isTopluAtamaAktif,
+                IsYetkili = isYetkili
+            };
+
+            return ViewRenderHelper.RenderPartialView("MezuniyetSureci", "GetMsTezKontrolBilgileri", model);
+
         }
         public ActionResult GetOtoMailAyarView(int id)
         {
@@ -862,6 +1169,158 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult TezAtamaDurumuGuncelle(int kullaniciId, bool isTezAtamaAcik)
+        {
+            // Yetki kontrolü
+            if (!RoleNames.MezuniyetSureciKayıt.InRole())
+            {
+                return Json(new { isSuccess = false, message = "Bu işlem için yetkiniz bulunmamaktadır." });
+            }
+
+            try
+            {
+                var kullanici = _entities.Kullanicilars.FirstOrDefault(k => k.KullaniciID == kullaniciId);
+                if (kullanici == null)
+                {
+                    return Json(new { isSuccess = false, message = "Kullanıcı bulunamadı." });
+                }
+
+                kullanici.IsTezAtamaAcik = isTezAtamaAcik;
+                _entities.SaveChanges();
+
+                return Json(new
+                {
+                    isSuccess = true,
+                    message = kullanici.Ad + " " + kullanici.Soyad + " — tez atama durumu " +
+                              (isTezAtamaAcik ? "açıldı." : "kapatıldı.")
+                });
+            }
+            catch
+            {
+                return Json(new { isSuccess = false, message = "İşlem sırasında hata oluştu." });
+            }
+        }
+        [HttpPost]
+        public ActionResult TumTezAtamaDurumuGuncelle(bool isTezAtamaAcik, string ekd)
+        {
+            // Yetki kontrolü
+            if (!RoleNames.MezuniyetSureciKayıt.InRole())
+            {
+                return Json(new { isSuccess = false, message = "Bu işlem için yetkiniz bulunmamaktadır." });
+            }
+
+            try
+            {
+                string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+                var yetkililer = _entities.Kullanicilars.Where(k =>
+                    k.YetkiGrupID == YetkiGrupBus.TezKontrolYetkiGrupId &&
+                    k.IsAktif &&
+                    k.EnstituKod == enstituKod).ToList();
+
+                foreach (var kul in yetkililer)
+                {
+                    kul.IsTezAtamaAcik = isTezAtamaAcik;
+                }
+
+                _entities.SaveChanges();
+
+                return Json(new
+                {
+                    isSuccess = true,
+                    message = yetkililer.Count + " yetkilinin tez atama durumu " +
+                              (isTezAtamaAcik ? "açıldı." : "kapatıldı.")
+                });
+            }
+            catch
+            {
+                return Json(new { isSuccess = false, message = "Toplu güncelleme sırasında hata oluştu." });
+            }
+        }
+        // <summary>
+        /// Tez kontrol sorumlusu atanmamış başvuruları mevcut algoritmaya göre toplu dağıtır.
+        /// Her başvuru için TezDosyasiKontrolYetkilisiAta çağrılır — böylece
+        /// aktif strateji (skorlama/round-robin, tavan, normalizasyon) aynen uygulanır.
+        /// </summary>
+        [HttpPost]
+        public ActionResult TopluTezAtamaYap(int mezuniyetSurecId)
+        {
+            // Yetki kontrolü
+            if (!User.IsInRole(RoleNames.MezuniyetSureciKayıt))
+            {
+                return Json(new { isSuccess = false, message = "Bu işlem için yetkiniz bulunmamaktadır." });
+            }
+
+            try
+            {
+                var surec = _entities.MezuniyetSurecis.First(f => f.MezuniyetSurecID == mezuniyetSurecId);
+                var enstituKod = surec.EnstituKod;
+
+                // Toplu atama ayarı aktif mi?
+                if (!MezuniyetAyar.TezKontrolTopluAtamaAktif.GetAyar(enstituKod).ToBoolean(false))
+                {
+                    return Json(new { isSuccess = false, message = "Toplu atama özelliği bu enstitü için aktif değildir." });
+                }
+
+                // Atanmamış başvuruları bul:
+                // Durum: KabulEdildi + tez dosyası yüklenmiş + son dosyada onay yok + sorumlu atanmamış
+                // "Tez Dosyası Yüklendi — Enstitü onayı bekleniyor" durumundaki başvurular
+                var atanmamisBasvuruIds = _entities.MezuniyetBasvurularis
+                    .Where(m =>
+                        m.MezuniyetSurecID == mezuniyetSurecId &&
+                        m.MezuniyetYayinKontrolDurumID == (int)MezuniyetYayinKontrolDurumuEnum.KabulEdildi &&
+                        !m.TezKontrolKullaniciID.HasValue &&
+                        m.MezuniyetBasvurulariTezDosyalaris.Any() &&
+                        m.MezuniyetBasvurulariTezDosyalaris
+                            .OrderByDescending(d => d.SiraNo)
+                            .FirstOrDefault().IsOnaylandiOrDuzeltme == null)
+                    .Select(m => m.MezuniyetBasvurulariID)
+                    .ToList();
+
+                if (!atanmamisBasvuruIds.Any())
+                {
+                    return Json(new { isSuccess = true, message = "Atanmamış başvuru bulunmamaktadır.", atananSayi = 0 });
+                }
+
+                var basariliSayi = 0;
+                var hataliSayi = 0;
+
+                // Her başvuru için mevcut algoritmayı çağır
+                // Böylece tavan, normalizasyon, bekleyen iş yükü hepsi uygulanır.
+                foreach (var basvuruId in atanmamisBasvuruIds)
+                {
+                    try
+                    {
+                        // Ana atama metodunu çağır — V2 algoritması aynen çalışır
+                        TezKontrolYetkilisiAtama.TezDosyasiKontrolYetkilisiAta(basvuruId);
+                        basariliSayi++;
+                    }
+                    catch
+                    {
+                        hataliSayi++;
+                    }
+                }
+
+                var mesaj = basariliSayi + " başvuruya tez kontrol sorumlusu atandı.";
+                if (hataliSayi > 0)
+                {
+                    mesaj += " " + hataliSayi + " başvuruda hata oluştu.";
+                }
+
+                return Json(new
+                {
+                    isSuccess = true,
+                    message = mesaj,
+                    atananSayi = basariliSayi,
+                    hataliSayi = hataliSayi
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { isSuccess = false, message = "Toplu atama sırasında hata oluştu: " + ex.Message });
+            }
         }
     }
 }

@@ -20,9 +20,9 @@ namespace LisansUstuBasvuruSistemi.Business
         int? basvuruId = null,
         int? belgeTalepId = null,
         int? mezuniyetBasvurulariId = null,
-        int? tdoBasvuruID = null,
-        int? toBasvuruID = null,
-        int? donemProjesiID = null,
+        int? tdoBasvuruId = null,
+        int? toBasvuruId = null,
+        int? donemProjesiId = null,
         string rowId = null)
         {
             using (var entities = new LubsDbEntities())
@@ -54,18 +54,16 @@ namespace LisansUstuBasvuruSistemi.Business
                             cevapQuery = cevapQuery.Where(p => p.BelgeTalepID == belgeTalepId.Value);
                         break;
                     case AnketTipiEnum.DanismanAtamaBasvurunAnketi:
-                        if (tdoBasvuruID.HasValue)
-                            cevapQuery = cevapQuery.Where(p => p.TDOBasvuruID == tdoBasvuruID.Value);
+                        if (tdoBasvuruId.HasValue)
+                            cevapQuery = cevapQuery.Where(p => p.TDOBasvuruID == tdoBasvuruId.Value);
                         break;
                     case AnketTipiEnum.DoktoraTezOneriSinaviBasvuruAnketi:
-                        if (toBasvuruID.HasValue)
-                            cevapQuery = cevapQuery.Where(p => p.ToBasvuruID == toBasvuruID.Value);
+                        if (toBasvuruId.HasValue)
+                            cevapQuery = cevapQuery.Where(p => p.ToBasvuruID == toBasvuruId.Value);
                         break;
                     case AnketTipiEnum.TezsizYukseklisansDonemProjesiBasvuruAnketi:
-                        if (donemProjesiID.HasValue)
-                            cevapQuery = cevapQuery.Where(p => p.DonemProjesiID == donemProjesiID.Value);
-                        break;
-                    default:
+                        if (donemProjesiId.HasValue)
+                            cevapQuery = cevapQuery.Where(p => p.DonemProjesiID == donemProjesiId.Value);
                         break;
                 }
 
@@ -77,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                      select new
                                      {
                                          aso.AnketSoruID,
-                                         AnketSoruSecenekID = sbc != null ? sbc.AnketSoruSecenekID : (int?)null,
+                                         AnketSoruSecenekID = sbc != null ? sbc.AnketSoruSecenekID : null,
                                          Aciklama = sbc != null ? sbc.EkAciklama : "",
                                          aso.SiraNo,
                                          aso.SoruAdi,
@@ -410,7 +408,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         var nRwId = new Guid(kModel.RowID);
                         var basvuru = entities.TDOBasvurus.FirstOrDefault(p => p.UniqueID == nRwId);
-                        var anketId = TdoAyar.IlkDanismanOnerisindeIstenenAnket.GetAyar(basvuru.EnstituKod, "").ToInt();
+                        var anketId = TdoAyar.IlkDanismanOnerisindeIstenenAnket.GetAyar(basvuru.EnstituKod).ToInt();
                          
                         if (anketId > 0 && basvuru.AnketCevaplaris.All(p => p.AnketID != anketId))
                         {
@@ -427,7 +425,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         var nRwId = new Guid(kModel.RowID);
                         var basvuru = entities.ToBasvurus.FirstOrDefault(p => p.UniqueID == nRwId);
-                        var anketId = TiAyar.TezOneriIlkBasvuruAnketi.GetAyar(basvuru.EnstituKod, "").ToInt();
+                        var anketId = TiAyar.TezOneriIlkBasvuruAnketi.GetAyar(basvuru.EnstituKod).ToInt();
 
                         
                         if (anketId > 0 && basvuru.AnketCevaplaris.All(p => p.AnketID != anketId))
@@ -446,7 +444,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         var nRwId = new Guid(kModel.RowID);
                         var basvuru = entities.DonemProjesis.FirstOrDefault(p => p.UniqueID == nRwId);
-                        var anketId = DonemProjesiAyar.DonemProjesiIlkBasvuruAnketi.GetAyar(basvuru.EnstituKod, "").ToInt();
+                        var anketId = DonemProjesiAyar.DonemProjesiIlkBasvuruAnketi.GetAyar(basvuru.EnstituKod).ToInt();
                         if (anketId.HasValue && basvuru.AnketCevaplaris.All(p => p.AnketID != anketId))
                         {
                             foreach (var item in lstData)
@@ -464,7 +462,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 }
 
-                var hatasizlar = qGroup.Where(p => hatalilar.Contains(p.AnketSoruID) == false)
+                var hatasizlar = qGroup.Where(p => !hatalilar.Contains(p.AnketSoruID))
                     .Select(s => s.AnketSoruID).ToList();
                 foreach (var item in hatasizlar)
                 {

@@ -1,130 +1,729 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model  LisansUstuBasvuruSistemi.Utilities.Dtos.MezuniyetSureciTezKontrolDto
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.MezuniyetSureciTezKontrolDto
+
 @{
     Layout = null;
-    var tableUniqueId = Guid.NewGuid();
+
+    var tableUniqueId = "tezKontrolTable_" + Guid.NewGuid().ToString("N");
+    var tableUniqueId2 = "tezKontrolHistoryTable_" + Guid.NewGuid().ToString("N");
+
+    var aktifVarMi = Model.AktifMezuniyetSureciTezKontrolBilgiDtos.Any();
+    var pasifVarMi = Model.PasifMezuniyetSureciTezKontrolBilgiDtos.Any();
+
+    var gunSiniriAktif = Model.GunSiniri > 0 && !Model.IsSiraylaAtama;
+    var bekleyenAktif = Model.IsBekleyenIsYukuAktif && !Model.IsSiraylaAtama;
+    var tavanAktif = Model.GunlukTavan > 0;
+    var skorGoster = !Model.IsSiraylaAtama;
+
+    var kriterKolon = "genel";
+    if (Model.IsSiraylaAtama) { kriterKolon = "roundrobin"; }
+    else if (Model.IsZamanPencereli) { kriterKolon = "skor"; }
+    else if (Model.IsDonemsel) { kriterKolon = "donemsel"; }
 }
 
+<style>
+    .tez-box {
+        font-size: 12px;
+    }
 
-<div class="panel panel-info" style="margin:0px;">
-    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-        <h3 class="panel-title">
-            <i class="fa fa-list-alt"></i>Mezuniyet Süreci Tez Şablon Kontrol Verileri
-        </h3>
-        <ul class="panel-controls">
-            <li><span class="label label-primary label-form"><a style="width:54px;color:white;" href="javascript:void(0)" onclick="ExportToExcel('@tableUniqueId', '@Model.DonemAdi Mezuniyet Süreci Tez Şablon Kontrol Verileri')"><i class="fa fa-download fa-lg"></i> Excel olarak indir</a></span></li>
-        </ul>
+    /* ── Strateji barı ── */
+    .tez-strateji {
+        padding: 10px 15px;
+        border-bottom: 2px solid #337ab7;
+        background: linear-gradient(135deg, #eaf2fa 0%, #f4f8fc 100%);
+    }
+
+    .tez-strateji-label {
+        display: inline-block;
+        padding: 3px 10px;
+        margin-right: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 3px;
+        background: #337ab7;
+        color: #fff;
+    }
+
+    .tez-strateji-tag {
+        display: inline-block;
+        padding: 1px 2px;
+        margin: 1px 2px;
+        font-size: 11px;
+        border-radius: 3px;
+        background: #fff;
+        border: 1px solid #c5d9ed;
+        color: #2a5885;
+    }
+
+    .tez-strateji-tag i {
+        margin-right: 3px;
+    }
+
+    /* ── Atanmamış tez uyarı barı ── */
+    .tez-uyari-bar {
+        padding: 10px 15px;
+        border-bottom: 2px solid #f0ad4e;
+        background: linear-gradient(135deg, #fef8ec 0%, #fff5e0 100%);
+    }
+
+    .tez-uyari-sayi {
+        display: inline-block;
+        padding: 2px 10px;
+        margin: 0 4px;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 4px;
+        background: #e65100;
+        color: #fff;
+    }
+
+    .tez-uyari-metin {
+        font-size: 12px;
+        color: #6d4c00;
+        font-weight: 500;
+    }
+
+    .tez-toolbar {
+        padding: 8px 15px;
+        border-bottom: 1px solid #eee;
+        background: #fcfcfc;
+    }
+
+    .tez-toolbar .btn {
+        margin-right: 6px;
+    }
+
+    .tez-scroll {
+        max-height: 480px;
+        overflow: auto;
+    }
+
+    .tez-table {
+        margin-bottom: 0;
+        font-size: 12px;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* ── Sticky header — her iki satır ── */
+    .tez-table thead tr:first-child th {
+        text-align: center;
+        vertical-align: middle !important;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 4;
+        background: #eaeef3;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .tez-table thead tr:nth-child(2) th {
+        text-align: center;
+        vertical-align: middle !important;
+        white-space: nowrap;
+        position: sticky;
+        top: 18px;
+        z-index: 3;
+        background: #f5f5f5;
+        border-bottom: 2px solid #bbb;
+    }
+
+    .tez-table td {
+        vertical-align: middle !important;
+    }
+
+    .tez-user-cell {
+        min-width: 220px;
+    }
+
+    .tez-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+        cursor: pointer;
+    }
+
+    .tez-col-skor {
+        background: #fff9e6;
+    }
+
+    .tez-col-process {
+        background: #f9fcff;
+    }
+
+    .tez-col-general {
+        background: #fcfbff;
+    }
+
+    .tez-group-sep {
+        border-right: 2px solid #ddd !important;
+    }
+
+    .tez-kriter {
+        font-weight: 600;
+        box-shadow: inset 0 0 0 1px #f0ad4e;
+    }
+
+    .tez-kontrol {
+        color: #1e7e34;
+        font-weight: 600;
+    }
+
+    .tez-row-izinde {
+        opacity: .55;
+    }
+
+    .tez-row-siradaki td {
+        background-color: #f2fbf5 !important;
+    }
+
+    .tez-row-tavanda td {
+        background-color: #fff5f5 !important;
+    }
+
+    .tez-badge-mini {
+        display: inline-block;
+        margin-left: 6px;
+        padding: 2px 6px;
+        font-size: 10px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        background: #f7f7f7;
+        color: #666;
+    }
+
+    .tez-badge-tavanda {
+        background: #fee;
+        border-color: #e99;
+        color: #c33;
+    }
+
+    .tez-empty {
+        padding: 40px 15px;
+        text-align: center;
+        color: #888;
+    }
+
+    .tez-legend {
+        padding: 8px 15px;
+        border-top: 1px solid #eee;
+        background: #fdfdfd;
+        font-size: 11px;
+        color: #888;
+    }
+
+    .tez-legend span {
+        margin-right: 14px;
+    }
+
+    .tez-legend i {
+        margin-right: 3px;
+    }
+
+    .tez-sort-select {
+        display: inline-block;
+        padding: 2px 6px;
+        font-size: 11px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        background: #fff;
+        margin-left: 4px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="panel panel-default tez-box">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list-alt"></i> Mezuniyet Süreci Tez Şablon Kontrol Verileri</h3>
     </div>
-    <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
-        <div class="panel-body" style="margin: 0px; padding: 0px;">
-            <div class="col-md-12" style="text-align: left; height: 345px; overflow: auto;">
-                <table class="table table-hover" id="@tableUniqueId">
-                    @if (Model.AktifMezuniyetSureciTezKontrolBilgiDtos.Any())
-                    {
-                        <tr class="success">
-                            <td colspan="9" style="text-align:center;">
-                                Aktif Tez Şablon Kontrol Yetkilileri Tez Şablon Kontrol Bilgileri
-                            </td>
-                        </tr>
-                        <tr>
-                            <th width="30"></th>
-                            <th width="30"></th>
-                            <th></th>
-                            <th class="info" colspan="3" style="text-align:center;">@Model.DonemAdi Döneminde Yapılan</th>
-                            <th class="warning" colspan="3" style="text-align:center;">Tüm Süreçlerde Yapılan</th>
-                        </tr>
-                        <tr style="font-size:7pt;">
-                            <th></th>
-                            <th></th>
-                            <th>Kontrol<br />Sorumlusu</th>
-                            <th class="info" style="text-align:center;">Sorumluya Atanan<br />Toplam Tez</th>
-                            <th class="info" style="text-align:center;">Sorumluya Atanan<br />Tez Kontrolü</th>
-                            <th class="info" style="text-align:center;">Sorumlu Tüm Tez <br />Kontrolleri</th>
-                            <th class="warning" style="text-align:center;">Sorumluya Atanan<br />Toplam Tez</th>
-                            <th class="warning" style="text-align:center;">Sorumluya Atanan<br />Tez Kontrolü</th>
-                            <th class="warning" style="text-align:center;">Sorumlu Tüm Tez <br />Kontrolleri</th>
-                        </tr>
+    <div class="panel-body" style="padding:0;">
+        <ul class="nav nav-tabs" style="padding:0 15px; margin-top:10px;">
+            <li class="active">
+                <a href="#tabAktifTezKontrol" data-toggle="tab">
+                    Aktif Yetkililer
+                    @if (aktifVarMi)
+                    {<span class="badge">@Model.AktifMezuniyetSureciTezKontrolBilgiDtos.Count</span>}
+                </a>
+            </li>
+            @if (pasifVarMi)
+            {
+                <li>
+                    <a href="#tabGecmisTezKontrol" data-toggle="tab">
+                        Kontrol Geçmişi <span class="badge">@Model.PasifMezuniyetSureciTezKontrolBilgiDtos.Count</span>
+                    </a>
+                </li>
+            }
+        </ul>
 
-                        int rowIndex = 0;
-                        foreach (var item in Model.AktifMezuniyetSureciTezKontrolBilgiDtos.OrderByDescending(o=>o.SurecToplamOnay).ThenByDescending(t=>t.GenelToplamOnay))
-                        {
-                            rowIndex++;
-                            <tr>
+        <div class="tab-content">
 
-                                <td>@rowIndex</td>
-                                <td><img src="@item.ResimAdi.ToKullaniciResim()" style="width:30px;height:30px;cursor:pointer;padding:1px;" onclick="DetayGor('@item.UserKey')" class="img-thumbnail"></td>
-                                <td>@item.AdSoyad</td>
-                                <td style="text-align:center;">@item.SurecToplamAtanan</td>
-                                <td style="text-align:center;">@item.SurecToplamKendiOnayi</td>
-                                <td style="text-align:center;">@item.SurecToplamOnay</td>
-                                <td class="warning" style="text-align:center;">@item.GenelToplamAtanan</td>
-                                <td class="warning" style="text-align:center;">@item.GenelToplamKendiOnayi</td>
-                                <td class="warning" style="text-align:center;">@item.GenelToplamOnay</td>
-                            </tr>
-
-                        }
-                    }
-                    @if (Model.PasifMezuniyetSureciTezKontrolBilgiDtos.Any())
-                    {
-                        <tr class="success">
-                            <td colspan="9" style="text-align:center;">
-                                Aktif Tez Şablon Kontrol Yetkilileri Haricindeki Tez Şablon Kontrol Bilgileri
-                            </td>
-                        </tr>
-                        <tr>
-                            <th width="30"></th>
-                            <th width="30"></th>
-                            <th></th>
-                            <th class="info" colspan="3" style="text-align:center;">@Model.DonemAdi Döneminde Yapılan</th>
-                            <th class="warning" colspan="3" style="text-align:center;">Tüm Süreçlerde Yapılan</th>
-                        </tr>
-                        <tr style="font-size:7pt;">
-                            <th></th>
-                            <th></th>
-                            <th>Kontrol<br />Sorumlusu</th>
-                            <th class="info" style="text-align:center;">Sorumluya Atanan<br />Toplam Tez</th>
-                            <th class="info" style="text-align:center;">Sorumluya Atanan<br />Tez Kontrolü</th>
-                            <th class="info" style="text-align:center;">Sorumlu Tüm Tez <br />Kontrolleri</th>
-                            <th class="warning" style="text-align:center;">Sorumluya Atanan<br />Toplam Tez</th>
-                            <th class="warning" style="text-align:center;">Sorumluya Atanan<br />Tez Kontrolü</th>
-                            <th class="warning" style="text-align:center;">Sorumlu Tüm Tez <br />Kontrolleri</th>
-                        </tr>
-                        var rowIndex = 0;
-                        foreach (var item in Model.PasifMezuniyetSureciTezKontrolBilgiDtos.OrderByDescending(o => o.SurecToplamOnay).ThenByDescending(t => t.GenelToplamOnay))
-                        {
-                            rowIndex++;
-                            <tr>
-
-                                <td>@rowIndex</td>
-                                <td><img src="@item.ResimAdi.ToKullaniciResim()" style="width:30px;height:30px;cursor:pointer;padding:1px;" onclick="DetayGor('@item.UserKey')" class="img-thumbnail"></td>
-                                <td>@item.AdSoyad</td>
-                                <td style="text-align:center;">@item.SurecToplamAtanan</td>
-                                <td style="text-align:center;">@item.SurecToplamKendiOnayi</td>
-                                <td style="text-align:center;">@item.SurecToplamOnay</td>
-                                <td class="warning" style="text-align:center;">@item.GenelToplamAtanan</td>
-                                <td class="warning" style="text-align:center;">@item.GenelToplamKendiOnayi</td>
-                                <td class="warning" style="text-align:center;">@item.GenelToplamOnay</td>
-                            </tr>
-
-                        }
-                    }
-                    @if (!Model.PasifMezuniyetSureciTezKontrolBilgiDtos.Any() && !Model.AktifMezuniyetSureciTezKontrolBilgiDtos.Any())
-                    {
-                        <tr>
-                            <td style="text-align:center;height:250px;">
-                                <div class="tasks">
-                                    <div class="task-item task-danger" style="margin-bottom: 0px; cursor: auto;">
-                                        <div class="task-text" style="padding-bottom: 0px; font-size: 8pt;">
-                                            Gösterilecek Tez Şablon Kontrol Verileri Bulunamadı.
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </table>
-
+            <!-- ═══ Strateji Özeti ═══ -->
+            <div class="tez-strateji">
+                <span class="tez-strateji-label"><i class="fa fa-cog"></i> Strateji</span>
+                @{
+                    var parcalar = Model.AktifStratejiAciklama.Split(new[] { " | " }, StringSplitOptions.RemoveEmptyEntries);
+                    var iconMap = new Dictionary<string, string> {
+                        {"Sırayla","fa-refresh"}, {"En Az","fa-balance-scale"}, {"Aktif Süreç","fa-calendar-check-o"},
+                        {"Tüm Süreç","fa-calendar"}, {"Son ","fa-clock-o"}, {"Tüm Zaman","fa-history"},
+                        {"Normalizasyon","fa-percent"}, {"Tavan","fa-ban"}, {"Bekleyen","fa-hourglass-half"}, {"Program","fa-sitemap"}
+                    };
+                }
+                @foreach (var parca in parcalar)
+                {
+                    var icon = "fa-tag";
+                    foreach (var kv in iconMap) { if (parca.Contains(kv.Key)) { icon = kv.Value; break; } }
+                    <span class="tez-strateji-tag"><i class="fa @icon"></i> @parca</span>
+                }
             </div>
+
+            <!-- ═══ Atanmamış Tez Uyarısı ═══ -->
+            @if (Model.AtanmamisTezSayisi > 0)
+            {
+                <div class="tez-uyari-bar">
+                    <i class="fa fa-exclamation-triangle" style="color:#e65100;font-size:14px;"></i>
+                    <span class="tez-uyari-sayi">@Model.AtanmamisTezSayisi</span>
+                    <span class="tez-uyari-metin">başvuruda tez dosyası yüklenmiş ancak kontrol sorumlusu atanmamış.</span>
+                    @if (Model.IsTopluAtamaAktif && Model.IsYetkili)
+                    {
+                        <button type="button" class="btn btn-warning btn-sm pull-right btn-toplu-atama" style="margin-top:-3px;" onclick="TopluTezAtamaOnay()">
+                            <i class="fa fa-magic"></i> Atanmamış Tezleri Dağıt (@Model.AtanmamisTezSayisi)
+                        </button>
+                    }
+                </div>
+            }
+
+            <!-- ═══ Aktif Yetkililer Tab ═══ -->
+            <div class="tab-pane active" id="tabAktifTezKontrol">
+                @if (aktifVarMi)
+                {
+                    <div class="tez-toolbar clearfix">
+                        @if (Model.IsYetkili)
+                        {
+                            <div class="pull-left">
+                                <button type="button" class="btn btn-success btn-xs" onclick="TumTezAtamaDurumunuDegistirOnay(true)">
+                                    <i class="fa fa-check-square-o"></i> Tümünü Aç
+                                </button>
+                                <button type="button" class="btn btn-default btn-xs" onclick="TumTezAtamaDurumunuDegistirOnay(false)">
+                                    <i class="fa fa-square-o"></i> Tümünü Kapat
+                                </button>
+                            </div>
+                        }
+                        <div class="pull-right">
+                            <i class="fa fa-sort-amount-desc" style="color:#999;"></i>
+                            <select class="tez-sort-select" onchange="TezTabloSirala(this.value,@Model.MezuniyetSurecId)">
+                                @if (skorGoster && kriterKolon == "skor")
+                                {
+                                    <option value="skor_asc" selected>Skor (Düşük → Yüksek)</option>
+                                    <option value="skor_desc">Skor (Yüksek → Düşük)</option>
+                                }
+                                <option value="surec_desc" @(kriterKolon != "skor" ? "selected" : "")>Süreç Toplam (Çok → Az)</option>
+                                <option value="surec_asc">Süreç Toplam (Az → Çok)</option>
+                                <option value="genel_desc">Genel Toplam (Çok → Az)</option>
+                                <option value="genel_asc">Genel Toplam (Az → Çok)</option>
+                                @if (gunSiniriAktif)
+                                {
+                                    <option value="pencere_desc">Son @Model.GunSiniri Gün (Çok → Az)</option>
+                                    <option value="pencere_asc">Son @Model.GunSiniri Gün (Az → Çok)</option>
+                                }
+                                @if (bekleyenAktif)
+                                {
+                                    <option value="bekleyen_desc">Bekleyen İş (Çok → Az)</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-primary btn-xs" style="margin-left:8px;" onclick="ExportToExcel('@tableUniqueId', '@Model.DonemAdi Tez Kontrol Verileri')">
+                                <i class="fa fa-download"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tez-scroll">
+                        <table class="table table-bordered table-hover tez-table" id="@tableUniqueId">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" width="35">#</th>
+                                    <th rowspan="2" width="36"></th>
+                                    <th rowspan="2" style="text-align:left;">Kontrol Sorumlusu</th>
+                                    <th rowspan="2" width="55" class="tez-group-sep">Atama</th>
+                                    @if (skorGoster)
+                                    {
+                                        var skorColspan = 1;
+                                        if (gunSiniriAktif) { skorColspan += 2; }
+                                        if (bekleyenAktif) { skorColspan += 1; }
+                                        if (tavanAktif) { skorColspan += 1; }
+                                        <th colspan="@skorColspan" class="tez-col-skor tez-group-sep"><i class="fa fa-calculator"></i> Atama Kriterleri</th>
+                                    }
+                                    <th colspan="3" class="tez-col-process">Süreç</th>
+                                    <th colspan="3" class="tez-col-general">Genel</th>
+                                </tr>
+                                <tr>
+                                    @if (skorGoster)
+                                    {
+                                        if (gunSiniriAktif)
+                                        {
+                                            <th class="tez-col-skor" title="Son @Model.GunSiniri gündeki atama sayısı">Son @Model.GunSiniri G.</th>
+                                            <th class="tez-col-skor" title="Son @Model.GunSiniri gündeki aktif gün sayısı">Aktif Gün</th>
+                                        }
+                                        if (bekleyenAktif)
+                                        {
+                                            <th class="tez-col-skor" title="@Model.BekleyenAciklama">Bekleyen</th>
+                                        }
+                                        if (tavanAktif)
+                                        {
+                                            <th class="tez-col-skor" title="Bugün / Tavan: @Model.GunlukTavan">Bugün</th>
+                                        }
+                                        <th class="tez-col-skor tez-kriter tez-group-sep" title="Düşük olan öncelikli atanır">Skor</th>
+                                    }
+                                    <th class="tez-col-process @(kriterKolon == "donemsel" ? "tez-kriter" : "")">Atanan</th>
+                                    <th class="tez-col-process tez-kontrol">Kontrol</th>
+                                    <th class="tez-col-process tez-group-sep">Toplam</th>
+                                    <th class="tez-col-general @(kriterKolon == "genel" ? "tez-kriter" : "")">Atanan</th>
+                                    <th class="tez-col-general tez-kontrol">Kontrol</th>
+                                    <th class="tez-col-general">Toplam</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tezKontrolTbody_@Model.MezuniyetSurecId">
+                                @{
+                                    var siraliListe = skorGoster && kriterKolon == "skor"
+                                        ? Model.AktifMezuniyetSureciTezKontrolBilgiDtos.OrderBy(x => x.FinalSkor).ThenByDescending(x => x.GenelToplamOnay).ToList()
+                                        : Model.AktifMezuniyetSureciTezKontrolBilgiDtos.OrderByDescending(x => x.SurecToplamOnay).ThenByDescending(x => x.GenelToplamOnay).ToList();
+                                    var rowIndex = 0;
+                                }
+                                @foreach (var item in siraliListe)
+                                {
+                                    rowIndex++;
+                                    var rowCss = "";
+                                    if (item.IsIzinde) { rowCss = "tez-row-izinde"; }
+                                    else if (item.IsSiradaki) { rowCss = "tez-row-siradaki"; }
+                                    else if (item.IsTavanda) { rowCss = "tez-row-tavanda"; }
+
+                                    <tr class="@rowCss" data-skor="@item.FinalSkor.ToString("F4", System.Globalization.CultureInfo.InvariantCulture)" data-surec="@item.SurecToplamOnay" data-genel="@item.GenelToplamOnay" data-pencere="@item.GunPenceresiAtanan" data-bekleyen="@item.BekleyenIsYuku">
+                                        <td class="text-center text-muted tez-row-num">@rowIndex</td>
+                                        <td class="text-center">
+                                            <img src="@item.ResimAdi.ToKullaniciResim()" class="tez-avatar" onclick="DetayGor('@item.UserKey')" />
+                                        </td>
+                                        <td class="tez-user-cell">
+                                            <strong>@item.AdSoyad</strong>
+                                            @if (item.IsSiradaki)
+                                            {<span class="tez-badge-mini" style="background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32;">Sıradaki</span> }
+                                            else if (item.IsIzinde)
+                                            { <span class="tez-badge-mini">İzinde</span> }
+                                            else if (item.IsTavanda)
+                                            { <span class="tez-badge-mini tez-badge-tavanda">Tavanda</span> }
+                                            else if (gunSiniriAktif && item.AktifGunSayisi <= 0 && !item.IsIzinde)
+                                            { <span class="tez-badge-mini" title="Penceredeki tüm günler izinli">Aktif Gün Yok</span> }
+                                            else if (!item.IsTezAtamaAcik)
+                                            { <span class="tez-badge-mini">Pasif</span>}
+                                        </td>
+                                        <td class="text-center tez-group-sep">
+                                            <input type="checkbox" class="tez-atama-checkbox" data-kullanici-id="@item.KullaniciId"
+                                                   @(item.IsTezAtamaAcik ? "checked=\"checked\"" : "") @(!Model.IsYetkili ? "disabled=\"disabled\"" : "")
+                                                   onchange="TezAtamaDurumuDegistir(this)" />
+                                        </td>
+
+                                        @if (skorGoster)
+                                        {
+                                            if (gunSiniriAktif)
+                                            {
+                                                <td class="text-center tez-col-skor">@item.GunPenceresiAtanan</td>
+                                                <td class="text-center tez-col-skor">
+                                                    @if (item.AktifGunSayisi <= 0)
+                                                    {<span class="text-muted" title="Penceredeki tüm günler izinli">—</span> }
+                                                    else
+                                                    { @item.AktifGunSayisi}
+                                                </td>
+                                            }
+                                            if (bekleyenAktif)
+                                            {
+                                                <td class="text-center tez-col-skor">
+                                                    @if (item.BekleyenIsYuku > 0)
+                                                    {<span style="color:#e65100;font-weight:600;">@item.BekleyenIsYuku</span> }
+                                                else
+                                                { <span class="text-muted">0</span>}
+                                                </td>
+                                            }
+                                            if (tavanAktif)
+                                            {
+                                                <td class="text-center tez-col-skor">@item.BugunkuAtamaSayisi / @Model.GunlukTavan</td>
+                                            }
+                                            <td class="text-center tez-col-skor tez-kriter tez-group-sep">
+                                                @if (item.FinalSkor < 0)
+                                                {<span class="text-muted" title="Atamaya dahil edilmez">—</span> }
+                                                else
+                                                { <span title="Oran: @item.NormalizeOran.ToString("F2") + Bekleyen: @item.BekleyenIsYuku × @TezKontrolYetkilisiAtama.BekleyenIsKatsayisi">@item.FinalSkor.ToString("F2")</span>}
+                                            </td>
+                                        }
+
+                                        <td class="text-center tez-col-process @(kriterKolon == "donemsel" ? "tez-kriter" : "")">@item.SurecToplamAtanan</td>
+                                        <td class="text-center tez-col-process tez-kontrol">@item.SurecToplamKendiOnayi</td>
+                                        <td class="text-center tez-col-process tez-group-sep">@item.SurecToplamOnay</td>
+                                        <td class="text-center tez-col-general @(kriterKolon == "genel" ? "tez-kriter" : "")">@item.GenelToplamAtanan</td>
+                                        <td class="text-center tez-col-general tez-kontrol">@item.GenelToplamKendiOnayi</td>
+                                        <td class="text-center tez-col-general">@item.GenelToplamOnay</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tez-legend">
+                        @if (skorGoster)
+                        {<span><i class="fa fa-star text-warning"></i> Skor = düşük olan öncelikli atanır</span>}
+                        @if (gunSiniriAktif)
+                        {<span><i class="fa fa-calendar-o"></i> Aktif Gün = izinli günler çıkarılmış</span>}
+                        @if (bekleyenAktif)
+                        {<span><i class="fa fa-clock-o text-warning"></i> Bekleyen = @Model.BekleyenAciklama</span>}
+                        @if (tavanAktif)
+                        {<span style="color:#c33;"><i class="fa fa-ban"></i> Tavanda = bugün @Model.GunlukTavan atamaya ulaşmış</span>}
+                    </div>
+                }
+                else
+                {
+                    <div class="tez-empty">Aktif tez şablon kontrol yetkilisi bulunamadı.</div>
+                }
+            </div>
+
+            <!-- ═══ Pasif / Geçmiş Tab ═══ -->
+            @if (pasifVarMi)
+            {
+                <div class="tab-pane" id="tabGecmisTezKontrol">
+                    <div class="tez-toolbar clearfix">
+                        <div class="pull-left text-muted" style="padding-top:4px;">Aktif yetki grubunda olmayan ancak daha önce kontrol yapmış kişiler</div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-primary btn-xs" onclick="ExportToExcel('@tableUniqueId2', '@Model.DonemAdi Tez Kontrol Geçmişi')">
+                                <i class="fa fa-download"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tez-scroll">
+                        <table class="table table-bordered table-hover tez-table" id="@tableUniqueId2">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" width="35">#</th>
+                                    <th rowspan="2" width="36"></th>
+                                    <th rowspan="2" style="text-align:left;">Kontrol Sorumlusu</th>
+                                    <th colspan="3" class="tez-col-process">Süreç</th>
+                                    <th colspan="3" class="tez-col-general">Genel</th>
+                                </tr>
+                                <tr>
+                                    <th class="tez-col-process">Atanan</th>
+                                    <th class="tez-col-process tez-kontrol">Kontrol</th>
+                                    <th class="tez-col-process tez-group-sep">Toplam</th>
+                                    <th class="tez-col-general">Atanan</th>
+                                    <th class="tez-col-general tez-kontrol">Kontrol</th>
+                                    <th class="tez-col-general">Toplam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ var rowIndex2 = 0; }
+                                @foreach (var item in Model.PasifMezuniyetSureciTezKontrolBilgiDtos.OrderByDescending(x => x.SurecToplamOnay).ThenByDescending(x => x.GenelToplamOnay))
+                                {
+                                    rowIndex2++;
+                                    <tr>
+                                        <td class="text-center text-muted">@rowIndex2</td>
+                                        <td class="text-center"><img src="@item.ResimAdi.ToKullaniciResim()" class="tez-avatar" onclick="DetayGor('@item.UserKey')" /></td>
+                                        <td class="tez-user-cell"><strong>@item.AdSoyad</strong></td>
+                                        <td class="text-center tez-col-process">@item.SurecToplamAtanan</td>
+                                        <td class="text-center tez-col-process tez-kontrol">@item.SurecToplamKendiOnayi</td>
+                                        <td class="text-center tez-col-process tez-group-sep">@item.SurecToplamOnay</td>
+                                        <td class="text-center tez-col-general">@item.GenelToplamAtanan</td>
+                                        <td class="text-center tez-col-general tez-kontrol">@item.GenelToplamKendiOnayi</td>
+                                        <td class="text-center tez-col-general">@item.GenelToplamOnay</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+         TezTabloSirala("skor_asc", @Model.MezuniyetSurecId);
+    });
+    // ═══ Sıralama (client-side) ═══
+    function TezTabloSirala(kriter,id) {
+        var $tbody = $("#tezKontrolTbody_" + id);
+        var $rows = $tbody.find("tr").get();
+        var parts = kriter.split("_");
+        var field = parts[0], dir = parts[1];
+
+        $rows.sort(function (a, b) {
+            var rawA = $(a).attr("data-" + field);
+            var rawB = $(b).attr("data-" + field);
+            var valA = parseFloat(rawA) || 0;
+            var valB = parseFloat(rawB) || 0;
+
+            // Negatif skor (aktif günü yok) → her zaman en alta
+            if (valA < 0 && valB >= 0) return 1;
+            if (valB < 0 && valA >= 0) return -1;
+            if (valA < 0 && valB < 0) return 0;
+
+            return dir === "asc" ? valA - valB : valB - valA;
+        });
+        $.each($rows, function (idx, row) {
+            $tbody.append(row);
+            $(row).find(".tez-row-num").text(idx + 1);
+        });
+    }
+
+    // ═══ Tek yetkili atama durumu ═══
+    function TezAtamaDurumuDegistir(checkbox) {
+        var $cb = $(checkbox), kullaniciId = $cb.data("kullanici-id"), durum = $cb.is(":checked");
+        $.ajax({
+            url: '@Url.Action("TezAtamaDurumuGuncelle", "MezuniyetSureci")',
+            type: 'POST', data: { kullaniciId: kullaniciId, isTezAtamaAcik: durum },
+            success: function (r) {
+                if (r && r.isSuccess) { toastr.success(r.message); }
+                else { $cb.prop("checked", !durum); toastr.error(r && r.message ? r.message : "Hata oluştu."); }
+            },
+            error: function () { $cb.prop("checked", !durum); toastr.error("Hata oluştu."); }
+        });
+    }
+
+    // ═══ Toplu atama durumu (SweetAlert) ═══
+    function TumTezAtamaDurumunuDegistirOnay(durum) {
+        Swal.fire({
+            title: durum ? "Tümünü Aç" : "Tümünü Kapat",
+            html: durum
+                ? "Tüm tez kontrol sorumlularının atama izni <b>açılacaktır</b>."
+                : "Tüm tez kontrol sorumlularının atama izni <b>kapatılacaktır</b>.<br/><small class='text-danger'>Bu işlem sonrası yeni otomatik atama yapılamayacaktır.</small>",
+            icon: durum ? "question" : "warning",
+            type: durum ? "question" : "warning",
+            showCancelButton: true,
+            confirmButtonColor: durum ? "#5cb85c" : "#d9534f",
+            confirmButtonText: durum ? "Evet, Tümünü Aç" : "Evet, Tümünü Kapat",
+            cancelButtonText: "Vazgeç",
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                var checkboxes = $(".tez-atama-checkbox:not(:disabled)");
+                if (!checkboxes.length) {
+                    Swal.showValidationMessage("Güncellenecek aktif kayıt bulunamadı.");
+                    return false;
+                }
+
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: '@Url.Action("TumTezAtamaDurumuGuncelle", "MezuniyetSureci")',
+                        type: 'POST',
+                        data: { isTezAtamaAcik: durum },
+                        success: function (r) {
+                            resolve(r);
+                        },
+                        error: function () {
+                            reject("Sunucu hatası oluştu.");
+                        }
+                    });
+                });
+            }
+        }).then(function (result) {
+            if (!result.value) return;
+
+            var r = result.value;
+            if (r && r.isSuccess) {
+                $(".tez-atama-checkbox:not(:disabled)").prop("checked", durum);
+
+                Swal.fire({
+                    title: "Başarılı",
+                    text: r.message || "Toplu güncelleme tamamlandı.",
+                    icon: "success",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else {
+                Swal.fire({
+                    title: "Hata",
+                    text: (r && r.message) ? r.message : "Hata oluştu.",
+                    icon: "error",
+                    type: "error",
+                    confirmButtonText: "Tamam"
+                });
+            }
+        }).catch(function (err) {
+            Swal.fire({
+                title: "Hata",
+                text: err || "Hata oluştu.",
+                icon: "error",
+                type: "error",
+                confirmButtonText: "Tamam"
+            });
+        });
+    }
+
+    // ═══ Toplu tez atama (SweetAlert) ═══
+    function TopluTezAtamaOnay() {
+        var sayi = @Model.AtanmamisTezSayisi;
+
+        Swal.fire({
+            title: "Toplu Tez Atama",
+            html: "<b>" + sayi + "</b> adet başvuruya tez kontrol sorumlusu atanacaktır.<br/><br/>" +
+                "<small>Atama, mevcut strateji ayarlarına göre yapılacaktır.<br/>" +
+                "<span class='text-danger'><i class='fa fa-exclamation-triangle'></i> Bu işlem geri alınamaz.</span></small>",
+            icon: "warning",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f0ad4e",
+            confirmButtonText: "<i class='fa fa-magic'></i> Evet, Dağıt",
+            cancelButtonText: "Vazgeç",
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: '@Url.Action("TopluTezAtamaYap", "MezuniyetSureci")',
+                        type: 'POST',
+                        data: { mezuniyetSurecId: @Model.MezuniyetSurecId },
+                        success: function (r) {
+                            resolve(r);
+                        },
+                        error: function () {
+                            reject("Sunucu hatası oluştu.");
+                        }
+                    });
+                });
+            }
+        }).then(function (result) {
+            if (!result.value) return;
+
+            var d = result.value;
+            if (d && d.isSuccess) {
+                Swal.fire({
+                    title: "Atama Tamamlandı",
+                    html: "<b>" + d.atananSayi + "</b> başvuruya sorumlu atandı." +
+                        (d.hataliSayi > 0
+                            ? "<br/><small class='text-danger'>" + d.hataliSayi + " başvuruda hata oluştu.</small>"
+                            : ""),
+                    icon: "success",
+                    type: "success",
+                    confirmButtonText: "Tamam"
+                }).then(function () {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    title: "Hata",
+                    text: d && d.message ? d.message : "Hata oluştu.",
+                    icon: "error",
+                    type: "error",
+                    confirmButtonText: "Tamam"
+                });
+            }
+        }).catch(function (err) {
+            Swal.fire({
+                title: "Hata",
+                text: err || "Hata oluştu.",
+                icon: "error",
+                type: "error",
+                confirmButtonText: "Tamam"
+            });
+        });
+    }
+</script>

@@ -17,8 +17,8 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AnketSoru()
         {
-            this.AnketSoruSeceneks = new HashSet<AnketSoruSecenek>();
             this.AnketCevaplaris = new HashSet<AnketCevaplari>();
+            this.AnketSoruSeceneks = new HashSet<AnketSoruSecenek>();
         }
     
         public int AnketSoruID { get; set; }
@@ -30,8 +30,8 @@ namespace Entities.Entities
     
         public virtual Anket Anket { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AnketSoruSecenek> AnketSoruSeceneks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnketSoruSecenek> AnketSoruSeceneks { get; set; }
     }
 }

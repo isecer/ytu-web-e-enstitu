@@ -17,8 +17,8 @@ namespace Entities.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ToBasvuru()
         {
-            this.ToBasvuruSavunmas = new HashSet<ToBasvuruSavunma>();
             this.AnketCevaplaris = new HashSet<AnketCevaplari>();
+            this.ToBasvuruSavunmas = new HashSet<ToBasvuruSavunma>();
         }
     
         public int ToBasvuruID { get; set; }
@@ -42,13 +42,13 @@ namespace Entities.Entities
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
         public virtual Donemler Donemler { get; set; }
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ToBasvuruSavunma> ToBasvuruSavunmas { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AnketCevaplari> AnketCevaplaris { get; set; }
     }
 }

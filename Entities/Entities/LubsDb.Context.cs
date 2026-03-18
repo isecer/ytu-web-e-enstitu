@@ -32,6 +32,7 @@ namespace Entities.Entities
         public virtual DbSet<AnabilimDaliYeterlikKomiteUyeleri> AnabilimDaliYeterlikKomiteUyeleris { get; set; }
         public virtual DbSet<AnabilimDallari> AnabilimDallaris { get; set; }
         public virtual DbSet<Anket> Ankets { get; set; }
+        public virtual DbSet<AnketCevaplari> AnketCevaplaris { get; set; }
         public virtual DbSet<AnketSoru> AnketSorus { get; set; }
         public virtual DbSet<AnketSoruSecenek> AnketSoruSeceneks { get; set; }
         public virtual DbSet<Ayarlar> Ayarlars { get; set; }
@@ -114,7 +115,9 @@ namespace Entities.Entities
         public virtual DbSet<MesajEkleri> MesajEkleris { get; set; }
         public virtual DbSet<MesajKategorileri> MesajKategorileris { get; set; }
         public virtual DbSet<Mesajlar> Mesajlars { get; set; }
+        public virtual DbSet<MezuniyetAyarlar> MezuniyetAyarlars { get; set; }
         public virtual DbSet<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
+        public virtual DbSet<MezuniyetBasvurulariTezDosyalari> MezuniyetBasvurulariTezDosyalaris { get; set; }
         public virtual DbSet<MezuniyetBasvurulariTezTeslimFormlari> MezuniyetBasvurulariTezTeslimFormlaris { get; set; }
         public virtual DbSet<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
         public virtual DbSet<MezuniyetJuriOneriFormlari> MezuniyetJuriOneriFormlaris { get; set; }
@@ -151,7 +154,6 @@ namespace Entities.Entities
         public virtual DbSet<OzelTarihTipleri> OzelTarihTipleris { get; set; }
         public virtual DbSet<Programlar> Programlars { get; set; }
         public virtual DbSet<Programlar2> Programlar2 { get; set; }
-        public virtual DbSet<Programlar2Obs> Programlar2Obs { get; set; }
         public virtual DbSet<Roller> Rollers { get; set; }
         public virtual DbSet<Sehirler> Sehirlers { get; set; }
         public virtual DbSet<ServiceLog> ServiceLogs { get; set; }
@@ -225,10 +227,9 @@ namespace Entities.Entities
         public virtual DbSet<YetkiGruplari> YetkiGruplaris { get; set; }
         public virtual DbSet<YetkiGrupRolleri> YetkiGrupRolleris { get; set; }
         public virtual DbSet<ZamanTipleri> ZamanTipleris { get; set; }
+        public virtual DbSet<C_vW_BasvuruAlesOrtalamalar> C_vW_BasvuruAlesOrtalamalar { get; set; }
+        public virtual DbSet<C_vW_BasvuruKayitSinavBilgi> C_vW_BasvuruKayitSinavBilgi { get; set; }
         public virtual DbSet<vW_ProgramBasvuruSonucSayisal> vW_ProgramBasvuruSonucSayisal { get; set; }
-        public virtual DbSet<AnketCevaplari> AnketCevaplaris { get; set; }
-        public virtual DbSet<MezuniyetBasvurulariTezDosyalari> MezuniyetBasvurulariTezDosyalaris { get; set; }
-        public virtual DbSet<MezuniyetAyarlar> MezuniyetAyarlars { get; set; }
     
         public virtual ObjectResult<sp_SearchMailsFullText_Result> sp_SearchMailsFullText(string enstituKodList, Nullable<bool> isEkVar, string konu, string enstituKod, Nullable<System.DateTime> tarih, string mailGonderen, Nullable<int> startRow, Nullable<int> pageSize, ObjectParameter totalCount)
         {

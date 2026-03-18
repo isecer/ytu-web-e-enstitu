@@ -235,7 +235,7 @@
                                             <select id="DanismanBasvuruOnay_@Model.MezuniyetBasvurulariID" onchange="DanOnayChange(this,@Model.MezuniyetBasvurulariID);">
                                                 <option></option>
                                                 <option value="true" @(Model.IsDanismanOnay == true ? "selected" : "")>Öğrenci Başvurusunu Onaylıyorum </option>
-                                                <option value="false" @(Model.IsDanismanOnay == false ? "selected" : "")>Öğrenci Başvurusunu Ret Ediyorum</option>
+                                                <option value="false" @(Model.IsDanismanOnay == false ? "selected" : "")>Öğrenci Başvurusunu Reddediyorum</option>
                                             </select>
                                             <a href="javascript:void(0);" onclick="DanismanBasvuruOnayKayit(@Model.MezuniyetBasvurulariID)" class="btn btn-primary btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
                                             <script>

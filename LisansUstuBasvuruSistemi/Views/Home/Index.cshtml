@@ -12,11 +12,11 @@
     var mesajGroupId = (string)ViewBag.MesajGroupID;
     var duyurular = (List<FrDuyurularDto>)ViewBag.Duyurular;
     var anketGiris = (string)ViewBag.AnketGiris;
-    var galleryUrls = ViewBag.GaleryUrls as List<string>; 
+    var galleryItems = ViewBag.GalleryItems as IEnumerable<GaleryItem>;
 }
 
 
-@if (galleryUrls != null && galleryUrls.Count > 0)
+@if (galleryItems != null && galleryItems.Any())
 {
     <link href="~/Content/assets/swiper/swiper-bundle.min.css" rel="stylesheet" />
     <script src="~/Content/assets/swiper/swiper-bundle.min.js"></script>
@@ -33,12 +33,17 @@
                 <div class="panel-body">
                     <div class="swiper swiper-v3 myGallerySwiper3">
                         <div class="swiper-wrapper">
-
-                            @foreach (var imgUrl in galleryUrls)
+                             
+                            @foreach (var item in galleryItems)
                             {
-                                var nowTicks = DateTime.Now.Ticks;
+                                var finalUrl = item.Url + "?v=" + item.Version;
+
                                 <div class="swiper-slide">
-                                    <img src="@imgUrl?v=@nowTicks" alt="Savunma Duyurusu" onclick="openGalleryModal('@imgUrl?v=@nowTicks')" />
+                                    <img src="@finalUrl"
+                                         loading="lazy"
+                                         alt="Savunma Duyurusu"
+                                         data-img="@finalUrl"
+                                         onclick="openGalleryModal(this.getAttribute('data-img'))" />
                                 </div>
                             }
                         </div>
@@ -109,7 +114,7 @@
         }
     </script>
 }
- 
+
 @if (duyurular.Count > 0)
 {
     <div class="row">

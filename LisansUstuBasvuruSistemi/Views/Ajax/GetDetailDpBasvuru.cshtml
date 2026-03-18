@@ -652,7 +652,7 @@ else
                                                                                 <select class="form-control" id="danismanOnay_@item.UniqueID" onchange="if ($(this).val() == 'false') { $('#danismanIptalRow_@item.UniqueID').removeClass('hide'); } else { $('#danismanIptalRow_@item.UniqueID').addClass('hide'); }">
                                                                                     <option></option>
                                                                                     <option value="true" @(item.IsDanismanOnay == true ? "selected" : "")>Başvuruyu Onaylıyorum</option>
-                                                                                    <option value="false" @(item.IsDanismanOnay == false ? "selected" : "")>Başvuruyu Ret Ediyorum</option>
+                                                                                    <option value="false" @(item.IsDanismanOnay == false ? "selected" : "")>Başvuruyu Reddediyorum</option>
                                                                                 </select>
                                                                             }
                                                                             else

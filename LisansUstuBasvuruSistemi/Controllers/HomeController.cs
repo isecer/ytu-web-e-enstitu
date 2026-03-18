@@ -85,8 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     basvuru.AnketCevaplaris.All(p => p.AnketID != basvuru.BasvuruSurec.KayitOlmayanlarAnketID))
                 {
                     var anketId = basvuru.BasvuruSurec.KayitOlmayanlarAnketID.Value;
-
-                    // 📌 Ortak helper metodunu çağırıyoruz
+                     
                     var anketViewHtml = AnketlerBus.GetAnketView(
                         anketId: anketId,
                         anketTipId: AnketTipiEnum.KayitHakkiKazananKayitYaptirmayanAnketi,
@@ -122,6 +121,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     .Select(p => new
                     {
                         p.DavetResimYolu,
+                        p.IslemTarihi,
                         p.Tarih,
                         p.BasSaat
                     })
@@ -132,6 +132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     .Select(p => new
                     {
                         p.DavetResimYolu,
+                        p.IslemTarihi,
                         FullDateTime = p.Tarih.Add(p.BasSaat)
                     })
                     .ToList();
@@ -158,7 +159,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 // 3) Sonuç: future içindeki sıralama zaten doğru (gelecek: en yakın->uzak ; ardından geçmiş: en yakın->uzak)
-                ViewBag.GaleryUrls = future.Select(x => x.DavetResimYolu).ToList();
+                //ViewBag.GaleryUrls = future.Select(x => x.DavetResimYolu).ToList();
+                ViewBag.GalleryItems = future.Select(x => new GaleryItem
+                {
+                    Url = x.DavetResimYolu,
+                    Version = x.IslemTarihi.Ticks
+                }).ToList();
             }
             #endregion
 

@@ -387,7 +387,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mevcutKullanici.ResimAdi = mevcutKullanici.ResimAdi;
                     model = mevcutKullanici;
 
-                   if(mevcutKullanici.YtuOgrencisi)
+                    if (mevcutKullanici.YtuOgrencisi)
                         KullanicilarBus.OgrenciBilgisiGuncelleObs(model.UserKey);
                 }
 
@@ -449,7 +449,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return View(model);
         }
-      
+
         [HttpPost]
         public async Task<ActionResult> HesapKayit(Kullanicilar kModel, bool isKurumIci, bool isYerli)
         {
@@ -505,16 +505,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     messageModel.Messages.Add("Lütfen önce öğrenci bilgilerinizi doğrulayınız! T.C. kimlik Numarası ve Öğrenci No Bilgisini Giriniz.");
                     messageModel.MessageType = MsgTypeEnum.Warning;
                     if (kModel.TcKimlikNo.IsNullOrWhiteSpace())
-                    { 
+                    {
                         messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
                     }
                     else messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "TcKimlikNo" });
                     if (kModel.OgrenciNo.IsNullOrWhiteSpace())
-                    { 
+                    {
                         messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
                     }
                     else if (kModel.OgrenciNo.Length != 8)
-                    { 
+                    {
                         messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "OgrenciNo" });
                     }
                     else messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Success, PropertyName = "OgrenciNo" });
@@ -907,7 +907,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kModel.YetkiGrupID = unvan.YetkiGrupID ?? 1;
                     }
                     if (kModel.YetkiGrupID <= 0) kModel.YetkiGrupID = 1;
-
+                    kModel.IsTezAtamaAcik = YetkiGrupBus.TezKontrolYetkiGrupId == kModel.YetkiGrupID;
                     kModel.UserKey = Guid.NewGuid();
                     kModel.OlusturmaTarihi = DateTime.Now;
                     kModel.IsAktif = true;
@@ -953,9 +953,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         kullanici.EnstituKod = kModel.EnstituKod;
                         kullanici.OgrenimEnstituKod = kModel.OgrenimEnstituKod;
+                    
+                        if (erisimYetki)
+                        {
+                            var eskiYetkiGrupId = kullanici.YetkiGrupID;
+                            var yeniYetkiGrupId = kModel.YetkiGrupID;
+                            var isYetkiDegisti = eskiYetkiGrupId != yeniYetkiGrupId;
+                            kullanici.YetkiGrupID = yeniYetkiGrupId;
 
-                        if (erisimYetki) kullanici.YetkiGrupID = kModel.YetkiGrupID;
+                            var tezKontrolYetkisineYeniGecis =
+                                isYetkiDegisti &&
+                                yeniYetkiGrupId == YetkiGrupBus.TezKontrolYetkiGrupId &&
+                                eskiYetkiGrupId != YetkiGrupBus.TezKontrolYetkiGrupId;
 
+                            if (tezKontrolYetkisineYeniGecis && !kullanici.IsTezAtamaAcik.HasValue)
+                            {
+                                kullanici.IsTezAtamaAcik = true;
+                            }
+                        } 
                         kullanici.KullaniciTipID = kModel.KullaniciTipID;
                         kullanici.Ad = kModel.Ad;
                         kullanici.Soyad = kModel.Soyad;
@@ -966,8 +981,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kullanici.Adres = kModel.Adres;
 
                         if (kullanici.EMail != kModel.EMail.Trim() &&
-                            (kullanici.KullaniciTipID == (int)KullaniciTipiEnum.YerliOgrenci ||
-                             kullanici.KullaniciTipID == (int)KullaniciTipiEnum.YabanciOgrenci))
+                            (kullanici.KullaniciTipID == KullaniciTipiEnum.YerliOgrenci ||
+                             kullanici.KullaniciTipID == KullaniciTipiEnum.YabanciOgrenci))
                             kullanici.KullaniciAdi = kModel.EMail.Trim();
 
                         kullanici.YtuOgrencisi = kModel.YtuOgrencisi;
@@ -1170,7 +1185,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             _entities.Dispose();
             base.Dispose(disposing);
         }
-         
+
 
         [HttpPost]
         public async Task<ActionResult> OgrenciDogrulaVeMailGonder(string tcKimlikNo, string ogrenciNo)
@@ -1253,7 +1268,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mailBody,
                         email,
                         null
-                        ,true
+                        , true
                     );
                 }
                 catch (Exception ex)

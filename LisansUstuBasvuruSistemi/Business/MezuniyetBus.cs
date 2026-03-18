@@ -54,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             }
         }
-        public static void TezDosyasiKontrolYetkilisiAta(int mezuniyetBasvurulariId)
+        public static void TezDosyasiKontrolYetkilisiAtaV0(int mezuniyetBasvurulariId)
         {
             using (var entities = new LubsDbEntities())
             {
@@ -71,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var isTezDosyasiIlgiliSorumluyaAta = MezuniyetAyar.MezuniyetBasvurusunuIlgiliTezSorumlusunaAta.GetAyar(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
 
-                var isTezSorumluAtamaHesaplamasiDonemselYap = MezuniyetAyar.TezSorumluAtamaHesaplamasiDonemselYap.GetAyar(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
+                var isTezSorumluAtamaHesaplamasiDonemselYap = false;// MezuniyetAyar.TezSorumluAtamaHesaplamasiDonemselYap.GetAyar(basvuru.MezuniyetSureci.EnstituKod).ToBoolean(false);
                 var nowDate = DateTime.Now;
 
                 //Yüklenen tezin ait olduğu programda yetkisi olanlar öncelikli, sonrasında hiç program yetkisi olmayanlar öncelikli, sonrasında count sayısına göre öncelikli, sonrasında random atama. Program yetkisi var ve gelen programda yetkisi yoksa hiç sıralamaya dahil edilmeyecek.
@@ -123,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             }
         }
-
+       
         public static MmMessage MezuniyetBasvurusuSilKontrol(int mezuniyetBasvurulariId)
         {
             var msg = new MmMessage
@@ -1443,8 +1443,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         new MailParameterDto { Key = "SeciliKomiteUyesiUniversite", Value =  sablon.Value.UniversiteAdi.IlkHarfiBuyut()}
                     };
                     parameters.AddRange(SetParameterJuriSavunmas(tikUyeleri, "TikUyesi"));
-                    parameters.AddRange(SetParameterJuriSavunmas(juriUyeleri.Where(p => p.IsAsilOrYedek == true).OrderBy(o => o.JuriTipAdi.Contains("YtuIci") ? 1 : 2).ThenBy(t => t.JuriTipAdi).ToList().ToList(), "AsilKomiteUyesi"));
-                    parameters.AddRange(SetParameterJuriSavunmas(juriUyeleri.Where(p => p.IsAsilOrYedek == false).OrderBy(o => o.JuriTipAdi.Contains("YtuIci") ? 1 : 2).ThenBy(t => t.JuriTipAdi).ToList().ToList(), "YedekKomiteUyesi"));
+                    parameters.AddRange(SetParameterJuriSavunmas(juriUyeleri.Where(p => p.IsAsilOrYedek == true).OrderBy(o => o.JuriTipAdi.Contains("YtuIci") ? 1 : 2).ThenBy(t => t.JuriTipAdi).ToList(), "AsilKomiteUyesi"));
+                    parameters.AddRange(SetParameterJuriSavunmas(juriUyeleri.Where(p => p.IsAsilOrYedek == false).OrderBy(o => o.JuriTipAdi.Contains("YtuIci") ? 1 : 2).ThenBy(t => t.JuriTipAdi).ToList(), "YedekKomiteUyesi"));
                     var html = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonHtml, parameters);
                     var htmlFooter = ValueReplaceExtension.ProcessHtmlContent(sablon.Key.SablonFooterHtml, parameters);
                     if (sablonInx == 0)
@@ -2385,9 +2385,9 @@ namespace LisansUstuBasvuruSistemi.Business
                             .OrderByDescending(p => p.SRTalepID)
                             .Select(p => new
                             {
-                                IsTezBasligiDegisti = p.IsTezBasligiDegisti,
-                                YeniTezBaslikTr = p.YeniTezBaslikTr,
-                                YeniTezBaslikEn = p.YeniTezBaslikEn
+                                p.IsTezBasligiDegisti,
+                                p.YeniTezBaslikTr,
+                                p.YeniTezBaslikEn
                             })
                             .FirstOrDefault();
 
